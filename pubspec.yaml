@@ -36,6 +36,7 @@ dependencies:
   freezed_annotation: ^2.2.0
   get: ^4.6.5
   hooks_riverpod: ^2.3.0
+  html: ^0.15.2
   json_annotation: ^4.8.0
   provider: ^6.0.5
   shared_preferences: ^2.0.18
