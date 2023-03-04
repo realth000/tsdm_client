@@ -1,82 +1,137 @@
-/// Thread type
-///
-/// 宣传、心情、其他……
-class ThreadType {
-  /// Constructor.
-  ThreadType(this.name, this.url);
+import 'package:collection/collection.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:html/dom.dart';
 
-  /// Type name: 宣传。
-  String name;
+import '../utils/html_element.dart';
+import '../utils/time.dart';
+import 'thread_author.dart';
+import 'thread_type.dart';
 
-  /// Type url.
-  String url;
-}
-
-/// Author of a thread.
-///
-/// Contains name and user page url.
-class ThreadAuthor {
-  /// Constructor.
-  ThreadAuthor(this.name, this.url);
-
-  ///  Name of the author.
-  String name;
-
-  /// User page url.
-  String url;
-}
+part 'normal_thread.freezed.dart';
 
 /// Model of normal thread;
-class NormalThread {
-  /// Constructor.
-  NormalThread({
-    required this.title,
-    required this.author,
-    required this.publishTime,
-    required this.lastReplyAuthor,
-    required this.lastReplyTime,
-    required this.iconUrl,
-    required this.replyCount,
-    required this.viewCount,
-    this.threadType,
-    this.price = 0,
-  });
+@freezed
+class NormalThread with _$NormalThread {
+  /// Freezed constructor.
+  const factory NormalThread({
+    /// Thread title.
+    required String title,
 
-  /// Icon of this thread.
-  String? iconUrl;
+    /// Thread url.
+    required String url,
 
-  /// ThreadType.
-  ThreadType? threadType;
+    /// Thread author, contains username and user page url.
+    required ThreadAuthor author,
 
-  /// Title of the thread.
-  String title;
+    /// Thread publish date, without publish hour level time.
+    ///
+    /// e.g. "2023-03-04".
+    required DateTime publishDate,
 
-  /// Price of the thread.
-  ///
-  /// May be 0.
-  int price;
+    /// Author of the latest reply.
+    ///
+    /// If no reply in thread, also is the [author].
+    required ThreadAuthor lastReplyAuthor,
 
-  /// Author of the thread.
-  ThreadAuthor author;
+    /// Time of latest reply, with hour level time.
+    ///
+    /// e.g. "2023-03-04 00:11:22".
+    required DateTime lastReplyTime,
 
-  /// Publish time of the thread.
-  DateTime publishTime;
+    /// Icon url of this thread.
+    ///
+    /// May be null.
+    required String iconUrl,
 
-  /// Count of reply in the thread.
-  ///
-  /// >= 0;
-  int replyCount;
+    /// Thread type: 动漫音乐、其他...
+    ///
+    /// May be null.
+    required ThreadType? threadType,
 
-  /// Count of user views times of the thread.
-  ///
-  /// >= 0;
-  int viewCount;
+    /// Thread reply count.
+    ///
+    /// >= 0.
+    required int replyCount,
 
-  /// Last reply of this thread.
-  ///
-  /// At least is the same with [author], never be null.
-  late ThreadAuthor lastReplyAuthor;
+    /// Thread view times.
+    ///
+    /// >= 0.
+    required int viewCount,
 
-  /// Last reply time of the thread.
-  late DateTime lastReplyTime;
+    /// Thread price.
+    ///
+    /// May be null, >= 0.
+    required int? price,
+  }) = _NormalThread;
+}
+
+/// Build a [NormalThread] model with the given [Element]
+///
+/// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
+NormalThread? buildNormalThreadFromElement(Element threadElement) {
+  if (threadElement.children.length != 1) {
+    return null;
+  }
+  final trRoot = threadElement.children.first;
+  final iconNode = trRoot.getElementsByClassName('icn').firstOrNull;
+  final titleNode = trRoot.getElementsByClassName('new').firstOrNull;
+  final replyCountNode = trRoot.getElementsByClassName('num').firstOrNull;
+  final userNodeList = trRoot.getElementsByClassName('by');
+  final authorNode = userNodeList.elementAtOrNull(0);
+  final lastReplyNode = userNodeList.elementAtOrNull(1);
+
+  final threadIconUrl =
+      iconNode?.childAtOrNull(0)?.childAtOrNull(0)?.attributes['src'];
+  final threadTypeUrl = titleNode?.childAtOrNull(1)?.firstHref();
+  final threadTypeName = titleNode?.childAtOrNull(1)?.firstEndDeepText();
+  final threadUrl =
+      titleNode?.getElementsByClassName('xst').firstOrNull?.attributes['href'];
+  final threadTitle =
+      titleNode?.getElementsByClassName('xst').firstOrNull?.firstChild?.text;
+  final threadPrice =
+      titleNode?.getElementsByClassName('xw1').firstOrNull?.firstChild?.text;
+  final threadAuthorUrl = authorNode?.childAtOrNull(0)?.firstHref();
+  final threadAuthorName = authorNode?.childAtOrNull(0)?.firstEndDeepText();
+  final threadPublishDate = authorNode?.childAtOrNull(1)?.firstEndDeepText();
+  final threadReplyCount = replyCountNode?.childAtOrNull(0)?.firstEndDeepText();
+  final threadViewCount = replyCountNode?.childAtOrNull(1)?.firstEndDeepText();
+
+  final threadLastReplyAuthorUrl = lastReplyNode?.childAtOrNull(0)?.firstHref();
+  final threadLastReplyAuthorName =
+      lastReplyNode?.childAtOrNull(0)?.firstEndDeepText();
+  final threadLastReplyTime = lastReplyNode
+      ?.childAtOrNull(1)
+      ?.firstChild
+      ?.firstChild
+      ?.attributes['title'];
+  if (threadTitle == null ||
+      threadUrl == null ||
+      threadIconUrl == null ||
+      threadAuthorUrl == null ||
+      threadAuthorName == null ||
+      threadPublishDate == null ||
+      threadLastReplyAuthorUrl == null ||
+      threadLastReplyAuthorName == null ||
+      threadLastReplyTime == null) {
+    return null;
+  }
+  return NormalThread(
+    title: threadTitle,
+    url: threadUrl,
+    author: ThreadAuthor(
+      name: threadAuthorName,
+      url: threadAuthorUrl,
+    ),
+    publishDate: DateTime.parse(formatTimeString(threadPublishDate)),
+    lastReplyAuthor: ThreadAuthor(
+      name: threadLastReplyAuthorName,
+      url: threadLastReplyAuthorUrl,
+    ),
+    lastReplyTime: DateTime.parse(formatTimeString(threadLastReplyTime)),
+    iconUrl: threadIconUrl,
+    threadType: parseThreadType(threadTypeName, threadTypeUrl),
+    replyCount: threadReplyCount != null ? int.parse(threadReplyCount) : 0,
+    viewCount: threadViewCount != null ? int.parse(threadViewCount) : 0,
+    price: threadPrice != null ? int.parse(threadPrice) : null,
+  );
 }

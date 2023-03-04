@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/parser.dart' as htmlParser;
+import 'package:html/parser.dart' as html_parser;
 
+import 'models/normal_thread.dart';
 import 'providers/dio_provider.dart';
 import 'providers/settings_provider.dart';
 import 'themes/app_themes.dart';
@@ -58,26 +59,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
-            print('AAAA start');
             final resp = await ref.read(dioProvider).get(
                   'https://www.tsdm39.net/forum.php?mod=forumdisplay&fid=247',
                 );
-            final a = htmlParser.parse(resp.data);
+            final a = html_parser.parse(resp.data);
             a.body!
                 .getElementsByClassName('tsdm_normalthread')
                 .forEach((thread) {
-              if (thread.children.length != 1) {
-                // This should not happen.
-                return;
-              }
-              final child = thread.children[0];
-
-              /// FIXME: Maybe is null.
-              final iconNode = child.getElementsByClassName('icn').first;
-              final titleNode = child.getElementsByClassName('new').first;
-              final authorNode = child.getElementsByClassName('by').first;
-              final replyCountNode = child.getElementsByClassName('num').first;
-              final lastReplyNode = child.getElementsByClassName('by')[1];
+              final model = buildNormalThreadFromElement(thread);
+              print('$model');
             });
           },
           tooltip: 'Increment',
