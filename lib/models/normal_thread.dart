@@ -31,12 +31,12 @@ class NormalThread with _$NormalThread {
     /// Author of the latest reply.
     ///
     /// If no reply in thread, also is the [author].
-    required ThreadAuthor lastReplyAuthor,
+    required ThreadAuthor latestReplyAuthor,
 
     /// Time of latest reply, with hour level time.
     ///
     /// e.g. "2023-03-04 00:11:22".
-    required DateTime lastReplyTime,
+    required DateTime latestReplyTime,
 
     /// Icon url of this thread.
     ///
@@ -123,11 +123,11 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       url: threadAuthorUrl,
     ),
     publishDate: DateTime.parse(formatTimeString(threadPublishDate)),
-    lastReplyAuthor: ThreadAuthor(
+    latestReplyAuthor: ThreadAuthor(
       name: threadLastReplyAuthorName,
       url: threadLastReplyAuthorUrl,
     ),
-    lastReplyTime: DateTime.parse(formatTimeString(threadLastReplyTime)),
+    latestReplyTime: DateTime.parse(formatTimeString(threadLastReplyTime)),
     iconUrl: threadIconUrl,
     threadType: parseThreadType(threadTypeName, threadTypeUrl),
     replyCount: threadReplyCount != null ? int.parse(threadReplyCount) : 0,

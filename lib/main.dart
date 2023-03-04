@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' as html_parser;
 
+import 'models/forum.dart';
 import 'models/normal_thread.dart';
 import 'providers/dio_provider.dart';
 import 'providers/settings_provider.dart';
@@ -59,6 +60,15 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: () async {
+            final rootResp = await ref
+                .read(dioProvider)
+                .get('https://www.tsdm39.net/forum.php');
+            final rootData = html_parser.parse(rootResp.data);
+            rootData.getElementsByClassName('fl_g').forEach((forum) {
+              final model = buildForumFromElement(forum);
+              print(model);
+            });
+            return;
             final resp = await ref.read(dioProvider).get(
                   'https://www.tsdm39.net/forum.php?mod=forumdisplay&fid=247',
                 );
@@ -67,7 +77,6 @@ class _MyHomePageState extends ConsumerState<MyHomePage> {
                 .getElementsByClassName('tsdm_normalthread')
                 .forEach((thread) {
               final model = buildNormalThreadFromElement(thread);
-              print('$model');
             });
           },
           tooltip: 'Increment',

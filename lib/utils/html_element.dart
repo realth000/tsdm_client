@@ -27,9 +27,7 @@ extension GrepExtension on Element {
   /// </a>
   ///
   /// When start with the arrow pointed <a>:
-  /// * Return "2.com" when [next] is true.
-  /// * Return "1.com" when [next] is false.
-  String? firstHref({bool next = true}) {
+  String? firstHref() {
     String? ret;
     bool work(Element element) {
       if (element.attributes.containsKey('href')) {
