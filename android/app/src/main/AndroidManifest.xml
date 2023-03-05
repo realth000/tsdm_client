@@ -1,7 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="kzs.th000.tsdm_client">
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
    <application
-        android:label="tsdm_client"
+        android:label="天使动漫"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
