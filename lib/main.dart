@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' as html_parser;
+import 'package:tsdm_client/routes/app_routes.dart';
 
 import 'models/forum.dart';
 import 'models/normal_thread.dart';
@@ -22,11 +23,16 @@ class TClientApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) => ProviderScope(
-        child: MaterialApp(
+        child: MaterialApp.router(
           title: 'TSDM Client',
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          home: const MyHomePage(),
+          routeInformationProvider: tClientRouter.routeInformationProvider,
+          routeInformationParser: tClientRouter.routeInformationParser,
+          routerDelegate: tClientRouter.routerDelegate,
+          // TODO: Actually we are using the [TClientScaffold] inside every page.
+          // Maybe can do something to this duplicate scaffold.
+          builder: (context, child) => Scaffold(body: child),
         ),
       );
 }

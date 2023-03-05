@@ -39,7 +39,7 @@ linter:
     collection_methods_unrelated_type: true
     comment_references: true
     control_flow_in_finally: true
-    diagnostic_describe_all_properties: true
+    diagnostic_describe_all_properties: false
     discarded_futures: true
     empty_statements: true
     hash_and_equals: true

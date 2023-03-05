@@ -1,10 +1,22 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/platform.dart';
+
 /// App themes.
 class AppTheme {
+  static final String? _fontFamily = isWindows ? 'Microsoft YaHei' : null;
+
+  /// Global theme for [ListTile].
+  static const _listTileTheme = ListTileThemeData(
+    visualDensity: VisualDensity.standard,
+    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+    horizontalTitleGap: 10,
+  );
+
   /// App light theme.
   static final light = FlexThemeData.light(
+    fontFamily: _fontFamily,
     colors: const FlexSchemeColor(
       primary: Color(0xff66bbff),
       primaryContainer: Color(0xffa4c4ed),
@@ -49,10 +61,13 @@ class AppTheme {
     swapLegacyOnMaterial3: true,
     // To use the playground font, add GoogleFonts package and uncomment
     // fontFamily: GoogleFonts.notoSans().fontFamily,
+  ).copyWith(
+    listTileTheme: _listTileTheme,
   );
 
   /// App dark themes.
   static final dark = FlexThemeData.dark(
+    fontFamily: _fontFamily,
     colors: const FlexSchemeColor(
       primary: Color(0xff66bbff),
       primaryContainer: Color(0xff004b74),
@@ -96,6 +111,8 @@ class AppTheme {
     swapLegacyOnMaterial3: true,
     // To use the Playground font, add GoogleFonts package and uncomment
     // fontFamily: GoogleFonts.notoSans().fontFamily,
+  ).copyWith(
+    listTileTheme: _listTileTheme,
   );
 }
 // If you do not have a themeMode switch, uncomment this line

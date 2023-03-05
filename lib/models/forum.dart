@@ -12,6 +12,7 @@ part 'forum.freezed.dart';
 class Forum with _$Forum {
   /// Freezed constructor.
   const factory Forum({
+    required int forumID,
     required String name,
     required String url,
     required String iconUrl,
@@ -19,6 +20,7 @@ class Forum with _$Forum {
     required int replyCount,
     required String? latestThreadUrl,
     required DateTime? latestThreadTime,
+    required String? latestThreadTimeText,
     required int? threadTodayCount,
   }) = _Forum;
 }
@@ -67,11 +69,20 @@ Forum? buildForumFromElement(Element element) {
       ?.childAtOrNull(0)
       ?.childAtOrNull(0)
       ?.attributes['title'];
+  // print(
+  //     'AAAA $forumName forumLatestThreadTime$forumLatestThreadTime ${DateTime.parse(formatTimeString(forumLatestThreadTime ?? '2023-03-06'))}');
+  final forumLatestThreadTimeText =
+      forumRootNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0)?.text;
+  print('AAAA $forumName $forumLatestThreadTimeText');
   if (forumName == null ||
       forumUrl == null ||
       forumIconUrl == null ||
       forumThreadCount == null ||
       forumReplyCount == null) {
+    return null;
+  }
+  final forumIDString = Uri.parse(forumUrl).queryParameters['fid'];
+  if (forumIDString == null) {
     return null;
   }
   return Forum(
@@ -84,7 +95,9 @@ Forum? buildForumFromElement(Element element) {
     latestThreadTime: forumLatestThreadTime != null
         ? DateTime.parse(formatTimeString(forumLatestThreadTime))
         : null,
+    latestThreadTimeText: forumLatestThreadTimeText,
     threadTodayCount:
         forumThreadTodayCount != null ? int.parse(forumThreadTodayCount) : null,
+    forumID: int.parse(forumIDString),
   );
 }
