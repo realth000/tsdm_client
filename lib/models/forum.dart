@@ -34,7 +34,7 @@ Forum? buildForumFromElement(Element element) {
       .childAtOrNull(0)
       ?.childAtOrNull(0)
       ?.childAtOrNull(0)
-      ?.attributes['src'];
+      ?.attributes['data-original'];
 
   // <dl>
   final forumRootNode = element.childAtOrNull(1)?.childAtOrNull(0);
