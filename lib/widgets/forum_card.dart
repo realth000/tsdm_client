@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../models/forum.dart';
+import '../routes/app_routes.dart';
 import '../themes/widget_themes.dart';
 import 'space.dart';
 
@@ -75,6 +77,18 @@ class ForumCard extends ConsumerWidget {
             ],
           ),
           isThreeLine: _buildLatestInfoLine,
+          onTap: () {
+            context.goNamed(
+              TClientRoute.forum,
+              params: <String, String>{
+                'fid': '${_forum.forumID}',
+              },
+              extra: <String, String>{
+                'fetchUrl': _forum.url,
+                'appBarTitle': _forum.name,
+              },
+            );
+          },
         ),
       );
 }

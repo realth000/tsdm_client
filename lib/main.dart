@@ -27,9 +27,7 @@ class TClientApp extends StatelessWidget {
           title: 'TSDM Client',
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          routeInformationProvider: tClientRouter.routeInformationProvider,
-          routeInformationParser: tClientRouter.routeInformationParser,
-          routerDelegate: tClientRouter.routerDelegate,
+          routerConfig: tClientRouter,
           // TODO: Actually we are using the [TClientScaffold] inside every page.
           // Maybe can do something to this duplicate scaffold.
           builder: (context, child) => Scaffold(body: child),

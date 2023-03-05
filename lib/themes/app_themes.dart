@@ -8,6 +8,11 @@ class AppTheme {
   static const _cardTheme = CardTheme(
     elevation: 1,
   );
+
+  static const _chipTheme = ChipThemeData(
+    padding: EdgeInsets.all(2),
+  );
+
   static final String? _fontFamily = isWindows ? 'Microsoft YaHei' : null;
 
   /// Global theme for [ListTile].
@@ -44,6 +49,7 @@ class AppTheme {
     useMaterial3: true,
   ).copyWith(
     cardTheme: _cardTheme,
+    chipTheme: _chipTheme,
     listTileTheme: _listTileTheme,
   );
 
@@ -74,6 +80,7 @@ class AppTheme {
     useMaterial3: true,
   ).copyWith(
     cardTheme: _cardTheme,
+    chipTheme: _chipTheme,
     listTileTheme: _listTileTheme,
   );
 }

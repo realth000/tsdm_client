@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 
 import '../utils/html_element.dart';
+import '../utils/prefix_url.dart';
 import '../utils/time.dart';
 
 part 'forum.freezed.dart';
@@ -73,7 +74,6 @@ Forum? buildForumFromElement(Element element) {
   //     'AAAA $forumName forumLatestThreadTime$forumLatestThreadTime ${DateTime.parse(formatTimeString(forumLatestThreadTime ?? '2023-03-06'))}');
   final forumLatestThreadTimeText =
       forumRootNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0)?.text;
-  print('AAAA $forumName $forumLatestThreadTimeText');
   if (forumName == null ||
       forumUrl == null ||
       forumIconUrl == null ||
@@ -87,11 +87,13 @@ Forum? buildForumFromElement(Element element) {
   }
   return Forum(
     name: forumName,
-    url: forumUrl,
+    url: addUrlPrefix(forumUrl),
     iconUrl: forumIconUrl,
     threadCount: int.parse(forumThreadCount),
     replyCount: int.parse(forumReplyCount),
-    latestThreadUrl: forumLatestThreadUrl,
+    latestThreadUrl: forumLatestThreadUrl != null
+        ? addUrlPrefix(forumLatestThreadUrl)
+        : null,
     latestThreadTime: forumLatestThreadTime != null
         ? DateTime.parse(formatTimeString(forumLatestThreadTime))
         : null,

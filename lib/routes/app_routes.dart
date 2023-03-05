@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../screens/error_route_page.dart';
+import '../screens/forum/forum_page.dart';
 import '../screens/homepage/homepage.dart';
 import '../widgets/app_scaffold.dart';
 
@@ -41,11 +43,26 @@ class TClientRoute {
 final tClientRouter = GoRouter(
   routes: [
     AppRoute(
-      appBarTitle: 'HomePage',
       path: TClientRoute.homepage,
+      appBarTitle: 'HomePage',
       builder: (_) => const TCHomePage(
         fetchUrl: 'https://www.tsdm39.net/forum.php',
       ),
+    ),
+    AppRoute(
+      path: TClientRoute.forum,
+      builder: (state) {
+        if (state.extra == null || state.extra! is! Map<String, String>) {
+          return ErrorRoutePage(
+            'Invalid router extra params: ${state.extra}',
+          );
+        }
+        final extra = state.extra! as Map<String, String>;
+        return ForumPage(
+          fetchUrl: extra['fetchUrl']!,
+          fid: state.params['fid']!,
+        );
+      },
     ),
   ],
 );
@@ -59,15 +76,24 @@ class AppRoute extends GoRoute {
     required Widget Function(GoRouterState s) builder,
     List<GoRoute> routes = const [],
     String? appBarTitle,
+    super.redirect,
   }) : super(
+          name: path,
           routes: routes,
           pageBuilder: (context, state) {
             final pageContent = TClientScaffold(
               body: builder(state),
-              appBarTitle: appBarTitle,
+              appBarTitle: _buildAppBarTitle(state, appBarTitle),
               // resizeToAvoidBottomInset: false,
             );
             return MaterialPage(child: pageContent);
           },
         );
+
+  static String? _buildAppBarTitle(GoRouterState state, String? appBarTitle) {
+    if (state.extra != null && state.extra is Map<String, String>) {
+      return (state.extra as Map<String, String>)['appBarTitle'] ?? appBarTitle;
+    }
+    return appBarTitle;
+  }
 }

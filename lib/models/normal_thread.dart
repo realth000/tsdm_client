@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 
 import '../utils/html_element.dart';
+import '../utils/prefix_url.dart';
 import '../utils/time.dart';
 import 'thread_author.dart';
 import 'thread_type.dart';
@@ -117,7 +118,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   }
   return NormalThread(
     title: threadTitle,
-    url: threadUrl,
+    url: addUrlPrefix(threadUrl),
     author: ThreadAuthor(
       name: threadAuthorName,
       url: threadAuthorUrl,
@@ -128,7 +129,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       url: threadLastReplyAuthorUrl,
     ),
     latestReplyTime: DateTime.parse(formatTimeString(threadLastReplyTime)),
-    iconUrl: threadIconUrl,
+    iconUrl: addUrlPrefix(threadIconUrl),
     threadType: parseThreadType(threadTypeName, threadTypeUrl),
     replyCount: threadReplyCount != null ? int.parse(threadReplyCount) : 0,
     viewCount: threadViewCount != null ? int.parse(threadViewCount) : 0,
