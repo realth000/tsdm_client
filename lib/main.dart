@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' as html_parser;
-import 'package:tsdm_client/routes/app_routes.dart';
 
 import 'models/forum.dart';
 import 'models/normal_thread.dart';
 import 'providers/dio_provider.dart';
 import 'providers/settings_provider.dart';
+import 'routes/app_routes.dart';
 import 'themes/app_themes.dart';
 
 Future<void> main() async {
