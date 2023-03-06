@@ -34,10 +34,15 @@ Forum? buildForumFromElement(Element element) {
     return null;
   }
   final forumIconUrl = element
-      .childAtOrNull(0)
-      ?.childAtOrNull(0)
-      ?.childAtOrNull(0)
-      ?.attributes['data-original'];
+          .childAtOrNull(0)
+          ?.childAtOrNull(0)
+          ?.childAtOrNull(0)
+          ?.attributes['data-original'] ??
+      element
+          .childAtOrNull(0)
+          ?.childAtOrNull(0)
+          ?.childAtOrNull(0)
+          ?.attributes['src'];
 
   // <dl>
   final forumRootNode = element.childAtOrNull(1)?.childAtOrNull(0);
