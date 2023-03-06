@@ -1,12 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/parser.dart' as html_parser;
 
 import '../../models/forum.dart';
 import '../../providers/dio_provider.dart';
 import '../../widgets/forum_card.dart';
-import '../../widgets/stack.dart';
+import '../../widgets/network_widget.dart';
 
 /// App homepage.
 ///
@@ -59,37 +58,16 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
       );
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: _data,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          } else if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final pageData = html_parser.parse(snapshot.data!.data);
-            final forumData = <Forum>[];
-            pageData.getElementsByClassName('fl_g').forEach((forumElement) {
-              final data = buildForumFromElement(forumElement);
-              if (data == null) {
-                return;
-              }
-              forumData.add(data);
-            });
-            return buildStack(
-              _buildForumList(context, ref, forumData),
-              FloatingActionButton(
-                onPressed: () {
-                  setState(_loadData);
-                },
-                child: const Icon(Icons.refresh),
-              ),
-            );
+  Widget build(BuildContext context) =>
+      NetworkWidget(widget.fetchUrl, (document) {
+        final forumData = <Forum>[];
+        document.getElementsByClassName('fl_g').forEach((forumElement) {
+          final data = buildForumFromElement(forumElement);
+          if (data == null) {
+            return;
           }
-        },
-      );
+          forumData.add(data);
+        });
+        return _buildForumList(context, ref, forumData);
+      });
 }
