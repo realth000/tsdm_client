@@ -43,7 +43,7 @@ final tClientRouter = GoRouter(
   routes: [
     AppRoute(
       path: TClientRoute.homepage,
-      appBarTitle: 'HomePage',
+      appBarTitle: '论坛首页',
       builder: (_) => const TCHomePage(
         fetchUrl: 'https://www.tsdm39.net/forum.php',
       ),

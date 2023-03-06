@@ -1,9 +1,11 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' as html_parser;
 
 import '../../models/normal_thread.dart';
 import '../../providers/dio_provider.dart';
+import '../../widgets/stack.dart';
 import '../../widgets/thread_card.dart';
 
 /// Forum page.
@@ -23,6 +25,18 @@ class ForumPage extends ConsumerStatefulWidget {
 class _ForumPageState extends ConsumerState<ForumPage> {
   final _threadScrollController = ScrollController(keepScrollOffset: true);
 
+  late Future<Response<dynamic>> _data;
+
+  void _loadData() {
+    _data = ref.read(dioProvider).get(widget._fetchUrl);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _loadData();
+  }
+
   Widget _buildNormalThreadList(
     BuildContext context,
     WidgetRef ref,
@@ -36,13 +50,13 @@ class _ForumPageState extends ConsumerState<ForumPage> {
 
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: ref.read(dioProvider).get(widget._fetchUrl),
+        future: _data,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Text(snapshot.error.toString()),
             );
-          } else if (!snapshot.hasData || snapshot.data == null) {
+          } else if (snapshot.connectionState != ConnectionState.done) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -58,7 +72,15 @@ class _ForumPageState extends ConsumerState<ForumPage> {
               }
               normalThreadData.add(model);
             });
-            return _buildNormalThreadList(context, ref, normalThreadData);
+            return buildStack(
+              _buildNormalThreadList(context, ref, normalThreadData),
+              FloatingActionButton(
+                onPressed: () {
+                  setState(_loadData);
+                },
+                child: const Icon(Icons.refresh),
+              ),
+            );
           }
         },
       );

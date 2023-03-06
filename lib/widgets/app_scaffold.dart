@@ -10,7 +10,7 @@ class TClientScaffold extends ConsumerWidget {
     this.appBarTitle,
   });
 
-  static const _defaultAppBarTitle = 'TSDM Client';
+  static const _defaultAppBarTitle = '天使动漫';
 
   /// Scaffold AppBar title.
   final String? appBarTitle;
@@ -22,12 +22,6 @@ class TClientScaffold extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle ?? _defaultAppBarTitle),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.refresh),
-              onPressed: () {},
-            ),
-          ],
         ),
         body: body,
       );

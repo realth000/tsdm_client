@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/parser.dart' as html_parser;
@@ -5,6 +6,7 @@ import 'package:html/parser.dart' as html_parser;
 import '../../models/forum.dart';
 import '../../providers/dio_provider.dart';
 import '../../widgets/forum_card.dart';
+import '../../widgets/stack.dart';
 
 /// App homepage.
 ///
@@ -27,9 +29,16 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
 
   final _forumListScrollController = ScrollController(keepScrollOffset: true);
 
+  late Future<Response<dynamic>> _data;
+
+  void _loadData() {
+    _data = ref.read(dioProvider).get(widget.fetchUrl);
+  }
+
   @override
   void initState() {
     super.initState();
+    _loadData();
   }
 
   @override
@@ -51,13 +60,13 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
 
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: ref.read(dioProvider).get(widget.fetchUrl),
+        future: _data,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
               child: Text(snapshot.error.toString()),
             );
-          } else if (!snapshot.hasData || snapshot.data == null) {
+          } else if (snapshot.connectionState != ConnectionState.done) {
             return const Center(
               child: CircularProgressIndicator(),
             );
@@ -71,7 +80,15 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
               }
               forumData.add(data);
             });
-            return _buildForumList(context, ref, forumData);
+            return buildStack(
+              _buildForumList(context, ref, forumData),
+              FloatingActionButton(
+                onPressed: () {
+                  setState(_loadData);
+                },
+                child: const Icon(Icons.refresh),
+              ),
+            );
           }
         },
       );
