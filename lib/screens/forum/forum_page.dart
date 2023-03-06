@@ -10,14 +10,11 @@ import '../../widgets/thread_card.dart';
 class ForumPage extends ConsumerStatefulWidget {
   /// Constructor.
   const ForumPage({
-    required String fetchUrl,
     required String fid,
     super.key,
-  })  : _fetchUrl = fetchUrl,
-        _fid = fid;
+  }) : _fetchUrl = 'https://www.tsdm39.net/forum.php?mod=forumdisplay&fid=$fid';
 
   final String _fetchUrl;
-  final String _fid;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ForumPageState();

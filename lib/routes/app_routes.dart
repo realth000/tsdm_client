@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-import '../screens/error_route_page.dart';
 import '../screens/forum/forum_page.dart';
 import '../screens/homepage/homepage.dart';
 import '../widgets/app_scaffold.dart';
@@ -51,18 +50,9 @@ final tClientRouter = GoRouter(
     ),
     AppRoute(
       path: TClientRoute.forum,
-      builder: (state) {
-        if (state.extra == null || state.extra! is! Map<String, String>) {
-          return ErrorRoutePage(
-            'Invalid router extra params: ${state.extra}',
-          );
-        }
-        final extra = state.extra! as Map<String, String>;
-        return ForumPage(
-          fetchUrl: extra['fetchUrl']!,
-          fid: state.params['fid']!,
-        );
-      },
+      builder: (state) => ForumPage(
+        fid: state.params['fid']!,
+      ),
     ),
   ],
 );
@@ -80,20 +70,33 @@ class AppRoute extends GoRoute {
   }) : super(
           name: path,
           routes: routes,
-          pageBuilder: (context, state) {
-            final pageContent = TClientScaffold(
-              body: builder(state),
-              appBarTitle: _buildAppBarTitle(state, appBarTitle),
-              // resizeToAvoidBottomInset: false,
-            );
-            return MaterialPage(child: pageContent);
-          },
+          pageBuilder: (context, state) => MaterialPage(
+            name: path,
+            arguments: state.params,
+            child: _buildScaffold(
+              state,
+              builder,
+              appBarTitle: appBarTitle,
+            ),
+          ),
         );
 
-  static String? _buildAppBarTitle(GoRouterState state, String? appBarTitle) {
+  static TClientScaffold _buildScaffold(
+    GoRouterState state,
+    Widget Function(GoRouterState s) builder, {
+    String? appBarTitle,
+  }) {
     if (state.extra != null && state.extra is Map<String, String>) {
-      return (state.extra as Map<String, String>)['appBarTitle'] ?? appBarTitle;
+      final extra = state.extra as Map<String, String>;
+      return TClientScaffold(
+        body: builder(state),
+        appBarTitle: extra['appBarTitle'] ?? appBarTitle,
+      );
+    } else {
+      return TClientScaffold(
+        body: builder(state),
+        appBarTitle: appBarTitle,
+      );
     }
-    return appBarTitle;
   }
 }
