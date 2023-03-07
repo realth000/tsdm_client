@@ -100,7 +100,7 @@ Forum? buildForumFromElement(Element element) {
         ? addUrlPrefix(forumLatestThreadUrl)
         : null,
     latestThreadTime: forumLatestThreadTime != null
-        ? DateTime.parse(formatTimeString(forumLatestThreadTime))
+        ? DateTime.parse(formatTimeStringWithUTC8(forumLatestThreadTime))
         : null,
     latestThreadTimeText: forumLatestThreadTimeText,
     threadTodayCount:

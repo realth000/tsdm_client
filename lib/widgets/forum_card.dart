@@ -23,11 +23,17 @@ class ForumCard extends ConsumerWidget {
   Widget _buildLatestInfoRow(BuildContext context, WidgetRef ret) {
     final itemList = <Widget>[];
     final latestItems = [
-      const Icon(Icons.access_time),
+      const Icon(
+        Icons.access_time,
+        size: smallIconSize,
+      ),
       Text('最近发表：${_forum.latestThreadTimeText}'),
     ];
     final todayItems = [
-      const Icon(Icons.campaign),
+      const Icon(
+        Icons.campaign,
+        size: smallIconSize,
+      ),
       Text('今日新帖：${_forum.threadTodayCount}'),
     ];
     if (_forum.latestThreadTime != null) {
@@ -48,11 +54,10 @@ class ForumCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) => Card(
         child: ListTile(
           leading: SizedBox(
-            width: 145,
+            width: 100,
             height: 50,
             child: Image.network(
               _forum.iconUrl,
-              fit: BoxFit.fitHeight,
             ),
           ),
           title: Text(
@@ -66,10 +71,13 @@ class ForumCard extends ConsumerWidget {
             children: [
               Row(
                 children: [
-                  const Icon(Icons.chat_bubble),
+                  const Icon(
+                    Icons.chat_bubble,
+                    size: smallIconSize,
+                  ),
                   Text('主题：${_forum.threadCount}'),
                   smallSpacing,
-                  const Icon(Icons.forum),
+                  const Icon(Icons.forum, size: smallIconSize),
                   Text('贴数：${_forum.replyCount}'),
                 ],
               ),

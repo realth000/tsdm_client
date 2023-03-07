@@ -123,12 +123,13 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       name: threadAuthorName,
       url: threadAuthorUrl,
     ),
-    publishDate: DateTime.parse(formatTimeString(threadPublishDate)),
+    publishDate: DateTime.parse(formatTimeStringWithUTC8(threadPublishDate)),
     latestReplyAuthor: ThreadAuthor(
       name: threadLastReplyAuthorName,
       url: threadLastReplyAuthorUrl,
     ),
-    latestReplyTime: DateTime.parse(formatTimeString(threadLastReplyTime)),
+    latestReplyTime:
+        DateTime.parse(formatTimeStringWithUTC8(threadLastReplyTime)),
     iconUrl: addUrlPrefix(threadIconUrl),
     threadType: parseThreadType(threadTypeName, threadTypeUrl),
     replyCount: threadReplyCount != null ? int.parse(threadReplyCount) : 0,
