@@ -27,14 +27,14 @@ class ForumCard extends ConsumerWidget {
         Icons.access_time,
         size: smallIconSize,
       ),
-      Text('最近发表：${_forum.latestThreadTimeText}'),
+      Text('最近：${_forum.latestThreadTimeText}'),
     ];
     final todayItems = [
       const Icon(
         Icons.campaign,
         size: smallIconSize,
       ),
-      Text('今日新帖：${_forum.threadTodayCount}'),
+      Text('新帖：${_forum.threadTodayCount}'),
     ];
     if (_forum.latestThreadTime != null) {
       itemList.addAll(latestItems);

@@ -44,7 +44,7 @@ class ThreadCard extends ConsumerWidget {
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
-                  mainAxisExtent: 30,
+                  mainAxisExtent: 35,
                 ),
                 children: [
                   TextButton.icon(
@@ -52,44 +52,60 @@ class ThreadCard extends ConsumerWidget {
                       Icons.perm_identity,
                       size: smallIconSize,
                     ),
-                    label: Text('作者：${thread.author.name}'),
+                    label: Text(
+                      '作者：${thread.author.name}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
                     ),
                     onPressed: () {},
                   ),
-                  Row(
-                    children: [
-                      const Icon(
+                  Tooltip(
+                    message:
+                        DateFormat('yyyy-MM-dd').format(thread.publishDate),
+                    child: TextButton.icon(
+                      icon: const Icon(
                         Icons.access_time,
                         size: smallIconSize,
                       ),
-                      smallSpacing,
-                      Text(
+                      label: Text(
                         '发布时间：${DateFormat('yyyy-MM-dd').format(thread.publishDate)}',
+                        style: const TextStyle(fontSize: 12),
                       ),
-                    ],
+                      style: const ButtonStyle(
+                        alignment: Alignment.centerLeft,
+                      ),
+                      onPressed: () {},
+                    ),
                   ),
                   TextButton.icon(
                     icon: const Icon(
                       Icons.forum,
                       size: smallIconSize,
                     ),
-                    label: Text('回复：${thread.replyCount}'),
+                    label: Text(
+                      '回复：${thread.replyCount}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
                     ),
                     onPressed: () {},
                   ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.signal_cellular_alt,
-                        size: smallIconSize,
-                      ),
-                      smallSpacing,
-                      Text('查看：${thread.viewCount}'),
-                    ],
+                  TextButton.icon(
+                    icon: const Icon(
+                      Icons.signal_cellular_alt,
+                      size: smallIconSize,
+                    ),
+                    label: Text(
+                      '查看：${thread.viewCount}',
+                      style: const TextStyle(fontSize: 12),
+                    ),
+                    style: const ButtonStyle(
+                      alignment: Alignment.centerLeft,
+                    ),
+                    onPressed: () {},
                   ),
                   TextButton.icon(
                     icon: const Icon(
@@ -105,18 +121,23 @@ class ThreadCard extends ConsumerWidget {
                     ),
                     onPressed: () {},
                   ),
-                  Row(
-                    children: [
-                      const Icon(
-                        Icons.access_time,
+                  Tooltip(
+                    message: DateFormat('yyyy-MM-dd hh:mm:ss')
+                        .format(thread.latestReplyTime),
+                    child: TextButton.icon(
+                      icon: const Icon(
+                        Icons.hourglass_bottom,
                         size: smallIconSize,
                       ),
-                      smallSpacing,
-                      Text(
+                      label: Text(
                         '回复时间：${timeDifferenceToString(_currentTime, thread.latestReplyTime)}',
                         style: const TextStyle(fontSize: 12),
                       ),
-                    ],
+                      style: const ButtonStyle(
+                        alignment: Alignment.centerLeft,
+                      ),
+                      onPressed: () {},
+                    ),
                   ),
                 ],
               ),
