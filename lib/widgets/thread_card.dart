@@ -40,6 +40,7 @@ class ThreadCard extends ConsumerWidget {
                 ],
               ),
               GridView(
+                physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
