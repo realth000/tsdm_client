@@ -1,9 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../models/normal_thread.dart';
-import '../../providers/dio_provider.dart';
 import '../../widgets/network_widget.dart';
 import '../../widgets/thread_card.dart';
 
@@ -23,18 +21,6 @@ class ForumPage extends ConsumerStatefulWidget {
 
 class _ForumPageState extends ConsumerState<ForumPage> {
   final _threadScrollController = ScrollController(keepScrollOffset: true);
-
-  late Future<Response<dynamic>> _data;
-
-  void _loadData() {
-    _data = ref.read(dioProvider).get(widget._fetchUrl);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
 
   Widget _buildNormalThreadList(
     BuildContext context,

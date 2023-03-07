@@ -1,9 +1,7 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../models/forum.dart';
-import '../../providers/dio_provider.dart';
 import '../../widgets/forum_card.dart';
 import '../../widgets/network_widget.dart';
 
@@ -27,18 +25,6 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
   _TCHomePageState();
 
   final _forumListScrollController = ScrollController(keepScrollOffset: true);
-
-  late Future<Response<dynamic>> _data;
-
-  void _loadData() {
-    _data = ref.read(dioProvider).get(widget.fetchUrl);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _loadData();
-  }
 
   @override
   void dispose() {
