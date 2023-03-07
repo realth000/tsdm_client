@@ -7,11 +7,12 @@ import 'package:html/parser.dart' as html_parser;
 import '../providers/dio_provider.dart';
 
 /// A widget that retrieve data from network and supports refresh.
-class NetworkWidget extends ConsumerStatefulWidget {
+class NetworkList<T> extends ConsumerStatefulWidget {
   /// Constructor.
-  const NetworkWidget(
-    this.fetchUrl,
-    this.bodyBuilder, {
+  const NetworkList(
+    this.fetchUrl, {
+    required this.listBuilder,
+    required this.widgetBuilder,
     super.key,
   });
 
@@ -20,21 +21,28 @@ class NetworkWidget extends ConsumerStatefulWidget {
 
   /// Build [Widget] from given [html.Document].
   ///
-  /// User needs to provide this method and [NetworkWidget] give it ability to
-  /// refresh by pressing refresh button.
-  final Widget Function(html.Document document) bodyBuilder;
+  /// User needs to provide this method and [NetworkList] refresh by pressing
+  /// refresh button.
+  final List<T> Function(html.Document document) listBuilder;
+
+  /// Build a list of [Widget].
+  final Widget Function(BuildContext, T) widgetBuilder;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _NetworkWidgetState();
 }
 
-class _NetworkWidgetState extends ConsumerState<NetworkWidget>
+class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
-  late Future<Response<dynamic>> _data;
+  late Future<Response<dynamic>> _networkData;
 
   void _loadData() {
-    _data = ref.read(dioProvider).get(widget.fetchUrl);
+    _networkData = ref.read(dioProvider).get(widget.fetchUrl);
   }
+
+  final _allData = <T>[];
+
+  final _listScrollController = ScrollController();
 
   late final AnimationController _menuAniController;
 
@@ -56,7 +64,9 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget>
 
   @override
   void dispose() {
+    _listScrollController.dispose();
     _menuAniController.dispose();
+    super.dispose();
     super.dispose();
   }
 
@@ -72,7 +82,7 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget>
 
   @override
   Widget build(BuildContext context) => FutureBuilder(
-        future: _data,
+        future: _networkData,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(
@@ -83,10 +93,18 @@ class _NetworkWidgetState extends ConsumerState<NetworkWidget>
               child: CircularProgressIndicator(),
             );
           } else {
+            final newData =
+                widget.listBuilder(html_parser.parse(snapshot.data!.data));
+            _allData.addAll(newData);
             return Stack(
               alignment: Alignment.bottomRight,
               children: [
-                widget.bodyBuilder(html_parser.parse(snapshot.data!.data)),
+                ListView.builder(
+                  controller: _listScrollController,
+                  itemCount: _allData.length,
+                  itemBuilder: (context, index) =>
+                      widget.widgetBuilder(context, _allData[index]),
+                ),
                 AnimatedPositioned(
                   right: 20,
                   bottom: _bottom1,

@@ -10,13 +10,13 @@ import 'space.dart';
 /// Card to show forum information.
 class ForumCard extends ConsumerWidget {
   /// Constructor.
-  ForumCard({required Forum forum, super.key}) : _forum = forum {
+  ForumCard(this.forum, {super.key}) {
     _buildLatestInfoLine =
-        !(_forum.latestThreadTime == null && _forum.threadTodayCount == null);
+        !(forum.latestThreadTime == null && forum.threadTodayCount == null);
   }
 
   /// Forum id.
-  final Forum _forum;
+  final Forum forum;
 
   late final bool _buildLatestInfoLine;
 
@@ -27,19 +27,19 @@ class ForumCard extends ConsumerWidget {
         Icons.access_time,
         size: smallIconSize,
       ),
-      Text('最近：${_forum.latestThreadTimeText}'),
+      Text('最近：${forum.latestThreadTimeText}'),
     ];
     final todayItems = [
       const Icon(
         Icons.campaign,
         size: smallIconSize,
       ),
-      Text('新帖：${_forum.threadTodayCount}'),
+      Text('新帖：${forum.threadTodayCount}'),
     ];
-    if (_forum.latestThreadTime != null) {
+    if (forum.latestThreadTime != null) {
       itemList.addAll(latestItems);
     }
-    if (_forum.threadTodayCount != null) {
+    if (forum.threadTodayCount != null) {
       if (itemList.isNotEmpty) {
         itemList.add(smallSpacing);
       }
@@ -57,11 +57,11 @@ class ForumCard extends ConsumerWidget {
             width: 100,
             height: 50,
             child: Image.network(
-              _forum.iconUrl,
+              forum.iconUrl,
             ),
           ),
           title: Text(
-            _forum.name,
+            forum.name,
             style: headerTextStyle(context),
             softWrap: false,
             maxLines: 1,
@@ -75,10 +75,10 @@ class ForumCard extends ConsumerWidget {
                     Icons.chat_bubble,
                     size: smallIconSize,
                   ),
-                  Text('主题：${_forum.threadCount}'),
+                  Text('主题：${forum.threadCount}'),
                   smallSpacing,
                   const Icon(Icons.forum, size: smallIconSize),
-                  Text('贴数：${_forum.replyCount}'),
+                  Text('贴数：${forum.replyCount}'),
                 ],
               ),
               if (_buildLatestInfoLine) _buildLatestInfoRow(context, ref),
@@ -89,10 +89,10 @@ class ForumCard extends ConsumerWidget {
             context.pushNamed(
               TClientRoute.forum,
               params: <String, String>{
-                'fid': '${_forum.forumID}',
+                'fid': '${forum.forumID}',
               },
               extra: <String, String>{
-                'appBarTitle': _forum.name,
+                'appBarTitle': forum.name,
               },
             );
           },

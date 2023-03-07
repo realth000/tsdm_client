@@ -3,7 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../models/forum.dart';
 import '../../widgets/forum_card.dart';
-import '../../widgets/network_widget.dart';
+import '../../widgets/network_list.dart';
 
 /// App homepage.
 ///
@@ -24,36 +24,20 @@ class _TCHomePageState extends ConsumerState<TCHomePage> {
   /// Constructor.
   _TCHomePageState();
 
-  final _forumListScrollController = ScrollController(keepScrollOffset: true);
-
   @override
-  void dispose() {
-    _forumListScrollController.dispose();
-    super.dispose();
-  }
-
-  Widget _buildForumList(
-    BuildContext context,
-    WidgetRef ref,
-    List<Forum> forumData,
-  ) =>
-      ListView.builder(
-        controller: _forumListScrollController,
-        itemCount: forumData.length,
-        itemBuilder: (context, index) => ForumCard(forum: forumData[index]),
+  Widget build(BuildContext context) => NetworkList<Forum>(
+        widget.fetchUrl,
+        listBuilder: <forum>(document) {
+          final forumData = <Forum>[];
+          document.getElementsByClassName('fl_g').forEach((forumElement) {
+            final forum = buildForumFromElement(forumElement);
+            if (forum == null) {
+              return;
+            }
+            forumData.add(forum);
+          });
+          return forumData;
+        },
+        widgetBuilder: <forum>(context, forum) => ForumCard(forum),
       );
-
-  @override
-  Widget build(BuildContext context) =>
-      NetworkWidget(widget.fetchUrl, (document) {
-        final forumData = <Forum>[];
-        document.getElementsByClassName('fl_g').forEach((forumElement) {
-          final data = buildForumFromElement(forumElement);
-          if (data == null) {
-            return;
-          }
-          forumData.add(data);
-        });
-        return _buildForumList(context, ref, forumData);
-      });
 }
