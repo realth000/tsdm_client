@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/parser.dart' as html_parser;
+import 'package:window_manager/window_manager.dart';
 
-import 'models/forum.dart';
-import 'models/normal_thread.dart';
-import 'providers/dio_provider.dart';
 import 'providers/settings_provider.dart';
 import 'routes/app_routes.dart';
 import 'themes/app_themes.dart';
+import 'utils/platform.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initSettings();
+  if (isDesktop) {
+    await _initWindow();
+  }
   runApp(const TClientApp());
 }
 
@@ -35,56 +36,31 @@ class TClientApp extends StatelessWidget {
       );
 }
 
-class MyHomePage extends ConsumerStatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  ConsumerState<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends ConsumerState<MyHomePage> {
-  @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(
-          title: const Text('TSDM Client'),
+/// Setup main window settings including size and position.
+///
+/// If window is set to be in center, ignore position,
+Future<void> _initWindow() async {
+  await windowManager.ensureInitialized();
+  final settings = ProviderContainer();
+  final center = settings.read(settingsProvider).windowInCenter;
+  // Only apply window position when not set in center.
+  if (!center) {
+    await windowManager.setPosition(
+      Offset(
+        settings.read(settingsProvider).windowPositionDx,
+        settings.read(settingsProvider).windowPositionDy,
+      ),
+    );
+  }
+  await windowManager.waitUntilReadyToShow(
+      WindowOptions(
+        size: Size(
+          settings.read(settingsProvider).windowWidth,
+          settings.read(settingsProvider).windowHeight,
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              Text(
-                '_counter',
-                style: Theme.of(context).textTheme.headlineMedium,
-              ),
-            ],
-          ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () async {
-            final rootResp = await ref
-                .read(dioProvider)
-                .get('https://www.tsdm39.net/forum.php');
-            final rootData = html_parser.parse(rootResp.data);
-            rootData.getElementsByClassName('fl_g').forEach((forum) {
-              final model = buildForumFromElement(forum);
-              print(model);
-            });
-            return;
-            final resp = await ref.read(dioProvider).get(
-                  'https://www.tsdm39.net/forum.php?mod=forumdisplay&fid=247',
-                );
-            final a = html_parser.parse(resp.data);
-            a.body!
-                .getElementsByClassName('tsdm_normalthread')
-                .forEach((thread) {
-              final model = buildNormalThreadFromElement(thread);
-            });
-          },
-          tooltip: 'Increment',
-          child: const Icon(Icons.add),
-        ), // This trailing comma makes auto-formatting nicer for build methods.
-      );
+        center: center,
+      ), () async {
+    await windowManager.show();
+    await windowManager.focus();
+  });
 }

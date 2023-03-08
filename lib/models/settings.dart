@@ -11,6 +11,11 @@ class Settings with _$Settings {
     required String dioAcceptEncoding,
     required String dioAcceptLanguage,
     required String dioUserAgent,
+    required double windowWidth,
+    required double windowHeight,
+    required double windowPositionDx,
+    required double windowPositionDy,
+    required bool windowInCenter,
   }) = _Settings;
 }
 
@@ -20,4 +25,9 @@ const settingsMap = <String, Type>{
   'dioAcceptEncoding': String,
   'dioAcceptLanguage': String,
   'dioUserAgent': String,
+  'windowWidth': double,
+  'windowHeight': double,
+  'windowPositionDx': double,
+  'windowPositionDy': double,
+  'windowInCenter': bool,
 };

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -23,6 +25,16 @@ class SettingsNotifier extends StateNotifier<Settings> {
                 _defaultDioAcceptLanguage,
             dioUserAgent:
                 _storage.getString('dioUserAgent') ?? _defaultDioUserAgent,
+            windowWidth:
+                _storage.getDouble('windowWidth') ?? _defaultWindowWidth,
+            windowHeight:
+                _storage.getDouble('windowHeight') ?? _defaultWindowHeight,
+            windowPositionDx: _storage.getDouble('windowPositionDx') ??
+                _defaultWindowPositionDx,
+            windowPositionDy: _storage.getDouble('windowPositionDy') ??
+                _defaultWindowPositionDy,
+            windowInCenter:
+                _storage.getBool('windowInCenter') ?? _defaultWindowInCenter,
           ),
         );
 
@@ -40,6 +52,39 @@ class SettingsNotifier extends StateNotifier<Settings> {
   /// Dio config: User-Agent.
   static const String _defaultDioUserAgent =
       'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.57';
+
+  /// Window position config on desktop platforms.
+  static const _defaultWindowPositionDx = 0.0;
+
+  /// Window position config on desktop platforms.
+  static const _defaultWindowPositionDy = 0.0;
+
+  /// Window width config on desktop platforms.
+  static const _defaultWindowWidth = 600.0;
+
+  /// Window height config on desktop platforms.
+  static const _defaultWindowHeight = 800.0;
+
+  /// Window whether in the center of screen config on desktop platforms.
+  static const _defaultWindowInCenter = false;
+
+  Future<void> setWindowSize(Size size) async {
+    await _storage.saveDouble('windowWidth', size.width);
+    await _storage.saveDouble('windowHeight', size.height);
+    state = state.copyWith(
+      windowPositionDx: size.width,
+      windowPositionDy: size.height,
+    );
+  }
+
+  Future<void> setWindowPosition(Offset offset) async {
+    await _storage.saveDouble('windowPositionDx', offset.dx);
+    await _storage.saveDouble('windowPositionDy', offset.dy);
+    state = state.copyWith(
+      windowPositionDx: offset.dx,
+      windowPositionDy: offset.dy,
+    );
+  }
 }
 
 /// Init settings, must call before start.

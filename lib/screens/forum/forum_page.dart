@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../models/normal_thread.dart';
+import '../../states/consumer_window_state.dart';
 import '../../widgets/network_list.dart';
 import '../../widgets/thread_card.dart';
 
@@ -19,7 +20,7 @@ class ForumPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ForumPageState();
 }
 
-class _ForumPageState extends ConsumerState<ForumPage> {
+class _ForumPageState extends ConsumerWindowState<ForumPage> {
   @override
   Widget build(BuildContext context) => NetworkList<NormalThread>(
         widget._fetchUrl,

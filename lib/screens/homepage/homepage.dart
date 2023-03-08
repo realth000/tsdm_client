@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 import '../../models/forum.dart';
+import '../../states/consumer_window_state.dart';
 import '../../widgets/forum_card.dart';
 import '../../widgets/network_list.dart';
 
@@ -20,7 +21,7 @@ class TCHomePage extends ConsumerStatefulWidget {
 }
 
 /// State of homepage.
-class _TCHomePageState extends ConsumerState<TCHomePage> {
+class _TCHomePageState extends ConsumerWindowState<TCHomePage> {
   /// Constructor.
   _TCHomePageState();
 
