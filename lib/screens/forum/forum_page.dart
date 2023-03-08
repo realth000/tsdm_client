@@ -37,5 +37,6 @@ class _ForumPageState extends ConsumerState<ForumPage> {
           return normalThreadData;
         },
         widgetBuilder: <thread>(context, thread) => ThreadCard(thread),
+        canFetchMorePages: true,
       );
 }

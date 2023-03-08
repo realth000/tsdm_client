@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart';
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as html;
@@ -13,11 +13,19 @@ class NetworkList<T> extends ConsumerStatefulWidget {
     this.fetchUrl, {
     required this.listBuilder,
     required this.widgetBuilder,
+    this.canFetchMorePages = false,
+    this.pageNumber = 1,
     super.key,
   });
 
+  /// Whether can fetch more pages.
+  final bool canFetchMorePages;
+
   /// Url to fetch data.
   final String fetchUrl;
+
+  /// Fetch page number "&page=[pageNumber]".
+  final int pageNumber;
 
   /// Build [Widget] from given [html.Document].
   ///
@@ -34,19 +42,36 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
-  late Future<Response<dynamic>> _networkData;
+  Future<void> _loadData() async {
+    final d1 = await ref.read(dioProvider).get(
+          '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
+        );
+    final d2 = widget.listBuilder(html_parser.parse(d1.data));
+    setState(() {
+      _allData.addAll(d2);
+    });
+    _pageNumber++;
+  }
 
-  void _loadData() {
-    _networkData = ref.read(dioProvider).get(widget.fetchUrl);
+  void _clearData() {
+    _pageNumber = 1;
+    _allData.clear();
   }
 
   final _allData = <T>[];
+
+  final _refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
 
   final _listScrollController = ScrollController();
 
   late final AnimationController _menuAniController;
 
   bool _showMenu = false;
+
+  late int _pageNumber = widget.pageNumber;
 
   static const _aniDuration = Duration(milliseconds: 200);
 
@@ -55,7 +80,6 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
   @override
   void initState() {
     super.initState();
-    _loadData();
     _menuAniController = AnimationController(
       vsync: this,
       duration: _aniDuration,
@@ -64,9 +88,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
 
   @override
   void dispose() {
-    _listScrollController.dispose();
     _menuAniController.dispose();
-    super.dispose();
+    _listScrollController.dispose();
+    _refreshController.dispose();
     super.dispose();
   }
 
@@ -81,69 +105,88 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
   }
 
   @override
-  Widget build(BuildContext context) => FutureBuilder(
-        future: _networkData,
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text(snapshot.error.toString()),
-            );
-          } else if (snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else {
-            final newData =
-                widget.listBuilder(html_parser.parse(snapshot.data!.data));
-            _allData.addAll(newData);
-            return Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                ListView.builder(
-                  controller: _listScrollController,
-                  itemCount: _allData.length,
-                  itemBuilder: (context, index) =>
-                      widget.widgetBuilder(context, _allData[index]),
-                ),
-                AnimatedPositioned(
-                  right: 20,
-                  bottom: _bottom1,
-                  duration: _aniDuration,
-                  child: FloatingActionButton(
-                    heroTag: 2,
-                    child: const Icon(Icons.refresh),
-                    onPressed: () {
-                      setState(() {
-                        _loadData();
-                        _showMenu = false;
-                        _closeMenuWidgets();
-                      });
-                    },
-                  ),
-                ),
-                Positioned(
-                  right: 20,
-                  bottom: 20,
-                  child: FloatingActionButton(
-                    onPressed: () {
-                      setState(() {
-                        _showMenu = !_showMenu;
-                        if (_showMenu) {
-                          _openMenuWidgets();
-                        } else {
-                          _closeMenuWidgets();
-                        }
-                      });
-                    },
-                    child: AnimatedIcon(
-                      icon: AnimatedIcons.menu_close,
-                      progress: _menuAniController,
-                    ),
-                  ),
-                ),
-              ],
-            );
-          }
-        },
+  Widget build(BuildContext context) => Stack(
+        alignment: Alignment.bottomRight,
+        children: [
+          EasyRefresh(
+            header: const ClassicHeader(
+              dragText: '下拉刷新',
+              armedText: '松开刷新',
+              readyText: '正在努力刷新 Q_Q',
+              processingText: '正在努力刷新 Q_Q',
+              processedText: '刷新好了 >_<',
+              noMoreText: '没有更多了 T_T',
+              messageText: '上次刷新是在…… %T',
+            ),
+            footer: const ClassicFooter(
+              dragText: '下拉刷新',
+              armedText: '松开刷新',
+              readyText: '正在努力刷新 Q_Q',
+              processingText: '正在努力刷新 Q_Q',
+              processedText: '刷新好了 >_<',
+              noMoreText: '没有更多了 T_T',
+              messageText: '上次刷新是在…… %T',
+            ),
+            scrollController: _listScrollController,
+            controller: _refreshController,
+            refreshOnStart: true,
+            child: ListView.builder(
+              controller: _listScrollController,
+              itemCount: _allData.length,
+              itemBuilder: (context, index) =>
+                  widget.widgetBuilder(context, _allData[index]),
+            ),
+            onRefresh: () async {
+              _clearData();
+              await _loadData();
+              _refreshController
+                ..finishRefresh()
+                ..resetFooter();
+            },
+            onLoad: () async {
+              if (!widget.canFetchMorePages) {
+                _clearData();
+              }
+              await _loadData();
+              _refreshController.finishLoad();
+            },
+          ),
+          AnimatedPositioned(
+            right: 20,
+            bottom: _bottom1,
+            duration: _aniDuration,
+            child: FloatingActionButton(
+              heroTag: 2,
+              child: const Icon(Icons.refresh),
+              onPressed: () async {
+                await _refreshController.callRefresh();
+                setState(() {
+                  _showMenu = false;
+                  _closeMenuWidgets();
+                });
+              },
+            ),
+          ),
+          Positioned(
+            right: 20,
+            bottom: 20,
+            child: FloatingActionButton(
+              onPressed: () {
+                setState(() {
+                  _showMenu = !_showMenu;
+                  if (_showMenu) {
+                    _openMenuWidgets();
+                  } else {
+                    _closeMenuWidgets();
+                  }
+                });
+              },
+              child: AnimatedIcon(
+                icon: AnimatedIcons.menu_close,
+                progress: _menuAniController,
+              ),
+            ),
+          ),
+        ],
       );
 }
