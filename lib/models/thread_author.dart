@@ -14,5 +14,8 @@ class ThreadAuthor with _$ThreadAuthor {
 
     /// User homepage url.
     required String url,
+
+    /// User avatar, may be null.
+    String? avatarUrl,
   }) = _ThreadAuthor;
 }
