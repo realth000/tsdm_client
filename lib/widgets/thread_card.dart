@@ -54,7 +54,7 @@ class ThreadCard extends ConsumerWidget {
                     ),
                     label: Text(
                       '作者：${thread.author.name}',
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
@@ -71,7 +71,7 @@ class ThreadCard extends ConsumerWidget {
                       ),
                       label: Text(
                         '发布时间：${DateFormat('yyyy-MM-dd').format(thread.publishDate)}',
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: smallTextSize),
                       ),
                       style: const ButtonStyle(
                         alignment: Alignment.centerLeft,
@@ -86,7 +86,7 @@ class ThreadCard extends ConsumerWidget {
                     ),
                     label: Text(
                       '回复：${thread.replyCount}',
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
@@ -100,7 +100,7 @@ class ThreadCard extends ConsumerWidget {
                     ),
                     label: Text(
                       '查看：${thread.viewCount}',
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
@@ -114,7 +114,7 @@ class ThreadCard extends ConsumerWidget {
                     ),
                     label: Text(
                       '最后回复：${thread.latestReplyAuthor.name}',
-                      style: const TextStyle(fontSize: 12),
+                      style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
                       alignment: Alignment.centerLeft,
@@ -131,7 +131,7 @@ class ThreadCard extends ConsumerWidget {
                       ),
                       label: Text(
                         '回复时间：${timeDifferenceToString(_currentTime, thread.latestReplyTime)}',
-                        style: const TextStyle(fontSize: 12),
+                        style: const TextStyle(fontSize: smallTextSize),
                       ),
                       style: const ButtonStyle(
                         alignment: Alignment.centerLeft,

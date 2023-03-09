@@ -7,4 +7,7 @@ TextStyle headerTextStyle(BuildContext context) => const TextStyle(
     );
 
 /// Small icon size.
-const double smallIconSize = 15;
+const double smallIconSize = 18;
+
+/// Small text size.
+const double smallTextSize = 14;
