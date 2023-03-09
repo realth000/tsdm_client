@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 
@@ -30,45 +29,32 @@ class Forum with _$Forum {
 ///
 /// <td class="fl_g" width="24.9%">
 Forum? buildForumFromElement(Element element) {
-  if (element.children.length != 2) {
+  if (element.children.length != 3) {
     return null;
   }
   final forumIconUrl = element
-          .childAtOrNull(0)
-          ?.childAtOrNull(0)
+          .childAtOrNull(1)
+          ?.childAtOrNull(1)
           ?.childAtOrNull(0)
           ?.attributes['data-original'] ??
       element
-          .childAtOrNull(0)
-          ?.childAtOrNull(0)
+          .childAtOrNull(1)
+          ?.childAtOrNull(1)
           ?.childAtOrNull(0)
           ?.attributes['src'];
 
   // <dl>
-  final forumRootNode = element.childAtOrNull(1)?.childAtOrNull(0);
+  final forumRootNode = element.childAtOrNull(2)?.childAtOrNull(0);
   // <a href="forum.php?mod=forumdisplay&amp;fid=8">新番下载</a>
   final forumInfoNode = forumRootNode?.childAtOrNull(0)?.childAtOrNull(0);
   final forumUrl = forumInfoNode?.firstHref();
   final forumName = forumInfoNode?.text;
-  final forumThreadTodayCount = forumRootNode
-      ?.childAtOrNull(0)
-      ?.childAtOrNull(1)
-      ?.text
-      .trim()
-      .replaceAll('(', '')
-      .replaceAll(')', '');
-  final forumThreadCount = forumRootNode
-      ?.childAtOrNull(1)
-      ?.childAtOrNull(0)
-      ?.text
-      .split(' ')
-      .elementAtOrNull(1);
-  final forumReplyCount = forumRootNode
-      ?.childAtOrNull(1)
-      ?.childAtOrNull(1)
-      ?.text
-      .split(' ')
-      .elementAtOrNull(1);
+  final forumThreadTodayCount =
+      forumRootNode?.childAtOrNull(1)?.childAtOrNull(2)?.childAtOrNull(1)?.text;
+  final forumThreadCount =
+      forumRootNode?.childAtOrNull(1)?.childAtOrNull(0)?.childAtOrNull(1)?.text;
+  final forumReplyCount =
+      forumRootNode?.childAtOrNull(1)?.childAtOrNull(1)?.childAtOrNull(1)?.text;
   final forumLatestThreadUrl = forumRootNode?.childAtOrNull(2)?.firstHref();
   final forumLatestThreadTime = forumRootNode
       ?.childAtOrNull(2)
