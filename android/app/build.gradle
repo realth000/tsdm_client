@@ -47,7 +47,10 @@ android {
         applicationId "kzs.th000.tsdm_client"
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
+
+        // webview_flutter_android acquires minSdkVersion >= 19, restore this when no longer use it.
+        // minSdkVersion flutter.minSdkVersion
+        minSdkVersion 19
         targetSdkVersion 33
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
