@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../screens/forum/forum_page.dart';
 import '../screens/homepage/homepage.dart';
+import '../screens/thread/thread_page.dart';
 import '../widgets/app_scaffold.dart';
 
 /// All app routes.
@@ -36,6 +37,9 @@ class TClientRoute {
 
   /// App settings page.
   static const String settings = '/settings';
+
+  /// Thread page.
+  static const String thread = '/thread/:tid';
 }
 
 /// All app routes.
@@ -52,6 +56,13 @@ final tClientRouter = GoRouter(
       path: TClientRoute.forum,
       builder: (state) => ForumPage(
         fid: state.params['fid']!,
+      ),
+    ),
+    AppRoute(
+      path: TClientRoute.thread,
+      builder: (state) => ThreadPage(
+        threadID: state.params['tid']!,
+        pageNumber: state.params['pageNumber'] ?? '1',
       ),
     ),
   ],

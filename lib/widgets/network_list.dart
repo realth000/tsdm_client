@@ -47,6 +47,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
           '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
         );
     final d2 = widget.listBuilder(html_parser.parse(d1.data));
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _allData.addAll(d2);
     });

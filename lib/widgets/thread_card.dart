@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../models/normal_thread.dart';
+import '../routes/app_routes.dart';
 import '../themes/widget_themes.dart';
 import '../utils/time.dart';
 import 'space.dart';
@@ -32,9 +34,22 @@ class ThreadCard extends ConsumerWidget {
                   ),
                   smallSpacing,
                   Expanded(
-                    child: Text(
-                      thread.title,
-                      style: headerTextStyle(context),
+                    child: TextButton(
+                      onPressed: () {
+                        context.pushNamed(
+                          TClientRoute.thread,
+                          params: <String, String>{
+                            'tid': thread.threadID,
+                          },
+                          extra: <String, String>{
+                            'appBarTitle': thread.title,
+                          },
+                        );
+                      },
+                      child: Text(
+                        thread.title,
+                        style: headerTextStyle(context),
+                      ),
                     ),
                   ),
                 ],

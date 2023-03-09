@@ -28,7 +28,7 @@ class _TCHomePageState extends ConsumerWindowState<TCHomePage> {
   @override
   Widget build(BuildContext context) => NetworkList<Forum>(
         widget.fetchUrl,
-        listBuilder: <forum>(document) {
+        listBuilder: (document) {
           final forumData = <Forum>[];
           document.getElementsByClassName('fl_g').forEach((forumElement) {
             final forum = buildForumFromElement(forumElement);

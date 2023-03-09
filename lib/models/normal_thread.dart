@@ -21,6 +21,9 @@ class NormalThread with _$NormalThread {
     /// Thread url.
     required String url,
 
+    /// Thread id.
+    required String threadID,
+
     /// Thread author, contains username and user page url.
     required ThreadAuthor author,
 
@@ -116,9 +119,14 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       threadLastReplyTime == null) {
     return null;
   }
+  final threadID = Uri.parse(addUrlPrefix(threadUrl)).queryParameters['tid'];
+  if (threadID == null) {
+    return null;
+  }
   return NormalThread(
     title: threadTitle,
     url: addUrlPrefix(threadUrl),
+    threadID: threadID,
     author: ThreadAuthor(
       name: threadAuthorName,
       url: threadAuthorUrl,
