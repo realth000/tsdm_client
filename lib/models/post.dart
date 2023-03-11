@@ -36,21 +36,16 @@ Post? buildPostFromElement(Element element) {
   final postID =
       element.childAtOrNull(0)?.attributes['id']?.replaceFirst('userinfo_', '');
   // <td class="pls">
-  final postInfoNode = element.childAtOrNull(0);
+  final postInfoNode =
+      element.childAtOrNull(0)?.querySelector('#ts_avatar_$postID');
   // <td class="plc tsdm_ftc">
   final postDataNode = element.childAtOrNull(1);
 
-  final postAuthorName = postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.text;
-  final postAuthorUrl = postInfoNode
-      ?.childAtOrNull(2)
-      ?.childAtOrNull(2)
-      ?.childAtOrNull(0)
-      ?.attributes['href'];
-  final tmpNode1 = postInfoNode
-      ?.childAtOrNull(2)
-      ?.childAtOrNull(2)
-      ?.childAtOrNull(0)
-      ?.childAtOrNull(0);
+  final postAuthorName = postInfoNode?.childAtOrNull(0)?.text;
+  final postAuthorUrl =
+      postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.attributes['href'];
+  final tmpNode1 =
+      postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0);
   final postAuthorAvatarUrl =
       tmpNode1?.attributes['data-original'] ?? tmpNode1?.attributes['src'];
   if (postID == null ||
