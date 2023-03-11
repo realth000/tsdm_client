@@ -5,8 +5,8 @@ import 'package:html/dom.dart';
 import '../utils/html_element.dart';
 import '../utils/prefix_url.dart';
 import '../utils/time.dart';
-import 'thread_author.dart';
 import 'thread_type.dart';
+import 'user.dart';
 
 part 'normal_thread.freezed.dart';
 
@@ -25,7 +25,7 @@ class NormalThread with _$NormalThread {
     required String threadID,
 
     /// Thread author, contains username and user page url.
-    required ThreadAuthor author,
+    required User author,
 
     /// Thread publish date, without publish hour level time.
     ///
@@ -35,7 +35,7 @@ class NormalThread with _$NormalThread {
     /// Author of the latest reply.
     ///
     /// If no reply in thread, also is the [author].
-    required ThreadAuthor latestReplyAuthor,
+    required User latestReplyAuthor,
 
     /// Time of latest reply, with hour level time.
     ///
@@ -95,12 +95,16 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   final threadPrice =
       titleNode?.getElementsByClassName('xw1').firstOrNull?.firstChild?.text;
   final threadAuthorUrl = authorNode?.childAtOrNull(0)?.firstHref();
+  final threadAuthorUid = threadAuthorUrl?.split('uid=').elementAtOrNull(1);
   final threadAuthorName = authorNode?.childAtOrNull(0)?.firstEndDeepText();
   final threadPublishDate = authorNode?.childAtOrNull(1)?.firstEndDeepText();
   final threadReplyCount = replyCountNode?.childAtOrNull(0)?.firstEndDeepText();
   final threadViewCount = replyCountNode?.childAtOrNull(1)?.firstEndDeepText();
 
   final threadLastReplyAuthorUrl = lastReplyNode?.childAtOrNull(0)?.firstHref();
+  // We only have username here.
+  // final threadLastReplyAuthorUid =
+  //     threadLastReplyAuthorUrl?.split('uid=').elementAtOrNull(1);
   final threadLastReplyAuthorName =
       lastReplyNode?.childAtOrNull(0)?.firstEndDeepText();
   final threadLastReplyTime = lastReplyNode
@@ -112,6 +116,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       threadUrl == null ||
       threadIconUrl == null ||
       threadAuthorUrl == null ||
+      threadAuthorUid == null ||
       threadAuthorName == null ||
       threadPublishDate == null ||
       threadLastReplyAuthorUrl == null ||
@@ -127,12 +132,13 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
     title: threadTitle,
     url: addUrlPrefix(threadUrl),
     threadID: threadID,
-    author: ThreadAuthor(
+    author: User(
       name: threadAuthorName,
+      uid: threadAuthorUid,
       url: threadAuthorUrl,
     ),
     publishDate: DateTime.parse(formatTimeStringWithUTC8(threadPublishDate)),
-    latestReplyAuthor: ThreadAuthor(
+    latestReplyAuthor: User(
       name: threadLastReplyAuthorName,
       url: threadLastReplyAuthorUrl,
     ),

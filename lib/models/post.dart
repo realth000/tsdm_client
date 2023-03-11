@@ -5,7 +5,7 @@ import 'package:html/dom.dart';
 import '../utils/html_element.dart';
 import '../utils/prefix_url.dart';
 import '../utils/time.dart';
-import 'thread_author.dart';
+import 'user.dart';
 
 part 'post.freezed.dart';
 
@@ -20,7 +20,7 @@ class Post with _$Post {
     required String postID,
 
     /// Post author, can not be null, should have avatar.
-    required ThreadAuthor author,
+    required User author,
 
     /// Post publish time.
     required DateTime publishTime,
@@ -44,19 +44,21 @@ Post? buildPostFromElement(Element element) {
   final postAuthorName = postInfoNode?.childAtOrNull(0)?.text;
   final postAuthorUrl =
       postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.attributes['href'];
+  final postAuthorUid = postAuthorUrl?.split('uid=').elementAtOrNull(1);
   final tmpNode1 =
       postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0);
   final postAuthorAvatarUrl =
       tmpNode1?.attributes['data-original'] ?? tmpNode1?.attributes['src'];
   if (postID == null ||
       postAuthorName == null ||
+      postAuthorUid == null ||
       postAuthorUrl == null ||
       postAuthorAvatarUrl == null) {
-    print('$postID $postAuthorName $postAuthorUrl $postAuthorAvatarUrl');
     return null;
   }
-  final postAuthor = ThreadAuthor(
+  final postAuthor = User(
     name: postAuthorName,
+    uid: postAuthorUid,
     url: addUrlPrefix(postAuthorUrl),
     avatarUrl: postAuthorAvatarUrl,
   );

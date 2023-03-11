@@ -16,6 +16,16 @@ class PostCard extends ConsumerWidget {
 
   // TODO: Handle better.
   @override
-  Widget build(BuildContext context, WidgetRef ref) =>
-      HtmlWidget(post.toString());
+  Widget build(BuildContext context, WidgetRef ref) => Card(
+        child: Column(
+          children: [
+            ListTile(
+              leading: Image.network(post.author.avatarUrl!),
+              title: Text(post.author.name),
+              subtitle: Text('uid ${post.author.uid ?? ""}'),
+            ),
+            HtmlWidget(post.data),
+          ],
+        ),
+      );
 }
