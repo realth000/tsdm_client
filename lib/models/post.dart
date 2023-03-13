@@ -69,7 +69,8 @@ Post? buildPostFromElement(Element element) {
   final postPublishTime = tmpNode2?.childAtOrNull(0)?.attributes['title'] ??
       tmpNode2?.text.split(' ').elementAtOrNull(1);
   final postData =
-      postDataNode?.getElementsByClassName('pct').elementAtOrNull(0)?.innerHtml;
+      postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
+  // postDataNode?.getElementsByClassName('pcb').elementAtOrNull(0)?.innerHtml;
   if (postPublishTime == null || postData == null) {
     return null;
   }
