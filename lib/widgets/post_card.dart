@@ -46,7 +46,10 @@ class PostCard extends ConsumerWidget {
                   style: hrefTextStyle(context),
                 ),
                 onTap: () async {
-                  await launchUrl(Uri.parse(e.attributes['href']!));
+                  await launchUrl(
+                    Uri.parse(e.attributes['href']!),
+                    mode: LaunchMode.externalApplication,
+                  );
                 },
               ),
             );
