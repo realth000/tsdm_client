@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../models/forum.dart';
 import '../routes/app_routes.dart';
 import '../themes/widget_themes.dart';
+import 'network_indicator_image.dart';
 import 'space.dart';
 
 /// Card to show forum information.
@@ -56,9 +57,7 @@ class ForumCard extends ConsumerWidget {
           leading: SizedBox(
             width: 100,
             height: 50,
-            child: Image.network(
-              forum.iconUrl,
-            ),
+            child: NetworkIndicatorImage(forum.iconUrl),
           ),
           title: Text(
             forum.name,

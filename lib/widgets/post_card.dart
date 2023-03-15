@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../models/post.dart';
 import '../themes/widget_themes.dart';
+import 'network_indicator_image.dart';
 
 /// Card for a [Post] model.
 ///
@@ -41,7 +42,7 @@ class PostCard extends ConsumerWidget {
                 splashColor: Colors.transparent,
                 splashFactory: NoSplash.splashFactory,
                 child: Text(
-                  e.text,
+                  e.text.trim(),
                   style: hrefTextStyle(context),
                 ),
                 onTap: () async {
@@ -62,9 +63,7 @@ class PostCard extends ConsumerWidget {
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.75,
                 ),
-                child: Image.network(
-                  imageSource,
-                ),
+                child: NetworkIndicatorImage(imageSource),
               ),
             );
           }
@@ -101,12 +100,15 @@ class PostCard extends ConsumerWidget {
         child: Column(
           children: [
             ListTile(
-              leading: Image.network(post.author.avatarUrl!),
+              leading: NetworkIndicatorImage(post.author.avatarUrl!),
               title: Text(post.author.name),
               subtitle: Text('uid ${post.author.uid ?? ""}'),
               onTap: () {},
             ),
-            _buildPostDataWidget(context, ref, post.data),
+            SizedBox(
+              width: MediaQuery.of(context).size.width,
+              child: _buildPostDataWidget(context, ref, post.data),
+            ),
           ],
         ),
       );
