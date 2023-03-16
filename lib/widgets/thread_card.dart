@@ -46,9 +46,12 @@ class ThreadCard extends ConsumerWidget {
                           },
                         );
                       },
-                      child: Text(
-                        thread.title,
-                        style: headerTextStyle(context),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          thread.title,
+                          style: headerTextStyle(context),
+                        ),
                       ),
                     ),
                   ),
