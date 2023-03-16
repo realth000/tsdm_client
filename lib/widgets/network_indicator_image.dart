@@ -21,5 +21,13 @@ class NetworkIndicatorImage extends StatelessWidget {
             child: CircularProgressIndicator(),
           );
         },
+        errorBuilder: (context, error, _) {
+          print('error: $error');
+          return const SizedBox(
+            height: 50,
+            width: 50,
+            child: Icon(Icons.account_circle),
+          );
+        },
       );
 }
