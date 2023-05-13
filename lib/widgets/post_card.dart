@@ -23,9 +23,8 @@ class PostCard extends ConsumerWidget {
     WidgetRef ref,
     String data,
   ) {
-    final rootWidgetColumn = Column(
+    const rootWidgetColumn = Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [],
     );
     final rootNode = html_parser.parse(data).body!;
 
@@ -79,18 +78,18 @@ class PostCard extends ConsumerWidget {
           ),
         );
       }
-      node.nodes.forEach((element) {
+      for (final element in node.nodes) {
         traverseNode(element, rootNode);
-      });
+      }
       return;
     }
 
     traverseNode(rootNode, rootNode);
 
     return RichText(
-      text: WidgetSpan(
+      text: const WidgetSpan(
         child: Padding(
-          padding: const EdgeInsets.all(8),
+          padding: EdgeInsets.all(8),
           child: rootWidgetColumn,
         ),
       ),

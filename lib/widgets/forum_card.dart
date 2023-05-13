@@ -87,7 +87,7 @@ class ForumCard extends ConsumerWidget {
           onTap: () {
             context.pushNamed(
               TClientRoute.forum,
-              params: <String, String>{
+              pathParameters: <String, String>{
                 'fid': '${forum.forumID}',
               },
               extra: <String, String>{

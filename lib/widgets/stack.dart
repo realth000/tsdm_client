@@ -14,7 +14,7 @@ Stack buildStack(Widget widget, Widget floatingWidget) => Stack(
           right: 20,
           bottom: 100,
           child: FloatingActionButton(
-            child: Icon(Icons.refresh),
+            child: const Icon(Icons.refresh),
             onPressed: () {},
           ),
         )

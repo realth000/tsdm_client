@@ -38,7 +38,7 @@ class ThreadCard extends ConsumerWidget {
                       onPressed: () {
                         context.pushNamed(
                           TClientRoute.thread,
-                          params: <String, String>{
+                          pathParameters: <String, String>{
                             'tid': thread.threadID,
                           },
                           extra: <String, String>{

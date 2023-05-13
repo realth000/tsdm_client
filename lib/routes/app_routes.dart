@@ -55,14 +55,14 @@ final tClientRouter = GoRouter(
     AppRoute(
       path: TClientRoute.forum,
       builder: (state) => ForumPage(
-        fid: state.params['fid']!,
+        fid: state.pathParameters['fid']!,
       ),
     ),
     AppRoute(
       path: TClientRoute.thread,
       builder: (state) => ThreadPage(
-        threadID: state.params['tid']!,
-        pageNumber: state.params['pageNumber'] ?? '1',
+        threadID: state.pathParameters['tid']!,
+        pageNumber: state.pathParameters['pageNumber'] ?? '1',
       ),
     ),
   ],
@@ -83,7 +83,7 @@ class AppRoute extends GoRoute {
           routes: routes,
           pageBuilder: (context, state) => MaterialPage(
             name: path,
-            arguments: state.params,
+            arguments: state.pathParameters,
             child: _buildScaffold(
               state,
               builder,
