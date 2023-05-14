@@ -13,7 +13,7 @@ import 'network_indicator_image.dart';
 /// Usually inside a [ThreadPage].
 class PostCard extends ConsumerWidget {
   /// Constructor.
-  const PostCard(this.post, {super.key});
+  PostCard(this.post, {super.key});
 
   /// [Post] model to show.
   final Post post;
@@ -23,9 +23,7 @@ class PostCard extends ConsumerWidget {
     WidgetRef ref,
     String data,
   ) {
-    const rootWidgetColumn = Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-    );
+    final c = <Widget>[];
     final rootNode = html_parser.parse(data).body!;
 
     void traverseNode(dom.Node? node, rootNode) {
@@ -36,7 +34,7 @@ class PostCard extends ConsumerWidget {
         final e = node as dom.Element;
         if (e.localName == 'a') {
           if (e.attributes.containsKey('href')) {
-            rootWidgetColumn.children.add(
+            c.add(
               InkWell(
                 splashColor: Colors.transparent,
                 splashFactory: NoSplash.splashFactory,
@@ -60,7 +58,7 @@ class PostCard extends ConsumerWidget {
               e.attributes['file'] ??
               '';
           if (imageSource.isNotEmpty) {
-            rootWidgetColumn.children.add(
+            c.add(
               ConstrainedBox(
                 constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.width * 0.75,
@@ -72,7 +70,7 @@ class PostCard extends ConsumerWidget {
           return;
         }
       } else if (node.nodeType == dom.Node.TEXT_NODE) {
-        rootWidgetColumn.children.add(
+        c.add(
           Text(
             node.text!.trim(),
           ),
@@ -87,10 +85,13 @@ class PostCard extends ConsumerWidget {
     traverseNode(rootNode, rootNode);
 
     return RichText(
-      text: const WidgetSpan(
+      text: WidgetSpan(
         child: Padding(
           padding: EdgeInsets.all(8),
-          child: rootWidgetColumn,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: c,
+          ),
         ),
       ),
     );
