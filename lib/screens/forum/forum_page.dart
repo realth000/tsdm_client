@@ -12,7 +12,7 @@ class ForumPage extends ConsumerStatefulWidget {
   const ForumPage({
     required String fid,
     super.key,
-  }) : _fetchUrl = 'https://www.tsdm39.net/forum.php?mod=forumdisplay&fid=$fid';
+  }) : _fetchUrl = 'https://www.tsdm39.com/forum.php?mod=forumdisplay&fid=$fid';
 
   final String _fetchUrl;
 

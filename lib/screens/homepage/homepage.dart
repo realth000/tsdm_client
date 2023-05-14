@@ -8,7 +8,7 @@ import '../../widgets/network_list.dart';
 
 /// App homepage.
 ///
-/// "https://www.tsdm39.net/forum.php"
+/// "https://www.tsdm39.com/forum.php"
 class TCHomePage extends ConsumerStatefulWidget {
   /// Constructor.
   const TCHomePage({required this.fetchUrl, super.key});

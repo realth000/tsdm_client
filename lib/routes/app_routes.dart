@@ -16,7 +16,7 @@ class TClientRoute {
   /// Need to specify forum id (fid).
   static const String forum = '/forum/:fid';
 
-  /// Homepage: "https://www.tsdm39.net/forum.php"
+  /// Homepage: "https://www.tsdm39.com/forum.php"
   static const String homepage = '/';
 
   /// App login page.
@@ -49,7 +49,7 @@ final tClientRouter = GoRouter(
       path: TClientRoute.homepage,
       appBarTitle: '论坛首页',
       builder: (_) => const TCHomePage(
-        fetchUrl: 'https://www.tsdm39.net/forum.php',
+        fetchUrl: 'https://www.tsdm39.com/forum.php',
       ),
     ),
     AppRoute(

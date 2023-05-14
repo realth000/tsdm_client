@@ -15,7 +15,7 @@ class ThreadPage extends ConsumerStatefulWidget {
     required this.pageNumber,
     super.key,
   }) : _fetchUrl =
-            'https://www.tsdm39.net/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
+            'https://www.tsdm39.com/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
 
   /// Thread ID, tid.
   final String threadID;
