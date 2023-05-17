@@ -78,7 +78,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   }
   final trRoot = threadElement.children.first;
   final iconNode = trRoot.getElementsByClassName('icn').firstOrNull;
-  final titleNode = trRoot.getElementsByClassName('new').firstOrNull;
+  final titleNode = trRoot.childAtOrNull(1);
   final replyCountNode = trRoot.getElementsByClassName('num').firstOrNull;
   final userNodeList = trRoot.getElementsByClassName('by');
   final authorNode = userNodeList.elementAtOrNull(0);
@@ -87,7 +87,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   final threadIconUrl =
       iconNode?.childAtOrNull(0)?.childAtOrNull(0)?.attributes['src'];
   final threadTypeUrl = titleNode?.childAtOrNull(1)?.firstHref();
-  final threadTypeName = titleNode?.childAtOrNull(1)?.firstEndDeepText();
+  final threadTypeName = titleNode?.childAtOrNull(0)?.firstEndDeepText();
   final threadUrl =
       titleNode?.getElementsByClassName('xst').firstOrNull?.attributes['href'];
   final threadTitle =
