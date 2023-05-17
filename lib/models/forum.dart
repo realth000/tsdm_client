@@ -44,17 +44,25 @@ Forum? buildForumFromElement(Element element) {
           ?.attributes['src'];
 
   // <dl>
-  final forumRootNode = element.childAtOrNull(2)?.childAtOrNull(0);
+  final forumRootNode = element.childAtOrNull(2);
   // <a href="forum.php?mod=forumdisplay&amp;fid=8">新番下载</a>
   final forumInfoNode = forumRootNode?.childAtOrNull(0)?.childAtOrNull(0);
   final forumUrl = forumInfoNode?.firstHref();
   final forumName = forumInfoNode?.text;
   final forumThreadTodayCount =
       forumRootNode?.childAtOrNull(1)?.childAtOrNull(2)?.childAtOrNull(1)?.text;
-  final forumThreadCount =
-      forumRootNode?.childAtOrNull(1)?.childAtOrNull(0)?.childAtOrNull(1)?.text;
-  final forumReplyCount =
-      forumRootNode?.childAtOrNull(1)?.childAtOrNull(1)?.childAtOrNull(1)?.text;
+  final forumThreadCount = forumRootNode
+      ?.childAtOrNull(1)
+      ?.childAtOrNull(0)
+      ?.text
+      .split(' ')
+      .elementAtOrNull(1);
+  final forumReplyCount = forumRootNode
+      ?.childAtOrNull(1)
+      ?.childAtOrNull(1)
+      ?.text
+      .split(' ')
+      .elementAtOrNull(1);
   final forumLatestThreadUrl = forumRootNode?.childAtOrNull(2)?.firstHref();
   final forumLatestThreadTime = forumRootNode
       ?.childAtOrNull(2)
@@ -70,6 +78,8 @@ Forum? buildForumFromElement(Element element) {
       forumIconUrl == null ||
       forumThreadCount == null ||
       forumReplyCount == null) {
+    print(
+        'failed to build forum page: $forumName $forumUrl $forumIconUrl $forumThreadCount $forumReplyCount ');
     return null;
   }
   final forumIDString = Uri.parse(forumUrl).queryParameters['fid'];
