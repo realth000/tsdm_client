@@ -1,9 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
+import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/html_element.dart';
-
-import 'post.dart';
 
 part 'thread_data.freezed.dart';
 

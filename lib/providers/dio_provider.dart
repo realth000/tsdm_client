@@ -1,7 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import 'settings_provider.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
 
 /// Provider of dio.
 ///

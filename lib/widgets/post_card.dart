@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
+import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../models/post.dart';
-import '../themes/widget_themes.dart';
-import 'network_indicator_image.dart';
 
 /// Card for a [Post] model.
 ///
-/// Usually inside a [ThreadPage].
+/// Usually inside a ThreadPage.
 class PostCard extends ConsumerWidget {
   /// Constructor.
   PostCard(this.post, {super.key});
@@ -26,7 +25,7 @@ class PostCard extends ConsumerWidget {
     final c = <Widget>[];
     final rootNode = html_parser.parse(data).body!;
 
-    void traverseNode(dom.Node? node, rootNode) {
+    void traverseNode(dom.Node? node, dom.Node rootNode) {
       if (node == null) {
         return;
       }

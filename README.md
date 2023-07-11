@@ -3,4 +3,5 @@
 用Flutter制作的天使动漫（TSDM）论坛客户端。
 
 # 状态
-🛠️ Under construction.
+
+🛠️ 开发中。

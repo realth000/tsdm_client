@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/themes/app_themes.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:window_manager/window_manager.dart';
-
-import 'providers/settings_provider.dart';
-import 'routes/app_routes.dart';
-import 'themes/app_themes.dart';
-import 'utils/platform.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

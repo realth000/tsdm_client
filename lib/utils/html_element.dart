@@ -11,8 +11,8 @@ extension AccessExtension on Element {
 extension GrepExtension on Element {
   /// Search the first value of attr "href" in pre-order use [Element] element
   /// as root node.
-  /// * Search in first child and next siblings when [next] is true.
-  /// * Search in previous siblings and parent when [next] is false.
+  /// * Search in first child and next siblings when next is true.
+  /// * Search in previous siblings and parent when next is false.
   /// If not found, return null;
   ///
   /// <a>

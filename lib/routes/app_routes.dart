@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-
-import '../screens/forum/forum_page.dart';
-import '../screens/homepage/homepage.dart';
-import '../screens/thread/thread_page.dart';
-import '../widgets/app_scaffold.dart';
+import 'package:tsdm_client/screens/forum/forum_page.dart';
+import 'package:tsdm_client/screens/homepage/homepage.dart';
+import 'package:tsdm_client/screens/thread/thread_page.dart';
+import 'package:tsdm_client/widgets/app_scaffold.dart';
 
 /// All app routes.
 class TClientRoute {
@@ -81,7 +80,7 @@ class AppRoute extends GoRoute {
   }) : super(
           name: path,
           routes: routes,
-          pageBuilder: (context, state) => MaterialPage(
+          pageBuilder: (context, state) => MaterialPage<void>(
             name: path,
             arguments: state.pathParameters,
             child: _buildScaffold(

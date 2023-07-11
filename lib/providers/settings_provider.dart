@@ -2,8 +2,7 @@ import 'dart:ui';
 
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
-import '../models/settings.dart';
+import 'package:tsdm_client/models/settings.dart';
 
 late final _SettingsService _storage;
 
@@ -94,6 +93,7 @@ Future<void> initSettings() async {
 
 class _SettingsService {
   late final SharedPreferences _sp;
+
   Future<_SettingsService> init() async {
     _sp = await SharedPreferences.getInstance();
     return this;

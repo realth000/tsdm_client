@@ -1,7 +1,6 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-
-import '../utils/platform.dart';
+import 'package:tsdm_client/utils/platform.dart';
 
 /// App themes.
 class AppTheme {

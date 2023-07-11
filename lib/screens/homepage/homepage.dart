@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../models/forum.dart';
-import '../../states/consumer_window_state.dart';
-import '../../widgets/forum_card.dart';
-import '../../widgets/network_list.dart';
+import 'package:tsdm_client/models/forum.dart';
+import 'package:tsdm_client/states/consumer_window_state.dart'
+    show ConsumerWindowState;
+import 'package:tsdm_client/widgets/forum_card.dart';
+import 'package:tsdm_client/widgets/network_list.dart';
 
 /// App homepage.
 ///
@@ -39,6 +39,6 @@ class _TCHomePageState extends ConsumerWindowState<TCHomePage> {
           });
           return forumData;
         },
-        widgetBuilder: <forum>(context, forum) => ForumCard(forum),
+        widgetBuilder: (context, forum) => ForumCard(forum),
       );
 }

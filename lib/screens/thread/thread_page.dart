@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../../models/post.dart';
-import '../../models/thread_data.dart';
-import '../../states/consumer_window_state.dart';
-import '../../widgets/network_list.dart';
-import '../../widgets/post_card.dart';
+import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/models/thread_data.dart';
+import 'package:tsdm_client/states/consumer_window_state.dart';
+import 'package:tsdm_client/widgets/network_list.dart';
+import 'package:tsdm_client/widgets/post_card.dart';
 
 /// Thread page.
 class ThreadPage extends ConsumerStatefulWidget {
@@ -35,13 +34,12 @@ class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
   Widget build(BuildContext context) => NetworkList<Post>(
         widget._fetchUrl,
         listBuilder: (document) {
-          final threadAllData = <Post>[];
           final threadDataNode = document.getElementById('postlist');
           if (threadDataNode == null) {
             return <Post>[];
           }
           return buildPostListFromThreadElement(threadDataNode);
         },
-        widgetBuilder: <Post>(context, post) => PostCard(post),
+        widgetBuilder: (context, post) => PostCard(post),
       );
 }

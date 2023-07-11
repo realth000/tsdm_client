@@ -1,11 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
-
-import '../utils/html_element.dart';
-import '../utils/prefix_url.dart';
-import '../utils/time.dart';
-import 'user.dart';
+import 'package:tsdm_client/models/user.dart';
+import 'package:tsdm_client/utils/html_element.dart';
+import 'package:tsdm_client/utils/prefix_url.dart';
+import 'package:tsdm_client/utils/time.dart';
 
 part 'post.freezed.dart';
 

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// Network image with loading indicator.
@@ -22,7 +23,9 @@ class NetworkIndicatorImage extends StatelessWidget {
           );
         },
         errorBuilder: (context, error, _) {
-          print('error: $error');
+          if (kDebugMode) {
+            print('error: $error');
+          }
           return const SizedBox(
             height: 50,
             width: 50,

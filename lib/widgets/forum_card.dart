@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-import '../models/forum.dart';
-import '../routes/app_routes.dart';
-import '../themes/widget_themes.dart';
-import 'network_indicator_image.dart';
-import 'space.dart';
+import 'package:tsdm_client/models/forum.dart';
+import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/space.dart';
 
 /// Card to show forum information.
 class ForumCard extends ConsumerWidget {

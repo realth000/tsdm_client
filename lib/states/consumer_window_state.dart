@@ -1,8 +1,7 @@
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:window_manager/window_manager.dart';
-
-import '../providers/settings_provider.dart';
-import '../utils/platform.dart';
 
 /// [ConsumerState] together with [WindowListener].
 abstract class ConsumerWindowState<T extends ConsumerStatefulWidget>
