@@ -52,14 +52,12 @@ Forum? buildForumFromElement(Element element) {
   final forumThreadTodayCount =
       forumRootNode?.childAtOrNull(1)?.childAtOrNull(2)?.childAtOrNull(1)?.text;
   final forumThreadCount = forumRootNode
-      ?.childAtOrNull(0)
       ?.childAtOrNull(1)
       ?.childAtOrNull(0)
       ?.text
       .split(' ')
       .elementAtOrNull(1);
   final forumReplyCount = forumRootNode
-      ?.childAtOrNull(0)
       ?.childAtOrNull(1)
       ?.childAtOrNull(1)
       ?.text
