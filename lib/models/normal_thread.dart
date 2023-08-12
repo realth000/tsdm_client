@@ -3,6 +3,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 import 'package:tsdm_client/models/thread_type.dart';
 import 'package:tsdm_client/models/user.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
@@ -73,6 +74,8 @@ class NormalThread with _$NormalThread {
 /// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
 NormalThread? buildNormalThreadFromElement(Element threadElement) {
   if (threadElement.children.length != 1) {
+    debug(
+        'failed to build normal thread: element children length is ${threadElement.children.length}');
     return null;
   }
   final trRoot = threadElement.children.first;
@@ -121,10 +124,13 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
       threadLastReplyAuthorUrl == null ||
       threadLastReplyAuthorName == null ||
       threadLastReplyTime == null) {
+    debug(
+        'failed to parse normal thread page: $threadTitle, $threadUrl, $threadIconUrl, $threadAuthorUrl, $threadAuthorUid, $threadAuthorName, $threadPublishDate, $threadLastReplyAuthorUrl, $threadLastReplyAuthorName, $threadLastReplyTime');
     return null;
   }
   final threadID = Uri.parse(addUrlPrefix(threadUrl)).queryParameters['tid'];
   if (threadID == null) {
+    debug('failed to parse normal thread page: thread id is null');
     return null;
   }
   return NormalThread(

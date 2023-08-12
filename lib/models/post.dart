@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 import 'package:tsdm_client/models/user.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
@@ -53,6 +54,8 @@ Post? buildPostFromElement(Element element) {
       postAuthorUid == null ||
       postAuthorUrl == null ||
       postAuthorAvatarUrl == null) {
+    debug(
+        'failed to parse post: $postID $postAuthorName $postAuthorUid $postAuthorUrl $postAuthorAvatarUrl');
     return null;
   }
   final postAuthor = User(
@@ -71,6 +74,7 @@ Post? buildPostFromElement(Element element) {
       postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
   // postDataNode?.getElementsByClassName('pcb').elementAtOrNull(0)?.innerHtml;
   if (postPublishTime == null || postData == null) {
+    debug('failed to parse post: $postPublishTime $postData');
     return null;
   }
   return Post(

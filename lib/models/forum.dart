@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
@@ -78,14 +79,13 @@ Forum? buildForumFromElement(Element element) {
       forumIconUrl == null ||
       forumThreadCount == null ||
       forumReplyCount == null) {
-    if (kDebugMode) {
-      print(
-          'failed to build forum page: $forumName $forumUrl $forumIconUrl $forumThreadCount $forumReplyCount ');
-    }
+    debug(
+        'failed to build forum page: $forumName $forumUrl $forumIconUrl $forumThreadCount $forumReplyCount ');
     return null;
   }
   final forumIDString = Uri.parse(forumUrl).queryParameters['fid'];
   if (forumIDString == null) {
+    debug('failed to build forum page: $forumIDString');
     return null;
   }
   return Forum(

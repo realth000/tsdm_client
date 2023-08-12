@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 
 part 'thread_data.freezed.dart';
@@ -38,6 +39,7 @@ ThreadData? buildThreadDataFromElement(Element element) {
       .elementAtOrNull(0)
       ?.getElementsByClassName('xi1');
   if (tmpElementList == null || tmpElementList.length != 2) {
+    debug('failed to parse thread data: $tmpElementList');
     return null;
   }
   tdViewCount = int.parse(tmpElementList[0].text);
@@ -74,6 +76,7 @@ ThreadData? buildThreadDataFromElement(Element element) {
     currentElement = currentElement.nextElementSibling;
   }
   if (tdID == null || tdTitle == null) {
+    debug('failed to parse thread data: $tdID $tdTitle');
     return null;
   }
 
@@ -87,9 +90,11 @@ ThreadData? buildThreadDataFromElement(Element element) {
 }
 
 /// Build a list of [Post] from the given [ThreadData] [Element].
+///
+/// [element]'s id is "postlist".
 List<Post> buildPostListFromThreadElement(Element element) {
-  final threadDataRootNode = element.childAtOrNull(0);
-  var currentElement = threadDataRootNode?.nextElementSibling;
+  final threadDataRootNode = element.childAtOrNull(1);
+  var currentElement = threadDataRootNode?.childAtOrNull(0);
   final tdPostList = <Post>[];
   while (currentElement != null) {
     // This while is a while (0), will not loop twice.
@@ -98,17 +103,22 @@ List<Post> buildPostListFromThreadElement(Element element) {
       final postRootNode =
           currentElement.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
       if (postRootNode == null) {
+        debug('warning: post root node is empty');
         break;
       }
       // Build post here.
       final post = buildPostFromElement(postRootNode);
       if (post == null) {
+        debug('warning: post is empty');
         break;
       }
       tdPostList.add(post);
       break;
     }
     currentElement = currentElement.nextElementSibling;
+  }
+  if (tdPostList.isEmpty) {
+    debug('warning: post list is empty');
   }
   return tdPostList;
 }
