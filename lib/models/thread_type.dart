@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-part 'thread_type.freezed.dart';
+part '../generated/models/thread_type.freezed.dart';
 
 /// Thread type
 ///

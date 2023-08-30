@@ -5,7 +5,7 @@ import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 
-part 'thread_data.freezed.dart';
+part '../generated/models/thread_data.freezed.dart';
 
 /// Data of each thread.
 @freezed

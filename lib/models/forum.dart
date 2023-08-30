@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -6,7 +5,7 @@ import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
 
-part 'forum.freezed.dart';
+part '../generated/models/forum.freezed.dart';
 
 /// Data model for sub forums.
 @freezed

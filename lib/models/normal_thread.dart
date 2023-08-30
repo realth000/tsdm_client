@@ -8,7 +8,7 @@ import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
 
-part 'normal_thread.freezed.dart';
+part '../generated/models/normal_thread.freezed.dart';
 
 /// Model of normal thread;
 @freezed

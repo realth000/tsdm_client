@@ -7,7 +7,7 @@ import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
 
-part 'post.freezed.dart';
+part '../generated/models/post.freezed.dart';
 
 /// Post model.
 ///
