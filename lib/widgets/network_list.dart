@@ -112,24 +112,8 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
         alignment: Alignment.bottomRight,
         children: [
           EasyRefresh(
-            header: const ClassicHeader(
-              dragText: '下拉刷新',
-              armedText: '松开刷新',
-              readyText: '正在努力刷新 Q_Q',
-              processingText: '正在努力刷新 Q_Q',
-              processedText: '刷新好了 >_<',
-              noMoreText: '没有更多了 T_T',
-              messageText: '上次刷新是在…… %T',
-            ),
-            footer: const ClassicFooter(
-              dragText: '下拉刷新',
-              armedText: '松开刷新',
-              readyText: '正在努力刷新 Q_Q',
-              processingText: '正在努力刷新 Q_Q',
-              processedText: '刷新好了 >_<',
-              noMoreText: '没有更多了 T_T',
-              messageText: '上次刷新是在…… %T',
-            ),
+            header: const MaterialHeader(),
+            footer: const MaterialFooter(),
             scrollController: _listScrollController,
             controller: _refreshController,
             refreshOnStart: true,
