@@ -29,8 +29,10 @@ environment:
 # versions available, run `flutter pub outdated`.
 dependencies:
   collection: ^1.17.2
+  cookie_jar: ^4.0.8
   cupertino_icons: ^1.0.6
   dio: ^5.3.2
+  dio_cookie_manager: ^3.1.0+1
   easy_refresh: ^3.3.2+1
   flex_color_scheme: ^7.3.1
   flutter:
@@ -42,6 +44,7 @@ dependencies:
   html: ^0.15.4
   intl: ^0.18.1
   json_annotation: ^4.8.1
+  riverpod_annotation: ^2.1.5
   shared_preferences: ^2.2.1
   surf_lint_rules: ^3.0.0
   url_launcher: ^6.1.14
@@ -55,6 +58,8 @@ dev_dependencies:
   freezed: ^2.4.2
   json_serializable: ^6.7.1
   lints: ^2.1.1
+  riverpod_generator: ^2.3.2
+  riverpod_lint: ^2.1.0
 
 flutter:
 

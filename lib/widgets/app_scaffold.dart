@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/widgets/app_navitaion_bar.dart';
 
 /// App scaffold.
 class TClientScaffold extends ConsumerWidget {
@@ -24,5 +25,6 @@ class TClientScaffold extends ConsumerWidget {
           title: Text(appBarTitle ?? _defaultAppBarTitle),
         ),
         body: body,
+        bottomNavigationBar: const AppNavigationBar(),
       );
 }

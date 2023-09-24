@@ -22,17 +22,19 @@ class TClientApp extends StatelessWidget {
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) => ProviderScope(
-        child: MaterialApp.router(
-          title: 'TSDM Client',
-          theme: AppTheme.light,
-          darkTheme: AppTheme.dark,
-          routerConfig: tClientRouter,
-          // TODO: Actually we are using the [TClientScaffold] inside every page.
-          // Maybe can do something to this duplicate scaffold.
-          builder: (context, child) => Scaffold(body: child),
-        ),
-      );
+  Widget build(BuildContext context) {
+    return ProviderScope(
+      child: MaterialApp.router(
+        title: 'TSDM Client',
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        routerConfig: tClientRouter,
+        // TODO: Actually we are using the [TClientScaffold] inside every page.
+        // Maybe can do something to this duplicate scaffold.
+        builder: (context, child) => Scaffold(body: child),
+      ),
+    );
+  }
 }
 
 /// Setup main window settings including size and position.

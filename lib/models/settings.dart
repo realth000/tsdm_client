@@ -16,6 +16,7 @@ class Settings with _$Settings {
     required double windowPositionDx,
     required double windowPositionDy,
     required bool windowInCenter,
+    required int loginUserUid,
   }) = _Settings;
 }
 
@@ -30,4 +31,5 @@ const settingsMap = <String, Type>{
   'windowPositionDx': double,
   'windowPositionDy': double,
   'windowInCenter': bool,
+  'loginUserUid': int,
 };

@@ -85,7 +85,7 @@ class ForumCard extends ConsumerWidget {
           isThreeLine: _buildLatestInfoLine,
           onTap: () {
             context.pushNamed(
-              TClientRoute.forum,
+              ScreenPaths.forum,
               pathParameters: <String, String>{
                 'fid': '${forum.forumID}',
               },

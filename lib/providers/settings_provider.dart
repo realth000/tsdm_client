@@ -34,6 +34,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
                 _defaultWindowPositionDy,
             windowInCenter:
                 _storage.getBool('windowInCenter') ?? _defaultWindowInCenter,
+            loginUserUid:
+                _storage.getInt('loginUserUid') ?? _defaultLoginUserUid,
           ),
         );
 
@@ -66,6 +68,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
   /// Window whether in the center of screen config on desktop platforms.
   static const _defaultWindowInCenter = false;
+
+  static const _defaultLoginUserUid = -1;
 
   Future<void> setWindowSize(Size size) async {
     await _storage.saveDouble('windowWidth', size.width);

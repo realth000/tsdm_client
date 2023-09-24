@@ -36,7 +36,7 @@ class ThreadCard extends ConsumerWidget {
                     child: TextButton(
                       onPressed: () {
                         context.pushNamed(
-                          TClientRoute.thread,
+                          ScreenPaths.thread,
                           pathParameters: <String, String>{
                             'tid': thread.threadID,
                           },
