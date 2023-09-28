@@ -58,6 +58,7 @@ final tClientRouter = GoRouter(
           builder: (_) => const TCHomePage(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
+          buildNavigator: true,
         ),
         AppRoute(
           path: ScreenPaths.forum,
@@ -96,6 +97,7 @@ class AppRoute extends GoRoute {
     required Widget Function(GoRouterState s) builder,
     List<GoRoute> routes = const [],
     String? appBarTitle,
+    bool buildNavigator = false,
     super.redirect,
   }) : super(
           name: path,
@@ -106,6 +108,7 @@ class AppRoute extends GoRoute {
             child: _buildScaffold(
               state,
               builder,
+              buildNavigator,
               appBarTitle: appBarTitle,
             ),
           ),
@@ -113,7 +116,8 @@ class AppRoute extends GoRoute {
 
   static TClientScaffold _buildScaffold(
     GoRouterState state,
-    Widget Function(GoRouterState s) builder, {
+    Widget Function(GoRouterState s) builder,
+    bool buildNavigator, {
     String? appBarTitle,
   }) {
     if (state.extra != null && state.extra is Map<String, String>) {
@@ -121,11 +125,13 @@ class AppRoute extends GoRoute {
       return TClientScaffold(
         body: builder(state),
         appBarTitle: extra['appBarTitle'] ?? appBarTitle,
+        buildNavigator: buildNavigator,
       );
     } else {
       return TClientScaffold(
         body: builder(state),
         appBarTitle: appBarTitle,
+        buildNavigator: buildNavigator,
       );
     }
   }

@@ -7,6 +7,7 @@ class TClientScaffold extends ConsumerWidget {
   /// Constructor.
   const TClientScaffold({
     required this.body,
+    required this.buildNavigator,
     super.key,
     this.appBarTitle,
   });
@@ -19,12 +20,14 @@ class TClientScaffold extends ConsumerWidget {
   /// Scaffold body.
   final Widget? body;
 
+  final bool buildNavigator;
+
   @override
   Widget build(BuildContext context, WidgetRef ref) => Scaffold(
         appBar: AppBar(
           title: Text(appBarTitle ?? _defaultAppBarTitle),
         ),
         body: body,
-        bottomNavigationBar: const AppNavigationBar(),
+        bottomNavigationBar: buildNavigator ? const AppNavigationBar() : null,
       );
 }
