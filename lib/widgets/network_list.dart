@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as html;
 import 'package:html/parser.dart' as html_parser;
-import 'package:tsdm_client/providers/dio_provider.dart';
+import 'package:tsdm_client/providers/net_client_provider.dart';
 
 /// A widget that retrieve data from network and supports refresh.
 class NetworkList<T> extends ConsumerStatefulWidget {
@@ -43,7 +43,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
   Future<void> _loadData() async {
-    final d1 = await ref.read(dioProvider).get<dynamic>(
+    final d1 = await ref.read(netClientProvider).get<dynamic>(
           '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
         );
     final d2 = widget.listBuilder(html_parser.parse(d1.data));

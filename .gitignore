@@ -1,3 +1,4 @@
+/lib/generated
 *.freezed.dart
 # Miscellaneous
 *.class

@@ -27,14 +27,14 @@ abstract class ConsumerWindowState<T extends ConsumerStatefulWidget>
   @override
   Future<void> onWindowResize() async {
     await _settings
-        .read(settingsProvider.notifier)
+        .read(appSettingsProvider.notifier)
         .setWindowSize(await windowManager.getSize());
   }
 
   @override
   Future<void> onWindowMove() async {
     await _settings
-        .read(settingsProvider.notifier)
+        .read(appSettingsProvider.notifier)
         .setWindowPosition(await windowManager.getPosition());
   }
 }

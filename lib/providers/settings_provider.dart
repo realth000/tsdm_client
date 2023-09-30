@@ -1,43 +1,42 @@
 import 'dart:ui';
 
-import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tsdm_client/models/settings.dart';
 
-late final _SettingsService _storage;
+part '../generated/providers/settings_provider.g.dart';
 
-/// Provider of app settings.
-final settingsProvider = StateNotifierProvider<SettingsNotifier, Settings>(
-  (ref) => SettingsNotifier(),
-);
+late final _SettingsStorage _storage;
 
 /// Notifier of app settings.
-class SettingsNotifier extends StateNotifier<Settings> {
+@Riverpod(keepAlive: true)
+class AppSettings extends _$AppSettings {
   /// Constructor.
-  SettingsNotifier()
-      : super(
-          Settings(
-            dioAccept: _storage.getString('dioAccept') ?? _defaultDioAccept,
-            dioAcceptEncoding: _storage.getString('dioAcceptEncoding') ??
-                _defaultDioAcceptEncoding,
-            dioAcceptLanguage: _storage.getString('dioAcceptLanguage') ??
-                _defaultDioAcceptLanguage,
-            dioUserAgent:
-                _storage.getString('dioUserAgent') ?? _defaultDioUserAgent,
-            windowWidth:
-                _storage.getDouble('windowWidth') ?? _defaultWindowWidth,
-            windowHeight:
-                _storage.getDouble('windowHeight') ?? _defaultWindowHeight,
-            windowPositionDx: _storage.getDouble('windowPositionDx') ??
-                _defaultWindowPositionDx,
-            windowPositionDy: _storage.getDouble('windowPositionDy') ??
-                _defaultWindowPositionDy,
-            windowInCenter:
-                _storage.getBool('windowInCenter') ?? _defaultWindowInCenter,
-            loginUserUid:
-                _storage.getInt('loginUserUid') ?? _defaultLoginUserUid,
-          ),
-        );
+  @override
+  Settings build() {
+    return Settings(
+      dioAccept:
+          _storage.getString(settingsNetClientAccept) ?? _defaultDioAccept,
+      dioAcceptEncoding: _storage.getString(settingsNetClientAcceptEncoding) ??
+          _defaultDioAcceptEncoding,
+      dioAcceptLanguage: _storage.getString(settingsNetClientAcceptLanguage) ??
+          _defaultDioAcceptLanguage,
+      dioUserAgent: _storage.getString(settingsNetClientUserAgent) ??
+          _defaultDioUserAgent,
+      windowWidth:
+          _storage.getDouble(settingsWindowWidth) ?? _defaultWindowWidth,
+      windowHeight:
+          _storage.getDouble(settingsWindowHeight) ?? _defaultWindowHeight,
+      windowPositionDx: _storage.getDouble(settingsWindowPositionDx) ??
+          _defaultWindowPositionDx,
+      windowPositionDy: _storage.getDouble(settingsWindowPositionDy) ??
+          _defaultWindowPositionDy,
+      windowInCenter:
+          _storage.getBool(settingsWindowInCenter) ?? _defaultWindowInCenter,
+      loginUserUid:
+          _storage.getInt(settingsLoginUserUid) ?? _defaultLoginUserUid,
+    );
+  }
 
   /// Dio config: Accept.
   static const String _defaultDioAccept =
@@ -72,8 +71,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
   static const _defaultLoginUserUid = -1;
 
   Future<void> setWindowSize(Size size) async {
-    await _storage.saveDouble('windowWidth', size.width);
-    await _storage.saveDouble('windowHeight', size.height);
+    await _storage.saveDouble(settingsWindowWidth, size.width);
+    await _storage.saveDouble(settingsWindowHeight, size.height);
     state = state.copyWith(
       windowPositionDx: size.width,
       windowPositionDy: size.height,
@@ -81,8 +80,8 @@ class SettingsNotifier extends StateNotifier<Settings> {
   }
 
   Future<void> setWindowPosition(Offset offset) async {
-    await _storage.saveDouble('windowPositionDx', offset.dx);
-    await _storage.saveDouble('windowPositionDy', offset.dy);
+    await _storage.saveDouble(settingsWindowPositionDx, offset.dx);
+    await _storage.saveDouble(settingsWindowPositionDy, offset.dy);
     state = state.copyWith(
       windowPositionDx: offset.dx,
       windowPositionDy: offset.dy,
@@ -92,13 +91,13 @@ class SettingsNotifier extends StateNotifier<Settings> {
 
 /// Init settings, must call before start.
 Future<void> initSettings() async {
-  _storage = await _SettingsService().init();
+  _storage = await _SettingsStorage().init();
 }
 
-class _SettingsService {
+class _SettingsStorage {
   late final SharedPreferences _sp;
 
-  Future<_SettingsService> init() async {
+  Future<_SettingsStorage> init() async {
     _sp = await SharedPreferences.getInstance();
     return this;
   }

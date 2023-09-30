@@ -43,21 +43,21 @@ class TClientApp extends StatelessWidget {
 Future<void> _initWindow() async {
   await windowManager.ensureInitialized();
   final settings = ProviderContainer();
-  final center = settings.read(settingsProvider).windowInCenter;
+  final center = settings.read(appSettingsProvider).windowInCenter;
   // Only apply window position when not set in center.
   if (!center) {
     await windowManager.setPosition(
       Offset(
-        settings.read(settingsProvider).windowPositionDx,
-        settings.read(settingsProvider).windowPositionDy,
+        settings.read(appSettingsProvider).windowPositionDx,
+        settings.read(appSettingsProvider).windowPositionDy,
       ),
     );
   }
   await windowManager.waitUntilReadyToShow(
       WindowOptions(
         size: Size(
-          settings.read(settingsProvider).windowWidth,
-          settings.read(settingsProvider).windowHeight,
+          settings.read(appSettingsProvider).windowWidth,
+          settings.read(appSettingsProvider).windowHeight,
         ),
         center: center,
       ), () async {
