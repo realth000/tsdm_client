@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
+import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/widgets/app_scaffold.dart';
@@ -78,10 +79,14 @@ final tClientRouter = GoRouter(
           builder: (state) => ProfilePage(
             uid: state.pathParameters['uid'],
           ),
-          // TODO: Redirect
-          // redirect: (context, state) {
-          //
-          // }
+        ),
+        AppRoute(
+          path: ScreenPaths.login,
+          builder: (state) {
+            final loginArgsMap = state.extra as Map<String, String>;
+            final redirectBackRoute = loginArgsMap['redirectBackRoute']!;
+            return LoginPage(redirectBackRoute: redirectBackRoute);
+          },
         ),
       ],
     ),

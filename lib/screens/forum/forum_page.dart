@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/models/normal_thread.dart';
+import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/states/consumer_window_state.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
@@ -36,6 +38,15 @@ class _ForumPageState extends ConsumerWindowState<ForumPage> {
             final docLogin = document.getElementById('messagelogin');
             debug(
                 'failed to build forum page, thread is empty. Maybe need to login ${docTitle.first.text} ${docMessage?.text} ${docAccessRequire ?? ''} ${docLogin == null}');
+            if (docLogin != null) {
+              // TODO: 这里实际上是在build页面的过程中，直接push到另一个页面是否有问题
+              context.pushReplacementNamed(
+                ScreenPaths.login,
+                extra: <String, String>{
+                  'redirectBackRoute': widget._fetchUrl,
+                },
+              );
+            }
             return normalThreadData;
           }
 
