@@ -4,6 +4,7 @@ import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
+import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
 import 'package:tsdm_client/widgets/app_scaffold.dart';
@@ -13,6 +14,9 @@ final shellRouteNavigatorKey = GlobalKey<NavigatorState>();
 
 /// All app routes.
 class ScreenPaths {
+  /// Root page to load [homepage].
+  static const String root = '/';
+
   /// App about page.
   static const String about = '/about';
 
@@ -24,7 +28,7 @@ class ScreenPaths {
   /// Homepage: "https://www.tsdm39.com/forum.php"
   ///
   /// Only the very first part of page.
-  static const String homepage = '/';
+  static const String homepage = '/homepage';
 
   /// Homepage: "https://www.tsdm39.com/forum.php"
   ///
@@ -62,6 +66,10 @@ final tClientRouter = GoRouter(
       navigatorKey: shellRouteNavigatorKey,
       builder: (context, router, navigator) => RootScaffold(child: navigator),
       routes: [
+        AppRoute(
+          path: ScreenPaths.root,
+          builder: (_) => const RootPage(),
+        ),
         AppRoute(
           path: ScreenPaths.homepage,
           appBarTitle: 'Homepage',
