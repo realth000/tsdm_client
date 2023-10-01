@@ -5,16 +5,32 @@ import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 
 class _NavigationBarItem {
-  _NavigationBarItem({required this.icon, required this.label});
+  _NavigationBarItem({
+    required this.icon,
+    required this.label,
+    required this.targetPath,
+  });
 
   final Icon icon;
   final String label;
+  final String targetPath;
 }
 
 final _barItems = [
-  _NavigationBarItem(icon: const Icon(Icons.home), label: '首页'),
-  _NavigationBarItem(icon: const Icon(Icons.person), label: '我的'),
-  _NavigationBarItem(icon: const Icon(Icons.settings), label: '设置'),
+  _NavigationBarItem(
+    icon: const Icon(Icons.home),
+    label: '首页',
+    targetPath: ScreenPaths.homepage,
+  ),
+  // _NavigationBarItem(
+  //     icon: const Icon(Icons.person),
+  //     label: '我的',
+  //     targetPath: ScreenPaths.profile),
+  _NavigationBarItem(
+    icon: const Icon(Icons.settings),
+    label: '设置',
+    targetPath: ScreenPaths.settings,
+  ),
 ];
 
 class AppNavigationBar extends ConsumerStatefulWidget {
@@ -25,17 +41,6 @@ class AppNavigationBar extends ConsumerStatefulWidget {
 }
 
 class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
-  void _gotoTab(BuildContext context, int index) {
-    switch (index) {
-      case 0:
-        context.go(ScreenPaths.homepage);
-      case 1:
-        context.go(ScreenPaths.profile);
-      case 2:
-        context.go(ScreenPaths.settings);
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return NavigationBar(
@@ -45,7 +50,7 @@ class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
       selectedIndex: ref.watch(appNavigationBarIndexProvider),
       onDestinationSelected: (index) {
         ref.read(appNavigationBarIndexProvider.notifier).state = index;
-        _gotoTab(context, index);
+        context.goNamed(_barItems[index].targetPath);
       },
     );
   }
