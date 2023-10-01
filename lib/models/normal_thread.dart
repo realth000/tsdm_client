@@ -110,10 +110,12 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   final threadLastReplyAuthorName =
       lastReplyNode?.childAtOrNull(0)?.firstEndDeepText();
   final threadLastReplyTime = lastReplyNode
-      ?.childAtOrNull(1)
-      ?.firstChild
-      ?.firstChild
-      ?.attributes['title'];
+          ?.childAtOrNull(1)
+          ?.firstChild
+          ?.firstChild
+          ?.attributes['title'] // Within 7 days.
+      ??
+      lastReplyNode?.childAtOrNull(1)?.firstEndDeepText(); // 7 days ago
   if (threadTitle == null ||
       threadUrl == null ||
       threadIconUrl == null ||
