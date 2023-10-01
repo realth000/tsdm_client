@@ -65,6 +65,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     }
     final data = widget.listBuilder(document);
 
+    // FIXME: Fix not disposed when navigate back.
     setState(() {
       _allData.addAll(data);
     });
