@@ -22,6 +22,11 @@ final _barItems = [
     label: '首页',
     targetPath: ScreenPaths.homepage,
   ),
+  _NavigationBarItem(
+    icon: const Icon(Icons.topic),
+    label: 'Topics',
+    targetPath: ScreenPaths.topic,
+  ),
   // _NavigationBarItem(
   //     icon: const Icon(Icons.person),
   //     label: '我的',

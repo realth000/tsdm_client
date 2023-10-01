@@ -5,6 +5,7 @@ import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
+import 'package:tsdm_client/screens/topic/topic.dart';
 import 'package:tsdm_client/widgets/app_scaffold.dart';
 import 'package:tsdm_client/widgets/root_scaffold.dart';
 
@@ -21,7 +22,15 @@ class ScreenPaths {
   static const String forum = '/forum/:fid';
 
   /// Homepage: "https://www.tsdm39.com/forum.php"
+  ///
+  /// Only the very first part of page.
   static const String homepage = '/';
+
+  /// Homepage: "https://www.tsdm39.com/forum.php"
+  ///
+  /// Rest part of homepage, including all topics.
+  /// Contains groups of sub-forums.
+  static const String topic = '/topic';
 
   /// App login page.
   ///
@@ -55,8 +64,13 @@ final tClientRouter = GoRouter(
       routes: [
         AppRoute(
           path: ScreenPaths.homepage,
-          appBarTitle: '论坛首页',
-          builder: (_) => const TCHomePage(
+          appBarTitle: 'Homepage',
+          builder: (_) => const HomePage(),
+          buildNavigator: true,
+        ),
+        AppRoute(
+          path: ScreenPaths.topic,
+          builder: (_) => const TopicPage(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
           buildNavigator: true,
