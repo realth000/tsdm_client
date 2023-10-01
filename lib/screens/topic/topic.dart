@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/models/forum.dart';
+import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/states/consumer_window_state.dart'
     show ConsumerWindowState;
 import 'package:tsdm_client/widgets/forum_card.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 
-/// App homepage.
+/// App topic page.
+///
+/// Contains most sub-forums in homepeage.
 ///
 /// "https://www.tsdm39.com/forum.php"
 class TopicPage extends ConsumerStatefulWidget {
@@ -40,5 +43,6 @@ class _TCHomePageState extends ConsumerWindowState<TopicPage> {
           return forumData;
         },
         widgetBuilder: (context, forum) => ForumCard(forum),
+        initialData: ref.read(rootContentProvider.notifier).doc,
       );
 }

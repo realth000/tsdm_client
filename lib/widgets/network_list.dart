@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as html;
+import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/providers/net_client_provider.dart';
 
@@ -14,6 +15,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
     required this.widgetBuilder,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
+    this.initialData,
     super.key,
   });
 
@@ -35,6 +37,10 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Build a list of [Widget].
   final Widget Function(BuildContext, T) widgetBuilder;
 
+  /// Initial data to use in the first fetch.
+  /// This argument allows to load cached data every first time.
+  final Document? initialData;
+
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
       _NetworkWidgetState<T>();
@@ -43,15 +49,24 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
   Future<void> _loadData() async {
-    final d1 = await ref.read(netClientProvider).get<dynamic>(
-          '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
-        );
-    final d2 = widget.listBuilder(html_parser.parse(d1.data));
     if (!mounted) {
       return;
     }
+
+    late final Document document;
+    if (!_initialized && widget.initialData != null) {
+      document = widget.initialData!;
+      _initialized = true;
+    } else {
+      final d1 = await ref.read(netClientProvider).get<dynamic>(
+            '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
+          );
+      document = html_parser.parse(d1.data);
+    }
+    final data = widget.listBuilder(document);
+
     setState(() {
-      _allData.addAll(d2);
+      _allData.addAll(data);
     });
     _pageNumber++;
   }
@@ -79,6 +94,10 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
   static const _aniDuration = Duration(milliseconds: 200);
 
   double _bottom1 = 20;
+
+  /// Flag to mark whether has already tried to load data.
+  /// If any attempt occurred before, set to true.
+  bool _initialized = false;
 
   @override
   void initState() {

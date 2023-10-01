@@ -27,10 +27,12 @@ class RootContent extends _$RootContent {
       return Future.error(
           'failed to load root page content, status code is ${resp.statusCode}');
     }
-    doc = html_parser.parse(resp.data);
+    _doc = html_parser.parse(resp.data);
 
-    return doc;
+    return _doc;
   }
 
-  late Document doc;
+  Document get doc => _doc;
+
+  late Document _doc;
 }
