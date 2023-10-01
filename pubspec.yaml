@@ -46,6 +46,7 @@ dependencies:
   html: ^0.15.4
   intl: ^0.18.1
   json_annotation: ^4.8.1
+  path_provider: ^2.1.1
   riverpod_annotation: ^2.1.5
   shared_preferences: ^2.2.1
   surf_lint_rules: ^3.0.0

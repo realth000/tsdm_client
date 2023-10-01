@@ -7,14 +7,22 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/screens/login/verity_image.dart';
+import 'package:tsdm_client/utils/debug.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
-  const LoginForm({required this.redirectBackRoute, super.key});
+  const LoginForm({
+    required this.redirectPath,
+    required this.redirectPathParameters,
+    required this.redirectExtra,
+    super.key,
+  });
 
   static const String _fakeFormUrl =
       'https://tsdm39.com/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
 
-  final String redirectBackRoute;
+  final String redirectPath;
+  final Map<String, String> redirectPathParameters;
+  final Object? redirectExtra;
 
   @override
   ConsumerState<LoginForm> createState() => _LoginFormState();
@@ -169,7 +177,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
 
                     if (mounted) {
                       // FIXME: Fix redirect back and cookie storage.
-                      context.pushReplacement(widget.redirectBackRoute);
+                      debug(
+                          'login success, redirect back to: path=${widget.redirectPath} with paraters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}');
+                      context.pushReplacementNamed(
+                        widget.redirectPath,
+                        pathParameters: widget.redirectPathParameters,
+                        extra: widget.redirectExtra,
+                      );
                     }
                   },
                   child: const Text('Login'),

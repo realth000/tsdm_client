@@ -40,7 +40,7 @@ class ThreadCard extends ConsumerWidget {
                           pathParameters: <String, String>{
                             'tid': thread.threadID,
                           },
-                          extra: <String, String>{
+                          extra: <String, dynamic>{
                             'appBarTitle': thread.title,
                           },
                         );

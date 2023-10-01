@@ -65,6 +65,7 @@ final tClientRouter = GoRouter(
           path: ScreenPaths.forum,
           builder: (state) => ForumPage(
             fid: state.pathParameters['fid']!,
+            routerState: state,
           ),
         ),
         AppRoute(
@@ -83,9 +84,10 @@ final tClientRouter = GoRouter(
         AppRoute(
           path: ScreenPaths.login,
           builder: (state) {
-            final loginArgsMap = state.extra as Map<String, String>;
-            final redirectBackRoute = loginArgsMap['redirectBackRoute']!;
-            return LoginPage(redirectBackRoute: redirectBackRoute);
+            final loginArgsMap = state.extra as Map<String, dynamic>;
+            final redirectBackState =
+                loginArgsMap['redirectBackState'] as GoRouterState;
+            return LoginPage(redirectBackState: redirectBackState);
           },
         ),
       ],
@@ -125,11 +127,13 @@ class AppRoute extends GoRoute {
     bool buildNavigator, {
     String? appBarTitle,
   }) {
-    if (state.extra != null && state.extra is Map<String, String>) {
-      final extra = state.extra as Map<String, String>;
+    if (state.extra != null) {
+      final extra = state.extra as Map<String, dynamic>;
       return TClientScaffold(
         body: builder(state),
-        appBarTitle: extra['appBarTitle'] ?? appBarTitle,
+        appBarTitle: extra['appBarTitle'] is String
+            ? extra['appBarTitle'] as String
+            : appBarTitle,
         buildNavigator: buildNavigator,
       );
     } else {

@@ -89,7 +89,7 @@ class ForumCard extends ConsumerWidget {
               pathParameters: <String, String>{
                 'fid': '${forum.forumID}',
               },
-              extra: <String, String>{
+              extra: <String, dynamic>{
                 'appBarTitle': forum.name,
               },
             );

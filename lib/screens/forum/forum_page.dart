@@ -14,10 +14,13 @@ class ForumPage extends ConsumerStatefulWidget {
   /// Constructor.
   const ForumPage({
     required String fid,
+    required this.routerState,
     super.key,
   }) : _fetchUrl = 'https://www.tsdm39.com/forum.php?mod=forumdisplay&fid=$fid';
 
   final String _fetchUrl;
+
+  final GoRouterState routerState;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ForumPageState();
@@ -42,8 +45,8 @@ class _ForumPageState extends ConsumerWindowState<ForumPage> {
               // TODO: 这里实际上是在build页面的过程中，直接push到另一个页面是否有问题
               context.pushReplacementNamed(
                 ScreenPaths.login,
-                extra: <String, String>{
-                  'redirectBackRoute': widget._fetchUrl,
+                extra: <String, dynamic>{
+                  'redirectBackState': widget.routerState,
                 },
               );
             }
