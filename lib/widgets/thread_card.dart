@@ -59,8 +59,8 @@ class ThreadCard extends ConsumerWidget {
               GridView(
                 physics: const NeverScrollableScrollPhysics(),
                 shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
+                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                  maxCrossAxisExtent: 170,
                   mainAxisExtent: 35,
                 ),
                 children: [
@@ -70,7 +70,7 @@ class ThreadCard extends ConsumerWidget {
                       size: smallIconSize,
                     ),
                     label: Text(
-                      '作者：${thread.author.name}',
+                      thread.author.name,
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
@@ -87,7 +87,7 @@ class ThreadCard extends ConsumerWidget {
                         size: smallIconSize,
                       ),
                       label: Text(
-                        '发布时间：${DateFormat('yyyy-MM-dd').format(thread.publishDate)}',
+                        DateFormat('yyyy-MM-dd').format(thread.publishDate),
                         style: const TextStyle(fontSize: smallTextSize),
                       ),
                       style: const ButtonStyle(
@@ -102,7 +102,7 @@ class ThreadCard extends ConsumerWidget {
                       size: smallIconSize,
                     ),
                     label: Text(
-                      '回复：${thread.replyCount}',
+                      '${thread.replyCount}',
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
@@ -116,7 +116,7 @@ class ThreadCard extends ConsumerWidget {
                       size: smallIconSize,
                     ),
                     label: Text(
-                      '查看：${thread.viewCount}',
+                      '${thread.viewCount}',
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
@@ -130,7 +130,7 @@ class ThreadCard extends ConsumerWidget {
                       size: smallIconSize,
                     ),
                     label: Text(
-                      '最后回复：${thread.latestReplyAuthor.name}',
+                      thread.latestReplyAuthor.name,
                       style: const TextStyle(fontSize: smallTextSize),
                     ),
                     style: const ButtonStyle(
@@ -147,7 +147,8 @@ class ThreadCard extends ConsumerWidget {
                         size: smallIconSize,
                       ),
                       label: Text(
-                        '回复时间：${timeDifferenceToString(_currentTime, thread.latestReplyTime)}',
+                        timeDifferenceToString(
+                            _currentTime, thread.latestReplyTime),
                         style: const TextStyle(fontSize: smallTextSize),
                       ),
                       style: const ButtonStyle(
