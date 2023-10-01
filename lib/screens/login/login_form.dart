@@ -53,7 +53,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final match = re.firstMatch(data);
     _loginHash = match?.namedGroup('Hash');
     if (_loginHash == null) {
-      debugPrint('failed to get login hash');
+      debug('failed to get login hash');
       return Future.error('prepare failed');
     }
 
@@ -61,11 +61,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final formHashMatch = re2.firstMatch(data);
     _formHash = formHashMatch?.namedGroup('FormHash');
     if (_formHash == null) {
-      debugPrint('failed to get form hash');
+      debug('failed to get form hash');
       return Future.error('prepare failed');
     }
 
-    debugPrint('get login hash $_loginHash');
+    debug('get login hash $_loginHash');
     return '';
   }
 
@@ -167,8 +167,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                         );
 
                     if (resp.statusCode != HttpStatus.ok) {
-                      debugPrint(
-                          'failed to login: StatusCode=${resp.statusCode}');
+                      debug('failed to login: StatusCode=${resp.statusCode}');
                       await Fluttertoast.showToast(
                           msg:
                               'failed to login: StatusCode=${resp.statusCode}');

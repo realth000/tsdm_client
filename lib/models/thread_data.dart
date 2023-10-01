@@ -93,8 +93,8 @@ ThreadData? buildThreadDataFromElement(Element element) {
 ///
 /// [element]'s id is "postlist".
 List<Post> buildPostListFromThreadElement(Element element) {
-  final threadDataRootNode = element.childAtOrNull(1);
-  var currentElement = threadDataRootNode?.childAtOrNull(0);
+  final threadDataRootNode = element.childAtOrNull(2);
+  var currentElement = threadDataRootNode;
   final tdPostList = <Post>[];
   while (currentElement != null) {
     // This while is a while (0), will not loop twice.

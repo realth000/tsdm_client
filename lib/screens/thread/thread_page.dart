@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/thread_data.dart';
 import 'package:tsdm_client/states/consumer_window_state.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
 
@@ -36,6 +37,7 @@ class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
         listBuilder: (document) {
           final threadDataNode = document.getElementById('postlist');
           if (threadDataNode == null) {
+            debug('thread postlist not found');
             return <Post>[];
           }
           return buildPostListFromThreadElement(threadDataNode);
