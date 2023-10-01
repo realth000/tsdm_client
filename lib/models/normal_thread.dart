@@ -89,7 +89,7 @@ NormalThread? buildNormalThreadFromElement(Element threadElement) {
   final threadIconUrl =
       iconNode?.childAtOrNull(0)?.childAtOrNull(0)?.attributes['src'];
   final threadTypeUrl = titleNode?.childAtOrNull(1)?.firstHref();
-  final threadTypeName = titleNode?.childAtOrNull(0)?.firstEndDeepText();
+  final threadTypeName = titleNode?.childAtOrNull(1)?.firstEndDeepText();
   final threadUrl =
       titleNode?.getElementsByClassName('xst').firstOrNull?.attributes['href'];
   final threadTitle =
