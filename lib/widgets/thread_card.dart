@@ -3,7 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
-import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/space.dart';

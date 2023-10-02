@@ -6,6 +6,7 @@ import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 class _ThreadAuthorPair {
   _ThreadAuthorPair({
@@ -34,15 +35,11 @@ class PinSection extends ConsumerWidget {
     final listTileList = threads
         .map(
           (e) => ListTile(
-            title: Text(
+            title: SingleLineText(
               e!.threadTitle,
-              overflow: TextOverflow.clip,
-              maxLines: 1,
             ),
-            trailing: Text(
+            trailing: SingleLineText(
               e.authorName,
-              overflow: TextOverflow.clip,
-              maxLines: 1,
             ),
             onTap: () {
               final target = e.threadUrl.parseUrlToRoute();

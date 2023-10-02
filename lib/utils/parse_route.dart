@@ -1,4 +1,5 @@
 import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 
 extension ParseUrl on String {
   /// Try parse string to [AppRoute] with arguments.

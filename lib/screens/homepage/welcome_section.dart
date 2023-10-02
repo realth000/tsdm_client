@@ -7,6 +7,7 @@ import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 class WelcomeSection extends ConsumerWidget {
   const WelcomeSection({super.key});
@@ -97,10 +98,8 @@ class WelcomeSection extends ConsumerWidget {
     return linkList
         .map(
           (e) => ListTile(
-            title: Text(
-              e.$1,
-              overflow: TextOverflow.clip,
-              maxLines: 1,
+            title: SingleLineText(
+              e.$1
             ),
             trailing: const Icon(Icons.navigate_next),
             shape: const BorderDirectional(),
@@ -120,10 +119,8 @@ class WelcomeSection extends ConsumerWidget {
   Widget _buildForumStatusRow(BuildContext context, dom.Element chartZElement) {
     final memberInfoList = chartZElement.querySelectorAll('em').toList();
     if (memberInfoList.length == 4) {
-      return Text(
+      return SingleLineText(
         '今日:${memberInfoList[0].text} 昨日:${memberInfoList[1].text} 会员:${memberInfoList[2].text} 新会员:${memberInfoList[3].firstEndDeepText()}',
-        maxLines: 1,
-        overflow: TextOverflow.clip,
         style: TextStyle(
           color: Theme.of(context).colorScheme.secondary,
         ),
@@ -200,19 +197,15 @@ class WelcomeSection extends ConsumerWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
+                    SingleLineText(
                       welcomeText,
                       style: Theme.of(context).textTheme.titleLarge,
                       textAlign: TextAlign.left,
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
                     ),
-                    Text(
+                    SingleLineText(
                       welcomeLastLoginText,
                       style: Theme.of(context).textTheme.titleMedium,
                       textAlign: TextAlign.left,
-                      overflow: TextOverflow.clip,
-                      maxLines: 1,
                     ),
                     ...linkTileList,
                   ],

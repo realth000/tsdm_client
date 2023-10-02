@@ -30,6 +30,10 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Column(
             children: [
               WelcomeSection(),
+              SizedBox(
+                width: 20,
+                height: 20,
+              ),
               PinSection(),
             ],
           ),

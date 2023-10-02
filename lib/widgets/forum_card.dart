@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/models/forum.dart';
-import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:tsdm_client/widgets/space.dart';
 
 /// Card to show forum information.
@@ -58,12 +59,10 @@ class ForumCard extends ConsumerWidget {
             height: 50,
             child: NetworkIndicatorImage(forum.iconUrl),
           ),
-          title: Text(
+          title: SingleLineText(
             forum.name,
             style: headerTextStyle(context),
             softWrap: false,
-            maxLines: 1,
-            overflow: TextOverflow.fade,
           ),
           subtitle: Column(
             children: [

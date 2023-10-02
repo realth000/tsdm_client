@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
-import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/root/auto_redirect_dialog.dart';
 
 class RootPage extends ConsumerWidget {
