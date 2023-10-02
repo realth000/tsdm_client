@@ -5,3 +5,7 @@ analyzer:
   exclude:
     - lib/**.g.dart
     - lib/**.freezed.dart
+
+linter:
+  rules:
+    flutter_style_todos: false

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/states/consumer_window_state.dart';
@@ -54,8 +53,7 @@ class _ForumPageState extends ConsumerWindowState<ForumPage> {
           }
 
           for (final threadElement in threadList) {
-            final thread =
-                buildNormalThreadFromElement(threadElement as dom.Element);
+            final thread = buildNormalThreadFromElement(threadElement);
             if (thread == null) {
               continue;
             }

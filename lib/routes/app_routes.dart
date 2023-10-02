@@ -106,7 +106,7 @@ final tClientRouter = GoRouter(
         AppRoute(
           path: ScreenPaths.login,
           builder: (state) {
-            final loginArgsMap = state.extra as Map<String, dynamic>;
+            final loginArgsMap = state.extra! as Map<String, dynamic>;
             final redirectBackState =
                 loginArgsMap['redirectBackState'] as GoRouterState;
             return LoginPage(redirectBackState: redirectBackState);
@@ -150,7 +150,7 @@ class AppRoute extends GoRoute {
     String? appBarTitle,
   }) {
     if (state.extra != null) {
-      final extra = state.extra as Map<String, dynamic>;
+      final extra = state.extra! as Map<String, dynamic>;
       return TClientScaffold(
         body: builder(state),
         appBarTitle: extra['appBarTitle'] is String

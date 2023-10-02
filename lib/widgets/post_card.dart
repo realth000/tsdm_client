@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 /// Usually inside a ThreadPage.
 class PostCard extends ConsumerWidget {
   /// Constructor.
-  PostCard(this.post, {super.key});
+  const PostCard(this.post, {super.key});
 
   /// [Post] model to show.
   final Post post;
@@ -86,7 +86,7 @@ class PostCard extends ConsumerWidget {
     return RichText(
       text: WidgetSpan(
         child: Padding(
-          padding: EdgeInsets.all(8),
+          padding: const EdgeInsets.all(8),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: c,
