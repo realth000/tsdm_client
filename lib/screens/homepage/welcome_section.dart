@@ -5,7 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -89,7 +88,9 @@ class WelcomeSection extends ConsumerWidget {
   }
 
   List<Widget> _buildKahrpbaLinkTileList(
-      BuildContext context, List<(String, String)>? linkList) {
+    BuildContext context,
+    List<(String, String)>? linkList,
+  ) {
     if (linkList == null) {
       return [];
     }
@@ -98,9 +99,7 @@ class WelcomeSection extends ConsumerWidget {
     return linkList
         .map(
           (e) => ListTile(
-            title: SingleLineText(
-              e.$1
-            ),
+            title: SingleLineText(e.$1),
             trailing: const Icon(Icons.navigate_next),
             shape: const BorderDirectional(),
             onTap: () {
@@ -116,11 +115,11 @@ class WelcomeSection extends ConsumerWidget {
         .toList();
   }
 
-  Widget _buildForumStatusRow(BuildContext context, dom.Element chartZElement) {
-    final memberInfoList = chartZElement.querySelectorAll('em').toList();
+  Widget _buildForumStatusRow(
+      BuildContext context, List<String> memberInfoList) {
     if (memberInfoList.length == 4) {
       return SingleLineText(
-        '今日:${memberInfoList[0].text} 昨日:${memberInfoList[1].text} 会员:${memberInfoList[2].text} 新会员:${memberInfoList[3].firstEndDeepText()}',
+        '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 会员:${memberInfoList[2]} 新会员:${memberInfoList[3]}',
         style: TextStyle(
           color: Theme.of(context).colorScheme.secondary,
         ),
@@ -131,31 +130,18 @@ class WelcomeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final document = ref.read(rootContentProvider.notifier).doc;
+    final cache = ref.read(rootContentProvider.notifier).cache;
 
-    final chartNode = document.getElementById('chart');
-    final chartZNode = document.querySelector('p.chart.z');
-    final styleNode = chartNode?.querySelector('style');
-    final scriptNode = chartNode?.querySelector('script');
-    final picUrlList = _buildKahrpbaPicUrlList(styleNode);
-    final picHrefList = _buildKahrpbaPicHrefList(scriptNode);
+    final picUrlList = cache.picUrlList;
+    final picHrefList = cache.picHrefList;
 
     final linkTileList = <Widget>[];
 
-    final welcomeNode = document.getElementById('tsdmwelcome');
     // welcomeText is plain text inside welcomeNode div.
     // Only using [nodes] method can capture it.
-    final welcomeTextList = welcomeNode?.nodes.firstOrNull?.text
-        ?.split('，')
-        .map((e) => e.trim())
-        .toList();
-    final welcomeText = welcomeTextList?[0] ?? 'Hello';
-    final welcomeLastLoginText = welcomeTextList?[1] ?? '';
-    final welcomeNavigateHrefsPairs = welcomeNode
-        ?.querySelectorAll('a')
-        .where((e) => e.attributes.containsKey('href'))
-        .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))
-        .toList();
+    final welcomeText = cache.welcomeText;
+    final welcomeLastLoginText = cache.welcomeLastLoginText;
+    final welcomeNavigateHrefsPairs = cache.welcomeNavigateHrefsPairs;
 
     if (picUrlList.length != picHrefList.length) {
       debug(
@@ -171,11 +157,16 @@ class WelcomeSection extends ConsumerWidget {
       );
     }
 
-    if (chartZNode == null) {
+    final memberInfoList = cache.memberInfoList;
+
+    if (memberInfoList == null) {
       debug('homepage forum info node not found, skip build');
     } else {
-      linkTileList..add(const SizedBox(height: 10,))
-      ..add(_buildForumStatusRow(context, chartZNode));
+      linkTileList
+        ..add(const SizedBox(
+          height: 10,
+        ))
+        ..add(_buildForumStatusRow(context, memberInfoList));
     }
 
     return ConstrainedBox(

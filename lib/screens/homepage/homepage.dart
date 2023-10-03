@@ -29,6 +29,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           padding: EdgeInsets.all(5),
           child: Column(
             children: [
+              // TODO: Optimize layout build jank.
               WelcomeSection(),
               SizedBox(
                 width: 20,
