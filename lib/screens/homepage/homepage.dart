@@ -30,6 +30,7 @@ class _HomePageState extends ConsumerState<HomePage> {
           child: Column(
             children: [
               // TODO: Optimize layout build jank.
+              // TODO: Optimize page when not login (no cookie or cookie invalid).
               WelcomeSection(),
               SizedBox(
                 width: 20,

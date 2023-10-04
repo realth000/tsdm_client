@@ -47,9 +47,15 @@ class PinSection extends ConsumerWidget {
     final navThreadList = cache.sectionAllThreadPairList;
     if (navNameList == null || navNameList.length != navThreadList.length) {
       final errorText =
-          'failed to build homepage pin section: navName length: ${navNameList?.length}, navShowList length: ${navThreadList?.length}';
+          'failed to build homepage pin section: navName length: ${navNameList?.length}, navShowList length: ${navThreadList.length}';
       debug(errorText);
       return Text(errorText);
+    }
+
+    if (navNameList.isEmpty || navThreadList.isEmpty) {
+      return const Center(
+        child: Text('Need to login to see recent pinned threads in homepage'),
+      );
     }
 
     final ret = <Widget>[];

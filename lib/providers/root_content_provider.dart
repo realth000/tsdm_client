@@ -116,13 +116,15 @@ class RootContent extends _$RootContent {
 class CachedRootContent {
   CachedRootContent();
 
-  late final String welcomeText;
-  late final String welcomeLastLoginText;
-  late final List<String?> picUrlList;
-  late final List<String?> picHrefList;
-  late final List<String>? memberInfoList;
-  late final List<(String, String)>? welcomeNavigateHrefsPairs;
-  late final List<String?>? navNameList;
+  String welcomeText = '';
+  String welcomeLastLoginText = '';
+  List<String?> picUrlList = [];
+  List<String?> picHrefList = [];
+  List<String>? memberInfoList = [];
+
+  List<(String, String)>? welcomeNavigateHrefsPairs = [];
+
+  List<String?>? navNameList = [];
   final sectionAllThreadPairList = <List<ThreadAuthorPair?>>[];
 
   List<String?> _buildKahrpbaPicUrlList(Element? styleNode) {
@@ -159,6 +161,12 @@ class CachedRootContent {
     final scriptNode = chartNode?.querySelector('script');
     picUrlList = _buildKahrpbaPicUrlList(styleNode);
     picHrefList = _buildKahrpbaPicHrefList(scriptNode);
+    if (picUrlList.isEmpty && picHrefList.isEmpty) {
+      debug('root content pinned pic not found: maybe not login');
+
+      // There's no pinned recent threads when not login, just return
+      return;
+    }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
     if (chartZInfoList != null && chartZInfoList.length == 4) {
       memberInfoList =
