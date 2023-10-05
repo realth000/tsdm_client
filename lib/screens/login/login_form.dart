@@ -6,7 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
-import 'package:tsdm_client/screens/login/verity_image.dart';
+import 'package:tsdm_client/screens/login/captcha_image.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
@@ -122,7 +122,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 constraints: const BoxConstraints(
                   maxWidth: 150,
                 ),
-                child: const VerifyImage(),
+                child: const CaptchaImage(),
               ),
             ],
           ),

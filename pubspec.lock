@@ -313,14 +313,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.1.1"
-  dio_image_provider:
-    dependency: "direct main"
-    description:
-      name: dio_image_provider
-      sha256: d7937f2b33c52db70cbf6209cf6ef6a929e006afcadaebfb6b0dc2da80dce52b
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "0.0.2"
   easy_refresh:
     dependency: "direct main"
     description:
