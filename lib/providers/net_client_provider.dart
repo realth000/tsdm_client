@@ -1,7 +1,6 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
@@ -25,11 +24,11 @@ Future<void> initCookieStorage() async {
 /// Global network http client.
 ///
 /// Now only plan to use directly, no state needed.
-@Riverpod(keepAlive: true)
+@Riverpod(keepAlive: true, dependencies: [AppSettings])
 class NetClient extends _$NetClient {
   @override
   Dio build() {
-    final settings = ProviderContainer().read(appSettingsProvider);
+    final settings = ref.read(appSettingsProvider);
 
     dio = Dio()
       ..options = BaseOptions(
