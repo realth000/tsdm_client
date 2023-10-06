@@ -1,7 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:isar/isar.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tsdm_client/models/database/settings.dart';
 import 'package:tsdm_client/models/settings.dart';
+import 'package:tsdm_client/utils/debug.dart';
 
 part '../generated/providers/settings_provider.g.dart';
 
@@ -107,72 +112,236 @@ Future<void> initSettings() async {
 }
 
 class _SettingsStorage {
-  late final SharedPreferences _sp;
+  late final Isar _isar;
 
   Future<_SettingsStorage> init() async {
-    _sp = await SharedPreferences.getInstance();
+    final isarStorageDir =
+        Directory('${(await getApplicationSupportDirectory()).path}/db');
+
+    if (!isarStorageDir.existsSync()) {
+      await isarStorageDir.create(recursive: true);
+    }
+
+    debug('init isar storage in $isarStorageDir');
+
+    _isar = Isar.open(
+      schemas: [DatabaseSettingsSchema],
+      directory: isarStorageDir.path,
+      name: 'main',
+    );
     return this;
   }
 
-  dynamic get(String key) => _sp.get(key);
-
-  /// Get int type value of specified key.
-  int? getInt(String key) => _sp.getInt(key);
-
-  /// Sae int type value of specified key.
-  Future<bool> saveInt(String key, int value) async {
-    if (!settingsMap.containsKey(key)) {
-      return false;
-    }
-    await _sp.setInt(key, value);
-    return true;
-  }
-
-  /// Get bool type value of specified key.
-  bool? getBool(String key) => _sp.getBool(key);
-
-  /// Save bool type value of specified value.
-  Future<bool> saveBool(String key, bool value) async {
-    if (!settingsMap.containsKey(key)) {
-      return false;
-    }
-    await _sp.setBool(key, value);
-    return true;
-  }
-
-  /// Get double type value of specified key.
-  double? getDouble(String key) => _sp.getDouble(key);
-
-  /// Save double type value of specified key.
-  Future<bool> saveDouble(String key, double value) async {
-    if (!settingsMap.containsKey(key)) {
-      return false;
-    }
-    await _sp.setDouble(key, value);
-    return true;
-  }
-
   /// Get string type value of specified key.
-  String? getString(String key) => _sp.getString(key);
+  String? getString(String key) =>
+      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.stringValue;
 
   /// Save string type value of specified key.
   Future<bool> saveString(String key, String value) async {
     if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
       return false;
     }
-    await _sp.setString(key, value);
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.put(DatabaseSettings.fromString(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        stringValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get int type value of specified key.
+  int? getInt(String key) =>
+      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.intValue;
+
+  /// Sae int type value of specified key.
+  Future<bool> saveInt(String key, int value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.put(DatabaseSettings.fromInt(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        intValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get bool type value of specified key.
+  bool? getBool(String key) =>
+      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.boolValue;
+
+  /// Save bool type value of specified value.
+  Future<bool> saveBool(String key, {required bool value}) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.put(DatabaseSettings.fromBool(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        boolValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get double type value of specified key.
+  double? getDouble(String key) =>
+      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.doubleValue;
+
+  /// Save double type value of specified key.
+  Future<bool> saveDouble(String key, double value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.put(DatabaseSettings.fromDouble(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        doubleValue: value,
+      ));
+    });
+    return true;
+  }
+
+  DateTime? getDateTime(String key) => _isar.databaseSettings
+      .where()
+      .nameEqualTo(key)
+      .findFirst()
+      ?.dateTimeValue;
+
+  Future<bool> saveDateTime(String key, DateTime value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.put(DatabaseSettings.fromDateTime(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        dateTimeValue: value,
+      ));
+    });
     return true;
   }
 
   /// Get string list type value of specified key.
-  List<String>? getStringList(String key) => _sp.getStringList(key);
+  List<String>? getStringList(String key) => _isar.databaseSettings
+      .where()
+      .nameEqualTo(key)
+      .findFirst()
+      ?.stringListValue;
 
   /// Save string list type value of specified key.
   Future<bool> saveStringList(String key, List<String> value) async {
     if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
       return false;
     }
-    await _sp.setStringList(key, value);
+    await _isar.writeAsync((isar) {
+      _isar.databaseSettings.put(DatabaseSettings.fromStringList(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        stringListValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get string list type value of specified key.
+  List<int>? getIntList(String key) =>
+      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.intListValue;
+
+  /// Save string list type value of specified key.
+  Future<bool> saveIntList(String key, List<int> value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      _isar.databaseSettings.put(DatabaseSettings.fromIntList(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        intListValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get string list type value of specified key.
+  List<double>? getDoubleList(String key) => _isar.databaseSettings
+      .where()
+      .nameEqualTo(key)
+      .findFirst()
+      ?.doubleListValue;
+
+  /// Save string list type value of specified key.
+  Future<bool> saveDoubleList(String key, List<double> value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      _isar.databaseSettings.put(DatabaseSettings.fromDoubleList(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        doubleListValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get string list type value of specified key.
+  List<bool>? getBoolList(String key) => _isar.databaseSettings
+      .where()
+      .nameEqualTo(key)
+      .findFirst()
+      ?.boolListValue;
+
+  /// Save string list type value of specified key.
+  Future<bool> saveBoolList(String key, List<bool> value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      _isar.databaseSettings.put(DatabaseSettings.fromBoolList(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        boolListValue: value,
+      ));
+    });
+    return true;
+  }
+
+  /// Get string list type value of specified key.
+  List<DateTime>? getDateTimeList(String key) => _isar.databaseSettings
+      .where()
+      .nameEqualTo(key)
+      .findFirst()
+      ?.dateTimeListValue;
+
+  /// Save string list type value of specified key.
+  Future<bool> saveDateTimeList(String key, List<DateTime> value) async {
+    if (!settingsMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    await _isar.writeAsync((isar) {
+      _isar.databaseSettings.put(DatabaseSettings.fromDateTimeList(
+        id: isar.databaseSettings.autoIncrement(),
+        name: key,
+        dateTimeListValue: value,
+      ));
+    });
     return true;
   }
 }

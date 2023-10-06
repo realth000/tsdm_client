@@ -26,10 +26,11 @@ dependencies:
   hooks_riverpod: ^2.4.2
   html: ^0.15.4
   intl: ^0.18.1
+  isar: ^4.0.0-dev.14
+  isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
   path_provider: ^2.1.1
   riverpod_annotation: ^2.1.6
-  shared_preferences: ^2.2.1
   surf_lint_rules: ^3.0.0
   url_launcher: ^6.1.14
   window_manager: ^0.3.6
