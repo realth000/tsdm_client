@@ -6,6 +6,7 @@ import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
+import 'package:tsdm_client/screens/settings/settings_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
 import 'package:tsdm_client/widgets/app_scaffold.dart';
@@ -35,6 +36,12 @@ final tClientRouter = GoRouter(
           builder: (_) => const TopicPage(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
+          buildNavigator: true,
+        ),
+        AppRoute(
+          path: ScreenPaths.settings,
+          appBarTitle: 'Settings',
+          builder: (_) => const SettingsPage(),
           buildNavigator: true,
         ),
         AppRoute(

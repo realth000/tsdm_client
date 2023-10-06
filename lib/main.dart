@@ -14,27 +14,28 @@ Future<void> main() async {
   if (isDesktop) {
     await _initWindow();
   }
-  runApp(const TClientApp());
+  runApp(const ProviderScope(
+    child: TClientApp(),
+  ));
 }
 
 /// Main app.
-class TClientApp extends StatelessWidget {
+class TClientApp extends ConsumerWidget {
   /// Constructor.
   const TClientApp({super.key});
 
   // This widget is the root of your application.
   @override
-  Widget build(BuildContext context) {
-    return ProviderScope(
-      child: MaterialApp.router(
-        title: 'TSDM Client',
-        theme: AppTheme.light,
-        darkTheme: AppTheme.dark,
-        routerConfig: tClientRouter,
-        // TODO: Actually we are using the [TClientScaffold] inside every page.
-        // Maybe can do something to this duplicate scaffold.
-        builder: (context, child) => Scaffold(body: child),
-      ),
+  Widget build(BuildContext context, WidgetRef ref) {
+    return MaterialApp.router(
+      title: 'TSDM Client',
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
+      routerConfig: tClientRouter,
+      // TODO: Actually we are using the [TClientScaffold] inside every page.
+      // Maybe can do something to this duplicate scaffold.
+      builder: (context, child) => Scaffold(body: child),
     );
   }
 }

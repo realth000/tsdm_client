@@ -1,5 +1,4 @@
-import 'dart:ui';
-
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tsdm_client/models/settings.dart';
@@ -35,6 +34,7 @@ class AppSettings extends _$AppSettings {
           _storage.getBool(settingsWindowInCenter) ?? _defaultWindowInCenter,
       loginUserUid:
           _storage.getInt(settingsLoginUserUid) ?? _defaultLoginUserUid,
+      themeMode: _storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
     );
   }
 
@@ -70,6 +70,13 @@ class AppSettings extends _$AppSettings {
 
   static const _defaultLoginUserUid = -1;
 
+  /// Default app theme mode.
+  ///
+  /// 0: [ThemeMode.system]
+  /// 1: [ThemeMode.light]
+  /// 2: [ThemeMode.dark]
+  static final _defaultThemeMode = ThemeMode.system.index;
+
   Future<void> setWindowSize(Size size) async {
     await _storage.saveDouble(settingsWindowWidth, size.width);
     await _storage.saveDouble(settingsWindowHeight, size.height);
@@ -86,6 +93,11 @@ class AppSettings extends _$AppSettings {
       windowPositionDx: offset.dx,
       windowPositionDy: offset.dy,
     );
+  }
+
+  Future<void> setThemeMode(int themeMode) async {
+    await _storage.saveInt(settingsThemeMode, themeMode);
+    state = state.copyWith(themeMode: themeMode);
   }
 }
 
