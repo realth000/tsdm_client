@@ -18,6 +18,11 @@ class AppSettings extends _$AppSettings {
   /// Constructor.
   @override
   Settings build() {
+    // Close isar instance when provider disposes.
+    ref.onDispose(() {
+      _storage.dispose();
+    });
+
     return Settings(
       dioAccept:
           _storage.getString(settingsNetClientAccept) ?? _defaultDioAccept,
@@ -114,7 +119,14 @@ Future<void> initSettings() async {
 class _SettingsStorage {
   late final Isar _isar;
 
+  bool _initialized = false;
+
   Future<_SettingsStorage> init() async {
+    if (_initialized) {
+      return this;
+    }
+    _initialized = true;
+
     final isarStorageDir =
         Directory('${(await getApplicationSupportDirectory()).path}/db');
 
@@ -124,12 +136,19 @@ class _SettingsStorage {
 
     debug('init isar storage in $isarStorageDir');
 
-    _isar = Isar.open(
+    _isar = await Isar.openAsync(
       schemas: [DatabaseSettingsSchema],
       directory: isarStorageDir.path,
       name: 'main',
     );
     return this;
+  }
+
+  void dispose() {
+    // Only try to close isar instance when already initialized
+    if (_initialized) {
+      _isar.close();
+    }
   }
 
   /// Get string type value of specified key.
