@@ -19,12 +19,6 @@ class AppSettings extends _$AppSettings {
   /// Constructor.
   @override
   Settings build() {
-    // Close isar instance when provider disposes.
-    ref.onDispose(() {
-      debug('warning: disposing database instance');
-      _storage.dispose();
-    });
-
     return Settings(
       dioAccept:
           _storage.getString(settingsNetClientAccept) ?? _defaultDioAccept,
