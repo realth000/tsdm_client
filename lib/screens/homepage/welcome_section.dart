@@ -14,33 +14,6 @@ class WelcomeSection extends ConsumerWidget {
   static const double _kahrpbaPicWidth = 300;
   static const double _kahrpbaPicHeight = 218;
 
-  List<String?> _buildKahrpbaPicUrlList(dom.Element? styleNode) {
-    if (styleNode == null) {
-      debug('failed to build kahrpba picture url list: node is null');
-      return [];
-    }
-
-    return styleNode.innerHtml
-        .split('\n')
-        .where((e) => e.startsWith('.Kahrpba_pic_') && !e.contains('ctrlbtn'))
-        .map((e) => e.split('(').lastOrNull?.split(')').firstOrNull)
-        .toList();
-  }
-
-  List<String?> _buildKahrpbaPicHrefList(dom.Element? scriptNode) {
-    if (scriptNode == null) {
-      debug('failed to build kahrpba picture href list: node is null');
-      return [];
-    }
-
-    return scriptNode.innerHtml
-        .split('\n')
-        .where((e) => e.contains("window.location='"))
-        .map((e) =>
-            e.split("window.location='").lastOrNull?.split("'").firstOrNull)
-        .toList();
-  }
-
   Widget _buildKahrpbaSwiper(BuildContext context, List<String?> picUrlList,
       List<String?> picHrefList) {
     return ConstrainedBox(
@@ -58,13 +31,6 @@ class WelcomeSection extends ConsumerWidget {
           itemCount: picUrlList.length,
           itemWidth: _kahrpbaPicWidth,
           itemHeight: _kahrpbaPicHeight,
-          // TODO: Add tap control on desktop platforms.
-          // control: const SwiperControl(
-          //   iconPrevious: Icons.navigate_before,
-          //   iconNext: Icons.navigate_next,
-          //   size: 40,
-          //   padding: EdgeInsets.zero,
-          // ),
           pagination: const SwiperPagination(
             margin: EdgeInsets.only(bottom: 2),
           ),
@@ -118,10 +84,16 @@ class WelcomeSection extends ConsumerWidget {
   Widget _buildForumStatusRow(
       BuildContext context, List<String> memberInfoList) {
     if (memberInfoList.length == 4) {
-      return SingleLineText(
-        '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 会员:${memberInfoList[2]} 新会员:${memberInfoList[3]}',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.secondary,
+      return Expanded(
+        child: Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 4),
+          child: SingleLineText(
+            '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 会员:${memberInfoList[2]} 新会员:${memberInfoList[3]}',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
+            textAlign: TextAlign.center,
+          ),
         ),
       );
     }
@@ -163,10 +135,7 @@ class WelcomeSection extends ConsumerWidget {
       debug('homepage forum info node not found, skip build');
     } else {
       linkTileList
-        ..add(const SizedBox(
-          height: 10,
-        ))
-        ..add(_buildForumStatusRow(context, memberInfoList));
+        .add(_buildForumStatusRow(context, memberInfoList));
     }
 
     return ConstrainedBox(
@@ -178,29 +147,22 @@ class WelcomeSection extends ConsumerWidget {
         children: [
           _buildKahrpbaSwiper(context, picUrlList, picHrefList),
           const SizedBox(
-            width: 10,
+            width: 20,
+            height: 20,
           ),
           Expanded(
             child: Card(
               margin: EdgeInsets.zero,
-              child: Padding(
-                padding: const EdgeInsets.all(10),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SingleLineText(
-                      welcomeText,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      textAlign: TextAlign.left,
-                    ),
-                    SingleLineText(
-                      welcomeLastLoginText,
-                      style: Theme.of(context).textTheme.titleMedium,
-                      textAlign: TextAlign.left,
-                    ),
-                    ...linkTileList,
-                  ],
-                ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ListTile(
+                    title: SingleLineText(welcomeText),
+                    subtitle: SingleLineText(welcomeLastLoginText),
+                    shape: const BorderDirectional(),
+                  ),
+                  ...linkTileList,
+                ],
               ),
             ),
           ),

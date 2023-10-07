@@ -26,7 +26,7 @@ class _HomePageState extends ConsumerState<HomePage> {
       child: SingleChildScrollView(
         controller: _scrollController,
         child: const Padding(
-          padding: EdgeInsets.all(5),
+          padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
           child: Column(
             children: [
               // TODO: Optimize layout build jank.

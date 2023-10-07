@@ -71,15 +71,20 @@ class PinSection extends ConsumerWidget {
           _buildSectionThreads(context, sectionAllThreadPair);
 
       ret.add(Card(
-        child: Column(
-          children: [
-            Text(
-              sectionName ?? '',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-            const SizedBox(width: 10, height: 10),
-            threadWidgetList,
-          ],
+        clipBehavior: Clip.hardEdge,
+        margin: EdgeInsets.zero,
+        child: Padding(
+          padding: const EdgeInsets.only(top: 10),
+          child: Column(
+            children: [
+              Text(
+                sectionName ?? '',
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              const SizedBox(width: 10, height: 10),
+              threadWidgetList,
+            ],
+          ),
         ),
       ));
     }
@@ -89,9 +94,9 @@ class PinSection extends ConsumerWidget {
       // TODO: Not hardcode these Extent sizes.
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 800,
-        // Set to at least 550 to ensure not overflow when scaling window size down.
-        mainAxisExtent: 550,
+        // Set to at least 552 to ensure not overflow when scaling window size down.
         mainAxisSpacing: 20,
+        mainAxisExtent: 552,
         crossAxisSpacing: 20,
       ),
       children: ret,
