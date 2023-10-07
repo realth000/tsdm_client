@@ -15,7 +15,6 @@ part '../../generated/models/database/cookie.g.dart';
 class DatabaseCookie {
   DatabaseCookie({
     required this.id,
-    required this.uid,
     required this.username,
     required this.cookie,
     this.ignoreExpires,
@@ -24,10 +23,6 @@ class DatabaseCookie {
 
   @Id()
   int id;
-
-  /// Unique user id
-  @Index(unique: true)
-  int? uid;
 
   /// Username
   ///

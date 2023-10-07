@@ -38,8 +38,6 @@ class AppSettings extends _$AppSettings {
           _defaultWindowPositionDy,
       windowInCenter:
           _storage.getBool(settingsWindowInCenter) ?? _defaultWindowInCenter,
-      loginUserUid:
-          _storage.getInt(settingsLoginUserUid) ?? _defaultLoginUserUid,
       loginUsername:
           _storage.getString(settingsLoginUsername) ?? _defaultLoginUsername,
       themeMode: _storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
@@ -76,9 +74,6 @@ class AppSettings extends _$AppSettings {
   /// Window whether in the center of screen config on desktop platforms.
   static const _defaultWindowInCenter = false;
 
-  /// Login user uid.
-  static const _defaultLoginUserUid = -1;
-
   /// Login user username.
   static const _defaultLoginUsername = '';
 
@@ -112,12 +107,6 @@ class AppSettings extends _$AppSettings {
     state = state.copyWith(themeMode: themeMode);
   }
 
-  /// Update current login user uid.
-  Future<void> setLoginUserId(int uid) async {
-    await _storage.saveInt(settingsLoginUserUid, uid);
-    state = state.copyWith(loginUserUid: uid);
-  }
-
   /// Update current login user username.
   ///
   /// Because in some situation we don't know uid (e.g. try to login), use this
@@ -130,29 +119,28 @@ class AppSettings extends _$AppSettings {
     state = state.copyWith(loginUsername: username);
   }
 
-  /// Get a cookie belongs to user with [uid].
+  /// Get a cookie belongs to user with [username].
   ///
   /// Return null if not found.
-  DatabaseCookie? getCookie(int uid, String username) {
-    return _storage.getCookie(uid, username);
+  DatabaseCookie? getCookie(String username) {
+    return _storage.getCookie(username);
   }
 
   /// Save cookie into database.
   ///
   /// This function should only be called by cookie provider.
   Future<void> saveCookie(
-    int? uid,
     String username,
     Map<String, String> cookie,
   ) async {
-    return _storage.saveCookie(uid, username, cookie);
+    return _storage.saveCookie(username, cookie);
   }
 
-  /// Delete user [uid]'s cookie from database.
+  /// Delete user [username]'s cookie from database.
   ///
   /// This function should only be called by cookie provider.
-  Future<bool> deleteCookieByUid(int uid) async {
-    return _storage.deleteCookieByUid(uid);
+  Future<bool> deleteCookieByUsername(String username) async {
+    return _storage.deleteCookieByUsername(username);
   }
 }
 
@@ -196,16 +184,11 @@ class _SettingsStorage {
     }
   }
 
-  DatabaseCookie? getCookie(int uid, String username) {
-    final cookie = _isar.databaseCookies.where().uidEqualTo(uid).findFirst();
-    if (cookie != null) {
-      return cookie;
-    }
+  DatabaseCookie? getCookie(String username) {
     return _isar.databaseCookies.where().usernameEqualTo(username).findFirst();
   }
 
   Future<void> saveCookie(
-    int? uid,
     String username,
     Map<String, String> cookie,
   ) async {
@@ -221,16 +204,18 @@ class _SettingsStorage {
     await _isar.writeAsync((isar) {
       isar.databaseCookies.put(DatabaseCookie(
         id: isar.databaseCookies.autoIncrement(),
-        uid: uid,
         username: username,
         cookie: currentCookie,
       ));
     });
   }
 
-  Future<bool> deleteCookieByUid(int uid) async {
+  Future<bool> deleteCookieByUsername(String username) async {
     return _isar.writeAsync((isar) {
-      return isar.databaseCookies.where().uidEqualTo(uid).deleteFirst();
+      return isar.databaseCookies
+          .where()
+          .usernameEqualTo(username)
+          .deleteFirst();
     });
   }
 

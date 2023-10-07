@@ -9,7 +9,7 @@ import 'package:tsdm_client/utils/debug.dart';
 ///
 /// Not expose cookies, managing cookies with database.
 ///
-/// Because in this layer we do not know any information about user (e.g. uid,
+/// Because in this layer we do not know any information about user (e.g.
 /// username), what we can do is save these cookies as cache in memory.
 /// And it's cookieProvider's work to save them to database.
 class CookieData implements Storage {
@@ -23,23 +23,16 @@ class CookieData implements Storage {
         _cookieMap = cookie;
 
   CookieData.withData({
-    required int? uid,
     required String username,
     required Map<String, String> cookie,
     required this.cookieStreamSink,
-  })  : _uid = uid,
-        _username = username,
+  })  : _username = username,
         _cookieMap = cookie;
 
   /// Stream to send cookie event.
   final StreamSink<UserCookieEvent> cookieStreamSink;
 
-  int? _uid;
   String? _username;
-
-  /// Return userinfo if all info known, otherwise return null.
-  (int, String)? get userInfo =>
-      _uid == null || _username == null ? null : (_uid!, _username!);
 
   /// Cookie data.
   Map<String, String> _cookieMap = {};
@@ -47,16 +40,10 @@ class CookieData implements Storage {
   /// Check if user info completed or not.
   ///
   /// We should not do anything with cookie storage when user info is not complete.
-  bool _isUserInfoComplete({bool checkUid = false}) {
-    /// Do not check [_uid] is null or not here, because some time we need to
-    /// save cookie in database without knowing [uid].
-    ///
+  bool _isUserInfoComplete() {
     /// Note that the server side does not allow same username so it's safe to
     /// do this.
     if (_username == null) {
-      return false;
-    }
-    if (checkUid && _uid == null) {
       return false;
     }
     return true;
@@ -80,20 +67,19 @@ class CookieData implements Storage {
     }
 
     cookieStreamSink.add(UserCookieEvent.update(
-      uid: _uid,
       username: _username!,
       cookie: _cookieMap,
     ));
     return true;
   }
 
-  /// Delete current user [_uid]'s cookie from database.
+  /// Delete current user [_username]'s cookie from database.
   ///
   /// Return false if delete failed (maybe user not found in database) or missing
   /// user info.
   /// Return true is success.
   Future<bool> _deleteUserCookie() async {
-    if (!_isUserInfoComplete(checkUid: true)) {
+    if (!_isUserInfoComplete()) {
       debug(
         'refuse to delete single user cookie from database: user info incomplete',
       );
@@ -102,7 +88,6 @@ class CookieData implements Storage {
 
     debug('CookieData $hashCode: delete cookie: $_username');
     cookieStreamSink.add(UserCookieEvent.delete(
-      uid: _uid!,
       username: _username!,
     ));
     return true;
@@ -114,7 +99,7 @@ class CookieData implements Storage {
     // If user cookie is empty, delete that item from database.
     if (_cookieMap.isEmpty) {
       debug(
-        'delete user(uid=$_uid, username=$_username) from database because cookie value is empty',
+        'delete user $_username from database because cookie value is empty',
       );
       await _deleteUserCookie();
     } else {
