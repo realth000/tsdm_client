@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/models/database/cookie.dart';
 import 'package:tsdm_client/models/database/settings.dart';
 import 'package:tsdm_client/models/settings.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -20,6 +21,7 @@ class AppSettings extends _$AppSettings {
   Settings build() {
     // Close isar instance when provider disposes.
     ref.onDispose(() {
+      debug('warning: disposing database instance');
       _storage.dispose();
     });
 
@@ -44,6 +46,8 @@ class AppSettings extends _$AppSettings {
           _storage.getBool(settingsWindowInCenter) ?? _defaultWindowInCenter,
       loginUserUid:
           _storage.getInt(settingsLoginUserUid) ?? _defaultLoginUserUid,
+      loginUsername:
+          _storage.getString(settingsLoginUsername) ?? _defaultLoginUsername,
       themeMode: _storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
     );
   }
@@ -78,7 +82,11 @@ class AppSettings extends _$AppSettings {
   /// Window whether in the center of screen config on desktop platforms.
   static const _defaultWindowInCenter = false;
 
+  /// Login user uid.
   static const _defaultLoginUserUid = -1;
+
+  /// Login user username.
+  static const _defaultLoginUsername = '';
 
   /// Default app theme mode.
   ///
@@ -109,6 +117,49 @@ class AppSettings extends _$AppSettings {
     await _storage.saveInt(settingsThemeMode, themeMode);
     state = state.copyWith(themeMode: themeMode);
   }
+
+  /// Update current login user uid.
+  Future<void> setLoginUserId(int uid) async {
+    await _storage.saveInt(settingsLoginUserUid, uid);
+    state = state.copyWith(loginUserUid: uid);
+  }
+
+  /// Update current login user username.
+  ///
+  /// Because in some situation we don't know uid (e.g. try to login), use this
+  /// [username] to identify user.
+  ///
+  /// Note that the server side does not allow same username so it's safe to
+  /// treat username as user identifier.
+  Future<void> setLoginUsername(String username) async {
+    await _storage.saveString(settingsLoginUsername, username);
+    state = state.copyWith(loginUsername: username);
+  }
+
+  /// Get a cookie belongs to user with [uid].
+  ///
+  /// Return null if not found.
+  DatabaseCookie? getCookie(int uid, String username) {
+    return _storage.getCookie(uid, username);
+  }
+
+  /// Save cookie into database.
+  ///
+  /// This function should only be called by cookie provider.
+  Future<void> saveCookie(
+    int? uid,
+    String username,
+    Map<String, String> cookie,
+  ) async {
+    return _storage.saveCookie(uid, username, cookie);
+  }
+
+  /// Delete user [uid]'s cookie from database.
+  ///
+  /// This function should only be called by cookie provider.
+  Future<bool> deleteCookieByUid(int uid) async {
+    return _storage.deleteCookieByUid(uid);
+  }
 }
 
 /// Init settings, must call before start.
@@ -137,7 +188,7 @@ class _SettingsStorage {
     debug('init isar storage in $isarStorageDir');
 
     _isar = await Isar.openAsync(
-      schemas: [DatabaseSettingsSchema],
+      schemas: [DatabaseSettingsSchema, DatabaseCookieSchema],
       directory: isarStorageDir.path,
       name: 'main',
     );
@@ -149,6 +200,44 @@ class _SettingsStorage {
     if (_initialized) {
       _isar.close();
     }
+  }
+
+  DatabaseCookie? getCookie(int uid, String username) {
+    final cookie = _isar.databaseCookies.where().uidEqualTo(uid).findFirst();
+    if (cookie != null) {
+      return cookie;
+    }
+    return _isar.databaseCookies.where().usernameEqualTo(username).findFirst();
+  }
+
+  Future<void> saveCookie(
+    int? uid,
+    String username,
+    Map<String, String> cookie,
+  ) async {
+    final currentCookie = _isar.databaseCookies
+            .where()
+            .usernameEqualTo(username)
+            .findFirst()
+            ?.cookie ??
+        {};
+
+    /// Combine two map together, do not directly use [cookie].
+    currentCookie.addAll(cookie);
+    await _isar.writeAsync((isar) {
+      isar.databaseCookies.put(DatabaseCookie(
+        id: isar.databaseCookies.autoIncrement(),
+        uid: uid,
+        username: username,
+        cookie: currentCookie,
+      ));
+    });
+  }
+
+  Future<bool> deleteCookieByUid(int uid) async {
+    return _isar.writeAsync((isar) {
+      return isar.databaseCookies.where().uidEqualTo(uid).deleteFirst();
+    });
   }
 
   /// Get string type value of specified key.

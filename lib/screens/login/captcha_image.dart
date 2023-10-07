@@ -21,7 +21,7 @@ class _VerityImageState extends ConsumerState<CaptchaImage> {
   Widget build(BuildContext context) {
     debug('fetching login captcha');
     return FutureBuilder(
-      future: ref.read(netClientProvider).getUri(
+      future: ref.read(netClientProvider()).getUri(
             CaptchaImage._fakeFormVerifyUri,
             options: Options(responseType: ResponseType.bytes),
           ),

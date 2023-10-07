@@ -58,7 +58,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
       document = widget.initialData!;
       _initialized = true;
     } else {
-      final d1 = await ref.read(netClientProvider).get<dynamic>(
+      final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
       document = html_parser.parse(d1.data);

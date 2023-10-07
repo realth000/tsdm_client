@@ -17,6 +17,7 @@ class Settings with _$Settings {
     required double windowPositionDy,
     required bool windowInCenter,
     required int loginUserUid,
+    required String loginUsername,
     required int themeMode,
   }) = _Settings;
 }
@@ -31,6 +32,7 @@ const settingsWindowPositionDx = 'windowPositionX';
 const settingsWindowPositionDy = 'windowPositionY';
 const settingsWindowInCenter = 'windowInCenter';
 const settingsLoginUserUid = 'loginUserUid';
+const settingsLoginUsername = 'loginUsername';
 const settingsThemeMode = 'ThemeMode';
 
 /// All settings names (as keys) and settings value types (as values).
@@ -45,5 +47,6 @@ const settingsMap = <String, Type>{
   settingsWindowPositionDy: double,
   settingsWindowInCenter: bool,
   settingsLoginUserUid: int,
+  settingsLoginUsername: String,
   settingsThemeMode: int,
 };

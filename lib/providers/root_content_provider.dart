@@ -77,7 +77,7 @@ ThreadAuthorPair? _filterThreadAndAuthors(Element element) {
 }
 
 /// Provider to prepare root page content from homepage "https://www.tsdm39.com/forum.php"
-// TODO: Make this a not presistant provider.
+// TODO: Make this a not persist provider.
 @Riverpod(keepAlive: true, dependencies: [NetClient])
 class RootContent extends _$RootContent {
   static const String _rootPage = 'https://www.tsdm39.com/forum.php';
@@ -91,7 +91,7 @@ class RootContent extends _$RootContent {
   ///
   /// This will take a long time so use cached data as possible.
   Future<CachedRootContent> fetch() async {
-    final resp = await ref.read(netClientProvider).get(_rootPage);
+    final resp = await ref.read(netClientProvider()).get(_rootPage);
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error(
           'failed to load root page content, status code is ${resp.statusCode}');

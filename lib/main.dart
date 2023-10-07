@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
@@ -10,7 +9,6 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initSettings();
-  await initCookieStorage();
   if (isDesktop) {
     await _initWindow();
   }

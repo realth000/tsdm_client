@@ -31,7 +31,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     //
     // 其中"main_message_"后面的是本次登录的loginHash，登录时需要加到url上
     final rawData =
-        await ref.read(netClientProvider).get(LoginPage._fakeFormUrl);
+        await ref.read(netClientProvider()).get(LoginPage._fakeFormUrl);
     final data = rawData.data as String;
     final re = RegExp(r'layer_login_(?<Hash>\w+)');
     final match = re.firstMatch(data);

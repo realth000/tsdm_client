@@ -8,6 +8,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/screens/login/captcha_image.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
@@ -62,7 +63,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     };
     final target =
         'https://tsdm39.com/member.php?mod=logging&action=login&loginsubmit=yes&frommessage&loginhash=${widget.loginHash}';
-    final resp = await ref.read(netClientProvider).post(
+    final resp = await ref
+        .read(netClientProvider(username: usernameController.text))
+        .post(
           target,
           data: body,
           options: Options(
@@ -104,7 +107,55 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       switch (loginResult) {
         case LoginAttemptResult.success:
           debug(
-              'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}');
+            'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
+          );
+
+          // TODO: Do this update in auth provider.
+          // FIXME: Now the check login state logic always fails with login
+          // failure. Fix this or we can not get uid and username.
+          // Update login state.
+          await ref
+              .read(appSettingsProvider.notifier)
+              .setLoginUsername(usernameController.text);
+          // final resp = await ref
+          //     .refresh(netClientProvider(username: usernameController.text))
+          //     .get('https://www.tsdm39.com/home.php?mod=task');
+          // final document = html_parser.parse(resp.data);
+          // final userNode =
+          //     document.querySelector('div#inner_stat > strong > a');
+          // if (userNode == null) {
+          //   debug(
+          //     'failed to find user node when check login state, seems not login.',
+          //   );
+          //   debug(document.body?.innerHtml);
+          //   return;
+          // }
+          // final uid = userNode.firstHref()?.split('uid=').last;
+          // if (uid == null) {
+          //   debug(
+          //     'failed to find uid when checking login state, seems not login',
+          //   );
+          //   return;
+          // }
+          // final username = userNode.firstEndDeepText();
+          // if (username == null) {
+          //   debug(
+          //     'failed to find username when checking login state, seems not login',
+          //   );
+          //   return;
+          // }
+          // await ref
+          //     .read(appSettingsProvider.notifier)
+          //     .setLoginUserId(int.parse(uid));
+          // await ref
+          //     .read(appSettingsProvider.notifier)
+          //     .setLoginUsername(username);
+          // debug('update login state: uid=$uid, username=$username');
+
+          if (!mounted) {
+            return;
+          }
+
           context.pushReplacementNamed(
             widget.redirectPath,
             pathParameters: widget.redirectPathParameters,
@@ -250,7 +301,9 @@ enum LoginAttemptResult {
       }
 
       // Impossible unless server response page updated and changed these messages.
-      debug('login result check passed but message check maybe outdated');
+      debug(
+        'login result check passed but message check maybe outdated: $message',
+      );
       return LoginAttemptResult.success;
     }
 
