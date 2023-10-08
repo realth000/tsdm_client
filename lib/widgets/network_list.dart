@@ -49,10 +49,6 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
   Future<void> _loadData() async {
-    if (!mounted) {
-      return;
-    }
-
     late final Document document;
     if (!_initialized && widget.initialData != null) {
       document = widget.initialData!;
@@ -65,7 +61,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     }
     final data = widget.listBuilder(document);
 
-    // FIXME: Fix not disposed when navigate back.
+    if (!mounted) {
+      return;
+    }
     setState(() {
       _allData.addAll(data);
     });
@@ -144,6 +142,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
                   widget.widgetBuilder(context, _allData[index]),
             ),
             onRefresh: () async {
+              if (!mounted) {
+                return;
+              }
               _clearData();
               await _loadData();
               _refreshController
@@ -151,6 +152,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
                 ..resetFooter();
             },
             onLoad: () async {
+              if (!mounted) {
+                return;
+              }
               if (!widget.canFetchMorePages) {
                 _clearData();
               }
@@ -166,6 +170,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
               heroTag: 2,
               child: const Icon(Icons.refresh),
               onPressed: () async {
+                if (!mounted) {
+                  return;
+                }
                 await _refreshController.callRefresh();
                 setState(() {
                   _showMenu = false;
