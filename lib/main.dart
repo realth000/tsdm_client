@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,6 +14,16 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initSettings();
+  // FIXME: Do not use ProviderContainer.
+  final settingsLocale = ProviderContainer().read(appSettingsProvider).locale;
+  final locale =
+      AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
+  if (locale == null) {
+    LocaleSettings.useDeviceLocale();
+  } else {
+    LocaleSettings.setLocale(locale);
+  }
+
   if (isDesktop) {
     await _initWindow();
   }
@@ -41,16 +52,6 @@ class TClientApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // final settingsLocale = ref.read(appSettingsProvider).locale;
-    // final locale = AppLocale.values
-    //     .firstWhereOrNull((v) => v.languageTag == settingsLocale);
-    // late final Locale flutterLocale;
-    // if (locale == null) {
-    //   flutterLocale = TranslationProvider.of(context).flutterLocale;
-    // } else {
-    //   flutterLocale = locale.flutterLocale;
-    // }
-
     return MaterialApp.router(
       title: context.t.appName,
       locale: TranslationProvider.of(context).flutterLocale,

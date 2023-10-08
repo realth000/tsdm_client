@@ -17,14 +17,14 @@ class RootPage extends ConsumerWidget {
         return AutoRedirectDialog(
           duration: const Duration(milliseconds: 500),
           child: Center(
-            child: Text(t.rootPage.initFinished),
+            child: Text(context.t.rootPage.initFinished),
           ),
           callback: () => context.go(ScreenPaths.homepage),
         );
       },
       error: (err, _) {
         return Center(
-          child: Text(t.rootPage.initFailed(err: err)),
+          child: Text(context.t.rootPage.initFailed(err: err)),
         );
       },
       loading: () {
@@ -42,7 +42,7 @@ class RootPage extends ConsumerWidget {
                   width: 20,
                   height: 20,
                 ),
-                Text(t.rootPage.initializingData),
+                Text(context.t.rootPage.initializingData),
               ],
             ),
           ),

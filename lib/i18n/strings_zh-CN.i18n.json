@@ -65,6 +65,6 @@
   "rootPage": {
     "initFailed": "初始化失败: $err",
     "initializingData": "正在初始化数据",
-    "initFinished": "Init finished"
+    "initFinished": "初始化完成"
   }
 }
