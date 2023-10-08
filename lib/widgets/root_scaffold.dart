@@ -7,6 +7,7 @@ class RootScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Add animation transition here.
     return Scaffold(
       body: child,
     );

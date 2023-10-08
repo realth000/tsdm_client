@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/screens/homepage/pin_section.dart';
 import 'package:tsdm_client/screens/homepage/welcome_section.dart';
+import 'package:tsdm_client/widgets/app_navitaion_bar.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -21,26 +23,30 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      controller: _scrollController,
-      child: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(title: Text(context.t.navigation.homepage)),
+      body: Scrollbar(
         controller: _scrollController,
-        child: const Padding(
-          padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
-          child: Column(
-            children: [
-              // TODO: Optimize layout build jank.
-              // TODO: Optimize page when not login (no cookie or cookie invalid).
-              WelcomeSection(),
-              SizedBox(
-                width: 20,
-                height: 20,
-              ),
-              PinSection(),
-            ],
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: const Padding(
+            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+            child: Column(
+              children: [
+                // TODO: Optimize layout build jank.
+                // TODO: Optimize page when not login (no cookie or cookie invalid).
+                WelcomeSection(),
+                SizedBox(
+                  width: 20,
+                  height: 20,
+                ),
+                PinSection(),
+              ],
+            ),
           ),
         ),
       ),
+      bottomNavigationBar: const AppNavigationBar(),
     );
   }
 }

@@ -61,9 +61,6 @@ class TClientApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
       routerConfig: tClientRouter,
-      // TODO: Actually we are using the [TClientScaffold] inside every page.
-      // Maybe can do something to this duplicate scaffold.
-      builder: (context, child) => Scaffold(body: child),
     );
   }
 }

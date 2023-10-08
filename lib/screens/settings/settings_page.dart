@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
+import 'package:tsdm_client/widgets/app_navitaion_bar.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -98,17 +99,21 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scrollbar(
-      controller: scrollController,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 18),
-        child: ListView(
-          controller: scrollController,
-          children: [
-            ..._buildAppearanceSection(context),
-          ],
+    return Scaffold(
+      appBar: AppBar(title: Text(context.t.navigation.settings)),
+      body: Scrollbar(
+        controller: scrollController,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
+          child: ListView(
+            controller: scrollController,
+            children: [
+              ..._buildAppearanceSection(context),
+            ],
+          ),
         ),
       ),
+      bottomNavigationBar: const AppNavigationBar(),
     );
   }
 }
