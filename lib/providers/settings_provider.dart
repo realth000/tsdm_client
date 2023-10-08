@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/database/cookie.dart';
 import 'package:tsdm_client/models/database/settings.dart';
 import 'package:tsdm_client/models/settings.dart';
@@ -41,6 +42,7 @@ class AppSettings extends _$AppSettings {
       loginUsername:
           _storage.getString(settingsLoginUsername) ?? _defaultLoginUsername,
       themeMode: _storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
+      locale: _storage.getString(settingsLocale) ?? _defaultLocale,
     );
   }
 
@@ -83,6 +85,11 @@ class AppSettings extends _$AppSettings {
   /// 1: [ThemeMode.light]
   /// 2: [ThemeMode.dark]
   static final _defaultThemeMode = ThemeMode.system.index;
+
+  /// Locale
+  ///
+  /// Empty means follow system locale.
+  static const _defaultLocale = '';
 
   Future<void> setWindowSize(Size size) async {
     await _storage.saveDouble(settingsWindowWidth, size.width);
@@ -141,6 +148,17 @@ class AppSettings extends _$AppSettings {
   /// This function should only be called by cookie provider.
   Future<bool> deleteCookieByUsername(String username) async {
     return _storage.deleteCookieByUsername(username);
+  }
+
+  Future<void> setLocale(String locale) async {
+    // Filter invalid locales.
+    // Empty locale means follow system locale.
+    if (locale.isNotEmpty &&
+        !AppLocale.values.any((v) => v.languageTag == locale)) {
+      return;
+    }
+    await _storage.saveString(settingsLocale, locale);
+    state = state.copyWith(locale: locale);
   }
 }
 

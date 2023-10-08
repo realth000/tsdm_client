@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
@@ -27,7 +28,7 @@ class _VerityImageState extends ConsumerState<CaptchaImage> {
           ),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          final message = 'failed to get login captcha: ${snapshot.error}';
+          final message = t.loginPage.failedToGetCaptcha(err: snapshot.error!);
           debug(message);
           return Text(message);
         }

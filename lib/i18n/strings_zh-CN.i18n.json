@@ -1,0 +1,70 @@
+{
+  "locale": "简体中文",
+  "appName": "天使动漫客户端",
+  "general": {
+    "ok": "确定",
+    "cancel": "取消",
+    "needLoginToSeeThisPage": "登录后才能访问此页面"
+  },
+  "navigation": {
+    "homepage": "主页",
+    "topics": "分区",
+    "settings": "设置"
+  },
+  "homepage": {
+    "title": "主页",
+    "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2"
+  },
+  "topicPage": {
+    "title": "分区",
+    "threads": "主题: ",
+    "posts": "帖数: ",
+    "today": "今日: ",
+    "new0": "新帖: "
+  },
+  "settingsPage": {
+    "title": "设置",
+    "appearanceSection": {
+      "title": "外观",
+      "themeMode": {
+        "title": "主题模式",
+        "light": "浅色",
+        "system": "跟随系统",
+        "dark": "深色"
+      },
+      "languages": {
+        "title": "语言",
+        "followSystem": "跟随系统",
+        "selectLanguage": "选择语言"
+      }
+    }
+  },
+  "loginPage": {
+    "login": "登录",
+    "username": "用户名",
+    "usernameEmpty": "用户名不能为空",
+    "password": "密码",
+    "passwordEmpty": "密码不能为空",
+    "verifyCode": "验证码",
+    "verifyCodeEmpty": "验证码不能为空",
+    "failedToLoginStatusCode": "登录失败: 状态码=$code",
+    "failedToLoginMessageNodeNotFound": "登录失败: 未找到MessageNode",
+    "loginResultSuccess": "登录成功",
+    "loginResultIncorrectCaptcha": "验证码错误",
+    "loginResultMaybeInvalidUsernameOrPassword": "可能是由于用户名或密码错误",
+    "loginResultTooManyLoginAttempts": "登录尝试次数过多",
+    "loginResultOtherErrors": "其他错误",
+    "loginResultUnknown": "未知的登录结果",
+    "loginFailed": "登录失败",
+    "failedToGetLoginHash": "获取登录值失败: $err",
+    "failedToGetCaptcha": "获取验证码失败: $err",
+    "failedToGetFormHash": "获取表格哈希失败",
+    "hashValueNotFound": "找不到hash",
+    "preparingLogin": "准备登录"
+  },
+  "rootPage": {
+    "initFailed": "初始化失败: $err",
+    "initializingData": "正在初始化数据",
+    "initFinished": "Init finished"
+  }
+}

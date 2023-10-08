@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/root/auto_redirect_dialog.dart';
@@ -15,15 +16,15 @@ class RootPage extends ConsumerWidget {
       data: (_) {
         return AutoRedirectDialog(
           duration: const Duration(milliseconds: 500),
-          child: const Center(
-            child: Text('Init finished'),
+          child: Center(
+            child: Text(t.rootPage.initFinished),
           ),
           callback: () => context.go(ScreenPaths.homepage),
         );
       },
       error: (err, _) {
         return Center(
-          child: Text('init failed: $err'),
+          child: Text(t.rootPage.initFailed(err: err)),
         );
       },
       loading: () {
@@ -33,15 +34,15 @@ class RootPage extends ConsumerWidget {
               maxWidth: 500,
               maxHeight: 500,
             ),
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                CircularProgressIndicator(),
-                SizedBox(
+                const CircularProgressIndicator(),
+                const SizedBox(
                   width: 20,
                   height: 20,
                 ),
-                Text('Initializing data'),
+                Text(t.rootPage.initializingData),
               ],
             ),
           ),

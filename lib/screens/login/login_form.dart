@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/screens/login/captcha_image.dart';
@@ -76,7 +77,9 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     // err_login_captcha_invalid
 
     if (resp.statusCode != HttpStatus.ok) {
-      final message = 'failed to login: StatusCode=${resp.statusCode}';
+      final message = t.loginPage.failedToLoginStatusCode(
+        code: resp.statusCode ?? 'null',
+      );
       debug(message);
       if (mounted) {
         return showLoginFailedDialog(context, message);
@@ -90,7 +93,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     final loginResultMessageNode = document.getElementById('messagetext');
     if (loginResultMessageNode == null) {
       // Impossible.
-      const message = 'failed to login: login result message node not found';
+      final message = t.loginPage.failedToLoginMessageNodeNotFound;
       debug(message);
       if (mounted) {
         return showLoginFailedDialog(context, message);
@@ -177,26 +180,26 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       child: Column(
         children: [
           Text(
-            'Login',
+            t.loginPage.login,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           const SizedBox(width: 10, height: 10),
           TextFormField(
             autofocus: true,
             controller: usernameController,
-            decoration: const InputDecoration(
-              prefixIcon: Icon(Icons.person),
-              labelText: 'Username',
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.person),
+              labelText: t.loginPage.username,
             ),
             validator: (v) =>
-                v!.trim().isNotEmpty ? null : 'Username should not be empty',
+                v!.trim().isNotEmpty ? null : t.loginPage.usernameEmpty,
           ),
           const SizedBox(width: 10, height: 10),
           TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.password),
-              labelText: 'Password',
+              labelText: t.loginPage.password,
               suffixIcon: IconButton(
                 icon: _showPassword
                     ? const Icon(Icons.visibility)
@@ -210,7 +213,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             ),
             obscureText: true,
             validator: (v) =>
-                v!.trim().isNotEmpty ? null : 'Password should not be empty',
+                v!.trim().isNotEmpty ? null : t.loginPage.passwordEmpty,
           ),
           const SizedBox(width: 10, height: 10),
           Row(
@@ -218,13 +221,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               Expanded(
                 child: TextFormField(
                   controller: verifyCodeController,
-                  decoration: const InputDecoration(
-                    prefixIcon: Icon(Icons.pin),
-                    labelText: 'Verify Code',
+                  decoration: InputDecoration(
+                    prefixIcon: const Icon(Icons.pin),
+                    labelText: t.loginPage.verifyCode,
                   ),
-                  validator: (v) => v!.trim().isNotEmpty
-                      ? null
-                      : 'Verify code should not be empty',
+                  validator: (v) =>
+                      v!.trim().isNotEmpty ? null : t.loginPage.verifyCodeEmpty,
                 ),
               ),
               const SizedBox(width: 10, height: 10),
@@ -242,7 +244,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: _login,
-                  child: const Text('Login'),
+                  child: Text(t.loginPage.login),
                 ),
               ),
             ],
@@ -341,17 +343,17 @@ enum LoginAttemptResult {
   String toString() {
     switch (this) {
       case LoginAttemptResult.success:
-        return 'login success';
+        return t.loginPage.loginResultSuccess;
       case LoginAttemptResult.incorrectCaptcha:
-        return 'incorrect captcha';
+        return t.loginPage.loginResultIncorrectCaptcha;
       case LoginAttemptResult.maybeInvalidUsernameOrPassword:
-        return 'maybe invalid username or password';
+        return t.loginPage.loginResultMaybeInvalidUsernameOrPassword;
       case LoginAttemptResult.loginAttemptLimit:
-        return 'too many login attempts';
+        return t.loginPage.loginResultTooManyLoginAttempts;
       case LoginAttemptResult.otherError:
-        return 'other errors';
+        return t.loginPage.loginResultOtherErrors;
       case LoginAttemptResult.unknown:
-        return 'failed with unknown reason';
+        return t.loginPage.loginResultUnknown;
     }
   }
 }
@@ -362,14 +364,14 @@ Future<void> showLoginFailedDialog(BuildContext context, String message) async {
     builder: (context) {
       return AlertDialog(
         scrollable: true,
-        title: const Text('Login failed'),
+        title: Text(t.loginPage.loginFailed),
         content: Text(message),
         actions: [
           TextButton(
             onPressed: () {
               Navigator.pop(context);
             },
-            child: const Text('Ok'),
+            child: Text(t.general.ok),
           )
         ],
       );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/screens/login/login_form.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -38,7 +39,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     loginHash = match?.namedGroup('Hash');
     if (loginHash == null) {
       debug('failed to get login hash');
-      return Future.error('prepare failed');
+      return Future.error(t.loginPage.hashValueNotFound);
     }
 
     final re2 = RegExp(r'formhash" value="(?<FormHash>\w+)"');
@@ -46,7 +47,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
     formHash = formHashMatch?.namedGroup('FormHash');
     if (formHash == null) {
       debug('failed to get form hash');
-      return Future.error('prepare failed');
+      return Future.error(t.loginPage.failedToGetFormHash);
     }
 
     debug('get login hash $loginHash');
@@ -59,7 +60,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       future: _fetchLoginHash(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text('failed to get login hash: ${snapshot.error}');
+          return Text(t.loginPage.failedToGetLoginHash(err: snapshot.error!));
         }
 
         if (snapshot.hasData) {
@@ -80,13 +81,13 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           );
         }
 
-        return const Center(
+        return Center(
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(width: 10, height: 10),
-              Text('Preparing login'),
+              const CircularProgressIndicator(),
+              const SizedBox(width: 10, height: 10),
+              Text(t.loginPage.preparingLogin),
             ],
           ),
         );

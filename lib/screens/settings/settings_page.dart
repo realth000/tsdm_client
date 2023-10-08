@@ -1,6 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/screens/settings/language_dialog.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -19,16 +22,36 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     super.dispose();
   }
 
+  Future<void> selectLanguageDialog(
+    BuildContext context,
+    String currentLocale,
+  ) async {
+    await showDialog<bool>(
+      context: context,
+      builder: (context) => const LanguageDialog(),
+    );
+  }
+
   List<Widget> _buildAppearanceSection(BuildContext context) {
+    final settingsLocale = ref.watch(appSettingsProvider).locale;
+    final locale = AppLocale.values
+        .firstWhereOrNull((v) => v.languageTag == settingsLocale);
+    final localeName = locale?.languageTag ??
+        context.t.settingsPage.appearanceSection.languages.followSystem;
+
     return [
-      const SectionTitleText('Appearance'),
+      // Appearance
+      SectionTitleText(context.t.settingsPage.appearanceSection.title),
+      // Theme mode
       ListTile(
         contentPadding: EdgeInsets.zero,
-        title: const Text('Theme Mode'),
+        title: Text(context.t.settingsPage.appearanceSection.themeMode.title),
         subtitle: Text(
-          ThemeMode.values[ref.watch(appSettingsProvider).themeMode]
-              .toString()
-              .split('.')[1],
+          <String>[
+            context.t.settingsPage.appearanceSection.themeMode.system,
+            context.t.settingsPage.appearanceSection.themeMode.light,
+            context.t.settingsPage.appearanceSection.themeMode.dark,
+          ][ref.watch(appSettingsProvider).themeMode],
         ),
         trailing: ToggleButtons(
           isSelected: [
@@ -60,6 +83,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 .setThemeMode(themeIndex);
           },
         ),
+      ),
+      // Language
+      ListTile(
+        contentPadding: EdgeInsets.zero,
+        title: Text(context.t.settingsPage.appearanceSection.languages.title),
+        subtitle: Text(localeName),
+        onTap: () async {
+          await selectLanguageDialog(context, localeName);
+        },
       ),
     ];
   }

@@ -2,7 +2,6 @@ import 'package:card_swiper/card_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as dom;
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';

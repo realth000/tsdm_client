@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
@@ -16,28 +17,6 @@ class _NavigationBarItem {
   final String targetPath;
 }
 
-final _barItems = [
-  _NavigationBarItem(
-    icon: const Icon(Icons.home),
-    label: '首页',
-    targetPath: ScreenPaths.homepage,
-  ),
-  _NavigationBarItem(
-    icon: const Icon(Icons.topic),
-    label: 'Topics',
-    targetPath: ScreenPaths.topic,
-  ),
-  // _NavigationBarItem(
-  //     icon: const Icon(Icons.person),
-  //     label: '我的',
-  //     targetPath: ScreenPaths.profile),
-  _NavigationBarItem(
-    icon: const Icon(Icons.settings),
-    label: '设置',
-    targetPath: ScreenPaths.settings,
-  ),
-];
-
 class AppNavigationBar extends ConsumerStatefulWidget {
   const AppNavigationBar({super.key});
 
@@ -48,14 +27,36 @@ class AppNavigationBar extends ConsumerStatefulWidget {
 class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
   @override
   Widget build(BuildContext context) {
+    final barItems = [
+      _NavigationBarItem(
+        icon: const Icon(Icons.home),
+        label: context.t.navigation.homepage,
+        targetPath: ScreenPaths.homepage,
+      ),
+      _NavigationBarItem(
+        icon: const Icon(Icons.topic),
+        label: context.t.navigation.topics,
+        targetPath: ScreenPaths.topic,
+      ),
+      // _NavigationBarItem(
+      //     icon: const Icon(Icons.person),
+      //     label: '我的',
+      //     targetPath: ScreenPaths.profile),
+      _NavigationBarItem(
+        icon: const Icon(Icons.settings),
+        label: context.t.navigation.settings,
+        targetPath: ScreenPaths.settings,
+      ),
+    ];
+
     return NavigationBar(
-      destinations: _barItems
+      destinations: barItems
           .map((e) => NavigationDestination(icon: e.icon, label: e.label))
           .toList(),
       selectedIndex: ref.watch(appNavigationBarIndexProvider),
       onDestinationSelected: (index) {
         ref.read(appNavigationBarIndexProvider.notifier).state = index;
-        context.goNamed(_barItems[index].targetPath);
+        context.goNamed(barItems[index].targetPath);
       },
     );
   }

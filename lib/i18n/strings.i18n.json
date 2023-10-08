@@ -1,0 +1,70 @@
+{
+  "locale": "English",
+  "appName": "TSDM Client",
+  "general": {
+    "ok": "Ok",
+    "cancel": "Cancel",
+    "needLoginToSeeThisPage": "Need to login to see this page"
+  },
+  "navigation": {
+    "homepage": "Home",
+    "topics": "Topics",
+    "settings": "Settings"
+  },
+  "homepage": {
+    "title": "TSDM Client",
+    "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2"
+  },
+  "topicPage": {
+    "title": "Topics",
+    "threads": "Threads: ",
+    "posts": "Posts: ",
+    "today": "Today: ",
+    "new0": "New: "
+  },
+  "settingsPage": {
+    "title": "Settings",
+    "appearanceSection": {
+      "title": "Appearance",
+      "themeMode": {
+        "title": "Theme Mode",
+        "light": "Light",
+        "system": "Follow System",
+        "dark": "Dark"
+      },
+      "languages": {
+        "title": "Languages",
+        "followSystem": "Follow System",
+        "selectLanguage": "选择语言"
+      }
+    }
+  },
+  "loginPage": {
+    "login": "Login",
+    "username": "Username",
+    "usernameEmpty": "Username should not be empty",
+    "password": "Password",
+    "passwordEmpty": "Password should not be empty",
+    "verifyCode": "Verification code",
+    "verifyCodeEmpty": "Verification code should not be empty",
+    "failedToLoginStatusCode": "Failed to login: StatusCode=$code",
+    "failedToLoginMessageNodeNotFound": "Failed to login: Message node not found",
+    "loginResultSuccess": "Login success",
+    "loginResultIncorrectCaptcha": "Incorrect verification code",
+    "loginResultMaybeInvalidUsernameOrPassword": "Maybe invalid username or password",
+    "loginResultTooManyLoginAttempts": "Too many login attempts",
+    "loginResultOtherErrors": "Other error",
+    "loginResultUnknown": "Unknown login result",
+    "loginFailed": "Login failed",
+    "failedToGetLoginHash": "Failed to get login value: $err",
+    "failedToGetCaptcha": "Failed to get captcha: $err",
+    "failedToGetFormHash": "Failed to get form hash",
+    "hashValueNotFound": "找不到hash",
+    "preparingLogin": "Preparing login"
+  },
+  "rootPage": {
+    "initFailed": "Init failed: $err",
+    "initializingData": "Initializing data",
+    "initFinished": "Init finished"
+  }
+}

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
@@ -46,15 +47,17 @@ class PinSection extends ConsumerWidget {
     final navNameList = cache.navNameList;
     final navThreadList = cache.sectionAllThreadPairList;
     if (navNameList == null || navNameList.length != navThreadList.length) {
-      final errorText =
-          'failed to build homepage pin section: navName length: ${navNameList?.length}, navShowList length: ${navThreadList.length}';
+      final errorText = t.homepage.failedToBuildPinSection(
+        length1: navNameList?.length ?? 'null',
+        length2: navThreadList.length,
+      );
       debug(errorText);
       return Text(errorText);
     }
 
     if (navNameList.isEmpty || navThreadList.isEmpty) {
-      return const Center(
-        child: Text('Need to login to see recent pinned threads in homepage'),
+      return Center(
+        child: Text(context.t.general.needLoginToSeeThisPage),
       );
     }
 

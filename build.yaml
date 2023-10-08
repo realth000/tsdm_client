@@ -12,3 +12,6 @@ targets:
         options:
           build_extensions:
             '^lib/{{}}.dart': 'lib/generated/{{}}.freezed.dart'
+      slang_build_runner:
+        options:
+          output_directory: 'lib/generated/i18n'
