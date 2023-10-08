@@ -90,6 +90,7 @@ class PinSection extends ConsumerWidget {
     }
 
     return GridView(
+      physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
       // TODO: Not hardcode these Extent sizes.
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
