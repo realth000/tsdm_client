@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
@@ -16,14 +17,11 @@ class WelcomeSection extends ConsumerWidget {
 
   Widget _buildKahrpbaSwiper(BuildContext context, List<String?> picUrlList,
       List<String?> picHrefList) {
-    return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxWidth: _kahrpbaPicWidth,
-        maxHeight: _kahrpbaPicHeight,
-      ),
-      child: Card(
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxHeight:  _kahrpbaPicHeight),
         child: Swiper(
           itemBuilder: (context, index) {
             return Image.network(picUrlList[index]!);
@@ -134,18 +132,19 @@ class WelcomeSection extends ConsumerWidget {
     if (memberInfoList == null) {
       debug('homepage forum info node not found, skip build');
     } else {
-      linkTileList
-        .add(_buildForumStatusRow(context, memberInfoList));
+      linkTileList.add(_buildForumStatusRow(context, memberInfoList));
     }
 
+    final needExpand = ResponsiveBreakpoints.of(context).largerOrEqualTo('homepage_welcome_expand');
+
     return ConstrainedBox(
-      constraints: const BoxConstraints(
-        maxHeight: _kahrpbaPicHeight,
+      constraints: BoxConstraints(
+        maxHeight: needExpand ? _kahrpbaPicHeight : _kahrpbaPicHeight * 2 + 20,
       ),
-      child: Row(
-        // crossAxisAlignment: CrossAxisAlignment.start,
+      child: Flex(
+        direction: needExpand ? Axis.horizontal : Axis.vertical,
         children: [
-          _buildKahrpbaSwiper(context, picUrlList, picHrefList),
+          Expanded(child: _buildKahrpbaSwiper(context, picUrlList, picHrefList)),
           const SizedBox(
             width: 20,
             height: 20,

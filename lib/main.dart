@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:responsive_framework/breakpoint.dart';
+import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
@@ -12,9 +14,19 @@ Future<void> main() async {
   if (isDesktop) {
     await _initWindow();
   }
-  runApp(const ProviderScope(
-    child: TClientApp(),
-  ));
+  runApp(
+    ResponsiveBreakpoints.builder(
+      breakpoints: const [
+        Breakpoint(start: 0, end: 450, name: MOBILE),
+        Breakpoint(start: 451, end: 800, name: TABLET),
+        Breakpoint(start: 801, end: 1920, name: DESKTOP),
+        Breakpoint(start: 1921, end: double.infinity, name: '4k'),
+        Breakpoint(start: 650, end: 650, name: 'homepage_welcome_expand'),
+        Breakpoint(start: 900, end: 900, name: 'app_expand_side_panel'),
+      ],
+      child: const ProviderScope(child: TClientApp()),
+    ),
+  );
 }
 
 /// Main app.
