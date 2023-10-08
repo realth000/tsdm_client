@@ -51,12 +51,12 @@ android {
         // webview_flutter_android acquires minSdkVersion >= 19, restore this when no longer use it.
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion 23
-        targetSdkVersion 33
+        targetSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
 
-     buildTypes {
+    buildTypes {
         debug {
             ndk {
                 abiFilters "arm64-v8a", "armeabi-v7a", "x86_64"
