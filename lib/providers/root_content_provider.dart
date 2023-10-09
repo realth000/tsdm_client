@@ -103,7 +103,7 @@ class RootContent extends _$RootContent {
     _cache = CachedRootContent();
     await _cache.analyze(_doc);
 
-    final uid = await ref.read(authProvider().notifier).parseDocument(_doc);
+    final uid = await ref.read(authProvider.notifier).checkAuthByParseDocument(_doc);
     if (uid != null) {
       ref.read(loggedUserUidProvider.notifier).state = uid;
       debug('root content with logged user: $uid');

@@ -15,22 +15,26 @@ enum AuthCheckResult {
   notAuthed,
 }
 
+/// Auth state manager.
 @Riverpod(dependencies: [NetClient])
 class Auth extends _$Auth {
   static const _authPath = 'https://www.tsdm39.com/home.php?mod=spacecp';
 
+  /// Check auth state.
+  ///
+  /// If logged in, return uid, otherwise return null.
   @override
-  Future<String?> build({String? username}) async {
+  Future<String?> build() async {
     // Use refresh() to ensure using the latest cookie.
     final resp = await ref.refresh(netClientProvider()).get(_authPath);
     if (resp.statusCode != HttpStatus.ok) {
       return null;
     }
     final document = html_parser.parse(resp.data);
-    return parseDocument(document);
+    return checkAuthByParseDocument(document);
   }
 
-  Future<String?> parseDocument(Document document) async {
+  Future<String?> checkAuthByParseDocument(Document document) async {
     final userNode = document.querySelector('div#inner_stat > strong > a');
     if (userNode == null) {
       debug('auth failed: user node not found');
