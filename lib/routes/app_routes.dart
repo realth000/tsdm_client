@@ -40,6 +40,11 @@ final tClientRouter = GoRouter(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
         ),
+        // AppRoute(
+        //   path: ScreenPaths.profile,
+        //   parentNavigatorKey: _shellRouteKey,
+        //   builder: (_) => const ProfilePage(),
+        // ),
         AppRoute(
           path: ScreenPaths.settings,
           parentNavigatorKey: _shellRouteKey,
