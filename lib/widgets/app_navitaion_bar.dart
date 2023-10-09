@@ -38,10 +38,11 @@ class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
         label: context.t.navigation.topics,
         targetPath: ScreenPaths.topic,
       ),
-      // _NavigationBarItem(
-      //     icon: const Icon(Icons.person),
-      //     label: '我的',
-      //     targetPath: ScreenPaths.profile),
+      _NavigationBarItem(
+        icon: const Icon(Icons.person),
+        label: context.t.navigation.profile,
+        targetPath: ScreenPaths.profile,
+      ),
       _NavigationBarItem(
         icon: const Icon(Icons.settings),
         label: context.t.navigation.settings,

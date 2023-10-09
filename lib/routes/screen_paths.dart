@@ -24,7 +24,6 @@ class ScreenPaths {
 
   /// App login page.
   ///
-  /// Redirect to user profile page.
   static const String login = '/login';
 
   /// Another login page, uses when website requires to login.
@@ -34,9 +33,7 @@ class ScreenPaths {
   static const String loginRedirect = '/login/redirect';
 
   /// User profile page.
-  ///
-  /// Need to specify username (username).
-  static const String profile = '/profile/:username';
+  static const String profile = '/profile';
 
   /// App settings page.
   static const String settings = '/settings';

@@ -40,11 +40,11 @@ final tClientRouter = GoRouter(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
         ),
-        // AppRoute(
-        //   path: ScreenPaths.profile,
-        //   parentNavigatorKey: _shellRouteKey,
-        //   builder: (_) => const ProfilePage(),
-        // ),
+        AppRoute(
+          path: ScreenPaths.profile,
+          parentNavigatorKey: _shellRouteKey,
+          builder: (_) => const ProfilePage(),
+        ),
         AppRoute(
           path: ScreenPaths.settings,
           parentNavigatorKey: _shellRouteKey,
@@ -88,13 +88,6 @@ final tClientRouter = GoRouter(
             pageNumber: state.pathParameters['pageNumber'] ?? '1',
           );
         }),
-    AppRoute(
-      path: ScreenPaths.profile,
-      parentNavigatorKey: _rootRouteKey,
-      builder: (state) => ProfilePage(
-        uid: state.pathParameters['uid'],
-      ),
-    ),
     AppRoute(
       path: ScreenPaths.login,
       parentNavigatorKey: _rootRouteKey,
