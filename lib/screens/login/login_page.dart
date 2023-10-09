@@ -60,22 +60,27 @@ class _LoginPageState extends ConsumerState<LoginPage> {
       future: _fetchLoginHash(),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Text(t.loginPage.failedToGetLoginHash(err: snapshot.error!));
+          return Scaffold(
+            body: Text(t.loginPage.failedToGetLoginHash(err: snapshot.error!)),
+          );
         }
 
         if (snapshot.hasData) {
-          return Center(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(
-                maxHeight: 500,
-                maxWidth: 500,
-              ),
-              child: LoginForm(
-                redirectPath: widget.redirectBackState.fullPath!,
-                redirectPathParameters: widget.redirectBackState.pathParameters,
-                redirectExtra: widget.redirectBackState.extra,
-                loginHash: loginHash!,
-                formHash: formHash!,
+          return Scaffold(
+            body: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(
+                  maxHeight: 500,
+                  maxWidth: 500,
+                ),
+                child: LoginForm(
+                  redirectPath: widget.redirectBackState.fullPath!,
+                  redirectPathParameters:
+                      widget.redirectBackState.pathParameters,
+                  redirectExtra: widget.redirectBackState.extra,
+                  loginHash: loginHash!,
+                  formHash: formHash!,
+                ),
               ),
             ),
           );
