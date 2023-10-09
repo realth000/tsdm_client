@@ -81,14 +81,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
           );
         }
 
-        return Center(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const CircularProgressIndicator(),
-              const SizedBox(width: 10, height: 10),
-              Text(t.loginPage.preparingLogin),
-            ],
+        return Scaffold(
+          body: Center(
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const CircularProgressIndicator(),
+                const SizedBox(width: 10, height: 10),
+                Text(t.loginPage.preparingLogin),
+              ],
+            ),
           ),
         );
       },

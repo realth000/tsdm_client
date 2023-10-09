@@ -11,78 +11,94 @@ import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
 import 'package:tsdm_client/widgets/root_scaffold.dart';
 
-final shellRouteNavigatorKey = GlobalKey<NavigatorState>();
+final _rootRouteKey = GlobalKey<NavigatorState>();
+final _shellRouteKey = GlobalKey<NavigatorState>();
 
 /// All app routes.
+///
+/// Routes with global nav bar are under [ShellRoute]
+/// https://github.com/flutter/packages/pull/2650#issuecomment-1561353369
 final tClientRouter = GoRouter(
+  navigatorKey: _rootRouteKey,
   routes: [
     ShellRoute(
-      navigatorKey: shellRouteNavigatorKey,
-      builder: (context, router, navigator) => RootScaffold(child: navigator),
+      navigatorKey: _shellRouteKey,
+      builder: (context, router, navigator) => RootScaffold(
+        showNavigationBar: true,
+        child: navigator,
+      ),
       routes: [
         AppRoute(
-          path: ScreenPaths.root,
-          builder: (_) => const RootPage(),
-        ),
-        AppRoute(
           path: ScreenPaths.homepage,
+          parentNavigatorKey: _shellRouteKey,
           builder: (_) => const HomePage(),
         ),
         AppRoute(
           path: ScreenPaths.topic,
+          parentNavigatorKey: _shellRouteKey,
           builder: (_) => const TopicPage(
             fetchUrl: 'https://www.tsdm39.com/forum.php',
           ),
         ),
         AppRoute(
           path: ScreenPaths.settings,
+          parentNavigatorKey: _shellRouteKey,
           builder: (_) => const SettingsPage(),
         ),
-        AppRoute(
-          path: ScreenPaths.forum,
-          builder: (state) {
-            final extra = state.extra;
-            String? title;
-            if (extra != null && extra is Map<String, dynamic>) {
-              title = extra['appBarTitle'] as String;
-            }
-            return ForumPage(
-              title: title,
-              fid: state.pathParameters['fid']!,
-              routerState: state,
-            );
-          },
-        ),
-        AppRoute(
-            path: ScreenPaths.thread,
-            builder: (state) {
-              final extra = state.extra;
-              String? title;
-              if (extra != null && extra is Map<String, dynamic>) {
-                title = extra['appBarTitle'] as String;
-              }
-              return ThreadPage(
-                title: title,
-                threadID: state.pathParameters['tid']!,
-                pageNumber: state.pathParameters['pageNumber'] ?? '1',
-              );
-            }),
-        AppRoute(
-          path: ScreenPaths.profile,
-          builder: (state) => ProfilePage(
-            uid: state.pathParameters['uid'],
-          ),
-        ),
-        AppRoute(
-          path: ScreenPaths.login,
-          builder: (state) {
-            final loginArgsMap = state.extra! as Map<String, dynamic>;
-            final redirectBackState =
-                loginArgsMap['redirectBackState'] as GoRouterState;
-            return LoginPage(redirectBackState: redirectBackState);
-          },
-        ),
       ],
+    ),
+    AppRoute(
+      path: ScreenPaths.root,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const RootPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.forum,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final extra = state.extra;
+        String? title;
+        if (extra != null && extra is Map<String, dynamic>) {
+          title = extra['appBarTitle'] as String;
+        }
+        return ForumPage(
+          title: title,
+          fid: state.pathParameters['fid']!,
+          routerState: state,
+        );
+      },
+    ),
+    AppRoute(
+        path: ScreenPaths.thread,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final extra = state.extra;
+          String? title;
+          if (extra != null && extra is Map<String, dynamic>) {
+            title = extra['appBarTitle'] as String;
+          }
+          return ThreadPage(
+            title: title,
+            threadID: state.pathParameters['tid']!,
+            pageNumber: state.pathParameters['pageNumber'] ?? '1',
+          );
+        }),
+    AppRoute(
+      path: ScreenPaths.profile,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) => ProfilePage(
+        uid: state.pathParameters['uid'],
+      ),
+    ),
+    AppRoute(
+      path: ScreenPaths.login,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final loginArgsMap = state.extra! as Map<String, dynamic>;
+        final redirectBackState =
+            loginArgsMap['redirectBackState'] as GoRouterState;
+        return LoginPage(redirectBackState: redirectBackState);
+      },
     ),
   ],
 );
@@ -95,6 +111,7 @@ class AppRoute extends GoRoute {
     required super.path,
     required Widget Function(GoRouterState s) builder,
     List<GoRoute> routes = const [],
+    super.parentNavigatorKey,
     super.redirect,
   }) : super(
           name: path,

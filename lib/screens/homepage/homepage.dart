@@ -3,7 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/screens/homepage/pin_section.dart';
 import 'package:tsdm_client/screens/homepage/welcome_section.dart';
-import 'package:tsdm_client/widgets/app_navitaion_bar.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -46,7 +45,6 @@ class _HomePageState extends ConsumerState<HomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: const AppNavigationBar(),
     );
   }
 }

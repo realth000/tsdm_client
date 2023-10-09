@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
-import 'package:tsdm_client/widgets/app_navitaion_bar.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -113,7 +112,6 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           ),
         ),
       ),
-      bottomNavigationBar: const AppNavigationBar(),
     );
   }
 }

@@ -5,6 +5,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/root/auto_redirect_dialog.dart';
+import 'package:tsdm_client/widgets/root_scaffold.dart';
 
 class RootPage extends ConsumerWidget {
   const RootPage({super.key});
@@ -16,34 +17,40 @@ class RootPage extends ConsumerWidget {
       data: (_) {
         return AutoRedirectDialog(
           duration: const Duration(milliseconds: 500),
-          child: Center(
-            child: Text(context.t.rootPage.initFinished),
+          child: RootScaffold(
+            child: Center(
+              child: Text(context.t.rootPage.initFinished),
+            ),
           ),
           callback: () => context.go(ScreenPaths.homepage),
         );
       },
       error: (err, _) {
-        return Center(
-          child: Text(context.t.rootPage.initFailed(err: err)),
+        return RootScaffold(
+          child: Center(
+            child: Text(context.t.rootPage.initFailed(err: err)),
+          ),
         );
       },
       loading: () {
-        return Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(
-              maxWidth: 500,
-              maxHeight: 500,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const CircularProgressIndicator(),
-                const SizedBox(
-                  width: 20,
-                  height: 20,
-                ),
-                Text(context.t.rootPage.initializingData),
-              ],
+        return RootScaffold(
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(
+                maxWidth: 500,
+                maxHeight: 500,
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  const SizedBox(
+                    width: 20,
+                    height: 20,
+                  ),
+                  Text(context.t.rootPage.initializingData),
+                ],
+              ),
             ),
           ),
         );
