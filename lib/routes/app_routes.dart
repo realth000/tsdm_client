@@ -41,10 +41,18 @@ final tClientRouter = GoRouter(
           ),
         ),
         AppRoute(
-          path: ScreenPaths.profile,
-          parentNavigatorKey: _shellRouteKey,
-          builder: (_) => const ProfilePage(),
-        ),
+            path: ScreenPaths.profile,
+            parentNavigatorKey: _shellRouteKey,
+            builder: (_) => const ProfilePage(),
+            redirect: (context, state) {
+              // final authState = ProviderContainer().read(authProvider);
+              // if () {
+              //
+              // }
+              //
+              //   return null;
+              return null;
+            }),
         AppRoute(
           path: ScreenPaths.settings,
           parentNavigatorKey: _shellRouteKey,
