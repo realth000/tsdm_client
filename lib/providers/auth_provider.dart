@@ -13,7 +13,7 @@ part '../generated/providers/auth_provider.g.dart';
 
 /// Auth state manager.
 ///
-@Riverpod(dependencies: [NetClient])
+@Riverpod(keepAlive: true, dependencies: [NetClient])
 class Auth extends _$Auth {
   static const _checkAuthUrl = 'https://www.tsdm39.com/home.php?mod=spacecp';
   static const _loginUrl =
