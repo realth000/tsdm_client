@@ -75,6 +75,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         if (widget.redirectPath == null) {
           debug('login success, redirect back');
           context.pop();
+          return;
         }
         debug(
           'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',

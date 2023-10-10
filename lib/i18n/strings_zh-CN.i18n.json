@@ -68,5 +68,9 @@
     "initFailed": "初始化失败: $err",
     "initializingData": "正在初始化数据",
     "initFinished": "初始化完成"
+  },
+  "profilePage": {
+    "title": "个人资料",
+    "userNodeNotFound": "未找到用户信息节点"
   }
 }

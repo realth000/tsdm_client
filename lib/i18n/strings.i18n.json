@@ -61,12 +61,16 @@
     "failedToGetLoginHash": "Failed to get login value: $err",
     "failedToGetCaptcha": "Failed to get captcha: $err",
     "failedToGetFormHash": "Failed to get form hash",
-    "hashValueNotFound": "找不到hash",
+    "hashValueNotFound": "Hash not found",
     "preparingLogin": "Preparing login"
   },
   "rootPage": {
     "initFailed": "Init failed: $err",
     "initializingData": "Initializing data",
     "initFinished": "Init finished"
+  },
+  "profilePage": {
+    "title": "User Profile",
+    "userNodeNotFound": "user info root node not found"
   }
 }
