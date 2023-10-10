@@ -67,6 +67,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
 
         if (snapshot.hasData) {
           return Scaffold(
+            appBar: AppBar(
+              title: Text(context.t.loginPage.title),
+            ),
             body: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(

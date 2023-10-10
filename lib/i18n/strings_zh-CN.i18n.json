@@ -41,6 +41,7 @@
     }
   },
   "loginPage": {
+    "title": "登录天使动漫",
     "login": "登录",
     "username": "用户名",
     "usernameEmpty": "用户名不能为空",

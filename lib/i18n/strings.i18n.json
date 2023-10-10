@@ -41,7 +41,8 @@
     }
   },
   "loginPage": {
-    "login": "Login",
+    "title": "Login TSDM",
+    "login": "TSDM",
     "username": "Username",
     "usernameEmpty": "Username should not be empty",
     "password": "Password",
