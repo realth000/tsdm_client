@@ -100,6 +100,9 @@ final tClientRouter = GoRouter(
       path: ScreenPaths.login,
       parentNavigatorKey: _rootRouteKey,
       builder: (state) {
+        if (state.extra == null) {
+          return const LoginPage();
+        }
         final loginArgsMap = state.extra! as Map<String, dynamic>;
         final redirectBackState =
             loginArgsMap['redirectBackState'] as GoRouterState;

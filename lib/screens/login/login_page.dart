@@ -7,9 +7,9 @@ import 'package:tsdm_client/screens/login/login_form.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
-  const LoginPage({required this.redirectBackState, super.key});
+  const LoginPage({this.redirectBackState, super.key});
 
-  final GoRouterState redirectBackState;
+  final GoRouterState? redirectBackState;
 
   static const String _fakeFormUrl =
       'https://tsdm39.com/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
@@ -77,10 +77,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   maxWidth: 500,
                 ),
                 child: LoginForm(
-                  redirectPath: widget.redirectBackState.fullPath!,
+                  redirectPath: widget.redirectBackState?.fullPath,
                   redirectPathParameters:
-                      widget.redirectBackState.pathParameters,
-                  redirectExtra: widget.redirectBackState.extra,
+                      widget.redirectBackState?.pathParameters,
+                  redirectExtra: widget.redirectBackState?.extra,
                   loginHash: loginHash!,
                   formHash: formHash!,
                 ),

@@ -9,16 +9,16 @@ import 'package:tsdm_client/utils/debug.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({
-    required this.redirectPath,
-    required this.redirectPathParameters,
-    required this.redirectExtra,
     required this.loginHash,
     required this.formHash,
+    this.redirectPath,
+    this.redirectPathParameters,
+    this.redirectExtra,
     super.key,
   });
 
-  final String redirectPath;
-  final Map<String, String> redirectPathParameters;
+  final String? redirectPath;
+  final Map<String, String>? redirectPathParameters;
   final Object? redirectExtra;
 
   // Data needed when posting login request.
@@ -55,10 +55,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     // Check login result.
     switch (loginResult) {
       case LoginResult.success:
-        debug(
-          'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
-        );
-
         // Refresh root content.
         // We do not need the value return here, but if we use ref.invalidate()
         // the future will not execute until we reach pages that watching
@@ -76,9 +72,16 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         if (!mounted) {
           return;
         }
+        if (widget.redirectPath == null) {
+          debug('login success, redirect back');
+          context.pop();
+        }
+        debug(
+          'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
+        );
         context.pushReplacementNamed(
-          widget.redirectPath,
-          pathParameters: widget.redirectPathParameters,
+          widget.redirectPath!,
+          pathParameters: widget.redirectPathParameters ?? {},
           extra: widget.redirectExtra,
         );
       case LoginResult.requestFailed:
