@@ -80,7 +80,7 @@ ThreadAuthorPair? _filterThreadAndAuthors(Element element) {
 
 /// Provider to prepare root page content from homepage "https://www.tsdm39.com/forum.php"
 // TODO: Make this a not persist provider.
-@Riverpod(keepAlive: true, dependencies: [NetClient])
+@Riverpod(keepAlive: true, dependencies: [Auth, NetClient])
 class RootContent extends _$RootContent {
   static const String _rootPage = 'https://www.tsdm39.com/forum.php';
 
@@ -102,6 +102,7 @@ class RootContent extends _$RootContent {
 
     _cache = CachedRootContent();
     await _cache.analyze(_doc);
+    await ref.read(authProvider.notifier).loginFromDocument(_doc);
     return _cache;
   }
 

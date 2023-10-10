@@ -61,6 +61,7 @@ class Auth extends _$Auth {
     await ref
         .read(appSettingsProvider.notifier)
         .setLoginUsername(_loggedUsername!);
+    ref.invalidateSelf();
     return _loggedUid;
   }
 
@@ -117,8 +118,10 @@ class Auth extends _$Auth {
       await ref
           .read(appSettingsProvider.notifier)
           .setLoginUsername(_loggedUsername!);
+      ref.invalidateSelf();
     } else {
       _loggedUid = null;
+      ref.invalidateSelf();
     }
 
     return (result, '');
@@ -141,6 +144,7 @@ class Auth extends _$Auth {
     if (uid == null) {
       debug('unnecessary logout: not authed');
       _loggedUid = null;
+      ref.invalidateSelf();
       return true;
     }
 
@@ -171,6 +175,7 @@ class Auth extends _$Auth {
     }
 
     _loggedUid = null;
+    ref.invalidateSelf();
     return true;
   }
 
