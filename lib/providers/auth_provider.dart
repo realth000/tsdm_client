@@ -114,6 +114,9 @@ class Auth extends _$Auth {
       final r = await _parseUidInDocument(document);
       _loggedUid = r!.$1;
       _loggedUsername = r.$2;
+      await ref
+          .read(appSettingsProvider.notifier)
+          .setLoginUsername(_loggedUsername!);
     } else {
       _loggedUid = null;
     }
