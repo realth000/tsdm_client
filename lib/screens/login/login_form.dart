@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/screens/login/captcha_image.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
@@ -48,31 +49,50 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           formHash: widget.formHash,
         );
 
-    if (mounted) {
-      // Check login result.
-      switch (loginResult) {
-        case LoginResult.success:
-          debug(
-            'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
-          );
-          context.pushReplacementNamed(
-            widget.redirectPath,
-            pathParameters: widget.redirectPathParameters,
-            extra: widget.redirectExtra,
-          );
-        case LoginResult.requestFailed:
-          return showLoginFailedDialog(
-            context,
-            context.t.loginPage.failedToLoginStatusCode(code: error),
-          );
-        case LoginResult.messageNotFound:
-          return showLoginFailedDialog(
-            context,
-            context.t.loginPage.failedToLoginMessageNodeNotFound,
-          );
-        default:
-          return showLoginFailedDialog(context, '$loginResult');
-      }
+    if (!mounted) {
+      return;
+    }
+    // Check login result.
+    switch (loginResult) {
+      case LoginResult.success:
+        debug(
+          'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
+        );
+
+        // Refresh root content.
+        // We do not need the value return here, but if we use ref.invalidate()
+        // the future will not execute until we reach pages that watching
+        // rootContentProvider.
+        //
+        // There is no risk that provider refreshes multiple times before we
+        // really use the cache in content.
+        //
+        // Can only use invalidate() here, using refresh or using invalidate with
+        // read will cause UI not refresh which is weired, maybe still using
+        // legacy cookie?
+        // FIXME: Fix root content not refresh immediately.
+        // Note that add Circle indicator to root content screen when loading not works.
+        ref.invalidate(rootContentProvider);
+        if (!mounted) {
+          return;
+        }
+        context.pushReplacementNamed(
+          widget.redirectPath,
+          pathParameters: widget.redirectPathParameters,
+          extra: widget.redirectExtra,
+        );
+      case LoginResult.requestFailed:
+        return showLoginFailedDialog(
+          context,
+          context.t.loginPage.failedToLoginStatusCode(code: error),
+        );
+      case LoginResult.messageNotFound:
+        return showLoginFailedDialog(
+          context,
+          context.t.loginPage.failedToLoginMessageNodeNotFound,
+        );
+      default:
+        return showLoginFailedDialog(context, '$loginResult');
     }
   }
 

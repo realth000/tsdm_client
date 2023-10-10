@@ -13,7 +13,7 @@ import 'package:tsdm_client/utils/debug.dart';
 /// username), what we can do is save these cookies as cache in memory.
 /// And it's cookieProvider's work to save them to database.
 class CookieData implements Storage {
-  CookieData(this.cookieStreamSink);
+  CookieData(this.cookieStreamSink) : _username = null;
 
   CookieData.withUsername({
     required String username,
@@ -32,7 +32,7 @@ class CookieData implements Storage {
   /// Stream to send cookie event.
   final StreamSink<UserCookieEvent> cookieStreamSink;
 
-  String? _username;
+  final String? _username;
 
   /// Cookie data.
   Map<String, String> _cookieMap = {};

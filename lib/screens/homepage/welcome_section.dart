@@ -20,7 +20,7 @@ class WelcomeSection extends ConsumerWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight:  _kahrpbaPicHeight),
+        constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
         child: Swiper(
           itemBuilder: (context, index) {
             return Image.network(picUrlList[index]!);
@@ -99,8 +99,22 @@ class WelcomeSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cache = ref.read(rootContentProvider.notifier).cache;
+    return ref.watch(rootContentProvider).when(
+      data: (cache) {
+        return _buildSection(context, cache);
+      },
+      error: (error, stackTrace) {
+        return Scaffold(
+          body: Text('$error'),
+        );
+      },
+      loading: () {
+        return const Scaffold(body: CircularProgressIndicator());
+      },
+    );
+  }
 
+  Widget _buildSection(BuildContext context, CachedRootContent cache) {
     final picUrlList = cache.picUrlList;
     final picHrefList = cache.picHrefList;
 
@@ -134,7 +148,8 @@ class WelcomeSection extends ConsumerWidget {
       linkTileList.add(_buildForumStatusRow(context, memberInfoList));
     }
 
-    final needExpand = ResponsiveBreakpoints.of(context).largerOrEqualTo('homepage_welcome_expand');
+    final needExpand = ResponsiveBreakpoints.of(context)
+        .largerOrEqualTo('homepage_welcome_expand');
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -143,7 +158,8 @@ class WelcomeSection extends ConsumerWidget {
       child: Flex(
         direction: needExpand ? Axis.horizontal : Axis.vertical,
         children: [
-          Expanded(child: _buildKahrpbaSwiper(context, picUrlList, picHrefList)),
+          Expanded(
+              child: _buildKahrpbaSwiper(context, picUrlList, picHrefList)),
           const SizedBox(
             width: 20,
             height: 20,

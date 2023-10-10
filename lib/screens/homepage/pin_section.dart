@@ -43,7 +43,22 @@ class PinSection extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final cache = ref.read(rootContentProvider.notifier).cache;
+    return ref.watch(rootContentProvider).when(
+      data: (cache) {
+        return _buildSection(context, cache);
+      },
+      error: (error, stackTrace) {
+        return Scaffold(
+          body: Text('$error'),
+        );
+      },
+      loading: () {
+        return const Scaffold(body: CircularProgressIndicator());
+      },
+    );
+  }
+
+  Widget _buildSection(BuildContext context, CachedRootContent cache) {
     final navNameList = cache.navNameList;
     final navThreadList = cache.sectionAllThreadPairList;
     if (navNameList == null || navNameList.length != navThreadList.length) {
