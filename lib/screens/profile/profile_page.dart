@@ -5,6 +5,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/providers/checkin_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -107,6 +108,45 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             Text('checkInNextLevelDays: $checkInNextLevelDays'),
             Text('checkInTodayStatus: $checkInTodayStatus'),
             ...activityInfoList.map((e) => Text('${e!.$1}: ${e.$2}')),
+            const SizedBox(width: 10, height: 10),
+            ElevatedButton(
+              child: const Text('check in'),
+              onPressed: () async {
+                final (result, message) =
+                    await ref.read(checkInProvider.future);
+                switch (result) {
+                  // TODO: Show dialog here to ensure enough time to read and
+                  // chances to copy other error message.
+                  case CheckInResult.success:
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text('Check in success: $message'),
+                    ));
+                  case CheckInResult.notAuthorized:
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Check in failed: not authorized'),
+                    ));
+                  case CheckInResult.webRequestFailed:
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                          'Check in failed: web request status code $message'),
+                    ));
+                  case CheckInResult.formHashNotFound:
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Check in failed: form hash not found'),
+                    ));
+                  case CheckInResult.alreadyCheckedIn:
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content:
+                          Text('Check in failed: already checked in today'),
+                    ));
+                  case CheckInResult.unknown:
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content:
+                          Text('Check in failed: unknown result: $message'),
+                    ));
+                }
+              },
+            ),
             const SizedBox(width: 10, height: 10),
             ElevatedButton(
               child: const Text('logout'),
