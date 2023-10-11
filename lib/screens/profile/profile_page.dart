@@ -30,9 +30,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       );
     }
 
-    final username =
-        profileRootNode.querySelector('h2.mbn')?.nodes.firstOrNull?.text;
-
+    // Basic info
+    final username = profileRootNode
+        .querySelector('h2.mbn')
+        ?.nodes
+        .firstOrNull
+        ?.text
+        ?.trim();
     final uid = profileRootNode
         .querySelector('h2.mbn > span.xw0')
         ?.text
@@ -40,30 +44,49 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         .lastOrNull
         ?.split(')')
         .firstOrNull;
+    final basicInfoList = profileRootNode
+        .querySelectorAll('div.pbm:nth-child(1) li')
+        .map((e) => e.parseLiEmNode())
+        .where((e) => e != null)
+        .toList();
 
-    final friendsNode =
-        document.querySelector('ul.bbda > li:nth-child(3) > a:nth-child(2)');
-    final friendsCount =
-        document.body?.firstEndDeepText()?.split(' ').lastOrNull;
+    // Check in status
+    final checkInNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
+    final checkInDaysCount =
+        checkInNode?.querySelector('p:nth-child(1)')?.firstEndDeepText();
+    final checkInThisMonthCount =
+        checkInNode?.querySelector('p:nth-child(2)')?.firstEndDeepText();
+    final checkInRecentTime =
+        checkInNode?.querySelector('p:nth-child(3)')?.firstEndDeepText();
+    final checkInAllCoins = checkInNode
+        ?.querySelector('p:nth-child(4) font:nth-child(1)')
+        ?.firstEndDeepText();
+    final checkInLastTimeCoin = checkInNode
+        ?.querySelector('p:nth-child(4) font:nth-child(3)')
+        ?.firstEndDeepText();
+    final checkInLevel = checkInNode
+        ?.querySelector('p:nth-child(5) font:nth-child(1)')
+        ?.firstEndDeepText();
+    final checkInNextLevel = checkInNode
+        ?.querySelector('p:nth-child(5) font:nth-child(3)')
+        ?.firstEndDeepText();
+    final checkInNextLevelDays = checkInNode
+        ?.querySelector('p:nth-child(5) font:nth-child(5)')
+        ?.firstEndDeepText();
+    final checkInTodayStatus =
+        checkInNode?.querySelector('p:nth-child(6)')?.firstEndDeepText();
 
-    final birthday = document
-        .querySelector(
-            'div.pbm:nth-child(1) > ul:nth-child(3) > li:nth-child(1)')
-        ?.firstEndDeepText();
-    final gender = profileRootNode
-        .querySelector(
-            'div.pbm:nth-child(1) > ul:nth-child(3) > li:nth-child(2)')
-        ?.firstEndDeepText();
+    // TODO: Parse medals here.
 
-    final signInDaysCount = profileRootNode
-        .querySelector('div.pbm:nth-child(2) > p:nth-child(2)')
-        ?.firstEndDeepText();
-    final signInThisMonthCount = profileRootNode
-        .querySelector('div.pbm:nth-child(2) > p:nth-child(3)')
-        ?.firstEndDeepText();
-    final signInRecentTime = document
-        .querySelector('div.pbm:nth-child(2) > p:nth-child(4)')
-        ?.firstEndDeepText();
+    // Activity overview
+    // TODO: Parse manager groups and user groups belonged to, here.
+    final activityNode = profileRootNode.querySelector('ul#pbbs');
+    final activityInfoList = activityNode
+            ?.querySelectorAll('li')
+            .map((e) => e.parseLiEmNode())
+            .where((e) => e != null)
+            .toList() ??
+        [];
 
     return Scaffold(
       appBar: AppBar(title: Text(t.profilePage.title)),
@@ -73,12 +96,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           children: [
             Text('username: $username'),
             Text('uid: $uid'),
-            Text('friendsCount: $friendsCount'),
-            Text('birthday: $birthday'),
-            Text('gender: $gender'),
-            Text('signInDaysCount: $signInDaysCount'),
-            Text('signInThisMonthCount: $signInThisMonthCount'),
-            Text('signInResultTime: $signInRecentTime'),
+            ...basicInfoList.map((e) => Text('${e!.$1}: ${e.$2}')),
+            Text('checkInDaysCount: $checkInDaysCount'),
+            Text('checkInThisMonthCount: $checkInThisMonthCount'),
+            Text('checkInResultTime: $checkInRecentTime'),
+            Text('checkInAllCoins: $checkInAllCoins'),
+            Text('checkInLastTimeCoins: $checkInLastTimeCoin'),
+            Text('checkInLevel: $checkInLevel'),
+            Text('checkInNextLevel: $checkInNextLevel'),
+            Text('checkInNextLevelDays: $checkInNextLevelDays'),
+            Text('checkInTodayStatus: $checkInTodayStatus'),
+            ...activityInfoList.map((e) => Text('${e!.$1}: ${e.$2}')),
             const SizedBox(width: 10, height: 10),
             ElevatedButton(
               child: const Text('logout'),
