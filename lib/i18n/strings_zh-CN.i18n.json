@@ -81,6 +81,19 @@
       "failedFormHashNotFound": "未找到form hash",
       "failedAlreadyCheckedIn": "今天已经签过到了",
       "failedOtherError": "其他错误：$err"
-    }
+    },
+    "logout": "注销",
+    "areYouSureToLogout": "确定注销？",
+    "username": "用户名",
+    "uid": "用户ID",
+    "checkInDaysCount": "累计签到总天数",
+    "checkInDaysInThisMonth": "本月签到天数",
+    "checkInRecentTime": "最近签到时间",
+    "checkInAllCoins": "签到总天使币",
+    "checkInLastTimeCoins": "最近一次签到天使币",
+    "checkInLevel": "签到等级",
+    "checkInNextLevel": "下个签到等级",
+    "checkInNextLevelDays": "距离下个签到等级天数",
+    "checkInTodayStatus": "今日签到状态"
   }
 }

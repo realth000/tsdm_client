@@ -23,14 +23,31 @@ class ProfilePage extends ConsumerStatefulWidget {
 }
 
 class _ProfilePageState extends ConsumerState<ProfilePage> {
+  static const _avatarWidth = 180.0;
+  static const _avatarHeight = 220.0;
+
+  final _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
   Widget _buildProfile(BuildContext context, dom.Document document) {
     final profileRootNode =
         document.body?.querySelector('div#pprl > div.bm.bbda');
+
     if (profileRootNode == null) {
       return Center(
         child: Text(t.profilePage.userNodeNotFound),
       );
     }
+
+    final avatarUrl = document.body
+        ?.querySelector(
+            'div#wp.wp div#ct.ct2 div#ct_shell div.sd div.hm > p > a > img')
+        ?.attributes['src'];
 
     // Basic info
     final username = profileRootNode
@@ -91,100 +108,222 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         [];
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.profilePage.title)),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text('username: $username'),
-            Text('uid: $uid'),
-            ...basicInfoList.map((e) => Text('${e!.$1}: ${e.$2}')),
-            Text('checkInDaysCount: $checkInDaysCount'),
-            Text('checkInThisMonthCount: $checkInThisMonthCount'),
-            Text('checkInResultTime: $checkInRecentTime'),
-            Text('checkInAllCoins: $checkInAllCoins'),
-            Text('checkInLastTimeCoins: $checkInLastTimeCoin'),
-            Text('checkInLevel: $checkInLevel'),
-            Text('checkInNextLevel: $checkInNextLevel'),
-            Text('checkInNextLevelDays: $checkInNextLevelDays'),
-            Text('checkInTodayStatus: $checkInTodayStatus'),
-            ...activityInfoList.map((e) => Text('${e!.$1}: ${e.$2}')),
-            const SizedBox(width: 10, height: 10),
-            ElevatedButton(
-              child: const Text('check in'),
-              onPressed: () async {
-                final (result, message) =
-                    await ref.read(checkInProvider.future);
-                switch (result) {
-                  // TODO: Show dialog here to ensure enough time to read and
-                  // chances to copy other error message.
-                  case CheckInResult.success:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message: context.t.profilePage.checkIn
-                          .success(msg: '$message'),
-                    );
-                  case CheckInResult.notAuthorized:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message:
-                          context.t.profilePage.checkIn.failedNotAuthorized,
-                    );
-                  case CheckInResult.webRequestFailed:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message: context.t.profilePage.checkIn
-                          .failedRequest(err: '$message'),
-                    );
-                  case CheckInResult.formHashNotFound:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message:
-                          context.t.profilePage.checkIn.failedFormHashNotFound,
-                    );
-                  case CheckInResult.alreadyCheckedIn:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message:
-                          context.t.profilePage.checkIn.failedAlreadyCheckedIn,
-                    );
-                  case CheckInResult.otherError:
-                    return showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.profilePage.checkIn.title,
-                      message: context.t.profilePage.checkIn
-                          .failedOtherError(err: '$message'),
-                    );
-                }
-              },
+      appBar: AppBar(
+        title: Text(t.profilePage.title),
+        actions: [
+          TextButton(
+            child: Text(context.t.profilePage.checkIn.title),
+            onPressed: () async {
+              // TODO: Debounce check in.
+              final (result, message) = await ref.read(checkInProvider.future);
+              switch (result) {
+                // TODO: Show dialog here to ensure enough time to read and
+                // chances to copy other error message.
+                case CheckInResult.success:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.success(msg: '$message'),
+                  );
+                case CheckInResult.notAuthorized:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn.failedNotAuthorized,
+                  );
+                case CheckInResult.webRequestFailed:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn
+                        .failedRequest(err: '$message'),
+                  );
+                case CheckInResult.formHashNotFound:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.failedFormHashNotFound,
+                  );
+                case CheckInResult.alreadyCheckedIn:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.failedAlreadyCheckedIn,
+                  );
+                case CheckInResult.otherError:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn
+                        .failedOtherError(err: '$message'),
+                  );
+              }
+            },
+          ),
+          TextButton(
+            child: Text(context.t.profilePage.logout),
+            onPressed: () async {
+              // TODO: Debounce logout.
+              final confirm = await showQuestionDialog(
+                context: context,
+                title: context.t.profilePage.logout,
+                message: context.t.profilePage.areYouSureToLogout,
+              );
+
+              if (confirm != true) {
+                return;
+              }
+
+              final logoutResult =
+                  await ref.read(authProvider.notifier).logout();
+              if (logoutResult) {
+                // Refresh root content.
+                // We do not need the value return here, but if we use ref.invalidate()
+                // the future will not execute until we reach pages that watching
+                // rootContentProvider.
+                //
+                // There is no risk that provider refreshes multiple times before we
+                // really use the cache in content.
+                ref.invalidate(rootContentProvider);
+              }
+              debug('logout result: $logoutResult');
+              setState(() {});
+            },
+          ),
+        ],
+      ),
+      body: ListView(
+        padding: const EdgeInsets.only(left: 15, right: 15),
+        children: [
+          if (avatarUrl != null)
+            Image.network(
+              avatarUrl,
+              width: _avatarWidth,
+              height: _avatarHeight,
             ),
-            const SizedBox(width: 10, height: 10),
-            ElevatedButton(
-              child: const Text('logout'),
-              onPressed: () async {
-                final logoutResult =
-                    await ref.read(authProvider.notifier).logout();
-                if (logoutResult) {
-                  // Refresh root content.
-                  // We do not need the value return here, but if we use ref.invalidate()
-                  // the future will not execute until we reach pages that watching
-                  // rootContentProvider.
-                  //
-                  // There is no risk that provider refreshes multiple times before we
-                  // really use the cache in content.
-                  ref.invalidate(rootContentProvider);
-                }
-                debug('logout result: $logoutResult');
-                setState(() {});
-              },
-            )
-          ],
-        ),
+          if (username != null)
+            ListTile(
+              title: Text(context.t.profilePage.username),
+              subtitle: Text(username),
+            ),
+          if (uid != null)
+            ListTile(
+              title: Text(context.t.profilePage.uid),
+              subtitle: Text(uid),
+            ),
+          ...basicInfoList.map(
+            (e) => ListTile(
+              title: Text(e!.$1),
+              subtitle: Text(e.$2),
+            ),
+          ),
+          if (checkInDaysCount != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInDaysCount),
+              subtitle: Text(checkInDaysCount),
+            ),
+          if (checkInThisMonthCount != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInDaysInThisMonth),
+              subtitle: Text(checkInThisMonthCount),
+            ),
+          if (checkInRecentTime != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInRecentTime),
+              subtitle: Text(checkInRecentTime),
+            ),
+          if (checkInAllCoins != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInAllCoins),
+              subtitle: Text(checkInAllCoins),
+            ),
+          if (checkInLastTimeCoin != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInLastTimeCoins),
+              subtitle: Text(checkInLastTimeCoin),
+            ),
+          if (checkInLevel != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInLevel),
+              subtitle: Text(checkInLevel),
+            ),
+          if (checkInNextLevel != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInNextLevel),
+              subtitle: Text(checkInNextLevel),
+            ),
+          if (checkInNextLevelDays != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInNextLevelDays),
+              subtitle: Text(checkInNextLevelDays),
+            ),
+          if (checkInTodayStatus != null)
+            ListTile(
+              title: Text(context.t.profilePage.checkInTodayStatus),
+              subtitle: Text(checkInTodayStatus),
+            ),
+          ...activityInfoList.map(
+            (e) => ListTile(
+              title: Text(e!.$1),
+              subtitle: Text(e.$2),
+            ),
+          ),
+          const SizedBox(width: 10, height: 10),
+          ElevatedButton(
+            child: const Text('check in'),
+            onPressed: () async {
+              final (result, message) = await ref.read(checkInProvider.future);
+              switch (result) {
+                // TODO: Show dialog here to ensure enough time to read and
+                // chances to copy other error message.
+                case CheckInResult.success:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.success(msg: '$message'),
+                  );
+                case CheckInResult.notAuthorized:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn.failedNotAuthorized,
+                  );
+                case CheckInResult.webRequestFailed:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn
+                        .failedRequest(err: '$message'),
+                  );
+                case CheckInResult.formHashNotFound:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.failedFormHashNotFound,
+                  );
+                case CheckInResult.alreadyCheckedIn:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message:
+                        context.t.profilePage.checkIn.failedAlreadyCheckedIn,
+                  );
+                case CheckInResult.otherError:
+                  return showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.profilePage.checkIn.title,
+                    message: context.t.profilePage.checkIn
+                        .failedOtherError(err: '$message'),
+                  );
+              }
+            },
+          ),
+        ],
       ),
     );
   }

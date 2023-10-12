@@ -81,6 +81,19 @@
       "failedFormHashNotFound": "Form hash not found",
       "failedAlreadyCheckedIn": "Already checked in today",
       "failedOtherError": "Other error: $err"
-    }
+    },
+    "logout": "Logout",
+    "areYouSureToLogout": "Are you sure to logout?",
+    "username": "Username",
+    "uid": "Uid",
+    "checkInDaysCount": "Check-in Days Count",
+    "checkInDaysInThisMonth": "Check-in Days This Month",
+    "checkInRecentTime": "Recent Check-in Time",
+    "checkInAllCoins": "Check-in All Coins",
+    "checkInLastTimeCoins": "Check-in Last Time Coins",
+    "checkInLevel": "Check-in Level",
+    "checkInNextLevel": "Check-in Next Level",
+    "checkInNextLevelDays": "Days To Next Check-in Level",
+    "checkInTodayStatus": "Check-in Today Status"
   }
 }
