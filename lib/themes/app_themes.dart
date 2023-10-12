@@ -33,8 +33,6 @@ class AppTheme {
       sliderTrackHeight: 5,
       inputDecoratorFocusedBorderWidth: 2,
       fabUseShape: true,
-      dialogBackgroundSchemeColor: SchemeColor.tertiaryContainer,
-      snackBarBackgroundSchemeColor: SchemeColor.tertiaryContainer,
       bottomNavigationBarShowUnselectedLabels: false,
       navigationBarLabelBehavior:
           NavigationDestinationLabelBehavior.onlyShowSelected,
@@ -64,8 +62,6 @@ class AppTheme {
       sliderTrackHeight: 5,
       inputDecoratorFocusedBorderWidth: 2,
       fabUseShape: true,
-      dialogBackgroundSchemeColor: SchemeColor.tertiaryContainer,
-      snackBarBackgroundSchemeColor: SchemeColor.tertiaryContainer,
       bottomNavigationBarShowUnselectedLabels: false,
       navigationBarLabelBehavior:
           NavigationDestinationLabelBehavior.onlyShowSelected,
