@@ -6,6 +6,7 @@ import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/screens/login/captcha_image.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({
@@ -86,17 +87,23 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           extra: widget.redirectExtra,
         );
       case LoginResult.requestFailed:
-        return showLoginFailedDialog(
-          context,
-          context.t.loginPage.failedToLoginStatusCode(code: error),
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.failedToLoginStatusCode(code: error),
         );
       case LoginResult.messageNotFound:
-        return showLoginFailedDialog(
-          context,
-          context.t.loginPage.failedToLoginMessageNodeNotFound,
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.failedToLoginMessageNodeNotFound,
         );
       default:
-        return showLoginFailedDialog(context, '$loginResult');
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: '$loginResult',
+        );
     }
   }
 
@@ -180,25 +187,4 @@ class _LoginFormState extends ConsumerState<LoginForm> {
       ),
     );
   }
-}
-
-Future<void> showLoginFailedDialog(BuildContext context, String message) async {
-  return showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        scrollable: true,
-        title: Text(t.loginPage.loginFailed),
-        content: Text(message),
-        actions: [
-          TextButton(
-            onPressed: () {
-              Navigator.pop(context);
-            },
-            child: Text(t.general.ok),
-          )
-        ],
-      );
-    },
-  );
 }

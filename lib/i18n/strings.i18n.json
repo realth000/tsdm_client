@@ -71,6 +71,16 @@
   },
   "profilePage": {
     "title": "User Profile",
-    "userNodeNotFound": "user info root node not found"
+    "userNodeNotFound": "user info root node not found",
+    "checkIn": {
+      "title": "Check In",
+      "checkInFailed": "Failed to check in",
+      "success": "Check in success: $msg",
+      "failedNotAuthorized": "Not authorized",
+      "failedRequest": "Web request status code: $err",
+      "failedFormHashNotFound": "Form hash not found",
+      "failedAlreadyCheckedIn": "Already checked in today",
+      "failedOtherError": "Other error: $err"
+    }
   }
 }

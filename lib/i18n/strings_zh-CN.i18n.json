@@ -71,6 +71,16 @@
   },
   "profilePage": {
     "title": "个人资料",
-    "userNodeNotFound": "未找到用户信息节点"
+    "userNodeNotFound": "未找到用户信息节点",
+    "checkIn": {
+      "title": "签到",
+      "checkInFailed": "签到失败",
+      "success": "签到成功：$msg",
+      "failedNotAuthorized": "签到失败",
+      "failedRequest": "网络请求错误：状态码=$err",
+      "failedFormHashNotFound": "未找到form hash",
+      "failedAlreadyCheckedIn": "今天已经签过到了",
+      "failedOtherError": "其他错误：$err"
+    }
   }
 }

@@ -16,7 +16,7 @@ enum CheckInResult {
   webRequestFailed,
   formHashNotFound,
   alreadyCheckedIn,
-  unknown,
+  otherError,
 }
 
 @Riverpod(dependencies: [Auth, NetClient])
@@ -75,7 +75,7 @@ class CheckIn extends _$CheckIn {
 
     if (checkInResult == null) {
       debug('check in result in null: $checkInResult');
-      return (CheckInResult.unknown, checkInResp.data as String);
+      return (CheckInResult.otherError, checkInResp.data as String);
     }
 
     if (checkInResult.contains('签到成功')) {
@@ -88,7 +88,7 @@ class CheckIn extends _$CheckIn {
       return (CheckInResult.alreadyCheckedIn, null);
     }
 
-    debug('check in with unknown result: $checkInResult');
-    return (CheckInResult.unknown, checkInResult);
+    debug('check in with other error: $checkInResult');
+    return (CheckInResult.otherError, checkInResult);
   }
 }

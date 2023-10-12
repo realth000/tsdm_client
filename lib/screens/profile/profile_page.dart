@@ -11,6 +11,7 @@ import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({this.uid, super.key});
@@ -118,32 +119,47 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   // TODO: Show dialog here to ensure enough time to read and
                   // chances to copy other error message.
                   case CheckInResult.success:
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text('Check in success: $message'),
-                    ));
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message: context.t.profilePage.checkIn
+                          .success(msg: '$message'),
+                    );
                   case CheckInResult.notAuthorized:
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Check in failed: not authorized'),
-                    ));
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message:
+                          context.t.profilePage.checkIn.failedNotAuthorized,
+                    );
                   case CheckInResult.webRequestFailed:
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                          'Check in failed: web request status code $message'),
-                    ));
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message: context.t.profilePage.checkIn
+                          .failedRequest(err: '$message'),
+                    );
                   case CheckInResult.formHashNotFound:
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content: Text('Check in failed: form hash not found'),
-                    ));
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message:
+                          context.t.profilePage.checkIn.failedFormHashNotFound,
+                    );
                   case CheckInResult.alreadyCheckedIn:
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                      content:
-                          Text('Check in failed: already checked in today'),
-                    ));
-                  case CheckInResult.unknown:
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content:
-                          Text('Check in failed: unknown result: $message'),
-                    ));
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message:
+                          context.t.profilePage.checkIn.failedAlreadyCheckedIn,
+                    );
+                  case CheckInResult.otherError:
+                    return showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.profilePage.checkIn.title,
+                      message: context.t.profilePage.checkIn
+                          .failedOtherError(err: '$message'),
+                    );
                 }
               },
             ),
