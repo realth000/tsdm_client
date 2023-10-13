@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:tsdm_client/providers/small_providers.dart';
 
 typedef FutureVoidCallback = Future<void> Function();
 
@@ -56,7 +55,44 @@ class DebounceTextButton extends ConsumerWidget {
               child: CircularProgressIndicator(strokeWidth: 3),
             )
           : Text(text),
-      onPressed: ref.watch(isCheckingInProvider)
+      onPressed: ref.watch(debounceProvider)
+          ? null
+          : () async {
+              if (ref.read(debounceProvider)) {
+                return;
+              }
+              ref.read(debounceProvider.notifier).state = true;
+              await onPressed();
+              ref.read(debounceProvider.notifier).state = false;
+            },
+    );
+  }
+}
+
+class DebounceElevatedButton extends ConsumerWidget {
+  const DebounceElevatedButton({
+    required this.child,
+    required this.debounceProvider,
+    required this.onPressed,
+    super.key,
+  });
+
+  final StateProvider<bool> debounceProvider;
+  final Widget child;
+  final FutureVoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(debounceProvider);
+    return ElevatedButton(
+      child: ref.watch(debounceProvider)
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 3),
+            )
+          : child,
+      onPressed: ref.watch(debounceProvider)
           ? null
           : () async {
               if (ref.read(debounceProvider)) {
