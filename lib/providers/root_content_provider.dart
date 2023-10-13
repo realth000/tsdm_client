@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -217,6 +218,13 @@ class CachedRootContent {
           .querySelectorAll('div.Kahrpba_threads')
           .map(_filterThreadAndAuthors)
           .toList());
+    }
+
+    // The sort on server side is not as displayed, fix the sort to keep the same
+    // with website appearance.
+    if (sectionAllThreadPairList.length >= 7) {
+      sectionAllThreadPairList..swap(4, 5)
+        ..swap(5, 6);
     }
   }
 }
