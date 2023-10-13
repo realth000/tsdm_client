@@ -269,58 +269,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               subtitle: Text(e.$2),
             ),
           ),
-          const SizedBox(width: 10, height: 10),
-          ElevatedButton(
-            child: const Text('check in'),
-            onPressed: () async {
-              final (result, message) = await ref.read(checkInProvider.future);
-              switch (result) {
-                // TODO: Show dialog here to ensure enough time to read and
-                // chances to copy other error message.
-                case CheckInResult.success:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.success(msg: '$message'),
-                  );
-                case CheckInResult.notAuthorized:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn.failedNotAuthorized,
-                  );
-                case CheckInResult.webRequestFailed:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn
-                        .failedRequest(err: '$message'),
-                  );
-                case CheckInResult.formHashNotFound:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.failedFormHashNotFound,
-                  );
-                case CheckInResult.alreadyCheckedIn:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.failedAlreadyCheckedIn,
-                  );
-                case CheckInResult.otherError:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn
-                        .failedOtherError(err: '$message'),
-                  );
-              }
-            },
-          ),
         ],
       ),
     );
