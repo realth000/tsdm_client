@@ -8,10 +8,12 @@ import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/checkin_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
+import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({this.uid, super.key});
@@ -32,6 +34,49 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   void dispose() {
     _scrollController.dispose();
     super.dispose();
+  }
+
+  Future<void> _checkInAction() async {
+    final (result, message) = await ref.read(checkInProvider.future);
+    switch (result) {
+      case CheckInResult.success:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.success(msg: '$message'),
+        );
+      case CheckInResult.notAuthorized:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedNotAuthorized,
+        );
+      case CheckInResult.webRequestFailed:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedRequest(err: '$message'),
+        );
+      case CheckInResult.formHashNotFound:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedFormHashNotFound,
+        );
+      case CheckInResult.alreadyCheckedIn:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedAlreadyCheckedIn,
+        );
+      case CheckInResult.otherError:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message:
+              context.t.profilePage.checkIn.failedOtherError(err: '$message'),
+        );
+    }
   }
 
   Widget _buildProfile(BuildContext context, dom.Document document) {
@@ -111,62 +156,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       appBar: AppBar(
         title: Text(t.profilePage.title),
         actions: [
-          TextButton(
-            child: Text(context.t.profilePage.checkIn.title),
-            onPressed: () async {
-              // TODO: Debounce check in.
-              final (result, message) = await ref.read(checkInProvider.future);
-              switch (result) {
-                // TODO: Show dialog here to ensure enough time to read and
-                // chances to copy other error message.
-                case CheckInResult.success:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.success(msg: '$message'),
-                  );
-                case CheckInResult.notAuthorized:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn.failedNotAuthorized,
-                  );
-                case CheckInResult.webRequestFailed:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn
-                        .failedRequest(err: '$message'),
-                  );
-                case CheckInResult.formHashNotFound:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.failedFormHashNotFound,
-                  );
-                case CheckInResult.alreadyCheckedIn:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message:
-                        context.t.profilePage.checkIn.failedAlreadyCheckedIn,
-                  );
-                case CheckInResult.otherError:
-                  return showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.profilePage.checkIn.title,
-                    message: context.t.profilePage.checkIn
-                        .failedOtherError(err: '$message'),
-                  );
-              }
-            },
+          DebounceTextButton(
+            text: context.t.profilePage.checkIn.title,
+            debounceProvider: isCheckingInProvider,
+            onPressed: _checkInAction,
           ),
-          TextButton(
-            child: Text(context.t.profilePage.logout),
+          DebounceTextButton(
+            text: context.t.profilePage.logout,
+            debounceProvider: isLoggingOutProvider,
             onPressed: () async {
-              // TODO: Debounce logout.
               final confirm = await showQuestionDialog(
                 context: context,
                 title: context.t.profilePage.logout,
