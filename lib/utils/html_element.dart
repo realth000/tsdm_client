@@ -128,4 +128,12 @@ extension GrepExtension on Element {
     }
     return (key, value);
   }
+
+  /// Return the img url in [Element]'s attribute.
+  ///
+  /// Priority: data-original > src.
+  /// If not found, return null.
+  String? dataOriginalOrSrcImgUrl() {
+    return attributes['data-original'] ?? attributes['src'] ?? '';
+  }
 }

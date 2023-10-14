@@ -48,7 +48,6 @@ class _ForumPageState extends ConsumerWindowState<ForumPage> {
               debug(
                   'failed to build forum page, thread is empty. Maybe need to login ${docTitle.first.text} ${docMessage?.text} ${docAccessRequire ?? ''} ${docLogin == null}');
               if (docLogin != null) {
-                // TODO: 这里实际上是在build页面的过程中，直接push到另一个页面是否有问题
                 context.pushReplacementNamed(
                   ScreenPaths.login,
                   extra: <String, dynamic>{

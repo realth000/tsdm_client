@@ -1,100 +1,131 @@
+import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:html/dom.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
-import 'package:tsdm_client/utils/prefix_url.dart';
-import 'package:tsdm_client/utils/time.dart';
 
-part '../generated/models/forum.freezed.dart';
+/// Wrap a class so we can mark model as immutable.
+@immutable
+class _ForumInfo {
+  const _ForumInfo({
+    required this.forumID,
+    required this.url,
+    required this.name,
+    required this.iconUrl,
+    required this.threadCount,
+    required this.replyCount,
+    required this.latestThreadUrl,
+    required this.latestThreadTime,
+    required this.latestThreadTimeText,
+    required this.threadTodayCount,
+  });
 
-/// Data model for sub forums.
-@freezed
-class Forum with _$Forum {
-  /// Freezed constructor.
-  const factory Forum({
-    required int forumID,
-    required String name,
-    required String url,
-    required String iconUrl,
-    required int threadCount,
-    required int replyCount,
-    required String? latestThreadUrl,
-    required DateTime? latestThreadTime,
-    required String? latestThreadTimeText,
-    required int? threadTodayCount,
-  }) = _Forum;
+  final int forumID;
+  final String url;
+  final String name;
+  final String iconUrl;
+  final int threadCount;
+  final int replyCount;
+  final String? latestThreadUrl;
+  final DateTime? latestThreadTime;
+  final String? latestThreadTimeText;
+  final int? threadTodayCount;
 }
 
-/// Build a [Forum] model with the given [Element]
-///
-/// <td class="fl_g" width="24.9%">
-Forum? buildForumFromElement(Element element) {
-  if (element.children.length != 3) {
-    return null;
-  }
-  final forumIconUrl = element
-          .childAtOrNull(1)
-          ?.childAtOrNull(1)
-          ?.childAtOrNull(0)
-          ?.attributes['data-original'] ??
-      element
-          .childAtOrNull(1)
-          ?.childAtOrNull(1)
-          ?.childAtOrNull(0)
-          ?.attributes['src'];
+/// Data model for sub forums.
+@immutable
+class Forum {
+  Forum.fromFlGNode(dom.Element element) : _info = _buildForumInfo(element);
 
-  // <div class="tsdm_fl_inf" style="float:left">
-  //   <dl>
-  final forumRootNode = element.childAtOrNull(2)?.childAtOrNull(0);
-  // <a href="forum.php?mod=forumdisplay&amp;fid=8">新番下载</a>
-  final forumInfoNode = forumRootNode?.childAtOrNull(0);
-  final forumUrl = forumInfoNode?.firstHref();
-  final forumName = forumInfoNode?.text;
-  final forumThreadTodayCount =
-      forumRootNode?.childAtOrNull(1)?.childAtOrNull(2)?.childAtOrNull(1)?.text;
-  final forumThreadCount =
-      forumRootNode?.childAtOrNull(1)?.childAtOrNull(0)?.childAtOrNull(1)?.text;
-  final forumReplyCount =
-      forumRootNode?.childAtOrNull(1)?.childAtOrNull(1)?.childAtOrNull(1)?.text;
-  final forumLatestThreadUrl = forumRootNode?.childAtOrNull(2)?.firstHref();
-  final forumLatestThreadTime = forumRootNode
-      ?.childAtOrNull(2)
-      ?.childAtOrNull(0)
-      ?.childAtOrNull(0)
-      ?.attributes['title'];
-  // print(
-  //     'AAAA $forumName forumLatestThreadTime$forumLatestThreadTime ${DateTime.parse(formatTimeString(forumLatestThreadTime ?? '2023-03-06'))}');
-  final forumLatestThreadTimeText =
-      forumRootNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0)?.text;
-  if (forumName == null ||
-      forumUrl == null ||
-      forumIconUrl == null ||
-      forumThreadCount == null ||
-      forumReplyCount == null) {
-    debug(
-        'failed to build forum page: $forumName $forumUrl $forumIconUrl $forumThreadCount $forumReplyCount ');
-    return null;
+  static _ForumInfo _buildForumInfo(dom.Element element) {
+    final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a');
+    final name = titleNode?.firstEndDeepText();
+    final url = titleNode?.firstHref();
+    final forumID = url?.split('fid=').lastOrNull;
+
+    final iconUrl = element
+        .querySelector('div.fl_icn_g > a > img')
+        ?.dataOriginalOrSrcImgUrl();
+
+    final ddNode = element
+        .querySelector('div.tsdm_fl_inf')
+        ?.childAtOrNull(0)
+        ?.childAtOrNull(1);
+    final threadCount =
+        ddNode?.childAtOrNull(0)?.childAtOrNull(1)?.firstEndDeepText();
+    final replyCount =
+        ddNode?.childAtOrNull(1)?.childAtOrNull(1)?.firstEndDeepText();
+    final threadTodayCount =
+        ddNode?.childAtOrNull(2)?.childAtOrNull(1)?.firstEndDeepText();
+
+    // The html package has bug in nth-child query, do not use it.
+    // final threadCount = element
+    //     .querySelector(
+    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)',
+    //     )
+    //     ?.firstEndDeepText();
+    // final replyCount = element
+    //     .querySelector(
+    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)',
+    //     )
+    //     ?.firstEndDeepText();
+
+    // final threadTodayCount = element
+    //     .querySelector(
+    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)',
+    //     )
+    //     ?.firstEndDeepText();
+
+    return _ForumInfo(
+      forumID: int.parse(forumID ?? '-1'),
+      url: url ?? '',
+      name: name ?? '',
+      iconUrl: iconUrl ?? '',
+      threadCount: int.parse(threadCount ?? '-1'),
+      replyCount: int.parse(replyCount ?? '-1'),
+      threadTodayCount: int.parse(threadTodayCount ?? '-1'),
+      // According to server web page rendering, these attributes are missing
+      // in the forum pages.
+      // Maybe they will add back someday.
+      latestThreadTime: null,
+      latestThreadTimeText: null,
+      latestThreadUrl: null,
+    );
   }
-  final forumIDString = Uri.parse(forumUrl).queryParameters['fid'];
-  if (forumIDString == null) {
-    debug('failed to build forum page: $forumIDString');
-    return null;
+
+  bool isValid() {
+    if (name.isEmpty ||
+        url.isEmpty ||
+        iconUrl.isEmpty ||
+        threadCount == -1 ||
+        replyCount == -1) {
+      debug(
+        'failed to build forum page: $name, $url, $iconUrl, $threadCount, $replyCount',
+      );
+      return false;
+    }
+    return true;
   }
-  return Forum(
-    name: forumName,
-    url: addUrlPrefix(forumUrl),
-    iconUrl: forumIconUrl,
-    threadCount: int.parse(forumThreadCount),
-    replyCount: int.parse(forumReplyCount),
-    latestThreadUrl: forumLatestThreadUrl != null
-        ? addUrlPrefix(forumLatestThreadUrl)
-        : null,
-    latestThreadTime: forumLatestThreadTime != null
-        ? DateTime.parse(formatTimeStringWithUTC8(forumLatestThreadTime))
-        : null,
-    latestThreadTimeText: forumLatestThreadTimeText,
-    threadTodayCount:
-        forumThreadTodayCount != null ? int.parse(forumThreadTodayCount) : null,
-    forumID: int.parse(forumIDString),
-  );
+
+  final _ForumInfo _info;
+
+  int get forumID => _info.forumID;
+
+  String get name => _info.name;
+
+  String get url => _info.url;
+
+  String get iconUrl => _info.iconUrl;
+
+  int get threadCount => _info.threadCount;
+
+  int get replyCount => _info.replyCount;
+
+  String? get latestThreadUrl => _info.latestThreadUrl;
+
+  DateTime? get latestThreadTime => _info.latestThreadTime;
+
+  String? get latestThreadTimeText => _info.latestThreadTimeText;
+
+  int? get threadTodayCount => _info.threadTodayCount;
 }

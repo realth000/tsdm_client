@@ -37,8 +37,8 @@ class _TCHomePageState extends ConsumerWindowState<TopicPage> {
           listBuilder: (document) {
             final forumData = <Forum>[];
             document.getElementsByClassName('fl_g').forEach((forumElement) {
-              final forum = buildForumFromElement(forumElement);
-              if (forum == null) {
+              final forum = Forum.fromFlGNode(forumElement);
+              if (!forum.isValid()) {
                 return;
               }
               forumData.add(forum);
