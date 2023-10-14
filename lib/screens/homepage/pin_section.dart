@@ -32,7 +32,13 @@ class PinSection extends ConsumerWidget {
                 debug('invalid pinned thread url: ${e.threadUrl}');
                 return;
               }
-              context.pushNamed(target.$1, pathParameters: target.$2);
+              context.pushNamed(
+                target.$1,
+                pathParameters: target.$2,
+                extra: <String, dynamic>{
+                  'appBarTitle': e.threadTitle,
+                },
+              );
             },
           ),
         )
