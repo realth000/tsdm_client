@@ -69,6 +69,18 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           title: context.t.profilePage.checkIn.title,
           message: context.t.profilePage.checkIn.failedAlreadyCheckedIn,
         );
+      case CheckInResult.earlyInTime:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedEarlyInTime,
+        );
+      case CheckInResult.lateInTime:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.profilePage.checkIn.title,
+          message: context.t.profilePage.checkIn.failedLateInTime,
+        );
       case CheckInResult.otherError:
         return showMessageSingleButtonDialog(
           context: context,

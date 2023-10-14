@@ -80,6 +80,8 @@
       "failedRequest": "Web request status code: $err",
       "failedFormHashNotFound": "Form hash not found",
       "failedAlreadyCheckedIn": "Already checked in today",
+      "failedEarlyInTime": "Earlier than allowed check-in time",
+      "failedLateInTime": "Later than allowed check-in time",
       "failedOtherError": "Other error: $err"
     },
     "logout": "Logout",

@@ -80,6 +80,8 @@
       "failedRequest": "网络请求错误：状态码=$err",
       "failedFormHashNotFound": "未找到form hash",
       "failedAlreadyCheckedIn": "今天已经签过到了",
+      "failedEarlyInTime": "还没到签到时间",
+      "failedLateInTime": "已经过了今天的签到时间",
       "failedOtherError": "其他错误：$err"
     },
     "logout": "注销",

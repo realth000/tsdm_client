@@ -16,6 +16,8 @@ enum CheckInResult {
   webRequestFailed,
   formHashNotFound,
   alreadyCheckedIn,
+  earlyInTime,
+  lateInTime,
   otherError,
 }
 
@@ -86,6 +88,16 @@ class CheckIn extends _$CheckIn {
     if (checkInResult.contains('已经签到')) {
       debug('check in failed: already checked in today');
       return (CheckInResult.alreadyCheckedIn, null);
+    }
+
+    if (checkInResult.contains('已经过了签到时间')) {
+      debug('check in failed: late in time');
+      return (CheckInResult.lateInTime, null);
+    }
+
+    if (checkInResult.contains('签到时间还没有到')) {
+      debug('check in failed: early in time');
+      return (CheckInResult.earlyInTime, null);
     }
 
     debug('check in with other error: $checkInResult');
