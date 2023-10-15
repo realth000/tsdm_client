@@ -5,14 +5,11 @@ typedef FutureVoidCallback = Future<void> Function();
 
 /// [TextButton] with debounce check.
 ///
-/// The [debounceProvider] maintains a bool type value, which representing the
+/// The [shouldDebounce] represents the
 /// work is still running (if true) or not (if false).
 ///
-/// When the state of [debounceProvider] is true, work in [onPressed] is currently
+/// When the [shouldDebounce] is true, work in [onPressed] is currently
 /// running, prevents other attempts to run the same work.
-///
-/// When the work in [onPressed] finishes, set state in [debounceProvider] to
-/// false, which permits following attempts.
 ///
 /// * Example:
 ///
@@ -35,36 +32,26 @@ typedef FutureVoidCallback = Future<void> Function();
 class DebounceTextButton extends ConsumerWidget {
   const DebounceTextButton({
     required this.text,
-    required this.debounceProvider,
+    required this.shouldDebounce,
     required this.onPressed,
     super.key,
   });
 
-  final StateProvider<bool> debounceProvider;
+  final bool shouldDebounce;
   final String text;
   final FutureVoidCallback onPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(debounceProvider);
     return TextButton(
-      child: ref.watch(debounceProvider)
+      child: shouldDebounce
           ? const SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(strokeWidth: 3),
             )
           : Text(text),
-      onPressed: ref.watch(debounceProvider)
-          ? null
-          : () async {
-              if (ref.read(debounceProvider)) {
-                return;
-              }
-              ref.read(debounceProvider.notifier).state = true;
-              await onPressed();
-              ref.read(debounceProvider.notifier).state = false;
-            },
+      onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }
 }
@@ -72,36 +59,26 @@ class DebounceTextButton extends ConsumerWidget {
 class DebounceElevatedButton extends ConsumerWidget {
   const DebounceElevatedButton({
     required this.child,
-    required this.debounceProvider,
+    required this.shouldDebounce,
     required this.onPressed,
     super.key,
   });
 
-  final StateProvider<bool> debounceProvider;
+  final bool shouldDebounce;
   final Widget child;
   final FutureVoidCallback onPressed;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.watch(debounceProvider);
     return ElevatedButton(
-      child: ref.watch(debounceProvider)
+      child: shouldDebounce
           ? const SizedBox(
               width: 16,
               height: 16,
               child: CircularProgressIndicator(strokeWidth: 3),
             )
           : child,
-      onPressed: ref.watch(debounceProvider)
-          ? null
-          : () async {
-              if (ref.read(debounceProvider)) {
-                return;
-              }
-              ref.read(debounceProvider.notifier).state = true;
-              await onPressed();
-              ref.read(debounceProvider.notifier).state = false;
-            },
+      onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }
 }

@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
-import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/screens/login/captcha_image.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -179,7 +178,8 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             children: [
               Expanded(
                 child: DebounceElevatedButton(
-                  debounceProvider: isLoggingInProvider,
+                  shouldDebounce:
+                      ref.watch(authProvider) == AuthState.loggingIn,
                   onPressed: () => _login(context),
                   child: Text(context.t.loginPage.login),
                 ),

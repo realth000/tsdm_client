@@ -25,8 +25,30 @@ class Auth extends _$Auth {
   ///
   /// If already logged in, return current login uid, otherwise return null.
   @override
-  String? build() {
-    return _loggedUid;
+  AuthState build() {
+    return _authState;
+  }
+
+  AuthState _authState = AuthState.notAuthorized;
+  String? _loggedUid;
+  String? _loggedUsername;
+
+  String? get loggedUid => _loggedUid;
+
+  Future<void> _updateAuthState(AuthState state) async {
+    debug('authProvider: update auth state to $state');
+    switch (state) {
+      case AuthState.authorized:
+        await ref
+            .read(appSettingsProvider.notifier)
+            .setLoginUsername(_loggedUsername!);
+      case AuthState.notAuthorized:
+        await ref.read(appSettingsProvider.notifier).setLoginUsername('');
+      default:
+      // Do nothing.
+    }
+    _authState = state;
+    ref.invalidateSelf();
   }
 
   /// Check if already logged in by accessing user space url.
@@ -39,6 +61,7 @@ class Auth extends _$Auth {
     if (resp.statusCode != HttpStatus.ok) {
       _loggedUid = null;
       _loggedUsername = null;
+      await _updateAuthState(AuthState.notAuthorized);
       return null;
     }
     final document = html_parser.parse(resp.data);
@@ -54,19 +77,40 @@ class Auth extends _$Auth {
   Future<String?> loginFromDocument(dom.Document document) async {
     final r = await _parseUidInDocument(document);
     if (r == null) {
+      _loggedUid = null;
+      _loggedUsername = null;
+      await _updateAuthState(AuthState.notAuthorized);
       return null;
     }
     _loggedUid = r.$1;
     _loggedUsername = r.$2;
-    await ref
-        .read(appSettingsProvider.notifier)
-        .setLoginUsername(_loggedUsername!);
-    ref.invalidateSelf();
+    await _updateAuthState(AuthState.authorized);
     return _loggedUid;
   }
 
   /// Login
   Future<(LoginResult, String)> login({
+    required String username,
+    required String password,
+    required String verifyCode,
+    required String formHash,
+  }) async {
+    await _updateAuthState(AuthState.loggingIn);
+    final result = await _login(
+      username: username,
+      password: password,
+      verifyCode: verifyCode,
+      formHash: formHash,
+    );
+    if (result.$1 == LoginResult.success) {
+      await _updateAuthState(AuthState.authorized);
+    } else {
+      await _updateAuthState(AuthState.notAuthorized);
+    }
+    return result;
+  }
+
+  Future<(LoginResult, String)> _login({
     required String username,
     required String password,
     required String verifyCode,
@@ -115,13 +159,10 @@ class Auth extends _$Auth {
       final r = await _parseUidInDocument(document);
       _loggedUid = r!.$1;
       _loggedUsername = r.$2;
-      await ref
-          .read(appSettingsProvider.notifier)
-          .setLoginUsername(_loggedUsername!);
-      ref.invalidateSelf();
+      await _updateAuthState(AuthState.authorized);
     } else {
       _loggedUid = null;
-      ref.invalidateSelf();
+      await _updateAuthState(AuthState.notAuthorized);
     }
 
     return (result, '');
@@ -131,6 +172,15 @@ class Auth extends _$Auth {
   ///
   /// If success or already logged out, return true.
   Future<bool> logout() async {
+    await _updateAuthState(AuthState.loggingOut);
+    final result = await _logout();
+    await _updateAuthState(
+      result ? AuthState.notAuthorized : AuthState.authorized,
+    );
+    return result;
+  }
+
+  Future<bool> _logout() async {
     // Check auth status by accessing user space url.
     final resp = await ref.read(netClientProvider()).get(_checkAuthUrl);
     if (resp.statusCode != HttpStatus.ok) {
@@ -144,7 +194,7 @@ class Auth extends _$Auth {
     if (uid == null) {
       debug('unnecessary logout: not authed');
       _loggedUid = null;
-      ref.invalidateSelf();
+      await _updateAuthState(AuthState.notAuthorized);
       return true;
     }
 
@@ -175,7 +225,7 @@ class Auth extends _$Auth {
     }
 
     _loggedUid = null;
-    ref.invalidateSelf();
+    await _updateAuthState(AuthState.notAuthorized);
     return true;
   }
 
@@ -198,9 +248,21 @@ class Auth extends _$Auth {
     }
     return (uid, username);
   }
+}
 
-  String? _loggedUid;
-  String? _loggedUsername;
+/// State of app account login state.
+enum AuthState {
+  /// Not logged in.
+  notAuthorized,
+
+  /// Processing login.
+  loggingIn,
+
+  /// Logged in.
+  authorized,
+
+  /// Processing logged out.
+  loggingOut,
 }
 
 /// Enum to represent whether a login attempt succeed.

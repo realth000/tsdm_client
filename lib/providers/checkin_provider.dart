@@ -6,6 +6,7 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 part '../generated/providers/checkin_provider.g.dart';
@@ -29,7 +30,20 @@ class CheckIn extends _$CheckIn {
       'https://www.tsdm39.com/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
 
   @override
-  Future<(CheckInResult result, String? message)> build() async {
+  bool build() {
+    return _isCheckingIn;
+  }
+
+  Future<(CheckInResult result, String? message)> checkIn() async {
+    _isCheckingIn = true;
+    ref.invalidateSelf();
+    final result = await _checkIn();
+    _isCheckingIn = false;
+    ref.invalidateSelf();
+    return result;
+  }
+
+  Future<(CheckInResult result, String? message)> _checkIn() async {
     final uid = ref.read(authProvider);
     if (uid == null) {
       debug('failed to check in: not authorized');
@@ -75,6 +89,10 @@ class CheckIn extends _$CheckIn {
         ?.replaceFirst('</div>', '')
         .trim();
 
+    // Set app state to false.
+    ref.read(isCheckingInProvider.notifier).state = false;
+
+    // Return results.
     if (checkInResult == null) {
       debug('check in result in null: $checkInResult');
       return (CheckInResult.otherError, checkInResp.data as String);
@@ -103,4 +121,6 @@ class CheckIn extends _$CheckIn {
     debug('check in with other error: $checkInResult');
     return (CheckInResult.otherError, checkInResult);
   }
+
+  bool _isCheckingIn = false;
 }

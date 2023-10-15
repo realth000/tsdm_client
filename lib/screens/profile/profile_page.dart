@@ -8,7 +8,6 @@ import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/checkin_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
-import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
@@ -37,7 +36,11 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   Future<void> _checkInAction() async {
-    final (result, message) = await ref.read(checkInProvider.future);
+    final (result, message) =
+        await ref.read(checkInProvider.notifier).checkIn();
+    if (!mounted) {
+      return;
+    }
     switch (result) {
       case CheckInResult.success:
         return showMessageSingleButtonDialog(
@@ -170,12 +173,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         actions: [
           DebounceTextButton(
             text: context.t.profilePage.checkIn.title,
-            debounceProvider: isCheckingInProvider,
+            shouldDebounce: ref.watch(checkInProvider),
             onPressed: _checkInAction,
           ),
           DebounceTextButton(
             text: context.t.profilePage.logout,
-            debounceProvider: isLoggingOutProvider,
+            shouldDebounce: ref.watch(authProvider) == AuthState.loggingOut,
             onPressed: () async {
               final confirm = await showQuestionDialog(
                 context: context,
@@ -288,8 +291,9 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final uid = widget.uid ?? ref.read(authProvider);
-    if (uid == null) {
+    final loggedIn =
+        widget.uid == null && ref.read(authProvider) != AuthState.notAuthorized;
+    if (!loggedIn) {
       return Scaffold(
         body: Center(
           child: Column(
@@ -309,6 +313,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         ),
       );
     }
+
+    final uid = ref.read(authProvider.notifier).loggedUid;
 
     return Scaffold(
       body: FutureBuilder(
