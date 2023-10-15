@@ -44,8 +44,8 @@ class CheckIn extends _$CheckIn {
   }
 
   Future<(CheckInResult result, String? message)> _checkIn() async {
-    final uid = ref.read(authProvider);
-    if (uid == null) {
+    final authState = ref.read(authProvider);
+    if (authState != AuthState.authorized) {
       debug('failed to check in: not authorized');
       return (CheckInResult.notAuthorized, null);
     }
