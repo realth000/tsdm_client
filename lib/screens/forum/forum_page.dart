@@ -59,8 +59,8 @@ class _ForumPageState extends ConsumerWindowState<ForumPage> {
             }
 
             for (final threadElement in threadList) {
-              final thread = buildNormalThreadFromElement(threadElement);
-              if (thread == null) {
+              final thread = NormalThread.fromTBody(threadElement);
+              if (!thread.isValid()) {
                 continue;
               }
               normalThreadData.add(thread);

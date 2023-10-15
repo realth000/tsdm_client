@@ -1,20 +1,21 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part '../generated/models/thread_type.freezed.dart';
+import 'package:flutter/foundation.dart';
 
 /// Thread type
 ///
 /// 宣传、心情、其他……
-@freezed
-class ThreadType with _$ThreadType {
+@immutable
+class ThreadType {
   /// Constructor.
-  const factory ThreadType({
-    /// Display name.
-    required String name,
+  const ThreadType({
+    required this.name,
+    required this.url,
+  });
 
-    /// Url.
-    required String url,
-  }) = _ThreadType;
+  /// Display name.
+  final String name;
+
+  /// Url.
+  final String url;
 }
 
 /// Parse and build [ThreadType]

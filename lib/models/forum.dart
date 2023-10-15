@@ -1,5 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
@@ -36,6 +35,28 @@ class _ForumInfo {
 @immutable
 class Forum {
   Forum.fromFlGNode(dom.Element element) : _info = _buildForumInfo(element);
+
+  final _ForumInfo _info;
+
+  int get forumID => _info.forumID;
+
+  String get name => _info.name;
+
+  String get url => _info.url;
+
+  String get iconUrl => _info.iconUrl;
+
+  int get threadCount => _info.threadCount;
+
+  int get replyCount => _info.replyCount;
+
+  String? get latestThreadUrl => _info.latestThreadUrl;
+
+  DateTime? get latestThreadTime => _info.latestThreadTime;
+
+  String? get latestThreadTimeText => _info.latestThreadTimeText;
+
+  int? get threadTodayCount => _info.threadTodayCount;
 
   static _ForumInfo _buildForumInfo(dom.Element element) {
     final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a');
@@ -106,26 +127,4 @@ class Forum {
     }
     return true;
   }
-
-  final _ForumInfo _info;
-
-  int get forumID => _info.forumID;
-
-  String get name => _info.name;
-
-  String get url => _info.url;
-
-  String get iconUrl => _info.iconUrl;
-
-  int get threadCount => _info.threadCount;
-
-  int get replyCount => _info.replyCount;
-
-  String? get latestThreadUrl => _info.latestThreadUrl;
-
-  DateTime? get latestThreadTime => _info.latestThreadTime;
-
-  String? get latestThreadTimeText => _info.latestThreadTimeText;
-
-  int? get threadTodayCount => _info.threadTodayCount;
 }

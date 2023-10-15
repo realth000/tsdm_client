@@ -1,124 +1,114 @@
 import 'package:collection/collection.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:html/dom.dart';
+import 'package:flutter/foundation.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 
-part '../generated/models/thread_data.freezed.dart';
+@immutable
+class _ThreadDataInfo {
+  /// Constructor.
+  const _ThreadDataInfo({
+    required this.threadID,
+    required this.title,
+    required this.replyCount,
+    required this.viewCount,
+    required this.postList,
+  });
+
+  /// Thread ID.
+  final String threadID;
+
+  /// Thread title.
+  final String title;
+
+  /// Total reply count.
+  final int replyCount;
+
+  /// Total view times count.
+  final int viewCount;
+
+  /// [Post] list.
+  final List<Post> postList;
+}
 
 /// Data of each thread.
-@freezed
-class ThreadData with _$ThreadData {
-  /// Constructor.
-  const factory ThreadData({
-    /// Thread ID.
-    required String threadID,
+@immutable
+class ThreadData {
+  /// [element] is "postlist".
+  ThreadData.fromPostListNode(dom.Element element)
+      : _info = _buildThreadData(element);
 
-    /// Thread title.
-    required String title,
+  final _ThreadDataInfo _info;
 
-    /// Total reply count.
-    required int replyCount,
+  String get threadID => _info.threadID;
 
-    /// Total view times count.
-    required int viewCount,
+  String get title => _info.title;
 
-    /// [Post] list.
-    required List<Post> postList,
-  }) = _ThreadData;
-}
+  int get replyCount => _info.replyCount;
 
-/// Build a [ThreadData] from [Element].
-ThreadData? buildThreadDataFromElement(Element element) {
-  final threadDataRootNode = element.childAtOrNull(0);
-  late final int tdReplyCount;
-  late final int tdViewCount;
-  final tmpElementList = threadDataRootNode
-      ?.getElementsByClassName('pls ptm pbm')
-      .elementAtOrNull(0)
-      ?.getElementsByClassName('xi1');
-  if (tmpElementList == null || tmpElementList.length != 2) {
-    debug('failed to parse thread data: $tmpElementList');
-    return null;
-  }
-  tdViewCount = int.parse(tmpElementList[0].text);
-  tdReplyCount = int.parse(tmpElementList[1].text);
-  final tdTitle = threadDataRootNode
-      ?.getElementsByClassName('ts')
-      .elementAtOrNull(0)
-      ?.childAtOrNull(0)
-      ?.text
-      .trim();
-  final tdID =
-      threadDataRootNode?.querySelector('#thread_subject')?.attributes['href'];
+  int get viewCount => _info.viewCount;
 
-  final tdPostList = <Post>[];
+  List<Post> get postList => _info.postList;
 
-  var currentElement = threadDataRootNode?.nextElementSibling;
-  while (currentElement != null) {
-    // This while is a while (0), will not loop twice.
-    while ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
-      // <tr>
-      final postRootNode =
-          currentElement.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
-      if (postRootNode == null) {
-        break;
+  /// Build a [ThreadData] from [dom.Element].
+  static _ThreadDataInfo _buildThreadData(dom.Element element) {
+    final threadDataRootNode = element.childAtOrNull(0);
+    late final int tdReplyCount;
+    late final int tdViewCount;
+    final tmpElementList = threadDataRootNode
+        ?.getElementsByClassName('pls ptm pbm')
+        .elementAtOrNull(0)
+        ?.getElementsByClassName('xi1');
+    // if (tmpElementList == null || tmpElementList.length != 2) {
+    //   debug('failed to parse thread data: $tmpElementList');
+    //   return null;
+    // }
+    tdViewCount = int.parse(tmpElementList?[0].text ?? '-1');
+    tdReplyCount = int.parse(tmpElementList?[1].text ?? '-1');
+    final tdTitle = threadDataRootNode
+        ?.getElementsByClassName('ts')
+        .elementAtOrNull(0)
+        ?.childAtOrNull(0)
+        ?.text
+        .trim();
+    final tdID = threadDataRootNode
+        ?.querySelector('#thread_subject')
+        ?.attributes['href'];
+
+    final tdPostList = <Post>[];
+
+    var currentElement = threadDataRootNode?.nextElementSibling;
+    while (currentElement != null) {
+      // This while is a while (0), will not loop twice.
+      if ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
+        // <tr>
+        // final postRootNode =
+        //     currentElement.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
+        final postRootNode = currentElement;
+        // Build post here.
+        final post = Post.fromPostNode(postRootNode);
+        if (post.isValid()) {
+          tdPostList.add(post);
+        }
       }
-      // Build post here.
-      final post = buildPostFromElement(postRootNode);
-      if (post == null) {
-        break;
-      }
-      tdPostList.add(post);
-      break;
+      currentElement = currentElement.nextElementSibling;
     }
-    currentElement = currentElement.nextElementSibling;
-  }
-  if (tdID == null || tdTitle == null) {
-    debug('failed to parse thread data: $tdID $tdTitle');
-    return null;
+
+    return _ThreadDataInfo(
+      threadID: tdID ?? '',
+      title: tdTitle ?? '',
+      replyCount: tdReplyCount,
+      viewCount: tdViewCount,
+      postList: tdPostList,
+    );
   }
 
-  return ThreadData(
-    threadID: tdID,
-    title: tdTitle,
-    replyCount: tdReplyCount,
-    viewCount: tdViewCount,
-    postList: tdPostList,
-  );
-}
-
-/// Build a list of [Post] from the given [ThreadData] [Element].
-///
-/// [element]'s id is "postlist".
-List<Post> buildPostListFromThreadElement(Element element) {
-  final threadDataRootNode = element.childAtOrNull(2);
-  var currentElement = threadDataRootNode;
-  final tdPostList = <Post>[];
-  while (currentElement != null) {
-    // This while is a while (0), will not loop twice.
-    while ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
-      // <tr>
-      final postRootNode =
-          currentElement.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
-      if (postRootNode == null) {
-        debug('warning: post root node is empty');
-        break;
-      }
-      // Build post here.
-      final post = buildPostFromElement(postRootNode);
-      if (post == null) {
-        debug('warning: post is empty');
-        break;
-      }
-      tdPostList.add(post);
-      break;
+  bool isValid() {
+    if (threadID.isEmpty || title.isEmpty) {
+      debug('failed to parse thread data: $threadID $title');
+      return false;
     }
-    currentElement = currentElement.nextElementSibling;
+    return true;
   }
-  if (tdPostList.isEmpty) {
-    debug('warning: post list is empty');
-  }
-  return tdPostList;
 }

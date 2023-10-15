@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
-import 'package:tsdm_client/models/thread_data.dart';
 import 'package:tsdm_client/states/consumer_window_state.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
@@ -46,7 +45,7 @@ class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
               debug('thread postlist not found');
               return <Post>[];
             }
-            return buildPostListFromThreadElement(threadDataNode);
+            return Post.buildListFromThreadDataNode(threadDataNode);
           },
           widgetBuilder: (context, post) => PostCard(post),
         ),

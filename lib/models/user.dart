@@ -1,26 +1,39 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
-part '../generated/models/user.freezed.dart';
-
+// TODO: Construct from html node.
 /// Author of a thread.
 ///
 /// Contains name and user page url.
-@freezed
-class User with _$User {
+class User {
   /// Freezed constructor.
-  const factory User({
-    /// User name.
-    required String name,
+  User({
+    required this.name,
+    required this.url,
+    this.uid,
+    this.avatarUrl,
+  });
 
-    /// User homepage url.
-    required String url,
+  /// User name.
+  String name;
 
-    /// User id.
-    ///
-    /// For somewhere we can not get user id, this can not be "required".
-    String? uid,
+  /// User homepage url.
+  String url;
 
-    /// User avatar, may be null.
-    String? avatarUrl,
-  }) = _User;
+  /// User id.
+  ///
+  /// For somewhere we can not get user id, this can not be "required".
+  String? uid;
+
+  /// User avatar, may be null.
+  String? avatarUrl;
+
+  bool isValid() {
+    if (name.isEmpty || url.isEmpty) {
+      return false;
+    }
+    return true;
+  }
+
+  @override
+  String toString() {
+    return 'User{ $name, $url, $uid, $avatarUrl }';
+  }
 }
