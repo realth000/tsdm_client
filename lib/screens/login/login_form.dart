@@ -135,18 +135,22 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.password),
               labelText: t.loginPage.password,
-              suffixIcon: IconButton(
-                icon: _showPassword
-                    ? const Icon(Icons.visibility)
-                    : const Icon(Icons.visibility_off),
-                onPressed: () {
-                  setState(() {
-                    _showPassword = !_showPassword;
-                  });
-                },
+              suffixIcon: Focus(
+                canRequestFocus: false,
+                descendantsAreFocusable: false,
+                child: IconButton(
+                  icon: _showPassword
+                      ? const Icon(Icons.visibility)
+                      : const Icon(Icons.visibility_off),
+                  onPressed: () {
+                    setState(() {
+                      _showPassword = !_showPassword;
+                    });
+                  },
+                ),
               ),
             ),
-            obscureText: true,
+            obscureText: !_showPassword,
             validator: (v) =>
                 v!.trim().isNotEmpty ? null : t.loginPage.passwordEmpty,
           ),
