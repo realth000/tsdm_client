@@ -35,6 +35,8 @@ class Auth extends _$Auth {
 
   String? get loggedUid => _loggedUid;
 
+  String? get loggedUsername => _loggedUsername;
+
   Future<void> _updateAuthState(AuthState state) async {
     debug('authProvider: update auth state to $state');
     switch (state) {
@@ -51,41 +53,26 @@ class Auth extends _$Auth {
     ref.invalidateSelf();
   }
 
-  /// Check if already logged in by accessing user space url.
-  ///
-  /// This will use current cookie to login.
-  /// If success, return logged in user uid, otherwise return null.
-  Future<String?> checkLoginState() async {
-    // Use refresh() to ensure using the latest cookie.
-    final resp = await ref.refresh(netClientProvider()).get(_checkAuthUrl);
-    if (resp.statusCode != HttpStatus.ok) {
-      _loggedUid = null;
-      _loggedUsername = null;
-      await _updateAuthState(AuthState.notAuthorized);
-      return null;
-    }
-    final document = html_parser.parse(resp.data);
-    return loginFromDocument(document);
-  }
-
-  /// Parsing html [dom.Document] and return logged in user uid if logged in.
+  /// Parsing html [dom.Document] and update auth state with user info in it.
   ///
   /// This is a function acts like try to login, but parse result using cached
   /// html [document].
   ///
   /// **Will update login status**.
-  Future<String?> loginFromDocument(dom.Document document) async {
+  ///
+  /// If login success, return true. Otherwise return false.
+  Future<bool> loginFromDocument(dom.Document document) async {
     final r = await _parseUidInDocument(document);
     if (r == null) {
       _loggedUid = null;
       _loggedUsername = null;
       await _updateAuthState(AuthState.notAuthorized);
-      return null;
+      return false;
     }
     _loggedUid = r.$1;
     _loggedUsername = r.$2;
     await _updateAuthState(AuthState.authorized);
-    return _loggedUid;
+    return true;
   }
 
   /// Login

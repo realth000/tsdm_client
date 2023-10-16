@@ -6,7 +6,6 @@ import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
-import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html_element.dart';
 
@@ -102,8 +101,9 @@ class RootContent extends _$RootContent {
     _doc = html_parser.parse(resp.data);
 
     _cache = CachedRootContent();
-    await _cache.analyze(_doc);
     await ref.read(authProvider.notifier).loginFromDocument(_doc);
+    final username = ref.read(authProvider.notifier).loggedUsername;
+    await _cache.analyze(_doc, username);
     return _cache;
   }
 
@@ -119,13 +119,13 @@ class RootContent extends _$RootContent {
 class CachedRootContent {
   CachedRootContent();
 
-  String welcomeText = '';
-  String welcomeLastLoginText = '';
+  String usernameText = '';
+  String avatarUrl = '';
   List<String?> picUrlList = [];
   List<String?> picHrefList = [];
   List<String>? memberInfoList = [];
 
-  List<(String, String)>? welcomeNavigateHrefsPairs = [];
+  List<(String, String)>? navigateHrefsPairs = [];
 
   List<String?>? navNameList = [];
   final sectionAllThreadPairList = <List<ThreadAuthorPair?>>[];
@@ -157,8 +157,7 @@ class CachedRootContent {
         .toList();
   }
 
-  Future<void> analyze(Document document) async {
-    // final chartNode = document.getElementById('chart');
+  Future<void> analyze(Document document, String? username) async {
     final chartNode = document.querySelector('div.mn');
     final chartZNode = document.querySelector('p.chart.z');
     final styleNode = chartNode?.querySelector('style');
@@ -175,16 +174,14 @@ class CachedRootContent {
     memberInfoList =
         chartZInfoList?.map((e) => e.text).toList(growable: false) ?? [];
 
-    final welcomeNode = document.getElementById('tsdmwelcome');
-    // welcomeText is plain text inside welcomeNode div.
-    // Only using [nodes] method can capture it.
-    final welcomeTextList = welcomeNode?.nodes.firstOrNull?.text
-        ?.split('，')
-        .map((e) => e.trim())
-        .toList();
-    welcomeText = welcomeTextList?[0] ?? 'Hello';
-    welcomeLastLoginText = welcomeTextList?[1] ?? '';
-    welcomeNavigateHrefsPairs = welcomeNode
+    final welcomeNode = document
+        .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
+    usernameText = username ?? '';
+    avatarUrl = document
+            .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
+            ?.attributes['src'] ??
+        'https://www.tsdm39.com/uc_server/images/noavatar_small.gif';
+    navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))
         .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))

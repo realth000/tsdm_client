@@ -80,12 +80,12 @@ class WelcomeSection extends ConsumerWidget {
 
   Widget _buildForumStatusRow(
       BuildContext context, List<String> memberInfoList) {
-    if (memberInfoList.length == 6) {
+    if (memberInfoList.length >= 3) {
       return Expanded(
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 4),
+          padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
           child: SingleLineText(
-            '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 帖子:${memberInfoList[2]} 会员:${memberInfoList[3]} 新会员:${memberInfoList[4]}',
+            '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 帖子:${memberInfoList[2]}',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
             ),
@@ -122,9 +122,9 @@ class WelcomeSection extends ConsumerWidget {
 
     // welcomeText is plain text inside welcomeNode div.
     // Only using [nodes] method can capture it.
-    final welcomeText = cache.welcomeText;
-    final welcomeLastLoginText = cache.welcomeLastLoginText;
-    final welcomeNavigateHrefsPairs = cache.welcomeNavigateHrefsPairs;
+    final welcomeText = cache.usernameText;
+    final avatarUrl = cache.avatarUrl;
+    final welcomeNavigateHrefsPairs = cache.navigateHrefsPairs;
 
     if (picUrlList.length != picHrefList.length) {
       debug(
@@ -171,9 +171,14 @@ class WelcomeSection extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    title: SingleLineText(welcomeText),
-                    subtitle: SingleLineText(welcomeLastLoginText),
-                    shape: const BorderDirectional(),
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(avatarUrl),
+                      backgroundColor: Colors.transparent,
+                    ),
+                    title: Text(
+                      welcomeText,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
                   ),
                   ...linkTileList,
                 ],
