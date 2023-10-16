@@ -158,7 +158,8 @@ class CachedRootContent {
   }
 
   Future<void> analyze(Document document) async {
-    final chartNode = document.getElementById('chart');
+    // final chartNode = document.getElementById('chart');
+    final chartNode = document.querySelector('div.mn');
     final chartZNode = document.querySelector('p.chart.z');
     final styleNode = chartNode?.querySelector('style');
     final scriptNode = chartNode?.querySelector('script');
@@ -171,12 +172,8 @@ class CachedRootContent {
       return;
     }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
-    if (chartZInfoList != null && chartZInfoList.length == 4) {
-      memberInfoList =
-          chartZInfoList.map((e) => e.text).toList(growable: false);
-    } else {
-      memberInfoList = null;
-    }
+    memberInfoList =
+        chartZInfoList?.map((e) => e.text).toList(growable: false) ?? [];
 
     final welcomeNode = document.getElementById('tsdmwelcome');
     // welcomeText is plain text inside welcomeNode div.
@@ -223,7 +220,8 @@ class CachedRootContent {
     // The sort on server side is not as displayed, fix the sort to keep the same
     // with website appearance.
     if (sectionAllThreadPairList.length >= 7) {
-      sectionAllThreadPairList..swap(4, 5)
+      sectionAllThreadPairList
+        ..swap(4, 5)
         ..swap(5, 6);
     }
   }

@@ -231,7 +231,8 @@ class Auth extends _$Auth {
 
   /// Parse html [document], find current logged in user uid in it.
   Future<(String, String)?> _parseUidInDocument(dom.Document document) async {
-    final userNode = document.querySelector('div#inner_stat > strong > a');
+    final userNode = document
+        .querySelector('div#hd div.wp div.hdc.cl div#um p strong.vwmy a');
     if (userNode == null) {
       debug('auth failed: user node not found');
       return null;

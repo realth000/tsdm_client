@@ -80,12 +80,12 @@ class WelcomeSection extends ConsumerWidget {
 
   Widget _buildForumStatusRow(
       BuildContext context, List<String> memberInfoList) {
-    if (memberInfoList.length == 4) {
+    if (memberInfoList.length == 6) {
       return Expanded(
         child: Padding(
           padding: const EdgeInsets.only(left: 10, right: 10, top: 4),
           child: SingleLineText(
-            '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 会员:${memberInfoList[2]} 新会员:${memberInfoList[3]}',
+            '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 帖子:${memberInfoList[2]} 会员:${memberInfoList[3]} 新会员:${memberInfoList[4]}',
             style: TextStyle(
               color: Theme.of(context).colorScheme.secondary,
             ),
