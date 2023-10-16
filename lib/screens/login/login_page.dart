@@ -70,19 +70,22 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             appBar: AppBar(
               title: Text(context.t.loginPage.title),
             ),
-            body: Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 500,
-                  maxWidth: 500,
-                ),
-                child: LoginForm(
-                  redirectPath: widget.redirectBackState?.fullPath,
-                  redirectPathParameters:
-                      widget.redirectBackState?.pathParameters,
-                  redirectExtra: widget.redirectBackState?.extra,
-                  loginHash: loginHash!,
-                  formHash: formHash!,
+            body: Padding(
+              padding: const EdgeInsets.all(15),
+              child: Center(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(
+                    maxHeight: 500,
+                    maxWidth: 500,
+                  ),
+                  child: LoginForm(
+                    redirectPath: widget.redirectBackState?.fullPath,
+                    redirectPathParameters:
+                        widget.redirectBackState?.pathParameters,
+                    redirectExtra: widget.redirectBackState?.extra,
+                    loginHash: loginHash!,
+                    formHash: formHash!,
+                  ),
                 ),
               ),
             ),
