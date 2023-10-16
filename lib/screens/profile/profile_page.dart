@@ -105,8 +105,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     }
 
     final avatarUrl = document.body
-        ?.querySelector(
-            'div#wp.wp div#ct.ct2 div#ct_shell div.sd div.hm > p > a > img')
+        ?.querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
         ?.attributes['src'];
 
     // Basic info
