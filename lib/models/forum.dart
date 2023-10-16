@@ -76,8 +76,11 @@ class Forum {
         ddNode?.childAtOrNull(0)?.childAtOrNull(1)?.firstEndDeepText();
     final replyCount =
         ddNode?.childAtOrNull(1)?.childAtOrNull(1)?.firstEndDeepText();
-    final threadTodayCount =
-        ddNode?.childAtOrNull(2)?.childAtOrNull(1)?.firstEndDeepText();
+    final threadTodayCount = ddNode
+        ?.childAtOrNull(2)
+        ?.firstEndDeepText()
+        ?.replaceFirst(' (', '')
+        .replaceFirst(')', '');
 
     // The html package has bug in nth-child query, do not use it.
     // final threadCount = element
@@ -97,6 +100,16 @@ class Forum {
     //     )
     //     ?.firstEndDeepText();
 
+    final latestThreadNode = element
+        .querySelector('div.tsdm_fl_inf')
+        ?.childAtOrNull(0)
+        ?.childAtOrNull(2)
+        ?.querySelector('a');
+    final latestThreadTime =
+        latestThreadNode?.querySelector('span')?.attributes['title'];
+    final latestThreadTimeText = latestThreadNode?.firstEndDeepText();
+    final latestThreadUrl = latestThreadNode?.firstHref();
+
     return _ForumInfo(
       forumID: int.parse(forumID ?? '-1'),
       url: url ?? '',
@@ -104,13 +117,12 @@ class Forum {
       iconUrl: iconUrl ?? '',
       threadCount: int.parse(threadCount ?? '-1'),
       replyCount: int.parse(replyCount ?? '-1'),
-      threadTodayCount: int.parse(threadTodayCount ?? '-1'),
-      // According to server web page rendering, these attributes are missing
-      // in the forum pages.
-      // Maybe they will add back someday.
-      latestThreadTime: null,
-      latestThreadTimeText: null,
-      latestThreadUrl: null,
+      threadTodayCount:
+          threadTodayCount == null ? null : int.parse(threadTodayCount),
+      latestThreadTime:
+          latestThreadTime == null ? null : DateTime.parse(latestThreadTime),
+      latestThreadTimeText: latestThreadTimeText,
+      latestThreadUrl: latestThreadUrl,
     );
   }
 
