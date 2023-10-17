@@ -1,10 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:tsdm_client/extensions/html_element.dart';
 import 'package:tsdm_client/models/thread_type.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/html_element.dart';
 import 'package:tsdm_client/utils/prefix_url.dart';
 import 'package:tsdm_client/utils/time.dart';
 

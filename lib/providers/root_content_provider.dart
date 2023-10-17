@@ -7,7 +7,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/html_element.dart';
+import 'package:tsdm_client/extensions/html_element.dart';
 
 part '../generated/providers/root_content_provider.g.dart';
 

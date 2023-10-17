@@ -1,9 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:tsdm_client/extensions/html_element.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/html_element.dart';
 
 @immutable
 class _ThreadDataInfo {

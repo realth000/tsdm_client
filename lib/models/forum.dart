@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:html/dom.dart' as dom;
+import 'package:tsdm_client/extensions/html_element.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/html_element.dart';
 
 /// Wrap a class so we can mark model as immutable.
 @immutable
