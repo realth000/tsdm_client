@@ -9,7 +9,7 @@ import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
-part '../generated/providers/checkin_provider.g.dart';
+part '../generated/providers/check_in_provider.g.dart';
 
 enum CheckInResult {
   success,

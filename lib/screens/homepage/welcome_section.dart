@@ -6,6 +6,7 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/parse_route.dart';
+import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 class WelcomeSection extends ConsumerWidget {
@@ -179,6 +180,7 @@ class WelcomeSection extends ConsumerWidget {
                       welcomeText,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
+                    trailing: const CheckInButton(),
                   ),
                   ...linkTileList,
                 ],

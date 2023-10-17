@@ -82,3 +82,30 @@ class DebounceElevatedButton extends ConsumerWidget {
     );
   }
 }
+
+class DebounceIconButton extends ConsumerWidget {
+  const DebounceIconButton({
+    required this.icon,
+    required this.shouldDebounce,
+    required this.onPressed,
+    super.key,
+  });
+
+  final bool shouldDebounce;
+  final Widget icon;
+  final FutureVoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return IconButton(
+      icon: shouldDebounce
+          ? const SizedBox(
+              width: 16,
+              height: 16,
+              child: CircularProgressIndicator(strokeWidth: 3),
+            )
+          : icon,
+      onPressed: shouldDebounce ? null : () async => onPressed(),
+    );
+  }
+}
