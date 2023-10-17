@@ -34,9 +34,15 @@ class ThreadPage extends ConsumerStatefulWidget {
 }
 
 class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
+  String? title;
+
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(widget.title ?? context.t.appName)),
+        // Title priority:
+        // 1. `widget.title`: Specified title in widget constructor.
+        // 2. `title`: Title found in html document.
+        // 3. `context.t.appName`: Default application name.
+        appBar: AppBar(title: Text(widget.title ?? title ?? context.t.appName)),
         body: NetworkList<Post>(
           widget._fetchUrl,
           listBuilder: (document) {
@@ -45,6 +51,18 @@ class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
               debug('thread postlist not found');
               return <Post>[];
             }
+
+            // Sometimes we do not know the web page title outside this widget,
+            // so here should use the title in html document as fallback.
+            //
+            // Note that the specified title (in widget constructor) is prior to
+            // this html document title, only use html title when that title is null.
+            if (widget.title == null) {
+              setState(() {
+                title = document.head?.querySelector('title')?.text;
+              });
+            }
+
             return Post.buildListFromThreadDataNode(threadDataNode);
           },
           widgetBuilder: (context, post) => PostCard(post),
