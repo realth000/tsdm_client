@@ -4,6 +4,7 @@ import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/models/database/cookie.dart';
+import 'package:tsdm_client/models/database/image_cache.dart';
 import 'package:tsdm_client/models/database/settings.dart';
 import 'package:tsdm_client/models/settings.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -46,7 +47,11 @@ class Storage {
     debug('init isar storage in $isarStorageDir');
 
     _isar = await Isar.openAsync(
-      schemas: [DatabaseSettingsSchema, DatabaseCookieSchema],
+      schemas: [
+        DatabaseSettingsSchema,
+        DatabaseCookieSchema,
+        DatabaseImageCacheSchema,
+      ],
       directory: isarStorageDir.path,
       name: 'main',
     );
