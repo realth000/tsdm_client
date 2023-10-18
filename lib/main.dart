@@ -6,6 +6,7 @@ import 'package:responsive_framework/breakpoint.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/providers/storage_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -13,7 +14,7 @@ import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initSettings();
+  await initStorage();
   // FIXME: Do not use ProviderContainer.
   final settingsLocale = ProviderContainer().read(appSettingsProvider).locale;
   final locale =
