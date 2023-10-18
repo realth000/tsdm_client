@@ -1,5 +1,8 @@
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:uuid/uuid.dart';
+
+const Uuid _uuid = Uuid();
 
 extension ParseUrl on String {
   /// Try parse string to [AppRoute] with arguments.
@@ -17,5 +20,11 @@ extension ParseUrl on String {
     }
 
     return null;
+  }
+}
+
+extension ImageCacheFileName on String {
+  String fileNameV5() {
+    return _uuid.v5(Namespace.URL, this);
   }
 }

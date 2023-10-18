@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:uuid/uuid.dart';
+import 'package:tsdm_client/extensions/string.dart';
 
 part '../../generated/models/database/image_cache.g.dart';
 
@@ -20,7 +20,7 @@ class DatabaseImageCache {
     String? fileName,
     DateTime? lastCachedTime,
     DateTime? lastUsedTime,
-  })  : fileName = fileName ?? const Uuid().v5(Uuid.NAMESPACE_URL, imageUrl),
+  })  : fileName = fileName ?? imageUrl.fileNameV5(),
         lastCachedTime = lastCachedTime ?? DateTime.now(),
         lastUsedTime = lastUsedTime ?? DateTime.now();
 

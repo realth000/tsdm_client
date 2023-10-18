@@ -66,6 +66,8 @@ class Storage {
     }
   }
 
+  /*             cookie             */
+
   DatabaseCookie? getCookie(String username) {
     return _isar.databaseCookies.where().usernameEqualTo(username).findFirst();
   }
@@ -100,6 +102,57 @@ class Storage {
           .deleteFirst();
     });
   }
+
+  /*            image cache           */
+
+  DatabaseImageCache? getImageCache(String imageUrl) {
+    return _isar.databaseImageCaches
+        .where()
+        .imageUrlEqualTo(imageUrl)
+        .findFirst();
+  }
+
+  /// Insert or update cache info, update all info.
+  Future<void> updateImageCache(
+    String imageUrl, {
+    String? fileName,
+    DateTime? lastCacheTime,
+    DateTime? lastUsedTime,
+  }) async {
+    final cache = await _isar.databaseImageCaches
+        .where()
+        .imageUrlEqualTo(imageUrl)
+        .findFirstAsync();
+
+    await _isar.writeAsync((isar) {
+      isar.databaseImageCaches.put(DatabaseImageCache.fromData(
+        id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
+        imageUrl: imageUrl,
+        fileName: fileName ?? cache?.fileName,
+        lastCachedTime: lastCacheTime,
+        lastUsedTime: lastUsedTime,
+      ));
+    });
+  }
+
+  /// Insert or update cache info, only update last used time.
+  Future<void> updateImageCacheUsedTime(String imageUrl) async {
+    final cache = await _isar.databaseImageCaches
+        .where()
+        .imageUrlEqualTo(imageUrl)
+        .findFirstAsync();
+
+    await _isar.writeAsync((isar) {
+      isar.databaseImageCaches.put(DatabaseImageCache.fromData(
+        id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
+        imageUrl: imageUrl,
+        fileName: cache?.fileName,
+        lastCachedTime: cache?.lastUsedTime,
+      ));
+    });
+  }
+
+  /*             settings             */
 
   /// Get string type value of specified key.
   String? getString(String key) =>

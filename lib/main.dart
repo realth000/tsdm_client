@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/breakpoint.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/providers/image_cache_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/storage_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
@@ -15,6 +16,7 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initStorage();
+  await initCache();
   // FIXME: Do not use ProviderContainer.
   final settingsLocale = ProviderContainer().read(appSettingsProvider).locale;
   final locale =
