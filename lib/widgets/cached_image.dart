@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/image_cache_provider.dart';
@@ -9,9 +9,11 @@ import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 class CachedImage extends ConsumerWidget {
-  const CachedImage(this.imageUrl, {super.key});
+  const CachedImage(this.imageUrl, {this.maxWidth, this.maxHeight, super.key});
 
   final String imageUrl;
+  final double? maxWidth;
+  final double? maxHeight;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +42,16 @@ class CachedImage extends ConsumerWidget {
           return const Placeholder();
         }
         if (snapshot.hasData) {
-          return Image.memory(snapshot.data!);
+          return ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: maxWidth ?? double.infinity,
+              maxHeight: maxHeight ?? double.infinity,
+            ),
+            child: Image.memory(
+              snapshot.data!,
+              fit: BoxFit.contain,
+            ),
+          );
         }
         return Container();
       },

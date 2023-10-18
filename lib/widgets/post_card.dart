@@ -102,7 +102,9 @@ class PostCard extends ConsumerWidget {
         child: Column(
           children: [
             ListTile(
-              leading: NetworkIndicatorImage(post.author.avatarUrl!),
+              leading: CircleAvatar(
+                child: NetworkIndicatorImage(post.author.avatarUrl!),
+              ),
               title: Text(post.author.name),
               subtitle: Text('uid ${post.author.uid ?? ""}'),
               onTap: () {},

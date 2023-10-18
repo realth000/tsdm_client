@@ -1,34 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/widgets/cached_image.dart';
 
 /// Network image with loading indicator.
 class NetworkIndicatorImage extends StatelessWidget {
   /// Constructor.
-  const NetworkIndicatorImage(this.src, {super.key});
+  const NetworkIndicatorImage(this.src,
+      {this.maxWidth, this.maxHeight, super.key});
 
   /// Image network source url.
   final String src;
 
+  final double? maxWidth;
+  final double? maxHeight;
+
   @override
-  Widget build(BuildContext context) => Image.network(
+  Widget build(BuildContext context) => CachedImage(
         src,
-        loadingBuilder: (context, child, progress) {
-          if (progress == null) {
-            return child;
-          }
-          return const SizedBox(
-            width: 50,
-            height: 50,
-            child: CircularProgressIndicator(),
-          );
-        },
-        errorBuilder: (context, error, _) {
-          debug('error: $error');
-          return const SizedBox(
-            height: 50,
-            width: 50,
-            child: Icon(Icons.account_circle),
-          );
-        },
+        maxWidth: maxWidth,
+        maxHeight: maxHeight,
       );
 }
