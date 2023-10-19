@@ -70,7 +70,7 @@ class CheckIn extends _$CheckIn {
       'formhash': formHash,
       'qdxq': 'ng',
       'qdmode': 1,
-      'todaysay': Uri.encodeComponent('签到'),
+      'todaysay': '签到',
       'fastreply': 1,
     };
 
