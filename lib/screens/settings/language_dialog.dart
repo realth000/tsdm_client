@@ -29,7 +29,7 @@ class LanguageDialog extends ConsumerWidget {
             ),
             ...AppLocale.values.map(
               (e) => RadioListTile(
-                title: Text(e.languageTag),
+                title: Text(e.translations.locale),
                 value: e.languageTag,
                 groupValue: ref.watch(appSettingsProvider).locale,
                 onChanged: (value) async {

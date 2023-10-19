@@ -36,15 +36,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final settingsLocale = ref.watch(appSettingsProvider).locale;
     final locale = AppLocale.values
         .firstWhereOrNull((v) => v.languageTag == settingsLocale);
-    final localeName = locale?.languageTag ??
-        context.t.settingsPage.appearanceSection.languages.followSystem;
+    final localeName = locale == null
+        ? context.t.settingsPage.appearanceSection.languages.followSystem
+        : context.t.locale;
 
     return [
       // Appearance
       SectionTitleText(context.t.settingsPage.appearanceSection.title),
       // Theme mode
       ListTile(
-        contentPadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
         title: Text(context.t.settingsPage.appearanceSection.themeMode.title),
         subtitle: Text(
           <String>[
@@ -86,7 +87,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       ),
       // Language
       ListTile(
-        contentPadding: EdgeInsets.zero,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
         title: Text(context.t.settingsPage.appearanceSection.languages.title),
         subtitle: Text(localeName),
         onTap: () async {
@@ -102,14 +103,11 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       appBar: AppBar(title: Text(context.t.navigation.settings)),
       body: Scrollbar(
         controller: scrollController,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
-          child: ListView(
-            controller: scrollController,
-            children: [
-              ..._buildAppearanceSection(context),
-            ],
-          ),
+        child: ListView(
+          controller: scrollController,
+          children: [
+            ..._buildAppearanceSection(context),
+          ],
         ),
       ),
     );

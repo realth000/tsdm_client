@@ -10,11 +10,14 @@ class SectionTitleText extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Text(
-      data,
-      style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            color: Theme.of(context).colorScheme.primary,
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 18),
+      child: Text(
+        data,
+        style: Theme.of(context).textTheme.titleSmall?.copyWith(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+      ),
     );
   }
 }
