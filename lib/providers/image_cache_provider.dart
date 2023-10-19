@@ -6,7 +6,6 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/models/database/image_cache.dart';
 import 'package:tsdm_client/providers/storage_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
 
 part '../generated/providers/image_cache_provider.g.dart';
 
@@ -38,18 +37,15 @@ class ImageCache extends _$ImageCache {
   Future<Uint8List> getCache(String imageUrl) async {
     final cacheInfo = getCacheInfo(imageUrl);
     if (cacheInfo == null) {
-      debug('$imageUrl not cached');
       return Future.error('$imageUrl not cached');
     }
 
     final cacheFile =
         File('${_imageCacheDirectory.path}/${cacheInfo.fileName}');
     if (!cacheFile.existsSync()) {
-      debug('$imageUrl cache file not exists');
       return Future.error('$imageUrl cache file not exists');
     }
 
-    debug('$imageUrl read cache from file');
     return cacheFile.readAsBytes();
   }
 

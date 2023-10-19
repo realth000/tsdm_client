@@ -18,7 +18,10 @@ Future<void> initStorage() async {
   _storage = await Storage().init();
 }
 
-@Riverpod()
+// Now make this `keepAlive` to avoid schedule task exception.
+// FIXME: Fix exception `Only one task can be scheduled at a time`.
+/// Database instance provider.
+@Riverpod(keepAlive: true)
 class AppStorage extends _$AppStorage {
   @override
   Storage build() {
