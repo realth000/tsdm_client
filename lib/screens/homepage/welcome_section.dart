@@ -6,6 +6,7 @@ import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -102,7 +103,7 @@ class WelcomeSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ref.watch(rootContentProvider).when(
       data: (cache) {
-        return _buildSection(context, cache);
+        return _buildSection(context, ref, cache);
       },
       error: (error, stackTrace) {
         return Scaffold(
@@ -115,7 +116,8 @@ class WelcomeSection extends ConsumerWidget {
     );
   }
 
-  Widget _buildSection(BuildContext context, CachedRootContent cache) {
+  Widget _buildSection(
+      BuildContext context, WidgetRef ref, CachedRootContent cache) {
     final picUrlList = cache.picUrlList;
     final picHrefList = cache.picHrefList;
 
@@ -173,7 +175,7 @@ class WelcomeSection extends ConsumerWidget {
                 children: [
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(avatarUrl),
+                      backgroundImage: CachedImageProvider(avatarUrl, ref),
                       backgroundColor: Colors.transparent,
                     ),
                     title: Text(

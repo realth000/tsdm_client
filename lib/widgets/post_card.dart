@@ -4,6 +4,7 @@ import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -103,7 +104,10 @@ class PostCard extends ConsumerWidget {
           children: [
             ListTile(
               leading: CircleAvatar(
-                child: NetworkIndicatorImage(post.author.avatarUrl!),
+                backgroundImage: CachedImageProvider(
+                  post.author.avatarUrl!,
+                  ref,
+                ),
               ),
               title: Text(post.author.name),
               subtitle: Text('uid ${post.author.uid ?? ""}'),
