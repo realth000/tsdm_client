@@ -1,0 +1,101 @@
+{
+  "locale": "繁體中文",
+  "appName": "天使動漫客戶端",
+  "general": {
+    "ok": "確定",
+    "cancel": "取消",
+    "needLoginToSeeThisPage": "登入後才能存取此頁面"
+  },
+  "navigation": {
+    "homepage": "首頁",
+    "topics": "分割區",
+    "profile": "我的",
+    "settings": "設定"
+  },
+  "homepage": {
+    "title": "首頁",
+    "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2"
+  },
+  "topicPage": {
+    "title": "分割區",
+    "threads": "主題: ",
+    "posts": "帖數: ",
+    "today": "今日: ",
+    "new0": "新貼文: "
+  },
+  "settingsPage": {
+    "title": "設定",
+    "appearanceSection": {
+      "title": "外觀",
+      "themeMode": {
+        "title": "主題模式",
+        "light": "淺色",
+        "system": "跟隨系統",
+        "dark": "深色"
+      },
+      "languages": {
+        "title": "語言",
+        "followSystem": "跟隨系統",
+        "selectLanguage": "選擇語言"
+      }
+    }
+  },
+  "loginPage": {
+    "title": "登入天使動漫",
+    "login": "登入",
+    "username": "使用者名稱",
+    "usernameEmpty": "使用者名稱不能為空",
+    "password": "密碼",
+    "passwordEmpty": "密碼不能為空",
+    "verifyCode": "驗證碼",
+    "verifyCodeEmpty": "驗證碼不能為空",
+    "failedToLoginStatusCode": "登入失敗: 狀態碼=$code",
+    "failedToLoginMessageNodeNotFound": "登入失敗: 未找到MessageNode",
+    "loginResultSuccess": "登入成功",
+    "loginResultIncorrectCaptcha": "驗證碼錯誤",
+    "loginResultMaybeInvalidUsernameOrPassword": "可能是因為使用者名稱或密碼錯誤",
+    "loginResultTooManyLoginAttempts": "登入嘗試次數過多",
+    "loginResultOtherErrors": "其他錯誤",
+    "loginResultUnknown": "未知的登入結果",
+    "loginFailed": "登入失敗",
+    "failedToGetLoginHash": "取得登入值失敗: $err",
+    "failedToGetCaptcha": "取得驗證碼失敗: $err",
+    "failedToGetFormHash": "取得表格雜湊失敗",
+    "hashValueNotFound": "找不到hash",
+    "preparingLogin": "準備登入"
+  },
+  "rootPage": {
+    "initFailed": "初始化失敗: $err",
+    "initializingData": "正在初始化資料",
+    "initFinished": "初始化完成"
+  },
+  "profilePage": {
+    "title": "個人資料",
+    "userNodeNotFound": "未找到使用者資訊節點",
+    "checkIn": {
+      "title": "簽到",
+      "checkInFailed": "簽到失敗",
+      "success": "簽到成功：$msg",
+      "failedNotAuthorized": "簽到失敗",
+      "failedRequest": "網路請求錯誤：狀態碼=$err",
+      "failedFormHashNotFound": "未找到form hash",
+      "failedAlreadyCheckedIn": "今天已經簽到了",
+      "failedEarlyInTime": "還沒簽到時間",
+      "failedLateInTime": "已經過了今天的簽到時間",
+      "failedOtherError": "其他錯誤：$err"
+    },
+    "logout": "登出",
+    "areYouSureToLogout": "確定註銷？",
+    "username": "使用者名稱",
+    "uid": "用戶ID",
+    "checkInDaysCount": "累計簽到總天數",
+    "checkInDaysInThisMonth": "本月簽到天數",
+    "checkInRecentTime": "最近簽到時間",
+    "checkInAllCoins": "簽到總天使幣",
+    "checkInLastTimeCoins": "最近一次簽到天使幣",
+    "checkInLevel": "簽到等級",
+    "checkInNextLevel": "下個簽到等級",
+    "checkInNextLevelDays": "距離下個簽到等級天數",
+    "checkInTodayStatus": "今日簽到狀態"
+  }
+}
