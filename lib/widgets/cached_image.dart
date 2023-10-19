@@ -26,7 +26,10 @@ class CachedImage extends ConsumerWidget {
         // correctly cached, fetch from network.
         final resp = await ref.read(netClientProvider()).get(
               imageUrl,
-              options: Options(responseType: ResponseType.bytes),
+              options: Options(
+                responseType: ResponseType.bytes,
+                headers: {'Accept': 'image/avif,image/webp,*/*'},
+              ),
             );
         final imageData = resp.data as List<int>;
 
