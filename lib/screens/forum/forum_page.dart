@@ -4,7 +4,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/states/consumer_window_state.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
@@ -29,7 +28,7 @@ class ForumPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ForumPageState();
 }
 
-class _ForumPageState extends ConsumerWindowState<ForumPage> {
+class _ForumPageState extends ConsumerState<ForumPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(title: Text(widget.title ?? context.t.appName)),

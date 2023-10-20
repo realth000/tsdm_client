@@ -10,8 +10,6 @@ import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/storage_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
-import 'package:tsdm_client/utils/platform.dart';
-import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,9 +25,6 @@ Future<void> main() async {
     LocaleSettings.setLocale(locale);
   }
 
-  if (isDesktop) {
-    await _initWindow();
-  }
   runApp(
     TranslationProvider(
       child: ResponsiveBreakpoints.builder(
@@ -66,33 +61,4 @@ class TClientApp extends ConsumerWidget {
       routerConfig: tClientRouter,
     );
   }
-}
-
-/// Setup main window settings including size and position.
-///
-/// If window is set to be in center, ignore position,
-Future<void> _initWindow() async {
-  await windowManager.ensureInitialized();
-  final settings = ProviderContainer();
-  final center = settings.read(appSettingsProvider).windowInCenter;
-  // Only apply window position when not set in center.
-  if (!center) {
-    await windowManager.setPosition(
-      Offset(
-        settings.read(appSettingsProvider).windowPositionDx,
-        settings.read(appSettingsProvider).windowPositionDy,
-      ),
-    );
-  }
-  await windowManager.waitUntilReadyToShow(
-      WindowOptions(
-        size: Size(
-          settings.read(appSettingsProvider).windowWidth,
-          settings.read(appSettingsProvider).windowHeight,
-        ),
-        center: center,
-      ), () async {
-    await windowManager.show();
-    await windowManager.focus();
-  });
 }

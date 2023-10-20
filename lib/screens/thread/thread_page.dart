@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
-import 'package:tsdm_client/states/consumer_window_state.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
@@ -33,7 +32,7 @@ class ThreadPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ThreadPageState();
 }
 
-class _ThreadPageState extends ConsumerWindowState<ThreadPage> {
+class _ThreadPageState extends ConsumerState<ThreadPage> {
   String? title;
 
   @override

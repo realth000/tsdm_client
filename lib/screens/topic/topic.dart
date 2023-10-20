@@ -3,8 +3,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
-import 'package:tsdm_client/states/consumer_window_state.dart'
-    show ConsumerWindowState;
 import 'package:tsdm_client/widgets/forum_card.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 
@@ -25,7 +23,7 @@ class TopicPage extends ConsumerStatefulWidget {
 }
 
 /// State of homepage.
-class _TCHomePageState extends ConsumerWindowState<TopicPage> {
+class _TCHomePageState extends ConsumerState<TopicPage> {
   /// Constructor.
   _TCHomePageState();
 

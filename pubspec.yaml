@@ -39,7 +39,6 @@ dependencies:
   surf_lint_rules: ^3.0.0
   url_launcher: ^6.1.14
   uuid: ^4.1.0
-  window_manager: ^0.3.7
 
 dev_dependencies:
   build_runner: ^2.4.6
