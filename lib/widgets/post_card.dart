@@ -109,6 +109,8 @@ class PostCard extends ConsumerWidget {
                   post.author.avatarUrl!,
                   context,
                   ref,
+                  fallbackImageUrl:
+                      'https://www.tsdm39.com/uc_server/images/noavatar_middle.gif',
                 ),
               ),
               title: Text(post.author.name),

@@ -22,6 +22,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
     this.headers = const <String, String>{
       'Accept': 'image/avif,image/webp,*/*',
     },
+    this.fallbackImageUrl,
   });
 
   final String imageUrl;
@@ -35,6 +36,9 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
   final double? maxHeight;
 
   final double scale;
+
+  /// Use this image if [imageUrl] is unavailable.
+  final String? fallbackImageUrl;
 
   String get url => imageUrl;
 
@@ -133,13 +137,30 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
         }
         // When error occurred in `getCache`, it means the image is not
         // correctly cached, fetch from network.
-        final resp = await ref.read(netClientProvider()).get(
+        final resp = await ref
+            .read(netClientProvider())
+            .get(
               imageUrl,
               options: Options(
                 responseType: ResponseType.bytes,
                 headers: headers,
               ),
-            );
+            )
+            .onError((e, st) async {
+          // Error occurred when fetching this image.
+          // If we have [fallbackImageUrl], use it.
+          if (fallbackImageUrl == null) {
+            // Rethrow if can not fallback.
+            throw Exception(e);
+          }
+          return ref.read(netClientProvider()).get(
+                fallbackImageUrl!,
+                options: Options(
+                  responseType: ResponseType.bytes,
+                  headers: headers,
+                ),
+              );
+        });
         if (!context.mounted) {
           return Uint8List(0);
         }
