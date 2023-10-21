@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -15,7 +16,7 @@ class ThreadPage extends ConsumerStatefulWidget {
     this.title,
     super.key,
   }) : _fetchUrl =
-            'https://www.tsdm39.com/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
+            '$baseUrl/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
 
   final String? title;
 

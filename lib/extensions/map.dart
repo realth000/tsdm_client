@@ -1,3 +1,4 @@
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
 extension ParseRoute on Map<String, String> {
@@ -16,6 +17,6 @@ extension ParseRoute on Map<String, String> {
       return null;
     }
 
-    return 'https://tsdm39.com/archiver?$route';
+    return '$baseUrl/archiver?$route';
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
@@ -109,8 +110,7 @@ class PostCard extends ConsumerWidget {
                   post.author.avatarUrl!,
                   context,
                   ref,
-                  fallbackImageUrl:
-                      'https://www.tsdm39.com/uc_server/images/noavatar_middle.gif',
+                  fallbackImageUrl: noAvatarUrl,
                 ),
               ),
               title: Text(post.author.name),

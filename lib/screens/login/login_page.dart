@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/screens/login/login_form.dart';
@@ -12,7 +13,7 @@ class LoginPage extends ConsumerStatefulWidget {
   final GoRouterState? redirectBackState;
 
   static const String _fakeFormUrl =
-      'https://tsdm39.com/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
+      '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
 
   @override
   ConsumerState<LoginPage> createState() => _LoginPageState();

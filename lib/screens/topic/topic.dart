@@ -10,7 +10,6 @@ import 'package:tsdm_client/widgets/network_list.dart';
 ///
 /// Contains most sub-forums in homepeage.
 ///
-/// "https://www.tsdm39.com/forum.php"
 class TopicPage extends ConsumerStatefulWidget {
   /// Constructor.
   const TopicPage({required this.fetchUrl, super.key});

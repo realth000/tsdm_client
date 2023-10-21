@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/html_element.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
@@ -15,11 +16,11 @@ part '../generated/providers/auth_provider.g.dart';
 ///
 @Riverpod(keepAlive: true, dependencies: [NetClient])
 class Auth extends _$Auth {
-  static const _checkAuthUrl = 'https://www.tsdm39.com/home.php?mod=spacecp';
+  static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
   static const _loginUrl =
-      'https://tsdm39.com/member.php?mod=logging&action=login&loginsubmit=yes&frommessage&loginhash=';
+      '$baseUrl/member.php?mod=logging&action=login&loginsubmit=yes&frommessage&loginhash=';
   static const _logoutUrl =
-      'https://www.tsdm39.com/member.php?mod=logging&action=logout&formhash=';
+      '$baseUrl/member.php?mod=logging&action=logout&formhash=';
 
   /// Check auth state *using cached data*.
   ///
@@ -109,7 +110,7 @@ class Auth extends _$Auth {
       'password': password,
       'tsdm_verify': verifyCode,
       'formhash': formHash,
-      'referer': 'https://tsdm39.com/forum.php',
+      'referer': homePage,
       'loginfield': 'username',
       'questionid': 0,
       'answer': 0,

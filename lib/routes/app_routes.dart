@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
@@ -37,7 +38,7 @@ final tClientRouter = GoRouter(
           path: ScreenPaths.topic,
           parentNavigatorKey: _shellRouteKey,
           builder: (_) => const TopicPage(
-            fetchUrl: 'https://www.tsdm39.com/forum.php',
+            fetchUrl: homePage,
           ),
         ),
         AppRoute(

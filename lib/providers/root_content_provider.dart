@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:html/dom.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -82,7 +83,7 @@ ThreadAuthorPair? _filterThreadAndAuthors(Element element) {
 // TODO: Make this a not persist provider.
 @Riverpod(keepAlive: true, dependencies: [Auth, NetClient])
 class RootContent extends _$RootContent {
-  static const String _rootPage = 'https://www.tsdm39.com/forum.php';
+  static const String _rootPage = homePage;
 
   @override
   Future<CachedRootContent> build() async {
@@ -179,8 +180,7 @@ class CachedRootContent {
     usernameText = username ?? '';
     avatarUrl = document
             .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-            ?.attributes['src'] ??
-        'https://www.tsdm39.com/uc_server/images/noavatar_small.gif';
+            ?.attributes['src'] ?? noAvatarUrl;
     navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))

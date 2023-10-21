@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -16,7 +17,7 @@ class ForumPage extends ConsumerStatefulWidget {
     required this.routerState,
     this.title,
     super.key,
-  }) : _fetchUrl = 'https://www.tsdm39.com/forum.php?mod=forumdisplay&fid=$fid';
+  }) : _fetchUrl = '$baseUrl/forum.php?mod=forumdisplay&fid=$fid';
 
   final String? title;
 

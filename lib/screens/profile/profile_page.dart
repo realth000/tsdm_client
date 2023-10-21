@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/html_element.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
@@ -256,7 +257,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       body: FutureBuilder(
         future: ref
             .read(netClientProvider())
-            .get('https://www.tsdm39.com/home.php?mod=space&uid=$uid'),
+            .get('$baseUrl/home.php?mod=space&uid=$uid'),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('${snapshot.error}'));

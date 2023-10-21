@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
@@ -24,10 +25,9 @@ enum CheckInResult {
 
 @Riverpod(dependencies: [Auth, NetClient])
 class CheckIn extends _$CheckIn {
-  static const _checkInPageUrl =
-      'https://www.tsdm39.com/plugin.php?id=dsu_paulsign:sign';
+  static const _checkInPageUrl = '$baseUrl/plugin.php?id=dsu_paulsign:sign';
   static const _checkInRequestUrl =
-      'https://www.tsdm39.com/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
+      '$baseUrl/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
 
   @override
   bool build() {
