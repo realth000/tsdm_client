@@ -1,8 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as html;
-import 'package:html/dom.dart';
+import 'package:html/dom.dart' as dom;
 import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/providers/net_client_provider.dart';
 
@@ -28,18 +27,18 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
 
-  /// Build [Widget] from given [html.Document].
+  /// Build [Widget] from given [dom.Document].
   ///
   /// User needs to provide this method and [NetworkList] refresh by pressing
   /// refresh button.
-  final List<T> Function(html.Document document) listBuilder;
+  final List<T> Function(dom.Document document) listBuilder;
 
   /// Build a list of [Widget].
   final Widget Function(BuildContext, T) widgetBuilder;
 
   /// Initial data to use in the first fetch.
   /// This argument allows to load cached data every first time.
-  final Document? initialData;
+  final dom.Document? initialData;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -49,7 +48,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
   Future<void> _loadData() async {
-    late final Document document;
+    late final dom.Document document;
     if (!_initialized && widget.initialData != null) {
       document = widget.initialData!;
       _initialized = true;

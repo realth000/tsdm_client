@@ -31,10 +31,14 @@ class ThreadCard extends ConsumerWidget {
     ];
 
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: ListTile(
-        leading: Chip(
-          label: Text(thread.threadType!.name),
-          backgroundColor: Colors.transparent,
+        leading: SizedBox(
+          width: 90,
+          child: Chip(
+            label: Text(thread.threadType!.name),
+            backgroundColor: Colors.transparent,
+          ),
         ),
         title: Text(thread.title),
         subtitle: Row(

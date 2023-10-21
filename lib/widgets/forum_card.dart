@@ -53,6 +53,7 @@ class ForumCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) => Card(
+        clipBehavior: Clip.antiAlias,
         child: ListTile(
           leading: SizedBox(
             width: 100,

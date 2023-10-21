@@ -100,6 +100,7 @@ class PostCard extends ConsumerWidget {
   // TODO: Handle better.
   @override
   Widget build(BuildContext context, WidgetRef ref) => Card(
+        clipBehavior: Clip.antiAlias,
         child: Column(
           children: [
             ListTile(

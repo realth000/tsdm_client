@@ -24,24 +24,21 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(context.t.navigation.homepage)),
-      body: Scrollbar(
+      body: SingleChildScrollView(
         controller: _scrollController,
-        child: SingleChildScrollView(
-          controller: _scrollController,
-          child: const Padding(
-            padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
-            child: Column(
-              children: [
-                // TODO: Optimize layout build jank.
-                // TODO: Optimize page when not login (no cookie or cookie invalid).
-                WelcomeSection(),
-                SizedBox(
-                  width: 20,
-                  height: 20,
-                ),
-                PinSection(),
-              ],
-            ),
+        child: const Padding(
+          padding: EdgeInsets.only(left: 15, right: 15, bottom: 20),
+          child: Column(
+            children: [
+              // TODO: Optimize layout build jank.
+              // TODO: Optimize page when not login (no cookie or cookie invalid).
+              WelcomeSection(),
+              SizedBox(
+                width: 20,
+                height: 20,
+              ),
+              PinSection(),
+            ],
           ),
         ),
       ),
