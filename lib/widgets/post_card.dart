@@ -107,6 +107,7 @@ class PostCard extends ConsumerWidget {
               leading: CircleAvatar(
                 backgroundImage: CachedImageProvider(
                   post.author.avatarUrl!,
+                  context,
                   ref,
                 ),
               ),

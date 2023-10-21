@@ -14,6 +14,7 @@ import 'package:tsdm_client/providers/net_client_provider.dart';
 class CachedImageProvider extends ImageProvider<CachedImageProvider> {
   const CachedImageProvider(
     this.imageUrl,
+    this.context,
     this.ref, {
     this.scale = 1.0,
     this.maxWidth,
@@ -24,6 +25,11 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
   });
 
   final String imageUrl;
+
+  /// Use check widget mounted.
+  ///
+  /// Workaround to fix "ref used after widget dispose" exception.
+  final BuildContext context;
   final WidgetRef ref;
   final double? maxWidth;
   final double? maxHeight;
@@ -122,6 +128,9 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
           .read(imageCacheProvider.notifier)
           .getCache(imageUrl)
           .onError((e, st) async {
+        if (!context.mounted) {
+          return Uint8List(0);
+        }
         // When error occurred in `getCache`, it means the image is not
         // correctly cached, fetch from network.
         final resp = await ref.read(netClientProvider()).get(
@@ -131,6 +140,9 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
                 headers: headers,
               ),
             );
+        if (!context.mounted) {
+          return Uint8List(0);
+        }
         final imageData = resp.data as List<int>;
 
         // Make cache.

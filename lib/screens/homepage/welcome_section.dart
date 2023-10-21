@@ -175,7 +175,7 @@ class WelcomeSection extends ConsumerWidget {
                 children: [
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: CachedImageProvider(avatarUrl, ref),
+                      backgroundImage: CachedImageProvider(avatarUrl, context, ref),
                       backgroundColor: Colors.transparent,
                     ),
                     title: Text(
