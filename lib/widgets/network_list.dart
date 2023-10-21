@@ -129,16 +129,26 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
         alignment: Alignment.bottomRight,
         children: [
           EasyRefresh(
+            scrollBehaviorBuilder: (physics) {
+              return ScrollConfiguration.of(context)
+                  .copyWith(physics: physics, scrollbars: false);
+            },
             header: const MaterialHeader(),
             footer: const MaterialFooter(),
             scrollController: _listScrollController,
             controller: _refreshController,
             refreshOnStart: true,
-            child: ListView.builder(
+            child: Scrollbar(
               controller: _listScrollController,
-              itemCount: _allData.length,
-              itemBuilder: (context, index) =>
-                  widget.widgetBuilder(context, _allData[index]),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: ListView.builder(
+                  controller: _listScrollController,
+                  itemCount: _allData.length,
+                  itemBuilder: (context, index) =>
+                      widget.widgetBuilder(context, _allData[index]),
+                ),
+              ),
             ),
             onRefresh: () async {
               if (!mounted) {
