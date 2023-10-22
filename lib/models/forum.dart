@@ -69,18 +69,42 @@ class Forum {
         .querySelector('div.fl_icn_g > a > img')
         ?.dataOriginalOrSrcImgUrl();
 
-    final threadCount = element
-        .querySelector(
-          'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > span:nth-child(2)',
-        )
-        ?.firstEndDeepText()
-        ?.parseToInt();
-    final replyCount = element
-        .querySelector(
-          'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > span:nth-child(2)',
-        )
-        ?.firstEndDeepText()
-        ?.parseToInt();
+    final threadCount =
+        // Style 1
+        element
+                .querySelector(
+                  'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > span:nth-child(2)',
+                )
+                ?.firstEndDeepText()
+                ?.parseToInt() ??
+            // Style 2
+            //
+            // <em>主题: 47857</em>, <em>帖数: 169905</em>
+            //
+            element
+                .querySelector('div.tsdm_fl_inf > dl > dd > em:nth-child(1)')
+                ?.firstEndDeepText()
+                ?.split(' ')
+                .elementAtOrNull(1)
+                ?.parseToInt();
+    final replyCount =
+        // Style 1
+        element
+                .querySelector(
+                  'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > span:nth-child(2)',
+                )
+                ?.firstEndDeepText()
+                ?.parseToInt() ??
+            // Style 2
+            //
+            // <em>主题: 47857</em>, <em>帖数: 169905</em>
+            //
+            element
+                .querySelector('div.tsdm_fl_inf > dl > dd > em:nth-child(2)')
+                ?.firstEndDeepText()
+                ?.split(' ')
+                .elementAtOrNull(1)
+                ?.parseToInt();
     final threadTodayCount = element
         .querySelector(
           'div.tsdm_fl_inf > dl > dd > em:nth-child(3)',
