@@ -1,11 +1,9 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/prefix_url.dart';
-import 'package:tsdm_client/utils/time.dart';
+import 'package:universal_html/html.dart' as uh;
 
 class _PostInfo {
   /// Constructor.
@@ -23,7 +21,7 @@ class _PostInfo {
   User author;
 
   /// Post publish time.
-  DateTime publishTime;
+  DateTime? publishTime;
 
   // TODO: Confirm data display.
   /// Post data.
@@ -36,7 +34,7 @@ class _PostInfo {
 @immutable
 class Post {
   // [element] has id "post_$postID".
-  Post.fromPostNode(dom.Element element)
+  Post.fromPostNode(uh.Element element)
       : _info = _buildPostFromElement(element);
 
   final _PostInfo _info;
@@ -45,67 +43,61 @@ class Post {
 
   User get author => _info.author;
 
-  DateTime get publishTime => _info.publishTime;
+  DateTime? get publishTime => _info.publishTime;
 
   String get data => _info.data;
 
-  /// Build [Post] from [dom.Element].
-  static _PostInfo _buildPostFromElement(dom.Element element) {
-    final trRootNode =
-        element.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
-    final postID = trRootNode
-        ?.childAtOrNull(0)
-        ?.attributes['id']
-        ?.replaceFirst('userinfo_', '');
+  /// Build [Post] from [uh.Element].
+  static _PostInfo _buildPostFromElement(uh.Element element) {
+    final trRootNode = element.querySelector('table > tbody > tr');
+    final postID = element.id.replaceFirst('post_', '');
     // <td class="pls">
     final postInfoNode =
-        trRootNode?.childAtOrNull(0)?.querySelector('#ts_avatar_$postID');
+        trRootNode?.querySelector('td:nth-child(1) > div#ts_avatar_$postID');
     // <td class="plc tsdm_ftc">
-    final postDataNode = trRootNode?.childAtOrNull(1);
-
-    final postAuthorName = postInfoNode?.childAtOrNull(0)?.text;
+    final postAuthorName =
+        postInfoNode?.querySelector('div')?.firstEndDeepText();
     final postAuthorUrl =
-        postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.attributes['href'];
+        postInfoNode?.querySelector('div.avatar > a')?.attributes['href'];
     final postAuthorUid = postAuthorUrl?.split('uid=').elementAtOrNull(1);
-    final tmpNode1 =
-        postInfoNode?.childAtOrNull(2)?.childAtOrNull(0)?.childAtOrNull(0);
+    final postAuthorAvatarNode =
+        postInfoNode?.querySelector('div.avatar > a > img');
     final postAuthorAvatarUrl =
-        tmpNode1?.attributes['data-original'] ?? tmpNode1?.attributes['src'];
+        postAuthorAvatarNode?.attributes['data-original'] ??
+            postAuthorAvatarNode?.attributes['src'];
     final postAuthor = User(
       name: postAuthorName ?? '',
       uid: postAuthorUid,
-      url: postAuthorUrl == null ? '' : addUrlPrefix(postAuthorUrl),
+      url: postAuthorUrl?.prependHost() ?? '',
       avatarUrl: postAuthorAvatarUrl,
     );
-    final tmpNode2 = postDataNode?.querySelector('#authorposton$postID');
+
+    final postDataNode = trRootNode?.querySelector('td:nth-child(2)');
+    final postPublishTimeNode =
+        postDataNode?.querySelector('#authorposton$postID');
     // Recent post can grep [publishTime] in the the "title" attribute
     // in first child.
     // Otherwise fallback split time string.
-    final postPublishTime = tmpNode2?.childAtOrNull(0)?.attributes['title'] ??
-        tmpNode2?.text.split(' ').elementAtOrNull(1);
+    final postPublishTime = postPublishTimeNode
+            ?.querySelector('span')
+            ?.attributes['title']
+            ?.parseToDateTimeUtc8() ??
+        postPublishTimeNode?.text?.substring(4).parseToDateTimeUtc8();
     final postData =
         postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
-    // postDataNode?.getElementsByClassName('pcb').elementAtOrNull(0)?.innerHtml;
-    // if (postPublishTime == null || postData == null) {
-    //   debug('failed to parse post: $postPublishTime $postData');
-    //   return _PostInfo(
-    //
-    //   );
-    // }
+
     return _PostInfo(
-      postID: postID ?? '',
+      postID: postID,
       author: postAuthor,
-      publishTime: postPublishTime == null
-          ? DateTime.utc(0)
-          : DateTime.parse(formatTimeStringWithUTC8(postPublishTime)),
+      publishTime: postPublishTime,
       data: postData ?? '',
     );
   }
 
-  /// Build a list of [Post] from the given [ThreadData] [dom.Element].
+  /// Build a list of [Post] from the given [ThreadData] [uh.Element].
   ///
   /// [element]'s id is "postlist".
-  static List<Post> buildListFromThreadDataNode(dom.Element element) {
+  static List<Post> buildListFromThreadDataNode(uh.Element element) {
     final threadDataRootNode = element.childAtOrNull(2);
     var currentElement = threadDataRootNode;
     final tdPostList = <Post>[];

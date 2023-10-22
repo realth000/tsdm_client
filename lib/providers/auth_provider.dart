@@ -1,14 +1,14 @@
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:universal_html/html.dart' as uh;
+import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/auth_provider.g.dart';
 
@@ -54,7 +54,7 @@ class Auth extends _$Auth {
     ref.invalidateSelf();
   }
 
-  /// Parsing html [dom.Document] and update auth state with user info in it.
+  /// Parsing html [uh.Document] and update auth state with user info in it.
   ///
   /// This is a function acts like try to login, but parse result using cached
   /// html [document].
@@ -62,7 +62,7 @@ class Auth extends _$Auth {
   /// **Will update login status**.
   ///
   /// If login success, return true. Otherwise return false.
-  Future<bool> loginFromDocument(dom.Document document) async {
+  Future<bool> loginFromDocument(uh.Document document) async {
     final r = await _parseUidInDocument(document);
     if (r == null) {
       _loggedUid = null;
@@ -135,7 +135,7 @@ class Auth extends _$Auth {
       return (LoginResult.requestFailed, '$message');
     }
 
-    final document = html_parser.parse(resp.data);
+    final document = parseHtmlDocument(resp.data as String);
     final messageNode = document.getElementById('messagetext');
     if (messageNode == null) {
       // Impossible.
@@ -177,7 +177,7 @@ class Auth extends _$Auth {
       );
       return false;
     }
-    final document = html_parser.parse(resp.data);
+    final document = parseHtmlDocument(resp.data as String);
     final uid = await _parseUidInDocument(document);
     if (uid == null) {
       debug('unnecessary logout: not authed');
@@ -205,9 +205,9 @@ class Auth extends _$Auth {
       return false;
     }
 
-    final logoutDocument = html_parser.parse(logoutResp.data);
+    final logoutDocument = parseHtmlDocument(logoutResp.data as String);
     final logoutMessage = logoutDocument.getElementById('messagetext');
-    if (logoutMessage == null || !logoutMessage.innerHtml.contains('已退出')) {
+    if (logoutMessage == null || !logoutMessage.innerHtmlEx().contains('已退出')) {
       debug('failed to logout: logout message not found');
       return false;
     }
@@ -218,7 +218,7 @@ class Auth extends _$Auth {
   }
 
   /// Parse html [document], find current logged in user uid in it.
-  Future<(String, String)?> _parseUidInDocument(dom.Document document) async {
+  Future<(String, String)?> _parseUidInDocument(uh.Document document) async {
     final userNode = document
         .querySelector('div#hd div.wp div.hdc.cl div#um p strong.vwmy a');
     if (userNode == null) {
@@ -284,7 +284,7 @@ enum LoginResult {
   /// Treat as login failed.
   unknown;
 
-  factory LoginResult.fromLoginMessageNode(dom.Element messageNode) {
+  factory LoginResult.fromLoginMessageNode(uh.Element messageNode) {
     final message = messageNode
         .querySelector('div#messagetext > p')
         ?.nodes

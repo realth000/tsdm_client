@@ -1,9 +1,11 @@
+import 'dart:async';
+
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:universal_html/html.dart' as uh;
+import 'package:universal_html/parsing.dart';
 
 /// A widget that retrieve data from network and supports refresh.
 class NetworkList<T> extends ConsumerStatefulWidget {
@@ -27,18 +29,18 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
 
-  /// Build [Widget] from given [dom.Document].
+  /// Build [Widget] from given [uh.Document].
   ///
   /// User needs to provide this method and [NetworkList] refresh by pressing
   /// refresh button.
-  final List<T> Function(dom.Document document) listBuilder;
+  final FutureOr<List<T>> Function(uh.Document document) listBuilder;
 
   /// Build a list of [Widget].
   final Widget Function(BuildContext, T) widgetBuilder;
 
   /// Initial data to use in the first fetch.
   /// This argument allows to load cached data every first time.
-  final dom.Document? initialData;
+  final uh.Document? initialData;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -48,7 +50,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
     with SingleTickerProviderStateMixin {
   Future<void> _loadData() async {
-    late final dom.Document document;
+    late final uh.Document document;
     if (!_initialized && widget.initialData != null) {
       document = widget.initialData!;
       _initialized = true;
@@ -56,9 +58,9 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
-      document = html_parser.parse(d1.data);
+      document = parseHtmlDocument(d1.data as String);
     }
-    final data = widget.listBuilder(document);
+    final data = await widget.listBuilder(document);
 
     if (!mounted) {
       return;

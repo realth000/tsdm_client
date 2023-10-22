@@ -26,7 +26,9 @@ class ThreadCard extends ConsumerWidget {
       (Icons.record_voice_over, thread.latestReplyAuthor.name),
       (
         Icons.hourglass_bottom,
-        timeDifferenceToString(_currentTime, thread.latestReplyTime),
+        thread.latestReplyTime == null
+            ? ''
+            : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
       ),
     ];
 
@@ -71,7 +73,8 @@ class ThreadCard extends ConsumerWidget {
               thread.author.name,
               style: Theme.of(context).textTheme.bodyMedium,
             ),
-            Text(DateFormat('yyyy-MM-dd').format(thread.publishDate)),
+            if (thread.publishDate != null)
+              Text(DateFormat('yyyy-MM-dd').format(thread.publishDate!)),
           ],
         ),
         onTap: () {

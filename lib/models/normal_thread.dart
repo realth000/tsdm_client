@@ -1,12 +1,11 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/models/thread_type.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/prefix_url.dart';
-import 'package:tsdm_client/utils/time.dart';
+import 'package:universal_html/html.dart' as uh;
 
 @immutable
 class _NormalThreadInfo {
@@ -40,7 +39,7 @@ class _NormalThreadInfo {
   /// Thread publish date, without publish hour level time.
   ///
   /// e.g. "2023-03-04".
-  final DateTime publishDate;
+  final DateTime? publishDate;
 
   /// Author of the latest reply.
   ///
@@ -50,7 +49,7 @@ class _NormalThreadInfo {
   /// Time of latest reply, with hour level time.
   ///
   /// e.g. "2023-03-04 00:11:22".
-  final DateTime latestReplyTime;
+  final DateTime? latestReplyTime;
 
   /// Icon url of this thread.
   ///
@@ -80,8 +79,7 @@ class _NormalThreadInfo {
 
 @immutable
 class NormalThread {
-  NormalThread.fromTBody(dom.Element element)
-      : _info = _buildFromTBody(element);
+  NormalThread.fromTBody(uh.Element element) : _info = _buildFromTBody(element);
 
   final _NormalThreadInfo _info;
 
@@ -93,11 +91,11 @@ class NormalThread {
 
   User get author => _info.author;
 
-  DateTime get publishDate => _info.publishDate;
+  DateTime? get publishDate => _info.publishDate;
 
   User get latestReplyAuthor => _info.latestReplyAuthor;
 
-  DateTime get latestReplyTime => _info.latestReplyTime;
+  DateTime? get latestReplyTime => _info.latestReplyTime;
 
   String get iconUrl => _info.iconUrl;
 
@@ -109,80 +107,86 @@ class NormalThread {
 
   int? get price => _info.price;
 
-  /// Build a [NormalThread] model with the given [dom.Element]
+  /// Build a [NormalThread] model with the given [uh.Element]
   ///
   /// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
-  static _NormalThreadInfo _buildFromTBody(dom.Element threadElement) {
-    final trRoot = threadElement.children.first;
-    final iconNode = trRoot.getElementsByClassName('icn').firstOrNull;
-    final titleNode = trRoot.childAtOrNull(1);
-    final replyCountNode = trRoot.getElementsByClassName('num').firstOrNull;
-    final userNodeList = trRoot.getElementsByClassName('by');
-    final authorNode = userNodeList.elementAtOrNull(0);
-    final lastReplyNode = userNodeList.elementAtOrNull(1);
+  static _NormalThreadInfo _buildFromTBody(uh.Element threadElement) {
+    final threadIconUrl = threadElement
+        .querySelector('tr > td > a > img')
+        ?.attributes['src']
+        ?.prependHost();
 
-    final threadIconUrl =
-        iconNode?.childAtOrNull(0)?.childAtOrNull(0)?.attributes['src'];
-    final threadTypeUrl = titleNode?.childAtOrNull(1)?.firstHref();
-    final threadTypeName = titleNode?.childAtOrNull(1)?.firstEndDeepText();
-    final threadUrl = titleNode
-        ?.getElementsByClassName('xst')
-        .firstOrNull
-        ?.attributes['href'];
-    final threadTitle =
-        titleNode?.getElementsByClassName('xst').firstOrNull?.firstChild?.text;
-    final threadPrice =
-        titleNode?.getElementsByClassName('xw1').firstOrNull?.firstChild?.text;
-    final threadAuthorUrl = authorNode?.childAtOrNull(0)?.firstHref();
+    final threadTypeNode =
+        threadElement.querySelector('tr > th > em > a:nth-child(1)');
+    final threadTypeUrl = threadTypeNode?.attributes['href'];
+    final threadTypeName = threadTypeNode?.firstEndDeepText();
+
+    final threadUrlNode = threadElement.querySelector('tr > th > span > a');
+    final threadUrl = threadUrlNode?.attributes['href'];
+    final threadTitle = threadUrlNode?.firstEndDeepText()?.trim();
+
+    final threadPrice = threadElement
+        .querySelector('tr > th > span.xw1')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+
+    final threadAuthorNode = threadElement.querySelector('tr > td.by');
+    final threadAuthorUrl =
+        threadAuthorNode?.querySelector('cite > a')?.attributes['href'];
     final threadAuthorUid = threadAuthorUrl?.split('uid=').elementAtOrNull(1);
-    final threadAuthorName = authorNode?.childAtOrNull(0)?.firstEndDeepText();
-    final threadPublishDate = authorNode?.childAtOrNull(1)?.firstEndDeepText();
-    final threadReplyCount =
-        replyCountNode?.childAtOrNull(0)?.firstEndDeepText();
-    final threadViewCount =
-        replyCountNode?.childAtOrNull(1)?.firstEndDeepText();
+    final threadAuthorName =
+        threadAuthorNode?.querySelector('cite > a')?.firstEndDeepText()?.trim();
+    final threadPublishDate = threadAuthorNode
+        ?.querySelector('em > span')
+        ?.firstEndDeepText()
+        ?.trim();
 
+    final threadStatisticsNode = threadElement.querySelector('tr > td.num');
+    final threadReplyCount = threadStatisticsNode
+        ?.querySelector('a.xi2')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+    final threadViewCount = threadStatisticsNode
+        ?.querySelector('em')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+
+    final threadLastReplyNode =
+        threadElement.querySelector('tr > td.by:nth-child(5)');
     final threadLastReplyAuthorUrl =
-        lastReplyNode?.childAtOrNull(0)?.firstHref();
+        threadLastReplyNode?.querySelector('cite > a')?.attributes['href'];
     // We only have username here.
-    // final threadLastReplyAuthorUid =
-    //     threadLastReplyAuthorUrl?.split('uid=').elementAtOrNull(1);
     final threadLastReplyAuthorName =
-        lastReplyNode?.childAtOrNull(0)?.firstEndDeepText();
-    final threadLastReplyTime = lastReplyNode
-            ?.childAtOrNull(1)
-            ?.firstChild
-            ?.firstChild
-            ?.attributes['title'] // Within 7 days.
-        ??
-        lastReplyNode?.childAtOrNull(1)?.firstEndDeepText(); // 7 days ago
-    final threadID = threadUrl == null
-        ? null
-        : Uri.parse(addUrlPrefix(threadUrl)).queryParameters['tid'];
+        threadLastReplyNode?.querySelector('cite > a')?.firstEndDeepText();
+    final threadLastReplyTime =
+        // Within 7 days.
+        threadLastReplyNode
+                ?.querySelector('em > a > span')
+                ?.attributes['title'] ??
+            // 7 days ago.
+            threadLastReplyNode?.querySelector('em > a')?.firstEndDeepText();
+
+    final threadID = threadUrl?.uriQueryParameter('tid');
     return _NormalThreadInfo(
       title: threadTitle ?? '',
-      url: threadUrl == null ? '' : addUrlPrefix(threadUrl),
+      url: threadUrl ?? '',
       threadID: threadID ?? '',
       author: User(
         name: threadAuthorName ?? '',
         uid: threadAuthorUid,
         url: threadAuthorUrl ?? '',
       ),
-      publishDate: threadPublishDate == null
-          ? DateTime.utc(0)
-          : DateTime.parse(formatTimeStringWithUTC8(threadPublishDate)),
+      publishDate: threadPublishDate?.parseToDateTimeUtc8(),
       latestReplyAuthor: User(
         name: threadLastReplyAuthorName ?? '',
         url: threadLastReplyAuthorUrl ?? '',
       ),
-      latestReplyTime: threadLastReplyTime == null
-          ? DateTime.utc(0)
-          : DateTime.parse(formatTimeStringWithUTC8(threadLastReplyTime)),
-      iconUrl: threadIconUrl == null ? '' : addUrlPrefix(threadIconUrl),
+      latestReplyTime: threadLastReplyTime?.parseToDateTimeUtc8(),
+      iconUrl: threadIconUrl ?? '',
       threadType: parseThreadType(threadTypeName, threadTypeUrl),
-      replyCount: threadReplyCount != null ? int.parse(threadReplyCount) : 0,
-      viewCount: threadViewCount != null ? int.parse(threadViewCount) : 0,
-      price: threadPrice != null ? int.parse(threadPrice) : null,
+      replyCount: threadReplyCount ?? 0,
+      viewCount: threadViewCount ?? 0,
+      price: threadPrice,
     );
   }
 
@@ -192,9 +196,9 @@ class NormalThread {
         iconUrl.isEmpty ||
         threadID.isEmpty ||
         !author.isValid() ||
-        publishDate.year == 0 ||
+        publishDate == null ||
         !latestReplyAuthor.isValid() ||
-        latestReplyTime.year == 0) {
+        latestReplyTime == null) {
       debug(
         'failed to parse normal thread page: $title, $url, $iconUrl, $author, $publishDate, $latestReplyAuthor, $latestReplyTime',
       );

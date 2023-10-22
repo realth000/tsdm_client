@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
-import 'package:html/dom.dart';
+import 'package:universal_html/html.dart';
 
 /// Extension for [Element] type to access children.
 extension AccessExtension on Element {
   /// Get the child at [index] in [children], return null if not exist.
   Element? childAtOrNull(int index) => children.elementAtOrNull(index);
+
+  String innerHtmlEx() => innerHtml ?? '';
 }
 
 /// Grep extension for [Element] type.
@@ -111,7 +113,7 @@ extension GrepExtension on Element {
       return null;
     }
 
-    final key = childAtOrNull(0)?.text.trim();
+    final key = childAtOrNull(0)?.text?.trim();
     late final String? value;
     if (children.length > 1) {
       // The value here is not a plain text, it's a normal node.

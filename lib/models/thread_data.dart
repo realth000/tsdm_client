@@ -1,9 +1,8 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:universal_html/html.dart' as uh;
 
 @immutable
 class _ThreadDataInfo {
@@ -36,7 +35,7 @@ class _ThreadDataInfo {
 @immutable
 class ThreadData {
   /// [element] is "postlist".
-  ThreadData.fromPostListNode(dom.Element element)
+  ThreadData.fromPostListNode(uh.Element element)
       : _info = _buildThreadData(element);
 
   final _ThreadDataInfo _info;
@@ -51,40 +50,31 @@ class ThreadData {
 
   List<Post> get postList => _info.postList;
 
-  /// Build a [ThreadData] from [dom.Element].
-  static _ThreadDataInfo _buildThreadData(dom.Element element) {
-    final threadDataRootNode = element.childAtOrNull(0);
-    late final int tdReplyCount;
-    late final int tdViewCount;
-    final tmpElementList = threadDataRootNode
-        ?.getElementsByClassName('pls ptm pbm')
-        .elementAtOrNull(0)
-        ?.getElementsByClassName('xi1');
-    // if (tmpElementList == null || tmpElementList.length != 2) {
-    //   debug('failed to parse thread data: $tmpElementList');
-    //   return null;
-    // }
-    tdViewCount = int.parse(tmpElementList?[0].text ?? '-1');
-    tdReplyCount = int.parse(tmpElementList?[1].text ?? '-1');
-    final tdTitle = threadDataRootNode
-        ?.getElementsByClassName('ts')
-        .elementAtOrNull(0)
-        ?.childAtOrNull(0)
-        ?.text
-        .trim();
-    final tdID = threadDataRootNode
-        ?.querySelector('#thread_subject')
+  /// Build a [ThreadData] from [uh.Element].
+  static _ThreadDataInfo _buildThreadData(uh.Element element) {
+    final rootNode = element.querySelector('table > body > tr');
+    final tdViewCount = rootNode
+            ?.querySelector('td > div > span:nth-child(2)')
+            ?.text
+            ?.parseToInt() ??
+        -1;
+    final tdReplyCount = rootNode
+            ?.querySelector('td > div > span:nth-child(5)')
+            ?.text
+            ?.parseToInt() ??
+        -1;
+    final tdTitle = rootNode?.querySelector('td:nth-child(2) > h1')?.text;
+    final tdID = rootNode
+        ?.querySelector('td:nth-child(2) > h1 > span > a#thread_subject')
         ?.attributes['href'];
 
     final tdPostList = <Post>[];
 
-    var currentElement = threadDataRootNode?.nextElementSibling;
+    var currentElement = rootNode?.nextElementSibling;
     while (currentElement != null) {
       // This while is a while (0), will not loop twice.
       if ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
         // <tr>
-        // final postRootNode =
-        //     currentElement.childAtOrNull(0)?.childAtOrNull(0)?.childAtOrNull(0);
         final postRootNode = currentElement;
         // Build post here.
         final post = Post.fromPostNode(postRootNode);

@@ -31,9 +31,9 @@ class _TCHomePageState extends ConsumerState<TopicPage> {
         appBar: AppBar(title: Text(context.t.navigation.topics)),
         body: NetworkList<Forum>(
           widget.fetchUrl,
-          listBuilder: (document) {
+          listBuilder: (document) async {
             final forumData = <Forum>[];
-            document.getElementsByClassName('fl_g').forEach((forumElement) {
+            document.querySelectorAll('td.fl_g').forEach((forumElement) {
               final forum = Forum.fromFlGNode(forumElement);
               if (!forum.isValid()) {
                 return;

@@ -46,7 +46,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
         body: NetworkList<Post>(
           widget._fetchUrl,
           listBuilder: (document) {
-            final threadDataNode = document.getElementById('postlist');
+            final threadDataNode = document.querySelector('div#postlist');
             if (threadDataNode == null) {
               debug('thread postlist not found');
               return <Post>[];
@@ -59,7 +59,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
             // this html document title, only use html title when that title is null.
             if (widget.title == null) {
               setState(() {
-                title = document.head?.querySelector('title')?.text;
+                title = document.querySelector('title')?.text;
               });
             }
 

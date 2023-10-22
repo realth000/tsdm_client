@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
@@ -14,6 +12,8 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:universal_html/html.dart' as uh;
+import 'package:universal_html/parsing.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({this.uid, super.key});
@@ -36,9 +36,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     super.dispose();
   }
 
-  Widget _buildProfile(BuildContext context, dom.Document document) {
-    final profileRootNode =
-        document.body?.querySelector('div#pprl > div.bm.bbda');
+  Widget _buildProfile(BuildContext context, uh.Document document) {
+    final profileRootNode = document.querySelector('div#pprl > div.bm.bbda');
 
     if (profileRootNode == null) {
       return Center(
@@ -46,8 +45,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       );
     }
 
-    final avatarUrl = document.body
-        ?.querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+    final avatarUrl = document
+        .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
         ?.attributes['src'];
 
     // Basic info
@@ -60,14 +59,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final uid = profileRootNode
         .querySelector('h2.mbn > span.xw0')
         ?.text
-        .split(': ')
+        ?.split(': ')
         .lastOrNull
         ?.split(')')
         .firstOrNull;
     final basicInfoList = profileRootNode
         .querySelectorAll('div.pbm:nth-child(1) li')
         .map((e) => e.parseLiEmNode())
-        .where((e) => e != null)
+        .whereType<(String, String)>()
         .toList();
 
     // Check in status
@@ -104,7 +103,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final activityInfoList = activityNode
             ?.querySelectorAll('li')
             .map((e) => e.parseLiEmNode())
-            .where((e) => e != null)
+            .whereType<(String, String)>()
             .toList() ??
         [];
 
@@ -166,7 +165,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
           ...basicInfoList.map(
             (e) => ListTile(
-              title: Text(e!.$1),
+              title: Text(e.$1),
               subtitle: Text(e.$2),
             ),
           ),
@@ -265,7 +264,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
           if (snapshot.hasData) {
             final resp = snapshot.data;
-            final document = html_parser.parse(resp!.data);
+            final document = parseHtmlDocument(resp!.data as String);
             return _buildProfile(context, document);
           }
 

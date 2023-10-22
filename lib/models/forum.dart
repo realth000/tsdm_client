@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:universal_html/html.dart' as uh;
 
 /// Wrap a class so we can mark model as immutable.
 @immutable
@@ -34,7 +35,7 @@ class _ForumInfo {
 /// Data model for sub forums.
 @immutable
 class Forum {
-  Forum.fromFlGNode(dom.Element element) : _info = _buildForumInfo(element);
+  Forum.fromFlGNode(uh.Element element) : _info = _buildForumInfo(element);
 
   final _ForumInfo _info;
 
@@ -58,69 +59,55 @@ class Forum {
 
   int? get threadTodayCount => _info.threadTodayCount;
 
-  static _ForumInfo _buildForumInfo(dom.Element element) {
+  static _ForumInfo _buildForumInfo(uh.Element element) {
     final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a');
     final name = titleNode?.firstEndDeepText();
     final url = titleNode?.firstHref();
-    final forumID = url?.split('fid=').lastOrNull;
+    final forumID = url?.split('fid=').lastOrNull?.parseToInt();
 
     final iconUrl = element
         .querySelector('div.fl_icn_g > a > img')
         ?.dataOriginalOrSrcImgUrl();
 
-    final ddNode = element
-        .querySelector('div.tsdm_fl_inf')
-        ?.childAtOrNull(0)
-        ?.childAtOrNull(1);
-    final threadCount =
-        ddNode?.childAtOrNull(0)?.childAtOrNull(1)?.firstEndDeepText();
-    final replyCount =
-        ddNode?.childAtOrNull(1)?.childAtOrNull(1)?.firstEndDeepText();
-    final threadTodayCount = ddNode
-        ?.childAtOrNull(2)
+    final threadCount = element
+        .querySelector(
+          'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > span:nth-child(2)',
+        )
+        ?.firstEndDeepText()
+        ?.parseToInt();
+    final replyCount = element
+        .querySelector(
+          'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > span:nth-child(2)',
+        )
+        ?.firstEndDeepText()
+        ?.parseToInt();
+    final threadTodayCount = element
+        .querySelector(
+          'div.tsdm_fl_inf > dl > dd > em:nth-child(3)',
+        )
         ?.firstEndDeepText()
         ?.replaceFirst(' (', '')
-        .replaceFirst(')', '');
+        .replaceFirst(')', '')
+        .parseToInt();
 
-    // The html package has bug in nth-child query, do not use it.
-    // final threadCount = element
-    //     .querySelector(
-    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)',
-    //     )
-    //     ?.firstEndDeepText();
-    // final replyCount = element
-    //     .querySelector(
-    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)',
-    //     )
-    //     ?.firstEndDeepText();
-
-    // final threadTodayCount = element
-    //     .querySelector(
-    //       'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)',
-    //     )
-    //     ?.firstEndDeepText();
-
-    final latestThreadNode = element
-        .querySelector('div.tsdm_fl_inf')
-        ?.childAtOrNull(0)
-        ?.childAtOrNull(2)
-        ?.querySelector('a');
-    final latestThreadTime =
-        latestThreadNode?.querySelector('span')?.attributes['title'];
+    final latestThreadNode =
+        element.querySelector('div.tsdm_fl_inf > dl > dd:nth-child(3) > a');
+    final latestThreadTime = latestThreadNode
+        ?.querySelector('span')
+        ?.attributes['title']
+        ?.parseToDateTimeUtc8();
     final latestThreadTimeText = latestThreadNode?.firstEndDeepText();
     final latestThreadUrl = latestThreadNode?.firstHref();
 
     return _ForumInfo(
-      forumID: int.parse(forumID ?? '-1'),
+      forumID: forumID ?? -1,
       url: url ?? '',
       name: name ?? '',
       iconUrl: iconUrl ?? '',
-      threadCount: int.parse(threadCount ?? '-1'),
-      replyCount: int.parse(replyCount ?? '-1'),
-      threadTodayCount:
-          threadTodayCount == null ? null : int.parse(threadTodayCount),
-      latestThreadTime:
-          latestThreadTime == null ? null : DateTime.parse(latestThreadTime),
+      threadCount: threadCount ?? -1,
+      replyCount: replyCount ?? -1,
+      threadTodayCount: threadTodayCount,
+      latestThreadTime: latestThreadTime,
       latestThreadTimeText: latestThreadTimeText,
       latestThreadUrl: latestThreadUrl,
     );

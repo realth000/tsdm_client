@@ -38,7 +38,7 @@ class _ForumPageState extends ConsumerState<ForumPage> {
           listBuilder: (document) {
             final normalThreadData = <NormalThread>[];
             final threadList =
-                document.getElementsByClassName('tsdm_normalthread');
+                document.querySelectorAll('tbody.tsdm_normalthread');
             if (threadList.isEmpty) {
               final docTitle = document.getElementsByTagName('title');
               final docMessage = document.getElementById('messagetext');

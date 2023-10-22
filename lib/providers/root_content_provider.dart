@@ -1,14 +1,12 @@
-import 'dart:io';
-
 import 'package:collection/collection.dart';
-import 'package:html/dom.dart';
-import 'package:html/parser.dart' as html_parser;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/extensions/html_element.dart';
+import 'package:universal_html/html.dart';
+import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/root_content_provider.g.dart';
 
@@ -99,7 +97,7 @@ class RootContent extends _$RootContent {
       return Future.error(
           'failed to load root page content, status code is ${resp.statusCode}');
     }
-    _doc = html_parser.parse(resp.data);
+    _doc = parseHtmlDocument(resp.data as String);
 
     _cache = CachedRootContent();
     await ref.read(authProvider.notifier).loginFromDocument(_doc);
@@ -137,7 +135,8 @@ class CachedRootContent {
       return [];
     }
 
-    return styleNode.innerHtml
+    return styleNode
+        .innerHtmlEx()
         .split('\n')
         .where((e) => e.startsWith('.Kahrpba_pic_') && !e.contains('ctrlbtn'))
         .map((e) => e.split('(').lastOrNull?.split(')').firstOrNull)
@@ -150,7 +149,8 @@ class CachedRootContent {
       return [];
     }
 
-    return scriptNode.innerHtml
+    return scriptNode
+        .innerHtmlEx()
         .split('\n')
         .where((e) => e.contains("window.location='"))
         .map((e) =>
@@ -173,14 +173,15 @@ class CachedRootContent {
     }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
     memberInfoList =
-        chartZInfoList?.map((e) => e.text).toList(growable: false) ?? [];
+        chartZInfoList?.map((e) => e.text).whereType<String>().toList(growable: false) ?? [];
 
     final welcomeNode = document
         .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
     usernameText = username ?? '';
     avatarUrl = document
             .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-            ?.attributes['src'] ?? noAvatarUrl;
+            ?.attributes['src'] ??
+        noAvatarUrl;
     navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))
