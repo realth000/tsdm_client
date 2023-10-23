@@ -10,6 +10,7 @@ import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/cached_image.dart';
 import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -148,10 +149,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         padding: const EdgeInsets.only(left: 15, right: 15),
         children: [
           if (avatarUrl != null)
-            Image.network(
+            CachedImage(
               avatarUrl,
-              width: _avatarWidth,
-              height: _avatarHeight,
+              maxWidth: _avatarWidth,
+              maxHeight: _avatarHeight,
             ),
           if (username != null)
             ListTile(
