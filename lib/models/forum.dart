@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -18,6 +19,13 @@ class _ForumInfo {
     required this.latestThreadTime,
     required this.latestThreadTimeText,
     required this.threadTodayCount,
+
+    /// Expanded layout only.
+    this.subForumList,
+    this.subThreadList,
+    this.latestThreadTitle,
+    this.latestThreadUserName,
+    this.latestThreadUserUrl,
   });
 
   final int forumID;
@@ -30,12 +38,22 @@ class _ForumInfo {
   final DateTime? latestThreadTime;
   final String? latestThreadTimeText;
   final int? threadTodayCount;
+
+  /// Expanded layout only.
+  final List<(String subForumName, String url)>? subForumList;
+  final List<(String threadTitle, String url)>? subThreadList;
+  final String? latestThreadTitle;
+  final String? latestThreadUserName;
+  final String? latestThreadUserUrl;
 }
 
 /// Data model for sub forums.
 @immutable
 class Forum {
   Forum.fromFlGNode(uh.Element element) : _info = _buildForumInfo(element);
+
+  Forum.fromFlRowNode(uh.Element element)
+      : _info = _buildExpandedForumInfo(element);
 
   final _ForumInfo _info;
 
@@ -134,6 +152,90 @@ class Forum {
       latestThreadTime: latestThreadTime,
       latestThreadTimeText: latestThreadTimeText,
       latestThreadUrl: latestThreadUrl,
+    );
+  }
+
+  /// Build from '<tr class="fl_row">' of '<tr>' (only the first row in table)
+  /// node [element] inside table, with expanded layout.
+  static _ForumInfo _buildExpandedForumInfo(uh.Element element) {
+    final titleNode = element.querySelector('td:nth-child(2) > h2 > a');
+    final name = titleNode?.firstEndDeepText();
+    final url = titleNode?.firstHref();
+    final forumID = url?.split('fid=').lastOrNull?.parseToInt();
+
+    final iconUrl =
+        element.querySelector('td > a > img')?.dataOriginalOrSrcImgUrl();
+
+    final threadCount = element
+        .querySelector('td:nth-child(3) > span:nth-child(1)')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+    final replyCount = element
+        .querySelector('td:nth-child(3) > span:nth-child(2)')
+        ?.firstEndDeepText()
+        ?.split(' ')
+        .lastOrNull
+        ?.parseToInt();
+    final threadTodayCount = element
+        .querySelector('td:nth-child(2) > h2 > em')
+        ?.firstEndDeepText()
+        ?.split('(')
+        .lastOrNull
+        ?.split(')')
+        .firstOrNull
+        ?.parseToInt();
+
+    final latestThreadNode = element.querySelector('td:nth-child(4) > div');
+    final latestThreadTime = latestThreadNode
+        ?.querySelector('cite > span')
+        ?.attributes['title']
+        ?.parseToDateTimeUtc8();
+    final latestThreadTimeText =
+        latestThreadNode?.querySelector('cite > span')?.firstEndDeepText();
+    final latestThreadUrl = latestThreadNode?.querySelector('a')?.firstHref();
+
+    // Expanded layout only.
+    final latestThreadTitle =
+        latestThreadNode?.querySelector('a')?.firstEndDeepText();
+    final latestThreadUserName =
+        latestThreadNode?.querySelector('cite > a')?.firstEndDeepText();
+    final latestThreadUserUrl =
+        latestThreadNode?.querySelector('cite > a')?.firstHref();
+
+    final subForumList = element
+        .querySelectorAll('td > p')
+        .firstWhereOrNull(
+          (e) => e.nodes.firstOrNull?.text?.contains('子版块') ?? false,
+        )
+        ?.querySelectorAll('a')
+        .map((e) => (e.firstEndDeepText()?.trim(), e.attributes['href']))
+        .whereType<(String, String)>()
+        .toList();
+
+    final subThreadList = element
+        .querySelectorAll('td > p a')
+        .where((e) => e.attributes['href']?.contains('tid=') ?? false)
+        .map((e) => (e.firstEndDeepText(), e.attributes['href']))
+        .whereType<(String, String)>()
+        .toList();
+
+    return _ForumInfo(
+      forumID: forumID ?? -1,
+      url: url ?? '',
+      name: name ?? '',
+      iconUrl: iconUrl ?? '',
+      threadCount: threadCount ?? -1,
+      replyCount: replyCount ?? -1,
+      threadTodayCount: threadTodayCount,
+      latestThreadTime: latestThreadTime,
+      latestThreadTimeText: latestThreadTimeText,
+      latestThreadUrl: latestThreadUrl,
+      // Expanded layout only.
+      latestThreadTitle: latestThreadTitle,
+      latestThreadUserName: latestThreadUserName,
+      latestThreadUserUrl: latestThreadUserUrl,
+      subForumList: subForumList,
+      subThreadList: subThreadList,
     );
   }
 

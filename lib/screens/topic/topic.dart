@@ -33,6 +33,29 @@ class _TCHomePageState extends ConsumerState<TopicPage> {
           widget.fetchUrl,
           listBuilder: (document) async {
             final forumData = <Forum>[];
+
+            // Add forums that have expanded layout.
+            document
+                .querySelectorAll('table.fl_tb')
+                .where(
+                    (e) => e.querySelector('tbody > tr > td > a > img') != null)
+                .map((e) => e.querySelectorAll('tbody > tr'))
+                .forEach((forumElementList) {
+              for (final forumElement in forumElementList) {
+                // Skip invisible empty row nodes.
+                if (forumElement.children.isEmpty) {
+                  continue;
+                }
+
+                final forum = Forum.fromFlRowNode(forumElement);
+                if (!forum.isValid()) {
+                  continue;
+                }
+
+                forumData.add(forum);
+              }
+            });
+
             document.querySelectorAll('td.fl_g').forEach((forumElement) {
               final forum = Forum.fromFlGNode(forumElement);
               if (!forum.isValid()) {
