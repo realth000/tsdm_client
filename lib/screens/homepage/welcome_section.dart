@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
@@ -182,7 +183,9 @@ class WelcomeSection extends ConsumerWidget {
                       welcomeText,
                       style: Theme.of(context).textTheme.titleLarge,
                     ),
-                    trailing: const CheckInButton(),
+                    trailing: ref.read(authProvider) == AuthState.authorized
+                        ? const CheckInButton()
+                        : null,
                   ),
                   ...linkTileList,
                 ],
