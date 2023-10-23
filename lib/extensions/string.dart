@@ -40,6 +40,15 @@ extension EnhanceModification on String {
   String prependHost() {
     return '$baseUrl/$this';
   }
+
+  /// Truncate string at position [size].
+  ///
+  /// If [length] is smaller than [size], return the whole string.
+  String truncate(int size, {bool ellipsis = false}) {
+    return length > size
+        ? '${substring(0, size)}${ellipsis ? "..." : ""}'
+        : this;
+  }
 }
 
 extension ParseStringTo on String {

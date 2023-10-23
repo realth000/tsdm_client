@@ -5,7 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
-import 'package:tsdm_client/utils/time.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Card to show thread info.
 class ThreadCard extends ConsumerWidget {
@@ -21,60 +21,74 @@ class ThreadCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoList = [
-      (Icons.forum, '${thread.replyCount}'),
-      (Icons.signal_cellular_alt, '${thread.viewCount}'),
-      (Icons.record_voice_over, thread.latestReplyAuthor.name),
-      (
-        Icons.hourglass_bottom,
-        thread.latestReplyTime == null
-            ? ''
-            : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
-      ),
+      (Icons.tag, thread.threadType!.name),
+      (Icons.forum_outlined, '${thread.replyCount}'),
+      (Icons.bar_chart_outlined, '${thread.viewCount}'),
+      // TODO: Add these for large layout.
+      // (Icons.person_outline, thread.latestReplyAuthor.name),
+      // (
+      //   Icons.timelapse_outlined,
+      //   thread.latestReplyTime == null
+      //       ? ''
+      //       : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
+      // ),
     ];
+
+    final infoWidgetList = <Widget>[];
+    for (final e in infoList) {
+      infoWidgetList.add(
+        Expanded(
+          child: Row(
+            children: [
+              Icon(e.$1, size: smallIconSize),
+              const SizedBox(width: 5),
+              Flexible(
+                child: Text(
+                  e.$2,
+                  style: const TextStyle(fontSize: smallTextSize),
+                  maxLines: 1,
+                  overflow: TextOverflow.clip,
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Card(
       clipBehavior: Clip.antiAlias,
       child: ListTile(
-        leading: SizedBox(
-          width: 90,
-          child: Chip(
-            label: Text(thread.threadType!.name),
-            backgroundColor: Colors.transparent,
-          ),
+        title: Text(
+          thread.title,
+          maxLines: 3,
+          overflow: TextOverflow.ellipsis,
         ),
-        title: Text(thread.title),
         subtitle: Row(
-          children: infoList
-              .map(
-                (e) => Expanded(
-                    child: Row(
-                  children: [
-                    Icon(e.$1, size: smallIconSize),
-                    const SizedBox(width: 5),
-
-                    /// Wrap in expand to make sure `overflow` in text works.
-                    Expanded(
-                      child: Text(
-                        e.$2,
-                        style: const TextStyle(fontSize: smallTextSize),
-                        maxLines: 1,
-                        overflow: TextOverflow.clip,
-                      ),
-                    ),
-                  ],
-                )),
-              )
-              .toList(),
+          children: infoWidgetList,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
         ),
         trailing: Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              thread.author.name,
-              style: Theme.of(context).textTheme.bodyMedium,
+            SizedBox(
+              width: 70,
+              child: SingleLineText(
+                thread.author.name,
+                textAlign: TextAlign.end,
+              ),
             ),
-            if (thread.publishDate != null)
-              Text(DateFormat('yyyy-MM-dd').format(thread.publishDate!)),
+            if (thread.publishDate != null) ...[
+              const SizedBox(height: 5),
+              SizedBox(
+                width: 70,
+                child: SingleLineText(
+                  DateFormat('yyyy-MM-dd').format(thread.publishDate!),
+                  textAlign: TextAlign.end,
+                ),
+              ),
+            ],
           ],
         ),
         onTap: () {
