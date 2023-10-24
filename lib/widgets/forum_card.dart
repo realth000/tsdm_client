@@ -4,96 +4,97 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
-import 'package:tsdm_client/widgets/single_line_text.dart';
-import 'package:tsdm_client/widgets/space.dart';
 
 /// Card to show forum information.
 class ForumCard extends ConsumerWidget {
   /// Constructor.
-  ForumCard(this.forum, {super.key}) {
-    _buildLatestInfoLine =
-        !(forum.latestThreadTime == null && forum.threadTodayCount == null);
-  }
+  ForumCard(this.forum, {super.key}) : _currentTime = DateTime.now();
 
   /// Forum id.
   final Forum forum;
-
-  late final bool _buildLatestInfoLine;
-
-  Widget _buildLatestInfoRow(BuildContext context, WidgetRef ret) {
-    final itemList = <Widget>[];
-    final latestItems = [
-      const Icon(
-        Icons.access_time,
-        size: smallIconSize,
-      ),
-      Text('最近：${forum.latestThreadTimeText}'),
-    ];
-    final todayItems = [
-      const Icon(
-        Icons.campaign,
-        size: smallIconSize,
-      ),
-      Text('新帖：${forum.threadTodayCount}'),
-    ];
-    if (forum.latestThreadTime != null) {
-      itemList.addAll(latestItems);
-    }
-    if (forum.threadTodayCount != null) {
-      if (itemList.isNotEmpty) {
-        itemList.add(smallSpacing);
-      }
-      itemList.addAll(todayItems);
-    }
-    return Row(
-      children: itemList,
-    );
-  }
+  final DateTime _currentTime;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Card(
-        clipBehavior: Clip.antiAlias,
-        child: ListTile(
-          leading: SizedBox(
-            width: 100,
-            height: 50,
-            child: NetworkIndicatorImage(forum.iconUrl),
-          ),
-          title: SingleLineText(
-            forum.name,
-            style: headerTextStyle(context),
-            softWrap: false,
-          ),
-          subtitle: Column(
-            children: [
-              Row(
-                children: [
-                  const Icon(
-                    Icons.chat_bubble,
-                    size: smallIconSize,
+  Widget build(BuildContext context, WidgetRef ref) {
+    final forumInfoList = [
+      (
+        Icons.forum_outlined,
+        forum.threadCount,
+      ),
+      (
+        Icons.chat_outlined,
+        forum.replyCount,
+      ),
+      (
+        Icons.mark_chat_unread_outlined,
+        forum.threadTodayCount ?? 0,
+      )
+    ];
+
+    final forumInfoWidgets = forumInfoList
+        .map(
+          (e) => Expanded(
+            child: Row(
+              children: [
+                Icon(e.$1, size: smallIconSize),
+                const SizedBox(width: 5, height: 5),
+                Flexible(
+                  child: Text(
+                    '${e.$2}',
+                    style: const TextStyle(fontSize: smallTextSize),
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
                   ),
-                  Text('主题：${forum.threadCount}'),
-                  smallSpacing,
-                  const Icon(Icons.forum, size: smallIconSize),
-                  Text('贴数：${forum.replyCount}'),
-                ],
-              ),
-              if (_buildLatestInfoLine) _buildLatestInfoRow(context, ref),
-            ],
+                )
+              ],
+            ),
           ),
-          isThreeLine: _buildLatestInfoLine,
-          onTap: () {
-            context.pushNamed(
-              ScreenPaths.forum,
-              pathParameters: <String, String>{
-                'fid': '${forum.forumID}',
-              },
-              extra: <String, dynamic>{
-                'appBarTitle': forum.name,
-              },
-            );
-          },
+        )
+        .toList();
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () {
+          context.pushNamed(
+            ScreenPaths.forum,
+            pathParameters: <String, String>{
+              'fid': '${forum.forumID}',
+            },
+            extra: <String, dynamic>{
+              'appBarTitle': forum.name,
+            },
+          );
+        },
+        child: Column(
+          children: [
+            ListTile(
+              leading: SizedBox(
+                width: 100,
+                height: 50,
+                child: NetworkIndicatorImage(forum.iconUrl),
+              ),
+              title: Text(
+                forum.name,
+                style: headerTextStyle(context),
+                maxLines: 2,
+              ),
+              subtitle: forum.latestThreadTime != null
+                  ? Text(timeDifferenceToString(
+                      _currentTime,
+                      forum.latestThreadTime!,
+                    ))
+                  : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Row(children: forumInfoWidgets),
+            ),
+          ],
         ),
-      );
+      ),
+    );
+  }
 }

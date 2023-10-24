@@ -124,21 +124,33 @@ class Forum {
                 .elementAtOrNull(1)
                 ?.parseToInt();
     final threadTodayCount = element
-        .querySelector(
-          'div.tsdm_fl_inf > dl > dd > em:nth-child(3)',
-        )
-        ?.firstEndDeepText()
-        ?.replaceFirst(' (', '')
-        .replaceFirst(')', '')
-        .parseToInt();
+            .querySelector(
+              'div.tsdm_fl_inf > dl > dd > em:nth-child(3)',
+            )
+            ?.firstEndDeepText()
+            ?.replaceFirst(' (', '')
+            .replaceFirst(')', '')
+            .parseToInt() ??
+        element
+            .querySelector('div.tsdm_fl_inf > dl > dt > em')
+            ?.firstEndDeepText()
+            ?.replaceFirst(' (', '')
+            .replaceFirst(')', '')
+            .parseToInt();
 
     final latestThreadNode =
         element.querySelector('div.tsdm_fl_inf > dl > dd:nth-child(3) > a');
-    final latestThreadTime = latestThreadNode
+    var latestThreadTime = latestThreadNode
         ?.querySelector('span')
         ?.attributes['title']
         ?.parseToDateTimeUtc8();
-    final latestThreadTimeText = latestThreadNode?.firstEndDeepText();
+    final latestThreadTimeText = latestThreadNode?.innerText;
+    if (latestThreadTime == null &&
+        (latestThreadTimeText?.contains('最后发表: ') ?? false)) {
+      latestThreadTime = latestThreadTimeText!
+          .replaceFirst('最后发表: ', '')
+          .parseToDateTimeUtc8();
+    }
     final latestThreadUrl = latestThreadNode?.firstHref();
 
     return _ForumInfo(

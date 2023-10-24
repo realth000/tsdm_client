@@ -4,6 +4,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart';
 import 'package:universal_html/parsing.dart';
@@ -103,6 +104,8 @@ class RootContent extends _$RootContent {
     await ref.read(authProvider.notifier).loginFromDocument(_doc);
     final username = ref.read(authProvider.notifier).loggedUsername;
     await _cache.analyze(_doc, username);
+    // Reset topics tab current tab index if reload content.
+    ref.read(topicsTabBarIndexProvider.notifier).state = 0;
     return _cache;
   }
 

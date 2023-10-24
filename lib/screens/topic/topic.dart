@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/forum.dart';
+import 'package:tsdm_client/models/forum_group.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
+import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/widgets/forum_card.dart';
-import 'package:tsdm_client/widgets/network_list.dart';
 
 /// App topic page.
 ///
@@ -22,51 +22,75 @@ class TopicPage extends ConsumerStatefulWidget {
 }
 
 /// State of homepage.
-class _TCHomePageState extends ConsumerState<TopicPage> {
+class _TCHomePageState extends ConsumerState<TopicPage>
+    with SingleTickerProviderStateMixin {
   /// Constructor.
   _TCHomePageState();
 
+  TabController? tabController;
+
+  void _updateIndex() {
+    if (tabController == null) {
+      return;
+    }
+    ref.read(topicsTabBarIndexProvider.notifier).state = tabController!.index;
+  }
+
   @override
-  Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(context.t.navigation.topics)),
-        body: NetworkList<Forum>(
-          widget.fetchUrl,
-          listBuilder: (document) async {
-            final forumData = <Forum>[];
+  void dispose() {
+    if (tabController != null) {
+      tabController!
+        ..removeListener(_updateIndex)
+        ..dispose();
+    }
+    super.dispose();
+  }
 
-            // Add forums that have expanded layout.
-            document
-                .querySelectorAll('table.fl_tb')
-                .where(
-                    (e) => e.querySelector('tbody > tr > td > a > img') != null)
-                .map((e) => e.querySelectorAll('tbody > tr'))
-                .forEach((forumElementList) {
-              for (final forumElement in forumElementList) {
-                // Skip invisible empty row nodes.
-                if (forumElement.children.isEmpty) {
-                  continue;
-                }
+  @override
+  Widget build(BuildContext context) {
+    final document = ref.read(rootContentProvider.notifier).doc;
 
-                final forum = Forum.fromFlRowNode(forumElement);
-                if (!forum.isValid()) {
-                  continue;
-                }
+    final forumGroupNodeList = document.querySelectorAll(
+        'div.bfff > div#wp > div#ct > div.mn > div.fl.bm > div.bm.bmw.cl');
+    final groupList = forumGroupNodeList.map(ForumGroup.fromBMNode).toList();
 
-                forumData.add(forum);
-              }
-            });
+    tabController ??= TabController(
+      initialIndex: ref.read(topicsTabBarIndexProvider),
+      length: groupList.length,
+      vsync: this,
+    )..addListener(_updateIndex);
 
-            document.querySelectorAll('td.fl_g').forEach((forumElement) {
-              final forum = Forum.fromFlGNode(forumElement);
-              if (!forum.isValid()) {
-                return;
-              }
-              forumData.add(forum);
-            });
-            return forumData;
-          },
-          widgetBuilder: (context, forum) => ForumCard(forum),
-          initialData: ref.read(rootContentProvider.notifier).doc,
+    final groupTabList = groupList.map((e) => Tab(text: e.name)).toList();
+    final groupTabBodyList = groupList
+        .map(
+          (e) => ListView.builder(
+            padding: const EdgeInsets.only(
+              left: 15,
+              right: 15,
+              top: 5,
+              bottom: 5,
+            ),
+            itemCount: e.forumList.length,
+            itemBuilder: (context, index) => ForumCard(
+              e.forumList[index],
+            ),
+          ),
+        )
+        .toList();
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(context.t.navigation.topics),
+        bottom: TabBar(
+          controller: tabController,
+          tabs: groupTabList,
+          isScrollable: true,
         ),
-      );
+      ),
+      body: TabBarView(
+        controller: tabController,
+        children: groupTabBodyList,
+      ),
+    );
+  }
 }

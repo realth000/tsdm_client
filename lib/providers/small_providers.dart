@@ -4,6 +4,4 @@ final appNavigationBarIndexProvider = StateProvider((ref) => 0);
 
 final isCheckingInProvider = StateProvider((ref) => false);
 
-final isLoggingInProvider = StateProvider((ref) => false);
-
-final isLoggingOutProvider = StateProvider((ref) => false);
+final topicsTabBarIndexProvider = StateProvider((ref) => 0);
