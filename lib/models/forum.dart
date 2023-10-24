@@ -77,6 +77,21 @@ class Forum {
 
   int? get threadTodayCount => _info.threadTodayCount;
 
+  List<(String subForumName, String url)>? get subForumList =>
+      _info.subForumList;
+
+  List<(String threadTitle, String url)>? get subThreadList =>
+      _info.subThreadList;
+
+  String? get latestThreadTitle => _info.latestThreadTitle;
+
+  String? get latestThreadUserName => _info.latestThreadUserName;
+
+  String? get latestThreadUserUrl => _info.latestThreadUserUrl;
+
+  bool get isExpanded =>
+      latestThreadTitle != null && latestThreadUserName != null;
+
   static _ForumInfo _buildForumInfo(uh.Element element) {
     final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a');
     final name = titleNode?.firstEndDeepText();

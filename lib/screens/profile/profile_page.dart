@@ -217,7 +217,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
             ),
           ...activityInfoList.map(
             (e) => ListTile(
-              title: Text(e!.$1),
+              title: Text(e.$1),
               subtitle: Text(e.$2),
             ),
           ),

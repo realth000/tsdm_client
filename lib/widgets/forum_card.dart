@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Card to show forum information.
-class ForumCard extends ConsumerWidget {
+class ForumCard extends ConsumerStatefulWidget {
   /// Constructor.
   ForumCard(this.forum, {super.key}) : _currentTime = DateTime.now();
 
@@ -17,19 +19,81 @@ class ForumCard extends ConsumerWidget {
   final DateTime _currentTime;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ForumCard> createState() => _ForumCardState();
+}
+
+class _ForumCardState extends ConsumerState<ForumCard> {
+  bool showingSubThread = false;
+  bool showingSubForum = false;
+
+  List<Widget> _buildWrapSection(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    List<(String, String)> dataList,
+    bool state,
+    VoidCallback onPressed,
+  ) {
+    final wrapChildren = dataList
+        .map(
+          (e) => ActionChip(
+            label: Text(e.$1),
+            labelStyle: Theme.of(context).textTheme.labelSmall,
+            shape: LinearBorder.start(),
+            onPressed: () async {
+              final target = e.$2.parseUrlToRoute();
+              if (target == null) {
+                debug('invalid url : ${e.$2}');
+                return;
+              }
+              await context.pushNamed(
+                target.$1,
+                pathParameters: target.$2,
+              );
+            },
+          ),
+        )
+        .toList();
+
+    return [
+      ListTile(
+        title: Text(title),
+        trailing: Icon(state ? Icons.expand_less : Icons.expand_more),
+        onTap: onPressed,
+      ),
+      if (state)
+        Padding(
+          padding: const EdgeInsets.only(left: 10, right: 10),
+          child: Row(
+            children: [
+              Expanded(
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  runAlignment: WrapAlignment.end,
+                  children: wrapChildren,
+                ),
+              ),
+            ],
+          ),
+        ),
+    ];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final forumInfoList = [
       (
         Icons.forum_outlined,
-        forum.threadCount,
+        widget.forum.threadCount,
       ),
       (
         Icons.chat_outlined,
-        forum.replyCount,
+        widget.forum.replyCount,
       ),
       (
         Icons.mark_chat_unread_outlined,
-        forum.threadTodayCount ?? 0,
+        widget.forum.threadTodayCount ?? 0,
       )
     ];
 
@@ -57,14 +121,14 @@ class ForumCard extends ConsumerWidget {
     return Card(
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () {
-          context.pushNamed(
+        onTap: () async {
+          await context.pushNamed(
             ScreenPaths.forum,
             pathParameters: <String, String>{
-              'fid': '${forum.forumID}',
+              'fid': '${widget.forum.forumID}',
             },
             extra: <String, dynamic>{
-              'appBarTitle': forum.name,
+              'appBarTitle': widget.forum.name,
             },
           );
         },
@@ -74,23 +138,80 @@ class ForumCard extends ConsumerWidget {
               leading: SizedBox(
                 width: 100,
                 height: 50,
-                child: NetworkIndicatorImage(forum.iconUrl),
+                child: NetworkIndicatorImage(widget.forum.iconUrl),
               ),
               title: Text(
-                forum.name,
+                widget.forum.name,
                 style: headerTextStyle(context),
                 maxLines: 2,
               ),
-              subtitle: forum.latestThreadTime != null
+              subtitle: widget.forum.latestThreadTime != null
                   ? Text(timeDifferenceToString(
-                      _currentTime,
-                      forum.latestThreadTime!,
+                      widget._currentTime,
+                      widget.forum.latestThreadTime!,
                     ))
                   : null,
             ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (widget.forum.isExpanded)
+                  ListTile(
+                    title: Text(
+                      '最新主题',
+                      style: Theme.of(context).textTheme.labelLarge,
+                    ),
+                    subtitle: Row(
+                      children: [
+                        Text(
+                          widget.forum.latestThreadTitle ?? '',
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        Expanded(child: Container()),
+                        Text(
+                          widget.forum.latestThreadUserName ?? '',
+                          style: Theme.of(context).textTheme.labelSmall,
+                        ),
+                      ],
+                    ),
+                    onTap: () async {
+                      final target =
+                          widget.forum.latestThreadUrl?.parseUrlToRoute();
+                      if (target == null) {
+                        debug(
+                            'invalid latest thread url: ${widget.forum.latestThreadUrl}');
+                        return;
+                      }
+                      await context.pushNamed(
+                        target.$1,
+                        pathParameters: target.$2,
+                      );
+                    },
+                  ),
+                if (widget.forum.subThreadList?.isNotEmpty ?? false)
+                  ..._buildWrapSection(context, ref, '链接',
+                      widget.forum.subThreadList!, showingSubThread, () {
+                    setState(() {
+                      showingSubThread = !showingSubThread;
+                    });
+                  }),
+                if (widget.forum.subForumList?.isNotEmpty ?? false)
+                  ..._buildWrapSection(context, ref, '子版块',
+                      widget.forum.subForumList!, showingSubForum, () {
+                    setState(() {
+                      showingSubForum = !showingSubForum;
+                    });
+                  }),
+              ],
+            ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-              child: Row(children: forumInfoWidgets),
+              child: Column(
+                children: [
+                  const SizedBox(width: 10, height: 10),
+                  Row(children: forumInfoWidgets),
+                ],
+              ),
             ),
           ],
         ),
