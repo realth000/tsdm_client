@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Card to show thread info.
@@ -21,17 +22,16 @@ class ThreadCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoList = [
-      (Icons.tag, thread.threadType!.name),
+      // (Icons.tag, thread.threadType!.name),
       (Icons.forum_outlined, '${thread.replyCount}'),
       (Icons.bar_chart_outlined, '${thread.viewCount}'),
-      // TODO: Add these for large layout.
       // (Icons.person_outline, thread.latestReplyAuthor.name),
-      // (
-      //   Icons.timelapse_outlined,
-      //   thread.latestReplyTime == null
-      //       ? ''
-      //       : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
-      // ),
+      (
+        Icons.timelapse_outlined,
+        thread.latestReplyTime == null
+            ? ''
+            : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
+      ),
     ];
 
     final infoWidgetList = <Widget>[];
@@ -58,41 +58,9 @@ class ThreadCard extends ConsumerWidget {
 
     return Card(
       clipBehavior: Clip.antiAlias,
-      child: ListTile(
-        title: Text(
-          thread.title,
-          maxLines: 3,
-          overflow: TextOverflow.ellipsis,
-        ),
-        subtitle: Row(
-          children: infoWidgetList,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        ),
-        trailing: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SizedBox(
-              width: 70,
-              child: SingleLineText(
-                thread.author.name,
-                textAlign: TextAlign.end,
-              ),
-            ),
-            if (thread.publishDate != null) ...[
-              const SizedBox(height: 5),
-              SizedBox(
-                width: 70,
-                child: SingleLineText(
-                  DateFormat('yyyy-MM-dd').format(thread.publishDate!),
-                  textAlign: TextAlign.end,
-                ),
-              ),
-            ],
-          ],
-        ),
-        onTap: () {
-          context.pushNamed(
+      child: InkWell(
+        onTap: () async {
+          await context.pushNamed(
             ScreenPaths.thread,
             pathParameters: <String, String>{
               'tid': thread.threadID,
@@ -102,6 +70,45 @@ class ThreadCard extends ConsumerWidget {
             },
           );
         },
+        child: Column(
+          children: [
+            // TODO: Tap to navigate to user space.
+            ListTile(
+              leading: CircleAvatar(
+                child: Text(thread.author.name[0]),
+              ),
+              title: SingleLineText(thread.author.name),
+              subtitle: thread.publishDate != null
+                  ? SingleLineText(
+                      DateFormat('yyyy-MM-dd').format(thread.publishDate!),
+                    )
+                  : null,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      thread.title,
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 10, height: 10),
+            Padding(
+              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              child: Row(
+                children: infoWidgetList,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
