@@ -97,5 +97,9 @@
     "checkInNextLevel": "Check-in Next Level",
     "checkInNextLevelDays": "Days To Next Check-in Level",
     "checkInTodayStatus": "Check-in Today Status"
+  },
+  "forumCard": {
+    "links": "Links",
+    "subForums": "Subreddit"
   }
 }

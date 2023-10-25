@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/models/forum.dart';
@@ -57,7 +58,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
 
     return [
       ListTile(
-        title: Text(title),
+        title: Text(title, style: Theme.of(context).textTheme.titleSmall),
         trailing: Icon(state ? Icons.expand_less : Icons.expand_more),
         onTap: onPressed,
       ),
@@ -157,11 +158,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
               children: [
                 if (widget.forum.isExpanded)
                   ListTile(
-                    title: Text(
-                      '最新主题',
-                      style: Theme.of(context).textTheme.labelLarge,
-                    ),
-                    subtitle: Row(
+                    title: Row(
                       children: [
                         Text(
                           widget.forum.latestThreadTitle ?? '',
@@ -189,14 +186,14 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                     },
                   ),
                 if (widget.forum.subThreadList?.isNotEmpty ?? false)
-                  ..._buildWrapSection(context, ref, '链接',
+                  ..._buildWrapSection(context, ref, context.t.forumCard.links,
                       widget.forum.subThreadList!, showingSubThread, () {
                     setState(() {
                       showingSubThread = !showingSubThread;
                     });
                   }),
                 if (widget.forum.subForumList?.isNotEmpty ?? false)
-                  ..._buildWrapSection(context, ref, '子版块',
+                  ..._buildWrapSection(context, ref, context.t.forumCard.subForums,
                       widget.forum.subForumList!, showingSubForum, () {
                     setState(() {
                       showingSubForum = !showingSubForum;

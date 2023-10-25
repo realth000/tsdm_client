@@ -97,5 +97,9 @@
     "checkInNextLevel": "下個簽到等級",
     "checkInNextLevelDays": "距離下個簽到等級天數",
     "checkInTodayStatus": "今日簽到狀態"
+  },
+  "forumCard": {
+    "links": "連結",
+    "subForums": "子版塊"
   }
 }
