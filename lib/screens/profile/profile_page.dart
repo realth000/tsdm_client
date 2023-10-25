@@ -115,7 +115,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         actions: [
           const CheckInButton(),
           DebounceIconButton(
-            icon: const Icon(Icons.logout),
+            icon: const Icon(Icons.logout_outlined),
             shouldDebounce: ref.watch(authProvider) == AuthState.loggingOut,
             onPressed: () async {
               final confirm = await showQuestionDialog(

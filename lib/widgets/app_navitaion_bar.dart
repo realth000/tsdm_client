@@ -29,22 +29,22 @@ class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
   Widget build(BuildContext context) {
     final barItems = [
       _NavigationBarItem(
-        icon: const Icon(Icons.home),
+        icon: const Icon(Icons.home_outlined),
         label: context.t.navigation.homepage,
         targetPath: ScreenPaths.homepage,
       ),
       _NavigationBarItem(
-        icon: const Icon(Icons.topic),
+        icon: const Icon(Icons.topic_outlined),
         label: context.t.navigation.topics,
         targetPath: ScreenPaths.topic,
       ),
       _NavigationBarItem(
-        icon: const Icon(Icons.person),
+        icon: const Icon(Icons.person_outline),
         label: context.t.navigation.profile,
         targetPath: ScreenPaths.profile,
       ),
       _NavigationBarItem(
-        icon: const Icon(Icons.settings),
+        icon: const Icon(Icons.settings_outlined),
         label: context.t.navigation.settings,
         targetPath: ScreenPaths.settings,
       ),

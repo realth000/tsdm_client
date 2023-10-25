@@ -61,9 +61,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
             ref.watch(appSettingsProvider).themeMode == ThemeMode.dark.index,
           ],
           children: const [
-            Icon(Icons.light_mode),
-            Icon(Icons.auto_mode),
-            Icon(Icons.dark_mode),
+            Icon(Icons.light_mode_outlined),
+            Icon(Icons.auto_mode_outlined),
+            Icon(Icons.dark_mode_outlined),
           ],
           onPressed: (index) async {
             // Default: ThemeData.system.

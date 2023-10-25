@@ -70,7 +70,7 @@ class CheckInButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return DebounceIconButton(
-      icon: const Icon(Icons.domain_verification),
+      icon: const Icon(Icons.domain_verification_outlined),
       shouldDebounce: ref.watch(checkInProvider),
       onPressed: () async => _checkIn(context, ref),
     );
