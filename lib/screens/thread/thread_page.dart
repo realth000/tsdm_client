@@ -57,7 +57,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
             //
             // Note that the specified title (in widget constructor) is prior to
             // this html document title, only use html title when that title is null.
-            if (widget.title == null) {
+            if (widget.title == null && mounted) {
               setState(() {
                 title = document.querySelector('title')?.text;
               });
