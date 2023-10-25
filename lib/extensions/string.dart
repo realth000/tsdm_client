@@ -56,8 +56,14 @@ extension ParseStringTo on String {
   }
 
   DateTime? parseToDateTimeUtc8() {
-    // Web server is using UTC+8 timezone.
-    return DateTime.tryParse(this);
+    final datePartList = split('-');
+    if (datePartList.length != 3) {
+      // Should not happen.
+      return DateTime.tryParse(this);
+    }
+    final formattedDateString =
+        '${datePartList[0]}-${datePartList[1].padLeft(2, '0')}-${datePartList[2].padLeft(2, '0')}';
+    return DateTime.tryParse(formattedDateString);
   }
 }
 
