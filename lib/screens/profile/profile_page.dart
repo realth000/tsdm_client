@@ -73,28 +73,28 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     // Check in status
     final checkInNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
     final checkInDaysCount =
-        checkInNode?.querySelector('p:nth-child(1)')?.firstEndDeepText();
-    final checkInThisMonthCount =
         checkInNode?.querySelector('p:nth-child(2)')?.firstEndDeepText();
-    final checkInRecentTime =
+    final checkInThisMonthCount =
         checkInNode?.querySelector('p:nth-child(3)')?.firstEndDeepText();
+    final checkInRecentTime =
+        checkInNode?.querySelector('p:nth-child(4)')?.firstEndDeepText();
     final checkInAllCoins = checkInNode
-        ?.querySelector('p:nth-child(4) font:nth-child(1)')
-        ?.firstEndDeepText();
-    final checkInLastTimeCoin = checkInNode
-        ?.querySelector('p:nth-child(4) font:nth-child(3)')
-        ?.firstEndDeepText();
-    final checkInLevel = checkInNode
         ?.querySelector('p:nth-child(5) font:nth-child(1)')
         ?.firstEndDeepText();
+    final checkInLastTimeCoin = checkInNode
+        ?.querySelector('p:nth-child(5) font:nth-child(2)')
+        ?.firstEndDeepText();
+    final checkInLevel = checkInNode
+        ?.querySelector('p:nth-child(6) font:nth-child(1)')
+        ?.firstEndDeepText();
     final checkInNextLevel = checkInNode
-        ?.querySelector('p:nth-child(5) font:nth-child(3)')
+        ?.querySelector('p:nth-child(6) font:nth-child(3)')
         ?.firstEndDeepText();
     final checkInNextLevelDays = checkInNode
-        ?.querySelector('p:nth-child(5) font:nth-child(5)')
+        ?.querySelector('p:nth-child(6) font:nth-child(5)')
         ?.firstEndDeepText();
     final checkInTodayStatus =
-        checkInNode?.querySelector('p:nth-child(6)')?.firstEndDeepText();
+        checkInNode?.querySelector('p:nth-child(7)')?.firstEndDeepText();
 
     // TODO: Parse medals here.
 
