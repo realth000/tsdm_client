@@ -1,7 +1,6 @@
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/utils/time.dart';
 import 'package:uuid/uuid.dart';
 
 const Uuid _uuid = Uuid();
@@ -57,7 +56,8 @@ extension ParseStringTo on String {
   }
 
   DateTime? parseToDateTimeUtc8() {
-    return DateTime.tryParse(formatTimeStringWithUTC8(this));
+    // Web server is using UTC+8 timezone.
+    return DateTime.tryParse(this);
   }
 }
 
