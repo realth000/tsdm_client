@@ -13,6 +13,7 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/cached_image.dart';
 import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/obscure_list_tile.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
@@ -216,10 +217,20 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
               subtitle: Text(checkInTodayStatus),
             ),
           ...activityInfoList.map(
-            (e) => ListTile(
-              title: Text(e.$1),
-              subtitle: Text(e.$2),
-            ),
+            (e) {
+              // Privacy contents should use ObscureListTile.
+              if (e.$1.contains('IP')) {
+                return ObscureListTile(
+                  title: Text(e.$1),
+                  subtitle: Text(e.$2),
+                );
+              } else {
+                return ListTile(
+                  title: Text(e.$1),
+                  subtitle: Text(e.$2),
+                );
+              }
+            },
           ),
         ],
       ),
