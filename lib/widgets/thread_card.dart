@@ -1,23 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:intl/intl.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
-import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Card to show thread info.
 class ThreadCard extends ConsumerWidget {
   /// Constructor.
-  ThreadCard(this.thread, {super.key});
+  const ThreadCard(this.thread, {super.key});
 
   /// Thread data.
   final NormalThread thread;
-
-  /// Current [DateTime] to check time distance.
-  final _currentTime = DateTime.now();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -30,7 +26,7 @@ class ThreadCard extends ConsumerWidget {
         Icons.timelapse_outlined,
         thread.latestReplyTime == null
             ? ''
-            : timeDifferenceToString(_currentTime, thread.latestReplyTime!),
+            : thread.latestReplyTime!.elapsedTillNow(),
       ),
     ];
 
@@ -79,9 +75,7 @@ class ThreadCard extends ConsumerWidget {
               ),
               title: SingleLineText(thread.author.name),
               subtitle: thread.publishDate != null
-                  ? SingleLineText(
-                      DateFormat('yyyy-MM-dd').format(thread.publishDate!),
-                    )
+                  ? SingleLineText(thread.publishDate!.yyyyMMDD())
                   : null,
             ),
             Padding(

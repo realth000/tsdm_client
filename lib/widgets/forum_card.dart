@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/time.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Card to show forum information.
 class ForumCard extends ConsumerStatefulWidget {
   /// Constructor.
-  ForumCard(this.forum, {super.key}) : _currentTime = DateTime.now();
+  const ForumCard(this.forum, {super.key});
 
   /// Forum id.
   final Forum forum;
-  final DateTime _currentTime;
 
   @override
   ConsumerState<ForumCard> createState() => _ForumCardState();
@@ -147,10 +146,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                 maxLines: 2,
               ),
               subtitle: widget.forum.latestThreadTime != null
-                  ? Text(timeDifferenceToString(
-                      widget._currentTime,
-                      widget.forum.latestThreadTime!,
-                    ))
+                  ? Text(widget.forum.latestThreadTime!.elapsedTillNow())
                   : null,
             ),
             Column(
@@ -193,8 +189,12 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                     });
                   }),
                 if (widget.forum.subForumList?.isNotEmpty ?? false)
-                  ..._buildWrapSection(context, ref, context.t.forumCard.subForums,
-                      widget.forum.subForumList!, showingSubForum, () {
+                  ..._buildWrapSection(
+                      context,
+                      ref,
+                      context.t.forumCard.subForums,
+                      widget.forum.subForumList!,
+                      showingSubForum, () {
                     setState(() {
                       showingSubForum = !showingSubForum;
                     });

@@ -27,7 +27,6 @@ dependencies:
   freezed_annotation: ^2.4.1
   go_router: ^12.0.0
   hooks_riverpod: ^2.4.4
-  intl: ^0.18.1
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
