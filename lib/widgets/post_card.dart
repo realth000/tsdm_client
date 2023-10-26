@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:html/dom.dart' as dom;
-import 'package:html/parser.dart' as html_parser;
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:universal_html/html.dart' as uh;
+import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Card for a [Post] model.
@@ -25,14 +25,14 @@ class PostCard extends ConsumerWidget {
     String data,
   ) {
     final c = <Widget>[];
-    final rootNode = html_parser.parse(data).body!;
+    final rootNode = parseHtmlDocument(data).body!;
 
-    void traverseNode(dom.Node? node, dom.Node rootNode) {
+    void traverseNode(uh.Node? node, uh.Node rootNode) {
       if (node == null) {
         return;
       }
-      if (node.nodeType == dom.Node.ELEMENT_NODE) {
-        final e = node as dom.Element;
+      if (node.nodeType == uh.Node.ELEMENT_NODE) {
+        final e = node as uh.Element;
         if (e.localName == 'a') {
           if (e.attributes.containsKey('href')) {
             c.add(
@@ -40,7 +40,7 @@ class PostCard extends ConsumerWidget {
                 splashColor: Colors.transparent,
                 splashFactory: NoSplash.splashFactory,
                 child: Text(
-                  e.text.trim(),
+                  e.text?.trim() ?? '',
                   style: hrefTextStyle(context),
                 ),
                 onTap: () async {
@@ -70,7 +70,7 @@ class PostCard extends ConsumerWidget {
           }
           return;
         }
-      } else if (node.nodeType == dom.Node.TEXT_NODE) {
+      } else if (node.nodeType == uh.Node.TEXT_NODE) {
         c.add(
           Text(
             node.text!.trim(),
