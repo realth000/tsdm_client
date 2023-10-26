@@ -477,6 +477,13 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "0.15.4"
+  html_muncher:
+    dependency: "direct main"
+    description:
+      path: "lib/packages/html_muncher"
+      relative: true
+    source: path
+    version: "0.0.1"
   http_multi_server:
     dependency: transitive
     description:
