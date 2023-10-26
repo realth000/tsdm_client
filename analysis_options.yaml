@@ -1,7 +1,10 @@
 include:
   package:surf_lint_rules/analysis_options.yaml
 
+# https://dart.dev/tools/analysis#changing-the-severity-of-rules
 analyzer:
+  errors:
+    depend_on_referenced_packages: error
   exclude:
     - lib/**.g.dart
     - lib/**.freezed.dart
