@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
@@ -119,7 +120,10 @@ class PostCard extends ConsumerWidget {
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width,
-              child: _buildPostDataWidget(context, ref, post.data),
+              child: munchElement(
+                context,
+                parseHtmlDocument(post.data).body!,
+              ),
             ),
           ],
         ),
