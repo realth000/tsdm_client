@@ -138,4 +138,10 @@ extension GrepExtension on Element {
   String? dataOriginalOrSrcImgUrl() {
     return attributes['data-original'] ?? attributes['src'] ?? '';
   }
+
+  String? imageUrl() {
+    return attributes['data-original'] ??
+        attributes['src'] ??
+        attributes['file'];
+  }
 }

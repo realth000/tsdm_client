@@ -1,7 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/widgets/cached_image.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:url_launcher/url_launcher.dart';
+
+extension MunchExtension on List<Widget> {
+  void addOrAppendText(TextSpan textSpan) {
+    if (isEmpty) {
+      add(RichText(text: textSpan));
+      return;
+    }
+
+    if (last.runtimeType != RichText) {
+      add(RichText(text: textSpan));
+      return;
+    }
+
+    final lastSpan = last as RichText;
+
+    lastSpan.children.add(textSpan as Widget);
+    last = lastSpan;
+  }
+}
+
+abstract class HtmlSpan {
+  final children = <InlineSpan>[];
+
+  void addSpan(InlineSpan? span) {
+    if (span == null) {
+      return;
+    }
+    children.add(span);
+  }
+
+  Widget toWidget();
+}
+
+class ColumnSpan extends HtmlSpan {
+  @override
+  Widget toWidget() {
+    return Column(children: children.map((e) => RichText(text: e)).toList());
+  }
+}
+
+class RowSpan extends HtmlSpan {
+  bool get isEmpty => children.isEmpty;
+
+  bool get isNotEmpty => !isEmpty;
+
+  void clear() {
+    children.clear();
+  }
+
+  @override
+  Widget toWidget() {
+    return RichText(
+      text: TextSpan(
+        children: children,
+      ),
+    );
+  }
+}
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
@@ -12,11 +70,7 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     context,
   );
 
-  final widgets = <Widget>[];
-  for (final node in rootElement.nodes) {
-    muncher.munchNode(context, node, widgets);
-  }
-  return Column(children: widgets);
+  return muncher._munch(context, rootElement);
 }
 
 /// State of [Muncher].
@@ -24,6 +78,7 @@ class MunchState {
   MunchState();
 
   bool strong = false;
+  bool br = false;
 }
 
 /// Munch html nodes into flutter widgets.
@@ -33,61 +88,55 @@ class Muncher {
   final BuildContext context;
   final MunchState state = MunchState();
 
-  void munchNode(
-      BuildContext context, uh.Node? node, List<Widget> contextWidgets) {
-    if (node == null) {
-      // Reach end.
-      return;
-    }
-    if (node.nodeType == uh.Node.ELEMENT_NODE) {
-      final e = node as uh.Element;
-      if (e.localName == 'a') {
-        if (node.nodeType == uh.Node.ELEMENT_NODE) {
-          if (node.localName == 'a') {
-            if (node.attributes.containsKey('href')) {
-              contextWidgets.add(
-                InkWell(
-                  splashColor: Colors.transparent,
-                  splashFactory: NoSplash.splashFactory,
-                  child: Text(
-                    node.text?.trim() ?? '',
-                    style: TextStyle(
-                      overflow: TextOverflow.fade,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                  ),
-                  onTap: () async {
-                    await launchUrl(
-                      Uri.parse(node.attributes['href']!),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                ),
-              );
-            }
-            return;
-          } else if (node.localName == 'img') {
-            final imageSource = node.attributes['data-original'] ??
-                node.attributes['src'] ??
-                node.attributes['file'] ??
-                '';
-            if (imageSource.isNotEmpty) {
-              contextWidgets.add(
-                ConstrainedBox(
-                  constraints: BoxConstraints(
-                    maxWidth: MediaQuery.of(context).size.width * 0.75,
-                  ),
-                  child: NetworkIndicatorImage(imageSource),
-                ),
-              );
-            }
-            return;
-          }
-        } else if (node.nodeType == uh.Node.TEXT_NODE) {
-          contextWidgets.add(Text(node.text!.trim()));
-        }
+  Widget _munch(BuildContext context, uh.Element rootElement) {
+    final widgetList = <Widget>[];
+    final rowSpan = RowSpan();
+
+    for (final node in rootElement.nodes) {
+      final span = munchNode(context, node);
+      if (state.br) {
+        widgetList.add(rowSpan.toWidget());
+        rowSpan.clear();
+      } else {
+        rowSpan.addSpan(span);
       }
     }
-    return;
+    if (rowSpan.isNotEmpty) {
+      widgetList.add(rowSpan.toWidget());
+    }
+    return Column(children: widgetList);
+  }
+
+  InlineSpan? munchNode(BuildContext context, uh.Node? node) {
+    if (node == null) {
+      // Reach end.
+      return null;
+    }
+    switch (node.nodeType) {
+      // Text node does not have children.
+      case uh.Node.TEXT_NODE:
+        {
+          return TextSpan(
+            text: node.text?.trim(),
+            style: Theme.of(context).textTheme.bodySmall,
+          );
+        }
+
+      case uh.Node.ELEMENT_NODE:
+        {
+          final element = node as uh.Element;
+          final localName = element.localName;
+          InlineSpan? span;
+
+          // Parse according to element types.
+
+          // <img>
+          if (localName == 'img' && node.imageUrl() != null) {
+            span = WidgetSpan(child: CachedImage(node.imageUrl()!));
+          }
+          return span;
+        }
+    }
+    return null;
   }
 }
