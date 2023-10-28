@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:universal_html/html.dart';
 
 /// Extension for [Element] type to access children.
@@ -140,7 +141,8 @@ extension GrepExtension on Element {
   }
 
   String? imageUrl() {
-    return attributes['data-original'] ??
+    return attributes['zoomfile']?.prependHost() ??
+        attributes['data-original'] ??
         attributes['src'] ??
         attributes['file'];
   }

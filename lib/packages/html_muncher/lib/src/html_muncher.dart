@@ -1,65 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/widgets/cached_image.dart';
+import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:universal_html/html.dart' as uh;
-
-extension MunchExtension on List<Widget> {
-  void addOrAppendText(TextSpan textSpan) {
-    if (isEmpty) {
-      add(RichText(text: textSpan));
-      return;
-    }
-
-    if (last.runtimeType != RichText) {
-      add(RichText(text: textSpan));
-      return;
-    }
-
-    final lastSpan = last as RichText;
-
-    lastSpan.children.add(textSpan as Widget);
-    last = lastSpan;
-  }
-}
-
-abstract class HtmlSpan {
-  final children = <InlineSpan>[];
-
-  void addSpan(InlineSpan? span) {
-    if (span == null) {
-      return;
-    }
-    children.add(span);
-  }
-
-  Widget toWidget();
-}
-
-class ColumnSpan extends HtmlSpan {
-  @override
-  Widget toWidget() {
-    return Column(children: children.map((e) => RichText(text: e)).toList());
-  }
-}
-
-class RowSpan extends HtmlSpan {
-  bool get isEmpty => children.isEmpty;
-
-  bool get isNotEmpty => !isEmpty;
-
-  void clear() {
-    children.clear();
-  }
-
-  @override
-  Widget toWidget() {
-    return RichText(
-      text: TextSpan(
-        children: children,
-      ),
-    );
-  }
-}
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
@@ -70,7 +12,7 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     context,
   );
 
-  return muncher._munch(context, rootElement);
+  return RichText(text: muncher._munch(context, rootElement));
 }
 
 /// State of [Muncher].
@@ -78,7 +20,6 @@ class MunchState {
   MunchState();
 
   bool strong = false;
-  bool br = false;
 }
 
 /// Munch html nodes into flutter widgets.
@@ -88,23 +29,29 @@ class Muncher {
   final BuildContext context;
   final MunchState state = MunchState();
 
-  Widget _munch(BuildContext context, uh.Element rootElement) {
+  InlineSpan _munch(BuildContext context, uh.Element rootElement) {
     final widgetList = <Widget>[];
-    final rowSpan = RowSpan();
+    final spanList = <InlineSpan>[];
 
     for (final node in rootElement.nodes) {
       final span = munchNode(context, node);
-      if (state.br) {
-        widgetList.add(rowSpan.toWidget());
-        rowSpan.clear();
-      } else {
-        rowSpan.addSpan(span);
+      if (span != null) {
+        spanList.add(span);
       }
     }
-    if (rowSpan.isNotEmpty) {
-      widgetList.add(rowSpan.toWidget());
+    if (spanList.isNotEmpty) {
+      widgetList.add(RichText(text: TextSpan(children: spanList)));
     }
-    return Column(children: widgetList);
+    if (widgetList.isEmpty) {
+      return const TextSpan();
+    }
+    // widgetList.add(widgetList.first);
+    return WidgetSpan(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: widgetList,
+      ),
+    );
   }
 
   InlineSpan? munchNode(BuildContext context, uh.Node? node) {
@@ -118,7 +65,7 @@ class Muncher {
         {
           return TextSpan(
             text: node.text?.trim(),
-            style: Theme.of(context).textTheme.bodySmall,
+            style: Theme.of(context).textTheme.bodyMedium,
           );
         }
 
@@ -126,14 +73,27 @@ class Muncher {
         {
           final element = node as uh.Element;
           final localName = element.localName;
-          InlineSpan? span;
 
           // Parse according to element types.
-
-          // <img>
-          if (localName == 'img' && node.imageUrl() != null) {
-            span = WidgetSpan(child: CachedImage(node.imageUrl()!));
-          }
+          final span = switch (localName) {
+            'img' when node.imageUrl() != null => WidgetSpan(
+                child: NetworkIndicatorImage(node.imageUrl()!),
+                // baseline: TextBaseline.ideographic,
+              ),
+            'br' => const TextSpan(text: '\n'),
+            'font' => TextSpan(
+                text: node.text ?? '',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+            'strong' => TextSpan(
+                text: node.text ?? '',
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+              ),
+            'a' || 'p' || 'ignore_js_op' => _munch(context, node),
+            String() => null,
+          };
           return span;
         }
     }
