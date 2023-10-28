@@ -19,7 +19,16 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
 class MunchState {
   MunchState();
 
-  bool strong = false;
+  bool bold = false;
+  bool underline = false;
+  bool lineThrough = false;
+  bool center = false;
+  List<Color> colorStack = [];
+
+  @override
+  String toString() {
+    return 'MunchState {bold=$bold, underline=$underline, lineThrough=$lineThrough, color=$colorStack}';
+  }
 }
 
 /// Munch html nodes into flutter widgets.
@@ -65,7 +74,14 @@ class Muncher {
         {
           return TextSpan(
             text: node.text?.trim(),
-            style: Theme.of(context).textTheme.bodyMedium,
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  color: state.colorStack.lastOrNull,
+                  fontWeight: state.bold ? FontWeight.w600 : null,
+                  decoration: TextDecoration.combine([
+                    if (state.underline) TextDecoration.underline,
+                    if (state.lineThrough) TextDecoration.lineThrough,
+                  ]),
+                ),
           );
         }
 
@@ -78,19 +94,11 @@ class Muncher {
           final span = switch (localName) {
             'img' when node.imageUrl() != null => WidgetSpan(
                 child: NetworkIndicatorImage(node.imageUrl()!),
-                // baseline: TextBaseline.ideographic,
               ),
             'br' => const TextSpan(text: '\n'),
-            'font' => TextSpan(
-                text: node.text ?? '',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ),
-            'strong' => TextSpan(
-                text: node.text ?? '',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-              ),
+            'font' => _buildFont(context, node),
+            'strong' => _buildStrong(context, node),
+            'u' => _buildUnderline(context, node),
             'a' || 'p' || 'ignore_js_op' => _munch(context, node),
             String() => null,
           };
@@ -98,5 +106,36 @@ class Muncher {
         }
     }
     return null;
+  }
+
+  InlineSpan _buildFont(BuildContext context, uh.Element element) {
+    // Trim and add alpha value for "#ffafc7".
+    final colorValue = int.tryParse(
+        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'a',
+        radix: 16);
+    Color? color;
+    if (colorValue != null) {
+      color = Color(colorValue);
+      state.colorStack.add(color);
+    }
+    final ret = _munch(context, element);
+    if (color != null) {
+      state.colorStack.removeLast();
+    }
+    return ret;
+  }
+
+  InlineSpan _buildStrong(BuildContext context, uh.Element element) {
+    state.bold = true;
+    final ret = _munch(context, element);
+    state.bold = false;
+    return ret;
+  }
+
+  InlineSpan _buildUnderline(BuildContext context, uh.Element element) {
+    state.underline = true;
+    final ret = _munch(context, element);
+    state.underline = false;
+    return ret;
   }
 }
