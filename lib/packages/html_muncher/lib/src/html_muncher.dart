@@ -111,11 +111,11 @@ class Muncher {
                 child: NetworkIndicatorImage(node.imageUrl()!),
               ),
             'br' => const TextSpan(text: '\n'),
-            'font' => _buildFont(context, node),
-            'strong' => _buildStrong(context, node),
-            'u' => _buildUnderline(context, node),
-            'p' => _buildP(context, node),
-            'a' || 'ignore_js_op' => _munch(node),
+            'font' => _buildFont(node),
+            'strong' => _buildStrong(node),
+            'u' => _buildUnderline(node),
+            'p' => _buildP(node),
+            'a' || 'div' || 'ignore_js_op' => _munch(node),
             String() => null,
           };
           return span;
@@ -124,7 +124,7 @@ class Muncher {
     return null;
   }
 
-  InlineSpan _buildFont(BuildContext context, uh.Element element) {
+  InlineSpan _buildFont(uh.Element element) {
     // Setup color
     // Trim and add alpha value for "#ffafc7".
     // Set to an invalid color value if "color" attribute not found.
@@ -158,21 +158,21 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan _buildStrong(BuildContext context, uh.Element element) {
+  InlineSpan _buildStrong(uh.Element element) {
     state.bold = true;
     final ret = _munch(element);
     state.bold = false;
     return ret;
   }
 
-  InlineSpan _buildUnderline(BuildContext context, uh.Element element) {
+  InlineSpan _buildUnderline(uh.Element element) {
     state.underline = true;
     final ret = _munch(element);
     state.underline = false;
     return ret;
   }
 
-  InlineSpan _buildP(BuildContext context, uh.Element element) {
+  InlineSpan _buildP(uh.Element element) {
     // Alignment requires the whole rendered page to a fixed max width that
     // equals to website page, otherwise if is different if we have a "center"
     // or "right" alignment.
