@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -19,74 +20,8 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     constraints: const BoxConstraints(
       maxWidth: 712,
     ),
-    child: RichText(text: muncher._munch(context, rootElement)),
+    child: RichText(text: muncher._munch(rootElement)),
   );
-}
-
-/// Font size.
-/// Only works for tsdm.
-///
-/// In the text editor, only 1 - 7 sizes are used.
-/// Font height can be known by hovering on html element in the devtool viewer.
-/// Normal text size is 18px.
-enum FontSize {
-  /// "1": 11px
-  size1,
-
-  /// "2": 14px
-  size2,
-
-  /// "3": 17px
-  size3,
-
-  /// "4": 19px
-  size4,
-
-  /// "5": 25px
-  size5,
-
-  /// "6": 33px
-  size6,
-
-  /// "7": 49px
-  size7,
-
-  // Not support size.
-  notSupport;
-
-  factory FontSize.fromString(String? size) {
-    if (size == null) {
-      return FontSize.notSupport;
-    }
-
-    return switch (size) {
-      '1' => FontSize.size1,
-      '2' => FontSize.size2,
-      '3' => FontSize.size3,
-      '4' => FontSize.size4,
-      '5' => FontSize.size5,
-      '6' => FontSize.size6,
-      '7' => FontSize.size7,
-      String() => FontSize.notSupport,
-    };
-  }
-
-  double value() {
-    return switch (this) {
-      FontSize.size1 => 11.0,
-      FontSize.size2 => 14.0,
-      FontSize.size3 => 17.0,
-      FontSize.size4 => 19.0,
-      FontSize.size5 => 25.0,
-      FontSize.size6 => 33.0,
-      FontSize.size7 => 49.0,
-      FontSize.notSupport => 18.0, // Default is 18
-    };
-  }
-
-  bool get isValid => this != FontSize.notSupport;
-
-  bool get isNotValid => !isValid;
 }
 
 /// State of [Muncher].
@@ -114,12 +49,12 @@ class Muncher {
   final BuildContext context;
   final MunchState state = MunchState();
 
-  InlineSpan _munch(BuildContext context, uh.Element rootElement) {
+  InlineSpan _munch(uh.Element rootElement) {
     final widgetList = <Widget>[];
     final spanList = <InlineSpan>[];
 
     for (final node in rootElement.nodes) {
-      final span = munchNode(context, node);
+      final span = munchNode(node);
       if (span != null) {
         spanList.add(span);
       }
@@ -142,7 +77,7 @@ class Muncher {
     );
   }
 
-  InlineSpan? munchNode(BuildContext context, uh.Node? node) {
+  InlineSpan? munchNode(uh.Node? node) {
     if (node == null) {
       // Reach end.
       return null;
@@ -180,7 +115,7 @@ class Muncher {
             'strong' => _buildStrong(context, node),
             'u' => _buildUnderline(context, node),
             'p' => _buildP(context, node),
-            'a' || 'ignore_js_op' => _munch(context, node),
+            'a' || 'ignore_js_op' => _munch(node),
             String() => null,
           };
           return span;
@@ -208,7 +143,7 @@ class Muncher {
       state.fontSizeStack.add(fontSize.value());
     }
     // Munch!
-    final ret = _munch(context, element);
+    final ret = _munch(element);
 
     // Restore color
     if (color != null) {
@@ -225,14 +160,14 @@ class Muncher {
 
   InlineSpan _buildStrong(BuildContext context, uh.Element element) {
     state.bold = true;
-    final ret = _munch(context, element);
+    final ret = _munch(element);
     state.bold = false;
     return ret;
   }
 
   InlineSpan _buildUnderline(BuildContext context, uh.Element element) {
     state.underline = true;
-    final ret = _munch(context, element);
+    final ret = _munch(element);
     state.underline = false;
     return ret;
   }
@@ -259,7 +194,7 @@ class Muncher {
       state.textAlign = align;
     }
 
-    final ret = _munch(context, element);
+    final ret = _munch(element);
 
     late final InlineSpan ret2;
 
