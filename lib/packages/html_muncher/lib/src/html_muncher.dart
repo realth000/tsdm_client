@@ -110,8 +110,9 @@ class Muncher {
 
   InlineSpan _buildFont(BuildContext context, uh.Element element) {
     // Trim and add alpha value for "#ffafc7".
+    // Set to an invalid color value if "color" attribute not found.
     final colorValue = int.tryParse(
-        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'a',
+        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
         radix: 16);
     Color? color;
     if (colorValue != null) {
