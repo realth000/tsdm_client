@@ -146,4 +146,33 @@ extension GrepExtension on Element {
         attributes['src'] ??
         attributes['file'];
   }
+
+  /// Parse data in a table row, return the first header <th> and all data <td>.
+  ///
+  /// <tr>
+  ///   <th>table_header</th>
+  ///   <td>data1<td>
+  ///   <td>data2<td>
+  ///   <td>data3<td>
+  /// </tr>
+  (String? title, List<String> data) parseTableRow() {
+    String? title;
+    final data = <String>[];
+    for (final node in nodes) {
+      if (node.nodeType != Node.ELEMENT_NODE) {
+        continue;
+      }
+
+      final e = node as Element;
+      if (e.localName == 'th' && title == null) {
+        title = e.text;
+        continue;
+      }
+
+      if (e.localName == 'td' && e.text != null) {
+        data.add(e.text!);
+      }
+    }
+    return (title, data);
+  }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -86,6 +87,7 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
+          // TODO: Support text-shadow.
           return TextSpan(
             text: node.text?.trim(),
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
@@ -115,7 +117,16 @@ class Muncher {
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
             'p' => _buildP(node),
-            'a' || 'div' || 'ignore_js_op' => _munch(node),
+            'table' when node.classes.contains('cgtl') => _buildTable(node),
+            'span' => _buildSpan(node),
+            'a' ||
+            'div' ||
+            'ignore_js_op' ||
+            'table' ||
+            'tbody' ||
+            'tr' ||
+            'td' =>
+              _munch(node),
             String() => null,
           };
           return span;
@@ -126,31 +137,17 @@ class Muncher {
 
   InlineSpan _buildFont(uh.Element element) {
     // Setup color
-    // Trim and add alpha value for "#ffafc7".
-    // Set to an invalid color value if "color" attribute not found.
-    final colorValue = int.tryParse(
-        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
-        radix: 16);
-    Color? color;
-    if (colorValue != null) {
-      color = Color(colorValue);
-      state.colorStack.add(color);
-    }
-
+    final hasColor = _tryPushColor(element);
     // Setup font size.
-    final fontSize = FontSize.fromString(element.attributes['size']);
-    if (fontSize.isValid) {
-      state.fontSizeStack.add(fontSize.value());
-    }
+    final hasFontSize = _tryPushFontSize(element);
     // Munch!
     final ret = _munch(element);
 
     // Restore color
-    if (color != null) {
+    if (hasColor) {
       state.colorStack.removeLast();
     }
-
-    if (fontSize.isValid) {
+    if (hasFontSize) {
       state.fontSizeStack.removeLast();
     }
 
@@ -219,5 +216,121 @@ class Muncher {
     }
 
     return ret2;
+  }
+
+  InlineSpan _buildTable(uh.Element element) {
+    String? title;
+    final rows = <TableRow>[];
+    for (final (index, node) in element.nodes.indexed) {
+      if (node.nodeType != uh.Node.ELEMENT_NODE) {
+        continue;
+      }
+      final e = node as uh.Element;
+
+      // Parse table title.
+      if (index == 0 && e.localName == 'caption') {
+        title = e.text;
+        continue;
+      }
+      if (e.localName != 'tbody') {
+        continue;
+      }
+
+      for (final n in e.nodes) {
+        if (n.nodeType != uh.Node.ELEMENT_NODE) {
+          continue;
+        }
+        final ne = n as uh.Element;
+        if (ne.localName != 'tr') {
+          continue;
+        }
+
+        final (t, d) = ne.parseTableRow();
+        rows.add(TableRow(
+          children: [
+            Text(t ?? ''),
+            ...d.map((e) => Text(e)),
+          ],
+        ));
+      }
+    }
+    return WidgetSpan(child: Table(children: rows));
+  }
+
+  InlineSpan _buildSpan(uh.Element element) {
+    final styleEntries = element.attributes['style']
+        ?.split(';')
+        .map((e) {
+          final x = e.trim().split(':');
+          return (x.firstOrNull?.trim(), x.lastOrNull?.trim());
+        })
+        .whereType<(String, String)>()
+        .map((e) => MapEntry(e.$1, e.$2))
+        .toList();
+    if (styleEntries == null) {
+      final ret = _munch(element);
+      return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+    }
+
+    final styleMap = Map.fromEntries(styleEntries);
+    final color = styleMap['color'];
+    final hasColor = _tryPushColor(element, colorString: color);
+    final fontSize = styleMap['font-size'];
+    final hasFontSize = _tryPushFontSize(element, fontSizeString: fontSize);
+
+    final ret = _munch(element);
+
+    if (hasColor) {
+      state.colorStack.removeLast();
+    }
+    if (hasFontSize) {
+      state.fontSizeStack.removeLast();
+    }
+
+    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+  }
+
+  /*                Setup Functions                      */
+
+  /// Try parse color from [element].
+  /// When provide [colorString], use that in advance.
+  ///
+  /// If has valid color, push to stack and return true.
+  bool _tryPushColor(uh.Element element, {String? colorString}) {
+    // Trim and add alpha value for "#ffafc7".
+    // Set to an invalid color value if "color" attribute not found.
+    final attr = colorString ?? element.attributes['color'];
+    int? colorValue;
+    if (attr != null && attr.startsWith('#')) {
+      colorValue = int.tryParse(
+          element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
+          radix: 16);
+    }
+    Color? color;
+    if (colorValue != null) {
+      color = Color(colorValue);
+      state.colorStack.add(color);
+    } else {
+      // If color not in format #aabcc, try parse as color name.
+      final webColor = WebColors.fromString(attr);
+      if (webColor.isValid) {
+        color = webColor.color;
+        state.colorStack.add(color);
+      }
+    }
+    return color != null;
+  }
+
+  /// Try parse font size from [element].
+  /// When provide [fontSizeString], use that in advance.
+  ///
+  /// If has valid color, push to stack and return true.
+  bool _tryPushFontSize(uh.Element element, {String? fontSizeString}) {
+    final fontSize =
+        FontSize.fromString(fontSizeString ?? element.attributes['size']);
+    if (fontSize.isValid) {
+      state.fontSizeStack.add(fontSize.value());
+    }
+    return fontSize.isValid;
   }
 }
