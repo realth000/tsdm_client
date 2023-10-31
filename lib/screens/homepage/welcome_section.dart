@@ -128,7 +128,13 @@ class WelcomeSection extends ConsumerWidget {
     // welcomeText is plain text inside welcomeNode div.
     // Only using [nodes] method can capture it.
     final welcomeText = cache.usernameText;
-    final avatarUrl = cache.avatarUrl;
+    // First use avatar url in homepage, null means current webpage layout does
+    // not provide one.
+    // Then use avatar url in profile page.
+    // In fact we can use the one in  profile page directly.
+    final avatarUrl = cache.avatarUrl ??
+        ref.read(rootContentProvider.notifier).avatarUrl ??
+        '';
     final welcomeNavigateHrefsPairs = cache.navigateHrefsPairs;
 
     if (picUrlList.length != picHrefList.length) {

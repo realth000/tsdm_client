@@ -79,10 +79,14 @@ ThreadAuthorPair? _filterThreadAndAuthors(Element element) {
 }
 
 /// Provider to prepare root page content from homepage "https://www.tsdm39.com/forum.php"
+///
+/// Also cache profile page data of current logged user.
+///
 // TODO: Make this a not persist provider.
 @Riverpod(keepAlive: true, dependencies: [Auth, NetClient])
 class RootContent extends _$RootContent {
   static const String _rootPage = homePage;
+  static const String _profilePage = uidProfilePage;
 
   @override
   Future<CachedRootContent> build() async {
@@ -106,12 +110,33 @@ class RootContent extends _$RootContent {
     await _cache.analyze(_doc, username);
     // Reset topics tab current tab index if reload content.
     ref.read(topicsTabBarIndexProvider.notifier).state = 0;
+
+    final uid = ref.read(authProvider.notifier).loggedUid;
+    if (ref.read(authProvider) == AuthState.authorized && uid != null) {
+      // Load current user profile page.
+      final profileResp = await ref.read(netClientProvider()).get('$_profilePage$uid');
+      if (profileResp.statusCode != HttpStatus.ok) {
+        return Future.error('failed to load user profile page, status code is ${profileResp.statusCode}');
+      }
+      _profileDoc = parseHtmlDocument(profileResp.data as String);
+      _avatarUrl = _profileDoc!
+          .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+          ?.attributes['src'];
+    }
     return _cache;
   }
 
   Document get doc => _doc;
 
+  Document? get profileDoc => _profileDoc;
+
+  String? get avatarUrl => _avatarUrl;
+
   late Document _doc;
+
+  Document? _profileDoc;
+
+  String? _avatarUrl;
 
   CachedRootContent get cache => _cache;
 
@@ -122,7 +147,8 @@ class CachedRootContent {
   CachedRootContent();
 
   String usernameText = '';
-  String avatarUrl = '';
+  /// Avatar url may be null because webpage layout not has that.
+  String? avatarUrl;
   List<String?> picUrlList = [];
   List<String?> picHrefList = [];
   List<String>? memberInfoList = [];
@@ -193,8 +219,7 @@ class CachedRootContent {
     usernameText = username ?? '';
     avatarUrl = document
             .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-            ?.attributes['src'] ??
-        noAvatarUrl;
+            ?.attributes['src'];
     navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))

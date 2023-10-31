@@ -93,6 +93,19 @@ class CookieData implements Storage {
     return true;
   }
 
+  // TODO: Try set webpage style in cookie.
+  /// To parse web page correctly, set a certain web page style id here.
+  ///
+  /// The main difference between web page styles are homepage layout.
+  ///
+  /// name    id     avatar   forum-info-layout
+  /// 水晶     4    no avatar  <dd> <em> <font>主题</font> <font>123</font> </em> </dd>
+  /// 爱丽丝   5       avatar  <dd> <em>主题</em> , <em>123></em> </dd>
+  /// 羽翼     6    no avatar  Same with style 4
+  /// 旅行者   13      avatar  Same with style 5
+  /// 自由之翼 12      avatar  Same with style 5
+  void _setupWebPageStyle() {}
+
   @override
   Future<void> delete(String key) async {
     _cookieMap.remove(key);
@@ -118,12 +131,14 @@ class CookieData implements Storage {
 
   @override
   Future<String?> read(String key) async {
+    _setupWebPageStyle();
     return _cookieMap[key];
   }
 
   @override
   Future<void> write(String key, String value) async {
     _cookieMap[key] = value;
+    //_setupWebPageStyle();
     await _syncCookie();
   }
 }

@@ -264,11 +264,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     final uid = ref.read(authProvider.notifier).loggedUid;
 
+    final profileDoc = ref.read(rootContentProvider.notifier).profileDoc;
+    if (profileDoc != null) {
+      // Use cached data.
+      return _buildProfile(context, profileDoc);
+    }
+
     return Scaffold(
       body: FutureBuilder(
-        future: ref
-            .read(netClientProvider())
-            .get('$baseUrl/home.php?mod=space&uid=$uid'),
+        future: ref.read(netClientProvider()).get('$uidProfilePage$uid'),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('${snapshot.error}'));
