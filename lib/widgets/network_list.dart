@@ -127,91 +127,47 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
   }
 
   @override
-  Widget build(BuildContext context) => Stack(
-        alignment: Alignment.bottomRight,
-        children: [
-          EasyRefresh(
-            scrollBehaviorBuilder: (physics) {
-              return ScrollConfiguration.of(context)
-                  .copyWith(physics: physics, scrollbars: false);
-            },
-            header: const MaterialHeader(),
-            footer: const MaterialFooter(),
-            scrollController: _listScrollController,
-            controller: _refreshController,
-            refreshOnStart: true,
-            child: Scrollbar(
+  Widget build(BuildContext context) => EasyRefresh(
+        scrollBehaviorBuilder: (physics) {
+          return ScrollConfiguration.of(context)
+              .copyWith(physics: physics, scrollbars: false);
+        },
+        header: const MaterialHeader(),
+        footer: const MaterialFooter(),
+        scrollController: _listScrollController,
+        controller: _refreshController,
+        refreshOnStart: true,
+        child: Scrollbar(
+          controller: _listScrollController,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: ListView.builder(
               controller: _listScrollController,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: ListView.builder(
-                  controller: _listScrollController,
-                  itemCount: _allData.length,
-                  itemBuilder: (context, index) =>
-                      widget.widgetBuilder(context, _allData[index]),
-                ),
-              ),
-            ),
-            onRefresh: () async {
-              if (!mounted) {
-                return;
-              }
-              _clearData();
-              await _loadData();
-              _refreshController
-                ..finishRefresh()
-                ..resetFooter();
-            },
-            onLoad: () async {
-              if (!mounted) {
-                return;
-              }
-              if (!widget.canFetchMorePages) {
-                _clearData();
-              }
-              await _loadData();
-              _refreshController.finishLoad();
-            },
-          ),
-          AnimatedPositioned(
-            right: 20,
-            bottom: _bottom1,
-            duration: _aniDuration,
-            child: FloatingActionButton(
-              heroTag: 2,
-              child: const Icon(Icons.refresh),
-              onPressed: () async {
-                if (!mounted) {
-                  return;
-                }
-                await _refreshController.callRefresh();
-                setState(() {
-                  _showMenu = false;
-                  _closeMenuWidgets();
-                });
-              },
+              itemCount: _allData.length,
+              itemBuilder: (context, index) =>
+                  widget.widgetBuilder(context, _allData[index]),
             ),
           ),
-          Positioned(
-            right: 20,
-            bottom: 20,
-            child: FloatingActionButton(
-              onPressed: () {
-                setState(() {
-                  _showMenu = !_showMenu;
-                  if (_showMenu) {
-                    _openMenuWidgets();
-                  } else {
-                    _closeMenuWidgets();
-                  }
-                });
-              },
-              child: AnimatedIcon(
-                icon: AnimatedIcons.menu_close,
-                progress: _menuAniController,
-              ),
-            ),
-          ),
-        ],
+        ),
+        onRefresh: () async {
+          if (!mounted) {
+            return;
+          }
+          _clearData();
+          await _loadData();
+          _refreshController
+            ..finishRefresh()
+            ..resetFooter();
+        },
+        onLoad: () async {
+          if (!mounted) {
+            return;
+          }
+          if (!widget.canFetchMorePages) {
+            _clearData();
+          }
+          await _loadData();
+          _refreshController.finishLoad();
+        },
       );
 }
