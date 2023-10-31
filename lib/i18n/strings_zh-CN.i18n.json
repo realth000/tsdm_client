@@ -47,9 +47,10 @@
   "aboutPage": {
     "title": "关于",
     "whatIsThis": "这是？",
-    "description": "跨平台的天使动漫非官方客户端",
+    "description": "跨平台的天使动漫论坛非官方客户端",
     "packageName": "包名",
-    "homepage": "主页",
+    "forumHomepage": "论坛主页",
+    "homepage": "软件主页",
     "findOnGithub": "在Github上",
     "version": "软件版本",
     "flutterVersion": "Flutter版本",

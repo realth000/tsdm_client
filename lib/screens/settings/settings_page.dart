@@ -48,6 +48,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       // Theme mode
       ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        leading: const Icon(Icons.contrast_outlined),
         title: Text(context.t.settingsPage.appearanceSection.themeMode.title),
         subtitle: Text(
           <String>[
@@ -90,6 +91,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       // Language
       ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        leading: const Icon(Icons.translate_outlined),
         title: Text(context.t.settingsPage.appearanceSection.languages.title),
         subtitle: Text(localeName),
         onTap: () async {
@@ -100,6 +102,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
       SectionTitleText(context.t.settingsPage.othersSection.title),
       ListTile(
         contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        leading: const Icon(Icons.info_outline),
         title: Text(context.t.settingsPage.othersSection.about),
         onTap: () async {
           await context.pushNamed(ScreenPaths.about);

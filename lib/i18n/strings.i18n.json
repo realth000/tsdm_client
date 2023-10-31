@@ -47,9 +47,10 @@
   "aboutPage": {
     "title": "About",
     "whatIsThis": "What's This",
-    "description": "Cross-platform unofficial TSDM client",
+    "description": "Cross-platform unofficial client for TSDM forum",
     "packageName": "Package Name",
-    "homepage": "Homepage",
+    "forumHomepage": "Forum Homepage",
+    "homepage": "App Homepage",
     "findOnGithub": "Find on github",
     "version": "App Version",
     "flutterVersion": "Flutter Version",
