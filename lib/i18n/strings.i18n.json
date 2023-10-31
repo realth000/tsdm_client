@@ -38,7 +38,23 @@
         "followSystem": "Follow System",
         "selectLanguage": "Select Language"
       }
+    },
+    "othersSection": {
+      "title": "Others",
+      "about": "About"
     }
+  },
+  "aboutPage": {
+    "title": "About",
+    "whatIsThis": "What's This",
+    "description": "Cross-platform unofficial TSDM client",
+    "packageName": "Package Name",
+    "homepage": "Homepage",
+    "findOnGithub": "Find on github",
+    "version": "App Version",
+    "flutterVersion": "Flutter Version",
+    "dartVersion": "Dart Version",
+    "license": "License"
   },
   "loginPage": {
     "title": "Login TSDM",

@@ -38,7 +38,23 @@
         "followSystem": "跟隨系統",
         "selectLanguage": "選擇語言"
       }
+    },
+    "othersSection": {
+      "title": "其他",
+      "about": "關於"
     }
+  },
+  "aboutPage": {
+    "title": "關於",
+    "whatIsThis": "這是？",
+    "description": "跨平台的天使動漫非官方客戶端",
+    "packageName": "包名",
+    "homepage": "首頁",
+    "findOnGithub": "在Github上",
+    "version": "軟體版本",
+    "flutterVersion": "Flutter版本",
+    "dartVersion": "Dart版本",
+    "license": "版權"
   },
   "loginPage": {
     "title": "登入天使動漫",

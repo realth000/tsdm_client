@@ -7,6 +7,7 @@ import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
+import 'package:tsdm_client/screens/settings/about_page.dart';
 import 'package:tsdm_client/screens/settings/settings_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
@@ -52,6 +53,11 @@ final tClientRouter = GoRouter(
           builder: (_) => const SettingsPage(),
         ),
       ],
+    ),
+    AppRoute(
+      path: ScreenPaths.about,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const AboutPage(),
     ),
     AppRoute(
       path: ScreenPaths.root,

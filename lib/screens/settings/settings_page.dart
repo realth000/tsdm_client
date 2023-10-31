@@ -1,8 +1,10 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
@@ -92,6 +94,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         subtitle: Text(localeName),
         onTap: () async {
           await selectLanguageDialog(context, localeName);
+        },
+      ),
+      // Others
+      SectionTitleText(context.t.settingsPage.othersSection.title),
+      ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        title: Text(context.t.settingsPage.othersSection.about),
+        onTap: () async {
+          await context.pushNamed(ScreenPaths.about);
         },
       ),
     ];

@@ -24,6 +24,10 @@ dependencies:
     sdk: flutter
   fluttertoast: ^8.2.2
   freezed_annotation: ^2.4.1
+  gitsumu:
+    git:
+      url: https://github.com/realth000/gitsumu.git
+      ref: 2ee442ac18ecbeac655b26cfc7603fccc3a78e73
   go_router: ^12.0.0
   hooks_riverpod: ^2.4.4
   isar: ^4.0.0-dev.14
@@ -61,6 +65,8 @@ dependency_overrides:
 
 flutter:
   uses-material-design: true
+  assets:
+    - assets/images/
 
 flutter_launcher_icons:
   image_path: "assets/images/tsdm_client.png"
