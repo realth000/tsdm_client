@@ -55,15 +55,25 @@ extension ParseStringTo on String {
     return int.tryParse(this);
   }
 
+  /// Parse "yyyy-MM-DD HH:mm:ss" or "yyyy-MM-DD" format to string.
+  /// Allow "yyyy-M-D", fill to "yyyy-MM-DD" format.
   DateTime? parseToDateTimeUtc8() {
-    final datePartList = split('-');
+    final list = split(' ');
+    if (list.isEmpty || list.length > 2) {
+      return null;
+    }
+    final timePart = list.elementAtOrNull(1);
+
+    final datePartList = list[0].split('-');
     if (datePartList.length != 3) {
       // Should not happen.
       return DateTime.tryParse(this);
     }
     final formattedDateString =
         '${datePartList[0]}-${datePartList[1].padLeft(2, '0')}-${datePartList[2].padLeft(2, '0')}';
-    return DateTime.tryParse(formattedDateString);
+    return DateTime.tryParse(
+      timePart == null ? formattedDateString : '$formattedDateString $timePart',
+    );
   }
 }
 
