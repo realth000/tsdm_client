@@ -50,8 +50,16 @@ class _TCHomePageState extends ConsumerState<TopicPage>
   Widget build(BuildContext context) {
     final document = ref.read(rootContentProvider.notifier).doc;
 
-    final forumGroupNodeList = document.querySelectorAll(
-        'div.bfff > div#wp > div#ct > div.mn > div.fl.bm > div.bm.bmw.cl');
+    final forumGroupNodeList = [
+      // Style 1: With user avatar
+      ...document.querySelectorAll(
+        'div.bfff > div#wp > div#ct > div.mn > div.fl.bm > div.bm.bmw.cl',
+      ),
+      // Style 2: Without user avatar and with welcome text.
+      ...document.querySelectorAll(
+        'div.mn.miku > div.forumlist > div.forumbox',
+      ),
+    ];
     final groupList = forumGroupNodeList.map(ForumGroup.fromBMNode).toList();
 
     tabController ??= TabController(

@@ -52,7 +52,7 @@ extension EnhanceModification on String {
 
 extension ParseStringTo on String {
   int? parseToInt() {
-    return int.parse(this);
+    return int.tryParse(this);
   }
 
   DateTime? parseToDateTimeUtc8() {

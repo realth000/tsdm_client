@@ -119,6 +119,15 @@ class Forum {
                 ?.firstEndDeepText()
                 ?.split(' ')
                 .elementAtOrNull(1)
+                ?.parseToInt() ??
+            // Style 3: With welcome text and without avatar.
+            //
+            // <em> <font>主题</font> <font>12345</font> </em>
+            //
+            element
+                .querySelector(
+                    'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)')
+                ?.firstEndDeepText()
                 ?.parseToInt();
     final replyCount =
         // Style 1
@@ -137,6 +146,15 @@ class Forum {
                 ?.firstEndDeepText()
                 ?.split(' ')
                 .elementAtOrNull(1)
+                ?.parseToInt() ??
+            // Style 3: With welcome text and without avatar.
+            //
+            // <em> <font>主题</font> <font>12345</font> </em>
+            //
+            element
+                .querySelector(
+                    'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)')
+                ?.firstEndDeepText()
                 ?.parseToInt();
     final threadTodayCount = element
             .querySelector(
@@ -151,7 +169,16 @@ class Forum {
             ?.firstEndDeepText()
             ?.replaceFirst(' (', '')
             .replaceFirst(')', '')
-            .parseToInt();
+            .parseToInt() ??
+        // Style 3: With welcome text and without avatar.
+        //
+        // <em> <font>主题</font> <font>12345</font> </em>
+        //
+        element
+            .querySelector(
+                'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)')
+            ?.firstEndDeepText()
+            ?.parseToInt();
 
     final latestThreadNode =
         element.querySelector('div.tsdm_fl_inf > dl > dd:nth-child(3) > a');
@@ -203,14 +230,21 @@ class Forum {
         ?.split(' ')
         .lastOrNull
         ?.parseToInt();
-    final threadTodayCount = element
-        .querySelector('td:nth-child(2) > h2 > em')
-        ?.firstEndDeepText()
-        ?.split('(')
-        .lastOrNull
-        ?.split(')')
-        .firstOrNull
-        ?.parseToInt();
+    final threadTodayCount =
+        // Style 1: With avatar.
+        element
+                .querySelector('td:nth-child(2) > h2 > em')
+                ?.firstEndDeepText()
+                ?.split('(')
+                .lastOrNull
+                ?.split(')')
+                .firstOrNull
+                ?.parseToInt() ??
+            // Style 2: With welcome text.
+            element
+                .querySelector('td:nth-child(2) > h2 > em:nth-child(3)')
+                ?.firstEndDeepText()
+                ?.parseToInt();
 
     final latestThreadNode = element.querySelector('td:nth-child(4) > div');
     final latestThreadTime = latestThreadNode

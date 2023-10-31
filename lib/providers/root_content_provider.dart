@@ -162,10 +162,17 @@ class CachedRootContent {
   }
 
   Future<void> analyze(Document document, String? username) async {
-    final chartNode = document.querySelector('div.mn');
     final chartZNode = document.querySelector('p.chart.z');
-    final styleNode = chartNode?.querySelector('style');
-    final scriptNode = chartNode?.querySelector('script');
+    final styleNode =
+        // Style 1: Without welcome text.
+        document.querySelector('div.mn > style') ??
+            // Style 2: With welcome text.
+            document.querySelector('div#chart > style');
+    final scriptNode =
+        // Style 1: Without welcome text.
+        document.querySelector('div.mn > script') ??
+            // Style 2: With welcome text
+            document.querySelector('div#chart > script');
     picUrlList = _buildKahrpbaPicUrlList(styleNode);
     picHrefList = _buildKahrpbaPicHrefList(scriptNode);
     if (picUrlList.isEmpty && picHrefList.isEmpty) {
@@ -175,8 +182,11 @@ class CachedRootContent {
       return;
     }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
-    memberInfoList =
-        chartZInfoList?.map((e) => e.text).whereType<String>().toList(growable: false) ?? [];
+    memberInfoList = chartZInfoList
+            ?.map((e) => e.text)
+            .whereType<String>()
+            .toList(growable: false) ??
+        [];
 
     final welcomeNode = document
         .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');

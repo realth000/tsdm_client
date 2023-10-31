@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
@@ -176,7 +177,12 @@ class WelcomeSection extends ConsumerWidget {
                 children: [
                   ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: CachedImageProvider(avatarUrl, context, ref),
+                      backgroundImage: CachedImageProvider(
+                        avatarUrl,
+                        context,
+                        ref,
+                        fallbackImageUrl: noAvatarUrl,
+                      ),
                       backgroundColor: Colors.transparent,
                     ),
                     title: Text(

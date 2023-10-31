@@ -25,7 +25,7 @@ class ForumGroup {
 
   List<Forum> get forumList => _info.forumList;
 
-  /// Build from <div class="bm bmw flg cl"> [element]
+  /// Build from <div class="bm bmw flg cl"> or <div class="forumbox"> [element]
   static _ForumGroupInfo _buildFromBMNode(uh.Element element) {
     final titleNode = element.querySelector('div:nth-child(1) > h2');
     final name = titleNode?.firstEndDeepText();
