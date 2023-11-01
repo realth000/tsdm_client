@@ -71,17 +71,20 @@ class _TCHomePageState extends ConsumerState<TopicPage>
     final groupTabList = groupList.map((e) => Tab(text: e.name)).toList();
     final groupTabBodyList = groupList
         .map(
-          (e) => ListView.builder(
+          (e) => ListView.separated(
             padding: const EdgeInsets.only(
               left: 15,
               right: 15,
               top: 5,
-              bottom: 5,
+              bottom: 20,
             ),
             itemCount: e.forumList.length,
             itemBuilder: (context, index) => ForumCard(
               e.forumList[index],
             ),
+            separatorBuilder: (context, index) {
+              return const SizedBox(width: 10, height: 10);
+            },
           ),
         )
         .toList();
