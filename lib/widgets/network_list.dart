@@ -14,11 +14,14 @@ class NetworkList<T> extends ConsumerStatefulWidget {
     this.fetchUrl, {
     required this.listBuilder,
     required this.widgetBuilder,
+    this.title,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
     this.initialData,
     super.key,
   });
+
+  final String? title;
 
   /// Whether can fetch more pages.
   final bool canFetchMorePages;
@@ -47,8 +50,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
       _NetworkWidgetState<T>();
 }
 
-class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
-    with SingleTickerProviderStateMixin {
+class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
   Future<void> _loadData() async {
     late final uh.Document document;
     if (!_initialized && widget.initialData != null) {
@@ -66,6 +68,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
       return;
     }
     setState(() {
+      print('>> add data : ${data.length}');
       _allData.addAll(data);
     });
     _pageNumber++;
@@ -85,15 +88,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
 
   final _listScrollController = ScrollController();
 
-  late final AnimationController _menuAniController;
-
-  bool _showMenu = false;
-
   late int _pageNumber = widget.pageNumber;
-
-  static const _aniDuration = Duration(milliseconds: 200);
-
-  double _bottom1 = 20;
 
   /// Flag to mark whether has already tried to load data.
   /// If any attempt occurred before, set to true.
@@ -102,72 +97,69 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>>
   @override
   void initState() {
     super.initState();
-    _menuAniController = AnimationController(
-      vsync: this,
-      duration: _aniDuration,
-    );
   }
 
   @override
   void dispose() {
-    _menuAniController.dispose();
     _listScrollController.dispose();
     _refreshController.dispose();
     super.dispose();
   }
 
-  void _openMenuWidgets() {
-    _menuAniController.forward();
-    _bottom1 = 90;
-  }
-
-  void _closeMenuWidgets() {
-    _menuAniController.reverse();
-    _bottom1 = 20;
-  }
-
   @override
-  Widget build(BuildContext context) => EasyRefresh(
-        scrollBehaviorBuilder: (physics) {
-          return ScrollConfiguration.of(context)
-              .copyWith(physics: physics, scrollbars: false);
-        },
-        header: const MaterialHeader(),
-        footer: const MaterialFooter(),
-        scrollController: _listScrollController,
-        controller: _refreshController,
-        refreshOnStart: true,
-        child: Scrollbar(
-          controller: _listScrollController,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: ListView.builder(
-              controller: _listScrollController,
-              itemCount: _allData.length,
-              itemBuilder: (context, index) =>
-                  widget.widgetBuilder(context, _allData[index]),
-            ),
+  Widget build(BuildContext context) => Scrollbar(
+        controller: _listScrollController,
+        child: EasyRefresh(
+          scrollBehaviorBuilder: (physics) {
+            // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+            return ERScrollBehavior(physics)
+                .copyWith(physics: physics, scrollbars: false);
+          },
+          header: const MaterialHeader(position: IndicatorPosition.locator),
+          footer: const ClassicFooter(position: IndicatorPosition.locator),
+          controller: _refreshController,
+          scrollController: _listScrollController,
+          refreshOnStart: true,
+          onRefresh: () async {
+            if (!mounted) {
+              return;
+            }
+            _clearData();
+            await _loadData();
+            _refreshController
+              ..finishRefresh()
+              ..resetFooter();
+          },
+          onLoad: () async {
+            if (!mounted) {
+              return;
+            }
+            if (!widget.canFetchMorePages) {
+              _clearData();
+            }
+            await _loadData();
+            _refreshController.finishLoad();
+          },
+          child: CustomScrollView(
+            controller: _listScrollController,
+            slivers: [
+              SliverAppBar(
+                title: widget.title == null ? null : Text(widget.title!),
+                pinned: true,
+              ),
+              const HeaderLocator.sliver(),
+              if (_allData.isNotEmpty)
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      return widget.widgetBuilder(context, _allData[index]);
+                    },
+                    childCount: _allData.length,
+                  ),
+                ),
+              const FooterLocator.sliver(),
+            ],
           ),
         ),
-        onRefresh: () async {
-          if (!mounted) {
-            return;
-          }
-          _clearData();
-          await _loadData();
-          _refreshController
-            ..finishRefresh()
-            ..resetFooter();
-        },
-        onLoad: () async {
-          if (!mounted) {
-            return;
-          }
-          if (!widget.canFetchMorePages) {
-            _clearData();
-          }
-          await _loadData();
-          _refreshController.finishLoad();
-        },
       );
 }

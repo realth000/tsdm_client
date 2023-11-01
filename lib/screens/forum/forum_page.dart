@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -32,9 +31,9 @@ class ForumPage extends ConsumerStatefulWidget {
 class _ForumPageState extends ConsumerState<ForumPage> {
   @override
   Widget build(BuildContext context) => Scaffold(
-        appBar: AppBar(title: Text(widget.title ?? context.t.appName)),
         body: NetworkList<NormalThread>(
           widget._fetchUrl,
+          title: widget.title ?? '',
           listBuilder: (document) {
             final normalThreadData = <NormalThread>[];
             final threadList =

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
@@ -42,9 +41,10 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
         // 1. `widget.title`: Specified title in widget constructor.
         // 2. `title`: Title found in html document.
         // 3. `context.t.appName`: Default application name.
-        appBar: AppBar(title: Text(widget.title ?? title ?? context.t.appName)),
+        // appBar: AppBar(title: Text(widget.title ?? title ?? '')),
         body: NetworkList<Post>(
           widget._fetchUrl,
+          title: widget.title ?? title ?? '',
           listBuilder: (document) {
             final threadDataNode = document.querySelector('div#postlist');
             if (threadDataNode == null) {
