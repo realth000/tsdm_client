@@ -118,5 +118,11 @@
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"
+  },
+  "networkList": {
+    "actionRefresh": "Refresh",
+    "actionCopyUrl": "Copy Url",
+    "actionOpenInBrowser": "Open In Browser",
+    "actionBackToTop": "Back To Top"
   }
 }

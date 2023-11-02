@@ -2,11 +2,20 @@ import 'dart:async';
 
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+enum _MenuActions {
+  refresh,
+  copyUrl,
+  openInBrowser,
+  backToTop,
+}
 
 /// A widget that retrieve data from network and supports refresh.
 class NetworkList<T> extends ConsumerStatefulWidget {
@@ -107,70 +116,115 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
   }
 
   @override
-  Widget build(BuildContext context) => Scrollbar(
-        controller: _listScrollController,
-        child: EasyRefresh(
-          scrollBehaviorBuilder: (physics) {
-            // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
-            return ERScrollBehavior(physics)
-                .copyWith(physics: physics, scrollbars: false);
-          },
-          header: const MaterialHeader(position: IndicatorPosition.locator),
-          footer: const ClassicFooter(position: IndicatorPosition.locator),
-          controller: _refreshController,
-          scrollController: _listScrollController,
-          refreshOnStart: true,
-          onRefresh: () async {
-            if (!mounted) {
-              return;
-            }
+  Widget build(BuildContext context) => EasyRefresh(
+        scrollBehaviorBuilder: (physics) {
+          // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+          return ERScrollBehavior(physics)
+              .copyWith(physics: physics, scrollbars: false);
+        },
+        header: const MaterialHeader(position: IndicatorPosition.locator),
+        footer: const ClassicFooter(position: IndicatorPosition.locator),
+        controller: _refreshController,
+        scrollController: _listScrollController,
+        refreshOnStart: true,
+        onRefresh: () async {
+          if (!mounted) {
+            return;
+          }
+          _clearData();
+          await _loadData();
+          _refreshController
+            ..finishRefresh()
+            ..resetFooter();
+        },
+        onLoad: () async {
+          if (!mounted) {
+            return;
+          }
+          if (!widget.canFetchMorePages) {
             _clearData();
-            await _loadData();
-            _refreshController
-              ..finishRefresh()
-              ..resetFooter();
-          },
-          onLoad: () async {
-            if (!mounted) {
-              return;
-            }
-            if (!widget.canFetchMorePages) {
-              _clearData();
-            }
-            await _loadData();
-            _refreshController.finishLoad();
-          },
-          child: CustomScrollView(
-            controller: _listScrollController,
-            slivers: [
-              SliverAppBar(
-                title: widget.title == null ? null : Text(widget.title!),
-                pinned: true,
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.launch_outlined),
-                    onPressed: () async {
-                      await launchUrl(
-                        Uri.parse(widget.fetchUrl),
-                        mode: LaunchMode.externalApplication,
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const HeaderLocator.sliver(),
-              if (_allData.isNotEmpty)
-                SliverList(
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      return widget.widgetBuilder(context, _allData[index]);
-                    },
-                    childCount: _allData.length,
-                  ),
+          }
+          await _loadData();
+          _refreshController.finishLoad();
+        },
+        child: CustomScrollView(
+          controller: _listScrollController,
+          slivers: [
+            SliverAppBar(
+              title: widget.title == null ? null : Text(widget.title!),
+              pinned: true,
+              actions: [
+                PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: _MenuActions.refresh,
+                      child: Row(children: [
+                        const Icon(Icons.refresh_outlined),
+                        Text(context.t.networkList.actionRefresh),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.copyUrl,
+                      child: Row(children: [
+                        const Icon(Icons.copy_outlined),
+                        Text(context.t.networkList.actionCopyUrl),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.refresh,
+                      child: Row(children: [
+                        const Icon(Icons.launch_outlined),
+                        Text(context.t.networkList.actionOpenInBrowser),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.backToTop,
+                      child: Row(children: [
+                        const Icon(Icons.vertical_align_top_outlined),
+                        Text(context.t.networkList.actionBackToTop),
+                      ]),
+                    ),
+                  ],
+                  onSelected: (value) async {
+                    switch (value) {
+                      case _MenuActions.refresh:
+                        await _refreshController.callRefresh();
+                      case _MenuActions.copyUrl:
+                        await Clipboard.setData(
+                          ClipboardData(text: widget.fetchUrl),
+                        );
+                      case _MenuActions.openInBrowser:
+                        await launchUrl(
+                          Uri.parse(widget.fetchUrl),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      case _MenuActions.backToTop:
+                        await _listScrollController.animateTo(
+                          0,
+                          curve: Curves.ease,
+                          duration: const Duration(milliseconds: 500),
+                        );
+                    }
+                  },
                 ),
-              const FooterLocator.sliver(),
-            ],
-          ),
+              ],
+            ),
+            const HeaderLocator.sliver(),
+            if (_allData.isNotEmpty)
+              SliverPadding(
+                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                sliver: SliverList.separated(
+                  itemCount: _allData.length,
+                  itemBuilder: (context, index) {
+                    return widget.widgetBuilder(context, _allData[index]);
+                  },
+                  separatorBuilder: (context, index) {
+                    return const SizedBox(width: 10, height: 5);
+                  },
+                ),
+              ),
+            const FooterLocator.sliver(),
+          ],
         ),
       );
 }

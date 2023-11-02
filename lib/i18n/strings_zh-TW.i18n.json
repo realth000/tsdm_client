@@ -118,5 +118,11 @@
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"
+  },
+  "networkList": {
+    "actionRefresh": "刷新",
+    "actionCopyUrl": "複製連結",
+    "actionOpenInBrowser": "在瀏覽器中開啟",
+    "actionBackToTop": "回到頂部"
   }
 }
