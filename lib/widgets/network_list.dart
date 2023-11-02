@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// A widget that retrieve data from network and supports refresh.
 class NetworkList<T> extends ConsumerStatefulWidget {
@@ -145,6 +146,17 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
               SliverAppBar(
                 title: widget.title == null ? null : Text(widget.title!),
                 pinned: true,
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.launch_outlined),
+                    onPressed: () async {
+                      await launchUrl(
+                        Uri.parse(widget.fetchUrl),
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
+                  ),
+                ],
               ),
               const HeaderLocator.sliver(),
               if (_allData.isNotEmpty)
