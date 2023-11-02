@@ -66,6 +66,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
             return Post.buildListFromThreadDataNode(threadDataNode);
           },
           widgetBuilder: (context, post) => PostCard(post),
+          canFetchMorePages: true,
         ),
       );
 }

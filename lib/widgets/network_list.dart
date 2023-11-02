@@ -68,7 +68,6 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
       return;
     }
     setState(() {
-      print('>> add data : ${data.length}');
       _allData.addAll(data);
     });
     _pageNumber++;
