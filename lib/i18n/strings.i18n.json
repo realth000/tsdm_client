@@ -55,7 +55,8 @@
     "version": "App Version",
     "flutterVersion": "Flutter Version",
     "dartVersion": "Dart Version",
-    "license": "License"
+    "license": "License",
+    "copiedToClipboard": "Copied to clipboard"
   },
   "loginPage": {
     "title": "Login TSDM",

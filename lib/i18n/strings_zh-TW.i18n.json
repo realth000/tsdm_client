@@ -55,7 +55,8 @@
     "version": "軟體版本",
     "flutterVersion": "Flutter版本",
     "dartVersion": "Dart版本",
-    "license": "版權"
+    "license": "版權",
+    "copiedToClipboard": "已複製到剪切板"
   },
   "loginPage": {
     "title": "登入天使動漫",

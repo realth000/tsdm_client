@@ -55,7 +55,8 @@
     "version": "软件版本",
     "flutterVersion": "Flutter版本",
     "dartVersion": "Dart版本",
-    "license": "版权"
+    "license": "版权",
+    "copiedToClipboard": "已复制到剪切板"
   },
   "loginPage": {
     "title": "登录天使动漫",

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -8,18 +9,42 @@ import 'package:url_launcher/url_launcher.dart';
 class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
+  static const _gitInfo =
+      '$gitCommitRevisionShort ($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.settingsPage.othersSection.about),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.copy_outlined),
+            onPressed: () async {
+              const data = '''
+## Info
+
+* Version: $_gitInfo
+* Flutter: $flutterVersion $flutterChannel ($flutterFrameworkRevision)
+* Dart: $dartVersion
+''';
+              await Clipboard.setData(const ClipboardData(text: data));
+              if (!context.mounted) {
+                return;
+              }
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: Text(context.t.aboutPage.copiedToClipboard),
+              ));
+            },
+          )
+        ],
       ),
       body: ListView(
         children: [
           Image.asset(
             './assets/images/tsdm_client.png',
-            width: 240,
-            height: 240,
+            width: 192,
+            height: 192,
           ),
           const SizedBox(width: 10, height: 10),
           ListTile(
@@ -38,9 +63,7 @@ class AboutPage extends ConsumerWidget {
             contentPadding: const EdgeInsets.symmetric(horizontal: 18),
             leading: const Icon(Icons.terminal_outlined),
             title: Text(context.t.aboutPage.version),
-            subtitle: const Text(
-              '$gitCommitRevisionShort ($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)',
-            ),
+            subtitle: const Text(_gitInfo),
           ),
           ListTile(
             contentPadding: const EdgeInsets.symmetric(horizontal: 18),
