@@ -171,7 +171,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
                       ]),
                     ),
                     PopupMenuItem(
-                      value: _MenuActions.refresh,
+                      value: _MenuActions.openInBrowser,
                       child: Row(children: [
                         const Icon(Icons.launch_outlined),
                         Text(context.t.networkList.actionOpenInBrowser),
