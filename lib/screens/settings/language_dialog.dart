@@ -22,6 +22,10 @@ class LanguageDialog extends ConsumerWidget {
                 if (value != null) {
                   LocaleSettings.useDeviceLocale();
                   await ref.read(appSettingsProvider.notifier).setLocale('');
+                  if (!context.mounted) {
+                    return;
+                  }
+                  Navigator.pop(context);
                 }
               },
               value: '',
@@ -37,6 +41,10 @@ class LanguageDialog extends ConsumerWidget {
                   await ref
                       .read(appSettingsProvider.notifier)
                       .setLocale(e.languageTag);
+                  if (!context.mounted) {
+                    return;
+                  }
+                  Navigator.pop(context);
                 },
               ),
             ),
