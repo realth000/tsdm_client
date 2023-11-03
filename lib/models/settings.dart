@@ -19,6 +19,8 @@ class Settings with _$Settings {
     required String loginUsername,
     required int themeMode,
     required String locale,
+    required String checkInFeeling,
+    required String checkInMessage,
   }) = _Settings;
 }
 
@@ -34,6 +36,8 @@ const settingsWindowInCenter = 'windowInCenter';
 const settingsLoginUsername = 'loginUsername';
 const settingsThemeMode = 'ThemeMode';
 const settingsLocale = 'locale';
+const settingsCheckInFeeling = 'checkInFeeling';
+const settingsCheckInMessage = 'checkInMessage';
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsMap = <String, Type>{
@@ -49,4 +53,6 @@ const settingsMap = <String, Type>{
   settingsLoginUsername: String,
   settingsThemeMode: int,
   settingsLocale: String,
+  settingsCheckInFeeling: String,
+  settingsCheckInMessage: String,
 };

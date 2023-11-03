@@ -39,6 +39,11 @@
         "selectLanguage": "選擇語言"
       }
     },
+    "checkInSection": {
+      "title": "簽到",
+      "feeling": "心情",
+      "anythingToSay": "有什麼想說的嗎？"
+    },
     "othersSection": {
       "title": "其他",
       "about": "關於"
@@ -125,5 +130,16 @@
     "actionCopyUrl": "複製連結",
     "actionOpenInBrowser": "在瀏覽器中開啟",
     "actionBackToTop": "回到頂部"
+  },
+  "feelingList": {
+    "happy": "開心",
+    "sad": "難過",
+    "depressed": "鬱悶",
+    "boring": "無聊",
+    "angry": "怒",
+    "speechless": "無言",
+    "struggling": "奮鬥",
+    "lazy": "慵懶",
+    "unlucky": "衰"
   }
 }

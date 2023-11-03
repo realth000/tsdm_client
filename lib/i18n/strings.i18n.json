@@ -39,6 +39,11 @@
         "selectLanguage": "Select Language"
       }
     },
+    "checkInSection": {
+      "title": "Check In",
+      "feeling": "Feeling",
+      "anythingToSay": "Anything to say?"
+    },
     "othersSection": {
       "title": "Others",
       "about": "About"
@@ -125,5 +130,16 @@
     "actionCopyUrl": "Copy Url",
     "actionOpenInBrowser": "Open In Browser",
     "actionBackToTop": "Back To Top"
+  },
+  "feelingList": {
+    "happy": "Happy",
+    "sad": "Sad",
+    "depressed": "Depressed",
+    "boring": "Boring",
+    "angry": "Angry",
+    "speechless": "Speechless",
+    "struggling": "Struggling",
+    "lazy": "Lazy",
+    "unlucky": "Unlucky"
   }
 }

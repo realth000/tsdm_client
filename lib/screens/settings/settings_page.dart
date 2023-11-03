@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/models/check_in_feeling.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/screens/settings/check_in_dialog.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
@@ -34,8 +36,26 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
   }
 
+  Future<void> _showSetCheckInFeelingDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => const CheckInFeelingDialog(),
+    );
+  }
+
+  Future<void> _showSetCheckInMessageDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => CheckInMessageDialog(),
+    );
+  }
+
   List<Widget> _buildAppearanceSection(BuildContext context) {
     final settingsLocale = ref.watch(appSettingsProvider).locale;
+
+    final checkInFeeling = ref.watch(appSettingsProvider).checkInFeeling;
+    final checkInMessage = ref.watch(appSettingsProvider).checkInMessage;
+
     final locale = AppLocale.values
         .firstWhereOrNull((v) => v.languageTag == settingsLocale);
     final localeName = locale == null
@@ -96,6 +116,25 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         subtitle: Text(localeName),
         onTap: () async {
           await selectLanguageDialog(context, localeName);
+        },
+      ),
+      SectionTitleText(context.t.settingsPage.checkInSection.title),
+      ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        leading: const Icon(Icons.emoji_emotions_outlined),
+        title: Text(context.t.settingsPage.checkInSection.feeling),
+        subtitle: Text(CheckInFeeling.from(checkInFeeling).translate(context)),
+        onTap: () async {
+          await _showSetCheckInFeelingDialog(context);
+        },
+      ),
+      ListTile(
+        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+        leading: const Icon(Icons.textsms_outlined),
+        title: Text(context.t.settingsPage.checkInSection.anythingToSay),
+        subtitle: Text(checkInMessage),
+        onTap: () async {
+          await _showSetCheckInMessageDialog(context);
         },
       ),
       // Others

@@ -39,6 +39,11 @@
         "selectLanguage": "选择语言"
       }
     },
+    "checkInSection": {
+      "title": "签到",
+      "feeling": "心情",
+      "anythingToSay": "有什么想说的吗？"
+    },
     "othersSection": {
       "title": "其他",
       "about": "关于"
@@ -125,5 +130,16 @@
     "actionCopyUrl": "复制链接",
     "actionOpenInBrowser": "在浏览器中打开",
     "actionBackToTop": "回到顶部"
+  },
+  "feelingList": {
+    "happy": "开心",
+    "sad": "难过",
+    "depressed": "郁闷",
+    "boring": "无聊",
+    "angry": "怒",
+    "speechless": "无语",
+    "struggling": "奋斗",
+    "lazy": "慵懒",
+    "unlucky": "衰"
   }
 }

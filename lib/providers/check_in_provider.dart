@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/models/check_in_feeling.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
@@ -34,16 +35,22 @@ class CheckIn extends _$CheckIn {
     return _isCheckingIn;
   }
 
-  Future<(CheckInResult result, String? message)> checkIn() async {
+  Future<(CheckInResult result, String? message)> checkIn(
+    CheckInFeeling feeling,
+    String message,
+  ) async {
     _isCheckingIn = true;
     ref.invalidateSelf();
-    final result = await _checkIn();
+    final result = await _checkIn(feeling, message);
     _isCheckingIn = false;
     ref.invalidateSelf();
     return result;
   }
 
-  Future<(CheckInResult result, String? message)> _checkIn() async {
+  Future<(CheckInResult result, String? message)> _checkIn(
+    CheckInFeeling feeling,
+    String message,
+  ) async {
     final authState = ref.read(authProvider);
     if (authState != AuthState.authorized) {
       debug('failed to check in: not authorized');
@@ -68,9 +75,9 @@ class CheckIn extends _$CheckIn {
 
     final body = {
       'formhash': formHash,
-      'qdxq': 'ng',
+      'qdxq': feeling.toString(),
       'qdmode': 1,
-      'todaysay': '签到',
+      'todaysay': message,
       'fastreply': 1,
     };
 

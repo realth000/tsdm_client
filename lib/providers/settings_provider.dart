@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/database/cookie.dart';
 import 'package:tsdm_client/models/settings.dart';
@@ -38,6 +39,10 @@ class AppSettings extends _$AppSettings {
           storage.getString(settingsLoginUsername) ?? _defaultLoginUsername,
       themeMode: storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
       locale: storage.getString(settingsLocale) ?? _defaultLocale,
+      checkInFeeling:
+          storage.getString(settingsCheckInFeeling) ?? _defaultCheckInFeeling,
+      checkInMessage:
+          storage.getString(settingsCheckInMessage) ?? _defaultCheckInMessage,
     );
   }
 
@@ -85,6 +90,12 @@ class AppSettings extends _$AppSettings {
   ///
   /// Empty means follow system locale.
   static const _defaultLocale = '';
+
+  /// Default feeling when check in
+  static const _defaultCheckInFeeling = 'kx';
+
+  /// Default check in message when check in
+  static const _defaultCheckInMessage = '每日签到';
 
   Storage _getStorage() {
     return ref.read(appStorageProvider);
@@ -174,5 +185,17 @@ class AppSettings extends _$AppSettings {
     }
     await storage.saveString(settingsLocale, locale);
     state = state.copyWith(locale: locale);
+  }
+
+  Future<void> setCheckInFeeling(String feeling) async {
+    final storage = _getStorage();
+    await storage.saveString(settingsCheckInFeeling, feeling);
+    state = state.copyWith(checkInFeeling: feeling);
+  }
+
+  Future<void> setCheckInMessage(String message) async {
+    final storage = _getStorage();
+    await storage.saveString(settingsCheckInMessage, message.truncate(50));
+    state = state.copyWith(checkInMessage: message.truncate(50));
   }
 }
