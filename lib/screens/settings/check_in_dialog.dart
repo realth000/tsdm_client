@@ -51,6 +51,7 @@ class CheckInMessageDialog extends ConsumerStatefulWidget {
 }
 
 class _CheckInMessageDialogState extends ConsumerState<CheckInMessageDialog> {
+  final formKey = GlobalKey<FormState>();
   final textController = TextEditingController();
 
   static const _maxTextLength = 50;
@@ -72,17 +73,23 @@ class _CheckInMessageDialogState extends ConsumerState<CheckInMessageDialog> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Expanded(
-            child: TextField(
-              autofocus: true,
-              onChanged: (value) {
-                setState(() {
-                  textRestLength = _maxTextLength - value.length;
-                });
-              },
-              controller: textController,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(_maxTextLength)
-              ],
+            child: Form(
+              key: formKey,
+              child: TextFormField(
+                autofocus: true,
+                validator: (v) => v == null || v.length > 3
+                    ? null
+                    : context.t.checkInForm.shouldMoreThan3,
+                onChanged: (value) {
+                  setState(() {
+                    textRestLength = _maxTextLength - value.length;
+                  });
+                },
+                controller: textController,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(_maxTextLength)
+                ],
+              ),
             ),
           ),
           const SizedBox(width: 20, height: 20),
@@ -99,6 +106,12 @@ class _CheckInMessageDialogState extends ConsumerState<CheckInMessageDialog> {
         TextButton(
           child: Text(context.t.general.ok),
           onPressed: () async {
+            // Validate
+            if (formKey.currentState == null ||
+                !(formKey.currentState!).validate()) {
+              return;
+            }
+
             await ref
                 .read(appSettingsProvider.notifier)
                 .setCheckInMessage(textController.text);

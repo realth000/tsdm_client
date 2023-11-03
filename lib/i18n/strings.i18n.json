@@ -131,6 +131,9 @@
     "actionOpenInBrowser": "Open In Browser",
     "actionBackToTop": "Back To Top"
   },
+  "checkInForm": {
+    "shouldMoreThan3": "Should more than 3"
+  },
   "feelingList": {
     "happy": "Happy",
     "sad": "Sad",

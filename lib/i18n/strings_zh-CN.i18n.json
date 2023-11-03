@@ -131,6 +131,9 @@
     "actionOpenInBrowser": "在浏览器中打开",
     "actionBackToTop": "回到顶部"
   },
+  "checkInForm": {
+    "shouldMoreThan3": "必须多于三个字"
+  },
   "feelingList": {
     "happy": "开心",
     "sad": "难过",
