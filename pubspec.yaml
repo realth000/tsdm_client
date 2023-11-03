@@ -1,6 +1,6 @@
 name: tsdm_client
 description: 使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端
-homepage: https://github.com/realth000/tsdm_client
+repository: https://github.com/realth000/tsdm_client
 publish_to: 'none'
 
 version: 0.0.1+1
@@ -11,7 +11,7 @@ environment:
 dependencies:
   card_swiper: ^3.0.1
   # Blocked by flutter
-  collection: ^1.17.2
+  collection: any
   cookie_jar: ^4.0.8
   cupertino_icons: ^1.0.6
   dio: ^5.3.3
@@ -27,15 +27,15 @@ dependencies:
   gitsumu:
     git:
       url: https://github.com/realth000/gitsumu.git
-      ref: 2ee442ac18ecbeac655b26cfc7603fccc3a78e73
+      ref: 7d26e1c920d1c47d64e208063823ea971358a3aa
   go_router: ^12.0.0
-  hooks_riverpod: ^2.4.4
+  hooks_riverpod: ^2.4.5
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
   path_provider: ^2.1.1
   responsive_framework: ^1.1.1
-  riverpod_annotation: ^2.2.1
+  riverpod_annotation: ^2.3.0
   slang: ^3.25.0
   slang_flutter: ^3.25.0
   surf_lint_rules: ^3.0.0
@@ -45,7 +45,7 @@ dependencies:
 
 dev_dependencies:
   build_runner: ^2.4.6
-  custom_lint: ^0.5.5
+  custom_lint: ^0.5.6
   flutter_launcher_icons: ^0.13.1
   # Blocked by surf_lint_rules
   flutter_lints: ^2.0.1
@@ -56,7 +56,7 @@ dev_dependencies:
   # Blocked by surf_lint_rules
   lints: ^2.1.1
   riverpod_generator: ^3.0.0-dev.2
-  riverpod_lint: ^2.3.2
+  riverpod_lint: ^2.3.3
   slang_build_runner: ^3.25.0
 
 dependency_overrides:
