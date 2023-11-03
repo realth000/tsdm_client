@@ -20,6 +20,3 @@ targets:
       gitsumu|info:
         generate_for:
           - lib/utils/git_info.dart
-        options:
-          build_extensions:
-            '^lib/{{}}.dart': 'lib/generated/{{}}.git.dart'

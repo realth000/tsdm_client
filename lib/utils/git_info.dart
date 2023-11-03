@@ -1,1 +1,1 @@
-part '../generated/utils/git_info.git.dart';
+part '../generated/utils/git_info.g.dart';
