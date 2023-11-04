@@ -1,11 +1,13 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -61,6 +63,55 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 }
 
 class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
+  final _allData = <T>[];
+
+  final _refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+    controlFinishLoad: true,
+  );
+
+  final _listScrollController = ScrollController();
+
+  late int _pageNumber = widget.pageNumber;
+
+  /// Flag to mark whether has already tried to load data.
+  /// If any attempt occurred before, set to true.
+  bool _initialized = false;
+
+  bool _inLastPage = false;
+
+  /// Check whether at the last page.
+  ///
+  /// When already in the last page, current page mark (the <strong> node) is
+  /// the last child of pagination indicator node.
+  ///
+  /// <div class=pg>
+  ///   <a class="url_to_page1"></a>
+  ///   <a class="url_to_page2"></a>
+  ///   <a class="url_to_page3"></a>
+  ///   <strong>4</strong>           <-  Here we are in the last page
+  /// </div>
+  bool canLoadMore(uh.Document document) {
+    final paginationNode = document.querySelector(
+        'div#ct > div#ct_shell > div#pgt.pgs > div.pgt > div.pg');
+    if (paginationNode == null) {
+      debug('failed to check can load more: pagination node not found');
+      return false;
+    }
+
+    final lastNode = paginationNode.children.lastOrNull;
+    if (lastNode == null) {
+      debug('failed to check can load more: empty pagination list');
+      return false;
+    }
+
+    // If we are in the last page, the last node should be a "strong" type node.
+    if (lastNode.nodeType != uh.Node.ELEMENT_NODE) {
+      return false;
+    }
+    return lastNode.localName != 'strong';
+  }
+
   Future<void> _loadData() async {
     late final uh.Document document;
     if (!_initialized && widget.initialData != null) {
@@ -81,27 +132,15 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
       _allData.addAll(data);
     });
     _pageNumber++;
+
+    // Update whether we are in the last page.
+    _inLastPage = !canLoadMore(document);
   }
 
   void _clearData() {
     _pageNumber = 1;
     _allData.clear();
   }
-
-  final _allData = <T>[];
-
-  final _refreshController = EasyRefreshController(
-    controlFinishRefresh: true,
-    controlFinishLoad: true,
-  );
-
-  final _listScrollController = ScrollController();
-
-  late int _pageNumber = widget.pageNumber;
-
-  /// Flag to mark whether has already tried to load data.
-  /// If any attempt occurred before, set to true.
-  bool _initialized = false;
 
   @override
   void initState() {
@@ -141,6 +180,12 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
           if (!mounted) {
             return;
           }
+          if (_inLastPage) {
+            debug('already in last page');
+            _refreshController.finishLoad(IndicatorResult.noMore);
+            return;
+          }
+
           if (!widget.canFetchMorePages) {
             _clearData();
           }
