@@ -238,6 +238,14 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
                         await Clipboard.setData(
                           ClipboardData(text: widget.fetchUrl),
                         );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            context.t.aboutPage.copiedToClipboard,
+                          ),
+                        ));
                       case _MenuActions.openInBrowser:
                         await launchUrl(
                           Uri.parse(widget.fetchUrl),
