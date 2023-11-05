@@ -10,6 +10,7 @@ import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/storage_provider.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
+import 'package:tsdm_client/utils/global_keys.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,6 +60,7 @@ class TClientApp extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
       routerConfig: tClientRouter,
+      scaffoldMessengerKey: globalSnackbarKey,
     );
   }
 }

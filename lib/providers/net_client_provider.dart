@@ -1,9 +1,12 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/cookie_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/global_keys.dart';
 
 part '../generated/providers/net_client_provider.g.dart';
 
@@ -31,10 +34,41 @@ class NetClient extends _$NetClient {
       storage: ref.read(cookieProvider(username: username)),
     );
 
-    dio.interceptors.add(CookieManager(cookieJar));
+    dio.interceptors
+      ..add(CookieManager(cookieJar))
+      ..add(_ErrorHandler());
 
     return dio;
   }
 
   late final Dio dio;
+}
+
+/// Handle exceptions during web request.
+class _ErrorHandler extends Interceptor {
+  @override
+  void onError(
+    DioException err,
+    ErrorInterceptorHandler handler,
+  ) {
+    debug('${err.type}: ${err.message}');
+
+    if (err.type == DioExceptionType.badResponse) {
+      // Till now we can do nothing if encounter a bad response.
+    }
+
+    // TODO: Retry if we need this error kind.
+    if (err.type == DioExceptionType.unknown) {
+      // Likely an error in SSL handshake.
+      // Show a snackbar to notify this error.
+      globalSnackbarKey.currentState?.showSnackBar(SnackBar(
+        content: Text('$err'),
+      ));
+      handler.reject(err);
+      return;
+    }
+
+    // Do not block error handling.
+    handler.next(err);
+  }
 }
