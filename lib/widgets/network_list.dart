@@ -80,22 +80,39 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
 
   bool _inLastPage = false;
 
-  /// Check whether at the last page.
+  /// Check whether in the last page in a web page (consists a series of pages).
   ///
   /// When already in the last page, current page mark (the <strong> node) is
   /// the last child of pagination indicator node.
   ///
-  /// <div class=pg>
-  ///   <a class="url_to_page1"></a>
-  ///   <a class="url_to_page2"></a>
-  ///   <a class="url_to_page3"></a>
-  ///   <strong>4</strong>           <-  Here we are in the last page
+  /// <div class="pgt">
+  ///   <div class="pg">
+  ///     <a class="url_to_page1"></a>
+  ///     <a class="url_to_page2"></a>
+  ///     <a class="url_to_page3"></a>
+  ///     <strong>4</strong>           <-  Here we are in the last page
+  ///   </div>
   /// </div>
+  ///
+  /// Typically when the web page only have one page, there is no pg node:
+  ///
+  /// <div class="pgt">
+  ///   <span>...</span>
+  /// </div>
+  ///
+  /// Indicating can not load more.
   bool canLoadMore(uh.Document document) {
-    final paginationNode = document.querySelector(
-        'div#ct > div#ct_shell > div#pgt.pgs > div.pgt > div.pg');
+    final barNode =
+        document.querySelector('div#ct > div#ct_shell > div#pgt.pgs > div.pgt');
+
+    if (barNode == null) {
+      debug('failed to check can load more: node not found');
+      return false;
+    }
+
+    final paginationNode = barNode.querySelector('div.pg');
     if (paginationNode == null) {
-      debug('failed to check can load more: pagination node not found');
+      // Only one page, can not load more.
       return false;
     }
 
