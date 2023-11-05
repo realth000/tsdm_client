@@ -8,6 +8,7 @@ import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/settings/check_in_dialog.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
+import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
 class SettingsPage extends ConsumerStatefulWidget {
@@ -46,16 +47,12 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Future<void> _showSetCheckInMessageDialog(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (context) => CheckInMessageDialog(),
+      builder: (context) => const CheckInMessageDialog(),
     );
   }
 
   List<Widget> _buildAppearanceSection(BuildContext context) {
     final settingsLocale = ref.watch(appSettingsProvider).locale;
-
-    final checkInFeeling = ref.watch(appSettingsProvider).checkInFeeling;
-    final checkInMessage = ref.watch(appSettingsProvider).checkInMessage;
-
     final locale = AppLocale.values
         .firstWhereOrNull((v) => v.languageTag == settingsLocale);
     final localeName = locale == null
@@ -63,11 +60,9 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         : context.t.locale;
 
     return [
-      // Appearance
       SectionTitleText(context.t.settingsPage.appearanceSection.title),
       // Theme mode
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+      SectionListTile(
         leading: const Icon(Icons.contrast_outlined),
         title: Text(context.t.settingsPage.appearanceSection.themeMode.title),
         subtitle: Text(
@@ -109,8 +104,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
         ),
       ),
       // Language
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+      SectionListTile(
         leading: const Icon(Icons.translate_outlined),
         title: Text(context.t.settingsPage.appearanceSection.languages.title),
         subtitle: Text(localeName),
@@ -118,9 +112,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await selectLanguageDialog(context, localeName);
         },
       ),
+    ];
+  }
+
+  List<Widget> _buildCheckInSections(BuildContext context) {
+    final checkInFeeling = ref.watch(appSettingsProvider).checkInFeeling;
+    final checkInMessage = ref.watch(appSettingsProvider).checkInMessage;
+
+    return [
       SectionTitleText(context.t.settingsPage.checkInSection.title),
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+      // Feeling
+      SectionListTile(
         leading: const Icon(Icons.emoji_emotions_outlined),
         title: Text(context.t.settingsPage.checkInSection.feeling),
         subtitle: Text(CheckInFeeling.from(checkInFeeling).translate(context)),
@@ -128,8 +130,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await _showSetCheckInFeelingDialog(context);
         },
       ),
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+      // Message
+      SectionListTile(
         leading: const Icon(Icons.textsms_outlined),
         title: Text(context.t.settingsPage.checkInSection.anythingToSay),
         subtitle: Text(checkInMessage),
@@ -137,10 +139,14 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await _showSetCheckInMessageDialog(context);
         },
       ),
-      // Others
+    ];
+  }
+
+  List<Widget> _buildOtherSection(BuildContext context) {
+    return [
       SectionTitleText(context.t.settingsPage.othersSection.title),
-      ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+      // About
+      SectionListTile(
         leading: const Icon(Icons.info_outline),
         title: Text(context.t.settingsPage.othersSection.about),
         onTap: () async {
@@ -160,6 +166,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           controller: scrollController,
           children: [
             ..._buildAppearanceSection(context),
+            ..._buildCheckInSections(context),
+            ..._buildOtherSection(context),
           ],
         ),
       ),

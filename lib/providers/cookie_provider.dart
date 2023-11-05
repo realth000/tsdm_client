@@ -83,7 +83,6 @@ class Cookie extends _$Cookie {
       return CookieData(_cookieStream!.sink);
     }
 
-    debug('cookie init load cookie username=$username');
     _username = username;
     // Has user login before, load cookie.
     final databaseCookie =
@@ -94,9 +93,6 @@ class Cookie extends _$Cookie {
       );
       return CookieData(_cookieStream!.sink);
     }
-    debug(
-      'auto load user cookie from database: username=$_username',
-    );
 
     return CookieData.withData(
       username: _username!,
