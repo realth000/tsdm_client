@@ -37,10 +37,10 @@ packages:
     dependency: transitive
     description:
       name: args
-      sha256: c372bb384f273f0c2a8aaaa226dad84dc27c8519a691b888725dec59518ad53a
+      sha256: eef6c46b622e0494a36c5a12d10d77fb4e855501a91c1b9ef9339326e58f0596
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.1"
+    version: "2.4.2"
   async:
     dependency: transitive
     description:
@@ -433,11 +433,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "7d26e1c920d1c47d64e208063823ea971358a3aa"
-      resolved-ref: "7d26e1c920d1c47d64e208063823ea971358a3aa"
+      ref: "5898d693473a0430f776a4878d70251dbe3e6603"
+      resolved-ref: "5898d693473a0430f776a4878d70251dbe3e6603"
       url: "https://github.com/realth000/gitsumu.git"
     source: git
-    version: "1.0.0"
+    version: "0.0.1"
   glob:
     dependency: transitive
     description:
@@ -450,10 +450,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: e156bc1b2088eb5ece9351bccd48c3e1719a4858eacbd44e59162e98a68205d1
+      sha256: "5098760d7478aabfe682a462bf121d61bc5dbe5df5aac8dad733564a0aee33bc"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "12.0.1"
+    version: "12.1.0"
   graphs:
     dependency: transitive
     description:
