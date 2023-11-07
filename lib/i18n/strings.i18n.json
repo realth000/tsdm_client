@@ -121,6 +121,10 @@
     "checkInNextLevelDays": "Days To Next Check-in Level",
     "checkInTodayStatus": "Check-in Today Status"
   },
+  "threadPage": {
+    "sendReplyHint": "Reply...",
+    "sendReply": "Reply"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

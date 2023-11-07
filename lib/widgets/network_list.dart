@@ -30,6 +30,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
     this.canFetchMorePages = false,
     this.pageNumber = 1,
     this.initialData,
+    this.replyFormHashCallback,
     super.key,
   });
 
@@ -43,6 +44,9 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
+
+  final Function(String postTime, String formHash, String subject)?
+      replyFormHashCallback;
 
   /// Build [Widget] from given [uh.Document].
   ///
@@ -152,6 +156,39 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
 
     // Update whether we are in the last page.
     _inLastPage = !canLoadMore(document);
+
+    // If this can reply, call the callback.
+    if (widget.replyFormHashCallback != null) {
+      final inputNodeList = document.querySelectorAll('input');
+      if (inputNodeList.isEmpty) {
+        debug('failed to get reply form hash: input not found');
+        return;
+      }
+
+      String? postTime;
+      String? formHash;
+      String? subject;
+      for (final node in inputNodeList) {
+        if (!node.attributes.containsKey('name')) {
+          continue;
+        }
+        final name = node.attributes['name'];
+        if (name == 'posttime') {
+          postTime = node.attributes['value'];
+        } else if (name == 'formhash') {
+          formHash = node.attributes['value'];
+        } else if (name == 'subject') {
+          subject = node.attributes['value'];
+        }
+      }
+
+      if (postTime == null || formHash == null || subject == null) {
+        debug(
+            'failed to get reply form hash: postTime=$postTime formHash=$formHash subject=$subject');
+        return;
+      }
+      widget.replyFormHashCallback!(postTime, formHash, subject);
+    }
   }
 
   void _clearData() {

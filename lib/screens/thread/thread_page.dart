@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/screens/thread/reply_bar.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_list.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
@@ -35,6 +36,8 @@ class ThreadPage extends ConsumerStatefulWidget {
 class _ThreadPageState extends ConsumerState<ThreadPage> {
   String? title;
 
+  (String, String, String)? _replyParameters;
+
   @override
   Widget build(BuildContext context) => Scaffold(
         // Title priority:
@@ -67,6 +70,15 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
           },
           widgetBuilder: (context, post) => PostCard(post),
           canFetchMorePages: true,
+          replyFormHashCallback: (postTime, formHash, subject) {
+            _replyParameters = (postTime, formHash, subject);
+          },
+        ),
+        bottomNavigationBar: ReplyBar(
+          sendCallBack: (message) async {
+            print('>>> formHash: $_replyParameters');
+            return false;
+          },
         ),
       );
 }

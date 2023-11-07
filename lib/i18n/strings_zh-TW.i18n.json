@@ -121,6 +121,10 @@
     "checkInNextLevelDays": "距離下個簽到等級天數",
     "checkInTodayStatus": "今日簽到狀態"
   },
+  "threadPage": {
+    "sendReplyHint": "回覆",
+    "sendReply": "傳送"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"
