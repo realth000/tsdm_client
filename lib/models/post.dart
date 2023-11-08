@@ -98,7 +98,9 @@ class Post {
   ///
   /// [element]'s id is "postlist".
   static List<Post> buildListFromThreadDataNode(uh.Element element) {
-    final threadDataRootNode = element.childAtOrNull(2);
+    final threadDataRootNode = element.childAtOrNull(2) ??
+        // Style 5
+        element.querySelector('div.bm')?.childAtOrNull(1);
     var currentElement = threadDataRootNode;
     final tdPostList = <Post>[];
     while (currentElement != null) {

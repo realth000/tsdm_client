@@ -92,8 +92,11 @@ class Forum {
   bool get isExpanded =>
       latestThreadTitle != null && latestThreadUserName != null;
 
+  // <td class="fl_g"> node
   static _ForumInfo _buildForumInfo(uh.Element element) {
-    final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a');
+    final titleNode = element.querySelector('div.tsdm_fl_inf > dl > dt > a') ??
+        // Style 5
+        element.querySelector('dl > dt > a');
     final name = titleNode?.firstEndDeepText();
     final url = titleNode?.firstHref();
     final forumID = url?.split('fid=').lastOrNull?.parseToInt();
@@ -128,6 +131,13 @@ class Forum {
                 .querySelector(
                     'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)')
                 ?.firstEndDeepText()
+                ?.parseToInt() ??
+            // Style 5
+            element
+                .querySelector('dl > dd > em:nth-child(1)')
+                ?.firstEndDeepText()
+                ?.split(' ')
+                .lastOrNull
                 ?.parseToInt();
     final replyCount =
         // Style 1
@@ -155,6 +165,14 @@ class Forum {
                 .querySelector(
                     'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)')
                 ?.firstEndDeepText()
+                ?.parseToInt() ??
+
+            // Style 5
+            element
+                .querySelector('dl > dd > em:nth-child(2)')
+                ?.firstEndDeepText()
+                ?.split(' ')
+                .lastOrNull
                 ?.parseToInt();
     final threadTodayCount = element
             .querySelector(
@@ -178,6 +196,15 @@ class Forum {
             .querySelector(
                 'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)')
             ?.firstEndDeepText()
+            ?.parseToInt() ??
+        // Style 5
+        element
+            .querySelector('dl > dt > em')
+            ?.firstEndDeepText()
+            ?.split('(')
+            .lastOrNull
+            ?.split(')')
+            .firstOrNull
             ?.parseToInt();
 
     final latestThreadNode =

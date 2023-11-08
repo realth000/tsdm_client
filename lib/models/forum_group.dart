@@ -27,7 +27,9 @@ class ForumGroup {
 
   /// Build from <div class="bm bmw flg cl"> or <div class="forumbox"> [element]
   static _ForumGroupInfo _buildFromBMNode(uh.Element element) {
-    final titleNode = element.querySelector('div:nth-child(1) > h2');
+    final titleNode = element.querySelector('div:nth-child(1) > h2') ??
+        // Style 5
+        element.querySelector('div.title_r > h2 > a');
     final name = titleNode?.firstEndDeepText();
     final url = titleNode?.attributes['href'];
 

@@ -53,7 +53,7 @@ class _TCHomePageState extends ConsumerState<TopicPage>
     final forumGroupNodeList = [
       // Style 1: With user avatar
       ...document.querySelectorAll(
-        'div.bfff > div#wp > div#ct > div.mn > div.fl.bm > div.bm.bmw.cl',
+        'div#ct > div.mn > div.fl.bm > div.bm.bmw.cl',
       ),
       // Style 2: Without user avatar and with welcome text.
       ...document.querySelectorAll(
