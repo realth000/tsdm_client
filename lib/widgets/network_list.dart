@@ -195,7 +195,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
             'failed to get reply form hash: fid=$fid postTime=$postTime formHash=$formHash subject=$subject');
         return;
       }
-      widget.replyFormHashCallback!(ReplyParameters(
+      await widget.replyFormHashCallback!(ReplyParameters(
         fid: fid,
         postTime: postTime,
         formHash: formHash,

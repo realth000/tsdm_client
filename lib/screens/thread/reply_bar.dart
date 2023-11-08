@@ -16,6 +16,9 @@ class ReplyBar extends ConsumerStatefulWidget {
 class _ReplyBarState extends ConsumerState<ReplyBar> {
   bool isExpanded = false;
   bool canSendReply = false;
+
+  /// Indicate whether sending reply.
+  bool isSendingReply = false;
   final _replyFocusNode = FocusNode();
   final _replyController = TextEditingController();
 
@@ -89,11 +92,23 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               ElevatedButton(
-                child: const Icon(Icons.send_outlined),
-                onPressed: canSendReply
+                child: isSendingReply
+                    ? const SizedBox(
+                        width: 16,
+                        height: 16,
+                        child: CircularProgressIndicator(strokeWidth: 3),
+                      )
+                    : const Icon(Icons.send_outlined),
+                onPressed: canSendReply && !isSendingReply
                     ? () async {
+                        setState(() {
+                          isSendingReply = true;
+                        });
                         final sendSuccess =
                             await widget.sendCallBack(_replyController.text);
+                        setState(() {
+                          isSendingReply = false;
+                        });
                         if (sendSuccess) {
                           _replyController.clear();
                         }
