@@ -7,7 +7,8 @@
       <br>
       tsdm_client
     </h1>
-    <h4>使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端</h4>
+    <!--Do NOT close the <h4> tag here to prevent links between badges-->
+    <h4>使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端<h4>
   </p>
   <p>
     <a href="https://github.com/realth000/tsdm_client/releases">
