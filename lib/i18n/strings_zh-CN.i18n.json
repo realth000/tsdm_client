@@ -123,7 +123,9 @@
   },
   "threadPage": {
     "sendReplyHint": "回复",
-    "sendReply": "发送"
+    "sendReply": "发送",
+    "replySuccess": "回复成功",
+    "replyFailed": "回复失败：$err"
   },
   "forumCard": {
     "links": "链接",

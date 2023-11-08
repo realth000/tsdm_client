@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -45,8 +46,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
 
-  final Function(String postTime, String formHash, String subject)?
-      replyFormHashCallback;
+  final Function(ReplyParameters)? replyFormHashCallback;
 
   /// Build [Widget] from given [uh.Document].
   ///
@@ -165,6 +165,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
         return;
       }
 
+      String? fid;
       String? postTime;
       String? formHash;
       String? subject;
@@ -173,21 +174,33 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
           continue;
         }
         final name = node.attributes['name'];
-        if (name == 'posttime') {
-          postTime = node.attributes['value'];
-        } else if (name == 'formhash') {
-          formHash = node.attributes['value'];
-        } else if (name == 'subject') {
-          subject = node.attributes['value'];
+        final value = node.attributes['value'];
+        switch (name) {
+          case 'srhfid':
+            fid = value;
+          case 'posttime':
+            postTime = value;
+          case 'formhash':
+            formHash = value;
+          case 'subject':
+            subject = value;
         }
       }
 
-      if (postTime == null || formHash == null || subject == null) {
+      if (fid == null ||
+          postTime == null ||
+          formHash == null ||
+          subject == null) {
         debug(
-            'failed to get reply form hash: postTime=$postTime formHash=$formHash subject=$subject');
+            'failed to get reply form hash: fid=$fid postTime=$postTime formHash=$formHash subject=$subject');
         return;
       }
-      widget.replyFormHashCallback!(postTime, formHash, subject);
+      widget.replyFormHashCallback!(ReplyParameters(
+        fid: fid,
+        postTime: postTime,
+        formHash: formHash,
+        subject: subject,
+      ));
     }
   }
 
