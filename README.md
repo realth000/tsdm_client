@@ -1,4 +1,4 @@
-<p align="center">
+<div align="center">
   <p>
     <h1>
       <a href="https://github.com/realth000/tsdm_client/">
@@ -29,7 +29,7 @@
       <img src="https://app.codacy.com/project/badge/Grade/cb1ee2e43746487798ced62cf0aee24b">
     </a>
   </p>
-</p>
+</div>
 
 > **Note**
 >
