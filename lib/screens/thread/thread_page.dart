@@ -52,87 +52,94 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
         // 2. `title`: Title found in html document.
         // 3. `context.t.appName`: Default application name.
         // appBar: AppBar(title: Text(widget.title ?? title ?? '')),
-        body: NetworkList<Post>(
-          widget._fetchUrl,
-          title: widget.title ?? title ?? '',
-          listBuilder: (document) {
-            final threadDataNode = document.querySelector('div#postlist');
-            if (threadDataNode == null) {
-              debug('thread postlist not found');
-              return <Post>[];
-            }
+        body: Column(
+          children: [
+            Expanded(
+              child: NetworkList<Post>(
+                widget._fetchUrl,
+                title: widget.title ?? title ?? '',
+                listBuilder: (document) {
+                  final threadDataNode = document.querySelector('div#postlist');
+                  if (threadDataNode == null) {
+                    debug('thread postlist not found');
+                    return <Post>[];
+                  }
 
-            // Sometimes we do not know the web page title outside this widget,
-            // so here should use the title in html document as fallback.
-            //
-            // Note that the specified title (in widget constructor) is prior to
-            // this html document title, only use html title when that title is null.
-            if (widget.title == null && mounted) {
-              setState(() {
-                title = document.querySelector('title')?.text;
-              });
-            }
+                  // Sometimes we do not know the web page title outside this widget,
+                  // so here should use the title in html document as fallback.
+                  //
+                  // Note that the specified title (in widget constructor) is prior to
+                  // this html document title, only use html title when that title is null.
+                  if (widget.title == null && mounted) {
+                    setState(() {
+                      title = document.querySelector('title')?.text;
+                    });
+                  }
 
-            return Post.buildListFromThreadDataNode(threadDataNode);
-          },
-          widgetBuilder: (context, post) => PostCard(post),
-          canFetchMorePages: true,
-          replyFormHashCallback: (replyParameters) {
-            _replyParameters = replyParameters;
-          },
-        ),
-        bottomNavigationBar: ReplyBar(
-          sendCallBack: (message) async {
-            if (_replyParameters == null) {
-              return false;
-            }
-            final formData = {
-              'message': message,
-              'usesig': 1,
-              'posttime': _replyParameters!.postTime,
-              'formhash': _replyParameters!.formHash,
-              'subject': _replyParameters!.subject,
-            };
+                  return Post.buildListFromThreadDataNode(threadDataNode);
+                },
+                widgetBuilder: (context, post) => PostCard(post),
+                canFetchMorePages: true,
+                replyFormHashCallback: (replyParameters) {
+                  _replyParameters = replyParameters;
+                },
+              ),
+            ),
+            ReplyBar(
+              sendCallBack: (message) async {
+                if (_replyParameters == null) {
+                  return false;
+                }
+                final formData = {
+                  'message': message,
+                  'usesig': 1,
+                  'posttime': _replyParameters!.postTime,
+                  'formhash': _replyParameters!.formHash,
+                  'subject': _replyParameters!.subject,
+                };
 
-            final resp = await ref.read(netClientProvider()).post(
-                  formatReplyThreadUrl(_replyParameters!.fid, widget.threadID),
-                  data: formData,
-                  options: Options(
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                  ),
-                );
+                final resp = await ref.read(netClientProvider()).post(
+                      formatReplyThreadUrl(
+                          _replyParameters!.fid, widget.threadID),
+                      data: formData,
+                      options: Options(
+                        headers: {
+                          'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                      ),
+                    );
 
-            if (resp.statusCode != HttpStatus.ok) {
-              if (!context.mounted) {
-                return false;
-              }
-              await showMessageSingleButtonDialog(
-                context: context,
-                title: context.t.threadPage.sendReply,
-                message:
-                    context.t.threadPage.replyFailed(err: '${resp.statusCode}'),
-              );
-            }
-            if (!context.mounted) {
-              return true;
-            }
-            final result = (resp.data as String).contains('回复发布成功');
-            if (!result) {
-              await showMessageSingleButtonDialog(
-                context: context,
-                title: context.t.threadPage.sendReply,
-                message:
-                    context.t.threadPage.replyFailed(err: resp.data as String),
-              );
-              return false;
-            }
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(context.t.threadPage.replySuccess),
-            ));
-            return true;
-          },
+                if (resp.statusCode != HttpStatus.ok) {
+                  if (!context.mounted) {
+                    return false;
+                  }
+                  await showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.threadPage.sendReply,
+                    message: context.t.threadPage
+                        .replyFailed(err: '${resp.statusCode}'),
+                  );
+                }
+                if (!context.mounted) {
+                  return true;
+                }
+                final result = (resp.data as String).contains('回复发布成功');
+                if (!result) {
+                  await showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.threadPage.sendReply,
+                    message: context.t.threadPage
+                        .replyFailed(err: resp.data as String),
+                  );
+                  return false;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(context.t.threadPage.replySuccess),
+                ));
+                return true;
+              },
+            ),
+          ],
         ),
       );
 }
