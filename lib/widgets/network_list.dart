@@ -106,8 +106,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
   ///
   /// Indicating can not load more.
   bool canLoadMore(uh.Document document) {
-    final barNode =
-        document.querySelector('div#ct > div#ct_shell > div#pgt.pgs > div.pgt');
+    final barNode = document.getElementById('pgt');
 
     if (barNode == null) {
       debug('failed to check can load more: node not found');
