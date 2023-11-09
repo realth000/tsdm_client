@@ -19,30 +19,27 @@ class PostCard extends ConsumerWidget {
 
   // TODO: Handle better.
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Card(
-        clipBehavior: Clip.antiAlias,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            ListTile(
-              leading: CircleAvatar(
-                backgroundImage: CachedImageProvider(
-                  post.author.avatarUrl!,
-                  context,
-                  ref,
-                  fallbackImageUrl: noAvatarUrl,
-                ),
+  Widget build(BuildContext context, WidgetRef ref) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ListTile(
+            leading: CircleAvatar(
+              backgroundImage: CachedImageProvider(
+                post.author.avatarUrl!,
+                context,
+                ref,
+                fallbackImageUrl: noAvatarUrl,
               ),
-              title: Text(post.author.name),
-              subtitle: Text('${post.publishTime?.elapsedTillNow()}'),
-              trailing:
-                  post.postFloor == null ? null : Text('#${post.postFloor}'),
             ),
-            Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
-              child: munchElement(context, parseHtmlDocument(post.data).body!),
-            ),
-          ],
-        ),
+            title: Text(post.author.name),
+            subtitle: Text('${post.publishTime?.elapsedTillNow()}'),
+            trailing:
+                post.postFloor == null ? null : Text('#${post.postFloor}'),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            child: munchElement(context, parseHtmlDocument(post.data).body!),
+          ),
+        ],
       );
 }

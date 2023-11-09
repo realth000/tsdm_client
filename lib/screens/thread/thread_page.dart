@@ -83,6 +83,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                 replyFormHashCallback: (replyParameters) {
                   _replyParameters = replyParameters;
                 },
+                useDivider: true,
               ),
             ),
             ReplyBar(

@@ -32,6 +32,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
     this.pageNumber = 1,
     this.initialData,
     this.replyFormHashCallback,
+    this.useDivider = false,
     super.key,
   });
 
@@ -60,6 +61,9 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Initial data to use in the first fetch.
   /// This argument allows to load cached data every first time.
   final uh.Document? initialData;
+
+  /// Use [Divider] instead of [SizedBox] between list items.
+  final bool useDivider;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() =>
@@ -337,9 +341,12 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
                   itemBuilder: (context, index) {
                     return widget.widgetBuilder(context, _allData[index]);
                   },
-                  separatorBuilder: (context, index) {
-                    return const SizedBox(width: 10, height: 5);
-                  },
+                  separatorBuilder: widget.useDivider
+                      ? (context, index) => const Divider(
+                            thickness: 0.5,
+                          )
+                      : (context, index) =>
+                          const SizedBox(width: 10, height: 5),
                 ),
               ),
             const FooterLocator.sliver(),
