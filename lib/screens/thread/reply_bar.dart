@@ -44,7 +44,12 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.only(
+                        left: 10,
+                        top: 5,
+                        right: 5,
+                        bottom: 5,
+                      ),
                       child: TextField(
                         controller: _replyController,
                         onChanged: (value) {
