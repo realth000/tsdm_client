@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
@@ -33,7 +34,9 @@ class PostCard extends ConsumerWidget {
                 ),
               ),
               title: Text(post.author.name),
-              subtitle: Text('uid ${post.author.uid ?? "-"}'),
+              subtitle: Text('${post.publishTime?.elapsedTillNow()}'),
+              trailing:
+                  post.postFloor == null ? null : Text('#${post.postFloor}'),
             ),
             Padding(
               padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),

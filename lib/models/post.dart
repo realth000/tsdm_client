@@ -9,6 +9,7 @@ class _PostInfo {
   /// Constructor.
   _PostInfo({
     required this.postID,
+    required this.postFloor,
     required this.author,
     required this.publishTime,
     required this.data,
@@ -16,6 +17,10 @@ class _PostInfo {
 
   /// Post ID.
   String postID;
+
+  /// Post floor number.
+  /// Make it nullable to be compatible with all web page styles.
+  int? postFloor;
 
   /// Post author, can not be null, should have avatar.
   User author;
@@ -40,6 +45,8 @@ class Post {
   final _PostInfo _info;
 
   String get postID => _info.postID;
+
+  int? get postFloor => _info.postFloor;
 
   User get author => _info.author;
 
@@ -86,8 +93,14 @@ class Post {
     final postData =
         postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
 
+    final postFloor = postDataNode
+        ?.querySelector('div.pi > strong > a > em')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+
     return _PostInfo(
       postID: postID,
+      postFloor: postFloor,
       author: postAuthor,
       publishTime: postPublishTime,
       data: postData ?? '',
