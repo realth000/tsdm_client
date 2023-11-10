@@ -119,6 +119,7 @@ class Muncher {
             'p' => _buildP(node),
             'table' when node.classes.contains('cgtl') => _buildTable(node),
             'span' => _buildSpan(node),
+            'blockquote' => _buildBlockQuote(node),
             'a' ||
             'div' ||
             'ignore_js_op' ||
@@ -288,6 +289,11 @@ class Muncher {
     }
 
     return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+  }
+
+  InlineSpan _buildBlockQuote(uh.Element element) {
+    final ret = _munch(element);
+    return WidgetSpan(child: Card(child: RichText(text: ret)));
   }
 
   /*                Setup Functions                      */
