@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:universal_html/html.dart';
 
@@ -141,10 +142,18 @@ extension GrepExtension on Element {
   }
 
   String? imageUrl() {
-    return attributes['zoomfile']?.prependHost() ??
+    final str = attributes['zoomfile']?.prependHost() ??
         attributes['data-original'] ??
         attributes['src'] ??
         attributes['file'];
+
+    if (str == null) {
+      return null;
+    }
+    if (str.startsWith('http')) {
+      return str;
+    }
+    return '$baseUrl/$str';
   }
 
   /// Parse data in a table row, return the first header <th> and all data <td>.
