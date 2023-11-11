@@ -7,6 +7,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -72,34 +73,14 @@ class _ForumPageState extends ConsumerState<ForumPage>
   /// currently, maybe before parsing".
   bool _haveNoThread = false;
 
+  /// A widget to show when a logged user have no permission to this forum.
+  Widget? _noPermissionFallbackDialog;
+
   /// Build thread tab.
   List<NormalThread> _buildThreadList(uh.Document document) {
     final normalThreadData = <NormalThread>[];
     final threadList = document.querySelectorAll('tbody.tsdm_normalthread');
     if (threadList.isEmpty) {
-      // First check if we have subreddit.
-      if (_allSubredditData.isNotEmpty) {
-        // We have subreddit, this forum is only a "redirect" to other forums.
-        // Redirect to subreddit page.
-        tabController?.animateTo(1,
-            duration: const Duration(milliseconds: 500));
-        return [];
-      }
-
-      final docTitle = document.getElementsByTagName('title');
-      final docMessage = document.getElementById('messagetext');
-      final docAccessRequire = docMessage?.nextElementSibling?.innerHtml;
-      final docLogin = document.getElementById('messagelogin');
-      if (docLogin != null) {
-        debug(
-            'failed to build forum page, thread is empty. Maybe need to login ${docTitle.first.text} ${docMessage?.text} ${docAccessRequire ?? ''} ${docLogin == null}');
-        context.pushReplacementNamed(
-          ScreenPaths.login,
-          extra: <String, dynamic>{
-            'redirectBackState': widget.routerState,
-          },
-        );
-      }
       return normalThreadData;
     }
 
@@ -206,6 +187,52 @@ class _ForumPageState extends ConsumerState<ForumPage>
     if (!mounted) {
       return;
     }
+
+    // Check if we have permission to visit this forum
+    if (_allThreadData.isEmpty) {
+      // First check if we have subreddit.
+      if (_allSubredditData.isNotEmpty) {
+        // We have subreddit, this forum is only a "redirect" to other forums.
+        // Redirect to subreddit page.
+        tabController?.animateTo(1,
+            duration: const Duration(milliseconds: 500));
+        return;
+      }
+
+      // Here both thread list and subreddit is empty.
+
+      // Check need to login or not.
+      final docTitle = document.getElementsByTagName('title');
+      final docMessage = document.getElementById('messagetext');
+      final docAccessRequire = docMessage?.nextElementSibling?.innerHtml;
+      final docLogin = document.getElementById('messagelogin');
+      if (docLogin != null) {
+        debug(
+            'failed to build forum page, thread is empty. Maybe need to login ${docTitle.first.text} ${docMessage?.text} ${docAccessRequire ?? ''} ${docLogin == null}');
+        context.pushReplacementNamed(
+          ScreenPaths.login,
+          extra: <String, dynamic>{
+            'redirectBackState': widget.routerState,
+          },
+        );
+        return;
+      }
+
+      // Already login, check permission.
+      if (docMessage == null) {
+        // Can not find message. treat as unknown result.
+        debug('failed to visit fid=${widget.fid}, unknown result');
+        return;
+      }
+
+      // Munch html document at node [docMessage] to flutter widget as fallback
+      // widget, take place of tab bar view.
+      setState(() {
+        _noPermissionFallbackDialog =
+            Center(child: munchElement(context, docMessage));
+      });
+    }
+
     setState(() {
       _allThreadData.addAll(data);
       _haveNoThread = _allThreadData.isEmpty;
@@ -335,13 +362,15 @@ class _ForumPageState extends ConsumerState<ForumPage>
     return Scaffold(
       appBar: ListSliverAppBar(
         title: widget.title,
-        bottom: TabBar(
-          controller: tabController,
-          tabs: [
-            Tab(child: Text(context.t.forumPage.threadTab.title)),
-            Tab(child: Text(context.t.forumPage.subredditTab.title)),
-          ],
-        ),
+        bottom: _noPermissionFallbackDialog == null
+            ? TabBar(
+                controller: tabController,
+                tabs: [
+                  Tab(child: Text(context.t.forumPage.threadTab.title)),
+                  Tab(child: Text(context.t.forumPage.subredditTab.title)),
+                ],
+              )
+            : null,
         onSelected: (value) async {
           switch (value) {
             case MenuActions.refresh:
@@ -372,13 +401,14 @@ class _ForumPageState extends ConsumerState<ForumPage>
           }
         },
       ),
-      body: TabBarView(
-        controller: tabController,
-        children: [
-          _buildThreadListTab(context, ref),
-          _buildSubredditTab(context, ref),
-        ],
-      ),
+      body: _noPermissionFallbackDialog ??
+          TabBarView(
+            controller: tabController,
+            children: [
+              _buildThreadListTab(context, ref),
+              _buildSubredditTab(context, ref),
+            ],
+          ),
     );
   }
 }
