@@ -91,6 +91,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
       }
       normalThreadData.add(thread);
     }
+
     return normalThreadData;
   }
 
@@ -188,6 +189,11 @@ class _ForumPageState extends ConsumerState<ForumPage>
       return;
     }
 
+    setState(() {
+      _allThreadData.addAll(data);
+      _haveNoThread = _allThreadData.isEmpty;
+    });
+
     // Check if we have permission to visit this forum
     if (_allThreadData.isEmpty) {
       // First check if we have subreddit.
@@ -233,10 +239,6 @@ class _ForumPageState extends ConsumerState<ForumPage>
       });
     }
 
-    setState(() {
-      _allThreadData.addAll(data);
-      _haveNoThread = _allThreadData.isEmpty;
-    });
     _pageNumber++;
 
     // Update whether we are in the last page.
