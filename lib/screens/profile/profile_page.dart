@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -7,7 +6,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
-import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/screens/need_login/need_login_page.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/cached_image.dart';
@@ -242,24 +241,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     final loggedIn =
         widget.uid == null && ref.read(authProvider) != AuthState.notAuthorized;
     if (!loggedIn) {
-      return Scaffold(
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(context.t.general.needLoginToSeeThisPage),
-              const SizedBox(width: 10, height: 10),
-              ElevatedButton(
-                child: Text(t.loginPage.login),
-                onPressed: () async {
-                  await context.pushNamed(ScreenPaths.login);
-                  setState(() {});
-                },
-              ),
-            ],
-          ),
-        ),
-      );
+      return const NeedLoginPage();
     }
 
     final uid = ref.read(authProvider.notifier).loggedUid;

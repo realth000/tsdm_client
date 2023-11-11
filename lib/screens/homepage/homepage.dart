@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/screens/homepage/pin_section.dart';
 import 'package:tsdm_client/screens/homepage/welcome_section.dart';
+import 'package:tsdm_client/screens/need_login/need_login_page.dart';
 
 class HomePage extends ConsumerStatefulWidget {
   const HomePage({super.key});
@@ -22,6 +24,11 @@ class _HomePageState extends ConsumerState<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+    final authState = ref.read(authProvider);
+    if (authState != AuthState.authorized) {
+      return const NeedLoginPage();
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(context.t.navigation.homepage)),
       body: SingleChildScrollView(
