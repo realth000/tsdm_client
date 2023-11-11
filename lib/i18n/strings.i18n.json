@@ -121,6 +121,16 @@
     "checkInNextLevelDays": "Days To Next Check-in Level",
     "checkInTodayStatus": "Check-in Today Status"
   },
+  "forumPage": {
+    "threadTab": {
+      "title": "Thread",
+      "noThread": "No Thread"
+    },
+    "subredditTab": {
+      "title": "Subreddit",
+      "noSubreddit": "No Subreddit"
+    }
+  },
   "threadPage": {
     "sendReplyHint": "Reply...",
     "sendReply": "Reply",

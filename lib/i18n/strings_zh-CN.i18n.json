@@ -121,6 +121,16 @@
     "checkInNextLevelDays": "距离下个签到等级天数",
     "checkInTodayStatus": "今日签到状态"
   },
+  "forumPage": {
+    "threadTab": {
+      "title": "帖子",
+      "noThread": "没有帖子"
+    },
+    "subredditTab": {
+      "title": "子版块",
+      "noSubreddit": "没有子版块"
+    }
+  },
   "threadPage": {
     "sendReplyHint": "回复",
     "sendReply": "发送",
