@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/post.dart';
@@ -37,7 +38,7 @@ class PostCard extends ConsumerWidget {
                 post.postFloor == null ? null : Text('#${post.postFloor}'),
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+            padding: edgeInsetsL15R15B10,
             child: munchElement(context, parseHtmlDocument(post.data).body!),
           ),
         ],

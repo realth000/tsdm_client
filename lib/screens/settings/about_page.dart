@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/git_info.dart';
+import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends ConsumerWidget {
@@ -46,27 +48,23 @@ class AboutPage extends ConsumerWidget {
             width: 192,
             height: 192,
           ),
-          const SizedBox(width: 10, height: 10),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          sizedBoxW10H10,
+          SectionListTile(
             leading: const Icon(Icons.contact_support_outlined),
             title: Text(context.t.aboutPage.whatIsThis),
             subtitle: Text(context.t.aboutPage.description),
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.app_shortcut_outlined),
             title: Text(context.t.aboutPage.packageName),
             subtitle: const Text('kzs.th000.tsdm_client'),
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.terminal_outlined),
             title: Text(context.t.aboutPage.version),
             subtitle: const Text(_gitInfo),
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.home_max_outlined),
             title: Text(context.t.aboutPage.forumHomepage),
             subtitle: const Text(baseUrl),
@@ -78,8 +76,7 @@ class AboutPage extends ConsumerWidget {
               );
             },
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.home_outlined),
             title: Text(context.t.aboutPage.homepage),
             subtitle: const Text('https://github.com/realth000/tsdm_client'),
@@ -91,8 +88,7 @@ class AboutPage extends ConsumerWidget {
               );
             },
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.flutter_dash_outlined),
             title: Text(context.t.aboutPage.flutterVersion),
             subtitle: const Text(
@@ -106,8 +102,7 @@ class AboutPage extends ConsumerWidget {
               );
             },
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.foundation_outlined),
             title: Text(context.t.aboutPage.dartVersion),
             subtitle: const Text(dartVersion),
@@ -119,8 +114,7 @@ class AboutPage extends ConsumerWidget {
               );
             },
           ),
-          ListTile(
-            contentPadding: const EdgeInsets.symmetric(horizontal: 18),
+          SectionListTile(
             leading: const Icon(Icons.balance_outlined),
             title: Text(context.t.aboutPage.license),
             subtitle: const Text('MIT license'),

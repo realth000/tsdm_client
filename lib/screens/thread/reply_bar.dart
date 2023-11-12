@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 class ReplyBar extends ConsumerStatefulWidget {
@@ -38,18 +39,13 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
           Flexible(
             fit: isExpanded ? FlexFit.tight : FlexFit.loose,
             child: Padding(
-              padding: const EdgeInsets.only(left: 10, bottom: 10, right: 10),
+              padding: edgeInsetsL10R10B10,
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.only(
-                        left: 10,
-                        top: 5,
-                        right: 5,
-                        bottom: 5,
-                      ),
+                      padding: edgeInsetsL10T5R5B5,
                       child: TextField(
                         controller: _replyController,
                         onChanged: (value) {
@@ -67,7 +63,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: edgeInsetsT10,
                     child: IconButton(
                       icon: Icon(
                         isExpanded
@@ -89,21 +85,13 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
           ),
           // Send Button
           Padding(
-            padding: const EdgeInsets.only(
-              left: 10,
-              bottom: 10,
-              right: 10,
-            ),
+            padding: edgeInsetsL10R10B10,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
                   child: isSendingReply
-                      ? const SizedBox(
-                          width: 16,
-                          height: 16,
-                          child: CircularProgressIndicator(strokeWidth: 3),
-                        )
+                      ? sizedCircularProgressIndicator
                       : const Icon(Icons.send_outlined),
                   onPressed: canSendReply && !isSendingReply
                       ? () async {

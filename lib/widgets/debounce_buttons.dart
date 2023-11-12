@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 
 typedef FutureVoidCallback = Future<void> Function();
 
@@ -44,13 +45,7 @@ class DebounceTextButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return TextButton(
-      child: shouldDebounce
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            )
-          : Text(text),
+      child: shouldDebounce ? sizedCircularProgressIndicator : Text(text),
       onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }
@@ -71,13 +66,7 @@ class DebounceElevatedButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ElevatedButton(
-      child: shouldDebounce
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            )
-          : child,
+      child: shouldDebounce ? sizedCircularProgressIndicator : child,
       onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }
@@ -98,13 +87,7 @@ class DebounceIconButton extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return IconButton(
-      icon: shouldDebounce
-          ? const SizedBox(
-              width: 16,
-              height: 16,
-              child: CircularProgressIndicator(strokeWidth: 3),
-            )
-          : icon,
+      icon: shouldDebounce ? sizedCircularProgressIndicator : icon,
       onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }

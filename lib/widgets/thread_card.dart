@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -37,7 +38,7 @@ class ThreadCard extends ConsumerWidget {
           child: Row(
             children: [
               Icon(e.$1, size: smallIconSize),
-              const SizedBox(width: 5),
+              sizedBoxW5H5,
               Flexible(
                 child: Text(
                   e.$2,
@@ -53,6 +54,7 @@ class ThreadCard extends ConsumerWidget {
     }
 
     return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
@@ -79,7 +81,7 @@ class ThreadCard extends ConsumerWidget {
                   : null,
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              padding: edgeInsetsL15R15B10,
               child: Row(
                 children: [
                   Expanded(
@@ -93,9 +95,9 @@ class ThreadCard extends ConsumerWidget {
                 ],
               ),
             ),
-            const SizedBox(width: 10, height: 10),
+            sizedBoxW10H10,
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              padding: edgeInsetsL15R15B10,
               child: Row(
                 children: infoWidgetList,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

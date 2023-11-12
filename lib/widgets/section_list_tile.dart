@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 
 class SectionListTile extends ListTile {
   const SectionListTile({
@@ -18,7 +19,7 @@ class SectionListTile extends ListTile {
     super.titleTextStyle,
     super.subtitleTextStyle,
     super.leadingAndTrailingTextStyle,
-    super.contentPadding = const EdgeInsets.symmetric(horizontal: 18),
+    super.contentPadding = edgeInsetsL18R18,
     super.enabled = true,
     super.onTap,
     super.onLongPress,

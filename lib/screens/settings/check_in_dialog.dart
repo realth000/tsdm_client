@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/check_in_feeling.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
@@ -92,7 +93,7 @@ class _CheckInMessageDialogState extends ConsumerState<CheckInMessageDialog> {
               ),
             ),
           ),
-          const SizedBox(width: 20, height: 20),
+          sizedBoxW20H20,
           Text('$textRestLength'),
         ],
       ),

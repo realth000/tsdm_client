@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 
 class SectionTitleText extends StatelessWidget {
   const SectionTitleText(
@@ -11,7 +12,7 @@ class SectionTitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 18),
+      padding: edgeInsetsL18R18,
       child: Text(
         data,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(

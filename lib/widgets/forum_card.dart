@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -63,7 +64,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
       ),
       if (state)
         Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
+          padding: edgeInsetsL10R10,
           child: Row(
             children: [
               Expanded(
@@ -103,7 +104,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
             child: Row(
               children: [
                 Icon(e.$1, size: smallIconSize),
-                const SizedBox(width: 5, height: 5),
+                sizedBoxW5H5,
                 Flexible(
                   child: Text(
                     '${e.$2}',
@@ -119,6 +120,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
         .toList();
 
     return Card(
+      margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
@@ -202,10 +204,10 @@ class _ForumCardState extends ConsumerState<ForumCard> {
               ],
             ),
             Padding(
-              padding: const EdgeInsets.only(left: 15, right: 15, bottom: 10),
+              padding: edgeInsetsL15R15B10,
               child: Column(
                 children: [
-                  const SizedBox(width: 10, height: 10),
+                  sizedBoxW10H10,
                   Row(children: forumInfoWidgets),
                 ],
               ),

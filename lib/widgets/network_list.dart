@@ -5,6 +5,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
@@ -335,19 +336,15 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
             const HeaderLocator.sliver(),
             if (_allData.isNotEmpty)
               SliverPadding(
-                padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+                padding: edgeInsetsL10R10B20,
                 sliver: SliverList.separated(
-                  itemCount: _allData.length,
-                  itemBuilder: (context, index) {
-                    return widget.widgetBuilder(context, _allData[index]);
-                  },
-                  separatorBuilder: widget.useDivider
-                      ? (context, index) => const Divider(
-                            thickness: 0.5,
-                          )
-                      : (context, index) =>
-                          const SizedBox(width: 10, height: 5),
-                ),
+                    itemCount: _allData.length,
+                    itemBuilder: (context, index) {
+                      return widget.widgetBuilder(context, _allData[index]);
+                    },
+                    separatorBuilder: widget.useDivider
+                        ? (context, index) => const Divider(thickness: 0.5)
+                        : (context, index) => sizedBoxW5H5),
               ),
             const FooterLocator.sliver(),
           ],

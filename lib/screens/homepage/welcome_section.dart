@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
@@ -87,7 +88,7 @@ class WelcomeSection extends ConsumerWidget {
     if (memberInfoList.length >= 3) {
       return Expanded(
         child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+          padding: edgeInsetsL10T10R10,
           child: SingleLineText(
             '今日:${memberInfoList[0]} 昨日:${memberInfoList[1]} 帖子:${memberInfoList[2]}',
             style: TextStyle(
@@ -171,10 +172,7 @@ class WelcomeSection extends ConsumerWidget {
         children: [
           Expanded(
               child: _buildKahrpbaSwiper(context, picUrlList, picHrefList)),
-          const SizedBox(
-            width: 20,
-            height: 20,
-          ),
+          sizedBoxW20H20,
           Expanded(
             child: Card(
               margin: EdgeInsets.zero,

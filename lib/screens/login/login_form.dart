@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
@@ -118,7 +119,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             t.loginPage.login,
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          const SizedBox(width: 10, height: 10),
+          sizedBoxW10H10,
           TextFormField(
             autofocus: true,
             controller: usernameController,
@@ -129,7 +130,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             validator: (v) =>
                 v!.trim().isNotEmpty ? null : t.loginPage.usernameEmpty,
           ),
-          const SizedBox(width: 10, height: 10),
+          sizedBoxW10H10,
           TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
@@ -154,7 +155,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
             validator: (v) =>
                 v!.trim().isNotEmpty ? null : t.loginPage.passwordEmpty,
           ),
-          const SizedBox(width: 10, height: 10),
+          sizedBoxW10H10,
           Row(
             children: [
               Expanded(
@@ -168,7 +169,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                       v!.trim().isNotEmpty ? null : t.loginPage.verifyCodeEmpty,
                 ),
               ),
-              const SizedBox(width: 10, height: 10),
+              sizedBoxW10H10,
               ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxWidth: 150,
@@ -177,7 +178,7 @@ class _LoginFormState extends ConsumerState<LoginForm> {
               ),
             ],
           ),
-          const SizedBox(width: 10, height: 10),
+          sizedBoxW10H10,
           Row(
             children: [
               Expanded(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
@@ -246,6 +247,17 @@ class _ForumPageState extends ConsumerState<ForumPage>
   }
 
   Widget _buildThreadListTab(BuildContext context, WidgetRef ref) {
+    // Use _haveNoThread to ensure we parsed the web page and there really
+    // no thread in the forum.
+    if (_haveNoThread) {
+      return Center(
+        child: Text(
+          context.t.forumPage.threadTab.noThread,
+          style: Theme.of(context).inputDecorationTheme.hintStyle,
+        ),
+      );
+    }
+
     return EasyRefresh(
       scrollBehaviorBuilder: buildScrollBehavior,
       header: header,
@@ -281,29 +293,12 @@ class _ForumPageState extends ConsumerState<ForumPage>
           const HeaderLocator.sliver(),
           if (_allThreadData.isNotEmpty)
             SliverPadding(
-              padding: const EdgeInsets.only(left: 10, right: 10, bottom: 20),
+              padding: edgeInsetsL10T5R10B20,
               sliver: SliverList.separated(
                 itemCount: _allThreadData.length,
                 itemBuilder: (context, index) =>
                     ThreadCard(_allThreadData[index]),
-                separatorBuilder: (context, index) => const SizedBox(
-                  width: 2,
-                  height: 2,
-                ),
-              ),
-            ),
-          // Use _haveNoThread to ensure we parsed the web page and there really
-          // no thread in the forum.
-          if (_haveNoThread)
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 100),
-                child: Center(
-                  child: Text(
-                    context.t.forumPage.threadTab.noThread,
-                    style: Theme.of(context).inputDecorationTheme.hintStyle,
-                  ),
-                ),
+                separatorBuilder: (context, index) => sizedBoxW5H5,
               ),
             ),
           const FooterLocator.sliver(),
@@ -318,17 +313,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
     }
 
     return ListView.separated(
-      padding: const EdgeInsets.only(
-        left: 15,
-        right: 15,
-        top: 5,
-        bottom: 20,
-      ),
+      padding: edgeInsetsL10T5R10B20,
       itemCount: _allSubredditData.length,
       itemBuilder: (context, index) => ForumCard(_allSubredditData[index]),
-      separatorBuilder: (context, index) {
-        return const SizedBox(width: 10, height: 10);
-      },
+      separatorBuilder: (context, index) => sizedBoxW5H5,
     );
   }
 

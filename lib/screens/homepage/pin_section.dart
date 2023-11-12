@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
@@ -98,14 +99,14 @@ class PinSection extends ConsumerWidget {
         clipBehavior: Clip.hardEdge,
         margin: EdgeInsets.zero,
         child: Padding(
-          padding: const EdgeInsets.only(top: 10),
+          padding: edgeInsetsT10,
           child: Column(
             children: [
               Text(
                 sectionName ?? '',
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              const SizedBox(width: 10, height: 10),
+              sizedBoxW10H10,
               threadWidgetList,
             ],
           ),

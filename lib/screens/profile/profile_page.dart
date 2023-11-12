@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -146,7 +147,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         ],
       ),
       body: ListView(
-        padding: const EdgeInsets.only(left: 15, right: 15),
+        padding: edgeInsetsL15R15,
         children: [
           if (avatarUrl != null)
             CachedImage(

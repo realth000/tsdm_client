@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum_group.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
@@ -72,19 +73,10 @@ class _TCHomePageState extends ConsumerState<TopicPage>
     final groupTabBodyList = groupList
         .map(
           (e) => ListView.separated(
-            padding: const EdgeInsets.only(
-              left: 15,
-              right: 15,
-              top: 5,
-              bottom: 20,
-            ),
+            padding: edgeInsetsL10T5R10B20,
             itemCount: e.forumList.length,
-            itemBuilder: (context, index) => ForumCard(
-              e.forumList[index],
-            ),
-            separatorBuilder: (context, index) {
-              return const SizedBox(width: 10, height: 10);
-            },
+            itemBuilder: (context, index) => ForumCard(e.forumList[index]),
+            separatorBuilder: (context, index) => sizedBoxW5H5,
           ),
         )
         .toList();
