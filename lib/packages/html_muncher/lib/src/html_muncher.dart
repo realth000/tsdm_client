@@ -116,6 +116,7 @@ class Muncher {
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
+            'strike' => _buildLineThrough(node),
             'p' => _buildP(node),
             'table' when node.classes.contains('cgtl') => _buildTable(node),
             'span' => _buildSpan(node),
@@ -167,6 +168,13 @@ class Muncher {
     state.underline = true;
     final ret = _munch(element);
     state.underline = false;
+    return ret;
+  }
+
+  InlineSpan _buildLineThrough(uh.Element element) {
+    state.lineThrough = true;
+    final ret = _munch(element);
+    state.lineThrough = false;
     return ret;
   }
 
