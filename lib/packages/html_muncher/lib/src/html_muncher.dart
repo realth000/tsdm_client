@@ -98,6 +98,7 @@ class Muncher {
                     if (state.underline) TextDecoration.underline,
                     if (state.lineThrough) TextDecoration.lineThrough,
                   ]),
+                  decorationThickness: 1.5,
                 ),
           );
         }
