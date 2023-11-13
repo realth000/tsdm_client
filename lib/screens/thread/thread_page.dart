@@ -1,17 +1,12 @@
-import 'dart:io';
-
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
-import 'package:tsdm_client/models/reply_parameters.dart';
-import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/models/user.dart';
+import 'package:tsdm_client/screens/thread/post_list.dart';
 import 'package:tsdm_client/screens/thread/reply_bar.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
-import 'package:tsdm_client/widgets/network_list.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
 
 /// Thread page.
@@ -43,7 +38,20 @@ class ThreadPage extends ConsumerStatefulWidget {
 class _ThreadPageState extends ConsumerState<ThreadPage> {
   String? title;
 
-  ReplyParameters? _replyParameters;
+  final _replyBarController = ReplyBarController();
+
+  Future<void> replyPostCallback(
+      User user, int? postFloor, String? replyAction) async {
+    if (replyAction == null) {
+      return;
+    }
+
+    _replyBarController
+      ..replyAction = replyAction
+      ..setHintText(
+          '${context.t.threadPage.sendReplyHint} ${user.name} ${postFloor == null ? "" : "#$postFloor"}')
+      ..requestFocus();
+  }
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -55,7 +63,8 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
         body: Column(
           children: [
             Expanded(
-              child: NetworkList<Post>(
+              child: PostList<Post>(
+                widget.threadID,
                 widget._fetchUrl,
                 title: widget.title ?? title ?? '',
                 listBuilder: (document) {
@@ -78,67 +87,19 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
 
                   return Post.buildListFromThreadDataNode(threadDataNode);
                 },
-                widgetBuilder: (context, post) => PostCard(post),
+                widgetBuilder: (context, post) => PostCard(
+                  post,
+                  replyCallback: replyPostCallback,
+                ),
                 canFetchMorePages: true,
                 replyFormHashCallback: (replyParameters) {
-                  _replyParameters = replyParameters;
+                  _replyBarController.replyParameters = replyParameters;
                 },
                 useDivider: true,
               ),
             ),
             ReplyBar(
-              sendCallBack: (message) async {
-                if (_replyParameters == null) {
-                  return false;
-                }
-                final formData = {
-                  'message': message,
-                  'usesig': 1,
-                  'posttime': _replyParameters!.postTime,
-                  'formhash': _replyParameters!.formHash,
-                  'subject': _replyParameters!.subject,
-                };
-
-                final resp = await ref.read(netClientProvider()).post(
-                      formatReplyThreadUrl(
-                          _replyParameters!.fid, widget.threadID),
-                      data: formData,
-                      options: Options(
-                        headers: {
-                          'Content-Type': 'application/x-www-form-urlencoded'
-                        },
-                      ),
-                    );
-
-                if (resp.statusCode != HttpStatus.ok) {
-                  if (!context.mounted) {
-                    return false;
-                  }
-                  await showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.threadPage.sendReply,
-                    message: context.t.threadPage
-                        .replyFailed(err: '${resp.statusCode}'),
-                  );
-                }
-                if (!context.mounted) {
-                  return true;
-                }
-                final result = (resp.data as String).contains('回复发布成功');
-                if (!result) {
-                  await showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.threadPage.sendReply,
-                    message: context.t.threadPage
-                        .replyFailed(err: resp.data as String),
-                  );
-                  return false;
-                }
-                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(context.t.threadPage.replySuccess),
-                ));
-                return true;
-              },
+              controller: _replyBarController,
             ),
           ],
         ),

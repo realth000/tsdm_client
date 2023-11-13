@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:universal_html/parsing.dart';
@@ -13,10 +16,13 @@ import 'package:universal_html/parsing.dart';
 /// Usually inside a ThreadPage.
 class PostCard extends ConsumerWidget {
   /// Constructor.
-  const PostCard(this.post, {super.key});
+  const PostCard(this.post, {this.replyCallback, super.key});
 
   /// [Post] model to show.
   final Post post;
+
+  final FutureOr<void> Function(User user, int? postFloor, String? replyAction)?
+      replyCallback;
 
   // TODO: Handle better.
   @override
@@ -37,9 +43,22 @@ class PostCard extends ConsumerWidget {
             trailing:
                 post.postFloor == null ? null : Text('#${post.postFloor}'),
           ),
-          Padding(
-            padding: edgeInsetsL15R15B10,
-            child: munchElement(context, parseHtmlDocument(post.data).body!),
+          GestureDetector(
+            onTap: () async {
+              await replyCallback?.call(
+                  post.author, post.postFloor, post.replyAction);
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: edgeInsetsL15R15B10,
+                    child: munchElement(
+                        context, parseHtmlDocument(post.data).body!),
+                  ),
+                ),
+              ],
+            ),
           ),
         ],
       );

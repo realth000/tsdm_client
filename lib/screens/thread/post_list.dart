@@ -22,9 +22,10 @@ enum _MenuActions {
 }
 
 /// A widget that retrieve data from network and supports refresh.
-class NetworkList<T> extends ConsumerStatefulWidget {
+class PostList<T> extends ConsumerStatefulWidget {
   /// Constructor.
-  const NetworkList(
+  const PostList(
+    this.tid,
     this.fetchUrl, {
     required this.listBuilder,
     required this.widgetBuilder,
@@ -42,6 +43,9 @@ class NetworkList<T> extends ConsumerStatefulWidget {
   /// Whether can fetch more pages.
   final bool canFetchMorePages;
 
+  /// Thread id.
+  final String tid;
+
   /// Url to fetch data.
   final String fetchUrl;
 
@@ -52,7 +56,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
 
   /// Build [Widget] from given [uh.Document].
   ///
-  /// User needs to provide this method and [NetworkList] refresh by pressing
+  /// User needs to provide this method and [PostList] refresh by pressing
   /// refresh button.
   final FutureOr<List<T>> Function(uh.Document document) listBuilder;
 
@@ -71,7 +75,7 @@ class NetworkList<T> extends ConsumerStatefulWidget {
       _NetworkWidgetState<T>();
 }
 
-class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
+class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   final _allData = <T>[];
 
   final _refreshController = EasyRefreshController(
@@ -201,6 +205,7 @@ class _NetworkWidgetState<T> extends ConsumerState<NetworkList<T>> {
       }
       await widget.replyFormHashCallback!(ReplyParameters(
         fid: fid,
+        tid: widget.tid,
         postTime: postTime,
         formHash: formHash,
         subject: subject,

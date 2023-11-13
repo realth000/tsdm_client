@@ -13,6 +13,7 @@ class _PostInfo {
     required this.author,
     required this.publishTime,
     required this.data,
+    required this.replyAction,
   });
 
   /// Post ID.
@@ -31,6 +32,9 @@ class _PostInfo {
   // TODO: Confirm data display.
   /// Post data.
   String data;
+
+  /// Url to reply this post.
+  String? replyAction;
 }
 
 /// Post model.
@@ -53,6 +57,8 @@ class Post {
   DateTime? get publishTime => _info.publishTime;
 
   String get data => _info.data;
+
+  String? get replyAction => _info.replyAction;
 
   /// Build [Post] from [uh.Element].
   static _PostInfo _buildPostFromElement(uh.Element element) {
@@ -98,12 +104,18 @@ class Post {
         ?.firstEndDeepText()
         ?.parseToInt();
 
+    final replyAction = element
+        .querySelector(
+            'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > div > em > a')
+        ?.firstHref();
+
     return _PostInfo(
       postID: postID,
       postFloor: postFloor,
       author: postAuthor,
       publishTime: postPublishTime,
       data: postData ?? '',
+      replyAction: replyAction,
     );
   }
 
