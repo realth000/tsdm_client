@@ -238,7 +238,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               .copyWith(physics: physics, scrollbars: false);
         },
         header: const MaterialHeader(position: IndicatorPosition.locator),
-        footer: const ClassicFooter(position: IndicatorPosition.locator),
+        footer: const MaterialFooter(),
         controller: _refreshController,
         scrollController: _listScrollController,
         refreshOnStart: true,
@@ -258,7 +258,9 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
           }
           if (_inLastPage) {
             debug('already in last page');
-            _refreshController.finishLoad(IndicatorResult.noMore);
+            _refreshController
+              ..finishLoad(IndicatorResult.noMore)
+              ..resetFooter();
             return;
           }
 
@@ -266,7 +268,9 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
             _clearData();
           }
           await _loadData();
-          _refreshController.finishLoad();
+          _refreshController
+            ..finishLoad()
+            ..resetFooter();
         },
         child: CustomScrollView(
           controller: _listScrollController,
@@ -343,15 +347,15 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               SliverPadding(
                 padding: edgeInsetsL10R10B20,
                 sliver: SliverList.separated(
-                    itemCount: _allData.length,
-                    itemBuilder: (context, index) {
-                      return widget.widgetBuilder(context, _allData[index]);
-                    },
-                    separatorBuilder: widget.useDivider
-                        ? (context, index) => const Divider(thickness: 0.5)
-                        : (context, index) => sizedBoxW5H5),
+                  itemCount: _allData.length,
+                  itemBuilder: (context, index) {
+                    return widget.widgetBuilder(context, _allData[index]);
+                  },
+                  separatorBuilder: widget.useDivider
+                      ? (context, index) => const Divider(thickness: 0.5)
+                      : (context, index) => sizedBoxW5H5,
+                ),
               ),
-            const FooterLocator.sliver(),
           ],
         ),
       );
