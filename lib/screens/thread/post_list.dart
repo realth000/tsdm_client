@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -230,8 +231,9 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) => EasyRefresh(
+  /// Reserved code
+  // @override
+  Widget buildNotUsed(BuildContext context) => EasyRefresh(
         scrollBehaviorBuilder: (physics) {
           // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
           return ERScrollBehavior(physics)
@@ -357,6 +359,141 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
                 ),
               ),
           ],
+        ),
+      );
+
+  /// Reserved code.
+  @override
+  Widget build(BuildContext context) => ExtendedNestedScrollView(
+        onlyOneScrollInBody: true,
+        controller: _listScrollController,
+        headerSliverBuilder: (context, innerBoxIsScrolled) {
+          return [
+            SliverAppBar(
+              title: widget.title == null ? null : Text(widget.title!),
+              pinned: true,
+              actions: [
+                PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: _MenuActions.refresh,
+                      child: Row(children: [
+                        const Icon(Icons.refresh_outlined),
+                        Text(context.t.networkList.actionRefresh),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.copyUrl,
+                      child: Row(children: [
+                        const Icon(Icons.copy_outlined),
+                        Text(context.t.networkList.actionCopyUrl),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.openInBrowser,
+                      child: Row(children: [
+                        const Icon(Icons.launch_outlined),
+                        Text(context.t.networkList.actionOpenInBrowser),
+                      ]),
+                    ),
+                    PopupMenuItem(
+                      value: _MenuActions.backToTop,
+                      child: Row(children: [
+                        const Icon(Icons.vertical_align_top_outlined),
+                        Text(context.t.networkList.actionBackToTop),
+                      ]),
+                    ),
+                  ],
+                  onSelected: (value) async {
+                    switch (value) {
+                      case _MenuActions.refresh:
+                        await _refreshController.callRefresh();
+                      case _MenuActions.copyUrl:
+                        await Clipboard.setData(
+                          ClipboardData(text: widget.fetchUrl),
+                        );
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            context.t.aboutPage.copiedToClipboard,
+                          ),
+                        ));
+                      case _MenuActions.openInBrowser:
+                        await launchUrl(
+                          Uri.parse(widget.fetchUrl),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      case _MenuActions.backToTop:
+                        await _listScrollController.animateTo(
+                          0,
+                          curve: Curves.ease,
+                          duration: const Duration(milliseconds: 500),
+                        );
+                    }
+                  },
+                ),
+              ],
+            ),
+          ];
+        },
+        body: ExtendedVisibilityDetector(
+          uniqueKey: const Key('list'),
+          child: EasyRefresh(
+            scrollBehaviorBuilder: (physics) {
+              // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+              return ERScrollBehavior(physics)
+                  .copyWith(physics: physics, scrollbars: false);
+            },
+            header: const MaterialHeader(),
+            footer: const MaterialFooter(),
+            controller: _refreshController,
+            scrollController: _listScrollController,
+            refreshOnStart: true,
+            onRefresh: () async {
+              if (!mounted) {
+                return;
+              }
+              _clearData();
+              await _loadData();
+              _refreshController
+                ..finishRefresh()
+                ..resetFooter();
+            },
+            onLoad: () async {
+              if (!mounted) {
+                return;
+              }
+              if (_inLastPage) {
+                debug('already in last page');
+                _refreshController
+                  ..finishLoad(IndicatorResult.noMore)
+                  ..resetFooter();
+                return;
+              }
+
+              if (!widget.canFetchMorePages) {
+                _clearData();
+              }
+              await _loadData();
+              _refreshController
+                ..finishLoad()
+                ..resetFooter();
+            },
+            child: Padding(
+              padding: edgeInsetsL10R10B20,
+              child: ListView.separated(
+                itemCount: _allData.length,
+                itemBuilder: (context, index) {
+                  return widget.widgetBuilder(context, _allData[index]);
+                },
+                separatorBuilder: widget.useDivider
+                    ? (context, index) => const Divider(thickness: 0.5)
+                    : (context, index) => sizedBoxW5H5,
+              ),
+            ),
+          ),
         ),
       );
 }

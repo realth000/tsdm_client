@@ -14,7 +14,7 @@ import 'package:universal_html/parsing.dart';
 /// Card for a [Post] model.
 ///
 /// Usually inside a ThreadPage.
-class PostCard extends ConsumerWidget {
+class PostCard extends ConsumerStatefulWidget {
   /// Constructor.
   const PostCard(this.post, {this.replyCallback, super.key});
 
@@ -24,42 +24,57 @@ class PostCard extends ConsumerWidget {
   final FutureOr<void> Function(User user, int? postFloor, String? replyAction)?
       replyCallback;
 
+  @override
+  ConsumerState<PostCard> createState() => _PostCardState();
+}
+
+class _PostCardState extends ConsumerState<PostCard>
+    with AutomaticKeepAliveClientMixin {
   // TODO: Handle better.
   @override
-  Widget build(BuildContext context, WidgetRef ref) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ListTile(
-            leading: CircleAvatar(
-              backgroundImage: CachedImageProvider(
-                post.author.avatarUrl!,
-                context,
-                ref,
-                fallbackImageUrl: noAvatarUrl,
-              ),
+  Widget build(BuildContext context) {
+    super.build(context);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          leading: CircleAvatar(
+            backgroundImage: CachedImageProvider(
+              widget.post.author.avatarUrl!,
+              context,
+              ref,
+              fallbackImageUrl: noAvatarUrl,
             ),
-            title: Text(post.author.name),
-            subtitle: Text('${post.publishTime?.elapsedTillNow()}'),
-            trailing:
-                post.postFloor == null ? null : Text('#${post.postFloor}'),
           ),
-          GestureDetector(
-            onTap: () async {
-              await replyCallback?.call(
-                  post.author, post.postFloor, post.replyAction);
-            },
-            child: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: edgeInsetsL15R15B10,
-                    child: munchElement(
-                        context, parseHtmlDocument(post.data).body!),
-                  ),
+          title: Text(widget.post.author.name),
+          subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
+          trailing: widget.post.postFloor == null
+              ? null
+              : Text('#${widget.post.postFloor}'),
+        ),
+        GestureDetector(
+          onTap: () async {
+            await widget.replyCallback?.call(widget.post.author,
+                widget.post.postFloor, widget.post.replyAction);
+          },
+          child: Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: edgeInsetsL15R15B10,
+                  child: munchElement(
+                      context, parseHtmlDocument(widget.post.data).body!),
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-        ],
-      );
+        ),
+      ],
+    );
+  }
+
+  // Add mixin and return true to avoid post list shaking when scrolling.
+  @override
+  bool get wantKeepAlive => true;
 }
