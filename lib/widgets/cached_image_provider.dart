@@ -154,7 +154,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
             throw Exception(e);
           }
           if (!context.mounted) {
-            throw Exception('widget already disposed');
+            return Future.value(Response(requestOptions: RequestOptions()));
           }
           return ref.read(netClientProvider()).get(
                 fallbackImageUrl!,
