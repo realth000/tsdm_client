@@ -12,7 +12,6 @@ import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/easy_refresh.dart';
 import 'package:tsdm_client/widgets/forum_card.dart';
 import 'package:tsdm_client/widgets/list_sliver_app_bar.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
@@ -259,9 +258,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
     }
 
     return EasyRefresh(
-      scrollBehaviorBuilder: buildScrollBehavior,
-      header: header,
-      footer: footer,
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
+          .copyWith(physics: physics, scrollbars: false),
+      header: const MaterialHeader(position: IndicatorPosition.locator),
+      footer: const MaterialFooter(),
       controller: _refreshController,
       scrollController: _listScrollController,
       onRefresh: () async {
@@ -301,7 +301,6 @@ class _ForumPageState extends ConsumerState<ForumPage>
                 separatorBuilder: (context, index) => sizedBoxW5H5,
               ),
             ),
-          const FooterLocator.sliver(),
         ],
       ),
     );
