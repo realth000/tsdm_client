@@ -4,7 +4,8 @@
   "general": {
     "ok": "确定",
     "cancel": "取消",
-    "needLoginToSeeThisPage": "登录后才能访问此页面"
+    "needLoginToSeeThisPage": "登录后才能访问此页面",
+    "pleaseWait": "请稍候"
   },
   "navigation": {
     "homepage": "主页",
@@ -43,6 +44,12 @@
       "title": "签到",
       "feeling": "心情",
       "anythingToSay": "有什么想说的吗？"
+    },
+    "storageSection": {
+      "title": "存储",
+      "clearCache": "清除缓存",
+      "sureToClear": "确定清除缓存？",
+      "downloadAgainInfo": "必要的缓存文件将会再次从服务器上下载"
     },
     "othersSection": {
       "title": "其他",

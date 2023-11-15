@@ -4,7 +4,8 @@
   "general": {
     "ok": "確定",
     "cancel": "取消",
-    "needLoginToSeeThisPage": "登入後才能存取此頁面"
+    "needLoginToSeeThisPage": "登入後才能存取此頁面",
+    "pleaseWait": "請稍候"
   },
   "navigation": {
     "homepage": "首頁",
@@ -43,6 +44,12 @@
       "title": "簽到",
       "feeling": "心情",
       "anythingToSay": "有什麼想說的嗎？"
+    },
+    "storageSection": {
+      "title": "儲存",
+      "clearCache": "清除快取",
+      "sureToClear": "確定清除快取？",
+      "downloadAgainInfo": "必要的快取檔案將會再次從伺服器下載"
     },
     "othersSection": {
       "title": "其他",

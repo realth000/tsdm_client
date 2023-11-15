@@ -4,7 +4,8 @@
   "general": {
     "ok": "Ok",
     "cancel": "Cancel",
-    "needLoginToSeeThisPage": "Need to login to see this page"
+    "needLoginToSeeThisPage": "Need to login to see this page",
+    "pleaseWait": "Please wait"
   },
   "navigation": {
     "homepage": "Home",
@@ -43,6 +44,12 @@
       "title": "Check In",
       "feeling": "Feeling",
       "anythingToSay": "Anything to say?"
+    },
+    "storageSection": {
+      "title": "Storage",
+      "clearCache": "Clear Cache",
+      "sureToClear": "Are you sure to clear cache?",
+      "downloadAgainInfo": "The necessary cache will be downloaded from the server again"
     },
     "othersSection": {
       "title": "Others",

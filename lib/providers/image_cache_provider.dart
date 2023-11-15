@@ -71,4 +71,19 @@ class ImageCache extends _$ImageCache {
   Future<void> updateCacheUsedTime(String imageUrl) async {
     await ref.read(appStorageProvider).updateImageCacheUsedTime(imageUrl);
   }
+
+  Future<int> calculateCache() async {
+    final fileList = _imageCacheDirectory.listSync(recursive: true);
+    return fileList.fold<int>(0, (acc, x) {
+      return acc + x.statSync().size;
+    });
+  }
+
+  /// Clear cache in [_imageCacheDirectory].
+  Future<void> clearCache() async {
+    // Currently all cached images are in _imageCacheDirectory, not sub dirs.
+    for (final f in _imageCacheDirectory.listSync()) {
+      await f.delete();
+    }
+  }
 }

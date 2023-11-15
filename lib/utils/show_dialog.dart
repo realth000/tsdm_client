@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
@@ -62,4 +64,44 @@ Future<bool?> showQuestionDialog({
       );
     },
   );
+}
+
+Future<void> showModalWorkDialog({
+  required BuildContext context,
+  required String message,
+  required FutureOr<void> Function() work,
+}) async {
+  BuildContext? dialogContext;
+  // DO NOT AWAIT
+  // ignore:unawaited_futures
+  showDialog<void>(
+    barrierDismissible: false,
+    context: context,
+    builder: (context) {
+      dialogContext = context;
+      return AlertDialog(
+        scrollable: true,
+        title: Text(context.t.general.pleaseWait),
+        content: SelectableText(message),
+      );
+    },
+  ).then((_) {
+    dialogContext = null;
+  });
+
+  final atLeast = Future.delayed(const Duration(seconds: 1));
+
+  if (work is Future<void> Function()) {
+    await Future.wait([work(), atLeast]);
+  } else {
+    await Future.wait([Future.value(work()), atLeast]);
+  }
+
+  if (!context.mounted) {
+    return;
+  }
+  if (dialogContext == null) {
+    return;
+  }
+  Navigator.of(dialogContext!).pop();
 }
