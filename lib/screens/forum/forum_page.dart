@@ -115,6 +115,9 @@ class _ForumPageState extends ConsumerState<ForumPage>
   void _clearData() {
     _pageNumber = 1;
     _allThreadData.clear();
+    _allSubredditData.clear();
+    _inLastPage = false;
+    _haveNoThread = false;
   }
 
   /// Check whether in the last page in a web page (consists a series of pages).
@@ -376,7 +379,16 @@ class _ForumPageState extends ConsumerState<ForumPage>
         onSelected: (value) async {
           switch (value) {
             case MenuActions.refresh:
-              await _refreshController.callRefresh();
+              await _listScrollController.animateTo(
+                0,
+                curve: Curves.ease,
+                duration: const Duration(milliseconds: 500),
+              );
+              Future.delayed(const Duration(milliseconds: 100), () async {
+                await _refreshController.callRefresh(
+                  scrollController: _listScrollController,
+                );
+              });
             case MenuActions.copyUrl:
               await Clipboard.setData(
                 ClipboardData(text: widget._fetchUrl),

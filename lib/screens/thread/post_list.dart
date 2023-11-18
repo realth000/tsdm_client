@@ -321,7 +321,16 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               onSelected: (value) async {
                 switch (value) {
                   case _MenuActions.refresh:
-                    await _refreshController.callRefresh();
+                    await _listScrollController.animateTo(
+                      0,
+                      curve: Curves.ease,
+                      duration: const Duration(milliseconds: 500),
+                    );
+                    Future.delayed(const Duration(milliseconds: 100), () async {
+                      await _refreshController.callRefresh(
+                        scrollController: _listScrollController,
+                      );
+                    });
                   case _MenuActions.copyUrl:
                     await Clipboard.setData(
                       ClipboardData(text: widget.fetchUrl),
