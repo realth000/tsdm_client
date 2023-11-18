@@ -7,12 +7,12 @@ import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:toastification/toastification.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -148,13 +148,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
       if (!context.mounted) {
         return;
       }
-      toastification.show(
-        context: context,
-        title: context.t.general.loadFailedAndRetry,
-        autoCloseDuration: const Duration(seconds: 1),
-      );
-      await Future.wait(
-          [Future.delayed(const Duration(milliseconds: 400), () {})]);
+      await showRetryToast(context);
     }
     final data = await widget.listBuilder(document);
 
