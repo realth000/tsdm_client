@@ -8,14 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
+import 'package:tsdm_client/models/thread_data.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+const _headerMaxExtent = 160.0;
+const _headerMinExtent = 160.0;
 
 enum _MenuActions {
   refresh,
@@ -76,6 +81,13 @@ class PostList<T> extends ConsumerStatefulWidget {
 class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   final _allData = <T>[];
 
+  /// Thread type name.
+  /// Actually this should provided by [ThreadData].
+  /// But till now we haven't parse this attr in forum page.
+  /// So parse here directly from thread page.
+  /// But only parse once because every page shall have the same thread type.
+  String? _threadType;
+
   final _refreshController = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
@@ -86,6 +98,14 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   late int _pageNumber = widget.pageNumber;
 
   bool _inLastPage = false;
+
+  /// Parse [_threadType] from thread page [document].
+  /// This should only run once.
+  String? _parseThreadType(uh.Document document) {
+    final node = document.querySelector(
+        'div#postlist > table > tbody > tr > td.pbn > h1.ts > a');
+    return node?.firstEndDeepText();
+  }
 
   /// Check whether in the last page in a web page (consists a series of pages).
   ///
@@ -151,6 +171,14 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
       await showRetryToast(context);
     }
     final data = await widget.listBuilder(document);
+
+    /// TODO: Use thread type parsed in [ThreadData].
+    /// Parse thread type
+    if (_threadType == null) {
+      setState(() {
+        _threadType = _parseThreadType(document);
+      });
+    }
 
     if (!mounted) {
       return;
@@ -221,6 +249,111 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     super.initState();
   }
 
+  Widget _buildHeader(
+      BuildContext context, WidgetRef ref, double shrinkOffset) {
+    final titleText = widget.title;
+    final isExpandHeader = shrinkOffset < 50;
+    // Calculate background color.
+    // When header fully expanded, use background color, otherwise use the same
+    // color as AppBar background.
+    final expandedBackgroundColor = _listScrollController.offset == 0
+        ? Theme.of(context).colorScheme.background
+        : ElevationOverlay.applySurfaceTint(
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.surfaceTint,
+            Theme.of(context).navigationBarTheme.elevation ?? 3,
+          );
+
+    Widget? titleWidget;
+    if (titleText != null) {
+      if (!isExpandHeader) {
+        titleWidget = Text(titleText);
+      }
+    }
+
+    return Column(
+      children: [
+        AppBar(
+          title: titleWidget,
+          actions: [
+            PopupMenuButton(
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                  value: _MenuActions.refresh,
+                  child: Row(children: [
+                    const Icon(Icons.refresh_outlined),
+                    Text(context.t.networkList.actionRefresh),
+                  ]),
+                ),
+                PopupMenuItem(
+                  value: _MenuActions.copyUrl,
+                  child: Row(children: [
+                    const Icon(Icons.copy_outlined),
+                    Text(context.t.networkList.actionCopyUrl),
+                  ]),
+                ),
+                PopupMenuItem(
+                  value: _MenuActions.openInBrowser,
+                  child: Row(children: [
+                    const Icon(Icons.launch_outlined),
+                    Text(context.t.networkList.actionOpenInBrowser),
+                  ]),
+                ),
+                PopupMenuItem(
+                  value: _MenuActions.backToTop,
+                  child: Row(children: [
+                    const Icon(Icons.vertical_align_top_outlined),
+                    Text(context.t.networkList.actionBackToTop),
+                  ]),
+                ),
+              ],
+              onSelected: (value) async {
+                switch (value) {
+                  case _MenuActions.refresh:
+                    await _refreshController.callRefresh();
+                  case _MenuActions.copyUrl:
+                    await Clipboard.setData(
+                      ClipboardData(text: widget.fetchUrl),
+                    );
+                    if (!context.mounted) {
+                      return;
+                    }
+                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                      content: Text(
+                        context.t.aboutPage.copiedToClipboard,
+                      ),
+                    ));
+                  case _MenuActions.openInBrowser:
+                    await launchUrl(
+                      Uri.parse(widget.fetchUrl),
+                      mode: LaunchMode.externalApplication,
+                    );
+                  case _MenuActions.backToTop:
+                    await _listScrollController.animateTo(
+                      0,
+                      curve: Curves.ease,
+                      duration: const Duration(milliseconds: 500),
+                    );
+                }
+              },
+            ),
+          ],
+        ),
+        if (isExpandHeader && titleText != null)
+          Expanded(
+            child: ColoredBox(
+              color: expandedBackgroundColor,
+              child: Text(
+                titleText,
+                style: Theme.of(context).textTheme.titleLarge,
+                maxLines: 2,
+              ),
+            ),
+          )
+      ],
+    );
+  }
+
   @override
   void dispose() {
     _listScrollController.dispose();
@@ -228,211 +361,94 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     super.dispose();
   }
 
-  /// Reserved code
-  // @override
-  Widget buildNotUsed(BuildContext context) => EasyRefresh(
-        scrollBehaviorBuilder: (physics) {
-          // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
-          return ERScrollBehavior(physics)
-              .copyWith(physics: physics, scrollbars: false);
-        },
-        header: const MaterialHeader(position: IndicatorPosition.locator),
-        footer: const MaterialFooter(),
-        controller: _refreshController,
-        scrollController: _listScrollController,
-        refreshOnStart: true,
-        onRefresh: () async {
-          if (!mounted) {
-            return;
-          }
-          _clearData();
-          await _loadData();
+  @override
+  Widget build(BuildContext context) {
+    return EasyRefresh(
+      scrollBehaviorBuilder: (physics) {
+        // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+        return ERScrollBehavior(physics)
+            .copyWith(physics: physics, scrollbars: false);
+      },
+      header: const MaterialHeader(position: IndicatorPosition.locator),
+      footer: const MaterialFooter(),
+      controller: _refreshController,
+      scrollController: _listScrollController,
+      refreshOnStart: true,
+      onRefresh: () async {
+        if (!mounted) {
+          return;
+        }
+        _clearData();
+        await _loadData();
+        _refreshController
+          ..finishRefresh()
+          ..resetFooter();
+      },
+      onLoad: () async {
+        if (!mounted) {
+          return;
+        }
+        if (_inLastPage) {
+          debug('already in last page');
           _refreshController
-            ..finishRefresh()
+            ..finishLoad(IndicatorResult.noMore)
             ..resetFooter();
-        },
-        onLoad: () async {
-          if (!mounted) {
-            return;
-          }
-          if (_inLastPage) {
-            debug('already in last page');
-            _refreshController
-              ..finishLoad(IndicatorResult.noMore)
-              ..resetFooter();
-            return;
-          }
+          await showNoMoreToast(context);
+          return;
+        }
 
-          if (!widget.canFetchMorePages) {
-            _clearData();
-          }
-          await _loadData();
-          _refreshController
-            ..finishLoad()
-            ..resetFooter();
-        },
-        child: CustomScrollView(
-          controller: _listScrollController,
-          slivers: [
-            SliverAppBar(
-              title: widget.title == null ? null : Text(widget.title!),
-              pinned: true,
-              actions: [
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: _MenuActions.refresh,
-                      child: Row(children: [
-                        const Icon(Icons.refresh_outlined),
-                        Text(context.t.networkList.actionRefresh),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.copyUrl,
-                      child: Row(children: [
-                        const Icon(Icons.copy_outlined),
-                        Text(context.t.networkList.actionCopyUrl),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.openInBrowser,
-                      child: Row(children: [
-                        const Icon(Icons.launch_outlined),
-                        Text(context.t.networkList.actionOpenInBrowser),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.backToTop,
-                      child: Row(children: [
-                        const Icon(Icons.vertical_align_top_outlined),
-                        Text(context.t.networkList.actionBackToTop),
-                      ]),
-                    ),
-                  ],
-                  onSelected: (value) async {
-                    switch (value) {
-                      case _MenuActions.refresh:
-                        await _refreshController.callRefresh();
-                      case _MenuActions.copyUrl:
-                        await Clipboard.setData(
-                          ClipboardData(text: widget.fetchUrl),
-                        );
-                        if (!context.mounted) {
-                          return;
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            context.t.aboutPage.copiedToClipboard,
-                          ),
-                        ));
-                      case _MenuActions.openInBrowser:
-                        await launchUrl(
-                          Uri.parse(widget.fetchUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      case _MenuActions.backToTop:
-                        await _listScrollController.animateTo(
-                          0,
-                          curve: Curves.ease,
-                          duration: const Duration(milliseconds: 500),
-                        );
-                    }
-                  },
-                ),
-              ],
-            ),
-            const HeaderLocator.sliver(),
-            if (_allData.isNotEmpty)
-              SliverPadding(
-                padding: edgeInsetsL10R10B20,
-                sliver: SliverList.separated(
-                  itemCount: _allData.length,
-                  itemBuilder: (context, index) {
-                    return widget.widgetBuilder(context, _allData[index]);
-                  },
-                  separatorBuilder: widget.useDivider
-                      ? (context, index) => const Divider(thickness: 0.5)
-                      : (context, index) => sizedBoxW5H5,
-                ),
+        if (!widget.canFetchMorePages) {
+          _clearData();
+        }
+        await _loadData();
+        _refreshController
+          ..finishLoad()
+          ..resetFooter();
+      },
+      child: CustomScrollView(
+        controller: _listScrollController,
+        slivers: [
+          SliverPersistentHeader(
+            pinned: true,
+            floating: true,
+            delegate: SliverAppBarPersistentDelegate(
+                buildHeader: (context, shrinkOffset, overlapsContent) {
+              return _buildHeader(context, ref, shrinkOffset);
+            }),
+          ),
+          const HeaderLocator.sliver(),
+          if (_allData.isNotEmpty)
+            SliverPadding(
+              padding: edgeInsetsL10R10B20,
+              sliver: SliverList.separated(
+                itemCount: _allData.length,
+                itemBuilder: (context, index) {
+                  return widget.widgetBuilder(context, _allData[index]);
+                },
+                separatorBuilder: widget.useDivider
+                    ? (context, index) => const Divider(thickness: 0.5)
+                    : (context, index) => sizedBoxW5H5,
               ),
-          ],
-        ),
-      );
+            ),
+        ],
+      ),
+    );
+  }
 
   /// Reserved code.
-  @override
-  Widget build(BuildContext context) => ExtendedNestedScrollView(
+  // @override
+  Widget buildNotUsed(BuildContext context) => ExtendedNestedScrollView(
         onlyOneScrollInBody: true,
         controller: _listScrollController,
         headerSliverBuilder: (context, innerBoxIsScrolled) {
           return [
-            SliverAppBar(
-              title: widget.title == null ? null : Text(widget.title!),
-              pinned: true,
-              actions: [
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: _MenuActions.refresh,
-                      child: Row(children: [
-                        const Icon(Icons.refresh_outlined),
-                        Text(context.t.networkList.actionRefresh),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.copyUrl,
-                      child: Row(children: [
-                        const Icon(Icons.copy_outlined),
-                        Text(context.t.networkList.actionCopyUrl),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.openInBrowser,
-                      child: Row(children: [
-                        const Icon(Icons.launch_outlined),
-                        Text(context.t.networkList.actionOpenInBrowser),
-                      ]),
-                    ),
-                    PopupMenuItem(
-                      value: _MenuActions.backToTop,
-                      child: Row(children: [
-                        const Icon(Icons.vertical_align_top_outlined),
-                        Text(context.t.networkList.actionBackToTop),
-                      ]),
-                    ),
-                  ],
-                  onSelected: (value) async {
-                    switch (value) {
-                      case _MenuActions.refresh:
-                        await _refreshController.callRefresh();
-                      case _MenuActions.copyUrl:
-                        await Clipboard.setData(
-                          ClipboardData(text: widget.fetchUrl),
-                        );
-                        if (!context.mounted) {
-                          return;
-                        }
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            context.t.aboutPage.copiedToClipboard,
-                          ),
-                        ));
-                      case _MenuActions.openInBrowser:
-                        await launchUrl(
-                          Uri.parse(widget.fetchUrl),
-                          mode: LaunchMode.externalApplication,
-                        );
-                      case _MenuActions.backToTop:
-                        await _listScrollController.animateTo(
-                          0,
-                          curve: Curves.ease,
-                          duration: const Duration(milliseconds: 500),
-                        );
-                    }
-                  },
-                ),
-              ],
-            ),
+            // SliverPersistentHeader(
+            //   delegate: SliverAppBarPersistentDelegate(
+            //       buildHeader: (context, shrinkOffset, overlapsContent) {
+            //     return _buildHeader(context, ref);
+            //   }),
+            // )
+            // _buildHeader(context, ref),
           ];
         },
         body: ExtendedVisibilityDetector(
@@ -494,4 +510,26 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
           ),
         ),
       );
+}
+
+class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
+  SliverAppBarPersistentDelegate({required this.buildHeader});
+
+  final Widget Function(BuildContext, double, bool) buildHeader;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return buildHeader(context, shrinkOffset, overlapsContent);
+  }
+
+  @override
+  double get maxExtent => _headerMaxExtent;
+
+  @override
+  double get minExtent => _headerMinExtent;
+
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
+      true;
 }
