@@ -228,6 +228,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
+      top: isExpanded,
       child: Column(
         mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
         children: [
