@@ -177,6 +177,10 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     }
     final data = await widget.listBuilder(document);
 
+    if (!context.mounted) {
+      return;
+    }
+
     /// TODO: Use thread type parsed in [ThreadData].
     /// Parse thread type
     if (_threadType == null) {
