@@ -1,51 +1,38 @@
-<div align="center">
-  <p>
-    <h1>
-      <a href="https://github.com/realth000/tsdm_client/">
+<h1 align="center">
+    <a href="https://github.com/realth000/tsdm_client/">
         <img src="./assets/images/tsdm_client.svg" width="120px">
-      </a>
-      <br>
-      tsdm_client
-    </h1>
-    <!--Do NOT close the <h4> tag here to prevent links between badges-->
-    <h4>使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端<h4>
-  </p>
-  <p>
-    <a href="https://github.com/realth000/tsdm_client/releases">
-      <img src="https://img.shields.io/badge/-Android-19A6E6?logo=android&logoColor=f0f0f0">
     </a>
-    <a href="https://github.com/realth000/tsdm_client/releases">
-      <img src="https://img.shields.io/badge/-Linux-19A6E6?&logo=Linux&logoColor=f0f0f0">
-    </a>
-    <a href="https://github.com/realth000/tsdm_client/releases">
-      <img src="https://img.shields.io/badge/-Windows-19A6E6?&logo=Windows&logoColor=f0f0f0">
-    </a>
-    <a href="https://flutter.dev/">
-      <img src="https://img.shields.io/badge/Flutter-3.13-19A6E6?logo=flutter">
-    </a>
-    <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE">
-      <img src="https://img.shields.io/github/license/realth000/tsdm_client">
-    </a>
-    <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade">
-      <img src="https://app.codacy.com/project/badge/Grade/cb1ee2e43746487798ced62cf0aee24b">
-    </a>
-  </p>
-</div>
+    <br>
+    tsdm_client
+</h1>
+
+<p align="center">
+使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端
+</p>
+
+<p align="center">
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Android-19A6E6?logo=android&logoColor=f0f0f0"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Linux-19A6E6?&logo=Linux&logoColor=f0f0f0"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Windows-19A6E6?&logo=Windows&logoColor=f0f0f0"></a>
+  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.16-19A6E6?logo=flutter"></a>
+  <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/github/license/realth000/tsdm_client"></a>
+  <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/cb1ee2e43746487798ced62cf0aee24b"></a>
+</p>
 
 > **Note**
 >
-> 所有功能实现均依靠解析公开的网页，仅与主站间有和网页端浏览相似的流量，数据均存储在本地设备，不会收集或上传任何信息到任何服务器。
+> 功能实现依靠解析网页，不会收集或上传信息。
 
 ## 功能
 
 * [ ] 看贴
-    * [x] 回复内容
+    * [x] 回复
     * [x] 基本信息（用户名、头像）
     * [ ] 其他信息（分组、徽章、心情等）
-    * [ ] 复制内容
-    * [ ] 回复时引用的内容
+    * [x] 引用
     * [ ] 投票
     * [ ] 代码块
+    * [ ] 看帖时复制
 * [ ] 登录
     * [x] 登录
     * [ ] 用户名或邮箱登录
@@ -55,8 +42,8 @@
 * [ ] 回帖
     * [x] 回复文字
     * [ ] 设置字体、字号、链接等富文本
-    * [ ] 回复具体楼层
-    * [ ] 编辑或删除回复
+    * [x] 回复其他楼层
+    * [ ] 编辑回复
 * [ ] 购买帖子
 * [x] 签到
 * [x] 深色模式
