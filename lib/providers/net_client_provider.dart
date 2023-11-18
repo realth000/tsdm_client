@@ -59,7 +59,10 @@ class _ErrorHandler extends Interceptor {
     if (err.type == DioExceptionType.unknown) {
       // Likely we have an error in SSL handshake.
       debug(err);
-      handler.reject(err);
+      // TODO: Avoid this status code.
+      handler.resolve(
+        Response(requestOptions: RequestOptions(), statusCode: 999),
+      );
       return;
     }
 
