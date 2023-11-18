@@ -65,6 +65,7 @@ class ThreadCard extends ConsumerWidget {
             },
             extra: <String, dynamic>{
               'appBarTitle': thread.title,
+              'threadType': thread.threadType?.name,
             },
           );
         },

@@ -16,6 +16,7 @@ class ThreadPage extends ConsumerStatefulWidget {
     required this.threadID,
     required this.pageNumber,
     this.title,
+    this.threadType,
     super.key,
   }) : _fetchUrl =
             '$baseUrl/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
@@ -30,6 +31,12 @@ class ThreadPage extends ConsumerStatefulWidget {
 
   /// Thread current page number.
   final String pageNumber;
+
+  /// Thread type.
+  ///
+  /// Sometimes we do not know the thread type before we load it, redirect from
+  /// homepage, for example. So it's a nullable String.
+  final String? threadType;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ThreadPageState();

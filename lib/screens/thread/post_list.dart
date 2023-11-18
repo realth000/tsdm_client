@@ -3,15 +3,14 @@ import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
-import 'package:tsdm_client/models/thread_data.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -38,6 +37,7 @@ class PostList<T> extends ConsumerStatefulWidget {
     required this.listBuilder,
     required this.widgetBuilder,
     this.title,
+    this.threadType,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
     this.replyFormHashCallback,
@@ -61,6 +61,11 @@ class PostList<T> extends ConsumerStatefulWidget {
 
   final Function(ReplyParameters)? replyFormHashCallback;
 
+  /// Thread type.
+  ///
+  /// When it is null, confirm it from thread page.
+  final String? threadType;
+
   /// Build [Widget] from given [uh.Document].
   ///
   /// User needs to provide this method and [PostList] refresh by pressing
@@ -82,7 +87,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   final _allData = <T>[];
 
   /// Thread type name.
-  /// Actually this should provided by [ThreadData].
+  /// Actually this should provided by [NormalThread].
   /// But till now we haven't parse this attr in forum page.
   /// So parse here directly from thread page.
   /// But only parse once because every page shall have the same thread type.
@@ -247,6 +252,8 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   @override
   void initState() {
     super.initState();
+    // Try use the thread type in widget which comes from routing.
+    _threadType = widget.threadType;
   }
 
   Widget _buildHeader(
@@ -434,82 +441,6 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
       ),
     );
   }
-
-  /// Reserved code.
-  // @override
-  Widget buildNotUsed(BuildContext context) => ExtendedNestedScrollView(
-        onlyOneScrollInBody: true,
-        controller: _listScrollController,
-        headerSliverBuilder: (context, innerBoxIsScrolled) {
-          return [
-            // SliverPersistentHeader(
-            //   delegate: SliverAppBarPersistentDelegate(
-            //       buildHeader: (context, shrinkOffset, overlapsContent) {
-            //     return _buildHeader(context, ref);
-            //   }),
-            // )
-            // _buildHeader(context, ref),
-          ];
-        },
-        body: ExtendedVisibilityDetector(
-          uniqueKey: const Key('list'),
-          child: EasyRefresh(
-            scrollBehaviorBuilder: (physics) {
-              // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
-              return ERScrollBehavior(physics)
-                  .copyWith(physics: physics, scrollbars: false);
-            },
-            header: const MaterialHeader(),
-            footer: const MaterialFooter(),
-            controller: _refreshController,
-            scrollController: _listScrollController,
-            refreshOnStart: true,
-            onRefresh: () async {
-              if (!mounted) {
-                return;
-              }
-              _clearData();
-              await _loadData();
-              _refreshController
-                ..finishRefresh()
-                ..resetFooter();
-            },
-            onLoad: () async {
-              if (!mounted) {
-                return;
-              }
-              if (_inLastPage) {
-                debug('already in last page');
-                _refreshController
-                  ..finishLoad(IndicatorResult.noMore)
-                  ..resetFooter();
-                await showNoMoreToast(context);
-                return;
-              }
-
-              if (!widget.canFetchMorePages) {
-                _clearData();
-              }
-              await _loadData();
-              _refreshController
-                ..finishLoad()
-                ..resetFooter();
-            },
-            child: Padding(
-              padding: edgeInsetsL10R10B20,
-              child: ListView.separated(
-                itemCount: _allData.length,
-                itemBuilder: (context, index) {
-                  return widget.widgetBuilder(context, _allData[index]);
-                },
-                separatorBuilder: widget.useDivider
-                    ? (context, index) => const Divider(thickness: 0.5)
-                    : (context, index) => sizedBoxW5H5,
-              ),
-            ),
-          ),
-        ),
-      );
 }
 
 class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {

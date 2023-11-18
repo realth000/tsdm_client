@@ -86,11 +86,14 @@ final tClientRouter = GoRouter(
         builder: (state) {
           final extra = state.extra;
           String? title;
+          String? threadType;
           if (extra != null && extra is Map<String, dynamic>) {
             title = extra['appBarTitle'] as String;
+            threadType = extra['threadType'] as String?;
           }
           return ThreadPage(
             title: title,
+            threadType: threadType,
             threadID: state.pathParameters['tid']!,
             pageNumber: state.pathParameters['pageNumber'] ?? '1',
           );
