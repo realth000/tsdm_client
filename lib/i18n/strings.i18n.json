@@ -5,7 +5,8 @@
     "ok": "Ok",
     "cancel": "Cancel",
     "needLoginToSeeThisPage": "Need to login to see this page",
-    "pleaseWait": "Please wait"
+    "pleaseWait": "Please wait",
+    "loadFailedAndRetry": "Load failed, retrying"
   },
   "navigation": {
     "homepage": "Home",

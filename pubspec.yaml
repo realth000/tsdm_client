@@ -23,7 +23,6 @@ dependencies:
     sdk: flutter
   flutter_localizations:
     sdk: flutter
-  fluttertoast: ^8.2.4
   freezed_annotation: ^2.4.1
   gitsumu:
     git:
@@ -40,6 +39,7 @@ dependencies:
   slang: ^3.25.0
   slang_flutter: ^3.25.0
   surf_lint_rules: ^3.0.0
+  toastification: ^1.1.0
   universal_html: ^2.2.4
   url_launcher: ^6.2.1
   uuid: ^4.2.1

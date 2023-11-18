@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toastification/toastification.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -173,10 +176,25 @@ class _ForumPageState extends ConsumerState<ForumPage>
     }
 
     late final uh.Document document;
-    final d1 = await ref.read(netClientProvider()).get<dynamic>(
-          '${widget._fetchUrl}&page=$_pageNumber',
-        );
-    document = parseHtmlDocument(d1.data as String);
+    while (true) {
+      final d1 = await ref.read(netClientProvider()).get<dynamic>(
+            '${widget._fetchUrl}&page=$_pageNumber',
+          );
+      if (d1.statusCode == HttpStatus.ok) {
+        document = parseHtmlDocument(d1.data as String);
+        break;
+      }
+      if (!context.mounted) {
+        return;
+      }
+      toastification.show(
+        context: context,
+        title: context.t.general.loadFailedAndRetry,
+        autoCloseDuration: const Duration(seconds: 1),
+      );
+      await Future.wait(
+          [Future.delayed(const Duration(milliseconds: 400), () {})]);
+    }
 
     // Subreddit.
     _allSubredditData = _buildForumList(document);

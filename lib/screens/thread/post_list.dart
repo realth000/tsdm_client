@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
@@ -6,6 +7,7 @@ import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:toastification/toastification.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
@@ -33,7 +35,6 @@ class PostList<T> extends ConsumerStatefulWidget {
     this.title,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
-    this.initialData,
     this.replyFormHashCallback,
     this.useDivider = false,
     super.key,
@@ -64,10 +65,6 @@ class PostList<T> extends ConsumerStatefulWidget {
   /// Build a list of [Widget].
   final Widget Function(BuildContext, T) widgetBuilder;
 
-  /// Initial data to use in the first fetch.
-  /// This argument allows to load cached data every first time.
-  final uh.Document? initialData;
-
   /// Use [Divider] instead of [SizedBox] between list items.
   final bool useDivider;
 
@@ -87,10 +84,6 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   final _listScrollController = ScrollController();
 
   late int _pageNumber = widget.pageNumber;
-
-  /// Flag to mark whether has already tried to load data.
-  /// If any attempt occurred before, set to true.
-  bool _initialized = false;
 
   bool _inLastPage = false;
 
@@ -144,14 +137,24 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
 
   Future<void> _loadData() async {
     late final uh.Document document;
-    if (!_initialized && widget.initialData != null) {
-      document = widget.initialData!;
-      _initialized = true;
-    } else {
+    while (true) {
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
-      document = parseHtmlDocument(d1.data as String);
+      if (d1.statusCode == HttpStatus.ok) {
+        document = parseHtmlDocument(d1.data as String);
+        break;
+      }
+      if (!context.mounted) {
+        return;
+      }
+      toastification.show(
+        context: context,
+        title: context.t.general.loadFailedAndRetry,
+        autoCloseDuration: const Duration(seconds: 1),
+      );
+      await Future.wait(
+          [Future.delayed(const Duration(milliseconds: 400), () {})]);
     }
     final data = await widget.listBuilder(document);
 

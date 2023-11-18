@@ -1,12 +1,10 @@
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/providers/cookie_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/global_keys.dart';
 
 part '../generated/providers/net_client_provider.g.dart';
 
@@ -59,11 +57,8 @@ class _ErrorHandler extends Interceptor {
 
     // TODO: Retry if we need this error kind.
     if (err.type == DioExceptionType.unknown) {
-      // Likely an error in SSL handshake.
-      // Show a snackbar to notify this error.
-      globalSnackbarKey.currentState?.showSnackBar(SnackBar(
-        content: Text('$err'),
-      ));
+      // Likely we have an error in SSL handshake.
+      debug(err);
       handler.reject(err);
       return;
     }
