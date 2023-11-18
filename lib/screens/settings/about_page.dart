@@ -68,7 +68,6 @@ class AboutPage extends ConsumerWidget {
             leading: const Icon(Icons.home_max_outlined),
             title: Text(context.t.aboutPage.forumHomepage),
             subtitle: const Text(baseUrl),
-            trailing: const Icon(Icons.launch_outlined),
             onTap: () async {
               await launchUrl(
                 Uri.parse(baseUrl),
@@ -80,7 +79,6 @@ class AboutPage extends ConsumerWidget {
             leading: const Icon(Icons.home_outlined),
             title: Text(context.t.aboutPage.homepage),
             subtitle: const Text('https://github.com/realth000/tsdm_client'),
-            trailing: const Icon(Icons.launch_outlined),
             onTap: () async {
               await launchUrl(
                 Uri.parse('https://github.com/realth000/tsdm_client'),
@@ -94,7 +92,6 @@ class AboutPage extends ConsumerWidget {
             subtitle: const Text(
               '$flutterVersion ($flutterChannel) - $flutterFrameworkRevision',
             ),
-            trailing: const Icon(Icons.launch_outlined),
             onTap: () async {
               await launchUrl(
                 Uri.parse('https://flutter.dev/'),
@@ -106,7 +103,6 @@ class AboutPage extends ConsumerWidget {
             leading: const Icon(Icons.foundation_outlined),
             title: Text(context.t.aboutPage.dartVersion),
             subtitle: const Text(dartVersion),
-            trailing: const Icon(Icons.launch_outlined),
             onTap: () async {
               await launchUrl(
                 Uri.parse('https://dart.dev/'),
