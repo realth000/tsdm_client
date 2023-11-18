@@ -1,1 +1,1 @@
-part '../generated/utils/git_info.gitsumu.dart';
+part '../generated/utils/git_info.g.dart';

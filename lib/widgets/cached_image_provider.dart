@@ -49,55 +49,6 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
     return SynchronousFuture<CachedImageProvider>(this);
   }
 
-  @Deprecated(
-    'Use ImageDecoderCallback with ImageProvider.loadImage instead. '
-    'This feature was deprecated after v2.13.0-1.0.pre.',
-  )
-  @override
-  ImageStreamCompleter load(CachedImageProvider key, DecoderCallback decode) {
-    // Ownership of this controller is handed off to [_loadAsync]; it is that
-    // method's responsibility to close the controller's stream when the image
-    // has been loaded or an error is thrown.
-    final chunkEvents = StreamController<ImageChunkEvent>();
-
-    return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, chunkEvents, decodeDeprecated: decode),
-      chunkEvents: chunkEvents.stream,
-      scale: key.scale,
-      debugLabel: key.url,
-      informationCollector: () => <DiagnosticsNode>[
-        DiagnosticsProperty<ImageProvider>('Image provider', this),
-        DiagnosticsProperty<CachedImageProvider>('Image key', key),
-      ],
-    );
-  }
-
-  @Deprecated(
-    'Use ImageDecoderCallback with ImageProvider.loadImage instead. '
-    'This feature was deprecated after v3.7.0-1.4.pre.',
-  )
-  @override
-  ImageStreamCompleter loadBuffer(
-    CachedImageProvider key,
-    DecoderBufferCallback decode,
-  ) {
-    // Ownership of this controller is handed off to [_loadAsync]; it is that
-    // method's responsibility to close the controller's stream when the image
-    // has been loaded or an error is thrown.
-    final chunkEvents = StreamController<ImageChunkEvent>();
-
-    return MultiFrameImageStreamCompleter(
-      codec: _loadAsync(key, chunkEvents, decodeBufferDeprecated: decode),
-      chunkEvents: chunkEvents.stream,
-      scale: key.scale,
-      debugLabel: key.url,
-      informationCollector: () => <DiagnosticsNode>[
-        DiagnosticsProperty<ImageProvider>('Image provider', this),
-        DiagnosticsProperty<CachedImageProvider>('Image key', key),
-      ],
-    );
-  }
-
   @override
   ImageStreamCompleter loadImage(
       CachedImageProvider key, ImageDecoderCallback decode) {
@@ -121,9 +72,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
   Future<ui.Codec> _loadAsync(
     CachedImageProvider key,
     StreamController<ImageChunkEvent> chunkEvents, {
-    ImageDecoderCallback? decode,
-    DecoderBufferCallback? decodeBufferDeprecated,
-    DecoderCallback? decodeDeprecated,
+    required ImageDecoderCallback decode,
   }) async {
     try {
       assert(key == this);
@@ -179,17 +128,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
       if (bytes.lengthInBytes == 0) {
         throw Exception('NetworkImage is an empty file: $imageUrl');
       }
-
-      if (decode != null) {
-        final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-        return decode(buffer);
-      } else if (decodeBufferDeprecated != null) {
-        final buffer = await ui.ImmutableBuffer.fromUint8List(bytes);
-        return decodeBufferDeprecated(buffer);
-      } else {
-        assert(decodeDeprecated != null);
-        return decodeDeprecated!(bytes);
-      }
+      return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
       // Depending on where the exception was thrown, the image cache may not
       // have had a chance to track the key in the cache at all.
