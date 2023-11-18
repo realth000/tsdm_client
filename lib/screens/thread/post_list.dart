@@ -467,6 +467,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
                 _refreshController
                   ..finishLoad(IndicatorResult.noMore)
                   ..resetFooter();
+                await showNoMoreToast(context);
                 return;
               }
 

@@ -6,7 +6,8 @@
     "cancel": "取消",
     "needLoginToSeeThisPage": "登录后才能访问此页面",
     "pleaseWait": "请稍候",
-    "loadFailedAndRetry": "加载失败，正在重试"
+    "loadFailedAndRetry": "加载失败，正在重试",
+    "noMoreData": "已经到头了"
   },
   "navigation": {
     "homepage": "主页",

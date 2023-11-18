@@ -293,6 +293,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
         if (_inLastPage) {
           debug('already in last page');
           _refreshController.finishLoad(IndicatorResult.noMore);
+          await showNoMoreToast(context);
           return;
         }
 

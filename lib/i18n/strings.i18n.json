@@ -6,7 +6,8 @@
     "cancel": "Cancel",
     "needLoginToSeeThisPage": "Need to login to see this page",
     "pleaseWait": "Please wait",
-    "loadFailedAndRetry": "Load failed, retrying"
+    "loadFailedAndRetry": "Load failed, retrying",
+    "noMoreData": "No more data"
   },
   "navigation": {
     "homepage": "Home",
