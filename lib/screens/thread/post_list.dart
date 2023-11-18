@@ -347,16 +347,23 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
           ],
         ),
         if (isExpandHeader && titleText != null)
-          Expanded(
-            child: ColoredBox(
-              color: expandedBackgroundColor,
-              child: Text(
-                titleText,
-                style: Theme.of(context).textTheme.titleLarge,
-                maxLines: 2,
+          Row(
+            children: [
+              Expanded(
+                child: ColoredBox(
+                  color: expandedBackgroundColor,
+                  child: Padding(
+                    padding: edgeInsetsL20R20B10,
+                    child: Text(
+                      titleText,
+                      style: Theme.of(context).textTheme.titleLarge,
+                      maxLines: 2,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          )
+            ],
+          ),
       ],
     );
   }
