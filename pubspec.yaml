@@ -28,15 +28,15 @@ dependencies:
   gitsumu:
     git:
       url: https://github.com/realth000/gitsumu.git
-      ref: 5898d693473a0430f776a4878d70251dbe3e6603
+      ref: eec78e9a88d93876a41c5a9bf4368cadcc8ccca8
   go_router: ^12.1.1
-  hooks_riverpod: ^2.4.5
+  hooks_riverpod: ^2.4.6
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
   path_provider: ^2.1.1
   responsive_framework: ^1.1.1
-  riverpod_annotation: ^2.3.0
+  riverpod_annotation: ^2.3.1
   slang: ^3.25.0
   slang_flutter: ^3.25.0
   surf_lint_rules: ^3.0.0
@@ -57,7 +57,7 @@ dev_dependencies:
   # Blocked by surf_lint_rules
   lints: ^2.1.1
   riverpod_generator: ^3.0.0-dev.2
-  riverpod_lint: ^2.3.3
+  riverpod_lint: ^2.3.4
   slang_build_runner: ^3.25.0
 
 dependency_overrides:
