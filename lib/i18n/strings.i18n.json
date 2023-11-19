@@ -146,6 +146,16 @@
     "replySuccess": "Reply success",
     "replyFailed": "Failed to reply: $err"
   },
+  "noticePage": {
+    "title": "Notifications",
+    "noticeTab": {
+      "title": "Notice",
+      "replyBody": "replied in $threadTitle"
+    },
+    "messageTab": {
+      "title": "Messages"
+    }
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

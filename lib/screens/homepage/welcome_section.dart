@@ -8,6 +8,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/check_in_button.dart';
@@ -189,13 +190,23 @@ class WelcomeSection extends ConsumerWidget {
                       ),
                       backgroundColor: Colors.transparent,
                     ),
-                    title: Text(
-                      welcomeText,
-                      style: Theme.of(context).textTheme.titleLarge,
+                    title: Row(
+                      children: [
+                        Text(
+                          welcomeText,
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        Expanded(child: Container()),
+                        IconButton(
+                          icon: const Icon(Icons.notifications_outlined),
+                          onPressed: () async {
+                            await context.pushNamed(ScreenPaths.notice);
+                          },
+                        ),
+                        if (ref.read(authProvider) == AuthState.authorized)
+                          const CheckInButton(),
+                      ],
                     ),
-                    trailing: ref.read(authProvider) == AuthState.authorized
-                        ? const CheckInButton()
-                        : null,
                   ),
                   ...linkTileList,
                 ],

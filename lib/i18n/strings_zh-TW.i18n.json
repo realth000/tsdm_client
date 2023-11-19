@@ -146,6 +146,16 @@
     "replySuccess": "回覆成功",
     "replyFailed": "回覆失敗：$err"
   },
+  "noticePage": {
+    "title": "通知",
+    "noticeTab": {
+      "title": "提醒",
+      "replyBody": "在 $threadTitle 中回覆了"
+    },
+    "messageTab": {
+      "title": "訊息"
+    }
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

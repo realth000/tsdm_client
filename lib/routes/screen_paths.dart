@@ -40,4 +40,9 @@ class ScreenPaths {
 
   /// Thread page.
   static const String thread = '/thread/:tid';
+
+  /// Notice page.
+  ///
+  /// Show all notice and private messages on current user.
+  static const String notice = '/notice';
 }

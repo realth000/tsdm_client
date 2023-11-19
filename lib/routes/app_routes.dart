@@ -5,6 +5,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
+import 'package:tsdm_client/screens/notice/notice_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
@@ -111,6 +112,12 @@ final tClientRouter = GoRouter(
         return LoginPage(redirectBackState: redirectBackState);
       },
     ),
+    AppRoute(
+        path: ScreenPaths.notice,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          return const NoticePage();
+        }),
   ],
 );
 

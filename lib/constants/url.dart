@@ -2,6 +2,8 @@ const baseUrl = 'https://www.tsdm39.com';
 const homePage = '$baseUrl/forum.php';
 const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
 const noAvatarUrl = '$baseUrl/uc_server/images/noavatar_middle.gif';
+const noticeUrl = '$baseUrl/home.php?mod=space&do=notice';
+const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
 
 /// Target url to post a reply to thread [tid], forum [fid].
 String formatReplyThreadUrl(String fid, String tid) {
