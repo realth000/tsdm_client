@@ -97,12 +97,15 @@ class RootContent extends _$RootContent {
   ///
   /// This will take a long time so use cached data as possible.
   Future<CachedRootContent> fetch() async {
-    final resp = await ref.read(netClientProvider()).get(_rootPage);
-    if (resp.statusCode != HttpStatus.ok) {
-      return Future.error(
-          'failed to load root page content, status code is ${resp.statusCode}');
+    while (true) {
+      final resp = await ref.read(netClientProvider()).get(_rootPage);
+      if (resp.statusCode == HttpStatus.ok) {
+        _doc = parseHtmlDocument(resp.data as String);
+        break;
+      }
+      await Future.wait(
+          [Future.delayed(const Duration(milliseconds: 400), () {})]);
     }
-    _doc = parseHtmlDocument(resp.data as String);
 
     _cache = CachedRootContent();
     await ref.read(authProvider.notifier).loginFromDocument(_doc);
@@ -114,9 +117,11 @@ class RootContent extends _$RootContent {
     final uid = ref.read(authProvider.notifier).loggedUid;
     if (ref.read(authProvider) == AuthState.authorized && uid != null) {
       // Load current user profile page.
-      final profileResp = await ref.read(netClientProvider()).get('$_profilePage$uid');
+      final profileResp =
+          await ref.read(netClientProvider()).get('$_profilePage$uid');
       if (profileResp.statusCode != HttpStatus.ok) {
-        return Future.error('failed to load user profile page, status code is ${profileResp.statusCode}');
+        return Future.error(
+            'failed to load user profile page, status code is ${profileResp.statusCode}');
       }
       _profileDoc = parseHtmlDocument(profileResp.data as String);
       _avatarUrl = _profileDoc!
@@ -147,6 +152,7 @@ class CachedRootContent {
   CachedRootContent();
 
   String usernameText = '';
+
   /// Avatar url may be null because webpage layout not has that.
   String? avatarUrl;
   List<String?> picUrlList = [];
@@ -218,8 +224,8 @@ class CachedRootContent {
         .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
     usernameText = username ?? '';
     avatarUrl = document
-            .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-            ?.attributes['src'];
+        .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
+        ?.attributes['src'];
     navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))
