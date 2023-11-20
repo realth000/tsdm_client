@@ -153,10 +153,10 @@
       "replyBody": "在 $threadTitle 中回复了"
     },
     "messageTab": {
-      "title": "回复"
+      "title": "消息"
     },
     "replyPage": {
-      "title": "Reply"
+      "title": "回复"
     }
   },
   "forumCard": {
