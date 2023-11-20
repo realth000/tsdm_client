@@ -443,7 +443,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               return _buildHeader(context, ref, shrinkOffset);
             }),
           ),
-          const HeaderLocator.sliver(),
+          const HeaderLocator.sliver(clearExtent: false),
           if (_allData.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10R10B20,

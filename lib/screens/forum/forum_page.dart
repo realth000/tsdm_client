@@ -306,7 +306,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
       child: CustomScrollView(
         controller: _listScrollController,
         slivers: [
-          const HeaderLocator.sliver(),
+          const HeaderLocator.sliver(clearExtent: false),
           if (_allThreadData.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10T5R10B20,
