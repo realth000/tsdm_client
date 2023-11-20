@@ -259,23 +259,24 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: edgeInsetsT10,
-                    child: IconButton(
-                      icon: Icon(
-                        isExpanded
-                            ? Icons.close_fullscreen_outlined
-                            : Icons.open_in_full_outlined,
+                  if (false)
+                    Padding(
+                      padding: edgeInsetsT10,
+                      child: IconButton(
+                        icon: Icon(
+                          isExpanded
+                              ? Icons.close_fullscreen_outlined
+                              : Icons.open_in_full_outlined,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                            // Reset focus to the text field.
+                            _replyFocusNode.requestFocus();
+                          });
+                        },
                       ),
-                      onPressed: () {
-                        setState(() {
-                          isExpanded = !isExpanded;
-                          // Reset focus to the text field.
-                          _replyFocusNode.requestFocus();
-                        });
-                      },
                     ),
-                  ),
                 ],
               ),
             ),
