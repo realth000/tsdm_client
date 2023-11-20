@@ -101,8 +101,10 @@ class Notice {
     final noticeThreadUrl = a2Node?.firstHref();
     final noticeThreadTitle = a2Node?.firstEndDeepText();
 
-    final redirectUrl =
-        element.querySelector('dd.ntc_body > a:nth-child(3)')?.firstHref();
+    final redirectUrl = element
+        .querySelector('dd.ntc_body > a:nth-child(3)')
+        ?.firstHref()
+        ?.prependHost();
 
     final ignoreCount = element
         .querySelector('dd.xg1.xw0')

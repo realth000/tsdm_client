@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/notice.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -35,7 +37,10 @@ class NoticeCard extends ConsumerWidget {
       child: InkWell(
         onTap: notice.redirectUrl != null
             ? () async {
-                // TODO: Show message dialog.
+                await context.pushNamed(ScreenPaths.reply,
+                    pathParameters: <String, String>{
+                      'target': notice.redirectUrl!,
+                    });
               }
             : null,
         child: Column(

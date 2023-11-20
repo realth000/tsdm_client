@@ -6,6 +6,7 @@ import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/notice/notice_page.dart';
+import 'package:tsdm_client/screens/notice/reply_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
@@ -113,11 +114,19 @@ final tClientRouter = GoRouter(
       },
     ),
     AppRoute(
-        path: ScreenPaths.notice,
+      path: ScreenPaths.notice,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        return const NoticePage();
+      },
+    ),
+    AppRoute(
+        path: ScreenPaths.reply,
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
-          return const NoticePage();
-        }),
+          final target = state.pathParameters['target']!;
+          return ReplyPage(url: target);
+        })
   ],
 );
 

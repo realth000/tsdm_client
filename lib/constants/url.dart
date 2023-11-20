@@ -1,3 +1,5 @@
+import 'package:dio/dio.dart';
+
 const baseUrl = 'https://www.tsdm39.com';
 const homePage = '$baseUrl/forum.php';
 const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
@@ -18,3 +20,5 @@ const replyPostWindowSuffix =
 String formatReplyPostUrl(String fid, String tid) {
   return '$homePage?mod=post&infloat=yes&action=reply&fid=$fid&extra=&tid=$tid&replysubmit=yes&inajax=1';
 }
+
+final emptyResponse = Response(requestOptions: RequestOptions(), data: '');

@@ -45,4 +45,10 @@ class ScreenPaths {
   ///
   /// Show all notice and private messages on current user.
   static const String notice = '/notice';
+
+  /// Reply page.
+  ///
+  /// Reply to a notice or message.
+  /// Currently only reply to a post with given pid in thread.
+  static const String reply = '/reply/:target';
 }

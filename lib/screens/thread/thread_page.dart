@@ -5,9 +5,9 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/screens/thread/post_list.dart';
-import 'package:tsdm_client/screens/thread/reply_bar.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
+import 'package:tsdm_client/widgets/reply_bar.dart';
 
 /// Thread page.
 class ThreadPage extends ConsumerStatefulWidget {

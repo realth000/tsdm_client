@@ -9,7 +9,7 @@ import 'package:tsdm_client/models/notice.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/noticeCard.dart';
+import 'package:tsdm_client/widgets/notice_card.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
