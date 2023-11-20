@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
@@ -56,7 +58,8 @@ class _ErrorHandler extends Interceptor {
     }
 
     // TODO: Retry if we need this error kind.
-    if (err.type == DioExceptionType.unknown) {
+    if (err.type == DioExceptionType.unknown &&
+        err.error.runtimeType == HandshakeException) {
       // Likely we have an error in SSL handshake.
       debug(err);
       // TODO: Avoid this status code.
