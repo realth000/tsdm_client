@@ -292,6 +292,14 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                       : const Icon(Icons.send_outlined),
                   onPressed: canSendReply && !isSendingReply
                       ? () async {
+                          if (_replyAction == null &&
+                              _replyParameters == null) {
+                            debug(
+                                'failed to send reply: null action and parameters');
+                            return;
+                          }
+                          debug(
+                              'ReplyBar: send reply $_replyAction, $_replyParameters');
                           setState(() {
                             isSendingReply = true;
                           });
@@ -319,21 +327,50 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
 class ReplyBarController {
   _ReplyBarState? _state;
 
+  /// Temporary value that saves before [_state] bind.
+  /// Because sometimes we bind these values before bind a state.
+  /// Defer sync values in [_state] till we have a state by called [_bind].
+  String? _replyAction;
+  ReplyParameters? _replyParameters;
+
   // ignore: avoid_setters_without_getters
-  set _bind(_ReplyBarState state) => _state = state;
+  set _bind(_ReplyBarState state) {
+    _state = state;
+    if (_replyAction != null) {
+      _state!._replyAction = _replyAction;
+      debug('update reply action');
+    }
+    if (_replyParameters != null) {
+      _state!._replyParameters = _replyParameters;
+      debug('update reply parameters');
+    }
+  }
 
   /// Set reply parameters to current state.
   /// These are parameters used in reply to a thread, not a post.
   ///
   // ignore: avoid_setters_without_getters
-  set replyParameters(ReplyParameters replyParameters) =>
-      _state?._replyParameters = replyParameters;
+  set replyParameters(ReplyParameters replyParameters) {
+    if (_state == null) {
+      _replyParameters = replyParameters;
+      return;
+    }
+    debug('update reply action');
+    _state!._replyParameters = replyParameters;
+  }
 
   /// Set reply action url to current state. Call this when user try to reply
   /// to another post, before user writes the reply or sends it.
   ///
   // ignore: avoid_setters_without_getters
-  set replyAction(String? replyAction) => _state?._replyAction = replyAction;
+  set replyAction(String? replyAction) {
+    if (_state == null) {
+      _replyAction = replyAction;
+      return;
+    }
+    _state!._replyAction = replyAction;
+    debug('update reply parameters');
+  }
 
   void setHintText(String hintText) {
     _state?._setHintText(hintText);

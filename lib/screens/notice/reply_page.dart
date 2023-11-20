@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
+import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -26,7 +27,52 @@ class ReplyPage extends ConsumerStatefulWidget {
 class _ReplyPageState extends ConsumerState<ReplyPage> {
   final _replyBarController = ReplyBarController();
 
-  // FIXME: Fix FormatException "null data" in redirect request.
+  ReplyParameters? _parseParameters(uh.Document document, String tid) {
+    final inputNodeList = document.querySelectorAll('input');
+    if (inputNodeList.isEmpty) {
+      debug('failed to get reply form hash: input not found');
+      return null;
+    }
+
+    String? fid;
+    String? postTime;
+    String? formHash;
+    String? subject;
+    for (final node in inputNodeList) {
+      if (!node.attributes.containsKey('name')) {
+        continue;
+      }
+      final name = node.attributes['name'];
+      final value = node.attributes['value'];
+      switch (name) {
+        case 'srhfid':
+          fid = value;
+        case 'posttime':
+          postTime = value;
+        case 'formhash':
+          formHash = value;
+        case 'subject':
+          subject = value;
+      }
+    }
+
+    if (fid == null ||
+        postTime == null ||
+        formHash == null ||
+        subject == null) {
+      debug(
+          'failed to get reply form hash: fid=$fid postTime=$postTime formHash=$formHash subject=$subject');
+      return null;
+    }
+    return ReplyParameters(
+      fid: fid,
+      tid: tid,
+      postTime: postTime,
+      formHash: formHash,
+      subject: subject,
+    );
+  }
+
   Future<Response<dynamic>> _fetchData(BuildContext context) async {
     var retryCount = 0;
     while (true) {
@@ -65,18 +111,39 @@ class _ReplyPageState extends ConsumerState<ReplyPage> {
       debug('failed to build reply page: post node not found for pid $pid');
       return Container();
     }
-
     final postData = Post.fromPostNode(postNode);
+
+    // Parse thread id.
+    final tidRe = RegExp(r'ptid=(?<ptid>\d+)');
+    final tidMatch = tidRe.firstMatch(widget.url);
+    final tid = tidMatch?.namedGroup('ptid');
+    ReplyParameters? parameters;
+    if (tid != null) {
+      parameters = _parseParameters(document, tid);
+      if (parameters != null) {
+        _replyBarController
+          ..replyParameters = parameters
+          ..replyAction = postData.replyAction;
+        debug('update reply action and parameters');
+      } else {
+        debug('parameters not found');
+      }
+    } else {
+      debug('ptid not found');
+    }
 
     // Reply to notice.
     return Column(
       children: [
-        SingleChildScrollView(
-          child: PostCard(postData),
+        Expanded(
+          child: SingleChildScrollView(
+            child: PostCard(postData),
+          ),
         ),
-        ReplyBar(
-          controller: _replyBarController,
-        ),
+        if (parameters != null)
+          ReplyBar(
+            controller: _replyBarController,
+          ),
       ],
     );
   }
