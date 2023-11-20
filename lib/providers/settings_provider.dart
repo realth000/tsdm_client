@@ -51,7 +51,13 @@ class AppSettings extends _$AppSettings {
       'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7';
 
   /// Dio config: Accept-Encoding.
-  static const String _defaultDioAcceptEncoding = 'gzip, deflate, br';
+  ///
+  /// FormatException happens in some page, current found in 301 request in redirect
+  /// url in notice page.
+  /// After debugging like this:
+  /// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
+  /// Remove "gzip" encoding in "Accept-Encoding" can fix this.
+  static const String _defaultDioAcceptEncoding = 'deflate, br';
 
   /// Dio config: Accept-Language.
   static const String _defaultDioAcceptLanguage =

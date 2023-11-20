@@ -31,12 +31,11 @@ class _ReplyPageState extends ConsumerState<ReplyPage> {
     var retryCount = 0;
     while (true) {
       // Allow Redirect to thread page url.
-      final resp = await ref.read(netClientProvider()).get(widget.url,
-          options: Options(
-            contentType: 'text/html; charset=UTF-8',
-            followRedirects: false,
-            responseType: ResponseType.bytes,
-          ));
+      //
+      // NOTE: Here when running get request, "Accept-Encoding" shall not use
+      // format "gzip" otherwise dart-io will throw exception: FormatException:
+      // null data.
+      final resp = await ref.read(netClientProvider()).get(widget.url);
       if (resp.statusCode == HttpStatus.ok) {
         return resp;
       }
