@@ -87,7 +87,7 @@ class Notice {
   /// [element] :
   /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl (notice=xxx)
   static _NoticeInfo _buildPostFromClNode(uh.Element element) {
-    final userAvatarUrl = element.querySelector('dd.avt > img')?.imageUrl();
+    final userAvatarUrl = element.querySelector('dd.avt > a > img')?.imageUrl();
 
     final noticeNode = element.querySelector('dt > span > span');
     final noticeTime = noticeNode?.attributes['title']?.parseToDateTimeUtc8();
