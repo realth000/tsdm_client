@@ -73,18 +73,19 @@ class _NoticePageState extends ConsumerState<NoticePage> {
             );
           }
           if (snapshot.hasData) {
-            final d1 = snapshot.data![0];
+            // Here should only use d2 which contains data from "isread=1" page.
+            // Because we accessed "unread notice" first and then "isread=1", so
+            // the new incoming notice will appear in both page.
+            // Just use data from "isread=1" page to avoid duplicate notice and
+            // ensure in the right order.
+            final _ = snapshot.data![0];
             final d2 = snapshot.data![1];
-            final d = [
-              ...d1,
-              ...d2,
-            ];
             return Padding(
               padding: edgeInsetsL10T5R10B20,
               child: ListView.separated(
-                itemCount: d.length,
+                itemCount: d2.length,
                 itemBuilder: (context, index) {
-                  return NoticeCard(notice: d[index]);
+                  return NoticeCard(notice: d2[index]);
                 },
                 separatorBuilder: (context, index) => sizedBoxW5H5,
               ),
