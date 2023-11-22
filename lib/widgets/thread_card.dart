@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -19,7 +20,6 @@ class ThreadCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoList = [
-      // (Icons.tag, thread.threadType!.name),
       (Icons.forum_outlined, '${thread.replyCount}'),
       (Icons.bar_chart_outlined, '${thread.viewCount}'),
       // (Icons.person_outline, thread.latestReplyAuthor.name),
@@ -29,6 +29,7 @@ class ThreadCard extends ConsumerWidget {
             ? ''
             : thread.latestReplyTime!.elapsedTillNow(),
       ),
+      if (thread.price != 0) (FontAwesomeIcons.coins, '${thread.price}'),
     ];
 
     final infoWidgetList = <Widget>[];
@@ -80,6 +81,7 @@ class ThreadCard extends ConsumerWidget {
               subtitle: thread.publishDate != null
                   ? SingleLineText(thread.publishDate!.yyyyMMDD())
                   : null,
+              trailing: Text(thread.threadType?.name ?? ''),
             ),
             Padding(
               padding: edgeInsetsL15R15B10,

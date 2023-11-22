@@ -413,6 +413,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  font_awesome_flutter:
+    dependency: "direct main"
+    description:
+      name: font_awesome_flutter
+      sha256: "52671aea66da73b58d42ec6d0912b727a42248dd9a7c76d6c20f275783c48c08"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "10.6.0"
   freezed:
     dependency: "direct dev"
     description:
