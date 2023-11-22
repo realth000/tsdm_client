@@ -435,6 +435,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
       child: CustomScrollView(
         controller: _listScrollController,
         slivers: [
+          const HeaderLocator.sliver(),
           SliverPersistentHeader(
             pinned: true,
             floating: true,
@@ -443,7 +444,6 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               return _buildHeader(context, ref, shrinkOffset);
             }),
           ),
-          const HeaderLocator.sliver(clearExtent: false),
           if (_allData.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10R10B20,
