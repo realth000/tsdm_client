@@ -18,8 +18,8 @@ import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _headerMaxExtent = 160.0;
-const _headerMinExtent = 160.0;
+const _headerMaxExtent = 60.0;
+const _headerMinExtent = 60.0;
 
 enum _MenuActions {
   refresh,
@@ -263,17 +263,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   Widget _buildHeader(
       BuildContext context, WidgetRef ref, double shrinkOffset) {
     final titleText = widget.title;
-    final isExpandHeader = shrinkOffset < 50;
-    // Calculate background color.
-    // When header fully expanded, use background color, otherwise use the same
-    // color as AppBar background.
-    final expandedBackgroundColor = _listScrollController.offset == 0
-        ? Theme.of(context).colorScheme.background
-        : ElevationOverlay.applySurfaceTint(
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surfaceTint,
-            Theme.of(context).navigationBarTheme.elevation ?? 3,
-          );
+    final isExpandHeader = _listScrollController.offset < _headerMaxExtent;
 
     Widget? titleWidget;
     if (titleText != null) {
@@ -359,24 +349,6 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
             ),
           ],
         ),
-        if (isExpandHeader && titleText != null)
-          Row(
-            children: [
-              Expanded(
-                child: ColoredBox(
-                  color: expandedBackgroundColor,
-                  child: Padding(
-                    padding: edgeInsetsL20R20B10,
-                    child: Text(
-                      titleText,
-                      style: Theme.of(context).textTheme.titleLarge,
-                      maxLines: 2,
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
       ],
     );
   }
@@ -443,6 +415,13 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
                 buildHeader: (context, shrinkOffset, overlapsContent) {
               return _buildHeader(context, ref, shrinkOffset);
             }),
+          ),
+          SliverPadding(
+            padding: edgeInsetsL10R10B10,
+            sliver: SliverToBoxAdapter(
+              child: Text(widget.title ?? '',
+                  style: Theme.of(context).textTheme.titleLarge),
+            ),
           ),
           if (_allData.isNotEmpty)
             SliverPadding(
