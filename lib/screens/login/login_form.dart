@@ -100,6 +100,31 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           title: context.t.loginPage.loginFailed,
           message: context.t.loginPage.failedToLoginMessageNodeNotFound,
         );
+      case LoginResult.incorrectCaptcha:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.loginResultIncorrectCaptcha,
+        );
+      case LoginResult.invalidUsernamePassword:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message:
+              context.t.loginPage.loginResultMaybeInvalidUsernameOrPassword,
+        );
+      case LoginResult.attemptLimit:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.loginResultTooManyLoginAttempts,
+        );
+      case LoginResult.otherError:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.loginResultOtherErrors,
+        );
       default:
         return showMessageSingleButtonDialog(
           context: context,
