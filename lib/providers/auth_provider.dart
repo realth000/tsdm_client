@@ -82,6 +82,8 @@ class Auth extends _$Auth {
     required String password,
     required String verifyCode,
     required String formHash,
+    int? questionId,
+    String? answer,
   }) async {
     await _updateAuthState(AuthState.loggingIn);
     final result = await _login(
@@ -89,6 +91,8 @@ class Auth extends _$Auth {
       password: password,
       verifyCode: verifyCode,
       formHash: formHash,
+      questionId: questionId,
+      answer: answer,
     );
     if (result.$1 == LoginResult.success) {
       await _updateAuthState(AuthState.authorized);
@@ -103,6 +107,8 @@ class Auth extends _$Auth {
     required String password,
     required String verifyCode,
     required String formHash,
+    int? questionId,
+    String? answer,
   }) async {
     // login
     final body = {
@@ -117,6 +123,11 @@ class Auth extends _$Auth {
       'cookietime': 2592000,
       'loginsubmit': true
     };
+
+    if (questionId != null && answer != null) {
+      body['questionid'] = '$questionId';
+      body['answer'] = answer;
+    }
 
     final target = '$_loginUrl$formHash';
     final resp = await ref.read(netClientProvider(username: username)).post(
@@ -280,6 +291,9 @@ enum LoginResult {
   /// When showing error messages or logging, record the original message.
   invalidUsernamePassword,
 
+  /// Incorrect login question or answer
+  incorrectQuestionOrAnswer,
+
   /// Too many login attempt and failure.
   attemptLimit,
 
@@ -340,6 +354,10 @@ enum LoginResult {
 
       if (message.contains('密码错误次数过多')) {
         return LoginResult.attemptLimit;
+      }
+
+      if (message.contains('请选择安全提问以及填写正确的答案')) {
+        return LoginResult.incorrectQuestionOrAnswer;
       }
 
       // Other unrecognized error.

@@ -10,6 +10,17 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
+final _loginQuestions = [
+  '无安全问题',
+  '母亲的名字',
+  '爷爷的名字',
+  '父亲出生的城市',
+  '您其中一位老师的名字',
+  '您个人计算机的型号',
+  '您最喜欢的餐馆名称',
+  '驾驶执照的最后四位数字'
+];
+
 class LoginForm extends ConsumerStatefulWidget {
   const LoginForm({
     required this.loginHash,
@@ -37,9 +48,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   final formKey = GlobalKey<FormState>();
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
+  final answerController = TextEditingController();
   final verifyCodeController = TextEditingController();
 
   bool _showPassword = false;
+
+  String _question = _loginQuestions.first;
 
   Future<void> _login(BuildContext context) async {
     if (formKey.currentState == null || !(formKey.currentState!).validate()) {
@@ -50,6 +64,11 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           password: passwordController.text,
           verifyCode: verifyCodeController.text,
           formHash: widget.formHash,
+          questionId: _question == _loginQuestions.first
+              ? null
+              : _loginQuestions.indexOf(_question),
+          answer:
+              _question == _loginQuestions.first ? null : answerController.text,
         );
 
     if (!mounted) {
@@ -112,6 +131,12 @@ class _LoginFormState extends ConsumerState<LoginForm> {
           title: context.t.loginPage.loginFailed,
           message:
               context.t.loginPage.loginResultMaybeInvalidUsernameOrPassword,
+        );
+      case LoginResult.incorrectQuestionOrAnswer:
+        return showMessageSingleButtonDialog(
+          context: context,
+          title: context.t.loginPage.loginFailed,
+          message: context.t.loginPage.loginResultIncorrectQuestionOrAnswer,
         );
       case LoginResult.attemptLimit:
         return showMessageSingleButtonDialog(
@@ -202,6 +227,45 @@ class _LoginFormState extends ConsumerState<LoginForm> {
                 child: const CaptchaImage(),
               ),
             ],
+          ),
+          sizedBoxW10H10,
+          InputDecorator(
+            decoration: const InputDecoration(
+              prefixIcon: Icon(Icons.question_mark_outlined),
+            ),
+            child: DropdownButtonHideUnderline(
+              child: DropdownButton<String>(
+                value: _question,
+                isDense: true,
+                onChanged: (newValue) {
+                  if (newValue == null) {
+                    return;
+                  }
+                  setState(() {
+                    _question = newValue;
+                  });
+                },
+                items: _loginQuestions.map((value) {
+                  return DropdownMenuItem<String>(
+                    value: value,
+                    child: Text(value),
+                  );
+                }).toList(),
+              ),
+            ),
+          ),
+          sizedBoxW10H10,
+          TextFormField(
+            controller: answerController,
+            decoration: InputDecoration(
+              prefixIcon: const Icon(Icons.question_answer_outlined),
+              labelText: context.t.loginPage.answer,
+              enabled: _question != _loginQuestions.first,
+            ),
+            validator: (v) =>
+                _question == _loginQuestions.first || v!.trim().isNotEmpty
+                    ? null
+                    : t.loginPage.answerEmpty,
           ),
           sizedBoxW10H10,
           Row(
