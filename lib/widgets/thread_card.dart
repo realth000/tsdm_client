@@ -29,7 +29,7 @@ class ThreadCard extends ConsumerWidget {
             ? ''
             : thread.latestReplyTime!.elapsedTillNow(),
       ),
-      if (thread.price != 0) (FontAwesomeIcons.coins, '${thread.price}'),
+      if ((thread.price ?? 0) > 0) (FontAwesomeIcons.coins, '${thread.price}'),
     ];
 
     final infoWidgetList = <Widget>[];
