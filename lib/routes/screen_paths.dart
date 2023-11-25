@@ -26,6 +26,9 @@ class ScreenPaths {
   ///
   static const String login = '/login';
 
+  /// A notice page that show the user need to login to see this page.
+  static const String needLogin = '/needLogin';
+
   /// Another login page, uses when website requires to login.
   ///
   /// Redirect to former page when successfully login,

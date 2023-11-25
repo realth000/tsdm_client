@@ -77,6 +77,14 @@ class _LoginFormState extends ConsumerState<LoginForm> {
     // Check login result.
     switch (loginResult) {
       case LoginResult.success:
+        // Refresh root content before allowing redirect user back.
+        await showModalWorkDialog(
+            context: context,
+            message: context.t.rootPage.initializingData,
+            work: () async {
+              await ref.read(rootContentProvider.notifier).fetch();
+              ref.invalidate(rootContentProvider);
+            });
         // Refresh root content.
         // We do not need the value return here, but if we use ref.invalidate()
         // the future will not execute until we reach pages that watching
@@ -90,7 +98,6 @@ class _LoginFormState extends ConsumerState<LoginForm> {
         // legacy cookie?
         // FIXME: Fix root content not refresh immediately.
         // Note that add Circle indicator to root content screen when loading not works.
-        ref.invalidate(rootContentProvider);
         if (!mounted) {
           return;
         }

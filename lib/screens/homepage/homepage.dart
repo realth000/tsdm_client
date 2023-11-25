@@ -3,6 +3,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/homepage/pin_section.dart';
 import 'package:tsdm_client/screens/homepage/welcome_section.dart';
 import 'package:tsdm_client/screens/need_login/need_login_page.dart';
@@ -27,7 +28,8 @@ class _HomePageState extends ConsumerState<HomePage> {
   Widget build(BuildContext context) {
     final authState = ref.read(authProvider);
     if (authState != AuthState.authorized) {
-      return const NeedLoginPage();
+      // Embed NeedLoginPage with redirect back route.
+      return const NeedLoginPage(backRoute: ScreenPaths.homepage);
     }
 
     return Scaffold(

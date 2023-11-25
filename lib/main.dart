@@ -51,6 +51,8 @@ class TClientApp extends ConsumerWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Get the router.
+    final routerConfig = ref.watch(routerProvider);
     return MaterialApp.router(
       title: context.t.appName,
       locale: TranslationProvider.of(context).flutterLocale,
@@ -59,7 +61,7 @@ class TClientApp extends ConsumerWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
-      routerConfig: tClientRouter,
+      routerConfig: routerConfig,
       scaffoldMessengerKey: globalSnackbarKey,
     );
   }
