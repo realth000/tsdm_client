@@ -449,8 +449,8 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: eec78e9a88d93876a41c5a9bf4368cadcc8ccca8
-      resolved-ref: eec78e9a88d93876a41c5a9bf4368cadcc8ccca8
+      ref: "927a949985f131e27f401287e7915b832f24b301"
+      resolved-ref: "927a949985f131e27f401287e7915b832f24b301"
       url: "https://github.com/realth000/gitsumu.git"
     source: git
     version: "0.0.1"
