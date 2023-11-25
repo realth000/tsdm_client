@@ -154,7 +154,8 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.needLogin,
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
-          return const NeedLoginPage();
+          // Now only show `AppBar` when using as an entire page, not embedded.
+          return const NeedLoginPage(showAppBar: true);
         },
       ),
       AppRoute(

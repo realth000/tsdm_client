@@ -12,6 +12,7 @@ import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/redirect_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -232,12 +233,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
       if (docLogin != null) {
         debug(
             'failed to build forum page, thread is empty. Maybe need to login ${docTitle.first.text} ${docMessage?.text} ${docAccessRequire ?? ''} ${docLogin == null}');
-        context.pushReplacementNamed(
-          ScreenPaths.login,
-          extra: <String, dynamic>{
-            'redirectBackState': widget.routerState,
-          },
-        );
+        ref
+            .read(redirectProvider.notifier)
+            .saveRedirectState(ScreenPaths.forum, widget.routerState);
+        context.pushReplacementNamed(ScreenPaths.needLogin);
         return;
       }
 

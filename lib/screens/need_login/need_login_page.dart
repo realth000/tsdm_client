@@ -18,12 +18,15 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// When using like 2., will `pushReplacementNamed` back.
 class NeedLoginPage extends ConsumerWidget {
   const NeedLoginPage({
+    this.showAppBar = false,
     this.backRoute,
     this.parameters = const <String, String>{},
     this.extra,
     super.key,
   });
 
+  /// Only show app bar when using this page as an entire screen, not embedded.
+  final bool showAppBar;
   final String? backRoute;
   final Map<String, String> parameters;
   final Object? extra;
@@ -31,6 +34,7 @@ class NeedLoginPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
+      appBar: showAppBar ? AppBar(title: Text(context.t.appName)) : null,
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
