@@ -66,7 +66,7 @@ class NeedLoginPage extends ConsumerWidget {
                 // Redirect back according to info in `redirectProvider`.
                 final r = ref.read(redirectProvider);
                 if (r.backRoute != null) {
-                  await context.pushNamed(
+                  context.pushReplacementNamed(
                     r.backRoute!,
                     pathParameters: r.parameters,
                     extra: r.extra,
