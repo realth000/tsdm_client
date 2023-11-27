@@ -37,6 +37,7 @@ class AppSettings extends _$AppSettings {
           storage.getBool(settingsWindowInCenter) ?? _defaultWindowInCenter,
       loginUsername:
           storage.getString(settingsLoginUsername) ?? _defaultLoginUsername,
+      loginUid: storage.getInt(settingsLoginUid) ?? _defaultLoginUid,
       themeMode: storage.getInt(settingsThemeMode) ?? _defaultThemeMode,
       locale: storage.getString(settingsLocale) ?? _defaultLocale,
       checkInFeeling:
@@ -84,6 +85,9 @@ class AppSettings extends _$AppSettings {
 
   /// Login user username.
   static const _defaultLoginUsername = '';
+
+  /// Login user uid.
+  static const _defaultLoginUid = -1;
 
   /// Default app theme mode.
   ///
@@ -143,11 +147,12 @@ class AppSettings extends _$AppSettings {
   ///
   /// Note that the server side does not allow same username so it's safe to
   /// treat username as user identifier.
-  Future<void> setLoginUsername(String username) async {
+  Future<void> setLoginInfo(String username, int uid) async {
     final storage = _getStorage();
 
     await storage.saveString(settingsLoginUsername, username);
-    state = state.copyWith(loginUsername: username);
+    await storage.saveInt(settingsLoginUid, uid);
+    state = state.copyWith(loginUsername: username, loginUid: uid);
   }
 
   /// Get a cookie belongs to user with [username].

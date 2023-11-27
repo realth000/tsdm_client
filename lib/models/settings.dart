@@ -17,6 +17,7 @@ class Settings with _$Settings {
     required double windowPositionDy,
     required bool windowInCenter,
     required String loginUsername,
+    required int loginUid,
     required int themeMode,
     required String locale,
     required String checkInFeeling,
@@ -34,6 +35,7 @@ const settingsWindowPositionDx = 'windowPositionX';
 const settingsWindowPositionDy = 'windowPositionY';
 const settingsWindowInCenter = 'windowInCenter';
 const settingsLoginUsername = 'loginUsername';
+const settingsLoginUid = 'loginUid';
 const settingsThemeMode = 'ThemeMode';
 const settingsLocale = 'locale';
 const settingsCheckInFeeling = 'checkInFeeling';
@@ -51,6 +53,7 @@ const settingsMap = <String, Type>{
   settingsWindowPositionDy: double,
   settingsWindowInCenter: bool,
   settingsLoginUsername: String,
+  settingsLoginUid: int,
   settingsThemeMode: int,
   settingsLocale: String,
   settingsCheckInFeeling: String,

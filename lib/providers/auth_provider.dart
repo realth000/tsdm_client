@@ -44,9 +44,9 @@ class Auth extends _$Auth {
       case AuthState.authorized:
         await ref
             .read(appSettingsProvider.notifier)
-            .setLoginUsername(_loggedUsername!);
+            .setLoginInfo(_loggedUsername!, int.parse(_loggedUid!));
       case AuthState.notAuthorized:
-        await ref.read(appSettingsProvider.notifier).setLoginUsername('');
+        await ref.read(appSettingsProvider.notifier).setLoginInfo('', -1);
       default:
       // Do nothing.
     }

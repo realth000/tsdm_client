@@ -4,6 +4,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart';
@@ -83,7 +84,7 @@ ThreadAuthorPair? _filterThreadAndAuthors(Element element) {
 /// Also cache profile page data of current logged user.
 ///
 // TODO: Make this a not persist provider.
-@Riverpod(keepAlive: true, dependencies: [Auth, NetClient])
+@Riverpod(keepAlive: true, dependencies: [Auth, NetClient, AppSettings])
 class RootContent extends _$RootContent {
   static const String _rootPage = homePage;
   static const String _profilePage = uidProfilePage;
@@ -93,41 +94,53 @@ class RootContent extends _$RootContent {
     return fetch();
   }
 
-  /// Fetch data from homepage.
-  ///
-  /// This will take a long time so use cached data as possible.
-  Future<CachedRootContent> fetch() async {
-    while (true) {
+  Future<void> _fetchHomepage() async {
+    debug('fetching homepage');
+    _cache = CachedRootContent();
+    var i = 0;
+    while (i < 3) {
       final resp = await ref.read(netClientProvider()).get(_rootPage);
       if (resp.statusCode == HttpStatus.ok) {
         _doc = parseHtmlDocument(resp.data as String);
+        await ref.read(authProvider.notifier).loginFromDocument(_doc);
+        final username = ref.read(authProvider.notifier).loggedUsername;
+        await _cache.analyze(_doc, username);
+        // Reset topics tab current tab index if reload content.
+        ref.read(topicsTabBarIndexProvider.notifier).state = 0;
         break;
       }
       await Future.wait(
           [Future.delayed(const Duration(milliseconds: 400), () {})]);
+      i++;
     }
+  }
 
-    _cache = CachedRootContent();
-    await ref.read(authProvider.notifier).loginFromDocument(_doc);
-    final username = ref.read(authProvider.notifier).loggedUsername;
-    await _cache.analyze(_doc, username);
-    // Reset topics tab current tab index if reload content.
-    ref.read(topicsTabBarIndexProvider.notifier).state = 0;
-
-    final uid = ref.read(authProvider.notifier).loggedUid;
-    if (ref.read(authProvider) == AuthState.authorized && uid != null) {
+  Future<void> _fetchProfile() async {
+    debug('fetching profile page');
+    var i = 0;
+    while (i < 3) {
+      final uid = ref.read(appSettingsProvider).loginUid;
       // Load current user profile page.
       final profileResp =
           await ref.read(netClientProvider()).get('$_profilePage$uid');
-      if (profileResp.statusCode != HttpStatus.ok) {
-        return Future.error(
-            'failed to load user profile page, status code is ${profileResp.statusCode}');
+      if (profileResp.statusCode == HttpStatus.ok) {
+        _profileDoc = parseHtmlDocument(profileResp.data as String);
+        _avatarUrl = _profileDoc!
+            .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+            ?.attributes['src'];
+        break;
       }
-      _profileDoc = parseHtmlDocument(profileResp.data as String);
-      _avatarUrl = _profileDoc!
-          .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-          ?.attributes['src'];
+      await Future.wait(
+          [Future.delayed(const Duration(milliseconds: 400), () {})]);
+      i++;
     }
+  }
+
+  /// Fetch data from homepage.
+  ///
+  /// This will take a long time so use cached data as possible.
+  Future<CachedRootContent> fetch() async {
+    await Future.wait([_fetchHomepage(), _fetchProfile()]);
     return _cache;
   }
 
