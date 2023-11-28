@@ -163,6 +163,9 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   Future<void> _loadData() async {
     late final uh.Document document;
     while (true) {
+      if (!context.mounted) {
+        return;
+      }
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
