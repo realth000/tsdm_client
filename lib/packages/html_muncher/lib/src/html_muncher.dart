@@ -61,6 +61,10 @@ class Muncher {
       }
     }
     if (spanList.isNotEmpty) {
+      // Do not wrap in another layout when there is only one span.
+      if (spanList.length == 1) {
+        return spanList.first;
+      }
       widgetList.add(RichText(
         text: TextSpan(children: spanList),
         textAlign: state.textAlign ?? TextAlign.justify,
