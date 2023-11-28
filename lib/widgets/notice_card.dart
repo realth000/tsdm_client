@@ -55,9 +55,11 @@ class NoticeCard extends ConsumerWidget {
               padding: edgeInsetsL15R15B10,
               child: Row(
                 children: [
-                  Text(
-                    context.t.noticePage.noticeTab.replyBody(
-                        threadTitle: notice.noticeThreadTitle ?? '-'),
+                  Expanded(
+                    child: Text(
+                      context.t.noticePage.noticeTab.replyBody(
+                          threadTitle: notice.noticeThreadTitle ?? '-'),
+                    ),
                   ),
                 ],
               ),
