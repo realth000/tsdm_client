@@ -60,26 +60,15 @@ class Muncher {
         spanList.add(span);
       }
     }
-    if (spanList.isNotEmpty) {
-      // Do not wrap in another layout when there is only one span.
-      if (spanList.length == 1) {
-        return spanList.first;
-      }
-      widgetList.add(RichText(
-        text: TextSpan(children: spanList),
-        textAlign: state.textAlign ?? TextAlign.justify,
-      ));
-    }
-    if (widgetList.isEmpty) {
+    if (spanList.isEmpty) {
+      // Not intend to happen.
       return const TextSpan();
     }
-    // widgetList.add(widgetList.first);
-    return WidgetSpan(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: widgetList,
-      ),
-    );
+    // Do not wrap in another layout when there is only one span.
+    if (spanList.length == 1) {
+      return spanList.first;
+    }
+    return TextSpan(children: spanList);
   }
 
   InlineSpan? munchNode(uh.Node? node) {
