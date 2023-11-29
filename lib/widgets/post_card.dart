@@ -54,6 +54,7 @@ class _PostCardState extends ConsumerState<PostCard>
               : Text('#${widget.post.postFloor}'),
         ),
         GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: () async {
             await widget.replyCallback?.call(widget.post.author,
                 widget.post.postFloor, widget.post.replyAction);

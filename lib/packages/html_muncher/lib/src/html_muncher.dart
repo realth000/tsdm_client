@@ -1,5 +1,8 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
@@ -115,6 +118,9 @@ class Muncher {
             'table' when node.classes.contains('cgtl') => _buildTable(node),
             'span' => _buildSpan(node),
             'blockquote' => _buildBlockQuote(node),
+            'div'
+                when node.attributes['class']?.contains('blockcode') ?? false =>
+              _buildBlockCode(node),
             'a' ||
             'div' ||
             'ignore_js_op' ||
@@ -300,6 +306,38 @@ class Muncher {
             child: Padding(
       padding: const EdgeInsets.all(15),
       child: RichText(text: ret),
+    )));
+  }
+
+  InlineSpan _buildBlockCode(uh.Element element) {
+    final text = element.querySelector('div')?.innerText.trim() ?? '';
+    return TextSpan(
+      recognizer: TapGestureRecognizer()
+        ..onTap = () async {
+          await Clipboard.setData(
+            ClipboardData(text: text),
+          );
+          if (!context.mounted) {
+            return;
+          }
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              context.t.aboutPage.copiedToClipboard,
+            ),
+          ));
+        },
+      style: const TextStyle(
+        decoration: TextDecoration.underline,
+        decorationStyle: TextDecorationStyle.dashed,
+      ),
+      text: text,
+    );
+    // FIXME: Remove duplicate white space when using `WidgetSpan` here.
+    return WidgetSpan(
+        child: Card(
+            child: Padding(
+      padding: const EdgeInsets.all(15),
+      child: Text(text),
     )));
   }
 
