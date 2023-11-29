@@ -7,6 +7,7 @@ import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:universal_html/html.dart' as uh;
+import 'package:url_launcher/url_launcher.dart';
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
@@ -39,6 +40,7 @@ class MunchState {
   TextAlign? textAlign;
   final colorStack = <Color>[];
   final fontSizeStack = <double>[];
+  String? tapUrl;
 
   @override
   String toString() {
@@ -83,19 +85,40 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
+          // Base text style.
+          var style = Theme.of(context).textTheme.bodyMedium?.copyWith(
+                color: state.colorStack.lastOrNull,
+                fontWeight: state.bold ? FontWeight.w600 : null,
+                fontSize: state.fontSizeStack.lastOrNull,
+                decoration: TextDecoration.combine([
+                  if (state.underline) TextDecoration.underline,
+                  if (state.lineThrough) TextDecoration.lineThrough,
+                ]),
+                decorationThickness: 1.5,
+              );
+
+          // Attach url to open when `onTap`.
+          GestureRecognizer? recognizer;
+          if (state.tapUrl != null) {
+            final u = state.tapUrl!;
+            recognizer = TapGestureRecognizer()
+              ..onTap = () async {
+                await launchUrl(
+                  Uri.parse(u),
+                  mode: LaunchMode.externalApplication,
+                );
+              };
+            style = style?.copyWith(
+              decoration: TextDecoration.underline,
+              decorationStyle: TextDecorationStyle.dashed,
+            );
+          }
+
           // TODO: Support text-shadow.
           return TextSpan(
             text: node.text?.trim(),
-            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: state.colorStack.lastOrNull,
-                  fontWeight: state.bold ? FontWeight.w600 : null,
-                  fontSize: state.fontSizeStack.lastOrNull,
-                  decoration: TextDecoration.combine([
-                    if (state.underline) TextDecoration.underline,
-                    if (state.lineThrough) TextDecoration.lineThrough,
-                  ]),
-                  decorationThickness: 1.5,
-                ),
+            recognizer: recognizer,
+            style: style,
           );
         }
 
@@ -121,7 +144,7 @@ class Muncher {
             'div'
                 when node.attributes['class']?.contains('blockcode') ?? false =>
               _buildBlockCode(node),
-            'a' ||
+            'a' => _buildA(node),
             'div' ||
             'ignore_js_op' ||
             'table' ||
@@ -339,6 +362,31 @@ class Muncher {
       padding: const EdgeInsets.all(15),
       child: Text(text),
     )));
+  }
+
+  InlineSpan _buildA(uh.Element element) {
+    if (element.attributes.containsKey('href')) {
+      state.tapUrl = element.attributes['href']!;
+      final ret = _munch(element);
+      state.tapUrl = null;
+      return ret;
+      return TextSpan(
+        recognizer: TapGestureRecognizer()
+          ..onTap = () async {
+            await launchUrl(
+              Uri.parse(element.attributes['href']!),
+              mode: LaunchMode.externalApplication,
+            );
+          },
+        style: const TextStyle(
+          backgroundColor: Colors.green,
+          decoration: TextDecoration.underline,
+          decorationStyle: TextDecorationStyle.dashed,
+        ),
+        children: [ret],
+      );
+    }
+    return _munch(element);
   }
 
   /*                Setup Functions                      */
