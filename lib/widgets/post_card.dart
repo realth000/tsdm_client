@@ -9,6 +9,7 @@ import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/widgets/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Card for a [Post] model.
@@ -71,6 +72,7 @@ class _PostCardState extends ConsumerState<PostCard>
             ],
           ),
         ),
+        if (widget.post.locked != null) LockedCard(widget.post.locked!)
       ],
     );
   }

@@ -21,4 +21,10 @@ String formatReplyPostUrl(String fid, String tid) {
   return '$homePage?mod=post&infloat=yes&action=reply&fid=$fid&extra=&tid=$tid&replysubmit=yes&inajax=1';
 }
 
+/// Target url to get the dialog showing before purchasing a thread.
+/// Need thread id [tid] and post id [pid].
+String formatPurchaseDialogUrl(String tid, String pid) {
+  return '$homePage?mod=misc&action=pay&tid=$tid&pid=$pid&infloat=yes&handlekey=pay&inajax=1&ajaxtarget=fwin_content_pay';
+}
+
 final emptyResponse = Response(requestOptions: RequestOptions(), data: '');

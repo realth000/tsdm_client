@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -14,6 +15,7 @@ class _PostInfo {
     required this.publishTime,
     required this.data,
     required this.replyAction,
+    this.locked,
   });
 
   /// Post ID.
@@ -32,6 +34,10 @@ class _PostInfo {
   // TODO: Confirm data display.
   /// Post data.
   String data;
+
+  /// `<div class="locked">` after `<div id="postmessage_xxx">`.
+  /// Need purchase to see full thread content.
+  Locked? locked;
 
   /// Url to reply this post.
   String? replyAction;
@@ -57,6 +63,8 @@ class Post {
   DateTime? get publishTime => _info.publishTime;
 
   String get data => _info.data;
+
+  Locked? get locked => _info.locked;
 
   String? get replyAction => _info.replyAction;
 
@@ -99,6 +107,16 @@ class Post {
     final postData =
         postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
 
+    final postLocked = postDataNode?.querySelector('div.locked');
+
+    // Locked block in this post.
+    Locked? locked;
+    if (postLocked != null && postLocked.querySelector('span') == null) {
+      // Already purchased locked block has `<span>已购买人数: xx</span>`, here
+      // only need not purchased ones.
+      locked = Locked.fromLockDivNode(postLocked);
+    }
+
     final postFloor = postDataNode
         ?.querySelector('div.pi > strong > a > em')
         ?.firstEndDeepText()
@@ -115,6 +133,7 @@ class Post {
       author: postAuthor,
       publishTime: postPublishTime,
       data: postData ?? '',
+      locked: locked,
       replyAction: replyAction,
     );
   }

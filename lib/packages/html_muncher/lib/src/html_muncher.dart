@@ -1,6 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
@@ -327,7 +328,7 @@ class Muncher {
     return WidgetSpan(
         child: Card(
             child: Padding(
-      padding: const EdgeInsets.all(15),
+      padding: edgeInsetsL15T15R15B15,
       child: RichText(text: ret),
     )));
   }
@@ -370,21 +371,6 @@ class Muncher {
       final ret = _munch(element);
       state.tapUrl = null;
       return ret;
-      return TextSpan(
-        recognizer: TapGestureRecognizer()
-          ..onTap = () async {
-            await launchUrl(
-              Uri.parse(element.attributes['href']!),
-              mode: LaunchMode.externalApplication,
-            );
-          },
-        style: const TextStyle(
-          backgroundColor: Colors.green,
-          decoration: TextDecoration.underline,
-          decorationStyle: TextDecorationStyle.dashed,
-        ),
-        children: [ret],
-      );
     }
     return _munch(element);
   }

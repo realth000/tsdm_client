@@ -7,6 +7,7 @@ const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
 const edgeInsetsT10 = EdgeInsets.only(top: 10);
 const edgeInsetsL10R10 = EdgeInsets.only(left: 10, right: 10);
 const edgeInsetsL15R15 = EdgeInsets.only(left: 15, right: 15);
+const edgeInsetsL15T15R15B15 = EdgeInsets.all(15);
 const edgeInsetsL18R18 = EdgeInsets.symmetric(horizontal: 18);
 const edgeInsetsL10T10R10 = EdgeInsets.only(left: 10, top: 10, right: 10);
 const edgeInsetsL10R10B10 = EdgeInsets.only(left: 10, right: 10, bottom: 10);

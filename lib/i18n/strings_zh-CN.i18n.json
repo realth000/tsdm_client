@@ -185,5 +185,17 @@
     "struggling": "奋斗",
     "lazy": "慵懒",
     "unlucky": "衰"
+  },
+  "lockedCard": {
+    "title": "部分内容需要购买才可浏览",
+    "purchasedInfo": "$num 人已购买此帖子",
+    "failedPurchase": "购买失败",
+    "failedParsingPurchase": "解析购买信息时失败",
+    "failedParsingConfirmInfo": "解析购买确认信息时失败",
+    "failedPurchaseMessage": "购买失败: $message",
+    "confirmPurchase": "确认购买",
+    "confirmInfo": "从 $author 处以 $price 个天使币的价格购买帖子。\n作者会得到 $authorProfit 个天使币。\n购买后你还有 $coinsLast 个天使币。",
+    "successPurchase": "购买成功",
+    "successPurchaseInfo": "即将刷新页面"
   }
 }
