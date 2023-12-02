@@ -180,7 +180,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     }
     final data = await widget.listBuilder(document);
 
-    if (mounted) {
+    if (!mounted) {
       return;
     }
 
