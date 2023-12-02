@@ -325,12 +325,15 @@ class Muncher {
 
   InlineSpan _buildBlockQuote(uh.Element element) {
     final ret = _munch(element);
-    return WidgetSpan(
-        child: Card(
-            child: Padding(
-      padding: edgeInsetsL15T15R15B15,
-      child: RichText(text: ret),
-    )));
+    return TextSpan(children: [
+      WidgetSpan(
+          child: Card(
+              child: Padding(
+        padding: edgeInsetsL15T15R15B15,
+        child: RichText(text: ret),
+      ))),
+      const TextSpan(text: '\n'),
+    ]);
   }
 
   InlineSpan _buildBlockCode(uh.Element element) {
