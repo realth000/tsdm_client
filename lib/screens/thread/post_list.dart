@@ -163,7 +163,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   Future<void> _loadData() async {
     late final uh.Document document;
     while (true) {
-      if (!context.mounted) {
+      if (!mounted) {
         return;
       }
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
@@ -173,14 +173,14 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
         document = parseHtmlDocument(d1.data as String);
         break;
       }
-      if (!context.mounted) {
+      if (!mounted) {
         return;
       }
       await showRetryToast(context);
     }
     final data = await widget.listBuilder(document);
 
-    if (!context.mounted) {
+    if (mounted) {
       return;
     }
 
