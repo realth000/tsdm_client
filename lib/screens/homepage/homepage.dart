@@ -43,7 +43,7 @@ class _HomePageState extends ConsumerState<HomePage> {
               // TODO: Optimize layout build jank.
               // TODO: Optimize page when not login (no cookie or cookie invalid).
               WelcomeSection(),
-              sizedBoxW20H20,
+              sizedBoxW5H5,
               PinSection(),
             ],
           ),

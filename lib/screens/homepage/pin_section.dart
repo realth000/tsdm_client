@@ -121,9 +121,9 @@ class PinSection extends ConsumerWidget {
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 800,
         // Set to at least 552 to ensure not overflow when scaling window size down.
-        mainAxisSpacing: 20,
+        mainAxisSpacing: 5,
         mainAxisExtent: 552,
-        crossAxisSpacing: 20,
+        crossAxisSpacing: 5,
       ),
       children: ret,
     );

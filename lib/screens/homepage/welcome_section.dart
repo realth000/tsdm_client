@@ -173,7 +173,7 @@ class WelcomeSection extends ConsumerWidget {
         children: [
           Expanded(
               child: _buildKahrpbaSwiper(context, picUrlList, picHrefList)),
-          sizedBoxW20H20,
+          sizedBoxW5H5,
           Expanded(
             child: Card(
               margin: EdgeInsets.zero,
