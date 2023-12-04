@@ -5,6 +5,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/providers/purchase_provider.dart';
+import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 
 class LockedCard extends ConsumerStatefulWidget {
@@ -119,9 +120,13 @@ class _LockedCardState extends ConsumerState<LockedCard> {
           await showMessageSingleButtonDialog(
             context: context,
             title: context.t.lockedCard.successPurchase,
-            // message: context.t.lockedCard.successPurchaseInfo,
-            message: context.t.lockedCard.successPurchase,
+            message: context.t.lockedCard.successPurchaseInfo,
           );
+
+          // Use the specified provider container to access this provider.
+          screenStateContainer
+              .read(screenStateProvider.notifier)
+              .add(ScreenStateEvent.refresh);
         }
         setState(() {
           _loading = false;

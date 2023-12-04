@@ -12,6 +12,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -92,6 +93,8 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   /// So parse here directly from thread page.
   /// But only parse once because every page shall have the same thread type.
   String? _threadType;
+
+  final _stateStream = StreamController<ScreenStateEvent>();
 
   final _refreshController = EasyRefreshController(
     controlFinishRefresh: true,
@@ -261,6 +264,38 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
     super.initState();
     // Try use the thread type in widget which comes from routing.
     _threadType = widget.threadType;
+    screenStateContainer
+        .read(screenStateProvider.notifier)
+        .sink(_stateStream.sink);
+    _stateStream.stream.listen((event) async {
+      switch (event) {
+        case ScreenStateEvent.refresh:
+          await _refresh();
+        default:
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _listScrollController.dispose();
+    _refreshController.dispose();
+    screenStateContainer.read(screenStateProvider.notifier).clearSink();
+    _stateStream.close();
+    super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    await _listScrollController.animateTo(
+      0,
+      curve: Curves.ease,
+      duration: const Duration(milliseconds: 500),
+    );
+    Future.delayed(const Duration(milliseconds: 100), () async {
+      await _refreshController.callRefresh(
+        scrollController: _listScrollController,
+      );
+    });
   }
 
   Widget _buildHeader(
@@ -314,16 +349,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
               onSelected: (value) async {
                 switch (value) {
                   case _MenuActions.refresh:
-                    await _listScrollController.animateTo(
-                      0,
-                      curve: Curves.ease,
-                      duration: const Duration(milliseconds: 500),
-                    );
-                    Future.delayed(const Duration(milliseconds: 100), () async {
-                      await _refreshController.callRefresh(
-                        scrollController: _listScrollController,
-                      );
-                    });
+                    await _refresh();
                   case _MenuActions.copyUrl:
                     await Clipboard.setData(
                       ClipboardData(text: widget.fetchUrl),
@@ -354,13 +380,6 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
         ),
       ],
     );
-  }
-
-  @override
-  void dispose() {
-    _listScrollController.dispose();
-    _refreshController.dispose();
-    super.dispose();
   }
 
   @override
