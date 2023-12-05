@@ -138,6 +138,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
               final logoutResult =
                   await ref.read(authProvider.notifier).logout();
+              debug('logout result: $logoutResult');
+              if (!mounted) {
+                return;
+              }
               if (logoutResult) {
                 // Refresh root content.
                 // We do not need the value return here, but if we use ref.invalidate()
@@ -148,7 +152,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                 // really use the cache in content.
                 ref.invalidate(rootContentProvider);
               }
-              debug('logout result: $logoutResult');
               setState(() {});
             },
           ),
