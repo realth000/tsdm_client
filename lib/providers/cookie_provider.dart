@@ -37,26 +37,15 @@ part '../generated/providers/cookie_provider.g.dart';
 class Cookie extends _$Cookie {
   String? _username;
 
-  /// Stream of [UserCookieEvent] to receive all cookie events happened in
-  /// [CookieData].
-  ///
-  /// Handle events and sync cookie to database.
-  StreamController<UserCookieEvent>? _cookieStream;
-
-  // To make linter happy: Bypass "unclosed instance of 'Sink'" warning
-  // TODO: Find a proper time to close stream when instance disposing.
-  void _() {
-    _cookieStream?.close();
-  }
-
   @override
   CookieData build({String? username}) {
-    if (_cookieStream == null) {
-      _cookieStream = StreamController<UserCookieEvent>();
-      _cookieStream!.stream.listen((event) async {
-        await _handleCookieEvent(event);
-      });
-    }
+    // ignore: close_sinks
+    final streamController = StreamController<UserCookieEvent>();
+    streamController.stream.listen((event) async {
+      await _handleCookieEvent(event);
+    });
+
+    ref.onDispose(streamController.close);
 
     // Specified user override.
     if (username != null) {
@@ -70,17 +59,18 @@ class Cookie extends _$Cookie {
       return CookieData.withUsername(
         username: username,
         cookie: cookie,
-        cookieStreamSink: _cookieStream!.sink,
+        cookieStreamController: streamController,
       );
     }
 
-    return _buildCookieDataFromLoginUser();
+    return _buildCookieDataFromLoginUser(streamController);
   }
 
-  CookieData _buildCookieDataFromLoginUser() {
+  CookieData _buildCookieDataFromLoginUser(
+      StreamController<UserCookieEvent> streamController) {
     final username = ref.watch(appSettingsProvider).loginUsername;
     if (username.isEmpty) {
-      return CookieData(_cookieStream!.sink);
+      return CookieData(streamController);
     }
 
     _username = username;
@@ -91,13 +81,13 @@ class Cookie extends _$Cookie {
       debug(
         'failed to init cookie: current login user username=$username not found in database',
       );
-      return CookieData(_cookieStream!.sink);
+      return CookieData(streamController);
     }
 
     return CookieData.withData(
       username: _username!,
       cookie: Map.castFrom(databaseCookie.cookie),
-      cookieStreamSink: _cookieStream!.sink,
+      cookieStreamController: streamController,
     );
   }
 

@@ -13,24 +13,27 @@ import 'package:tsdm_client/utils/debug.dart';
 /// username), what we can do is save these cookies as cache in memory.
 /// And it's cookieProvider's work to save them to database.
 class CookieData implements Storage {
-  CookieData(this.cookieStreamSink) : _username = null;
+  CookieData(this.cookieStreamController) : _username = null;
 
   CookieData.withUsername({
     required String username,
     required Map<String, String> cookie,
-    required this.cookieStreamSink,
+    required this.cookieStreamController,
   })  : _username = username,
         _cookieMap = cookie;
 
   CookieData.withData({
     required String username,
     required Map<String, String> cookie,
-    required this.cookieStreamSink,
+    required this.cookieStreamController,
   })  : _username = username,
         _cookieMap = cookie;
 
-  /// Stream to send cookie event.
-  final StreamSink<UserCookieEvent> cookieStreamSink;
+  /// Stream of [UserCookieEvent] to receive all cookie events happened in
+  /// [CookieData].
+  ///
+  /// Handle events and sync cookie to database.
+  StreamController<UserCookieEvent>? cookieStreamController;
 
   final String? _username;
 
@@ -66,10 +69,12 @@ class CookieData implements Storage {
       return false;
     }
 
-    cookieStreamSink.add(UserCookieEvent.update(
-      username: _username!,
-      cookie: _cookieMap,
-    ));
+    if (cookieStreamController != null && cookieStreamController!.isClosed) {
+      cookieStreamController?.sink.add(UserCookieEvent.update(
+        username: _username!,
+        cookie: _cookieMap,
+      ));
+    }
     return true;
   }
 
@@ -87,9 +92,11 @@ class CookieData implements Storage {
     }
 
     debug('CookieData $hashCode: delete cookie: $_username');
-    cookieStreamSink.add(UserCookieEvent.delete(
-      username: _username!,
-    ));
+    if (cookieStreamController != null && !cookieStreamController!.isClosed) {
+      cookieStreamController?.sink.add(UserCookieEvent.delete(
+        username: _username!,
+      ));
+    }
     return true;
   }
 
