@@ -128,6 +128,7 @@ class Muncher {
           final element = node as uh.Element;
           final localName = element.localName;
 
+          // TODO: Handle <ul> and <li> marker
           // Parse according to element types.
           final span = switch (localName) {
             'img' when node.imageUrl() != null => WidgetSpan(
@@ -151,7 +152,9 @@ class Muncher {
             'table' ||
             'tbody' ||
             'tr' ||
-            'td' =>
+            'td' ||
+            'ul' ||
+            'li' =>
               _munch(node),
             String() => null,
           };
