@@ -36,7 +36,7 @@ class PinSection extends ConsumerWidget {
               context.pushNamed(
                 target.$1,
                 pathParameters: target.$2,
-                extra: <String, dynamic>{
+                queryParameters: {
                   'appBarTitle': e.threadTitle,
                 },
               );

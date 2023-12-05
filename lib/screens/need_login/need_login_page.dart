@@ -18,18 +18,20 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// When using like 2., will `pushReplacementNamed` back.
 class NeedLoginPage extends ConsumerWidget {
   const NeedLoginPage({
+    required this.backUri,
     this.showAppBar = false,
-    this.backRoute,
-    this.parameters = const <String, String>{},
-    this.extra,
+    this.needPop = false,
     super.key,
   });
 
   /// Only show app bar when using this page as an entire screen, not embedded.
   final bool showAppBar;
-  final String? backRoute;
-  final Map<String, String> parameters;
-  final Object? extra;
+
+  /// When redirect back, use `push` or `pushReplacement`.
+  final bool needPop;
+
+  /// Router uri to redirect back after login.
+  final Uri backUri;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -48,32 +50,15 @@ class NeedLoginPage extends ConsumerWidget {
                 if (!context.mounted) {
                   return;
                 }
-                if (backRoute != null) {
-                  // Embedded in another page, push to that.
-                  // NOTE: Because this page is embedded, do not use
-                  // `pushReplacementNamed`, it will throw an error, maybe it is
-                  // a bug in go_router, though `pushNamed` may cause duplicate
-                  // routes in stack.
-                  await context.pushNamed(
-                    backRoute!,
-                    pathParameters: parameters,
-                    extra: extra,
+                if (needPop) {
+                  context.pushReplacement(
+                    backUri.toString(),
                   );
-                  return;
-                }
-
-                // Use as an entire page.
-                // Redirect back according to info in `redirectProvider`.
-                final r = ref.read(redirectProvider);
-                if (r.backRoute != null) {
-                  context.pushReplacementNamed(
-                    r.backRoute!,
-                    pathParameters: r.parameters,
-                    extra: r.extra,
+                } else {
+                  await context.push(
+                    backUri.toString(),
                   );
-                  return;
                 }
-                context.pop();
               },
             ),
           ],

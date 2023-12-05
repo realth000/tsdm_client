@@ -107,15 +107,10 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.forum,
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
-          final extra = state.extra;
-          String? title;
-          if (extra != null && extra is Map<String, dynamic>) {
-            title = extra['appBarTitle'] as String;
-          }
+          final title = state.uri.queryParameters['appBarTitle'];
           return ForumPage(
             title: title,
             fid: state.pathParameters['fid']!,
-            routerState: state,
           );
         },
       ),
@@ -123,13 +118,8 @@ GoRouter router(RouterRef ref) {
           path: ScreenPaths.thread,
           parentNavigatorKey: _rootRouteKey,
           builder: (state) {
-            final extra = state.extra;
-            String? title;
-            String? threadType;
-            if (extra != null && extra is Map<String, dynamic>) {
-              title = extra['appBarTitle'] as String;
-              threadType = extra['threadType'] as String?;
-            }
+            final title = state.uri.queryParameters['appBarTitle'];
+            final threadType = state.uri.queryParameters['threadType'];
             return ThreadPage(
               title: title,
               threadType: threadType,
@@ -154,8 +144,15 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.needLogin,
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
-          // Now only show `AppBar` when using as an entire page, not embedded.
-          return const NeedLoginPage(showAppBar: true);
+          var needPop = false;
+          if (state.uri.queryParameters.containsKey('needPop')) {
+            needPop = true;
+          }
+          return NeedLoginPage(
+            showAppBar: true,
+            needPop: needPop,
+            backUri: state.extra! as Uri,
+          );
         },
       ),
       AppRoute(

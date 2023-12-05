@@ -129,7 +129,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
             pathParameters: <String, String>{
               'fid': '${widget.forum.forumID}',
             },
-            extra: <String, dynamic>{
+            queryParameters: {
               'appBarTitle': widget.forum.name,
             },
           );

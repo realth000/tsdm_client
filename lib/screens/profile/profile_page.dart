@@ -254,7 +254,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         widget.uid == null && ref.read(authProvider) != AuthState.notAuthorized;
     if (!loggedIn) {
       // Embed NeedLoginPage with redirect back route.
-      return const NeedLoginPage(backRoute: ScreenPaths.profile);
+      return NeedLoginPage(backUri: GoRouterState.of(context).uri);
     }
 
     final uid = ref.read(authProvider.notifier).loggedUid;
