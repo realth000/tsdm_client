@@ -1,7 +1,8 @@
 import 'dart:async';
 
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:tsdm_client/models/user_cookie_event.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 /// Cookie stored to use in [PersistCookieJar] as replacement of [FileStorage]
@@ -11,29 +12,27 @@ import 'package:tsdm_client/utils/debug.dart';
 ///
 /// Because in this layer we do not know any information about user (e.g.
 /// username), what we can do is save these cookies as cache in memory.
-/// And it's cookieProvider's work to save them to database.
+///
+/// Use the [ref] passed from outside to access database. Generally [ref] comes
+/// from cookie provider so it lives long enough to persist cookie data.
 class CookieData implements Storage {
-  CookieData(this.cookieStreamController) : _username = null;
+  CookieData(this.ref) : _username = null;
 
   CookieData.withUsername({
     required String username,
     required Map<String, String> cookie,
-    required this.cookieStreamController,
+    required this.ref,
   })  : _username = username,
         _cookieMap = cookie;
 
   CookieData.withData({
     required String username,
     required Map<String, String> cookie,
-    required this.cookieStreamController,
+    required this.ref,
   })  : _username = username,
         _cookieMap = cookie;
 
-  /// Stream of [UserCookieEvent] to receive all cookie events happened in
-  /// [CookieData].
-  ///
-  /// Handle events and sync cookie to database.
-  StreamController<UserCookieEvent>? cookieStreamController;
+  Ref ref;
 
   final String? _username;
 
@@ -69,12 +68,11 @@ class CookieData implements Storage {
       return false;
     }
 
-    if (cookieStreamController != null && cookieStreamController!.isClosed) {
-      cookieStreamController?.sink.add(UserCookieEvent.update(
-        username: _username!,
-        cookie: _cookieMap,
-      ));
-    }
+    await ref.read(appSettingsProvider.notifier).saveCookie(
+          _username!,
+          _cookieMap,
+        );
+
     return true;
   }
 
@@ -92,11 +90,9 @@ class CookieData implements Storage {
     }
 
     debug('CookieData $hashCode: delete cookie: $_username');
-    if (cookieStreamController != null && !cookieStreamController!.isClosed) {
-      cookieStreamController?.sink.add(UserCookieEvent.delete(
-        username: _username!,
-      ));
-    }
+    await ref.read(appSettingsProvider.notifier).deleteCookieByUsername(
+          _username!,
+        );
     return true;
   }
 
