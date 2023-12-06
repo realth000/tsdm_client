@@ -89,7 +89,7 @@ class Rate {
     final detailUrl = infoNode?.firstHref();
     final attrList = rateHeaders
         .skip(1)
-        .map((e) => e.querySelector('i')?.firstEndDeepText())
+        .map((e) => e.querySelector('i')?.firstEndDeepText()?.trim())
         .whereType<String>()
         .toList();
 
@@ -126,7 +126,7 @@ class Rate {
         userNode?.querySelector('a:nth-child(1) > img')?.imageUrl();
     final name = userNode?.querySelector('a:nth-child(2)')?.firstEndDeepText();
     final attrValueList =
-        tdList.skip(1).map((e) => e.firstEndDeepText() ?? '').toList();
+        tdList.skip(1).map((e) => e.firstEndDeepText()?.trim() ?? '').toList();
 
     if (url == null || name == null) {
       return null;
