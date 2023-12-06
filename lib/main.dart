@@ -16,8 +16,8 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await initStorage();
   await initCache();
-  // FIXME: Do not use ProviderContainer.
-  final settingsLocale = ProviderContainer().read(appSettingsProvider).locale;
+  final container = ProviderContainer();
+  final settingsLocale = container.read(appSettingsProvider).locale;
   final locale =
       AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
   if (locale == null) {
@@ -37,7 +37,8 @@ Future<void> main() async {
           Breakpoint(start: 650, end: 650, name: 'homepage_welcome_expand'),
           Breakpoint(start: 900, end: 900, name: 'app_expand_side_panel'),
         ],
-        child: const ProviderScope(child: TClientApp()),
+        child: UncontrolledProviderScope(
+            container: container, child: const TClientApp()),
       ),
     ),
   );
