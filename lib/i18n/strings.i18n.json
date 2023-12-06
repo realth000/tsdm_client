@@ -153,7 +153,8 @@
     "title": "Notifications",
     "noticeTab": {
       "title": "Notice",
-      "replyBody": "replied in $threadTitle"
+      "replyBody": "replied in $threadTitle",
+      "scoreBody": "scored your thread in $threadTitle $score"
     },
     "messageTab": {
       "title": "Messages"

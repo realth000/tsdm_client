@@ -31,18 +31,45 @@ class NoticeCard extends ConsumerWidget {
       userAvatar = CircleAvatar(child: Text(notice.username?[0] ?? ''));
     }
 
+    final noticeBody = switch (notice.noticeType) {
+      NoticeType.reply => Text(
+          context.t.noticePage.noticeTab
+              .replyBody(threadTitle: notice.noticeThreadTitle ?? '-'),
+        ),
+      NoticeType.score => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              context.t.noticePage.noticeTab.scoreBody(
+                threadTitle: notice.noticeThreadTitle ?? '-',
+                score: notice.score ?? '-',
+              ),
+            ),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: edgeInsetsL15T15R15B15,
+                child: Text(notice.scoreComment ?? ''),
+              ),
+            )
+          ],
+        ),
+    };
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: notice.redirectUrl != null
-            ? () async {
-                await context.pushNamed(ScreenPaths.reply,
-                    pathParameters: <String, String>{
-                      'target': notice.redirectUrl!,
-                    });
-              }
-            : null,
+        onTap:
+            // TODO: Allow redirect to related post.
+            notice.redirectUrl != null && notice.noticeType == NoticeType.reply
+                ? () async {
+                    await context.pushNamed(ScreenPaths.reply,
+                        pathParameters: <String, String>{
+                          'target': notice.redirectUrl!,
+                        });
+                  }
+                : null,
         child: Column(
           children: [
             ListTile(
@@ -56,14 +83,11 @@ class NoticeCard extends ConsumerWidget {
               child: Row(
                 children: [
                   Expanded(
-                    child: Text(
-                      context.t.noticePage.noticeTab.replyBody(
-                          threadTitle: notice.noticeThreadTitle ?? '-'),
-                    ),
+                    child: noticeBody,
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),

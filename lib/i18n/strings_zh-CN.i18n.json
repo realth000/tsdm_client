@@ -153,7 +153,8 @@
     "title": "通知",
     "noticeTab": {
       "title": "提醒",
-      "replyBody": "在 $threadTitle 中回复了"
+      "replyBody": "在 $threadTitle 中回复了",
+      "scoreBody": "在 $threadTitle 中给您的帖子评分 $score"
     },
     "messageTab": {
       "title": "消息"
