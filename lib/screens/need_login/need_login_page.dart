@@ -3,14 +3,12 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/providers/redirect_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
 /// A page to show need to login hint.
 ///
 /// This page can be used by:
-/// 1. Pushing route to [ScreenPaths.needLogin], with redirect back, route,
-/// parameters and extra info saved in [redirectProvider].
+/// 1. Pushing route to [ScreenPaths.needLogin] and redirect back.
 /// 2. Embedded in another page, pass the redirect back route, parameters and
 /// extra info to constructor.
 ///

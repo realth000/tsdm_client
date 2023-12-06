@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
-import 'package:tsdm_client/providers/redirect_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
@@ -24,7 +23,7 @@ part '../generated/routes/app_routes.g.dart';
 final _rootRouteKey = GlobalKey<NavigatorState>();
 final _shellRouteKey = GlobalKey<NavigatorState>();
 
-@Riverpod(dependencies: [Auth, Redirect])
+@Riverpod(dependencies: [Auth])
 GoRouter router(RouterRef ref) {
   bool isAuthorized() {
     return ref.read(authProvider) == AuthState.authorized;
@@ -48,19 +47,6 @@ GoRouter router(RouterRef ref) {
             path: ScreenPaths.homepage,
             parentNavigatorKey: _shellRouteKey,
             builder: (_) => const HomePage(),
-            // Do not redirect here because users still can access many pages
-            // without login.
-            //
-            // redirect: (context, state) {
-            //   if (!isAuthorized()) {
-            //     print('homepage: not authoried');
-            //     ref
-            //         .read(redirectProvider.notifier)
-            //         .saveRedirectState(ScreenPaths.homepage, state);
-            //     return ScreenPaths.needLogin;
-            //   }
-            //   return null;
-            // },
           ),
           AppRoute(
             path: ScreenPaths.topic,
@@ -73,18 +59,6 @@ GoRouter router(RouterRef ref) {
             path: ScreenPaths.profile,
             parentNavigatorKey: _shellRouteKey,
             builder: (_) => const ProfilePage(),
-            // Do not redirect here because users still can access many pages
-            // without login.
-            //
-            // redirect: (context, state) {
-            //   if (!isAuthorized()) {
-            //     ref
-            //         .read(redirectProvider.notifier)
-            //         .saveRedirectState(ScreenPaths.profile, state);
-            //     return ScreenPaths.needLogin;
-            //   }
-            //   return null;
-            // },
           ),
           AppRoute(
             path: ScreenPaths.settings,
