@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/models/locked.dart';
+import 'package:tsdm_client/models/rate.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -16,6 +17,7 @@ class _PostInfo {
     required this.data,
     required this.replyAction,
     this.locked,
+    this.rate,
   });
 
   /// Post ID.
@@ -38,6 +40,10 @@ class _PostInfo {
   /// `<div class="locked">` after `<div id="postmessage_xxx">`.
   /// Need purchase to see full thread content.
   Locked? locked;
+
+  /// `<dl id="ratelog_xxx">` in `<div class="pcb">`.
+  /// Rate records on this post.
+  Rate? rate;
 
   /// Url to reply this post.
   String? replyAction;
@@ -67,6 +73,8 @@ class Post {
   Locked? get locked => _info.locked;
 
   String? get replyAction => _info.replyAction;
+
+  Rate? get rate => _info.rate;
 
   /// Build [Post] from [uh.Element].
   static _PostInfo _buildPostFromElement(uh.Element element) {
@@ -127,6 +135,15 @@ class Post {
             'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > div > em > a')
         ?.firstHref();
 
+    final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');
+    Rate? rate;
+    if (rateNode != null) {
+      final r = Rate.fromRateLogNode(rateNode);
+      if (r.isValid()) {
+        rate = r;
+      }
+    }
+
     return _PostInfo(
       postID: postID,
       postFloor: postFloor,
@@ -135,6 +152,7 @@ class Post {
       data: postData ?? '',
       locked: locked,
       replyAction: replyAction,
+      rate: rate,
     );
   }
 

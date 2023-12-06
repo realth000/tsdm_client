@@ -198,5 +198,9 @@
     "confirmInfo": "从 $author 处以 $price 個天使幣的价格帖子。\n作者會得到 $authorProfit 個天使幣。\n購買后你還有 $coinsLast 個天使幣。",
     "successPurchase": "購買成功",
     "successPurchaseInfo": "即將重新整理頁面"
+  },
+  "rateCard": {
+    "title": "評分記錄（$userCount）",
+    "total": "總計: $total"
   }
 }

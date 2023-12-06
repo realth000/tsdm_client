@@ -198,5 +198,9 @@
     "confirmInfo": "Purchase from $author with is price $price.\nThe author will get $authorProfit coins.\nYou will have $coinsLast coins left after purchase",
     "successPurchase": "Purchase success",
     "successPurchaseInfo": "Will refresh this page"
+  },
+  "rateCard": {
+    "title": "Rate log ($userCount)",
+    "total": "Total: $total"
   }
 }
