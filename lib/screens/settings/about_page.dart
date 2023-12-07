@@ -12,7 +12,7 @@ class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
 
   static const _gitInfo =
-      '$gitCommitRevisionShort ($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
+      '$appVersion-$gitCommitRevisionShort ($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

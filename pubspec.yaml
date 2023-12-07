@@ -28,7 +28,7 @@ dependencies:
   gitsumu:
     git:
       url: https://github.com/realth000/gitsumu.git
-      ref: 927a949985f131e27f401287e7915b832f24b301
+      ref: 4a410c1af875c89c4daeded52530713111ec9244
   go_router: ^12.1.1
   hooks_riverpod: ^3.0.0-dev.3
   isar: ^4.0.0-dev.14
