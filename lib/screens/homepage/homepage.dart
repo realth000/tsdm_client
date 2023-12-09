@@ -45,18 +45,21 @@ class _HomePageState extends ConsumerState<HomePage> {
           )
         ],
       ),
-      body: SingleChildScrollView(
-        controller: _scrollController,
-        child: const Padding(
-          padding: edgeInsetsL10T5R10B20,
-          child: Column(
-            children: [
-              // TODO: Optimize layout build jank.
-              // TODO: Optimize page when not login (no cookie or cookie invalid).
-              WelcomeSection(),
-              sizedBoxW5H5,
-              PinSection(),
-            ],
+      body: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+        child: SingleChildScrollView(
+          controller: _scrollController,
+          child: const Padding(
+            padding: edgeInsetsL10T5R10B20,
+            child: Column(
+              children: [
+                // TODO: Optimize layout build jank.
+                // TODO: Optimize page when not login (no cookie or cookie invalid).
+                WelcomeSection(),
+                sizedBoxW5H5,
+                PinSection(),
+              ],
+            ),
           ),
         ),
       ),
