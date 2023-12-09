@@ -50,7 +50,7 @@ class _NoticePageState extends ConsumerState<NoticePage> {
 
     final noticeList = document
         .querySelectorAll(
-            'div#ct > div > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl')
+            'div#ct div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl')
         .map(Notice.fromClNode)
         .where((e) => e.isValid())
         .toList();
