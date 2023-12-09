@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 
 enum MenuActions {
   refresh,
@@ -11,8 +13,15 @@ enum MenuActions {
 
 class ListSliverAppBar<T> extends ConsumerWidget
     implements PreferredSizeWidget {
-  const ListSliverAppBar({this.title, this.bottom, this.onSelected, super.key});
+  const ListSliverAppBar({
+    required this.fid,
+    this.title,
+    this.bottom,
+    this.onSelected,
+    super.key,
+  });
 
+  final String fid;
   final String? title;
 
   final PopupMenuItemSelected<MenuActions>? onSelected;
@@ -24,6 +33,13 @@ class ListSliverAppBar<T> extends ConsumerWidget
       title: title == null ? null : Text(title!),
       bottom: bottom,
       actions: [
+        IconButton(
+          icon: const Icon(Icons.search_outlined),
+          onPressed: () async {
+            await context
+                .pushNamed(ScreenPaths.search, queryParameters: {'fid': fid});
+          },
+        ),
         PopupMenuButton(
           itemBuilder: (context) => [
             PopupMenuItem(

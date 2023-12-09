@@ -163,6 +163,27 @@
       "title": "Reply"
     }
   },
+  "searchPage": {
+    "title": "Search",
+    "noThreadFound": "No thread found",
+    "form": {
+      "search": "Search",
+      "any": "Any",
+      "keyword": "Keyword",
+      "keywordEmpty": "Keyword should not be empty",
+      "keywordInvalid": "Keyword must not contains \"%\"",
+      "authorUid": "Author Uid",
+      "authorUidInvalid": "Author uid must be a number not less than zero",
+      "fid": "Forum id (fid)",
+      "fidInvalid": "Fid must be a number not less than zero"
+    },
+    "result": {
+      "title": "Search Result",
+      "totalThreadCount": "$count results",
+      "pageInfo": "$total pages",
+      "noData": "No Data"
+    }
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"
@@ -202,5 +223,8 @@
   "rateCard": {
     "title": "Rate log ($userCount)",
     "total": "Total: $total"
+  },
+  "jumpDialog": {
+    "title": "Jump to page ..."
   }
 }

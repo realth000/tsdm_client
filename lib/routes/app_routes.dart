@@ -12,6 +12,7 @@ import 'package:tsdm_client/screens/notice/notice_page.dart';
 import 'package:tsdm_client/screens/notice/reply_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
+import 'package:tsdm_client/screens/search/search_page.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
 import 'package:tsdm_client/screens/settings/settings_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
@@ -137,12 +138,29 @@ GoRouter router(RouterRef ref) {
         },
       ),
       AppRoute(
-          path: ScreenPaths.reply,
-          parentNavigatorKey: _rootRouteKey,
-          builder: (state) {
-            final target = state.pathParameters['target']!;
-            return ReplyPage(url: target);
-          })
+        path: ScreenPaths.reply,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final target = state.pathParameters['target']!;
+          return ReplyPage(url: target);
+        },
+      ),
+      AppRoute(
+        path: ScreenPaths.search,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final keyword = state.uri.queryParameters['keyword'];
+          final authorUid = state.uri.queryParameters['authorUid'];
+          final fid = state.uri.queryParameters['fid'];
+          final page = state.uri.queryParameters['page'];
+          return SearchPage(
+            keyword: keyword,
+            authorUid: authorUid,
+            fid: fid,
+            page: page,
+          );
+        },
+      ),
     ],
   );
 

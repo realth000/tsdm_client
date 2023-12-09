@@ -54,4 +54,7 @@ class ScreenPaths {
   /// Reply to a notice or message.
   /// Currently only reply to a post with given pid in thread.
   static const String reply = '/reply/:target';
+
+  /// Search page.
+  static const String search = '/search';
 }

@@ -313,7 +313,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
               sliver: SliverList.separated(
                 itemCount: _allThreadData.length,
                 itemBuilder: (context, index) =>
-                    ThreadCard(_allThreadData[index]),
+                    NormalThreadCard(_allThreadData[index]),
                 separatorBuilder: (context, index) => sizedBoxW5H5,
               ),
             ),
@@ -366,6 +366,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
 
     return Scaffold(
       appBar: ListSliverAppBar(
+        fid: widget.fid,
         title: widget.title,
         bottom: _noPermissionFallbackDialog == null
             ? TabBar(

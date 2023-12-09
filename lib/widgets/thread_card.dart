@@ -5,31 +5,49 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
+import 'package:tsdm_client/models/searched_thread.dart';
+import 'package:tsdm_client/models/thread_type.dart';
+import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
-/// Card to show thread info.
-class ThreadCard extends ConsumerWidget {
-  /// Constructor.
-  const ThreadCard(this.thread, {super.key});
+class _CardLayout extends ConsumerWidget {
+  const _CardLayout({
+    required this.threadID,
+    required this.title,
+    required this.author,
+    this.publishTime,
+    this.threadType,
+    this.replyCount,
+    this.viewCount,
+    this.latestReplyTime,
+    this.price,
+  });
 
-  /// Thread data.
-  final NormalThread thread;
+  final String threadID;
+  final String title;
+  final ThreadType? threadType;
+  final User author;
+  final DateTime? publishTime;
+
+  final int? replyCount;
+  final int? viewCount;
+  final DateTime? latestReplyTime;
+  final int? price;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final infoList = [
-      (Icons.forum_outlined, '${thread.replyCount}'),
-      (Icons.bar_chart_outlined, '${thread.viewCount}'),
+      if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
+      if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
       // (Icons.person_outline, thread.latestReplyAuthor.name),
-      (
-        Icons.timelapse_outlined,
-        thread.latestReplyTime == null
-            ? ''
-            : thread.latestReplyTime!.elapsedTillNow(),
-      ),
-      if ((thread.price ?? 0) > 0) (FontAwesomeIcons.coins, '${thread.price}'),
+      if (latestReplyTime != null)
+        (
+          Icons.timelapse_outlined,
+          latestReplyTime!.elapsedTillNow(),
+        ),
+      if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
     ];
 
     final infoWidgetList = <Widget>[];
@@ -62,11 +80,11 @@ class ThreadCard extends ConsumerWidget {
           await context.pushNamed(
             ScreenPaths.thread,
             pathParameters: <String, String>{
-              'tid': thread.threadID,
+              'tid': threadID,
             },
             queryParameters: {
-              'appBarTitle': thread.title,
-              'threadType': thread.threadType?.name,
+              'appBarTitle': title,
+              'threadType': threadType?.name,
             },
           );
         },
@@ -75,13 +93,13 @@ class ThreadCard extends ConsumerWidget {
             // TODO: Tap to navigate to user space.
             ListTile(
               leading: CircleAvatar(
-                child: Text(thread.author.name[0]),
+                child: Text(author.name[0]),
               ),
-              title: SingleLineText(thread.author.name),
-              subtitle: thread.publishDate != null
-                  ? SingleLineText(thread.publishDate!.yyyyMMDD())
+              title: SingleLineText(author.name),
+              subtitle: publishTime != null
+                  ? SingleLineText(publishTime!.yyyyMMDD())
                   : null,
-              trailing: Text(thread.threadType?.name ?? ''),
+              trailing: Text(threadType?.name ?? ''),
             ),
             Padding(
               padding: edgeInsetsL15R15B10,
@@ -89,7 +107,7 @@ class ThreadCard extends ConsumerWidget {
                 children: [
                   Expanded(
                     child: Text(
-                      thread.title,
+                      title,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.bodyMedium,
@@ -99,16 +117,58 @@ class ThreadCard extends ConsumerWidget {
               ),
             ),
             sizedBoxW10H10,
-            Padding(
-              padding: edgeInsetsL15R15B10,
-              child: Row(
-                children: infoWidgetList,
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            if (infoWidgetList.isNotEmpty)
+              Padding(
+                padding: edgeInsetsL15R15B10,
+                child: Row(
+                  children: infoWidgetList,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                ),
               ),
-            ),
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Card to show thread info.
+class NormalThreadCard extends ConsumerWidget {
+  /// Constructor.
+  const NormalThreadCard(this.thread, {super.key});
+
+  /// Thread data.
+  final NormalThread thread;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _CardLayout(
+      threadID: thread.threadID,
+      title: thread.title,
+      author: thread.author,
+      publishTime: thread.publishDate,
+      threadType: thread.threadType,
+      replyCount: thread.replyCount,
+      viewCount: thread.viewCount,
+      latestReplyTime: thread.latestReplyTime,
+      price: thread.price,
+    );
+  }
+}
+
+/// Card to show a thread in search result.
+class SearchedThreadCard extends ConsumerWidget {
+  const SearchedThreadCard(this.thread, {super.key});
+
+  final SearchedThread thread;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _CardLayout(
+      threadID: '${thread.threadID!}',
+      title: thread.title!,
+      author: thread.author!,
+      publishTime: thread.publishTime,
     );
   }
 }

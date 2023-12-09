@@ -163,6 +163,27 @@
       "title": "回覆"
     }
   },
+  "searchPage": {
+    "title": "搜尋",
+    "noThreadFound": "結果為空",
+    "form": {
+      "search": "搜尋",
+      "any": "不限",
+      "keyword": "關鍵字",
+      "keywordEmpty": "關鍵字不能為空",
+      "keywordInvalid": "關鍵字不能包含\"%\"",
+      "authorUid": "作者uid",
+      "authorUidInvalid": "作者uid必須是不小於0的數字",
+      "fid": "論壇id（fid）",
+      "fidInvalid": "論壇id必須是不小於0的數字"
+    },
+    "result": {
+      "title": "搜尋結果",
+      "totalThreadCount": "$count 條結果",
+      "pageInfo": "$total 頁",
+      "noData": "沒有資料"
+    }
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"
@@ -202,5 +223,8 @@
   "rateCard": {
     "title": "評分記錄（$userCount）",
     "total": "總計: $total"
+  },
+  "jumpDialog": {
+    "title": "跳到頁面"
   }
 }

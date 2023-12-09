@@ -4,6 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/homepage/pin_section.dart';
 import 'package:tsdm_client/screens/homepage/welcome_section.dart';
 import 'package:tsdm_client/screens/need_login/need_login_page.dart';
@@ -33,7 +34,17 @@ class _HomePageState extends ConsumerState<HomePage> {
     }
 
     return Scaffold(
-      appBar: AppBar(title: Text(context.t.navigation.homepage)),
+      appBar: AppBar(
+        title: Text(context.t.navigation.homepage),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search_outlined),
+            onPressed: () async {
+              await context.pushNamed(ScreenPaths.search);
+            },
+          )
+        ],
+      ),
       body: SingleChildScrollView(
         controller: _scrollController,
         child: const Padding(

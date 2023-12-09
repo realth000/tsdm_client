@@ -163,6 +163,27 @@
       "title": "回复"
     }
   },
+  "searchPage": {
+    "title": "搜索",
+    "noThreadFound": "结果为空",
+    "form": {
+      "search": "搜索",
+      "any": "不限",
+      "keyword": "关键词",
+      "keywordEmpty": "关键词不能为空",
+      "keywordInvalid": "关键词不能包含\"%\"",
+      "authorUid": "作者uid",
+      "authorUidInvalid": "作者uid必须是不小于0的数字",
+      "fid": "论坛id（fid）",
+      "fidInvalid": "论坛id必须是不小于0的数字"
+    },
+    "result": {
+      "title": "搜索结果",
+      "totalThreadCount": "$count 条结果",
+      "pageInfo": "$total 页",
+      "noData": "没有数据"
+    }
+  },
   "forumCard": {
     "links": "链接",
     "subForums": "子版块"
@@ -202,5 +223,8 @@
   "rateCard": {
     "title": "评分记录（$userCount）",
     "total": "总计: $total"
+  },
+  "jumpDialog": {
+    "title": "跳转到页面"
   }
 }

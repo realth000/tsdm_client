@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum_group.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/widgets/forum_card.dart';
 
 /// App topic page.
@@ -84,6 +86,14 @@ class _TCHomePageState extends ConsumerState<TopicPage>
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.navigation.topics),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.search_outlined),
+            onPressed: () async {
+              await context.pushNamed(ScreenPaths.search);
+            },
+          )
+        ],
         bottom: TabBar(
           controller: tabController,
           tabs: groupTabList,
