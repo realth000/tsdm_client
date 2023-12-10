@@ -154,7 +154,8 @@
     "noticeTab": {
       "title": "Notice",
       "replyBody": "replied in $threadTitle",
-      "scoreBody": "scored your thread in $threadTitle $score"
+      "rateBody": "scored your thread in $threadTitle $score",
+      "mentionBody": "mentioned you in thread"
     },
     "messageTab": {
       "title": "Messages"

@@ -36,11 +36,11 @@ class NoticeCard extends ConsumerWidget {
           context.t.noticePage.noticeTab
               .replyBody(threadTitle: notice.noticeThreadTitle ?? '-'),
         ),
-      NoticeType.score => Column(
+      NoticeType.rate => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              context.t.noticePage.noticeTab.scoreBody(
+              context.t.noticePage.noticeTab.rateBody(
                 threadTitle: notice.noticeThreadTitle ?? '-',
                 score: notice.score ?? '-',
               ),
@@ -49,9 +49,22 @@ class NoticeCard extends ConsumerWidget {
               elevation: 2,
               child: Padding(
                 padding: edgeInsetsL15T15R15B15,
-                child: Text(notice.scoreComment ?? ''),
+                child: Text(notice.quotedMessage ?? ''),
               ),
             )
+          ],
+        ),
+      NoticeType.mention => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(context.t.noticePage.noticeTab.mentionBody),
+            Card(
+              elevation: 2,
+              child: Padding(
+                padding: edgeInsetsL15T15R15B15,
+                child: Text(notice.quotedMessage ?? ''),
+              ),
+            ),
           ],
         ),
     };
@@ -60,16 +73,14 @@ class NoticeCard extends ConsumerWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap:
-            // TODO: Allow redirect to related post.
-            notice.redirectUrl != null && notice.noticeType == NoticeType.reply
-                ? () async {
-                    await context.pushNamed(ScreenPaths.reply,
-                        pathParameters: <String, String>{
-                          'target': notice.redirectUrl!,
-                        });
-                  }
-                : null,
+        onTap: notice.redirectUrl != null
+            ? () async {
+                await context.pushNamed(ScreenPaths.reply,
+                    pathParameters: <String, String>{
+                      'target': notice.redirectUrl!,
+                    });
+              }
+            : null,
         child: Column(
           children: [
             ListTile(
