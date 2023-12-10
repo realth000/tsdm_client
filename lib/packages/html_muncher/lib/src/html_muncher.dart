@@ -140,7 +140,6 @@ class Muncher {
             'u' => _buildUnderline(node),
             'strike' => _buildLineThrough(node),
             'p' => _buildP(node),
-            'table' when node.classes.contains('cgtl') => _buildTable(node),
             'span' => _buildSpan(node),
             'blockquote' => _buildBlockQuote(node),
             'div'
@@ -252,45 +251,6 @@ class Muncher {
     }
 
     return ret2;
-  }
-
-  InlineSpan _buildTable(uh.Element element) {
-    String? title;
-    final rows = <TableRow>[];
-    for (final (index, node) in element.nodes.indexed) {
-      if (node.nodeType != uh.Node.ELEMENT_NODE) {
-        continue;
-      }
-      final e = node as uh.Element;
-
-      // Parse table title.
-      if (index == 0 && e.localName == 'caption') {
-        title = e.text;
-        continue;
-      }
-      if (e.localName != 'tbody') {
-        continue;
-      }
-
-      for (final n in e.nodes) {
-        if (n.nodeType != uh.Node.ELEMENT_NODE) {
-          continue;
-        }
-        final ne = n as uh.Element;
-        if (ne.localName != 'tr') {
-          continue;
-        }
-
-        final (t, d) = ne.parseTableRow();
-        rows.add(TableRow(
-          children: [
-            Text(t ?? ''),
-            ...d.map((e) => Text(e)),
-          ],
-        ));
-      }
-    }
-    return WidgetSpan(child: Table(children: rows));
   }
 
   InlineSpan _buildSpan(uh.Element element) {
