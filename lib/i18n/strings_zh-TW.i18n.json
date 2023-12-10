@@ -160,8 +160,10 @@
     "messageTab": {
       "title": "訊息"
     },
-    "replyPage": {
-      "title": "回覆"
+    "noticeDetailPage": {
+      "titleReply": "回覆",
+      "titleRate": "評分詳情",
+      "titleMention": "回覆提及"
     }
   },
   "searchPage": {

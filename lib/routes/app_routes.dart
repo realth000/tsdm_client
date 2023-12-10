@@ -2,14 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/models/notice.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/need_login/need_login_page.dart';
+import 'package:tsdm_client/screens/notice/notice_detail_page.dart';
 import 'package:tsdm_client/screens/notice/notice_page.dart';
-import 'package:tsdm_client/screens/notice/reply_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/search/search_page.dart';
@@ -142,7 +144,10 @@ GoRouter router(RouterRef ref) {
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
           final target = state.pathParameters['target']!;
-          return ReplyPage(url: target);
+          final noticeTypeIndex =
+              state.uri.queryParameters['noticeType']!.parseToInt()!;
+          return NoticeDetailPage(
+              url: target, noticeType: NoticeType.values[noticeTypeIndex]);
         },
       ),
       AppRoute(

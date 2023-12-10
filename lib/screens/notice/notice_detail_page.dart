@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/models/notice.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
@@ -15,16 +16,23 @@ import 'package:tsdm_client/widgets/reply_bar.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
-class ReplyPage extends ConsumerStatefulWidget {
-  const ReplyPage({required this.url, super.key});
+/// Show details for a single notice, also provides interaction:
+/// * Reply to the notice if notice type is [NoticeType.reply] or [NoticeType.mention].
+class NoticeDetailPage extends ConsumerStatefulWidget {
+  const NoticeDetailPage({
+    required this.url,
+    required this.noticeType,
+    super.key,
+  });
 
+  final NoticeType noticeType;
   final String url;
 
   @override
-  ConsumerState<ReplyPage> createState() => _ReplyPageState();
+  ConsumerState<NoticeDetailPage> createState() => _NoticeDetailPage();
 }
 
-class _ReplyPageState extends ConsumerState<ReplyPage> {
+class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
   final _replyBarController = ReplyBarController();
 
   ReplyParameters? _parseParameters(uh.Document document, String tid) {
@@ -113,6 +121,13 @@ class _ReplyPageState extends ConsumerState<ReplyPage> {
     }
     final postData = Post.fromPostNode(postNode);
 
+    // Only show post date (hide reply bar) if notice is rate type.
+    if (widget.noticeType == NoticeType.rate) {
+      return SingleChildScrollView(
+        child: PostCard(postData),
+      );
+    }
+
     // Parse thread id.
     final tidRe = RegExp(r'ptid=(?<ptid>\d+)');
     final tidMatch = tidRe.firstMatch(widget.url);
@@ -150,10 +165,13 @@ class _ReplyPageState extends ConsumerState<ReplyPage> {
 
   @override
   Widget build(BuildContext context) {
+    final title = switch (widget.noticeType) {
+      NoticeType.reply => context.t.noticePage.noticeDetailPage.titleReply,
+      NoticeType.rate => context.t.noticePage.noticeDetailPage.titleRate,
+      NoticeType.mention => context.t.noticePage.noticeDetailPage.titleMention,
+    };
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.t.noticePage.replyPage.title),
-      ),
+      appBar: AppBar(title: Text(title)),
       body: FutureBuilder(
         future: _fetchData(context),
         builder: (context, snapshot) {

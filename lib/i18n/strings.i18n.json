@@ -160,8 +160,10 @@
     "messageTab": {
       "title": "Messages"
     },
-    "replyPage": {
-      "title": "Reply"
+    "noticeDetailPage": {
+      "titleReply": "Reply",
+      "titleRate": "Rate info",
+      "titleMention": "Reply mention"
     }
   },
   "searchPage": {

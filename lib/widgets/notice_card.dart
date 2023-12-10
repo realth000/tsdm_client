@@ -78,6 +78,9 @@ class NoticeCard extends ConsumerWidget {
                 await context.pushNamed(ScreenPaths.reply,
                     pathParameters: <String, String>{
                       'target': notice.redirectUrl!,
+                    },
+                    queryParameters: {
+                      'noticeType': '${notice.noticeType.index}',
                     });
               }
             : null,
