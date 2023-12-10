@@ -160,17 +160,18 @@ class Post {
   ///
   /// [element]'s id is "postlist".
   static List<Post> buildListFromThreadDataNode(uh.Element element) {
-    final threadDataRootNode = element.childAtOrNull(2) ??
+    final threadDataRootNode =
         // Style 5
-        element.querySelector('div.bm')?.childAtOrNull(1);
+        element.querySelector('div.bm > div') ??
+            // Some normal styles.
+            element.childAtOrNull(2);
     var currentElement = threadDataRootNode;
     final tdPostList = <Post>[];
     while (currentElement != null) {
       // This while is a while (0), will not loop twice.
       if ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
-        final postRootNode = currentElement;
         // Build post here.
-        final post = Post.fromPostNode(postRootNode);
+        final post = Post.fromPostNode(currentElement);
         if (!post.isValid()) {
           debug('warning: post is empty');
         }
