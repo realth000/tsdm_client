@@ -86,6 +86,9 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
+          if (node.text?.trim().isEmpty ?? true) {
+            return null;
+          }
           // Base text style.
           var style = Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: state.colorStack.lastOrNull,
@@ -146,12 +149,12 @@ class Muncher {
                 when node.attributes['class']?.contains('blockcode') ?? false =>
               _buildBlockCode(node),
             'a' => _buildA(node),
+            'tr' => _buildTr(node),
+            'td' => _buildTd(node),
             'div' ||
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
-            'tr' ||
-            'td' ||
             'ul' ||
             'li' =>
               _munch(node),
@@ -339,6 +342,16 @@ class Muncher {
       return ret;
     }
     return _munch(element);
+  }
+
+  InlineSpan _buildTr(uh.Element element) {
+    final ret = _munch(element);
+    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+  }
+
+  InlineSpan _buildTd(uh.Element element) {
+    final ret = _munch(element);
+    return TextSpan(children: [ret, const TextSpan(text: ' ')]);
   }
 
   /*                Setup Functions                      */
