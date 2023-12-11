@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -14,8 +15,10 @@ import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -23,12 +26,12 @@ import 'package:url_launcher/url_launcher.dart';
 const _headerMaxExtent = 60.0;
 const _headerMinExtent = 60.0;
 
-enum _MenuActions {
-  refresh,
-  copyUrl,
-  openInBrowser,
-  backToTop,
-}
+// enum _MenuActions {
+//   refresh,
+//   copyUrl,
+//   openInBrowser,
+//   backToTop,
+// }
 
 /// A widget that retrieve data from network and supports refresh.
 class PostList<T> extends ConsumerStatefulWidget {
@@ -318,85 +321,47 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
     WidgetRef ref,
     double shrinkOffset,
   ) {
-    final titleText = widget.title;
+    String? titleText;
     final isExpandHeader = _listScrollController.offset < _headerMaxExtent;
 
-    Widget? titleWidget;
-    if (titleText != null) {
-      if (!isExpandHeader) {
-        titleWidget = Text(titleText);
-      }
+    if (widget.title != null && !isExpandHeader) {
+      titleText = widget.title;
     }
 
-    return Column(
-      children: [
-        AppBar(
-          title: titleWidget,
-          actions: [
-            PopupMenuButton(
-              itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: _MenuActions.refresh,
-                  child: Row(children: [
-                    const Icon(Icons.refresh_outlined),
-                    Text(context.t.networkList.actionRefresh),
-                  ]),
-                ),
-                PopupMenuItem(
-                  value: _MenuActions.copyUrl,
-                  child: Row(children: [
-                    const Icon(Icons.copy_outlined),
-                    Text(context.t.networkList.actionCopyUrl),
-                  ]),
-                ),
-                PopupMenuItem(
-                  value: _MenuActions.openInBrowser,
-                  child: Row(children: [
-                    const Icon(Icons.launch_outlined),
-                    Text(context.t.networkList.actionOpenInBrowser),
-                  ]),
-                ),
-                PopupMenuItem(
-                  value: _MenuActions.backToTop,
-                  child: Row(children: [
-                    const Icon(Icons.vertical_align_top_outlined),
-                    Text(context.t.networkList.actionBackToTop),
-                  ]),
-                ),
-              ],
-              onSelected: (value) async {
-                switch (value) {
-                  case _MenuActions.refresh:
-                    await _refresh();
-                  case _MenuActions.copyUrl:
-                    await Clipboard.setData(
-                      ClipboardData(text: widget.fetchUrl),
-                    );
-                    if (!context.mounted) {
-                      return;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        context.t.aboutPage.copiedToClipboard,
-                      ),
-                    ));
-                  case _MenuActions.openInBrowser:
-                    await launchUrl(
-                      Uri.parse(widget.fetchUrl),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  case _MenuActions.backToTop:
-                    await _listScrollController.animateTo(
-                      0,
-                      curve: Curves.ease,
-                      duration: const Duration(milliseconds: 500),
-                    );
-                }
-              },
-            ),
-          ],
-        ),
-      ],
+    return ListAppBar(
+      title: titleText,
+      onSearch: () async {
+        await context.pushNamed(ScreenPaths.search);
+      },
+      onSelected: (value) async {
+        switch (value) {
+          case MenuActions.refresh:
+            await _refresh();
+          case MenuActions.copyUrl:
+            await Clipboard.setData(
+              ClipboardData(text: widget.fetchUrl),
+            );
+            if (!context.mounted) {
+              return;
+            }
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text(
+                context.t.aboutPage.copiedToClipboard,
+              ),
+            ));
+          case MenuActions.openInBrowser:
+            await launchUrl(
+              Uri.parse(widget.fetchUrl),
+              mode: LaunchMode.externalApplication,
+            );
+          case MenuActions.backToTop:
+            await _listScrollController.animateTo(
+              0,
+              curve: Curves.ease,
+              duration: const Duration(milliseconds: 500),
+            );
+        }
+      },
     );
   }
 

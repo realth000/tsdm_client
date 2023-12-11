@@ -16,7 +16,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/forum_card.dart';
-import 'package:tsdm_client/widgets/list_sliver_app_bar.dart';
+import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -365,8 +365,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
     );
 
     return Scaffold(
-      appBar: ListSliverAppBar(
-        fid: widget.fid,
+      appBar: ListAppBar(
         title: widget.title,
         bottom: _noPermissionFallbackDialog == null
             ? TabBar(
@@ -377,6 +376,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
                 ],
               )
             : null,
+        onSearch: () async {
+          await context.pushNamed(ScreenPaths.search,
+              queryParameters: {'fid': widget.fid});
+        },
         onSelected: (value) async {
           switch (value) {
             case MenuActions.refresh:
