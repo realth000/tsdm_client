@@ -163,7 +163,8 @@
     "noticeDetailPage": {
       "titleReply": "Reply",
       "titleRate": "Rate info",
-      "titleMention": "Reply mention"
+      "titleMention": "Reply mention",
+      "postNotFound": "Content not found, user may be blocked"
     }
   },
   "searchPage": {

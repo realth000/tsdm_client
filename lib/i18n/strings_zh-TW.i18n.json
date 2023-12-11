@@ -163,7 +163,8 @@
     "noticeDetailPage": {
       "titleReply": "回覆",
       "titleRate": "評分詳情",
-      "titleMention": "回覆提及"
+      "titleMention": "回覆提及",
+      "postNotFound": "找不到內容，用戶可能處於禁言狀態"
     }
   },
   "searchPage": {

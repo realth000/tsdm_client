@@ -117,7 +117,8 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
     final postNode = document.querySelector('div#post_$pid');
     if (postNode == null) {
       debug('failed to build reply page: post node not found for pid $pid');
-      return Container();
+      return Center(
+          child: Text(context.t.noticePage.noticeDetailPage.postNotFound));
     }
     final postData = Post.fromPostNode(postNode);
 
