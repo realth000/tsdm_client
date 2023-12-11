@@ -43,6 +43,35 @@ class MunchState {
   final fontSizeStack = <double>[];
   String? tapUrl;
 
+  /// An internal field to save field current values.
+  MunchState? _reservedState;
+
+  /// Save current state [_reservedState].
+  void save() {
+    _reservedState = this;
+  }
+
+  /// Restore state from [_reservedState].
+  void restore() {
+    if (_reservedState != null) {
+      return;
+    }
+    bold = _reservedState!.bold;
+    underline = _reservedState!.underline;
+    lineThrough = _reservedState!.lineThrough;
+    center = _reservedState!.center;
+    textAlign = _reservedState!.textAlign;
+    colorStack
+      ..clear()
+      ..addAll(_reservedState!.colorStack);
+    fontSizeStack
+      ..clear()
+      ..addAll(_reservedState!.fontSizeStack);
+    tapUrl = _reservedState!.tapUrl;
+
+    _reservedState = null;
+  }
+
   @override
   String toString() {
     return 'MunchState {bold=$bold, underline=$underline, lineThrough=$lineThrough, color=$colorStack}';
@@ -290,7 +319,16 @@ class Muncher {
   }
 
   InlineSpan _buildBlockQuote(uh.Element element) {
+    // Try isolate the munch state inside quoted message.
+    // Bug is that when the original quoted message "truncated" at unclosed tags like "foo[s]bar...", the unclosed tag
+    // will affect all following contents in current post, that is, all texts are marked with line through.
+    // This is unfixable after rendered into html because we do not know whether a whole decoration tag (e.g. <strike>)
+    // contains the all following post messages is user added or caused by the bug above.
+    // Here just try to save and restore munch state to avoid potential issued about "styles inside quoted blocks
+    // affects outside main content".
+    state.save();
     final ret = _munch(element);
+    state.restore();
     return TextSpan(children: [
       WidgetSpan(
           child: Card(
