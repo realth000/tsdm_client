@@ -11,6 +11,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -80,11 +81,10 @@ class PostList<T> extends ConsumerStatefulWidget {
   final bool useDivider;
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _NetworkWidgetState<T>();
+  ConsumerState<PostList<T>> createState() => _PostListState<T>();
 }
 
-class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
+class _PostListState<T> extends ConsumerState<PostList<T>> {
   final _allData = <T>[];
 
   /// Thread type name.
@@ -106,6 +106,10 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   late int _pageNumber = widget.pageNumber;
 
   bool _inLastPage = false;
+
+  /// Widget indicating widget.listBuilder builds failed or not.
+  /// When build failed, show text info in current page.
+  Widget? _failedMessageWidget;
 
   /// Parse [_threadType] from thread page [document].
   /// This should only run once.
@@ -185,6 +189,17 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
 
     if (!mounted) {
       return;
+    }
+
+    // When not post found, try to parse message text dialog.
+    if (data.isEmpty) {
+      final messageText = document.querySelector('div#messagetext');
+      if (messageText != null) {
+        setState(() {
+          _failedMessageWidget = munchElement(context, messageText);
+        });
+        return;
+      }
     }
 
     /// TODO: Use thread type parsed in [ThreadData].
@@ -299,7 +314,10 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
   }
 
   Widget _buildHeader(
-      BuildContext context, WidgetRef ref, double shrinkOffset) {
+    BuildContext context,
+    WidgetRef ref,
+    double shrinkOffset,
+  ) {
     final titleText = widget.title;
     final isExpandHeader = _listScrollController.offset < _headerMaxExtent;
 
@@ -445,7 +463,7 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
                   style: Theme.of(context).textTheme.titleLarge),
             ),
           ),
-          if (_allData.isNotEmpty)
+          if (_failedMessageWidget == null && _allData.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10R10B20,
               sliver: SliverList.separated(
@@ -458,6 +476,8 @@ class _NetworkWidgetState<T> extends ConsumerState<PostList<T>> {
                     : (context, index) => sizedBoxW5H5,
               ),
             ),
+          if (_failedMessageWidget != null)
+            SliverFillRemaining(child: Center(child: _failedMessageWidget)),
         ],
       ),
     );

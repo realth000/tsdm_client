@@ -42,10 +42,14 @@ class ThreadPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _ThreadPageState();
 }
 
+/// TODO: Refactor all callbacks and communicate in [ReplyBar] and [PostList].
 class _ThreadPageState extends ConsumerState<ThreadPage> {
   String? title;
 
   final _replyBarController = ReplyBarController();
+
+  /// Flag indicating current page has [Post] or not.
+  var _hasPost = false;
 
   Future<void> replyPostCallback(
       User user, int? postFloor, String? replyAction) async {
@@ -82,6 +86,9 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                       debug('thread postlist not found');
                       return <Post>[];
                     }
+                    setState(() {
+                      _hasPost = true;
+                    });
 
                     // Sometimes we do not know the web page title outside this widget,
                     // so here should use the title in html document as fallback.
@@ -107,9 +114,10 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                   useDivider: true,
                 ),
               ),
-              ReplyBar(
-                controller: _replyBarController,
-              ),
+              if (_hasPost)
+                ReplyBar(
+                  controller: _replyBarController,
+                ),
             ],
           ),
         ),
