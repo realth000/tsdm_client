@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -22,6 +23,16 @@ class NoticePage extends ConsumerStatefulWidget {
 }
 
 class _NoticePageState extends ConsumerState<NoticePage> {
+  final _allData = <Notice>[];
+
+  final _refreshController = EasyRefreshController(
+    controlFinishRefresh: true,
+  );
+
+  void _clearData() {
+    setState(_allData.clear);
+  }
+
   Future<List<Notice>> _fetchNotice(String url) async {
     late final uh.Document document;
 
@@ -58,43 +69,57 @@ class _NoticePageState extends ConsumerState<NoticePage> {
   }
 
   @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.noticePage.title),
       ),
-      body: FutureBuilder(
-        future:
-            Future.wait([_fetchNotice(noticeUrl), _fetchNotice(readNoticeUrl)]),
-        builder: (context, snapshot) {
-          if (snapshot.hasError) {
-            return Center(
-              child: Text('${snapshot.error}'),
-            );
-          }
-          if (snapshot.hasData) {
-            // Here d1 is unread notices and d2 is read notices.
-            // When fetching data, we use Futures.wait() to run the two futures in parallel so we need to combine them
-            // together while filter duplicate messages when server side get d1 request before d2.
-            final d1 = snapshot.data![0];
-            final d2 = snapshot.data![1];
-            d2.addAll(d1.where((x) => !d2.any((y) =>
-                (y.redirectUrl == x.redirectUrl) ||
-                (y.noticeTime != x.noticeTime))));
-            return Padding(
-              padding: edgeInsetsL10T5R10B20,
-              child: ListView.separated(
-                itemCount: d2.length,
-                itemBuilder: (context, index) {
-                  return NoticeCard(notice: d2[index]);
-                },
-                separatorBuilder: (context, index) => sizedBoxW5H5,
-              ),
-            );
-          }
-
-          return const Center(child: CircularProgressIndicator());
+      body: EasyRefresh(
+        scrollBehaviorBuilder: (physics) {
+          // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+          return ERScrollBehavior(physics)
+              .copyWith(physics: physics, scrollbars: false);
         },
+        header: const MaterialHeader(),
+        controller: _refreshController,
+        refreshOnStart: true,
+        onRefresh: () async {
+          if (!mounted) {
+            return;
+          }
+          _clearData();
+          final data = await Future.wait(
+              [_fetchNotice(noticeUrl), _fetchNotice(readNoticeUrl)]);
+          final d1 = data[0];
+          final d2 = data[1];
+          final d3 = d1.where((x) => !d2.any((y) =>
+              (y.redirectUrl == x.redirectUrl) ||
+              (y.noticeTime != x.noticeTime)));
+          setState(() {
+            _allData
+              ..addAll(d3)
+              ..addAll(d2);
+          });
+          _refreshController
+            ..finishRefresh()
+            ..resetFooter();
+        },
+        child: Padding(
+          padding: edgeInsetsL10T5R10B20,
+          child: ListView.separated(
+            itemCount: _allData.length,
+            itemBuilder: (context, index) {
+              return NoticeCard(notice: _allData[index]);
+            },
+            separatorBuilder: (context, index) => sizedBoxW5H5,
+          ),
+        ),
       ),
     );
   }
