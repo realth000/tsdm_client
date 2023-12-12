@@ -170,11 +170,13 @@ class _LoginFormState extends ConsumerState<LoginForm> {
   Widget build(BuildContext context) {
     return Form(
       key: formKey,
-      child: Column(
+      child: ListView(
         children: [
-          Text(
-            t.loginPage.login,
-            style: Theme.of(context).textTheme.titleLarge,
+          Center(
+            child: Text(
+              t.loginPage.login,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
           sizedBoxW10H10,
           TextFormField(
