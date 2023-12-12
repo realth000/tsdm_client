@@ -73,13 +73,14 @@ class _NoticePageState extends ConsumerState<NoticePage> {
             );
           }
           if (snapshot.hasData) {
-            // Here should only use d2 which contains data from "isread=1" page.
-            // Because we accessed "unread notice" first and then "isread=1", so
-            // the new incoming notice will appear in both page.
-            // Just use data from "isread=1" page to avoid duplicate notice and
-            // ensure in the right order.
-            final _ = snapshot.data![0];
+            // Here d1 is unread notices and d2 is read notices.
+            // When fetching data, we use Futures.wait() to run the two futures in parallel so we need to combine them
+            // together while filter duplicate messages when server side get d1 request before d2.
+            final d1 = snapshot.data![0];
             final d2 = snapshot.data![1];
+            d2.addAll(d1.where((x) => !d2.any((y) =>
+                (y.redirectUrl == x.redirectUrl) ||
+                (y.noticeTime != x.noticeTime))));
             return Padding(
               padding: edgeInsetsL10T5R10B20,
               child: ListView.separated(
