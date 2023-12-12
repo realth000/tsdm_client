@@ -212,7 +212,6 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           TextFormField(
             autofocus: true,
             controller: keywordController,
-            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.abc_outlined),
               labelText: context.t.searchPage.form.keyword,
@@ -229,6 +228,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           ),
           TextFormField(
             controller: authorUidController,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.person_outline),
               labelText: context.t.searchPage.form.authorUid,
@@ -258,6 +258,7 @@ class _SearchPageState extends ConsumerState<SearchPage> {
           ),
           TextFormField(
             controller: fidController,
+            keyboardType: TextInputType.number,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.forum_outlined),
               labelText: context.t.searchPage.form.fid,
