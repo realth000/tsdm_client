@@ -176,6 +176,20 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await selectLanguageDialog(context, localeName);
         },
       ),
+      SwitchListTile(
+        secondary: const Icon(Icons.shortcut_outlined),
+        title: Text(context
+            .t.settingsPage.appearanceSection.showShortcutInForumCard.title),
+        subtitle: Text(context
+            .t.settingsPage.appearanceSection.showShortcutInForumCard.detail),
+        contentPadding: edgeInsetsL18R18,
+        value: ref.read(appSettingsProvider).showShortcutInForumCard,
+        onChanged: (v) async {
+          await ref
+              .read(appSettingsProvider.notifier)
+              .setShowShortcutInForumCard(visible: v);
+        },
+      ),
     ];
   }
 

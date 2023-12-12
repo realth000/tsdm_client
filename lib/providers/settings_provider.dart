@@ -44,6 +44,9 @@ class AppSettings extends _$AppSettings {
           storage.getString(settingsCheckInFeeling) ?? _defaultCheckInFeeling,
       checkInMessage:
           storage.getString(settingsCheckInMessage) ?? _defaultCheckInMessage,
+      showShortcutInForumCard:
+          storage.getBool(settingsShowShortcutInForumCard) ??
+              _defaultShowRedirectInForumCard,
     );
   }
 
@@ -106,6 +109,9 @@ class AppSettings extends _$AppSettings {
 
   /// Default check in message when check in
   static const _defaultCheckInMessage = '每日签到';
+
+  /// Show shortcut widget that to redirect to latest thread or subreddit in forum card.
+  static const _defaultShowRedirectInForumCard = false;
 
   Storage _getStorage() {
     return ref.read(appStorageProvider);
@@ -208,5 +214,11 @@ class AppSettings extends _$AppSettings {
     final storage = _getStorage();
     await storage.saveString(settingsCheckInMessage, message.truncate(50));
     state = state.copyWith(checkInMessage: message.truncate(50));
+  }
+
+  Future<void> setShowShortcutInForumCard({required bool visible}) async {
+    final storage = _getStorage();
+    await storage.saveBool(settingsShowShortcutInForumCard, value: visible);
+    state = state.copyWith(showShortcutInForumCard: visible);
   }
 }

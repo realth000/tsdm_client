@@ -22,6 +22,7 @@ class Settings with _$Settings {
     required String locale,
     required String checkInFeeling,
     required String checkInMessage,
+    required bool showShortcutInForumCard,
   }) = _Settings;
 }
 
@@ -40,6 +41,7 @@ const settingsThemeMode = 'ThemeMode';
 const settingsLocale = 'locale';
 const settingsCheckInFeeling = 'checkInFeeling';
 const settingsCheckInMessage = 'checkInMessage';
+const settingsShowShortcutInForumCard = 'showShortcutInForumCard';
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsMap = <String, Type>{
@@ -58,4 +60,5 @@ const settingsMap = <String, Type>{
   settingsLocale: String,
   settingsCheckInFeeling: String,
   settingsCheckInMessage: String,
+  settingsShowShortcutInForumCard: bool,
 };

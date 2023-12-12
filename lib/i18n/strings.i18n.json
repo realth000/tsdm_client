@@ -40,6 +40,10 @@
         "title": "Languages",
         "followSystem": "Follow System",
         "selectLanguage": "Select Language"
+      },
+      "showShortcutInForumCard": {
+        "title": "Forum Card Shortcut Entries",
+        "detail": "Show shortcut entries towards latest thread and subreddits in forum card"
       }
     },
     "checkInSection": {

@@ -6,6 +6,7 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
+import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -83,6 +84,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
 
   @override
   Widget build(BuildContext context) {
+    final showShortCut = ref.watch(appSettingsProvider).showShortcutInForumCard;
     final forumInfoList = [
       (
         Icons.forum_outlined,
@@ -151,58 +153,63 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                   ? Text(widget.forum.latestThreadTime!.elapsedTillNow())
                   : null,
             ),
-            Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (widget.forum.isExpanded)
-                  ListTile(
-                    title: Row(
-                      children: [
-                        Text(
-                          widget.forum.latestThreadTitle ?? '',
-                          style: Theme.of(context).textTheme.labelMedium,
-                        ),
-                        Expanded(child: Container()),
-                        Text(
-                          widget.forum.latestThreadUserName ?? '',
-                          style: Theme.of(context).textTheme.labelSmall,
-                        ),
-                      ],
+            if (showShortCut)
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  if (widget.forum.isExpanded)
+                    ListTile(
+                      title: Row(
+                        children: [
+                          Text(
+                            widget.forum.latestThreadTitle ?? '',
+                            style: Theme.of(context).textTheme.labelMedium,
+                          ),
+                          Expanded(child: Container()),
+                          Text(
+                            widget.forum.latestThreadUserName ?? '',
+                            style: Theme.of(context).textTheme.labelSmall,
+                          ),
+                        ],
+                      ),
+                      onTap: () async {
+                        final target =
+                            widget.forum.latestThreadUrl?.parseUrlToRoute();
+                        if (target == null) {
+                          debug(
+                              'invalid latest thread url: ${widget.forum.latestThreadUrl}');
+                          return;
+                        }
+                        await context.pushNamed(
+                          target.$1,
+                          pathParameters: target.$2,
+                        );
+                      },
                     ),
-                    onTap: () async {
-                      final target =
-                          widget.forum.latestThreadUrl?.parseUrlToRoute();
-                      if (target == null) {
-                        debug(
-                            'invalid latest thread url: ${widget.forum.latestThreadUrl}');
-                        return;
-                      }
-                      await context.pushNamed(
-                        target.$1,
-                        pathParameters: target.$2,
-                      );
-                    },
-                  ),
-                if (widget.forum.subThreadList?.isNotEmpty ?? false)
-                  ..._buildWrapSection(context, ref, context.t.forumCard.links,
-                      widget.forum.subThreadList!, showingSubThread, () {
-                    setState(() {
-                      showingSubThread = !showingSubThread;
-                    });
-                  }),
-                if (widget.forum.subForumList?.isNotEmpty ?? false)
-                  ..._buildWrapSection(
-                      context,
-                      ref,
-                      context.t.forumCard.subForums,
-                      widget.forum.subForumList!,
-                      showingSubForum, () {
-                    setState(() {
-                      showingSubForum = !showingSubForum;
-                    });
-                  }),
-              ],
-            ),
+                  if (widget.forum.subThreadList?.isNotEmpty ?? false)
+                    ..._buildWrapSection(
+                        context,
+                        ref,
+                        context.t.forumCard.links,
+                        widget.forum.subThreadList!,
+                        showingSubThread, () {
+                      setState(() {
+                        showingSubThread = !showingSubThread;
+                      });
+                    }),
+                  if (widget.forum.subForumList?.isNotEmpty ?? false)
+                    ..._buildWrapSection(
+                        context,
+                        ref,
+                        context.t.forumCard.subForums,
+                        widget.forum.subForumList!,
+                        showingSubForum, () {
+                      setState(() {
+                        showingSubForum = !showingSubForum;
+                      });
+                    }),
+                ],
+              ),
             Padding(
               padding: edgeInsetsL15R15B10,
               child: Column(

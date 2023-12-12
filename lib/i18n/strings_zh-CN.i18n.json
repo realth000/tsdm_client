@@ -40,6 +40,10 @@
         "title": "语言",
         "followSystem": "跟随系统",
         "selectLanguage": "选择语言"
+      },
+      "showShortcutInForumCard": {
+        "title": "论坛卡片可跳转",
+        "detail": "论坛卡片上显示可跳转到最新帖子和子板块的部件"
       }
     },
     "checkInSection": {
