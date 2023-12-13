@@ -79,20 +79,20 @@ class Storage {
     String username,
     Map<String, String> cookie,
   ) async {
-    final currentCookie = _isar.databaseCookies
-            .where()
-            .usernameEqualTo(username)
-            .findFirst()
-            ?.cookie ??
-        {};
+    final currentCookie = await _isar.databaseCookies
+        .where()
+        .usernameEqualTo(username)
+        .findFirstAsync();
+
+    final c = currentCookie?.cookie ?? {};
 
     /// Combine two map together, do not directly use [cookie].
-    currentCookie.addAll(cookie);
+    c.addAll(cookie);
     await _isar.writeAsync((isar) {
       isar.databaseCookies.put(DatabaseCookie(
-        id: isar.databaseCookies.autoIncrement(),
+        id: currentCookie?.id ?? isar.databaseCookies.autoIncrement(),
         username: username,
-        cookie: currentCookie,
+        cookie: c,
       ));
     });
   }
