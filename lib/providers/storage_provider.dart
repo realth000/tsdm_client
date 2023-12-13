@@ -155,6 +155,12 @@ class Storage {
     });
   }
 
+  Future<void> clearImageCache() async {
+    await _isar.writeAsync((isar) {
+      isar.databaseImageCaches.clear();
+    });
+  }
+
   /*             settings             */
 
   /// Get string type value of specified key.

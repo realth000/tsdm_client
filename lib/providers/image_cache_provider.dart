@@ -85,5 +85,6 @@ class ImageCache extends _$ImageCache {
     for (final f in _imageCacheDirectory.listSync()) {
       await f.delete();
     }
+    await ref.read(appStorageProvider).clearImageCache();
   }
 }
