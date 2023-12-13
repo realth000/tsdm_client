@@ -232,6 +232,26 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
       child: Column(
         mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
         children: [
+          if (_hintText != null)
+            Padding(
+              padding: edgeInsetsL20R20,
+              child: Row(
+                children: [
+                  Text(
+                    _hintText!,
+                    style: Theme.of(context).textTheme.labelLarge,
+                  ),
+                  Expanded(child: Container()),
+                  IconButton(
+                      icon: const Icon(Icons.clear_outlined),
+                      onPressed: () {
+                        setState(() {
+                          _hintText = null;
+                        });
+                      }),
+                ],
+              ),
+            ),
           Flexible(
             fit: isExpanded ? FlexFit.tight : FlexFit.loose,
             child: Padding(
@@ -253,8 +273,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                         maxLines: isExpanded ? null : 10,
                         minLines: isExpanded ? null : 1,
                         decoration: InputDecoration(
-                          hintText:
-                              _hintText ?? context.t.threadPage.sendReplyHint,
+                          hintText: context.t.threadPage.sendReplyHint,
                         ),
                       ),
                     ),

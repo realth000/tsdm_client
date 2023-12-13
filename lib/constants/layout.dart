@@ -13,6 +13,7 @@ const edgeInsetsL10T10R10 = EdgeInsets.only(left: 10, top: 10, right: 10);
 const edgeInsetsL10R10B10 = EdgeInsets.only(left: 10, right: 10, bottom: 10);
 const edgeInsetsL10R10B20 = EdgeInsets.only(left: 10, right: 10, bottom: 20);
 const edgeInsetsL15R15B10 = EdgeInsets.only(left: 15, right: 15, bottom: 10);
+const edgeInsetsL20R20 = EdgeInsets.only(left: 20, right: 20);
 const edgeInsetsL20R20B10 = EdgeInsets.only(left: 20, right: 20, bottom: 10);
 const edgeInsetsL10T5R5B5 =
     EdgeInsets.only(left: 10, top: 5, right: 5, bottom: 5);
