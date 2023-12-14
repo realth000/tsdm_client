@@ -143,8 +143,6 @@ class WelcomeSection extends ConsumerWidget {
       debug(
           'homepage kahrpba picture url count and href count not equal, ${picUrlList.length} != ${picHrefList.length}, skip building swiper');
     } else {
-      debug('kahrpba picture count is ${picUrlList.length}');
-
       linkTileList.addAll(
         _buildKahrpbaLinkTileList(
           context,

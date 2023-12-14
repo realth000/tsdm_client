@@ -74,7 +74,7 @@ class PinSection extends ConsumerWidget {
         length2: navThreadList.length,
       );
       debug(errorText);
-      return Text(errorText);
+      return Container();
     }
 
     if (navNameList.isEmpty || navThreadList.isEmpty) {
