@@ -86,6 +86,9 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                       debug('thread postlist not found');
                       return <Post>[];
                     }
+                    if (!mounted) {
+                      return <Post>[];
+                    }
                     setState(() {
                       _hasPost = true;
                     });
