@@ -98,9 +98,10 @@ class _NoticePageState extends ConsumerState<NoticePage> {
               [_fetchNotice(noticeUrl), _fetchNotice(readNoticeUrl)]);
           final d1 = data[0];
           final d2 = data[1];
-          final d3 = d1.where((x) => !d2.any((y) =>
-              (y.redirectUrl == x.redirectUrl) ||
-              (y.noticeTime != x.noticeTime)));
+          // Filter duplicate notices.
+          // Only filter on reply type notices for now.
+          final d3 = d1.where((x) => !d2.any(
+              (y) => x.redirectUrl != null && y.redirectUrl == x.redirectUrl));
           setState(() {
             _allData
               ..addAll(d3)
