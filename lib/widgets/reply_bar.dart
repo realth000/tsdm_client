@@ -247,6 +247,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                       onPressed: () {
                         setState(() {
                           _hintText = null;
+                          _replyAction = null;
                         });
                       }),
                 ],
