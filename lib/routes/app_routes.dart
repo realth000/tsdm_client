@@ -9,6 +9,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
+import 'package:tsdm_client/screens/my_thread/my_thread_page.dart';
 import 'package:tsdm_client/screens/need_login/need_login_page.dart';
 import 'package:tsdm_client/screens/notice/notice_detail_page.dart';
 import 'package:tsdm_client/screens/notice/notice_page.dart';
@@ -164,6 +165,13 @@ GoRouter router(RouterRef ref) {
             fid: fid,
             page: page,
           );
+        },
+      ),
+      AppRoute(
+        path: ScreenPaths.myThread,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          return MyThreadPage();
         },
       ),
     ],

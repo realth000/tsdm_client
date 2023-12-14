@@ -192,6 +192,15 @@
       "noData": "沒有資料"
     }
   },
+  "myThreadPage": {
+    "title": "我的貼文",
+    "threadTab": {
+      "title": "主題"
+    },
+    "replyTab": {
+      "title": "回覆"
+    }
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

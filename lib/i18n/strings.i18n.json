@@ -192,6 +192,15 @@
       "noData": "No Data"
     }
   },
+  "myThreadPage": {
+    "title": "My Thread",
+    "threadTab": {
+      "title": "Thread"
+    },
+    "replyTab": {
+      "title": "ReplyThread"
+    }
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

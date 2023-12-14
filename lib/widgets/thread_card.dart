@@ -4,6 +4,8 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/models/my_thread.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/searched_thread.dart';
 import 'package:tsdm_client/models/thread_type.dart';
@@ -23,6 +25,7 @@ class _CardLayout extends ConsumerWidget {
     this.viewCount,
     this.latestReplyTime,
     this.price,
+    this.quotedMessage,
   });
 
   final String threadID;
@@ -35,6 +38,7 @@ class _CardLayout extends ConsumerWidget {
   final int? viewCount;
   final DateTime? latestReplyTime;
   final int? price;
+  final String? quotedMessage;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -116,7 +120,18 @@ class _CardLayout extends ConsumerWidget {
                 ],
               ),
             ),
-            sizedBoxW10H10,
+            if (quotedMessage != null)
+              Row(
+                children: [
+                  Card(
+                    elevation: 2,
+                    child: Padding(
+                      padding: edgeInsetsL15T15R15B15,
+                      child: Text(quotedMessage!),
+                    ),
+                  ),
+                ],
+              ),
             if (infoWidgetList.isNotEmpty)
               Padding(
                 padding: edgeInsetsL15R15B10,
@@ -125,7 +140,7 @@ class _CardLayout extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 ),
               ),
-          ],
+          ].insertBetween(sizedBoxW10H10),
         ),
       ),
     );
@@ -169,6 +184,26 @@ class SearchedThreadCard extends ConsumerWidget {
       title: thread.title!,
       author: thread.author!,
       publishTime: thread.publishTime,
+    );
+  }
+}
+
+/// Card to show current user's thread info in "My Thread" page.
+class MyThreadCard extends ConsumerWidget {
+  const MyThreadCard(this.thread, {super.key});
+
+  final MyThread thread;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _CardLayout(
+      threadID: thread.threadID!,
+      title: thread.title!,
+      author: thread.latestReplyAuthor!,
+      // FIXME: Do not use thread type to represent forum.
+      threadType: ThreadType(name: thread.forumName!, url: thread.forumUrl!),
+      publishTime: thread.latestReplyTime,
+      quotedMessage: thread.quotedMessage,
     );
   }
 }

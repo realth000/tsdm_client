@@ -9,14 +9,21 @@ extension ParseUrl on String {
   /// Try parse string to [AppRoute] with arguments.
   (String, Map<String, String>)? parseUrlToRoute() {
     final url = Uri.parse(this);
-    final mod = url.queryParameters['mod'];
+    final queryParameters = url.queryParameters;
+    final mod = queryParameters['mod'];
 
-    if (mod == 'forumdisplay' && url.queryParameters.containsKey('fid')) {
-      return (ScreenPaths.forum, {'fid': "${url.queryParameters['fid']}"});
+    if (mod == 'forumdisplay' && queryParameters.containsKey('fid')) {
+      return (ScreenPaths.forum, {'fid': "${queryParameters['fid']}"});
     }
 
-    if (mod == 'viewthread' && url.queryParameters.containsKey('tid')) {
-      return (ScreenPaths.thread, {'tid': "${url.queryParameters['tid']}"});
+    if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
+      return (ScreenPaths.thread, {'tid': "${queryParameters['tid']}"});
+    }
+
+    if (mod == 'space' &&
+        queryParameters['do'] == 'thread' &&
+        queryParameters['view'] == 'me') {
+      return (ScreenPaths.myThread, {});
     }
 
     return null;

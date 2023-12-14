@@ -6,6 +6,10 @@ const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
 const noAvatarUrl = '$baseUrl/uc_server/images/noavatar_middle.gif';
 const noticeUrl = '$baseUrl/home.php?mod=space&do=notice';
 const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
+const myThreadThreadUrl =
+    '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';
+const myThreadReplyUrl =
+    '$baseUrl/home.php?mod=space&do=thread&view=me&type=reply';
 
 /// Target url to post a reply to thread [tid], forum [fid].
 String formatReplyThreadUrl(String fid, String tid) {

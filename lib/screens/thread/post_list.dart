@@ -176,6 +176,9 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
       if (!mounted) {
         return;
       }
+
+      // TODO: Should get next page url from html document, do NOT format it here manually.
+      // <a class="nxt" href="next_page_url"></a>
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
