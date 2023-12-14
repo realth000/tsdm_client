@@ -8,16 +8,15 @@ const Uuid _uuid = Uuid();
 extension ParseUrl on String {
   /// Try parse string to [AppRoute] with arguments.
   (String, Map<String, String>)? parseUrlToRoute() {
-    final fidRe = RegExp(r'fid=(?<Fid>\d+)');
-    final fidMatch = fidRe.firstMatch(this);
-    if (fidMatch != null) {
-      return (ScreenPaths.forum, {'fid': "${fidMatch.namedGroup('Fid')}"});
+    final url = Uri.parse(this);
+    final mod = url.queryParameters['mod'];
+
+    if (mod == 'forumdisplay' && url.queryParameters.containsKey('fid')) {
+      return (ScreenPaths.forum, {'fid': "${url.queryParameters['fid']}"});
     }
 
-    final tidRe = RegExp(r'tid=(?<Tid>\d+)');
-    final tidMatch = tidRe.firstMatch(this);
-    if (tidMatch != null) {
-      return (ScreenPaths.thread, {'tid': "${tidMatch.namedGroup('Tid')}"});
+    if (mod == 'viewthread' && url.queryParameters.containsKey('tid')) {
+      return (ScreenPaths.thread, {'tid': "${url.queryParameters['tid']}"});
     }
 
     return null;
