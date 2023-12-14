@@ -96,12 +96,15 @@ class _NoticePageState extends ConsumerState<NoticePage> {
           _clearData();
           final data = await Future.wait(
               [_fetchNotice(noticeUrl), _fetchNotice(readNoticeUrl)]);
+          // Unread
           final d1 = data[0];
+          // Read
           final d2 = data[1];
           // Filter duplicate notices.
           // Only filter on reply type notices for now.
-          final d3 = d1.where((x) => !d2.any(
-              (y) => x.redirectUrl != null && y.redirectUrl == x.redirectUrl));
+          final d3 = d1.where((x) =>
+              x.redirectUrl == null ||
+              !d2.any((y) => y.redirectUrl == x.redirectUrl));
           setState(() {
             _allData
               ..addAll(d3)
