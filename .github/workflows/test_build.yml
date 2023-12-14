@@ -36,6 +36,7 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
+          cache: true
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build windows
