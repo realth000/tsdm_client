@@ -23,8 +23,8 @@ import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const _headerMaxExtent = 60.0;
-const _headerMinExtent = 60.0;
+const _headerMaxExtent = 100.0;
+const _headerMinExtent = 100.0;
 
 // enum _MenuActions {
 //   refresh,

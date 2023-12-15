@@ -71,58 +71,55 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
         // 2. `title`: Title found in html document.
         // 3. `context.t.appName`: Default application name.
         // appBar: AppBar(title: Text(widget.title ?? title ?? '')),
-        body: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                child: PostList<Post>(
-                  widget.threadID,
-                  widget._fetchUrl,
-                  title: widget.title ?? title ?? '',
-                  listBuilder: (document) {
-                    final threadDataNode =
-                        document.querySelector('div#postlist');
-                    if (threadDataNode == null) {
-                      debug('thread postlist not found');
-                      return <Post>[];
-                    }
-                    if (!mounted) {
-                      return <Post>[];
-                    }
+        body: Column(
+          children: [
+            Expanded(
+              child: PostList<Post>(
+                widget.threadID,
+                widget._fetchUrl,
+                title: widget.title ?? title ?? '',
+                listBuilder: (document) {
+                  final threadDataNode = document.querySelector('div#postlist');
+                  if (threadDataNode == null) {
+                    debug('thread postlist not found');
+                    return <Post>[];
+                  }
+                  if (!mounted) {
+                    return <Post>[];
+                  }
+                  setState(() {
+                    _hasPost = true;
+                  });
+
+                  // Sometimes we do not know the web page title outside this widget,
+                  // so here should use the title in html document as fallback.
+                  //
+                  // Note that the specified title (in widget constructor) is prior to
+                  // this html document title, only use html title when that title is null.
+                  if (widget.title == null && mounted) {
                     setState(() {
-                      _hasPost = true;
+                      title = document.querySelector('title')?.text;
                     });
+                  }
 
-                    // Sometimes we do not know the web page title outside this widget,
-                    // so here should use the title in html document as fallback.
-                    //
-                    // Note that the specified title (in widget constructor) is prior to
-                    // this html document title, only use html title when that title is null.
-                    if (widget.title == null && mounted) {
-                      setState(() {
-                        title = document.querySelector('title')?.text;
-                      });
-                    }
-
-                    return Post.buildListFromThreadDataNode(threadDataNode);
-                  },
-                  widgetBuilder: (context, post) => PostCard(
-                    post,
-                    replyCallback: replyPostCallback,
-                  ),
-                  canFetchMorePages: true,
-                  replyFormHashCallback: (replyParameters) {
-                    _replyBarController.replyParameters = replyParameters;
-                  },
-                  useDivider: true,
+                  return Post.buildListFromThreadDataNode(threadDataNode);
+                },
+                widgetBuilder: (context, post) => PostCard(
+                  post,
+                  replyCallback: replyPostCallback,
                 ),
+                canFetchMorePages: true,
+                replyFormHashCallback: (replyParameters) {
+                  _replyBarController.replyParameters = replyParameters;
+                },
+                useDivider: true,
               ),
-              if (_hasPost)
-                ReplyBar(
-                  controller: _replyBarController,
-                ),
-            ],
-          ),
+            ),
+            if (_hasPost)
+              ReplyBar(
+                controller: _replyBarController,
+              ),
+          ],
         ),
       );
 }
