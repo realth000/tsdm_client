@@ -30,17 +30,23 @@ jobs:
           dart run build_runner build
       - name: Build Linux
         run: flutter build linux --release
+      - name: Pre Packing
+        run: |
+          pushd build/linux/x64/release/
+          mv bundle tsdm_client
+          popd
       - name: Pack Linux tarball
         uses: thedoctor0/zip-release@master
         with:
           type: 'tar'
           filename: tsdm_client-linux.tar.gz
-          directory: build/linux/x64/release/bundle
+          directory: build/linux/x64/release/
+          path: tsdm_client
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Linux tarball
-          path: build/linux/x64/release/bundle/tsdm_client-linux.tar.gz
+          path: build/linux/x64/release/tsdm_client-linux.tar.gz
       - name: Setup Android sign key
         run: |
           echo '${{ secrets.KEYSTORE }}' | base64 --decode > android/app/key.jks
@@ -50,8 +56,10 @@ jobs:
           flutter build apk --release
       - name: Pack Android apk
         run: |
-          mv build/app/outputs/flutter-apk/app-arm64-v8a-release.apk build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk
-          mv build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk
+          pushd build/app/outputs/flutter-apk/
+          mv app-arm64-v8a-release.apk tsdm_client-arm64_v8a.apk
+          mv app-armeabi-v7a-release.apk tsdm_client-armeabi_v7a.apk
+          popd
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -73,14 +81,21 @@ jobs:
           dart run build_runner build
       - name: Build Windows
         run: flutter build windows --release
+      - name: Pre Packing
+        shell: pwsh
+        run: |
+          cd build/windows/x64/runner
+          Rename-Item Release tsdm_client
+          cd ../../../../
       - name: Pack Windows tarball
         uses: thedoctor0/zip-release@master
         with:
           type: 'zip'
           filename: tsdm_client-windows.zip
-          directory: build/windows/runner/Release
+          directory: build/windows/x64/runner
+          path: tsdm_client
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v3
         with:
           name: Windows tarball
-          path: build/windows/runner/Release/tsdm_client-windows.zip
+          path: build/windows/x64/runner/tsdm_client-windows.zip
