@@ -201,8 +201,12 @@ class CachedRootContent {
         .innerHtmlEx()
         .split('\n')
         .where((e) => e.contains("window.location='"))
-        .map((e) =>
-            e.split("window.location='").lastOrNull?.split("'").firstOrNull)
+        .map((e) => e
+            .split("window.location='")
+            .lastOrNull
+            ?.split("'")
+            .firstOrNull
+            ?.replaceFirst('&amp;', '&'))
         .toList();
   }
 
