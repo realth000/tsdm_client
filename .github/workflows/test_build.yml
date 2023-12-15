@@ -12,8 +12,8 @@ jobs:
     name: Build Linux and Android
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: 'zulu'
           java-version: '11'
@@ -27,16 +27,19 @@ jobs:
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build linux
+      - name: Setup Android sign key
+        run: |
+          echo '${{ secrets.KEYSTORE }}' | base64 --decode > android/app/key.jks
+          echo '${{ secrets.KEY_PROPERTIES }}' > android/key.properties
       - run: flutter build apk
   build-windows:
     name: Build Windows
     runs-on: windows-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
-          cache: true
       - run: flutter pub get
       - run: dart run build_runner build
       - run: flutter build windows
