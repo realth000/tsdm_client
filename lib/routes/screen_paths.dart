@@ -64,4 +64,9 @@ class ScreenPaths {
   /// Even when redirect to this route, query parameters contain uid, only the page of current user is visible.
   /// https://tsdm39.com/home.php?mod=space&uid=xxx&do=thread&view=me
   static const String myThread = '/myThread';
+
+  /// Page to show "Latest thread" on web side.
+  ///
+  /// https://tsdm39.com/home.php?mod=forum&searchid=xxx&orderby...
+  static const String latestThread = '/latestPage';
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
@@ -34,11 +35,10 @@ class PinSection extends ConsumerWidget {
                 return;
               }
               context.pushNamed(
-                target.$1,
-                pathParameters: target.$2,
-                queryParameters: {
-                  'appBarTitle': e.threadTitle,
-                },
+                target.screenPath,
+                pathParameters: target.pathParameters,
+                queryParameters: target.queryParameters
+                    .copyWith({'appBarTitle': e.threadTitle}),
               );
             },
           ),

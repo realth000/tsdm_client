@@ -47,8 +47,9 @@ class WelcomeSection extends ConsumerWidget {
               return;
             }
             await context.pushNamed(
-              parseResult.$1,
-              pathParameters: parseResult.$2,
+              parseResult.screenPath,
+              pathParameters: parseResult.pathParameters,
+              queryParameters: parseResult.queryParameters,
             );
           },
         ),
@@ -77,7 +78,11 @@ class WelcomeSection extends ConsumerWidget {
                 debug('invalid kahrpba link: ${e.$2}');
                 return;
               }
-              context.pushNamed(target.$1, pathParameters: target.$2);
+              context.pushNamed(
+                target.screenPath,
+                pathParameters: target.pathParameters,
+                queryParameters: target.queryParameters,
+              );
             },
           ),
         )

@@ -201,6 +201,9 @@
       "title": "回覆"
     }
   },
+  "latestThreadPage": {
+    "title": "最新主題"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

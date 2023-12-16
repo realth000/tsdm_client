@@ -49,8 +49,9 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                 return;
               }
               await context.pushNamed(
-                target.$1,
-                pathParameters: target.$2,
+                target.screenPath,
+                pathParameters: target.pathParameters,
+                queryParameters: target.queryParameters,
               );
             },
           ),
@@ -181,8 +182,9 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                           return;
                         }
                         await context.pushNamed(
-                          target.$1,
-                          pathParameters: target.$2,
+                          target.screenPath,
+                          pathParameters: target.pathParameters,
+                          queryParameters: target.queryParameters,
                         );
                       },
                     ),

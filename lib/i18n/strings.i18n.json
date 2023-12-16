@@ -201,6 +201,9 @@
       "title": "ReplyThread"
     }
   },
+  "latestThreadPage": {
+    "title": "Latest Thread"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

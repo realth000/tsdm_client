@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/models/latest_thread.dart';
 import 'package:tsdm_client/models/my_thread.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/searched_thread.dart';
@@ -193,6 +194,26 @@ class MyThreadCard extends ConsumerWidget {
   const MyThreadCard(this.thread, {super.key});
 
   final MyThread thread;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return _CardLayout(
+      threadID: thread.threadID!,
+      title: thread.title!,
+      author: thread.latestReplyAuthor!,
+      // FIXME: Do not use thread type to represent forum.
+      threadType: ThreadType(name: thread.forumName!, url: thread.forumUrl!),
+      publishTime: thread.latestReplyTime,
+      quotedMessage: thread.quotedMessage,
+    );
+  }
+}
+
+/// Card to show result in "Latest thread" page.
+class LatestThreadCard extends ConsumerWidget {
+  const LatestThreadCard(this.thread, {super.key});
+
+  final LatestThread thread;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

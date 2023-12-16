@@ -8,6 +8,7 @@ import 'package:tsdm_client/providers/auth_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/forum/forum_page.dart';
 import 'package:tsdm_client/screens/homepage/homepage.dart';
+import 'package:tsdm_client/screens/latest_thread/latest_thread_page.dart';
 import 'package:tsdm_client/screens/login/login_page.dart';
 import 'package:tsdm_client/screens/my_thread/my_thread_page.dart';
 import 'package:tsdm_client/screens/need_login/need_login_page.dart';
@@ -171,9 +172,16 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.myThread,
         parentNavigatorKey: _rootRouteKey,
         builder: (state) {
-          return MyThreadPage();
+          return const MyThreadPage();
         },
       ),
+      AppRoute(
+          path: ScreenPaths.latestThread,
+          parentNavigatorKey: _rootRouteKey,
+          builder: (state) {
+            final url = state.uri.queryParameters['url']!;
+            return LatestThreadPage(url: url);
+          }),
     ],
   );
 

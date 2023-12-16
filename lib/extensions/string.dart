@@ -1,29 +1,57 @@
+import 'package:flutter/cupertino.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:uuid/uuid.dart';
 
 const Uuid _uuid = Uuid();
 
+/// Result when parsing [String] to route succeed.
+@immutable
+class RecognizedRoute {
+  const RecognizedRoute(
+    this.screenPath, {
+    this.pathParameters = const {},
+    this.queryParameters = const {},
+  });
+
+  final String screenPath;
+  final Map<String, String> pathParameters;
+  final Map<String, String> queryParameters;
+}
+
 extension ParseUrl on String {
-  /// Try parse string to [AppRoute] with arguments.
-  (String, Map<String, String>)? parseUrlToRoute() {
+  /// Try parse string to [RecognizedRoute] with arguments.
+  /// Return null if string is unsupported route.
+  RecognizedRoute? parseUrlToRoute() {
     final url = Uri.parse(this);
     final queryParameters = url.queryParameters;
     final mod = queryParameters['mod'];
 
     if (mod == 'forumdisplay' && queryParameters.containsKey('fid')) {
-      return (ScreenPaths.forum, {'fid': "${queryParameters['fid']}"});
+      return RecognizedRoute(
+        ScreenPaths.forum,
+        pathParameters: {'fid': "${queryParameters['fid']}"},
+      );
     }
 
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
-      return (ScreenPaths.thread, {'tid': "${queryParameters['tid']}"});
+      return RecognizedRoute(
+        ScreenPaths.thread,
+        pathParameters: {'tid': "${queryParameters['tid']}"},
+      );
     }
 
     if (mod == 'space' &&
         queryParameters['do'] == 'thread' &&
         queryParameters['view'] == 'me') {
-      return (ScreenPaths.myThread, {});
+      return const RecognizedRoute(ScreenPaths.myThread);
+    }
+
+    if (mod == 'forum' && queryParameters['srchfrom'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.latestThread,
+        queryParameters: {'url': prependHost()},
+      );
     }
 
     return null;

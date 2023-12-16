@@ -20,3 +20,14 @@ extension ParseRoute on Map<String, String> {
     return '$baseUrl/archiver?$route';
   }
 }
+
+extension ModifyMap<K, V> on Map<K, V> {
+  /// Return a new map that copies current map and [other] together.
+  Map<K, V> copyWith(Map<K, V> other) {
+    final ret = this;
+    for (final i in other.entries) {
+      ret[i.key] = i.value;
+    }
+    return ret;
+  }
+}
