@@ -17,6 +17,7 @@ import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -25,6 +26,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 const _headerMaxExtent = 100.0;
 const _headerMinExtent = 100.0;
+
+const _headerMaxExtentDesktop = 60.0;
+const _headerMinExtentDesktop = 60.0;
 
 // enum _MenuActions {
 //   refresh,
@@ -325,7 +329,12 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
     double shrinkOffset,
   ) {
     String? titleText;
-    final isExpandHeader = _listScrollController.offset < _headerMaxExtent;
+    var isExpandHeader = false;
+    if (isDesktop) {
+      isExpandHeader = _listScrollController.offset < _headerMaxExtentDesktop;
+    } else {
+      isExpandHeader = _listScrollController.offset < _headerMaxExtent;
+    }
 
     if (widget.title != null && !isExpandHeader) {
       titleText = widget.title;
@@ -464,10 +473,12 @@ class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent => _headerMaxExtent;
+  double get maxExtent =>
+      isDesktop ? _headerMaxExtentDesktop : _headerMaxExtent;
 
   @override
-  double get minExtent => _headerMinExtent;
+  double get minExtent =>
+      isDesktop ? _headerMinExtentDesktop : _headerMinExtent;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
