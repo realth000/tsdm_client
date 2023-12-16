@@ -1,0 +1,104 @@
+name: Test build
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CI_FLUTTER_VERSION: '3.16.x'
+
+jobs:
+  build-linux-android:
+    name: Build Linux and Android
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.CI_FLUTTER_VERSION}}
+          cache: true
+      - run: |
+          sudo apt update -y
+          sudo apt install -y ninja-build libgtk-3-dev
+      - name: Precompile
+        run: |
+          flutter pub get
+          dart run build_runner build
+      - name: Build Linux
+        run: flutter build linux --release
+      - name: Pre Packing
+        run: |
+          pushd build/linux/x64/release/
+          mv bundle tsdm_client
+          popd
+      - name: Pack Linux tarball
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'tar'
+          filename: tsdm_client-linux.tar.gz
+          directory: build/linux/x64/release/
+          path: tsdm_client
+      - name: Release Linux artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: 'build/linux/x64/release/tsdm_client-linux.tar.gz'
+      - name: Setup Android sign key
+        run: |
+          echo '${{ secrets.KEYSTORE }}' | base64 --decode > android/app/key.jks
+          echo '${{ secrets.KEY_PROPERTIES }}' > android/key.properties
+      - name: Build Android
+        run: |
+          flutter build apk --release
+      - name: Pack Android apk
+        run: |
+          pushd build/app/outputs/flutter-apk/
+          mv app-arm64-v8a-release.apk tsdm_client-arm64_v8a.apk
+          mv app-armeabi-v7a-release.apk tsdm_client-armeabi_v7a.apk
+          popd
+      - name: Release Android artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: 'build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk'
+  build-windows:
+    name: Build Windows
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.CI_FLUTTER_VERSION}}
+      - name: Precompile
+        run: |
+          flutter pub get
+          dart run build_runner build
+      - name: Build Windows
+        run: flutter build windows --release
+      - name: Pre Packing
+        shell: pwsh
+        run: |
+          cd build/windows/x64/runner
+          Rename-Item Release tsdm_client
+          cd ../../../../
+      - name: Pack Windows tarball
+        uses: thedoctor0/zip-release@master
+        with:
+          type: 'zip'
+          filename: tsdm_client-windows.zip
+          directory: build/windows/x64/runner
+          path: tsdm_client
+      - name: Release Windows artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
