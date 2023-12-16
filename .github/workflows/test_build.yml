@@ -3,6 +3,8 @@ name: Test build
 on:
   push:
     branches: [ "master" ]
+    tags-ignore:
+      - 'v*'
 
 env:
   CI_FLUTTER_VERSION: '3.16.x'
