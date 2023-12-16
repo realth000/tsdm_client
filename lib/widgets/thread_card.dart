@@ -124,11 +124,13 @@ class _CardLayout extends ConsumerWidget {
             if (quotedMessage != null)
               Row(
                 children: [
-                  Card(
-                    elevation: 2,
-                    child: Padding(
-                      padding: edgeInsetsL15T15R15B15,
-                      child: Text(quotedMessage!),
+                  Expanded(
+                    child: Card(
+                      elevation: 2,
+                      child: Padding(
+                        padding: edgeInsetsL15T15R15B15,
+                        child: Text(quotedMessage!),
+                      ),
                     ),
                   ),
                 ],
