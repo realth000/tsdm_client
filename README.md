@@ -11,22 +11,54 @@
 </p>
 
 <p align="center">
+  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test_build.yml?label=build"/></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Android-19A6E6?logo=android&logoColor=f0f0f0"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Linux-19A6E6?&logo=Linux&logoColor=f0f0f0"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Windows-19A6E6?&logo=Windows&logoColor=f0f0f0"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.16-19A6E6?logo=flutter"></a>
-  <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/github/license/realth000/tsdm_client"></a>
   <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
-  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test_build.yml?label=build"/></a>
+  <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-19A6E6"></a>
 </p>
 
 > **Note**
 >
-> 功能实现依靠解析网页，不会收集或上传信息。
-
-> **Note**
->
 > 受测试条件限制，标注为已实现的功能也可能有缺陷，欢迎提issue或PR。
+
+## 截图
+
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_01.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_02.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_03.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_04.png">
+      </td>
+    </tr>
+    <tr>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_05.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_06.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_07.png">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_08.png">
+      </td>
+    </tr>
+  </table>
+</div>
 
 ## 功能
 
@@ -36,19 +68,21 @@
   * [ ] 其他信息（分组、徽章、心情等）
   * [x] 引用
   * [ ] 投票
-  * [ ] 评分
   * [x] 查看评分
+  * [ ] 评分
   * [x] 代码块
-  * [ ] 看帖时复制
+  * [ ] 复制
+  * [x] 我的帖子
+  * [x] 查看新帖
 * [ ] 登录
-  * [x] 登录
-  * [ ] 用户名或邮箱登录
+  * [x] 用户名登录
+  * [ ] UID或邮箱登录
   * [x] 带安全问题登录
   * [x] 退出登录
 * [x] 搜索
 * [ ] 回帖
   * [x] 回复文字
-  * [ ] 设置字体、字号、链接等富文本
+  * [ ] 设置字体、字号、链接等
   * [x] 回复其他楼层
   * [ ] 编辑回复
 * [ ] 购买帖子
@@ -63,7 +97,7 @@
   * [ ] 查看消息
   * [ ] 回复消息
 * [ ] 查看用户信息
-* [ ] 省流模式（解析archiver或移动版UI)
+* [ ] 省流模式
 * [ ] ...
 
 ## 已知问题
@@ -89,3 +123,11 @@
 dart run build_runner build
 flutter build windows/linux/apk --release
 ```
+
+## 隐私政策
+
+本程序不会收集或上传任何系统或设备或用户信息，访问主站时使用的凭据均只保存在设备本地。
+
+## 版权协议
+
+本程序以[MIT License](./LICENSE)的授权形式分发。
