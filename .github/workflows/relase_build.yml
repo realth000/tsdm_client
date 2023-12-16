@@ -68,6 +68,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
           artifacts: 'build/linux/x64/release/tsdm_client-linux.tar.gz'
       - name: Setup Android sign key
         run: |
@@ -86,6 +88,8 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
           artifacts: 'build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk'
 
   build-windows:
@@ -121,4 +125,6 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
           artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
