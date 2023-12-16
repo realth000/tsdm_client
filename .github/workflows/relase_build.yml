@@ -9,6 +9,25 @@ env:
   CI_FLUTTER_VERSION: '3.16.x'
 
 jobs:
+  release:
+    name: Create release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Extract release notes
+        id: extract-release-notes
+        uses: ffurrer2/extract-release-notes@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          body: '${{ steps.extract-release-notes.outputs.release_notes }}'
+
   build-linux-android:
     name: Build Linux and Android
     runs-on: ubuntu-latest
@@ -68,6 +87,7 @@ jobs:
         with:
           allowUpdates: true
           artifacts: 'build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk'
+
   build-windows:
     name: Build Windows
     runs-on: windows-latest
