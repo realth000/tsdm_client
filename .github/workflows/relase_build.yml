@@ -1,9 +1,9 @@
-name: Test build
+name: Release build
 
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 env:
   CI_FLUTTER_VERSION: '3.16.x'
