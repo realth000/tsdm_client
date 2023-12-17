@@ -53,6 +53,10 @@ class CachedImage extends ConsumerWidget {
             child: Image.memory(
               snapshot.data!,
               fit: BoxFit.contain,
+              errorBuilder: (context, e, st) {
+                debug('failed to load image from $imageUrl: $e');
+                return Container();
+              },
             ),
           );
         }
