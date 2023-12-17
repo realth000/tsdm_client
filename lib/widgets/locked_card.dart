@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/providers/purchase_provider.dart';
@@ -29,8 +30,8 @@ class _LockedCardState extends ConsumerState<LockedCard> {
         if (!widget.locked.isValid()) {
           await showMessageSingleButtonDialog(
             context: context,
-            title: context.t.lockedCard.failedPurchase,
-            message: context.t.lockedCard.failedParsingPurchase,
+            title: context.t.lockedCard.purchase.failedPurchase,
+            message: context.t.lockedCard.purchase.failedParsingPurchase,
           );
           setState(() {
             _loading = false;
@@ -58,8 +59,8 @@ class _LockedCardState extends ConsumerState<LockedCard> {
           }
           await showMessageSingleButtonDialog(
             context: context,
-            title: context.t.lockedCard.failedPurchase,
-            message: context.t.lockedCard.failedParsingConfirmInfo,
+            title: context.t.lockedCard.purchase.failedPurchase,
+            message: context.t.lockedCard.purchase.failedParsingConfirmInfo,
           );
           setState(() {
             _loading = false;
@@ -74,8 +75,8 @@ class _LockedCardState extends ConsumerState<LockedCard> {
         // Confirm purchase.
         final purchase = await showQuestionDialog(
           context: context,
-          title: context.t.lockedCard.confirmPurchase,
-          message: context.t.lockedCard.confirmInfo(
+          title: context.t.lockedCard.purchase.confirmPurchase,
+          message: context.t.lockedCard.purchase.confirmInfo(
             author: info.author ?? '',
             price: info.price ?? '',
             authorProfit: info.authorProfit ?? '',
@@ -112,15 +113,15 @@ class _LockedCardState extends ConsumerState<LockedCard> {
         if (purchaseResult is PurchaseFailed) {
           await showMessageSingleButtonDialog(
             context: context,
-            title: context.t.lockedCard.failedPurchase,
+            title: context.t.lockedCard.purchase.failedPurchase,
             message: purchaseResult.message,
           );
         } else {
           // TODO: Refresh current page after purchase success.
           await showMessageSingleButtonDialog(
             context: context,
-            title: context.t.lockedCard.successPurchase,
-            message: context.t.lockedCard.successPurchaseInfo,
+            title: context.t.lockedCard.purchase.successPurchase,
+            message: context.t.lockedCard.purchase.successPurchaseInfo,
           );
 
           // Use the specified provider container to access this provider.
@@ -137,30 +138,47 @@ class _LockedCardState extends ConsumerState<LockedCard> {
 
   @override
   Widget build(BuildContext context) {
+    final widgets = <Widget>[];
+    if (widget.locked.lockedWithPoints) {
+      widgets.addAll([
+        Text(
+          context.t.lockedCard.points.title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          context.t.lockedCard.points.detail(
+            requiredPoints: widget.locked.requiredPoints!,
+            points: widget.locked.points!,
+          ),
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+      ]);
+    } else if (widget.locked.lockedWithPurchase) {
+      widgets.addAll([
+        Text(
+          context.t.lockedCard.purchase.title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          context.t.lockedCard.purchase
+              .purchasedInfo(num: widget.locked.purchasedCount!),
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+        SizedBox(
+          width: 200,
+          child: _loading
+              ? const Center(child: sizedCircularProgressIndicator)
+              : _buildPurchaseButton(context),
+        ),
+      ]);
+    }
+
     return Card(
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              context.t.lockedCard.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            sizedBoxW5H5,
-            Text(
-              context.t.lockedCard
-                  .purchasedInfo(num: widget.locked.purchasedCount),
-              style: Theme.of(context).textTheme.labelMedium,
-            ),
-            sizedBoxW5H5,
-            SizedBox(
-              width: 200,
-              child: _loading
-                  ? const Center(child: sizedCircularProgressIndicator)
-                  : _buildPurchaseButton(context),
-            ),
-          ],
+          children: widgets.insertBetween(sizedBoxW5H5),
         ),
       ),
     );

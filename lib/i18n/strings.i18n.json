@@ -229,16 +229,22 @@
     "unlucky": "Unlucky"
   },
   "lockedCard": {
-    "title": "Some content requires purchase",
-    "purchasedInfo": "$num people have purchased this article",
-    "failedPurchase": "Can not purchase",
-    "failedParsingPurchase": "Failed when parsing purchase info",
-    "failedParsingConfirmInfo": "Failed when parsing purchase confirm info",
-    "failedPurchaseMessage": "Purchase failed: $message",
-    "confirmPurchase": "Confirm purchase",
-    "confirmInfo": "Purchase from $author with is price $price.\nThe author will get $authorProfit coins.\nYou will have $coinsLast coins left after purchase",
-    "successPurchase": "Purchase success",
-    "successPurchaseInfo": "Will refresh this page"
+    "points": {
+      "title": "Some content requires enough points to be visible",
+      "detail": "$requiredPoints points are required, but you only have $points points"
+    },
+    "purchase": {
+      "title": "Some content requires purchase",
+      "purchasedInfo": "$num people have purchased this article",
+      "failedPurchase": "Can not purchase",
+      "failedParsingPurchase": "Failed when parsing purchase info",
+      "failedParsingConfirmInfo": "Failed when parsing purchase confirm info",
+      "failedPurchaseMessage": "Purchase failed: $message",
+      "confirmPurchase": "Confirm purchase",
+      "confirmInfo": "Purchase from $author with is price $price.\nThe author will get $authorProfit coins.\nYou will have $coinsLast coins left after purchase",
+      "successPurchase": "Purchase success",
+      "successPurchaseInfo": "Will refresh this page"
+    }
   },
   "rateCard": {
     "title": "Rate log ($userCount)",
