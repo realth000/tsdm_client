@@ -62,8 +62,11 @@ class Locked {
   /// <div class="locked">
   ///
   /// Currently only support locked by purchasing.
-  Locked.fromLockDivNode(uh.Element element)
-      : _info = _buildLockedFromNode(element);
+  ///
+  /// For better layout, when a section is locked with points and inside "postmessage", we should only build it inside
+  /// "postmessage" too, [allowWithPoints] is the flag caller shall specify.
+  Locked.fromLockDivNode(uh.Element element, {bool allowWithPoints = true})
+      : _info = _buildLockedFromNode(element, allowWithPoints: allowWithPoints);
 
   static final _re =
       RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
@@ -135,7 +138,10 @@ class Locked {
   }
 
   /// Build from <div class="locked"> [element].
-  static _LockedInfo? _buildLockedFromNode(uh.Element element) {
+  static _LockedInfo? _buildLockedFromNode(
+    uh.Element element, {
+    required bool allowWithPoints,
+  }) {
     final price = element
         .querySelector('strong')
         ?.firstEndDeepText()
@@ -157,6 +163,11 @@ class Locked {
     final pid = match?.namedGroup('pid');
 
     if (tid == null || pid == null || price == null || purchasedCount == null) {
+      if (!allowWithPoints) {
+        // Do not allow locked area that locked with points here.
+        return null;
+      }
+
       /// Points type;
       final re = RegExp(r'高于 (?<requiredPoints>\d+).+当前积分为 (?<points>\d+)');
       final match = re.firstMatch(element.innerText);
@@ -180,6 +191,14 @@ class Locked {
   }
 
   bool isValid() {
-    return tid != null && pid != null;
+    if (_info == null) {
+      return false;
+    }
+    if (_info is _LockedWithPurchase) {
+      return (_info! as _LockedWithPurchase).price > 0 &&
+          tid != null &&
+          pid != null;
+    }
+    return false;
   }
 }

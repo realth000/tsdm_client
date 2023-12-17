@@ -112,17 +112,21 @@ class Post {
             ?.attributes['title']
             ?.parseToDateTimeUtc8() ??
         postPublishTimeNode?.text?.substring(4).parseToDateTimeUtc8();
-    final postData =
-        postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
+    // Sometimes the #postmessage_ID ID does not match postID.
+    // e.g. tid=1184238
+    // Use div.pcb to match it.
+    final postData = postDataNode?.querySelector('div.pcb')?.innerHtml;
 
     // Locked block in this post.
     //
     // Already purchased locked block has `<span>已购买人数: xx</span>`, here
     // only need not purchased ones.
+    //
+    // Should not build locked with points which must be built in "postmessage" munching.
     final locked = postDataNode
         ?.querySelectorAll('div.locked')
         .where((e) => e.querySelector('span') == null)
-        .map(Locked.fromLockDivNode)
+        .map((e) => Locked.fromLockDivNode(e, allowWithPoints: false))
         .toList();
 
     final postFloor = postDataNode
