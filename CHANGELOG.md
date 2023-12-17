@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 新增解析帖子楼层正文`postmessage`中的隐藏部分。
+- 新增解析帖子中由于积分不足而隐藏的部分。
+
+### Fixed
+
+- 修复无法在具有多个隐藏部分的帖子中购买的问题。
+- 修复在github构建流水线中发布release时描述信息被空信息覆盖的问题。
+
 ## [0.1.1] - 2023-12-17
 
 ### Fixed
