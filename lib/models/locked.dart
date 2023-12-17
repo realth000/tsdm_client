@@ -19,8 +19,11 @@ class _LockedInfo {
     required String tid,
     required String pid,
   }) = _LockedWithPurchase;
+
+  const factory _LockedInfo.reply() = _LockedWithReply;
 }
 
+/// This section is invisible because current user does not have enough points.
 @immutable
 final class _LockedWithPoints extends _LockedInfo {
   const _LockedWithPoints({
@@ -35,6 +38,7 @@ final class _LockedWithPoints extends _LockedInfo {
   final int points;
 }
 
+/// This section needs purchase to be visible.
 @immutable
 final class _LockedWithPurchase extends _LockedInfo {
   const _LockedWithPurchase(
@@ -57,6 +61,12 @@ final class _LockedWithPurchase extends _LockedInfo {
   final int purchasedCount;
 }
 
+/// This section needs reply to be visible.
+@immutable
+final class _LockedWithReply extends _LockedInfo {
+  const _LockedWithReply() : super._();
+}
+
 class Locked {
   /// Build a [Locked] from html node [element] where [element] is:
   /// <div class="locked">
@@ -69,10 +79,12 @@ class Locked {
     uh.Element element, {
     bool allowWithPoints = true,
     bool allowWithPurchase = true,
+    bool allowWithReply = true,
   }) : _info = _buildLockedFromNode(
           element,
           allowWithPoints: allowWithPoints,
           allowWithPurchase: allowWithPurchase,
+          allowWithReply: allowWithReply,
         );
 
   static final _re =
@@ -83,6 +95,8 @@ class Locked {
   bool get lockedWithPoints => _info != null && _info is _LockedWithPoints;
 
   bool get lockedWithPurchase => _info != null && _info is _LockedWithPurchase;
+
+  bool get lockedWithReply => _info != null && _info is _LockedWithReply;
 
   String? get tid {
     if (_info == null) {
@@ -149,7 +163,13 @@ class Locked {
     uh.Element element, {
     required bool allowWithPoints,
     required bool allowWithPurchase,
+    required bool allowWithReply,
   }) {
+    // Check if is locked with reply.
+    if (allowWithReply && element.innerText.contains('查看本帖隐藏内容请回复')) {
+      return const _LockedInfo.reply();
+    }
+
     final price = element
         .querySelector('strong')
         ?.firstEndDeepText()
@@ -206,6 +226,10 @@ class Locked {
     if (_info == null) {
       return false;
     }
+    if (_info is _LockedWithReply) {
+      return true;
+    }
+
     if (_info is _LockedWithPurchase) {
       return (_info! as _LockedWithPurchase).price > 0 &&
           tid != null &&

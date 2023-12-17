@@ -171,6 +171,17 @@ class _LockedCardState extends ConsumerState<LockedCard> {
               : _buildPurchaseButton(context),
         ),
       ]);
+    } else if (widget.locked.lockedWithReply) {
+      widgets.addAll([
+        Text(
+          context.t.lockedCard.reply.title,
+          style: Theme.of(context).textTheme.titleMedium,
+        ),
+        Text(
+          context.t.lockedCard.reply.detail,
+          style: Theme.of(context).textTheme.labelMedium,
+        ),
+      ]);
     }
 
     return Card(

@@ -244,6 +244,10 @@
       "confirmInfo": "从 $author 处以 $price 個天使幣的价格帖子。\n作者會得到 $authorProfit 個天使幣。\n購買后你還有 $coinsLast 個天使幣。",
       "successPurchase": "購買成功",
       "successPurchaseInfo": "即將重新整理頁面"
+    },
+    "reply": {
+      "title": "部分需要回覆才可瀏覽",
+      "detail": "回覆以查看該部分內容"
     }
   },
   "rateCard": {
