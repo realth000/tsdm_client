@@ -65,8 +65,15 @@ class Locked {
   ///
   /// For better layout, when a section is locked with points and inside "postmessage", we should only build it inside
   /// "postmessage" too, [allowWithPoints] is the flag caller shall specify.
-  Locked.fromLockDivNode(uh.Element element, {bool allowWithPoints = true})
-      : _info = _buildLockedFromNode(element, allowWithPoints: allowWithPoints);
+  Locked.fromLockDivNode(
+    uh.Element element, {
+    bool allowWithPoints = true,
+    bool allowWithPurchase = true,
+  }) : _info = _buildLockedFromNode(
+          element,
+          allowWithPoints: allowWithPoints,
+          allowWithPurchase: allowWithPurchase,
+        );
 
   static final _re =
       RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
@@ -141,6 +148,7 @@ class Locked {
   static _LockedInfo? _buildLockedFromNode(
     uh.Element element, {
     required bool allowWithPoints,
+    required bool allowWithPurchase,
   }) {
     final price = element
         .querySelector('strong')
@@ -182,6 +190,10 @@ class Locked {
       );
     }
 
+    if (!allowWithPurchase) {
+      return null;
+    }
+
     return _LockedInfo.purchase(
       price: price,
       purchasedCount: purchasedCount,
@@ -199,6 +211,11 @@ class Locked {
           tid != null &&
           pid != null;
     }
+    if (_info is _LockedWithPoints) {
+      return true;
+    }
     return false;
   }
+
+  bool isNotValid() => !isValid();
 }

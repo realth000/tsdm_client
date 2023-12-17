@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
+import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:url_launcher/url_launcher.dart';
@@ -177,6 +179,8 @@ class Muncher {
             'div'
                 when node.attributes['class']?.contains('blockcode') ?? false =>
               _buildBlockCode(node),
+            'div' when node.attributes['class']?.contains('locked') ?? false =>
+              _buildLockedArea(node),
             'a' => _buildA(node),
             'tr' => _buildTr(node),
             'td' => _buildTd(node),
@@ -370,6 +374,19 @@ class Muncher {
       padding: const EdgeInsets.all(15),
       child: Text(text),
     )));
+  }
+
+  InlineSpan _buildLockedArea(uh.Element element) {
+    final lockedArea =
+        Locked.fromLockDivNode(element, allowWithPurchase: false);
+    if (lockedArea.isNotValid()) {
+      return const TextSpan();
+    }
+
+    return TextSpan(children: [
+      WidgetSpan(child: LockedCard(lockedArea)),
+      const TextSpan(text: '\n'),
+    ]);
   }
 
   InlineSpan _buildA(uh.Element element) {
