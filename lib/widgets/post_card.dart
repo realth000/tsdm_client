@@ -73,7 +73,8 @@ class _PostCardState extends ConsumerState<PostCard>
             ],
           ),
         ),
-        if (widget.post.locked != null) LockedCard(widget.post.locked!),
+        if (widget.post.locked.isNotEmpty)
+          ...widget.post.locked.map(LockedCard.new),
         if (widget.post.rate != null)
           ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 712),

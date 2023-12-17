@@ -16,7 +16,7 @@ class _PostInfo {
     required this.publishTime,
     required this.data,
     required this.replyAction,
-    this.locked,
+    this.locked = const [],
     this.rate,
   });
 
@@ -39,7 +39,7 @@ class _PostInfo {
 
   /// `<div class="locked">` after `<div id="postmessage_xxx">`.
   /// Need purchase to see full thread content.
-  Locked? locked;
+  List<Locked> locked;
 
   /// `<dl id="ratelog_xxx">` in `<div class="pcb">`.
   /// Rate records on this post.
@@ -70,7 +70,7 @@ class Post {
 
   String get data => _info.data;
 
-  Locked? get locked => _info.locked;
+  List<Locked> get locked => _info.locked;
 
   String? get replyAction => _info.replyAction;
 
@@ -115,15 +115,15 @@ class Post {
     final postData =
         postDataNode?.querySelector('#postmessage_$postID')?.innerHtml;
 
-    final postLocked = postDataNode?.querySelector('div.locked');
-
     // Locked block in this post.
-    Locked? locked;
-    if (postLocked != null && postLocked.querySelector('span') == null) {
-      // Already purchased locked block has `<span>已购买人数: xx</span>`, here
-      // only need not purchased ones.
-      locked = Locked.fromLockDivNode(postLocked);
-    }
+    //
+    // Already purchased locked block has `<span>已购买人数: xx</span>`, here
+    // only need not purchased ones.
+    final locked = postDataNode
+        ?.querySelectorAll('div.locked')
+        .where((e) => e.querySelector('span') == null)
+        .map(Locked.fromLockDivNode)
+        .toList();
 
     final postFloor = postDataNode
         ?.querySelector('div.pi > strong > a > em')
@@ -150,7 +150,7 @@ class Post {
       author: postAuthor,
       publishTime: postPublishTime,
       data: postData ?? '',
-      locked: locked,
+      locked: locked ?? [],
       replyAction: replyAction,
       rate: rate,
     );
