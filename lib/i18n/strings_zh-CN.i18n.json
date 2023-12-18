@@ -259,5 +259,8 @@
   },
   "reviewCard": {
     "title": "点评"
+  },
+  "codeCard": {
+    "title": "代码块"
   }
 }

@@ -7,6 +7,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
+import 'package:tsdm_client/widgets/code_card.dart';
 import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/review_card.dart';
@@ -349,6 +350,7 @@ class Muncher {
 
   InlineSpan _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
+    return WidgetSpan(child: CodeCard(code: text));
     return TextSpan(
       recognizer: TapGestureRecognizer()
         ..onTap = () async {
