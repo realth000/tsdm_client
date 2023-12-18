@@ -17,18 +17,11 @@ import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-const _headerMaxExtent = 100.0;
-const _headerMinExtent = 100.0;
-
-const _headerMaxExtentDesktop = 60.0;
-const _headerMinExtentDesktop = 60.0;
 
 // enum _MenuActions {
 //   refresh,
@@ -327,14 +320,10 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
     BuildContext context,
     WidgetRef ref,
     double shrinkOffset,
+    double expandHeight,
   ) {
     String? titleText;
-    var isExpandHeader = false;
-    if (isDesktop) {
-      isExpandHeader = _listScrollController.offset < _headerMaxExtentDesktop;
-    } else {
-      isExpandHeader = _listScrollController.offset < _headerMaxExtent;
-    }
+    final isExpandHeader = _listScrollController.offset < expandHeight;
 
     if (widget.title != null && !isExpandHeader) {
       titleText = widget.title;
@@ -379,6 +368,11 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
 
   @override
   Widget build(BuildContext context) {
+    // Set app bar height.
+    // On desktop platforms it is the default height of appbar preferred size.
+    // On mobile platforms it is the default height of appbar preferred size plus the safe top padding of notification bar.
+    final safeHeight = MediaQuery.of(context).viewPadding.top + kToolbarHeight;
+
     return EasyRefresh(
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
@@ -429,9 +423,12 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
             pinned: true,
             floating: true,
             delegate: SliverAppBarPersistentDelegate(
-                buildHeader: (context, shrinkOffset, overlapsContent) {
-              return _buildHeader(context, ref, shrinkOffset);
-            }),
+              buildHeader: (context, shrinkOffset, overlapsContent) {
+                return _buildHeader(context, ref, shrinkOffset, safeHeight);
+              },
+              headerMaxExtent: safeHeight,
+              headerMinExtent: safeHeight,
+            ),
           ),
           SliverPadding(
             padding: edgeInsetsL10R10B10,
@@ -462,9 +459,16 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
 }
 
 class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
-  SliverAppBarPersistentDelegate({required this.buildHeader});
+  SliverAppBarPersistentDelegate({
+    required this.buildHeader,
+    required this.headerMaxExtent,
+    required this.headerMinExtent,
+  });
 
   final Widget Function(BuildContext, double, bool) buildHeader;
+
+  final double headerMaxExtent;
+  final double headerMinExtent;
 
   @override
   Widget build(
@@ -473,12 +477,10 @@ class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  double get maxExtent =>
-      isDesktop ? _headerMaxExtentDesktop : _headerMaxExtent;
+  double get maxExtent => headerMaxExtent;
 
   @override
-  double get minExtent =>
-      isDesktop ? _headerMinExtentDesktop : _headerMinExtent;
+  double get minExtent => headerMinExtent;
 
   @override
   bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
