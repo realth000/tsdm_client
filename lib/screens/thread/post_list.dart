@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
@@ -21,7 +22,6 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 // enum _MenuActions {
 //   refresh,
@@ -351,10 +351,7 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
               ),
             ));
           case MenuActions.openInBrowser:
-            await launchUrl(
-              Uri.parse(widget.fetchUrl),
-              mode: LaunchMode.externalApplication,
-            );
+            await context.dispatchAsUrl(widget.fetchUrl);
           case MenuActions.backToTop:
             await _listScrollController.animateTo(
               0,

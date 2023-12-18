@@ -2,6 +2,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/locked.dart';
@@ -12,7 +13,6 @@ import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/review_card.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:url_launcher/url_launcher.dart';
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
@@ -140,10 +140,7 @@ class Muncher {
             final u = state.tapUrl!;
             recognizer = TapGestureRecognizer()
               ..onTap = () async {
-                await launchUrl(
-                  Uri.parse(u),
-                  mode: LaunchMode.externalApplication,
-                );
+                await context.dispatchAsUrl(u);
               };
             style = style?.copyWith(
               decoration: TextDecoration.underline,

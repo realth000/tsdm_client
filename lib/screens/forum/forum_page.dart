@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
@@ -20,7 +21,6 @@ import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 /// Forum page.
 class ForumPage extends ConsumerStatefulWidget {
@@ -406,10 +406,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
                 ),
               ));
             case MenuActions.openInBrowser:
-              await launchUrl(
-                Uri.parse(widget._fetchUrl),
-                mode: LaunchMode.externalApplication,
-              );
+              await context.dispatchAsUrl(widget._fetchUrl);
             case MenuActions.backToTop:
               await _listScrollController.animateTo(
                 0,
