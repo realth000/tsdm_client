@@ -99,7 +99,7 @@ class Rate {
         recordNodeList.map(_parseSingleRate).whereType<SingleRate>().toList();
     final rateStatus = element
         .querySelector('p.ratc')
-        ?.querySelectorAll('span.xi1')
+        ?.querySelectorAll('span')
         .map((e) => e.firstEndDeepText())
         .whereType<String>()
         .toList()

@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 修复无法在具有多个隐藏部分的帖子中购买的问题。
 - 修复在github构建流水线中发布release时描述信息被空信息覆盖的问题。
+- 修复当帖子的回复评分为扣分时显示总评分为空的问题。
 
 ## [0.1.1] - 2023-12-17
 
