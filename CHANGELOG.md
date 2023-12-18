@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增解析帖子楼层正文`postmessage`中的隐藏部分。
 - 新增解析帖子中由于积分不足而隐藏的部分。
 - 新增解析帖子中回复后才可见的部分。
+- 新增解析对帖子回复的点评。
 
 ### Fixed
 

@@ -256,5 +256,8 @@
   },
   "jumpDialog": {
     "title": "Jump to page ..."
+  },
+  "reviewCard": {
+    "title": "Review"
   }
 }

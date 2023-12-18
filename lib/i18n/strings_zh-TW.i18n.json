@@ -256,5 +256,8 @@
   },
   "jumpDialog": {
     "title": "跳到頁面"
+  },
+  "reviewCard": {
+    "title": "點評"
   }
 }

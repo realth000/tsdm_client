@@ -9,6 +9,7 @@ import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/review_card.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:url_launcher/url_launcher.dart';
 
@@ -181,6 +182,8 @@ class Muncher {
               _buildBlockCode(node),
             'div' when node.attributes['class']?.contains('locked') ?? false =>
               _buildLockedArea(node),
+            'div' when node.attributes['class']?.contains('cm') ?? false =>
+              _buildReview(node),
             'a' => _buildA(node),
             'tr' => _buildTr(node),
             'td' => _buildTd(node),
@@ -387,6 +390,31 @@ class Muncher {
       WidgetSpan(child: LockedCard(lockedArea)),
       const TextSpan(text: '\n'),
     ]);
+  }
+
+  InlineSpan _buildReview(uh.Element element) {
+    if (element.children.length <= 1) {
+      return const TextSpan();
+    }
+    final avatarUrl = element.querySelector('div.psta > a > img')?.imageUrl();
+    final name = element.querySelector('div.psti > a')?.firstEndDeepText();
+    final content = element
+        .querySelector('div.psti')
+        ?.nodes
+        .elementAtOrNull(2)
+        ?.text
+        ?.trim();
+    // final time = element
+    //     .querySelector('div.psti > span > span')
+    //     ?.attributes['title']
+    //     ?.parseToDateTimeUtc8();
+
+    return WidgetSpan(
+        child: ReviewCard(
+      name: name ?? '',
+      content: content ?? '',
+      avatarUrl: avatarUrl,
+    ));
   }
 
   InlineSpan _buildA(uh.Element element) {
