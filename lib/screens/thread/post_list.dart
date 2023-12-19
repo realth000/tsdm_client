@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,6 +13,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
+import 'package:tsdm_client/providers/jump_page_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -103,7 +103,11 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
 
   final _listScrollController = ScrollController();
 
+  /// Current page number.
   late int _pageNumber = widget.pageNumber;
+
+  /// Total pages number.
+  var _totalPages = 0;
 
   bool _inLastPage = false;
 
@@ -120,51 +124,8 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
   }
 
   /// Check whether in the last page in a web page (consists a series of pages).
-  ///
-  /// When already in the last page, current page mark (the <strong> node) is
-  /// the last child of pagination indicator node.
-  ///
-  /// <div class="pgt">
-  ///   <div class="pg">
-  ///     <a class="url_to_page1"></a>
-  ///     <a class="url_to_page2"></a>
-  ///     <a class="url_to_page3"></a>
-  ///     <strong>4</strong>           <-  Here we are in the last page
-  ///   </div>
-  /// </div>
-  ///
-  /// Typically when the web page only have one page, there is no pg node:
-  ///
-  /// <div class="pgt">
-  ///   <span>...</span>
-  /// </div>
-  ///
-  /// Indicating can not load more.
   bool canLoadMore(uh.Document document) {
-    final barNode = document.getElementById('pgt');
-
-    if (barNode == null) {
-      debug('failed to check can load more: node not found');
-      return false;
-    }
-
-    final paginationNode = barNode.querySelector('div.pg');
-    if (paginationNode == null) {
-      // Only one page, can not load more.
-      return false;
-    }
-
-    final lastNode = paginationNode.children.lastOrNull;
-    if (lastNode == null) {
-      debug('failed to check can load more: empty pagination list');
-      return false;
-    }
-
-    // If we are in the last page, the last node should be a "strong" type node.
-    if (lastNode.nodeType != uh.Node.ELEMENT_NODE) {
-      return false;
-    }
-    return lastNode.localName != 'strong';
+    return _pageNumber >= 0 && _pageNumber < _totalPages;
   }
 
   Future<void> _loadData() async {
@@ -219,7 +180,11 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
     setState(() {
       _allData.addAll(data);
     });
-    _pageNumber++;
+    _pageNumber = document.currentPage() ?? _pageNumber;
+    _totalPages = document.totalPages() ?? _pageNumber;
+    ref
+        .read(jumpPageProvider(hashCode).notifier)
+        .setPageState(currentPage: _pageNumber, totalPages: _totalPages);
 
     // Update whether we are in the last page.
     _inLastPage = !canLoadMore(document);
@@ -273,7 +238,6 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
   }
 
   void _clearData() {
-    _pageNumber = 1;
     _allData.clear();
   }
 
@@ -333,6 +297,19 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
       title: titleText,
       onSearch: () async {
         await context.pushNamed(ScreenPaths.search);
+      },
+      jumpPageKey: hashCode,
+      onJumpPage: (pageNumber) async {
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          _pageNumber = pageNumber;
+          ref
+              .read(jumpPageProvider(hashCode).notifier)
+              .setPageState(currentPage: _pageNumber, totalPages: _totalPages);
+        });
+        await _refresh();
       },
       onSelected: (value) async {
         switch (value) {
@@ -395,6 +372,9 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
         if (!mounted) {
           return;
         }
+        if (!widget.canFetchMorePages) {
+          return;
+        }
         if (_inLastPage) {
           debug('already in last page');
           _refreshController
@@ -404,13 +384,9 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
           return;
         }
 
-        if (!widget.canFetchMorePages) {
-          _clearData();
-        }
+        _pageNumber++;
         await _loadData();
-        _refreshController
-          ..finishLoad()
-          ..resetFooter();
+        _refreshController.finishLoad();
       },
       child: CustomScrollView(
         controller: _listScrollController,

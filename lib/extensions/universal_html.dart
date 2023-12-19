@@ -1,7 +1,59 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:universal_html/html.dart';
+
+extension GrepDocumentExtension on Document {
+  /// Parse the current page number of current document.
+  int? currentPage() {
+    // Should call on "this" implicitly.
+    return this
+        .querySelector('div.pg > strong')
+        ?.firstEndDeepText()
+        ?.parseToInt();
+  }
+
+  /// Parse the total pages count in current document.
+  int? totalPages() {
+    // Should call on "this" implicitly.
+    final paginateNode = this.querySelector('div.pg');
+    var currentPage = 1;
+    var ret = 1;
+    if (paginateNode == null) {
+      return ret;
+    }
+    currentPage = paginateNode
+            .querySelector('strong')
+            ?.firstEndDeepText()
+            ?.parseToInt() ??
+        1;
+
+    final lastNode = paginateNode.children.lastOrNull;
+    final skippedLastNode = paginateNode.querySelector('a.last');
+    if (lastNode != null &&
+        lastNode.nodeType == Node.ELEMENT_NODE &&
+        lastNode.localName == 'strong') {
+      // Already in the last page.
+      ret = currentPage;
+    } else if (skippedLastNode != null) {
+      // 1, 2, .. 100
+      //           |---- Skipped to the last page
+      // Fall back to 1 if parse int failed.
+      ret = skippedLastNode.firstEndDeepText()?.substring(4).parseToInt() ?? 1;
+    } else {
+      ret = paginateNode
+          .querySelectorAll('a')
+          .where((e) => e.classes.isEmpty)
+          .map((e) => (e.firstEndDeepText() ?? '0').parseToInt())
+          .whereType<int>()
+          .toList()
+          .reduce(max<int>);
+    }
+    return ret;
+  }
+}
 
 /// Extension for [Element] type to access children.
 extension AccessExtension on Element {

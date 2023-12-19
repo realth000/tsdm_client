@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -8,7 +7,6 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/models/searched_thread.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
-import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/search_provider.g.dart';
@@ -133,39 +131,8 @@ class Search extends _$Search {
         .firstOrNull
         ?.parseToInt();
 
-    var currentPage = 1;
-    var totalPages = 1;
-    final paginateNode = document.querySelector('div.pg');
-    if (paginateNode != null) {
-      currentPage = paginateNode
-              .querySelector('strong')
-              ?.firstEndDeepText()
-              ?.parseToInt() ??
-          1;
-
-      final lastNode = paginateNode.children.lastOrNull;
-      final skippedLastNode = paginateNode.querySelector('a.last');
-      if (lastNode != null &&
-          lastNode.nodeType == uh.Node.ELEMENT_NODE &&
-          lastNode.localName == 'strong') {
-        // Already in the last page.
-        totalPages = currentPage;
-      } else if (skippedLastNode != null) {
-        // 1, 2, .. 100
-        //           |---- Skipped to the last page
-        // Fall back to 1 if parse int failed.
-        totalPages =
-            skippedLastNode.firstEndDeepText()?.substring(4).parseToInt() ?? 1;
-      } else {
-        totalPages = paginateNode
-            .querySelectorAll('a')
-            .where((e) => e.classes.isEmpty)
-            .map((e) => (e.firstEndDeepText() ?? '0').parseToInt())
-            .whereType<int>()
-            .toList()
-            .reduce(max<int>);
-      }
-    }
+    final currentPage = document.currentPage() ?? 1;
+    final totalPages = document.totalPages() ?? currentPage;
 
     return SearchResult(
       currentPage: currentPage,

@@ -8,10 +8,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
+import 'package:tsdm_client/providers/jump_page_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -59,7 +61,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
   );
 
   /// Current page number.
-  int _pageNumber = 1;
+  int _pageNumber = 0;
+
+  /// Total pages number.
+  int _totalPages = 0;
 
   /// Whether we are in the last page.
   bool _inLastPage = false;
@@ -110,7 +115,6 @@ class _ForumPageState extends ConsumerState<ForumPage>
   }
 
   void _clearData() {
-    _pageNumber = 1;
     _allThreadData.clear();
     _allSubredditData.clear();
     _inLastPage = false;
@@ -254,7 +258,12 @@ class _ForumPageState extends ConsumerState<ForumPage>
       });
     }
 
-    _pageNumber++;
+    _pageNumber = document.currentPage() ?? 1;
+    _totalPages = document.totalPages() ?? _pageNumber;
+    ref.read(jumpPageProvider(hashCode).notifier).setPageState(
+          currentPage: _pageNumber,
+          totalPages: _totalPages,
+        );
 
     // Update whether we are in the last page.
     _inLastPage = !canLoadMore(document);
@@ -300,6 +309,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
           return;
         }
 
+        _pageNumber++;
         await _loadData();
         _refreshController.finishLoad();
       },
@@ -336,6 +346,14 @@ class _ForumPageState extends ConsumerState<ForumPage>
   }
 
   @override
+  void activate() {
+    super.activate();
+    ref
+        .read(jumpPageProvider(hashCode).notifier)
+        .setPageState(currentPage: _pageNumber, totalPages: _totalPages);
+  }
+
+  @override
   void initState() {
     super.initState();
     // Call refresh here instead of setting [EasyRefresh]'s refreshOnStart to true.
@@ -348,6 +366,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
         await _refreshController.callRefresh();
       });
     }
+
+    ref
+        .read(jumpPageProvider(hashCode).notifier)
+        .setCanJumpPage(canJumpPage: false);
   }
 
   @override
@@ -379,6 +401,18 @@ class _ForumPageState extends ConsumerState<ForumPage>
         onSearch: () async {
           await context.pushNamed(ScreenPaths.search,
               queryParameters: {'fid': widget.fid});
+        },
+        jumpPageKey: hashCode,
+        onJumpPage: (pageNumber) async {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _pageNumber = pageNumber;
+            ref.read(jumpPageProvider(hashCode).notifier).setPageState(
+                currentPage: _pageNumber, totalPages: _totalPages);
+          });
+          await _refreshController.callRefresh();
         },
         onSelected: (value) async {
           switch (value) {

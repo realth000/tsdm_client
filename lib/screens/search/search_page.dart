@@ -4,9 +4,9 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/search_provider.dart';
-import 'package:tsdm_client/screens/search/jump_page_dialog.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
 
 /// Page of search, including a form to fill search parameters and search results.
