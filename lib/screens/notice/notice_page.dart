@@ -114,15 +114,13 @@ class _NoticePageState extends ConsumerState<NoticePage> {
             ..finishRefresh()
             ..resetFooter();
         },
-        child: Padding(
+        child: ListView.separated(
           padding: edgeInsetsL10T5R10B20,
-          child: ListView.separated(
-            itemCount: _allData.length,
-            itemBuilder: (context, index) {
-              return NoticeCard(notice: _allData[index]);
-            },
-            separatorBuilder: (context, index) => sizedBoxW5H5,
-          ),
+          itemCount: _allData.length,
+          itemBuilder: (context, index) {
+            return NoticeCard(notice: _allData[index]);
+          },
+          separatorBuilder: (context, index) => sizedBoxW5H5,
         ),
       ),
     );
