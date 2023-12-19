@@ -10,10 +10,14 @@ extension DispatchUrl on BuildContext {
   ///
   /// If current string is not an valid url:
   /// * Do nothing.
-  Future<void> dispatchAsUrl(String url) async {
+  Future<void> dispatchAsUrl(String url, {bool external = false}) async {
     final u = Uri.tryParse(url);
     if (u == null) {
       // Do nothing if is invalid url.
+      return;
+    }
+    if (external) {
+      await launchUrl(u, mode: LaunchMode.externalApplication);
       return;
     }
     final route = url.parseUrlToRoute();

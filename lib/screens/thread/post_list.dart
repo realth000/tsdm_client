@@ -351,7 +351,7 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
               ),
             ));
           case MenuActions.openInBrowser:
-            await context.dispatchAsUrl(widget.fetchUrl);
+            await context.dispatchAsUrl(widget.fetchUrl, external: true);
           case MenuActions.backToTop:
             await _listScrollController.animateTo(
               0,

@@ -406,7 +406,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
                 ),
               ));
             case MenuActions.openInBrowser:
-              await context.dispatchAsUrl(widget._fetchUrl);
+              await context.dispatchAsUrl(widget._fetchUrl, external: true);
             case MenuActions.backToTop:
               await _listScrollController.animateTo(
                 0,
