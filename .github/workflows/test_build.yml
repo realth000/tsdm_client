@@ -1,9 +1,7 @@
 name: Test build
 
 on:
-  push:
-    tags-ignore:
-      - 'v*'
+  workflow_dispatch:
 
 env:
   CI_FLUTTER_VERSION: '3.16.x'
