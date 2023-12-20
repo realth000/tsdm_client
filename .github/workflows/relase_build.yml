@@ -1,7 +1,9 @@
 name: Release build
 
+# git push --atomic --tags
 on:
   push:
+    branches: [ "master" ]
     tags:
       - 'v*'
 

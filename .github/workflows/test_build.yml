@@ -47,7 +47,7 @@ jobs:
       - name: Upload Linux artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Linux tarball
+          name: tsdm_client-linux-tarball
           path: build/linux/x64/release/tsdm_client-linux.tar.gz
       - name: Setup Android sign key
         run: |
@@ -65,10 +65,9 @@ jobs:
       - name: Upload Android artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Android apk
+          name: tsdm_client-apk-arm64_v8a
           path: |
             build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk
-            build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk
   build-windows:
     name: Build Windows
     runs-on: windows-latest
@@ -99,5 +98,5 @@ jobs:
       - name: Upload Windows artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: Windows tarball
+          name: tsdm_client-windows-tarball
           path: build/windows/x64/runner/tsdm_client-windows.zip
