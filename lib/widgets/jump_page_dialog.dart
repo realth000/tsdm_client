@@ -57,8 +57,8 @@ class JumpPageDialog extends ConsumerWidget {
                 itemCount: choicesList.length,
                 itemBuilder: (context, index) {
                   return RadioListTile(
-                    title: Text('$index'),
-                    value: index,
+                    title: Text('${choicesList[index]}'),
+                    value: choicesList[index],
                     groupValue: v,
                     onChanged: (value) {
                       if (value == null) {
