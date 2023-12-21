@@ -35,11 +35,12 @@ class PostList<T> extends ConsumerStatefulWidget {
   /// Constructor.
   const PostList(
     this.tid,
-    this.fetchUrl, {
+    this.fetchUrl,
+    this.threadID,
+    this.threadType, {
     required this.listBuilder,
     required this.widgetBuilder,
     this.title,
-    this.threadType,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
     this.replyFormHashCallback,
@@ -62,6 +63,9 @@ class PostList<T> extends ConsumerStatefulWidget {
   final int pageNumber;
 
   final Function(ReplyParameters)? replyFormHashCallback;
+
+  /// Thread ID.
+  final String? threadID;
 
   /// Thread type.
   ///
@@ -282,154 +286,192 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
 
   Widget _buildHeader(
     BuildContext context,
-    WidgetRef ref,
     double shrinkOffset,
     double expandHeight,
   ) {
-    String? titleText;
-    final isExpandHeader = _listScrollController.offset < expandHeight;
-
-    if (widget.title != null && !isExpandHeader) {
-      titleText = widget.title;
+    if (_listScrollController.offset <= expandHeight) {
+      return Padding(
+        padding: edgeInsetsL10R10B10,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            Text(
+              '[${context.t.threadPage.title} ${widget.threadID ?? ""}]',
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
+            ),
+            sizedBoxW5H5,
+            Text(
+              '[${_threadType ?? ""}]',
+              style: Theme.of(context)
+                  .textTheme
+                  .labelLarge
+                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
+            ),
+          ],
+        ),
+      );
     }
-
-    return ListAppBar(
-      title: titleText,
-      onSearch: () async {
-        await context.pushNamed(ScreenPaths.search);
-      },
-      jumpPageKey: hashCode,
-      onJumpPage: (pageNumber) async {
-        if (!mounted) {
-          return;
-        }
-        setState(() {
-          _pageNumber = pageNumber;
-          ref
-              .read(jumpPageProvider(hashCode).notifier)
-              .setPageState(currentPage: _pageNumber, totalPages: _totalPages);
-        });
-        await _refresh();
-      },
-      onSelected: (value) async {
-        switch (value) {
-          case MenuActions.refresh:
-            await _refresh();
-          case MenuActions.copyUrl:
-            await Clipboard.setData(
-              ClipboardData(text: widget.fetchUrl),
-            );
-            if (!context.mounted) {
-              return;
-            }
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(
-                context.t.aboutPage.copiedToClipboard,
-              ),
-            ));
-          case MenuActions.openInBrowser:
-            await context.dispatchAsUrl(widget.fetchUrl, external: true);
-          case MenuActions.backToTop:
-            await _listScrollController.animateTo(
-              0,
-              curve: Curves.ease,
-              duration: const Duration(milliseconds: 500),
-            );
-        }
-      },
+    final bg = _listScrollController.offset >= expandHeight
+        ? ElevationOverlay.applySurfaceTint(
+            Theme.of(context).colorScheme.surface,
+            Theme.of(context).colorScheme.surfaceTint,
+            Theme.of(context).navigationBarTheme.elevation ?? 3)
+        : Colors.transparent;
+    return ColoredBox(
+      color: bg,
+      child: Padding(
+        padding: edgeInsetsL10R10B10,
+        child: Text(
+          _listScrollController.offset > expandHeight
+              ? (widget.title ?? '')
+              : (widget.threadType ?? ''),
+          style: Theme.of(context).textTheme.titleLarge,
+          maxLines: 1,
+        ),
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    // Set app bar height.
-    // On desktop platforms it is the default height of appbar preferred size.
-    // On mobile platforms it is the default height of appbar preferred size plus the safe top padding of notification bar.
-    final safeHeight = MediaQuery.of(context).viewPadding.top + kToolbarHeight;
+    final safeHeight = 40.0;
 
-    return EasyRefresh.builder(
-      scrollBehaviorBuilder: (physics) {
-        // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
-        return ERScrollBehavior(physics)
-            .copyWith(physics: physics, scrollbars: false);
-      },
-      header: const MaterialHeader(position: IndicatorPosition.locator),
-      footer: const MaterialFooter(),
-      controller: _refreshController,
-      scrollController: _listScrollController,
-      refreshOnStart: true,
-      onRefresh: () async {
-        if (!mounted) {
-          return;
-        }
-        _clearData();
-        await _loadData();
-        _refreshController
-          ..finishRefresh()
-          ..resetFooter();
-      },
-      onLoad: () async {
-        if (!mounted) {
-          return;
-        }
-        if (!widget.canFetchMorePages) {
-          return;
-        }
-        if (_inLastPage) {
-          debug('already in last page');
-          _refreshController
-            ..finishLoad(IndicatorResult.noMore)
-            ..resetFooter();
-          await showNoMoreToast(context);
-          return;
-        }
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        ListAppBar(
+          onSearch: () async {
+            await context.pushNamed(ScreenPaths.search);
+          },
+          jumpPageKey: hashCode,
+          onJumpPage: (pageNumber) async {
+            if (!mounted) {
+              return;
+            }
+            setState(() {
+              _pageNumber = pageNumber;
+              ref.read(jumpPageProvider(hashCode).notifier).setPageState(
+                  currentPage: _pageNumber, totalPages: _totalPages);
+            });
+            await _refresh();
+          },
+          onSelected: (value) async {
+            switch (value) {
+              case MenuActions.refresh:
+                await _refresh();
+              case MenuActions.copyUrl:
+                await Clipboard.setData(
+                  ClipboardData(text: widget.fetchUrl),
+                );
+                if (!context.mounted) {
+                  return;
+                }
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(
+                    context.t.aboutPage.copiedToClipboard,
+                  ),
+                ));
+              case MenuActions.openInBrowser:
+                await context.dispatchAsUrl(widget.fetchUrl, external: true);
+              case MenuActions.backToTop:
+                await _listScrollController.animateTo(
+                  0,
+                  curve: Curves.ease,
+                  duration: const Duration(milliseconds: 500),
+                );
+            }
+          },
+        ),
+        Expanded(
+          child: EasyRefresh.builder(
+            scrollBehaviorBuilder: (physics) {
+              // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+              return ERScrollBehavior(physics)
+                  .copyWith(physics: physics, scrollbars: false);
+            },
+            header: const MaterialHeader(position: IndicatorPosition.locator),
+            footer: const MaterialFooter(),
+            controller: _refreshController,
+            scrollController: _listScrollController,
+            refreshOnStart: true,
+            onRefresh: () async {
+              if (!mounted) {
+                return;
+              }
+              _clearData();
+              await _loadData();
+              _refreshController
+                ..finishRefresh()
+                ..resetFooter();
+            },
+            onLoad: () async {
+              if (!mounted) {
+                return;
+              }
+              if (!widget.canFetchMorePages) {
+                return;
+              }
+              if (_inLastPage) {
+                debug('already in last page');
+                _refreshController
+                  ..finishLoad(IndicatorResult.noMore)
+                  ..resetFooter();
+                await showNoMoreToast(context);
+                return;
+              }
 
-        _pageNumber++;
-        await _loadData();
-        _refreshController.finishLoad();
-      },
-      childBuilder: (context, physics) {
-        return CustomScrollView(
-          physics: physics,
-          controller: _listScrollController,
-          slivers: [
-            const HeaderLocator.sliver(),
-            SliverPersistentHeader(
-              pinned: true,
-              floating: true,
-              delegate: SliverAppBarPersistentDelegate(
-                buildHeader: (context, shrinkOffset, overlapsContent) {
-                  return _buildHeader(context, ref, shrinkOffset, safeHeight);
-                },
-                headerMaxExtent: safeHeight,
-                headerMinExtent: safeHeight,
-              ),
-            ),
-            SliverPadding(
-              padding: edgeInsetsL10R10B10,
-              sliver: SliverToBoxAdapter(
-                child: Text(widget.title ?? '',
-                    style: Theme.of(context).textTheme.titleLarge),
-              ),
-            ),
-            if (_failedMessageWidget == null && _allData.isNotEmpty)
-              SliverPadding(
-                padding: edgeInsetsL10R10B20,
-                sliver: SliverList.separated(
-                  itemCount: _allData.length,
-                  itemBuilder: (context, index) {
-                    return widget.widgetBuilder(context, _allData[index]);
-                  },
-                  separatorBuilder: widget.useDivider
-                      ? (context, index) => const Divider(thickness: 0.5)
-                      : (context, index) => sizedBoxW5H5,
-                ),
-              ),
-            if (_failedMessageWidget != null)
-              SliverFillRemaining(child: Center(child: _failedMessageWidget)),
-          ],
-        );
-      },
+              _pageNumber++;
+              await _loadData();
+              _refreshController.finishLoad();
+            },
+            childBuilder: (context, physics) {
+              return CustomScrollView(
+                physics: physics,
+                controller: _listScrollController,
+                slivers: [
+                  const HeaderLocator.sliver(),
+                  SliverPersistentHeader(
+                    floating: true,
+                    delegate: SliverAppBarPersistentDelegate(
+                      buildHeader: (context, shrinkOffset, overlapsContent) {
+                        return _buildHeader(context, shrinkOffset, safeHeight);
+                      },
+                      headerMaxExtent: safeHeight,
+                      headerMinExtent: safeHeight,
+                    ),
+                  ),
+                  SliverPadding(
+                    padding: edgeInsetsL10R10B10,
+                    sliver: SliverToBoxAdapter(
+                      child: Text(widget.title ?? '',
+                          style: Theme.of(context).textTheme.titleLarge),
+                    ),
+                  ),
+                  if (_failedMessageWidget == null && _allData.isNotEmpty)
+                    SliverPadding(
+                      padding: edgeInsetsL10R10B20,
+                      sliver: SliverList.separated(
+                        itemCount: _allData.length,
+                        itemBuilder: (context, index) {
+                          return widget.widgetBuilder(context, _allData[index]);
+                        },
+                        separatorBuilder: widget.useDivider
+                            ? (context, index) => const Divider(thickness: 0.5)
+                            : (context, index) => sizedBoxW5H5,
+                      ),
+                    ),
+                  if (_failedMessageWidget != null)
+                    SliverFillRemaining(
+                        child: Center(child: _failedMessageWidget)),
+                ],
+              );
+            },
+          ),
+        ),
+      ],
     );
   }
 }

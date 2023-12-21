@@ -78,6 +78,8 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                 widget.threadID,
                 widget._fetchUrl,
                 title: widget.title ?? title ?? '',
+                widget.threadID,
+                widget.threadType,
                 listBuilder: (document) {
                   final threadDataNode = document.querySelector('div#postlist');
                   if (threadDataNode == null) {

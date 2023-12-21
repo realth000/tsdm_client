@@ -148,6 +148,7 @@
     }
   },
   "threadPage": {
+    "title": "Thread",
     "sendReplyHint": "Reply...",
     "sendReply": "Reply",
     "replySuccess": "Reply success",

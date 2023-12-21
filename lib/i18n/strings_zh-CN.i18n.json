@@ -148,6 +148,7 @@
     }
   },
   "threadPage": {
+    "title": "帖子",
     "sendReplyHint": "回复",
     "sendReply": "发送",
     "replySuccess": "回复成功",
