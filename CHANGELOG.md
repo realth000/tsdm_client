@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增解析对帖子回复的点评。
 - 现在打开帖子中的链接时对支持的链接优先以页面的形式在应用内打开。
 - 现在论坛页面和帖子页面可以快速跳页。
+- 帖子的评分表支持左右滚动以适应屏幕过窄的情况。
 
 ### Fixed
 

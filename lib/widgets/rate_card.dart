@@ -22,8 +22,8 @@ class RateCard extends ConsumerWidget {
       for (final (i, v) in fixedColumnWidths.indexed)
         i + 1: FixedColumnWidth(v.toDouble())
     };
-    columnWidths[0] = const FlexColumnWidth();
-    columnWidths[rate.attrList.length + 1] = const FlexColumnWidth();
+    columnWidths[0] = const FixedColumnWidth(150);
+    columnWidths[rate.attrList.length + 1] = const FixedColumnWidth(200);
     final tableHeaders = [
       context.t.rateCard.title(userCount: '${rate.userCount}'),
       ...rate.attrList
@@ -66,15 +66,20 @@ class RateCard extends ConsumerWidget {
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Table(
-              columnWidths: columnWidths,
-              defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-              children: [
-                TableRow(children: tableHeaders),
-                ...tableContent,
-              ],
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Table(
+                defaultColumnWidth: const IntrinsicColumnWidth(),
+                columnWidths: columnWidths,
+                defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+                children: [
+                  TableRow(children: tableHeaders),
+                  ...tableContent,
+                ],
+              ),
             ),
             bottom,
           ],

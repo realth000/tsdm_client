@@ -347,7 +347,7 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
     // On mobile platforms it is the default height of appbar preferred size plus the safe top padding of notification bar.
     final safeHeight = MediaQuery.of(context).viewPadding.top + kToolbarHeight;
 
-    return EasyRefresh(
+    return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
         return ERScrollBehavior(physics)
@@ -388,45 +388,48 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
         await _loadData();
         _refreshController.finishLoad();
       },
-      child: CustomScrollView(
-        controller: _listScrollController,
-        slivers: [
-          const HeaderLocator.sliver(),
-          SliverPersistentHeader(
-            pinned: true,
-            floating: true,
-            delegate: SliverAppBarPersistentDelegate(
-              buildHeader: (context, shrinkOffset, overlapsContent) {
-                return _buildHeader(context, ref, shrinkOffset, safeHeight);
-              },
-              headerMaxExtent: safeHeight,
-              headerMinExtent: safeHeight,
-            ),
-          ),
-          SliverPadding(
-            padding: edgeInsetsL10R10B10,
-            sliver: SliverToBoxAdapter(
-              child: Text(widget.title ?? '',
-                  style: Theme.of(context).textTheme.titleLarge),
-            ),
-          ),
-          if (_failedMessageWidget == null && _allData.isNotEmpty)
-            SliverPadding(
-              padding: edgeInsetsL10R10B20,
-              sliver: SliverList.separated(
-                itemCount: _allData.length,
-                itemBuilder: (context, index) {
-                  return widget.widgetBuilder(context, _allData[index]);
+      childBuilder: (context, physics) {
+        return CustomScrollView(
+          physics: physics,
+          controller: _listScrollController,
+          slivers: [
+            const HeaderLocator.sliver(),
+            SliverPersistentHeader(
+              pinned: true,
+              floating: true,
+              delegate: SliverAppBarPersistentDelegate(
+                buildHeader: (context, shrinkOffset, overlapsContent) {
+                  return _buildHeader(context, ref, shrinkOffset, safeHeight);
                 },
-                separatorBuilder: widget.useDivider
-                    ? (context, index) => const Divider(thickness: 0.5)
-                    : (context, index) => sizedBoxW5H5,
+                headerMaxExtent: safeHeight,
+                headerMinExtent: safeHeight,
               ),
             ),
-          if (_failedMessageWidget != null)
-            SliverFillRemaining(child: Center(child: _failedMessageWidget)),
-        ],
-      ),
+            SliverPadding(
+              padding: edgeInsetsL10R10B10,
+              sliver: SliverToBoxAdapter(
+                child: Text(widget.title ?? '',
+                    style: Theme.of(context).textTheme.titleLarge),
+              ),
+            ),
+            if (_failedMessageWidget == null && _allData.isNotEmpty)
+              SliverPadding(
+                padding: edgeInsetsL10R10B20,
+                sliver: SliverList.separated(
+                  itemCount: _allData.length,
+                  itemBuilder: (context, index) {
+                    return widget.widgetBuilder(context, _allData[index]);
+                  },
+                  separatorBuilder: widget.useDivider
+                      ? (context, index) => const Divider(thickness: 0.5)
+                      : (context, index) => sizedBoxW5H5,
+                ),
+              ),
+            if (_failedMessageWidget != null)
+              SliverFillRemaining(child: Center(child: _failedMessageWidget)),
+          ],
+        );
+      },
     );
   }
 }
