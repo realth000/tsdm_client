@@ -165,7 +165,7 @@ class _LockedCardState extends ConsumerState<LockedCard> {
           style: Theme.of(context).textTheme.labelMedium,
         ),
         SizedBox(
-          width: 200,
+          width: sizeButtonInCardMinWidth,
           child: _loading
               ? const Center(child: sizedCircularProgressIndicator)
               : _buildPurchaseButton(context),

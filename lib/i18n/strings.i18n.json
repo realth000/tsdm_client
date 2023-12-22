@@ -263,5 +263,9 @@
   },
   "codeCard": {
     "title": "Code Block"
+  },
+  "spoilerCard": {
+    "expandMore": "Expand More",
+    "expandLess": "Expand Less"
   }
 }

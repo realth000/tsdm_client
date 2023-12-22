@@ -263,5 +263,9 @@
   },
   "codeCard": {
     "title": "代码块"
+  },
+  "spoilerCard": {
+    "expandMore": "展开",
+    "expandLess": "折叠"
   }
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:tsdm_client/widgets/code_card.dart';
 import 'package:tsdm_client/widgets/locked_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/review_card.dart';
+import 'package:tsdm_client/widgets/spoiler_card.dart';
 import 'package:universal_html/html.dart' as uh;
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
@@ -88,6 +90,9 @@ class Muncher {
 
   final BuildContext context;
   final MunchState state = MunchState();
+
+  /// Map to store div classes and corresponding munch functions.
+  Map<String, InlineSpan Function(uh.Element)>? _divMap;
 
   InlineSpan _munch(uh.Element rootElement) {
     final widgetList = <Widget>[];
@@ -175,17 +180,10 @@ class Muncher {
             'p' => _buildP(node),
             'span' => _buildSpan(node),
             'blockquote' => _buildBlockQuote(node),
-            'div'
-                when node.attributes['class']?.contains('blockcode') ?? false =>
-              _buildBlockCode(node),
-            'div' when node.attributes['class']?.contains('locked') ?? false =>
-              _buildLockedArea(node),
-            'div' when node.attributes['class']?.contains('cm') ?? false =>
-              _buildReview(node),
+            'div' => _munchDiv(node),
             'a' => _buildA(node),
             'tr' => _buildTr(node),
             'td' => _buildTd(node),
-            'div' ||
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -346,6 +344,22 @@ class Muncher {
     ]);
   }
 
+  InlineSpan _munchDiv(uh.Element element) {
+    _divMap ??= {
+      'blockcode': _buildBlockCode,
+      'locked': _buildLockedArea,
+      'cm': _buildReview,
+      'spoiler': _buildSpoiler,
+    };
+
+    // Find the first munch executor, use `_munch` if none found.
+    final executor = _divMap!.entries
+            .firstWhereOrNull((e) => element.classes.contains(e.key))
+            ?.value ??
+        _munch;
+    return executor(element);
+  }
+
   InlineSpan _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
     return WidgetSpan(child: CodeCard(code: text));
@@ -415,6 +429,29 @@ class Muncher {
       content: content ?? '',
       avatarUrl: avatarUrl,
     ));
+  }
+
+  /// Spoiler is a button with an area of contents.
+  /// Button is used to control the visibility of contents.
+  InlineSpan _buildSpoiler(uh.Element element) {
+    final title = element
+        .querySelector('div.spoiler_control > input.spoiler_btn')
+        ?.attributes['value'];
+    final contentNode = element.querySelector('div.spoiler_content');
+    if (title == null || contentNode == null) {
+      // Impossible.
+      return const TextSpan();
+    }
+    final content = _munch(contentNode);
+    return TextSpan(children: [
+      WidgetSpan(
+        child: SpoilerCard(
+          title: title,
+          content: content,
+        ),
+      ),
+      const TextSpan(text: '\n'),
+    ]);
   }
 
   InlineSpan _buildA(uh.Element element) {

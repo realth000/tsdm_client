@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+const sizeButtonInCardMinWidth = 200.0;
+
 const sizedBoxW5H5 = SizedBox(width: 5, height: 5);
 const sizedBoxW10H10 = SizedBox(width: 10, height: 10);
 const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
