@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/user.dart';
@@ -77,7 +78,7 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
               child: PostList<Post>(
                 widget.threadID,
                 widget._fetchUrl,
-                title: widget.title ?? title ?? '',
+                title: title ?? '',
                 widget.threadID,
                 widget.threadType,
                 listBuilder: (document) {
@@ -96,11 +97,11 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                   // Sometimes we do not know the web page title outside this widget,
                   // so here should use the title in html document as fallback.
                   //
-                  // Note that the specified title (in widget constructor) is prior to
-                  // this html document title, only use html title when that title is null.
-                  if (widget.title == null && mounted) {
+                  // Use the title in html document to ensure displaying the full thread title.
+                  if (mounted) {
                     setState(() {
-                      title = document.querySelector('title')?.text;
+                      title =
+                          document.querySelector('title')?.text?.trimTitle();
                     });
                   }
 

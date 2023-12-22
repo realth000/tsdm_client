@@ -82,6 +82,10 @@ extension EnhanceModification on String {
         ? '${substring(0, size)}${ellipsis ? "..." : ""}'
         : this;
   }
+
+  String trimTitle() {
+    return replaceFirst(' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!', '');
+  }
 }
 
 extension ParseStringTo on String {
