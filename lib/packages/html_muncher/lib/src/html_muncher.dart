@@ -44,6 +44,9 @@ class MunchState {
   bool underline = false;
   bool lineThrough = false;
   bool center = false;
+
+  /// If true, use [String.trim], if false, use [String.trimLeft].
+  bool trimAll = false;
   TextAlign? textAlign;
   final colorStack = <Color>[];
   final fontSizeStack = <double>[];
@@ -95,7 +98,6 @@ class Muncher {
   Map<String, InlineSpan Function(uh.Element)>? _divMap;
 
   InlineSpan _munch(uh.Element rootElement) {
-    final widgetList = <Widget>[];
     final spanList = <InlineSpan>[];
 
     for (final node in rootElement.nodes) {
@@ -124,9 +126,13 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
-          if (node.text?.trim().isEmpty ?? true) {
-            return null;
+          final text =
+              state.trimAll ? node.text?.trim() : node.text?.trimLeft();
+          // If text is trimmed to empty, maybe it is an '\n' before trimming.
+          if (text?.isEmpty ?? true) {
+            return state.trimAll ? null : const TextSpan(text: '\n');
           }
+
           // Base text style.
           var style = Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: state.colorStack.lastOrNull,
@@ -155,7 +161,7 @@ class Muncher {
 
           // TODO: Support text-shadow.
           return TextSpan(
-            text: node.text?.trim(),
+            text: text,
             recognizer: recognizer,
             style: style,
           );
@@ -465,12 +471,16 @@ class Muncher {
   }
 
   InlineSpan _buildTr(uh.Element element) {
+    state.trimAll = true;
     final ret = _munch(element);
+    state.trimAll = false;
     return TextSpan(children: [ret, const TextSpan(text: '\n')]);
   }
 
   InlineSpan _buildTd(uh.Element element) {
+    state.trimAll = true;
     final ret = _munch(element);
+    state.trimAll = false;
     return TextSpan(children: [ret, const TextSpan(text: ' ')]);
   }
 
