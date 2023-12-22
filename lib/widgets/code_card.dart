@@ -30,7 +30,7 @@ class CodeCard extends ConsumerWidget {
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
