@@ -122,9 +122,11 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
   /// Parse [_threadType] from thread page [document].
   /// This should only run once.
   String? _parseThreadType(uh.Document document) {
-    final node = document.querySelector(
-        'div#postlist > table > tbody > tr > td.pbn > h1.ts > a');
-    return node?.firstEndDeepText();
+    final node = document.querySelector('div#postlist h1.ts > a');
+    return node
+        ?.firstEndDeepText()
+        ?.replaceFirst('[', '')
+        .replaceFirst(']', '');
   }
 
   /// Check whether in the last page in a web page (consists a series of pages).
