@@ -47,6 +47,9 @@ class MunchState {
 
   /// If true, use [String.trim], if false, use [String.trimLeft].
   bool trimAll = false;
+
+  /// Flag to indicate whether in state of repeated line wrapping.
+  bool inRepeatWrapLine = false;
   TextAlign? textAlign;
   final colorStack = <Color>[];
   final fontSizeStack = <double>[];
@@ -130,7 +133,14 @@ class Muncher {
               state.trimAll ? node.text?.trim() : node.text?.trimLeft();
           // If text is trimmed to empty, maybe it is an '\n' before trimming.
           if (text?.isEmpty ?? true) {
-            return state.trimAll ? null : const TextSpan(text: '\n');
+            if (state.trimAll) {
+              return null;
+            }
+            if (state.inRepeatWrapLine) {
+              return null;
+            }
+            state.inRepeatWrapLine = true;
+            return const TextSpan(text: '\n');
           }
 
           // Base text style.
@@ -159,6 +169,7 @@ class Muncher {
             );
           }
 
+          state.inRepeatWrapLine = false;
           // TODO: Support text-shadow.
           return TextSpan(
             text: text,
