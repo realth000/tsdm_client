@@ -25,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复安卓上帖子标题下方空白和其他页面不一致的问题。
 - 修复搜索页面中跳页的对话框默认选中的页不是当前页的问题。
 - 修复解析帖子分类时失败的问题。
+- 修复因为未解析`pre`标签导致部分楼层解析结果为空的问题。
 
 ### Changed
 

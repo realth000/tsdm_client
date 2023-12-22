@@ -190,7 +190,8 @@ class Muncher {
             'table' ||
             'tbody' ||
             'ul' ||
-            'li' =>
+            'li' ||
+            'pre' =>
               _munch(node),
             String() => null,
           };
