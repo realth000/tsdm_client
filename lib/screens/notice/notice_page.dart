@@ -7,12 +7,12 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/notice.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/notice_card.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 /// Notice page, shows [Notice] and PrivateMessage of current user.
 class NoticePage extends ConsumerStatefulWidget {
@@ -39,7 +39,7 @@ class _NoticePageState extends ConsumerState<NoticePage> {
     while (true) {
       final resp = await ref.read(netClientProvider()).get(url);
       if (resp.statusCode == HttpStatus.ok) {
-        document = parseHtmlDocument(resp.data as String);
+        document = ref.read(htmlParserProvider.notifier).parseResp(resp);
         break;
       }
 

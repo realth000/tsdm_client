@@ -50,7 +50,7 @@ class _CardLayout extends ConsumerWidget {
       if (latestReplyTime != null)
         (
           Icons.timelapse_outlined,
-          latestReplyTime!.elapsedTillNow(),
+          latestReplyTime!.elapsedTillNow(ref),
         ),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
     ];

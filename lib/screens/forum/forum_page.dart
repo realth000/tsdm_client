@@ -13,6 +13,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/jump_page_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -22,7 +23,6 @@ import 'package:tsdm_client/widgets/forum_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 /// Forum page.
 class ForumPage extends ConsumerStatefulWidget {
@@ -185,7 +185,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
             '${widget._fetchUrl}&page=$_pageNumber',
           );
       if (d1.statusCode == HttpStatus.ok) {
-        document = parseHtmlDocument(d1.data as String);
+        document = ref.read(htmlParserProvider.notifier).parseResp(d1);
         break;
       }
 

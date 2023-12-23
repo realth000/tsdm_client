@@ -50,7 +50,7 @@ class _PostCardState extends ConsumerState<PostCard>
             ),
           ),
           title: Text(widget.post.author.name),
-          subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
+          subtitle: Text('${widget.post.publishTime?.elapsedTillNow(ref)}'),
           trailing: widget.post.postFloor == null
               ? null
               : Text('#${widget.post.postFloor}'),

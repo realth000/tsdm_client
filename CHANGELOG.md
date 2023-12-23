@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## Fixed
+
+- 修复页面中时间显示和网页端有误差的问题。
+
 ## [0.2.0] - 2023-12-22
 
 ### Added

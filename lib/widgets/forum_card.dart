@@ -151,7 +151,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                 maxLines: 2,
               ),
               subtitle: widget.forum.latestThreadTime != null
-                  ? Text(widget.forum.latestThreadTime!.elapsedTillNow())
+                  ? Text(widget.forum.latestThreadTime!.elapsedTillNow(ref))
                   : null,
             ),
             if (showShortCut)

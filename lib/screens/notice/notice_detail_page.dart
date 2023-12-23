@@ -8,13 +8,13 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/notice.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
 import 'package:tsdm_client/widgets/reply_bar.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 /// Show details for a single notice, also provides interaction:
 /// * Reply to the notice if notice type is [NoticeType.reply] or [NoticeType.mention].
@@ -183,7 +183,8 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
           }
           if (snapshot.hasData) {
             final data = snapshot.data!;
-            final document = parseHtmlDocument(data.data as String);
+            final document =
+                ref.read(htmlParserProvider.notifier).parseResp(data);
             return _buildBody(context, document);
           }
           return Center(

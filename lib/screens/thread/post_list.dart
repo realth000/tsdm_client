@@ -13,6 +13,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/jump_page_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
@@ -21,7 +22,6 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 // enum _MenuActions {
 //   refresh,
@@ -147,7 +147,7 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
       if (d1.statusCode == HttpStatus.ok) {
-        document = parseHtmlDocument(d1.data as String);
+        document = ref.read(htmlParserProvider.notifier).parseResp(d1);
         break;
       }
       if (!mounted) {

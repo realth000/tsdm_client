@@ -6,6 +6,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/root_content_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -17,7 +18,6 @@ import 'package:tsdm_client/widgets/check_in_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/obscure_list_tile.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({this.uid, super.key});
@@ -275,7 +275,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
           if (snapshot.hasData) {
             final resp = snapshot.data;
-            final document = parseHtmlDocument(resp!.data as String);
+            final document =
+                ref.read(htmlParserProvider.notifier).parseResp(resp!);
             return _buildProfile(context, document);
           }
 

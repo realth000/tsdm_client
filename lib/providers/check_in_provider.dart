@@ -6,10 +6,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/models/check_in_feeling.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/check_in_provider.g.dart';
 
@@ -65,7 +65,7 @@ class CheckIn extends _$CheckIn {
       return (CheckInResult.webRequestFailed, '${resp.statusCode}');
     }
 
-    final document = parseHtmlDocument(resp.data as String);
+    final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
     final re = RegExp(r'formhash" value="(?<FormHash>\w+)"');
     final formHashMatch = re.firstMatch(document.body?.innerHtml ?? '');
     final formHash = formHashMatch?.namedGroup('FormHash');

@@ -3,12 +3,12 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/providers/auth_provider.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/small_providers.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart';
-import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/root_content_provider.g.dart';
 
@@ -101,7 +101,7 @@ class RootContent extends _$RootContent {
     while (i < 3) {
       final resp = await ref.read(netClientProvider()).get(_rootPage);
       if (resp.statusCode == HttpStatus.ok) {
-        _doc = parseHtmlDocument(resp.data as String);
+        _doc = ref.read(htmlParserProvider.notifier).parseResp(resp);
         await ref.read(authProvider.notifier).loginFromDocument(_doc);
         final username = ref.read(authProvider.notifier).loggedUsername;
         await _cache.analyze(_doc, username);
@@ -124,7 +124,8 @@ class RootContent extends _$RootContent {
       final profileResp =
           await ref.read(netClientProvider()).get('$_profilePage$uid');
       if (profileResp.statusCode == HttpStatus.ok) {
-        _profileDoc = parseHtmlDocument(profileResp.data as String);
+        _profileDoc =
+            ref.read(htmlParserProvider.notifier).parseResp(profileResp);
         _avatarUrl = _profileDoc!
             .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
             ?.attributes['src'];

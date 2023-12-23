@@ -4,9 +4,9 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 /// A refreshable [ListView].
 ///
@@ -84,7 +84,7 @@ class _RefreshListState<T> extends ConsumerState<RefreshList<T>> {
         if (!mounted) {
           return;
         }
-        final document = parseHtmlDocument(resp.data as String);
+        final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
         final data = await widget.buildDataCallback(document);
         setState(() {
           _allData.addAll(data);
@@ -101,7 +101,7 @@ class _RefreshListState<T> extends ConsumerState<RefreshList<T>> {
           return;
         }
         final resp = await ref.read(netClientProvider()).get(_nextPageUrl!);
-        final document = parseHtmlDocument(resp.data as String);
+        final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
         final data = await widget.buildDataCallback(document);
         setState(() {
           _allData.addAll(data);

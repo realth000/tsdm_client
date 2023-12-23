@@ -4,11 +4,11 @@ import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
-import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/auth_provider.g.dart';
 
@@ -146,7 +146,7 @@ class Auth extends _$Auth {
       return (LoginResult.requestFailed, '$message');
     }
 
-    final document = parseHtmlDocument(resp.data as String);
+    final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
     final messageNode = document.getElementById('messagetext');
     if (messageNode == null) {
       // Impossible.
@@ -188,7 +188,7 @@ class Auth extends _$Auth {
       );
       return false;
     }
-    final document = parseHtmlDocument(resp.data as String);
+    final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
     final uid = await _parseUidInDocument(document);
     if (uid == null) {
       debug('unnecessary logout: not authed');
@@ -216,7 +216,8 @@ class Auth extends _$Auth {
       return false;
     }
 
-    final logoutDocument = parseHtmlDocument(logoutResp.data as String);
+    final logoutDocument =
+        ref.read(htmlParserProvider.notifier).parseResp(logoutResp);
     final logoutMessage = logoutDocument.getElementById('messagetext');
     if (logoutMessage == null || !logoutMessage.innerHtmlEx().contains('已退出')) {
       debug('failed to logout: logout message not found');

@@ -6,8 +6,8 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/models/searched_thread.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
-import 'package:universal_html/parsing.dart';
 
 part '../generated/providers/search_provider.g.dart';
 
@@ -115,7 +115,7 @@ class Search extends _$Search {
       return const SearchResult.empty();
     }
 
-    final document = parseHtmlDocument(resp.data as String);
+    final document = ref.read(htmlParserProvider.notifier).parseResp(resp);
 
     final threadList = document
         .querySelectorAll('div#ct > div#ct_shell > div#left_s > div.ts_se_rs')

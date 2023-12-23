@@ -8,10 +8,10 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
+import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
-import 'package:universal_html/parsing.dart';
 
 class ReplyBar extends ConsumerStatefulWidget {
   const ReplyBar({required this.controller, super.key});
@@ -133,7 +133,8 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
       return false;
     }
 
-    final replyWindowDoc = parseHtmlDocument(replyWindowResp.data as String);
+    final replyWindowDoc =
+        ref.read(htmlParserProvider.notifier).parseResp(replyWindowResp);
     final inputList = replyWindowDoc.querySelectorAll('input');
 
     String? formHash;
