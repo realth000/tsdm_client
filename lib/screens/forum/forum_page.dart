@@ -115,7 +115,6 @@ class _ForumPageState extends ConsumerState<ForumPage>
 
   void _clearData() {
     _normalThreadData.clear();
-    _allSubredditData.clear();
     _inLastPage = false;
     _haveNoThread = false;
   }
@@ -195,11 +194,6 @@ class _ForumPageState extends ConsumerState<ForumPage>
       await showRetryToast(context);
     }
 
-    // Subreddit.
-    _allSubredditData = _buildForumList(document);
-    // Build subreddit first, so when thread list is empty, we can know whether
-    // it is a web request error or permission denied or just need to go into
-    // subreddit.
     final data =
         _buildThreadList(document, 'tsdm_normalthread', NormalThread.fromTBody);
 
@@ -209,6 +203,8 @@ class _ForumPageState extends ConsumerState<ForumPage>
 
     // Only the first page of forum has pinned thread.
     if (_pageNumber <= 1) {
+      // Subreddit.
+      _allSubredditData = _buildForumList(document);
       final stickThreadData =
           _buildThreadList(document, 'tsdm_stickthread', StickThread.fromTBody);
       if (stickThreadData.isNotEmpty) {
