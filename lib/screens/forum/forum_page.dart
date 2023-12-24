@@ -430,12 +430,15 @@ class _ForumPageState extends ConsumerState<ForumPage>
           if (!mounted) {
             return;
           }
+          tabController?.animateTo(1,
+              duration: const Duration(milliseconds: 100));
           setState(() {
             _pageNumber = pageNumber;
             ref.read(jumpPageProvider(hashCode).notifier).setPageState(
                 currentPage: _pageNumber, totalPages: _totalPages);
           });
-          await _refreshController.callRefresh();
+          Future.delayed(const Duration(milliseconds: 100),
+              _refreshController.callRefresh);
         },
         onSelected: (value) async {
           switch (value) {
