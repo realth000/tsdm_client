@@ -82,6 +82,9 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                 widget.threadID,
                 widget.threadType,
                 listBuilder: (document) {
+                  if (document.querySelector('form#fastpostform') == null) {
+                    _replyBarController.closed = true;
+                  }
                   final threadDataNode = document.querySelector('div#postlist');
                   if (threadDataNode == null) {
                     debug('thread postlist not found');

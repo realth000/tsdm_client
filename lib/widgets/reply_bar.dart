@@ -23,6 +23,9 @@ class ReplyBar extends ConsumerStatefulWidget {
 }
 
 class _ReplyBarState extends ConsumerState<ReplyBar> {
+  /// Indicate current thread is closed.
+  bool _closed = false;
+
   bool isExpanded = false;
   bool canSendReply = false;
 
@@ -233,7 +236,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
       child: Column(
         mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
         children: [
-          if (_hintText != null)
+          if (_hintText != null && !_closed)
             Padding(
               padding: edgeInsetsL20R20,
               child: Row(
@@ -271,11 +274,13 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                             canSendReply = value.isNotEmpty;
                           });
                         },
-                        focusNode: _replyFocusNode,
+                        enabled: !_closed,
                         maxLines: isExpanded ? null : 10,
                         minLines: isExpanded ? null : 1,
                         decoration: InputDecoration(
-                          hintText: context.t.threadPage.sendReplyHint,
+                          hintText: _closed
+                              ? context.t.threadPage.closed
+                              : context.t.threadPage.sendReplyHint,
                         ),
                       ),
                     ),
@@ -312,7 +317,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                   child: isSendingReply
                       ? sizedCircularProgressIndicator
                       : const Icon(Icons.send_outlined),
-                  onPressed: canSendReply && !isSendingReply
+                  onPressed: (canSendReply && !isSendingReply && !_closed)
                       ? () async {
                           if (_replyAction == null &&
                               _replyParameters == null) {
@@ -354,6 +359,7 @@ class ReplyBarController {
   /// Defer sync values in [_state] till we have a state by called [_bind].
   String? _replyAction;
   ReplyParameters? _replyParameters;
+  bool? _closed;
 
   // ignore: avoid_setters_without_getters
   set _bind(_ReplyBarState state) {
@@ -365,6 +371,9 @@ class ReplyBarController {
     if (_replyParameters != null) {
       _state!._replyParameters = _replyParameters;
       debug('update reply parameters');
+    }
+    if (_closed != null) {
+      _state!._closed = _closed!;
     }
   }
 
@@ -394,9 +403,23 @@ class ReplyBarController {
     debug('update reply parameters');
   }
 
+  bool get closed => _state?._closed ?? _closed ?? false;
+
+  set closed(bool closed) {
+    if (_state == null) {
+      _closed = closed;
+      return;
+    }
+    _state!._closed = closed;
+  }
+
   void setHintText(String hintText) {
     _state?._setHintText(hintText);
   }
 
-  void requestFocus() => _state?._replyFocusNode.requestFocus();
+  void requestFocus() {
+    if (_closed ?? false) {
+      _state?._replyFocusNode.requestFocus();
+    }
+  }
 }
