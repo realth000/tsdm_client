@@ -138,6 +138,10 @@
     "checkInTodayStatus": "今日签到状态"
   },
   "forumPage": {
+    "stickThreadTab": {
+      "title": "置顶",
+      "noThread": "没有置顶帖"
+    },
     "threadTab": {
       "title": "帖子",
       "noThread": "没有帖子"

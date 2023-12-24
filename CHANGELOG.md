@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 新增解析帖子名称的颜色和字重。
 - 新增解析帖子分类和状态图标（已关闭，评分，投票，加精，置顶等）。
+- 新增解析论坛页面中的置顶帖。
 
 ### Fixed
 

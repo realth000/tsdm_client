@@ -12,6 +12,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/forum.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
+import 'package:tsdm_client/models/stick_thread.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/html_muncher.dart';
 import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/jump_page_provider.dart';
@@ -45,8 +46,11 @@ class ForumPage extends ConsumerStatefulWidget {
 
 class _ForumPageState extends ConsumerState<ForumPage>
     with SingleTickerProviderStateMixin {
+  /// All pinned thread in this forum.
+  final _stickThreadData = <StickThread>[];
+
   /// All thread in this forum.
-  final _allThreadData = <NormalThread>[];
+  final _normalThreadData = <NormalThread>[];
 
   /// All subreddit.
   var _allSubredditData = <Forum>[];
@@ -82,22 +86,17 @@ class _ForumPageState extends ConsumerState<ForumPage>
   Widget? _noPermissionFallbackDialog;
 
   /// Build thread tab.
-  List<NormalThread> _buildThreadList(uh.Document document) {
-    final normalThreadData = <NormalThread>[];
-    final threadList = document.querySelectorAll('tbody.tsdm_normalthread');
-    if (threadList.isEmpty) {
-      return normalThreadData;
-    }
-
-    for (final threadElement in threadList) {
-      final thread = NormalThread.fromTBody(threadElement);
-      if (!thread.isValid()) {
-        continue;
-      }
-      normalThreadData.add(thread);
-    }
-
-    return normalThreadData;
+  List<T> _buildThreadList<T extends NormalThread>(
+    uh.Document document,
+    String threadClass,
+    T Function(uh.Element element) threadBuilder,
+  ) {
+    final threadList = document
+        .querySelectorAll('tbody.$threadClass')
+        .map((e) => threadBuilder(e))
+        .where((e) => e.isValid())
+        .toList();
+    return threadList;
   }
 
   List<Forum> _buildForumList(uh.Document document) {
@@ -115,7 +114,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
   }
 
   void _clearData() {
-    _allThreadData.clear();
+    _normalThreadData.clear();
     _allSubredditData.clear();
     _inLastPage = false;
     _haveNoThread = false;
@@ -201,19 +200,31 @@ class _ForumPageState extends ConsumerState<ForumPage>
     // Build subreddit first, so when thread list is empty, we can know whether
     // it is a web request error or permission denied or just need to go into
     // subreddit.
-    final data = _buildThreadList(document);
+    final data =
+        _buildThreadList(document, 'tsdm_normalthread', NormalThread.fromTBody);
 
     if (!mounted) {
       return;
     }
 
+    // Only the first page of forum has pinned thread.
+    if (_pageNumber <= 1) {
+      final stickThreadData =
+          _buildThreadList(document, 'tsdm_stickthread', StickThread.fromTBody);
+      if (stickThreadData.isNotEmpty) {
+        setState(() {
+          _stickThreadData.addAll(stickThreadData);
+        });
+      }
+    }
+
     setState(() {
-      _allThreadData.addAll(data);
-      _haveNoThread = _allThreadData.isEmpty;
+      _normalThreadData.addAll(data);
+      _haveNoThread = _normalThreadData.isEmpty;
     });
 
     // Check if we have permission to visit this forum
-    if (_allThreadData.isEmpty) {
+    if (_normalThreadData.isEmpty) {
       // First check if we have subreddit.
       if (_allSubredditData.isNotEmpty) {
         // We have subreddit, this forum is only a "redirect" to other forums.
@@ -269,7 +280,21 @@ class _ForumPageState extends ConsumerState<ForumPage>
     _inLastPage = !canLoadMore(document);
   }
 
-  Widget _buildThreadListTab(BuildContext context, WidgetRef ref) {
+  Widget _buildStickThreadTab(BuildContext context) {
+    if (_stickThreadData.isEmpty) {
+      return Center(child: Text(context.t.forumPage.stickThreadTab.noThread));
+    }
+
+    return ListView.separated(
+      padding: edgeInsetsL10T5R10B20,
+      itemCount: _stickThreadData.length,
+      itemBuilder: (context, index) =>
+          NormalThreadCard(_stickThreadData[index]),
+      separatorBuilder: (context, index) => sizedBoxW5H5,
+    );
+  }
+
+  Widget _buildNormalThreadTab(BuildContext context) {
     // Use _haveNoThread to ensure we parsed the web page and there really
     // no thread in the forum.
     if (_haveNoThread) {
@@ -317,13 +342,13 @@ class _ForumPageState extends ConsumerState<ForumPage>
         controller: _listScrollController,
         slivers: [
           const HeaderLocator.sliver(),
-          if (_allThreadData.isNotEmpty)
+          if (_normalThreadData.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10T5R10B20,
               sliver: SliverList.separated(
-                itemCount: _allThreadData.length,
+                itemCount: _normalThreadData.length,
                 itemBuilder: (context, index) =>
-                    NormalThreadCard(_allThreadData[index]),
+                    NormalThreadCard(_normalThreadData[index]),
                 separatorBuilder: (context, index) => sizedBoxW5H5,
               ),
             ),
@@ -332,7 +357,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
     );
   }
 
-  Widget _buildSubredditTab(BuildContext context, WidgetRef ref) {
+  Widget _buildSubredditTab(BuildContext context) {
     if (_allSubredditData.isEmpty) {
       return Center(child: Text(context.t.forumPage.subredditTab.noSubreddit));
     }
@@ -361,7 +386,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
     // tabs every time.
     //
     // Seems without [Future.delayed()] the loading header is not visible.
-    if (_allThreadData.isEmpty) {
+    if (_normalThreadData.isEmpty) {
       Future.delayed(const Duration(milliseconds: 10), () async {
         await _refreshController.callRefresh();
       });
@@ -382,7 +407,8 @@ class _ForumPageState extends ConsumerState<ForumPage>
   @override
   Widget build(BuildContext context) {
     tabController ??= TabController(
-      length: 2,
+      initialIndex: 1,
+      length: 3,
       vsync: this,
     );
 
@@ -393,6 +419,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
             ? TabBar(
                 controller: tabController,
                 tabs: [
+                  Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
                   Tab(child: Text(context.t.forumPage.threadTab.title)),
                   Tab(child: Text(context.t.forumPage.subredditTab.title)),
                 ],
@@ -454,8 +481,9 @@ class _ForumPageState extends ConsumerState<ForumPage>
           TabBarView(
             controller: tabController,
             children: [
-              _buildThreadListTab(context, ref),
-              _buildSubredditTab(context, ref),
+              _buildStickThreadTab(context),
+              _buildNormalThreadTab(context),
+              _buildSubredditTab(context),
             ],
           ),
     );

@@ -138,6 +138,10 @@
     "checkInTodayStatus": "Check-in Today Status"
   },
   "forumPage": {
+    "stickThreadTab": {
+      "title": "Pinned",
+      "noThread": "No Pinned Thread"
+    },
     "threadTab": {
       "title": "Thread",
       "noThread": "No Thread"

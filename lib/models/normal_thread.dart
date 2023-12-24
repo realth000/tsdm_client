@@ -42,7 +42,6 @@ extension _ParseThreadState on uh.Element {
     }
 
     final alt = attributes['alt'];
-    print('>>> alt: $alt');
     switch (alt) {
       case 'agree':
         ret.add(ThreadState.agreed);
