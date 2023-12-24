@@ -146,6 +146,9 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget.fetchUrl}${widget.canFetchMorePages ? "&page=$_pageNumber" : ""}',
           );
+      if (!mounted) {
+        return;
+      }
       if (d1.statusCode == HttpStatus.ok) {
         document = ref.read(htmlParserProvider.notifier).parseResp(d1);
         break;
