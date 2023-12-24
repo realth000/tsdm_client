@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/models/css_types.dart';
 import 'package:tsdm_client/models/latest_thread.dart';
 import 'package:tsdm_client/models/my_thread.dart';
 import 'package:tsdm_client/models/normal_thread.dart';
@@ -27,6 +28,8 @@ class _CardLayout extends ConsumerWidget {
     this.latestReplyTime,
     this.price,
     this.quotedMessage,
+    this.css,
+    this.stateSet,
   });
 
   final String threadID;
@@ -40,6 +43,8 @@ class _CardLayout extends ConsumerWidget {
   final DateTime? latestReplyTime;
   final int? price;
   final String? quotedMessage;
+  final CssTypes? css;
+  final Set<ThreadState>? stateSet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,7 +109,15 @@ class _CardLayout extends ConsumerWidget {
               subtitle: publishTime != null
                   ? SingleLineText(publishTime!.yyyyMMDD())
                   : null,
-              trailing: Text(threadType?.name ?? ''),
+              trailing: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (stateSet != null)
+                    ...stateSet!.map((e) => Icon(e.icon, size: 16)),
+                  Text(threadType?.name ?? ''),
+                ].insertBetween(sizedBoxW5H5),
+              ),
             ),
             Padding(
               padding: edgeInsetsL15R15B10,
@@ -115,7 +128,10 @@ class _CardLayout extends ConsumerWidget {
                       title,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: TextStyle(
+                        color: css?.color,
+                        fontWeight: css?.fontWeight,
+                      ),
                     ),
                   ),
                 ],
@@ -170,6 +186,8 @@ class NormalThreadCard extends ConsumerWidget {
       viewCount: thread.viewCount,
       latestReplyTime: thread.latestReplyTime,
       price: thread.price,
+      css: thread.css,
+      stateSet: thread.stateSet,
     );
   }
 }

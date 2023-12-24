@@ -6,7 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## Fixed
+### Added
+
+- 新增解析帖子名称的颜色和字重。
+- 新增解析帖子分类和状态图标（已关闭，评分，投票，加精，置顶等）。
+
+### Fixed
 
 - 修复页面中时间显示和网页端有误差的问题。
 - 修复帖子页面加载数据报错。

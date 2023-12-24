@@ -1,11 +1,97 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/models/css_types.dart';
 import 'package:tsdm_client/models/thread_type.dart';
 import 'package:tsdm_client/models/user.dart';
+import 'package:tsdm_client/utils/css_parser.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
+
+extension _ParseThreadState on uh.Element {
+  /// Parse the [ThreadState] represented by the image node.
+  ///
+  /// Return an empty set if current node is not <img> node.
+  ///
+  /// Till now a <img> node may only have one state, but not for sure, so returns a set of state.
+  Set<ThreadState> _parseThreadStateFromImg() {
+    final ret = <ThreadState>{};
+
+    if (tagName != 'IMG') {
+      return ret;
+    }
+
+    final src = attributes['src'];
+
+    /// FIXME: Better checking state.
+    if (src != null) {
+      if (src.contains('folder_lock')) {
+        ret.add(ThreadState.closed);
+      } else if (src.contains('poll')) {
+        ret.add(ThreadState.poll);
+      } else if (src.contains('reward')) {
+        ret.add(ThreadState.rewarded);
+      } else if (src.contains('pin_3')) {
+        ret.add(ThreadState.pinnedGlobally);
+      } else if (src.contains('pin_2')) {
+        ret.add(ThreadState.pinnedInType);
+      } else if (src.contains('pin_1')) {
+        ret.add(ThreadState.pinnedInForum);
+      }
+    }
+
+    final alt = attributes['alt'];
+    print('>>> alt: $alt');
+    switch (alt) {
+      case 'agree':
+        ret.add(ThreadState.agreed);
+      case 'digest':
+        ret.add(ThreadState.digested);
+      case 'attach_img':
+        ret.add(ThreadState.pictureAttached);
+    }
+
+    return ret;
+  }
+}
+
+/// Thread state shown on thread entry.
+///
+/// The definition of "state" is not clear, just added some related info that can be displayed at the trailing of
+/// UI which going to display later.
+enum ThreadState {
+  /// Closed and can not reply.
+  closed(Icons.lock_outline),
+
+  /// Rated by other user.
+  agreed(Icons.thumb_up_outlined),
+
+  /// Has attached pictures.
+  pictureAttached(Icons.image_outlined),
+
+  /// Marked as essential thread.
+  digested(Icons.recommend_outlined),
+
+  /// Globally pinned across the forum.
+  pinnedGlobally(Icons.looks_3_outlined),
+
+  /// Pinned in current thread type.
+  pinnedInType(Icons.looks_two_outlined),
+
+  /// Pinned in current subreddit.
+  pinnedInForum(Icons.looks_one_outlined),
+
+  /// Has poll (also called "rate").
+  poll(Icons.poll_outlined),
+
+  /// Asks for help and provides reward.
+  rewarded(Icons.live_help_outlined);
+
+  const ThreadState(this.icon);
+
+  final IconData icon;
+}
 
 @immutable
 class _NormalThreadInfo {
@@ -22,6 +108,8 @@ class _NormalThreadInfo {
     required this.replyCount,
     required this.viewCount,
     required this.price,
+    required this.css,
+    required this.stateSet,
   });
 
   /// Thread title.
@@ -75,6 +163,14 @@ class _NormalThreadInfo {
   ///
   /// May be null, >= 0.
   final int? price;
+
+  /// Css decoration on thread entry.
+  final CssTypes? css;
+
+  /// List of thread state.
+  ///
+  /// For example, a thread can be rated and marked pinned at the same time.
+  final Set<ThreadState> stateSet;
 }
 
 @immutable
@@ -107,14 +203,21 @@ class NormalThread {
 
   int? get price => _info.price;
 
+  CssTypes? get css => _info.css;
+
+  Set<ThreadState> get stateSet => _info.stateSet;
+
   /// Build a [NormalThread] model with the given [uh.Element]
   ///
   /// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
   static _NormalThreadInfo _buildFromTBody(uh.Element threadElement) {
-    final threadIconUrl = threadElement
-        .querySelector('tr > td > a > img')
-        ?.attributes['src']
-        ?.prependHost();
+    final stateSet = <ThreadState>{};
+
+    final threadIconNode = threadElement.querySelector('tr > td > a > img');
+    if (threadIconNode != null) {
+      stateSet.addAll(threadIconNode._parseThreadStateFromImg());
+    }
+    final threadIconUrl = threadIconNode?.attributes['src']?.prependHost();
 
     final threadTypeNode =
         threadElement.querySelector('tr > th > em > a:nth-child(1)');
@@ -124,6 +227,7 @@ class NormalThread {
     final threadUrlNode = threadElement.querySelector('tr > th > span > a');
     final threadUrl = threadUrlNode?.attributes['href'];
     final threadTitle = threadUrlNode?.firstEndDeepText()?.trim();
+    final css = parseCssString(threadUrlNode?.attributes['style'] ?? '');
 
     final threadPrice = threadElement
         .querySelector('tr > th > span.xw1')
@@ -167,6 +271,16 @@ class NormalThread {
             threadLastReplyNode?.querySelector('em > a')?.firstEndDeepText();
 
     final threadID = threadUrl?.uriQueryParameter('tid');
+
+    // Parse thread state from images following title text.
+    final stateList = threadElement
+        .querySelectorAll('tr > th > img')
+        .map((e) => e._parseThreadStateFromImg())
+        .toList()
+        .flattened
+        .toList();
+    stateSet.addAll(stateList);
+
     return _NormalThreadInfo(
       title: threadTitle ?? '',
       url: threadUrl ?? '',
@@ -187,6 +301,8 @@ class NormalThread {
       replyCount: threadReplyCount ?? 0,
       viewCount: threadViewCount ?? 0,
       price: threadPrice,
+      css: css,
+      stateSet: stateSet,
     );
   }
 
