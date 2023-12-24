@@ -12,7 +12,7 @@ class HtmlParser extends _$HtmlParser {
   @override
   void build() {}
 
-  uh.HtmlDocument parseResp<T>(Response<T> resp) {
+  uh.HtmlDocument parseResp<T>(Response<T> resp, {bool syncServerTime = true}) {
     final doc = parseHtmlDocument((resp.data ?? '') as String);
     final serverTime = doc
             .querySelector('p.xs0')
@@ -24,7 +24,9 @@ class HtmlParser extends _$HtmlParser {
             ?.trim()
             .parseToDateTimeUtc8() ??
         DateTime.now();
-    ref.read(serverDateTimeProvider.notifier).state = serverTime;
+    if (syncServerTime) {
+      ref.read(serverDateTimeProvider.notifier).state = serverTime;
+    }
     return doc;
   }
 }

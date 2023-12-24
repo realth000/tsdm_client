@@ -183,8 +183,10 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
           }
           if (snapshot.hasData) {
             final data = snapshot.data!;
-            final document =
-                ref.read(htmlParserProvider.notifier).parseResp(data);
+            // Here we are in a future builder, where should avoid modifying providers, skip sync server time here.
+            final document = ref
+                .read(htmlParserProvider.notifier)
+                .parseResp(data, syncServerTime: false);
             return _buildBody(context, document);
           }
           return Center(
