@@ -54,6 +54,13 @@ extension ParseUrl on String {
       );
     }
 
+    if (mod == 'redirect' && queryParameters['tid'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.thread,
+        pathParameters: {'tid': "${queryParameters['tid']}"},
+      );
+    }
+
     return null;
   }
 
