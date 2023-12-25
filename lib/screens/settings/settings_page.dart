@@ -110,7 +110,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     await showModalWorkDialog(
       context: context,
       message: context.t.settingsPage.storageSection.clearCache,
-      work: ref.read(imageCacheProvider.notifier).clearCache,
+      work: () async => ref.read(imageCacheProvider.notifier).clearCache(),
     );
     await _calculateCacheSize();
   }

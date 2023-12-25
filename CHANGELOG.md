@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复论坛卡片上的最新帖子无法跳转的问题。
 - 修复帖子内发送回复后发送按钮依然可点击的问题。
 - 修复论坛页面刷新时偶见的异常。
+- 修复清除缓存时卡住的问题。
 
 ## [0.2.0] - 2023-12-22
 
