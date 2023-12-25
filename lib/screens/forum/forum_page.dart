@@ -182,6 +182,9 @@ class _ForumPageState extends ConsumerState<ForumPage>
       final d1 = await ref.read(netClientProvider()).get<dynamic>(
             '${widget._fetchUrl}&page=$_pageNumber',
           );
+      if (!mounted) {
+        return;
+      }
       if (d1.statusCode == HttpStatus.ok) {
         document = ref.read(htmlParserProvider.notifier).parseResp(d1);
         break;
