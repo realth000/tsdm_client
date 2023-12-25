@@ -335,6 +335,7 @@ class _ReplyBarState extends ConsumerState<ReplyBar> {
                               : await _sendReplyPostMessage();
                           setState(() {
                             isSendingReply = false;
+                            canSendReply = false;
                           });
                           if (sendSuccess) {
                             _replyController.clear();
