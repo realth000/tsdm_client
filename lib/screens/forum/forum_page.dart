@@ -25,6 +25,10 @@ import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/thread_card.dart';
 import 'package:universal_html/html.dart' as uh;
 
+const _pinnedTabIndex = 0;
+const _threadTabIndex = 1;
+const _subredditTabIndex = 2;
+
 /// Forum page.
 class ForumPage extends ConsumerStatefulWidget {
   /// Constructor.
@@ -228,8 +232,10 @@ class _ForumPageState extends ConsumerState<ForumPage>
       if (_allSubredditData.isNotEmpty) {
         // We have subreddit, this forum is only a "redirect" to other forums.
         // Redirect to subreddit page.
-        tabController?.animateTo(1,
-            duration: const Duration(milliseconds: 500));
+        tabController?.animateTo(
+          _subredditTabIndex,
+          duration: const Duration(milliseconds: 500),
+        );
         return;
       }
 
@@ -406,7 +412,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
   @override
   Widget build(BuildContext context) {
     tabController ??= TabController(
-      initialIndex: 1,
+      initialIndex: _threadTabIndex,
       length: 3,
       vsync: this,
     );
@@ -433,7 +439,7 @@ class _ForumPageState extends ConsumerState<ForumPage>
           if (!mounted) {
             return;
           }
-          tabController?.animateTo(1,
+          tabController?.animateTo(_threadTabIndex,
               duration: const Duration(milliseconds: 100));
           setState(() {
             _pageNumber = pageNumber;
