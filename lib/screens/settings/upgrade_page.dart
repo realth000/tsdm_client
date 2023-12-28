@@ -69,7 +69,7 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
       return;
     }
     // Check permission first.
-    if (isMobile) {
+    if (isAndroid) {
       final androidInfo = await DeviceInfoPlugin().androidInfo;
       // Check storage permission.
       if (androidInfo.version.sdkInt < 33 &&
@@ -118,8 +118,11 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
       );
       return;
     }
-    final sysDownloadPath =
-        path.join((await getDownloadsDirectory())!.path, 'tsdm_client');
+    final sysDownloadPath = path.join(
+        isAndroid
+            ? '/storage/emulated/0/download'
+            : (await getDownloadsDirectory())!.path,
+        'tsdm_client');
     downloadFileName = downloadPair.$1;
     downloadUrl = downloadPair.$2;
     final savePath = path.join(sysDownloadPath, downloadFileName);
