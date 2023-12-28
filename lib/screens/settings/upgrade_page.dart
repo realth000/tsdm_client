@@ -68,9 +68,11 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
     if (upgradeModel == null) {
       return;
     }
+
+    AndroidDeviceInfo? androidInfo;
     // Check permission first.
     if (isAndroid) {
-      final androidInfo = await DeviceInfoPlugin().androidInfo;
+      androidInfo = await DeviceInfoPlugin().androidInfo;
       // Check storage permission.
       if (androidInfo.version.sdkInt < 33 &&
           !await Permission.storage.isGranted &&
@@ -93,7 +95,7 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
     late final String downloadUrl;
     late final (String, String)? downloadPair;
     if (isAndroid) {
-      if ((await DeviceInfoPlugin().androidInfo).supported64BitAbis.isEmpty) {
+      if (androidInfo!.supported64BitAbis.isNotEmpty) {
         // 64 bit Android.
         downloadPair = upgradeModel!.assetsMap.filterPairs('arm64_v8a.apk');
       } else {
