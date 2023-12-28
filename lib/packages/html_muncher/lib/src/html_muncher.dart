@@ -206,6 +206,7 @@ class Muncher {
             'h3' => _buildH3(node),
             'h4' => _buildH4(node),
             'li' => _buildLi(node),
+            'code' => _buildCode(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -554,6 +555,23 @@ class Muncher {
       const TextSpan(text: ' '),
       ret,
     ]);
+  }
+
+  /// <code>xxx</code> tags. Mainly for github.com
+  InlineSpan _buildCode(uh.Element element) {
+    state.fontSizeStack.add(FontSize.size2.value());
+    final ret = _munch(element);
+    state.fontSizeStack.removeLast();
+    return WidgetSpan(
+      child: Card(
+        color: Theme.of(context).colorScheme.onSecondary,
+        shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(5)),
+        ),
+        margin: EdgeInsets.zero,
+        child: RichText(text: ret),
+      ),
+    );
   }
 
   /*                Setup Functions                      */
