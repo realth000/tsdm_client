@@ -205,11 +205,11 @@ class Muncher {
             'h2' => _buildH2(node),
             'h3' => _buildH3(node),
             'h4' => _buildH4(node),
+            'li' => _buildLi(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
             'ul' ||
-            'li' ||
             'pre' =>
               _munch(node),
             String() => null,
@@ -540,6 +540,19 @@ class Muncher {
       const TextSpan(text: '\n'),
       ret,
       const TextSpan(text: '\n')
+    ]);
+  }
+
+  InlineSpan _buildLi(uh.Element element) {
+    final ret = _munch(element);
+    return TextSpan(children: [
+      WidgetSpan(
+          child: Icon(
+        Icons.radio_button_unchecked,
+        size: FontSize.size2.value(),
+      )),
+      const TextSpan(text: ' '),
+      ret,
     ]);
   }
 
