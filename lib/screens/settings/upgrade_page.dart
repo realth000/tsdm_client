@@ -285,15 +285,18 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
 
     return Scaffold(
       appBar: AppBar(title: Text(context.t.upgradePage.title)),
-      body: Padding(
-        padding: edgeInsetsL10T5R10B20,
+      body: ScrollConfiguration(
+        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
         child: SingleChildScrollView(
-          child: Row(
-            children: [
-              Expanded(
-                child: buildContent(context, latestVersion),
-              ),
-            ],
+          child: Padding(
+            padding: edgeInsetsL10T5R10B20,
+            child: Row(
+              children: [
+                Expanded(
+                  child: buildContent(context, latestVersion),
+                ),
+              ],
+            ),
           ),
         ),
       ),
