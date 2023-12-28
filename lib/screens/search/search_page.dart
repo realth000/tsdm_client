@@ -293,16 +293,22 @@ class _SearchPageState extends ConsumerState<SearchPage> {
 
   Widget _buildResultInfoRow(BuildContext context) {
     final searching = ref.watch(searchProvider) == SearchState.searching;
+    final r = context.t.searchPage.result;
+    final searchResultCount =
+        '${r.totalThreadCount(count: '${_result.count ?? "-"}')} ${r.pageInfo(total: _result.totalPages)}';
     return Row(
       children: [
-        Text(context.t.searchPage.result.title,
-            style: Theme.of(context).textTheme.titleMedium),
-        sizedBoxW10H10,
-        Text(context.t.searchPage.result
-            .totalThreadCount(count: '${_result.count ?? "-"}')),
-        sizedBoxW10H10,
-        Text(context.t.searchPage.result.pageInfo(total: _result.totalPages)),
-        Expanded(child: Container()),
+        Expanded(
+          child: ListTile(
+            title: Text(
+              context.t.searchPage.result.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            subtitle: Text(searchResultCount),
+            visualDensity: VisualDensity.compact,
+          ),
+        ),
+        // Text(),
         IconButton(
           icon: const Icon(Icons.arrow_left_outlined),
           onPressed:
