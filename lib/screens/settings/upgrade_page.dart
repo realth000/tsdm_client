@@ -128,7 +128,7 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
     final savePath = path.join(sysDownloadPath, downloadFileName);
 
     setState(() {
-      saveDir = sysDownloadPath;
+      saveDir = sysDownloadPath.replaceFirst('/storage/emulated/0/', '');
       fileName = downloadFileName;
     });
 
