@@ -6,6 +6,12 @@ class ScreenPaths {
   /// App about page.
   static const String about = '/about';
 
+  /// App license page.
+  static const String license = '/license';
+
+  /// Detail page of license of a package.
+  static const String licenseDetail = '/license_detail/:package/:license';
+
   /// Sub form page.
   ///
   /// Need to specify forum id (fid).

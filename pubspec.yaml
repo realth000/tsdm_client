@@ -65,6 +65,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/text/
 
 flutter_launcher_icons:
   image_path: "assets/images/tsdm_client.png"

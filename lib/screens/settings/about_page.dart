@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});
-
-  static const _gitInfo =
-      '$appVersion-$gitCommitRevisionShort ($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -26,7 +26,7 @@ class AboutPage extends ConsumerWidget {
               const data = '''
 ## Info
 
-* Version: $_gitInfo
+* Version: $appFullVersion
 * Flutter: $flutterVersion $flutterChannel ($flutterFrameworkRevision)
 * Dart: $dartVersion
 ''';
@@ -43,11 +43,7 @@ class AboutPage extends ConsumerWidget {
       ),
       body: ListView(
         children: [
-          Image.asset(
-            './assets/images/tsdm_client.png',
-            width: 192,
-            height: 192,
-          ),
+          Image.asset(assetsLogoPath, width: 192, height: 192),
           sizedBoxW10H10,
           SectionListTile(
             leading: const Icon(Icons.contact_support_outlined),
@@ -62,7 +58,7 @@ class AboutPage extends ConsumerWidget {
           SectionListTile(
             leading: const Icon(Icons.terminal_outlined),
             title: Text(context.t.aboutPage.version),
-            subtitle: const Text(_gitInfo),
+            subtitle: const Text(appFullVersion),
           ),
           SectionListTile(
             leading: const Icon(Icons.home_max_outlined),
@@ -114,6 +110,7 @@ class AboutPage extends ConsumerWidget {
             leading: const Icon(Icons.balance_outlined),
             title: Text(context.t.aboutPage.license),
             subtitle: const Text('MIT license'),
+            onTap: () async => context.pushNamed(ScreenPaths.license),
           )
         ],
       ),

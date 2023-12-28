@@ -18,6 +18,7 @@ import 'package:tsdm_client/screens/profile/profile_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/search/search_page.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
+import 'package:tsdm_client/screens/settings/app_license_page.dart';
 import 'package:tsdm_client/screens/settings/settings_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
@@ -76,6 +77,11 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.about,
         parentNavigatorKey: _rootRouteKey,
         builder: (_) => const AboutPage(),
+      ),
+      AppRoute(
+        path: ScreenPaths.license,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (_) => const AppLicensePage(),
       ),
       AppRoute(
         path: ScreenPaths.root,
