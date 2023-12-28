@@ -14,6 +14,7 @@ dependencies:
   collection: any
   cookie_jar: ^4.0.8
   cupertino_icons: ^1.0.6
+  device_info_plus: ^9.1.1
   dio: ^5.4.0
   dio_cookie_manager: ^3.1.1
   easy_refresh: ^3.3.3+1
@@ -35,6 +36,7 @@ dependencies:
   isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
   path_provider: ^2.1.1
+  permission_handler: ^11.1.0
   responsive_framework: ^1.1.1
   riverpod_annotation: ^3.0.0-dev.3
   slang: ^3.26.2

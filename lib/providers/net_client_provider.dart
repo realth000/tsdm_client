@@ -16,7 +16,7 @@ part '../generated/providers/net_client_provider.g.dart';
 @Riverpod(dependencies: [AppSettings, Cookie])
 class NetClient extends _$NetClient {
   @override
-  Dio build({String? username}) {
+  Dio build({String? username, bool disableCookie = false}) {
     final settings = ref.read(appSettingsProvider);
 
     dio = Dio()
@@ -29,14 +29,18 @@ class NetClient extends _$NetClient {
         },
       );
 
-    final cookieJar = PersistCookieJar(
-      ignoreExpires: true,
-      storage: ref.read(cookieProvider(username: username)),
-    );
+    if (disableCookie) {
+      dio.interceptors.add(_ErrorHandler());
+    } else {
+      final cookieJar = PersistCookieJar(
+        ignoreExpires: true,
+        storage: ref.read(cookieProvider(username: username)),
+      );
 
-    dio.interceptors
-      ..add(CookieManager(cookieJar))
-      ..add(_ErrorHandler());
+      dio.interceptors
+        ..add(CookieManager(cookieJar))
+        ..add(_ErrorHandler());
+    }
 
     return dio;
   }

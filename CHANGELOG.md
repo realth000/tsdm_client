@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增设置->关于->开源许可页面。
 - 在已被关闭的帖子内关闭回复栏。
 - 解析无序列表时在文字前添加圆点。
+- 支持检查和下载最新版本。
 
 ### Fixed
 

@@ -59,7 +59,8 @@
     },
     "othersSection": {
       "title": "Others",
-      "about": "About"
+      "about": "About",
+      "upgrade": "Get New Release"
     }
   },
   "aboutPage": {
@@ -75,6 +76,22 @@
     "dartVersion": "Dart Version",
     "license": "License",
     "copiedToClipboard": "Copied to clipboard"
+  },
+  "upgradePage": {
+    "title": "Upgrade @:appName",
+    "description": "Check and download the latest version",
+    "currentVersion": "Current version: $currentVersion",
+    "latestVersion": "Latest version:  $latestVersion",
+    "releaseNotes": "Release Notes",
+    "fetchingData": "fetching",
+    "download": "Download",
+    "savePath": "Save path",
+    "storagePermissionNotGranted": "Download failed because storage permission not granted",
+    "saveTo": "Save to $path",
+    "failedToDownloadDialog": {
+      "title": "Download Failed",
+      "description": "No package suitable for the current system found"
+    }
   },
   "loginPage": {
     "title": "Login TSDM",

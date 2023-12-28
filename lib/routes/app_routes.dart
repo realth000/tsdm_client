@@ -20,6 +20,7 @@ import 'package:tsdm_client/screens/search/search_page.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
 import 'package:tsdm_client/screens/settings/app_license_page.dart';
 import 'package:tsdm_client/screens/settings/settings_page.dart';
+import 'package:tsdm_client/screens/settings/upgrade_page.dart';
 import 'package:tsdm_client/screens/thread/thread_page.dart';
 import 'package:tsdm_client/screens/topic/topic.dart';
 import 'package:tsdm_client/widgets/root_scaffold.dart';
@@ -98,6 +99,11 @@ GoRouter router(RouterRef ref) {
             fid: state.pathParameters['fid']!,
           );
         },
+      ),
+      AppRoute(
+        path: ScreenPaths.upgrade,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (_) => const UpgradePage(),
       ),
       AppRoute(
           path: ScreenPaths.thread,

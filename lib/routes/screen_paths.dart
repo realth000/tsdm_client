@@ -12,6 +12,9 @@ class ScreenPaths {
   /// Detail page of license of a package.
   static const String licenseDetail = '/license_detail/:package/:license';
 
+  /// Page to get latest version.
+  static const String upgrade = '/upgrade';
+
   /// Sub form page.
   ///
   /// Need to specify forum id (fid).

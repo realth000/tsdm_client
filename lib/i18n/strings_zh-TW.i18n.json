@@ -59,7 +59,8 @@
     },
     "othersSection": {
       "title": "其他",
-      "about": "關於"
+      "about": "關於",
+      "upgrade": "取得新版"
     }
   },
   "aboutPage": {
@@ -75,6 +76,22 @@
     "dartVersion": "Dart版本",
     "license": "版權",
     "copiedToClipboard": "已複製到剪切板"
+  },
+  "upgradePage": {
+    "title": "更新@:appName",
+    "description": "檢查並下載最新版本",
+    "currentVersion": "目前版本: $currentVersion",
+    "latestVersion": "最新版本: $latestVersion",
+    "releaseNotes": "更新記錄",
+    "fetchingData": "取得中",
+    "download": "下載",
+    "savePath": "儲存路徑",
+    "storagePermissionNotGranted": "下載失敗，因為未授予儲存權限",
+    "saveTo": "儲存到 $path",
+    "failedToDownloadDialog": {
+      "title": "下載失敗",
+      "description": "沒有找到適合目前系統的安裝套件"
+    }
   },
   "loginPage": {
     "title": "登入天使動漫",

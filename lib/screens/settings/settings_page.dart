@@ -245,6 +245,15 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await context.pushNamed(ScreenPaths.about);
         },
       ),
+
+      /// Update
+      SectionListTile(
+        leading: const Icon(Icons.new_releases_outlined),
+        title: Text(context.t.settingsPage.othersSection.upgrade),
+        onTap: () async {
+          await context.pushNamed(ScreenPaths.upgrade);
+        },
+      ),
     ];
   }
 
