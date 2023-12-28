@@ -71,13 +71,13 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
     // Check permission first.
     if (isMobile) {
       // Check storage permission.
-      if (!await Permission.storage.isGranted &&
+      if (!await Permission.storage.isGranted ||
           !await Permission.storage.isLimited) {
         final status = await Permission.storage.request();
         if (!mounted) {
           return;
         }
-        if (status != PermissionStatus.granted &&
+        if (status != PermissionStatus.granted ||
             status != PermissionStatus.limited) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(context.t.upgradePage.storagePermissionNotGranted),
