@@ -201,6 +201,10 @@ class Muncher {
             'a' => _buildA(node),
             'tr' => _buildTr(node),
             'td' => _buildTd(node),
+            'h1' => _buildH1(node),
+            'h2' => _buildH2(node),
+            'h3' => _buildH3(node),
+            'h4' => _buildH4(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -493,6 +497,50 @@ class Muncher {
     final ret = _munch(element);
     state.trimAll = false;
     return TextSpan(children: [ret, const TextSpan(text: ' ')]);
+  }
+
+  InlineSpan _buildH1(uh.Element element) {
+    state.fontSizeStack.add(FontSize.size6.value());
+    final ret = _munch(element);
+    state.fontSizeStack.removeLast();
+    return TextSpan(children: [
+      const TextSpan(text: '\n'),
+      ret,
+      const TextSpan(text: '\n')
+    ]);
+  }
+
+  InlineSpan _buildH2(uh.Element element) {
+    state.fontSizeStack.add(FontSize.size5.value());
+    final ret = _munch(element);
+    state.fontSizeStack.removeLast();
+    return TextSpan(children: [
+      const TextSpan(text: '\n'),
+      ret,
+      const TextSpan(text: '\n')
+    ]);
+  }
+
+  InlineSpan _buildH3(uh.Element element) {
+    state.fontSizeStack.add(FontSize.size4.value());
+    final ret = _munch(element);
+    state.fontSizeStack.removeLast();
+    return TextSpan(children: [
+      const TextSpan(text: '\n'),
+      ret,
+      const TextSpan(text: '\n')
+    ]);
+  }
+
+  InlineSpan _buildH4(uh.Element element) {
+    state.fontSizeStack.add(FontSize.size3.value());
+    final ret = _munch(element);
+    state.fontSizeStack.removeLast();
+    return TextSpan(children: [
+      const TextSpan(text: '\n'),
+      ret,
+      const TextSpan(text: '\n')
+    ]);
   }
 
   /*                Setup Functions                      */
