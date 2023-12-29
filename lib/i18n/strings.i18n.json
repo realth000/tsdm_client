@@ -60,7 +60,7 @@
     "othersSection": {
       "title": "Others",
       "about": "About",
-      "upgrade": "Get New Release"
+      "upgrade": "Update"
     }
   },
   "aboutPage": {
@@ -78,7 +78,7 @@
     "copiedToClipboard": "Copied to clipboard"
   },
   "upgradePage": {
-    "title": "Upgrade @:appName",
+    "title": "Upgrade",
     "description": "Check and download the latest version",
     "currentVersion": "Current version: $currentVersion",
     "latestVersion": "Latest version:  $latestVersion",

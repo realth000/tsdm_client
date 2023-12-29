@@ -235,27 +235,13 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
             if (upgradeModel != null)
               Row(children: [Expanded(child: buildReleaseNotesCard(context))]),
             if (fileName != null)
-              Card(
-                child: Padding(
-                  padding: edgeInsetsL15T15R15B15,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(context.t.upgradePage.saveTo(path: saveDir ?? '')),
-                      Row(
-                        children: [
-                          Text(fileName!),
-                          Expanded(
-                            child: LinearProgressIndicator(
-                              value: dp == null ? null : dp / 100.0,
-                            ),
-                          ),
-                          Text('$downloadProgress%'),
-                        ].insertBetween(sizedBoxW5H5),
-                      ),
-                    ].insertBetween(sizedBoxW10H10),
-                  ),
-                ),
+              Text(context.t.upgradePage.saveTo(path: saveDir ?? '')),
+            if (fileName != null)
+              ListTile(
+                title: Text(fileName ?? 'file'),
+                subtitle: LinearProgressIndicator(
+                    value: dp == null ? null : dp / 100.0),
+                trailing: Text('${dp ?? "-"}%'),
               ),
             sizedBoxW10H10,
             Row(
