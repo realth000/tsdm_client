@@ -111,11 +111,15 @@ GoRouter router(RouterRef ref) {
           builder: (state) {
             final title = state.uri.queryParameters['appBarTitle'];
             final threadType = state.uri.queryParameters['threadType'];
+            final tid = state.pathParameters['tid']!;
+            final pageNumber = state.uri.queryParameters['pageNumber'];
+            final postId = state.uri.queryParameters['pid'];
             return ThreadPage(
               title: title,
               threadType: threadType,
-              threadID: state.pathParameters['tid']!,
-              pageNumber: state.pathParameters['pageNumber'] ?? '1',
+              threadID: tid,
+              pageNumber: pageNumber ?? '1',
+              postId: postId,
             );
           }),
       AppRoute(

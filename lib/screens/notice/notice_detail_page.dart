@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -10,6 +11,7 @@ import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/reply_parameters.dart';
 import 'package:tsdm_client/providers/html_parser_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/post_card.dart';
@@ -34,6 +36,10 @@ class NoticeDetailPage extends ConsumerStatefulWidget {
 
 class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
   final _replyBarController = ReplyBarController();
+
+  String? _tid;
+  String? _pid;
+  String? _page;
 
   ReplyParameters? _parseParameters(uh.Document document, String tid) {
     final inputNodeList = document.querySelectorAll('input');
@@ -91,6 +97,8 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
       // null data.
       final resp = await ref.read(netClientProvider()).get(widget.url);
       if (resp.statusCode == HttpStatus.ok) {
+        // Here is after redirect and resp came from the redirected url which has "page" parameter.
+        _page = resp.realUri.queryParameters['page'];
         return resp;
       }
       if (!context.mounted) {
@@ -113,6 +121,8 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
       debug('pid not found in url: ${widget.url}');
       return Container();
     }
+
+    _pid = pid;
 
     final postNode = document.querySelector('div#post_$pid');
     if (postNode == null) {
@@ -141,6 +151,7 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
           ..replyParameters = parameters
           ..replyAction = postData.replyAction;
         debug('update reply action and parameters');
+        _tid = tid;
       } else {
         debug('parameters not found');
       }
@@ -172,7 +183,30 @@ class _NoticeDetailPage extends ConsumerState<NoticeDetailPage> {
       NoticeType.mention => context.t.noticePage.noticeDetailPage.titleMention,
     };
     return Scaffold(
-      appBar: AppBar(title: Text(title)),
+      appBar: AppBar(
+        title: Text(title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.open_in_new_outlined),
+            onPressed: () async {
+              if (_tid == null || _page == null || _pid == null) {
+                return;
+              }
+              debug('find post: tid:$_tid, page:$_page, pid:$_pid');
+              await context.pushNamed(
+                ScreenPaths.thread,
+                pathParameters: <String, String>{
+                  'tid': _tid!,
+                },
+                queryParameters: <String, String>{
+                  'pageNumber': _page!,
+                  'pid': _pid!,
+                },
+              );
+            },
+          )
+        ],
+      ),
       body: FutureBuilder(
         future: _fetchData(context),
         builder: (context, snapshot) {

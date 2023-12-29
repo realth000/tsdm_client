@@ -43,6 +43,7 @@ class PostList<T> extends ConsumerStatefulWidget {
     this.title,
     this.canFetchMorePages = false,
     this.pageNumber = 1,
+    this.postId,
     this.replyFormHashCallback,
     this.useDivider = false,
     super.key,
@@ -61,6 +62,10 @@ class PostList<T> extends ConsumerStatefulWidget {
 
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
+
+  // TODO: Scroll to post.
+  /// Post that need to ensure visible (or say: scroll to) when page first built.
+  final String? postId;
 
   final Function(ReplyParameters)? replyFormHashCallback;
 
@@ -118,6 +123,10 @@ class _PostListState<T> extends ConsumerState<PostList<T>> {
   /// Widget indicating widget.listBuilder builds failed or not.
   /// When build failed, show text info in current page.
   Widget? _failedMessageWidget;
+
+  /// Flag indicates that whether need to scroll to the post with id widget.postId after load data for the first time.
+  /// This scrolling should only scroll the first time widget is built.
+  bool needScrollToPost = true;
 
   /// Parse [_threadType] from thread page [document].
   /// This should only run once.

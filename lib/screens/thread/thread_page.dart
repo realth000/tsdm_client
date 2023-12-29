@@ -17,9 +17,10 @@ class ThreadPage extends ConsumerStatefulWidget {
     required this.pageNumber,
     this.title,
     this.threadType,
+    this.postId,
     super.key,
   }) : _fetchUrl =
-            '$baseUrl/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1&page=$pageNumber';
+            '$baseUrl/forum.php?mod=viewthread&tid=$threadID&extra=page%3D1';
 
   final String? title;
 
@@ -31,6 +32,11 @@ class ThreadPage extends ConsumerStatefulWidget {
 
   /// Thread current page number.
   final String pageNumber;
+
+  /// Post id that need to show when page initialize.
+  ///
+  /// Make it optional because only in some situations we need to show the specified post.
+  final String? postId;
 
   /// Thread type.
   ///
@@ -77,9 +83,11 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
               child: PostList<Post>(
                 widget.threadID,
                 widget._fetchUrl,
-                title: title ?? '',
                 widget.threadID,
                 widget.threadType,
+                title: title ?? '',
+                pageNumber: int.tryParse(widget.pageNumber) ?? 1,
+                postId: widget.postId,
                 listBuilder: (document) {
                   if (document.querySelector('form#fastpostform') == null) {
                     _replyBarController.closed = true;

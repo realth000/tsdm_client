@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 在已被关闭的帖子内关闭回复栏。
 - 解析无序列表时在文字前添加圆点。
 - 支持检查和下载最新版本。
+- 支持从提醒跳转到帖子对应楼层的页面（目前只能滚动到同一页）。
 
 ### Fixed
 
