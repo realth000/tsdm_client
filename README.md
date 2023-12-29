@@ -36,25 +36,13 @@
       <td align="center">
         <img width="100%" src="./doc/pic/screenshot_02.png">
       </td>
+    </tr>
+    <tr>
       <td align="center">
         <img width="100%" src="./doc/pic/screenshot_03.png">
       </td>
       <td align="center">
         <img width="100%" src="./doc/pic/screenshot_04.png">
-      </td>
-    </tr>
-    <tr>
-      <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_05.png">
-      </td>
-      <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_06.png">
-      </td>
-      <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_07.png">
-      </td>
-      <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_08.png">
       </td>
     </tr>
   </table>
