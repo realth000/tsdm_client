@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.3.0] - 2023-12-30
+
 ### Added
 
 - 新增解析帖子名称的颜色和字重。
