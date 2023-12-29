@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/models/css_types.dart';
@@ -102,10 +103,21 @@ class _CardLayout extends ConsumerWidget {
           children: [
             // TODO: Tap to navigate to user space.
             ListTile(
-              leading: CircleAvatar(
-                child: Text(author.name[0]),
+              leading: GestureDetector(
+                onTap: () async => context.dispatchAsUrl(author.url),
+                child: CircleAvatar(
+                  child: Text(author.name[0]),
+                ),
               ),
-              title: SingleLineText(author.name),
+              title: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async => context.dispatchAsUrl(author.url),
+                    child: SingleLineText(author.name),
+                  ),
+                  Expanded(child: Container()),
+                ],
+              ),
               subtitle: publishTime != null
                   ? SingleLineText(publishTime!.yyyyMMDD())
                   : null,

@@ -63,9 +63,11 @@ GoRouter router(RouterRef ref) {
             ),
           ),
           AppRoute(
-            path: ScreenPaths.profile,
+            path: ScreenPaths.loggedUserProfile,
             parentNavigatorKey: _shellRouteKey,
-            builder: (_) => const ProfilePage(),
+            builder: (state) {
+              return const ProfilePage(showLoggedUser: true);
+            },
           ),
           AppRoute(
             path: ScreenPaths.settings,
@@ -104,6 +106,14 @@ GoRouter router(RouterRef ref) {
         path: ScreenPaths.upgrade,
         parentNavigatorKey: _rootRouteKey,
         builder: (_) => const UpgradePage(),
+      ),
+      AppRoute(
+        path: ScreenPaths.profile,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final uid = state.pathParameters['uid'];
+          return ProfilePage(uid: uid);
+        },
       ),
       AppRoute(
           path: ScreenPaths.thread,

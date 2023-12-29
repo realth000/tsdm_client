@@ -46,7 +46,7 @@ class _AppNavigationBarState extends ConsumerState<AppNavigationBar> {
         icon: const Icon(Icons.person_outline),
         selectedIcon: const Icon(Icons.person),
         label: context.t.navigation.profile,
-        targetPath: ScreenPaths.profile,
+        targetPath: ScreenPaths.loggedUserProfile,
       ),
       _NavigationBarItem(
         icon: const Icon(Icons.settings_outlined),

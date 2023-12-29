@@ -61,6 +61,13 @@ extension ParseUrl on String {
       );
     }
 
+    if (mod == 'space' && queryParameters['uid'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.profile,
+        pathParameters: {'uid': '${queryParameters["uid"]}'},
+      );
+    }
+
     return null;
   }
 

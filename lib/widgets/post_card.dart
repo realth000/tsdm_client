@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/user.dart';
@@ -33,6 +34,7 @@ class PostCard extends ConsumerStatefulWidget {
 class _PostCardState extends ConsumerState<PostCard>
     with AutomaticKeepAliveClientMixin {
   // TODO: Handle better.
+  // FIXME: Fix rebuild when interacting with widgets inside.
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -41,15 +43,27 @@ class _PostCardState extends ConsumerState<PostCard>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ListTile(
-          leading: CircleAvatar(
-            backgroundImage: CachedImageProvider(
-              widget.post.author.avatarUrl!,
-              context,
-              ref,
-              fallbackImageUrl: noAvatarUrl,
+          leading: GestureDetector(
+            onTap: () async => context.dispatchAsUrl(widget.post.author.url),
+            child: CircleAvatar(
+              backgroundImage: CachedImageProvider(
+                widget.post.author.avatarUrl!,
+                context,
+                ref,
+                fallbackImageUrl: noAvatarUrl,
+              ),
             ),
           ),
-          title: Text(widget.post.author.name),
+          title: Row(
+            children: [
+              GestureDetector(
+                onTap: () async =>
+                    context.dispatchAsUrl(widget.post.author.url),
+                child: Text(widget.post.author.name),
+              ),
+              Expanded(child: Container()),
+            ],
+          ),
           subtitle: Text('${widget.post.publishTime?.elapsedTillNow(ref)}'),
           trailing: widget.post.postFloor == null
               ? null

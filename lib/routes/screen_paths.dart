@@ -44,8 +44,11 @@ class ScreenPaths {
   /// need to specify the former page.
   static const String loginRedirect = '/login/redirect';
 
-  /// User profile page.
-  static const String profile = '/profile';
+  /// Logged user profile page.
+  static const String loggedUserProfile = '/profile';
+
+  /// Other not logged user profile page, need uid.
+  static const String profile = '/profile/:uid';
 
   /// App settings page.
   static const String settings = '/settings';
