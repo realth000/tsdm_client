@@ -81,10 +81,13 @@ class ImageCache extends _$ImageCache {
 
   /// Clear cache in [_imageCacheDirectory].
   Future<void> clearCache() async {
+    await ref.read(appStorageProvider).clearImageCache();
+    // FIXME: It is not clear why use this ref first can avoid use after dispose exception.
+    // Clear cache in database first, otherwise will get exception when cache size is large enough (50mb):
+    //  "Bad state: Tried to use a notifier in an uninitialized state."
     // Currently all cached images are in _imageCacheDirectory, not sub dirs.
     for (final f in _imageCacheDirectory.listSync()) {
-      await f.delete();
+      await f.delete(recursive: true);
     }
-    await ref.read(appStorageProvider).clearImageCache();
   }
 }
