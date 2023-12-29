@@ -7,10 +7,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/check_in_feeling.dart';
+import 'package:tsdm_client/providers/color_scheme_provider.dart';
 import 'package:tsdm_client/providers/image_cache_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/screens/settings/check_in_dialog.dart';
+import 'package:tsdm_client/screens/settings/color_picker_dialog.dart';
 import 'package:tsdm_client/screens/settings/language_dialog.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
@@ -93,6 +95,13 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     );
   }
 
+  Future<void> _showAccentColorPickerDialog(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (context) => const ColorPickerDialog(),
+    );
+  }
+
   Future<void> _showClearCacheDialog(BuildContext context) async {
     final result = await showQuestionDialog(
       title: context.t.settingsPage.storageSection.sureToClear,
@@ -122,6 +131,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
     final localeName = locale == null
         ? context.t.settingsPage.appearanceSection.languages.followSystem
         : context.t.locale;
+
+    final accentColor = ref.watch(appColorSchemeProvider);
 
     return [
       SectionTitleText(context.t.settingsPage.appearanceSection.title),
@@ -176,6 +187,8 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await selectLanguageDialog(context, localeName);
         },
       ),
+
+      /// Shortcut in forum card.
       SwitchListTile(
         secondary: const Icon(Icons.shortcut_outlined),
         title: Text(context
@@ -188,6 +201,16 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
           await ref
               .read(appSettingsProvider.notifier)
               .setShowShortcutInForumCard(visible: v);
+        },
+      ),
+      SectionListTile(
+        leading: const Icon(Icons.color_lens_outlined),
+        title: Text(context.t.settingsPage.appearanceSection.colorScheme.title),
+        trailing: accentColor == null
+            ? null
+            : CircleAvatar(radius: 15, backgroundColor: accentColor),
+        onTap: () async {
+          await _showAccentColorPickerDialog(context);
         },
       ),
     ];

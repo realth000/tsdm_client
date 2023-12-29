@@ -5,6 +5,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:responsive_framework/breakpoint.dart';
 import 'package:responsive_framework/responsive_breakpoints.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/providers/color_scheme_provider.dart';
 import 'package:tsdm_client/providers/image_cache_provider.dart';
 import 'package:tsdm_client/providers/settings_provider.dart';
 import 'package:tsdm_client/providers/storage_provider.dart';
@@ -54,13 +55,16 @@ class TClientApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     // Get the router.
     final routerConfig = ref.watch(routerProvider);
+    final accentColor = ref.watch(appColorSchemeProvider);
+    final lightTheme = AppTheme.makeLight(accentColor);
+    final darkTheme = AppTheme.makeDark(accentColor);
     return MaterialApp.router(
       title: context.t.appName,
       locale: TranslationProvider.of(context).flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      theme: AppTheme.light,
-      darkTheme: AppTheme.dark,
+      theme: lightTheme,
+      darkTheme: darkTheme,
       themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
       routerConfig: routerConfig,
       scaffoldMessengerKey: globalSnackbarKey,

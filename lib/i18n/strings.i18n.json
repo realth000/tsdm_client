@@ -7,7 +7,8 @@
     "needLoginToSeeThisPage": "Need to login to see this page",
     "pleaseWait": "Please wait",
     "loadFailedAndRetry": "Load failed, retrying",
-    "noMoreData": "No more data"
+    "noMoreData": "No more data",
+    "reset": "Reset to default"
   },
   "navigation": {
     "homepage": "Home",
@@ -35,6 +36,9 @@
         "light": "Light",
         "system": "Follow System",
         "dark": "Dark"
+      },
+      "colorScheme": {
+        "title": "Color Scheme"
       },
       "languages": {
         "title": "Languages",
@@ -289,5 +293,8 @@
   "spoilerCard": {
     "expandMore": "Expand More",
     "expandLess": "Expand Less"
+  },
+  "colorPickerDialog": {
+    "title": "Choose Color"
   }
 }

@@ -7,7 +7,8 @@
     "needLoginToSeeThisPage": "登录后才能访问此页面",
     "pleaseWait": "请稍候",
     "loadFailedAndRetry": "加载失败，正在重试",
-    "noMoreData": "已经到头了"
+    "noMoreData": "已经到头了",
+    "reset": "重置为默认值"
   },
   "navigation": {
     "homepage": "主页",
@@ -35,6 +36,9 @@
         "light": "浅色",
         "system": "跟随系统",
         "dark": "深色"
+      },
+      "colorScheme": {
+        "title": "色调"
       },
       "languages": {
         "title": "语言",
@@ -289,5 +293,8 @@
   "spoilerCard": {
     "expandMore": "展开",
     "expandLess": "折叠"
+  },
+  "colorPickerDialog": {
+    "title": "选择颜色"
   }
 }

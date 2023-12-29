@@ -47,6 +47,7 @@ class AppSettings extends _$AppSettings {
       showShortcutInForumCard:
           storage.getBool(settingsShowShortcutInForumCard) ??
               _defaultShowRedirectInForumCard,
+      accentColor: storage.getInt(settingsAccentColor) ?? _defaultAccentColor,
     );
   }
 
@@ -112,6 +113,11 @@ class AppSettings extends _$AppSettings {
 
   /// Show shortcut widget that to redirect to latest thread or subreddit in forum card.
   static const _defaultShowRedirectInForumCard = false;
+
+  /// Default accent color.
+  ///
+  /// Less than zero represents default color.
+  static const _defaultAccentColor = -1;
 
   Storage _getStorage() {
     return ref.read(appStorageProvider);
@@ -220,5 +226,17 @@ class AppSettings extends _$AppSettings {
     final storage = _getStorage();
     await storage.saveBool(settingsShowShortcutInForumCard, value: visible);
     state = state.copyWith(showShortcutInForumCard: visible);
+  }
+
+  Future<void> setAccentColor(Color color) async {
+    final storage = _getStorage();
+    await storage.saveInt(settingsAccentColor, color.value);
+    state = state.copyWith(accentColor: color.value);
+  }
+
+  Future<void> clearAccentColor() async {
+    final storage = _getStorage();
+    await storage.saveInt(settingsAccentColor, -1);
+    state = state.copyWith(accentColor: -1);
   }
 }
