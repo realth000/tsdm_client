@@ -209,52 +209,49 @@ class _UpgradePageState extends ConsumerState<UpgradePage> {
 
   Widget buildContent(BuildContext context, String latestVersion) {
     final dp = double.tryParse(downloadProgress ?? '0');
-    return Card(
-      elevation: 2,
-      child: Padding(
-        padding: edgeInsetsL15T15R15B15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Text(
-              context.t.upgradePage.description,
-              style: Theme.of(context).textTheme.titleLarge,
+    return Padding(
+      padding: edgeInsetsL15T15R15B15,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            context.t.upgradePage.description,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          sizedBoxW10H10,
+          Text(
+            context.t.upgradePage
+                .currentVersion(currentVersion: appVersion)
+                .split('+')
+                .first,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          Text(
+            context.t.upgradePage.latestVersion(latestVersion: latestVersion),
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          if (upgradeModel != null)
+            Row(children: [Expanded(child: buildReleaseNotesCard(context))]),
+          if (fileName != null)
+            Text(context.t.upgradePage.saveTo(path: saveDir ?? '')),
+          if (fileName != null)
+            ListTile(
+              title: Text(fileName ?? 'file'),
+              subtitle: LinearProgressIndicator(
+                  value: dp == null ? null : dp / 100.0),
+              trailing: Text('${dp ?? "-"}%'),
             ),
-            sizedBoxW10H10,
-            Text(
-              context.t.upgradePage
-                  .currentVersion(currentVersion: appVersion)
-                  .split('+')
-                  .first,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            Text(
-              context.t.upgradePage.latestVersion(latestVersion: latestVersion),
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            if (upgradeModel != null)
-              Row(children: [Expanded(child: buildReleaseNotesCard(context))]),
-            if (fileName != null)
-              Text(context.t.upgradePage.saveTo(path: saveDir ?? '')),
-            if (fileName != null)
-              ListTile(
-                title: Text(fileName ?? 'file'),
-                subtitle: LinearProgressIndicator(
-                    value: dp == null ? null : dp / 100.0),
-                trailing: Text('${dp ?? "-"}%'),
-              ),
-            sizedBoxW10H10,
-            Row(
-              children: [
-                Expanded(
-                  child: isBusy
-                      ? const Center(child: sizedCircularProgressIndicator)
-                      : buildActionButton(context),
-                )
-              ],
-            ),
-          ].insertBetween(sizedBoxW5H5),
-        ),
+          sizedBoxW10H10,
+          Row(
+            children: [
+              Expanded(
+                child: isBusy
+                    ? const Center(child: sizedCircularProgressIndicator)
+                    : buildActionButton(context),
+              )
+            ],
+          ),
+        ].insertBetween(sizedBoxW5H5),
       ),
     );
   }
