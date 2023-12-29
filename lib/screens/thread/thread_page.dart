@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/models/post.dart';
 import 'package:tsdm_client/models/user.dart';
@@ -103,8 +102,12 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                   // Use the title in html document to ensure displaying the full thread title.
                   if (mounted) {
                     setState(() {
-                      title =
-                          document.querySelector('title')?.text?.trimTitle();
+                      title = document
+                          .querySelector('div#postlist h1.ts')
+                          ?.nodes
+                          .elementAtOrNull(2)
+                          ?.text
+                          ?.trim();
                     });
                   }
 
