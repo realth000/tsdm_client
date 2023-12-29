@@ -98,6 +98,7 @@ class _TCHomePageState extends ConsumerState<TopicPage>
           controller: tabController,
           tabs: groupTabList,
           isScrollable: true,
+          tabAlignment: TabAlignment.start,
         ),
       ),
       body: TabBarView(

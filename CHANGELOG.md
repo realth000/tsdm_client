@@ -58,6 +58,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 展示帖子回复中代码块的方式由下划线文本改为代码卡片。
 - 帖子页面中楼层顶部的标题使用完整的标题。
+- 分区页面的分区标签栏按左对齐。
 
 ## [0.1.1] - 2023-12-17
 
