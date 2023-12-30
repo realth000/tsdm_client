@@ -309,10 +309,10 @@ packages:
     dependency: "direct main"
     description:
       name: easy_refresh
-      sha256: "9465065e86ce4993c3a9c825295cd1cbcdeffaa6903fe2575b30565b5b39a1f4"
+      sha256: f36324c7f50291f85085bd64b39abe6b63909481bfa527f9c654d17ef172de30
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.3.3+1"
+    version: "3.3.4"
   equatable:
     dependency: transitive
     description:
@@ -325,10 +325,10 @@ packages:
     dependency: "direct main"
     description:
       name: extended_nested_scroll_view
-      sha256: "444a6f883e6e07effc7639e69a309e1fb491b6c19b095e9281714a51ace2b384"
+      sha256: "835580d40c2c62b448bd14adecd316acba469ba61f1510ef559d17668a85e777"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.1.2"
+    version: "6.2.1"
   fake_async:
     dependency: transitive
     description:
@@ -441,10 +441,10 @@ packages:
     dependency: "direct dev"
     description:
       name: freezed
-      sha256: "21bf2825311de65501d22e563e3d7605dff57fb5e6da982db785ae5372ff018a"
+      sha256: "6c5031daae12c7072b3a87eff98983076434b4889ef2a44384d0cae3f82372ba"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "2.4.5"
+    version: "2.4.6"
   freezed_annotation:
     dependency: "direct main"
     description:
@@ -482,10 +482,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: c5fa45fa502ee880839e3b2152d987c44abae26d064a2376d4aad434cf0f7b15
+      sha256: ca7e4a2249f96773152f1853fa25933ac752495cdd7fdf5dafb9691bd05830fd
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "12.1.3"
+    version: "13.0.0"
   graphs:
     dependency: transitive
     description:
@@ -943,26 +943,26 @@ packages:
     dependency: "direct main"
     description:
       name: slang
-      sha256: "3231d9b11163acb96e7611c5da54404e93d1e0d0eb8f31126ce86a1a43a1c7d4"
+      sha256: "77fd99f7b0da15e671ef0289b24a0a63e74f693c58a0ca54111388e4c0ddb1dd"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.26.2"
+    version: "3.28.0"
   slang_build_runner:
     dependency: "direct dev"
     description:
       name: slang_build_runner
-      sha256: "3c1efe9cc32af091859962fc67d68aedf8e649ac758348f3b2ecf4942b2eac4a"
+      sha256: "387a3d569da4490b1fffbf31f203021fbfd34f15228d83e14a0f40bc940966fa"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.26.2"
+    version: "3.28.0"
   slang_flutter:
     dependency: "direct main"
     description:
       name: slang_flutter
-      sha256: "88e40b238307abdc191c9c26cdfb7c1b6d5075f461e8fbcf89f6f2a3f92cd5d7"
+      sha256: "57817bb15553bb5df37aed3bac497286bdd8c2eab6763f4de6815efe2c0becee"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.26.2"
+    version: "3.28.0"
   source_gen:
     dependency: transitive
     description:
@@ -1103,10 +1103,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: b1c9e98774adf8820c96fbc7ae3601231d324a7d5ebd8babe27b6dfac91357ba
+      sha256: e9aa5ea75c84cf46b3db4eea212523591211c3cf2e13099ee4ec147f54201c86
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.2.1"
+    version: "6.2.2"
   url_launcher_android:
     dependency: transitive
     description:
