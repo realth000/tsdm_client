@@ -11,6 +11,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增支持旅行者主题。
 - 当从网络请求拉取图片失败时，使用默认的图片logo。
 
+### Changed
+
+- 更新隐藏区域卡片上的按钮样式，更明显。
+
 ## [0.3.0] - 2023-12-30
 
 ### Added

@@ -22,7 +22,7 @@ class _LockedCardState extends ConsumerState<LockedCard> {
   var _loading = false;
 
   Widget _buildPurchaseButton(BuildContext context) {
-    return ElevatedButton.icon(
+    return FilledButton.icon(
       icon: const Icon(FontAwesomeIcons.coins),
       label: Text('${widget.locked.price}'),
       onPressed: () async {
