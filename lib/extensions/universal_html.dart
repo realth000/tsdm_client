@@ -190,7 +190,7 @@ extension GrepExtension on Element {
   /// Priority: data-original > src.
   /// If not found, return null.
   String? dataOriginalOrSrcImgUrl() {
-    return attributes['data-original'] ?? attributes['src'] ?? '';
+    return attributes['data-original'] ?? attributes['src'];
   }
 
   String? imageUrl() {

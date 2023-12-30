@@ -49,7 +49,7 @@ class ForumGroup {
       // The only way to check this is looking at the image node in sub forums.
 
       // Expanded layout forum layout.
-      if (subForumNode.querySelector('td > a') != null) {
+      if (subForumNode.querySelector('h2') != null) {
         final forum = Forum.fromFlRowNode(subForumNode);
         forumList.add(forum);
         continue;

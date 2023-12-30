@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/providers/image_cache_provider.dart';
 import 'package:tsdm_client/providers/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/widgets/fallback_picture.dart';
 
 class CachedImage extends ConsumerWidget {
   const CachedImage(this.imageUrl, {this.maxWidth, this.maxHeight, super.key});
@@ -17,6 +18,15 @@ class CachedImage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (imageUrl.isEmpty) {
+      return ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: maxWidth ?? double.infinity,
+          maxHeight: maxHeight ?? double.infinity,
+        ),
+        child: const FallbackPicture(),
+      );
+    }
     return FutureBuilder(
       future: ref
           .read(imageCacheProvider.notifier)

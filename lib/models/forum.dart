@@ -239,7 +239,9 @@ class Forum {
   /// Build from '<tr class="fl_row">' of '<tr>' (only the first row in table)
   /// node [element] inside table, with expanded layout.
   static _ForumInfo _buildExpandedForumInfo(uh.Element element) {
-    final titleNode = element.querySelector('td:nth-child(2) > h2 > a');
+    final titleNode = element.querySelector('td:nth-child(2) > h2 > a') ??
+        // Theme 旅行者
+        element.querySelector('td:nth-child(1) > h2 > a');
     final name = titleNode?.firstEndDeepText();
     final url = titleNode?.firstHref();
     final forumID = url?.split('fid=').lastOrNull?.parseToInt();
@@ -247,20 +249,25 @@ class Forum {
     final iconUrl =
         element.querySelector('td > a > img')?.dataOriginalOrSrcImgUrl();
 
-    final threadCount = element
-        .querySelector('td:nth-child(3) > span:nth-child(1)')
-        ?.firstEndDeepText()
-        ?.parseToInt();
-    final replyCount = element
-        .querySelector('td:nth-child(3) > span:nth-child(2)')
-        ?.firstEndDeepText()
-        ?.split(' ')
-        .lastOrNull
-        ?.parseToInt();
+    final threadCount =
+        (element.querySelector('td:nth-child(3) > span:nth-child(1)') ??
+                // 旅行者 theme
+                element.querySelector('td:nth-child(2) > span:nth-child(1)'))
+            ?.firstEndDeepText()
+            ?.parseToInt();
+    final replyCount =
+        (element.querySelector('td:nth-child(3) > span:nth-child(2)') ??
+                // 旅行者 theme
+                element.querySelector('td:nth-child(2) > span:nth-child(2)'))
+            ?.firstEndDeepText()
+            ?.split(' ')
+            .lastOrNull
+            ?.parseToInt();
     final threadTodayCount =
         // Style 1: With avatar.
-        element
-                .querySelector('td:nth-child(2) > h2 > em')
+        (element.querySelector('td:nth-child(2) > h2 > em') ??
+                    // 旅行者 theme
+                    element.querySelector('td:nth-child(1) > h2 > em'))
                 ?.firstEndDeepText()
                 ?.split('(')
                 .lastOrNull
@@ -268,12 +275,16 @@ class Forum {
                 .firstOrNull
                 ?.parseToInt() ??
             // Style 2: With welcome text.
-            element
-                .querySelector('td:nth-child(2) > h2 > em:nth-child(3)')
+            (element.querySelector('td:nth-child(2) > h2 > em:nth-child(3)') ??
+                    // 旅行者 theme
+                    element.querySelector(
+                        'td:nth-child(2) > h2 > em:nth-child(3)'))
                 ?.firstEndDeepText()
                 ?.parseToInt();
 
-    final latestThreadNode = element.querySelector('td:nth-child(4) > div');
+    final latestThreadNode = element.querySelector('td:nth-child(4) > div') ??
+        // 旅行者 theme
+        element.querySelector('td:nth-child(3) > div');
     final latestThreadTime = latestThreadNode
         ?.querySelector('cite > span')
         ?.attributes['title']
@@ -328,11 +339,7 @@ class Forum {
   }
 
   bool isValid() {
-    if (name.isEmpty ||
-        url.isEmpty ||
-        iconUrl.isEmpty ||
-        threadCount == -1 ||
-        replyCount == -1) {
+    if (name.isEmpty || url.isEmpty || threadCount == -1 || replyCount == -1) {
       debug(
         'failed to build forum page: $name, $url, $iconUrl, $threadCount, $replyCount',
       );
