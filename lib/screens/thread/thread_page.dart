@@ -110,12 +110,22 @@ class _ThreadPageState extends ConsumerState<ThreadPage> {
                   // Use the title in html document to ensure displaying the full thread title.
                   if (mounted) {
                     setState(() {
+                      // Most threads have thread type node before the title.
                       title = document
                           .querySelector('div#postlist h1.ts')
                           ?.nodes
                           .elementAtOrNull(2)
                           ?.text
                           ?.trim();
+                      if (title?.isEmpty ?? true) {
+                        // Some thread
+                        title = document
+                            .querySelector('div#postlist h1.ts')
+                            ?.nodes
+                            .elementAtOrNull(0)
+                            ?.text
+                            ?.trim();
+                      }
                     });
                   }
 
