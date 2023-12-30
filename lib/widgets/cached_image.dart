@@ -52,7 +52,7 @@ class CachedImage extends ConsumerWidget {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           debug('failed to get cached image: ${snapshot.error}');
-          return const Placeholder();
+          return const FallbackPicture();
         }
         if (snapshot.hasData) {
           return ConstrainedBox(
