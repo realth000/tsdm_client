@@ -20,16 +20,25 @@ import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
-  const ProfilePage({this.uid, this.showLoggedUser = false, super.key})
-      : assert(uid != null || showLoggedUser,
-            'uid or showLoggedUser should not be empty at the same time'),
+  const ProfilePage(
+      {this.uid, this.username, this.showLoggedUser = false, super.key})
+      : assert(uid != null || username != null || showLoggedUser,
+            'uid or username or showLoggedUser should not be empty at the same time'),
         assert(!(uid != null && showLoggedUser),
-            'uid and showLoggedUser should not have value at the same time');
+            'uid and showLoggedUser should not have value at the same time'),
+        assert(!(username != null && showLoggedUser),
+            'username and showLoggedUser should not have value at the same time');
 
   /// Uid for other user.
   ///
   /// When not null, it means we are accessing the profile page of a not logged user, or other user.
+  /// When [uid] is provided, ignore [username].
   final String? uid;
+
+  /// Username for other user.
+  /// When not null, it means we are accessing the profile page of a not logged user, or other user.
+  /// If both [uid] and [username] are provided, use [uid] in advance.
+  final String? username;
 
   /// When set to true, it means we accessing the profile page of current logged user.
   final bool showLoggedUser;
@@ -50,9 +59,15 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
     super.dispose();
   }
 
-  Future<uh.Document> _fetchDocument(String userId) async {
-    final resp =
-        await ref.read(netClientProvider()).get('$uidProfilePage$userId');
+  Future<uh.Document> _fetchDocumentByUid(String uid) async {
+    final resp = await ref.read(netClientProvider()).get('$uidProfilePage$uid');
+    return parseHtmlDocument(resp.data as String);
+  }
+
+  Future<uh.Document> _fetchDocumentByUsername(String username) async {
+    final resp = await ref
+        .read(netClientProvider())
+        .get('$usernameProfilePage$username');
     return parseHtmlDocument(resp.data as String);
   }
 
@@ -248,12 +263,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    late final String userId;
     late final List<Widget> appBarActions;
+    late final Future<uh.Document> documentFuture;
+    // Initial data for profile, only available when accessing current user's profile page.
     uh.Document? profileDoc;
     if (widget.uid != null) {
       // Accessing other users.
-      userId = widget.uid!;
+      documentFuture = _fetchDocumentByUid(widget.uid!);
+      appBarActions = [];
+    } else if (widget.username != null) {
+      documentFuture = _fetchDocumentByUsername(widget.username!);
       appBarActions = [];
     } else if (widget.showLoggedUser) {
       // Accessing current logged user.
@@ -263,7 +282,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         // Embed NeedLoginPage with redirect back route.
         return NeedLoginPage(backUri: GoRouterState.of(context).uri);
       }
-      userId = ref.read(authProvider.notifier).loggedUid!;
+      documentFuture =
+          _fetchDocumentByUid(ref.read(authProvider.notifier).loggedUid!);
 
       // Profile page of current logged user may be already cached. Use the cache first.
       profileDoc = ref.read(rootContentProvider.notifier).profileDoc;
@@ -291,7 +311,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       appBar: AppBar(title: Text(t.profilePage.title), actions: appBarActions),
       body: FutureBuilder(
         initialData: profileDoc,
-        future: _fetchDocument(userId),
+        future: documentFuture,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return Center(child: Text('${snapshot.error}'));

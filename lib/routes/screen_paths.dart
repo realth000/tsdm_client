@@ -45,10 +45,14 @@ class ScreenPaths {
   static const String loginRedirect = '/login/redirect';
 
   /// Logged user profile page.
-  static const String loggedUserProfile = '/profile';
+  static const String loggedUserProfile = '/myProfile';
 
-  /// Other not logged user profile page, need uid.
-  static const String profile = '/profile/:uid';
+  /// Other not logged user profile page.
+  ///
+  ///
+  /// User identity MUST be provided in **queryParameters** because we need to accept both uid and username.
+  /// When both are available, use uid in advance.
+  static const String profile = '/profile';
 
   /// App settings page.
   static const String settings = '/settings';

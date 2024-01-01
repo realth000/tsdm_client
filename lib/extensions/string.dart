@@ -61,11 +61,22 @@ extension ParseUrl on String {
       );
     }
 
-    if (mod == 'space' && queryParameters['uid'] != null) {
-      return RecognizedRoute(
-        ScreenPaths.profile,
-        pathParameters: {'uid': '${queryParameters["uid"]}'},
-      );
+    if (mod == 'space') {
+      // Access by uid.
+      if (queryParameters['uid'] != null) {
+        return RecognizedRoute(
+          ScreenPaths.profile,
+          queryParameters: {'uid': '${queryParameters["uid"]}'},
+        );
+      }
+
+      // Access by username.
+      if (queryParameters['username'] != null) {
+        return RecognizedRoute(
+          ScreenPaths.profile,
+          queryParameters: {'username': '${queryParameters["username"]}'},
+        );
+      }
     }
 
     return null;

@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 const baseUrl = 'https://www.tsdm39.com';
 const homePage = '$baseUrl/forum.php';
 const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
+const usernameProfilePage = '$baseUrl/home.php?mod=space&username=';
 const noAvatarUrl = '$baseUrl/uc_server/images/noavatar_middle.gif';
 const noticeUrl = '$baseUrl/home.php?mod=space&do=notice';
 const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
