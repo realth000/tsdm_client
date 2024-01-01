@@ -15,6 +15,7 @@ import 'package:tsdm_client/screens/need_login/need_login_page.dart';
 import 'package:tsdm_client/screens/notice/notice_detail_page.dart';
 import 'package:tsdm_client/screens/notice/notice_page.dart';
 import 'package:tsdm_client/screens/profile/profile_page.dart';
+import 'package:tsdm_client/screens/rate/rate_post_page.dart';
 import 'package:tsdm_client/screens/root/root.dart';
 import 'package:tsdm_client/screens/search/search_page.dart';
 import 'package:tsdm_client/screens/settings/about_page.dart';
@@ -202,12 +203,29 @@ GoRouter router(RouterRef ref) {
         },
       ),
       AppRoute(
-          path: ScreenPaths.latestThread,
-          parentNavigatorKey: _rootRouteKey,
-          builder: (state) {
-            final url = state.uri.queryParameters['url']!;
-            return LatestThreadPage(url: url);
-          }),
+        path: ScreenPaths.latestThread,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final url = state.uri.queryParameters['url']!;
+          return LatestThreadPage(url: url);
+        },
+      ),
+      AppRoute(
+        path: ScreenPaths.ratePost,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final username = state.pathParameters['username']!;
+          final pid = state.pathParameters['pid']!;
+          final floor = state.pathParameters['floor']!;
+          final rateAction = state.pathParameters['rateAction']!;
+          return RatePostPage(
+            username: username,
+            pid: pid,
+            floor: floor,
+            rateAction: rateAction,
+          );
+        },
+      ),
     ],
   );
 

@@ -231,6 +231,17 @@
   "latestThreadPage": {
     "title": "Latest Thread"
   },
+  "ratePostPage": {
+    "title": "Rate",
+    "description": "Rate $username post at floor $floor",
+    "reason": "Reason",
+    "noticeAuthor": "Notice the author",
+    "invalidNumber": "Invalid number",
+    "notInAllowedRange": "Should in range $range",
+    "unknownAllowedRange": "Unknown allowed range $range",
+    "onlyAllowIntegers": "Only integers are allowed",
+    "failedToRate": "Rate failed"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"
@@ -296,5 +307,9 @@
   },
   "colorPickerDialog": {
     "title": "Choose Color"
+  },
+  "postCard": {
+    "rateFetchInfoFailed": "Fetch info failed",
+    "rateFailed": "Rate failed"
   }
 }

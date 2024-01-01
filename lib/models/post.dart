@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -6,6 +7,14 @@ import 'package:tsdm_client/models/rate.dart';
 import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
+
+extension _ParseExtension on uh.Element {
+  String? _parseRateAction() {
+    return Post._rateActionRe
+        .firstMatch(attributes['onclick'] ?? '')
+        ?.namedGroup('url');
+  }
+}
 
 class _PostInfo {
   /// Constructor.
@@ -16,6 +25,7 @@ class _PostInfo {
     required this.publishTime,
     required this.data,
     required this.replyAction,
+    required this.rateAction,
     this.locked = const [],
     this.rate,
   });
@@ -47,6 +57,9 @@ class _PostInfo {
 
   /// Url to reply this post.
   String? replyAction;
+
+  /// Url to rate this post.
+  String? rateAction;
 }
 
 /// Post model.
@@ -57,6 +70,8 @@ class Post {
   // [element] has id "post_$postID".
   Post.fromPostNode(uh.Element element)
       : _info = _buildPostFromElement(element);
+
+  static final _rateActionRe = RegExp(r"'rate', '(?<url>forum.php[^']*)',");
 
   final _PostInfo _info;
 
@@ -73,6 +88,8 @@ class Post {
   List<Locked> get locked => _info.locked;
 
   String? get replyAction => _info.replyAction;
+
+  String? get rateAction => _info.rateAction;
 
   Rate? get rate => _info.rate;
 
@@ -149,6 +166,26 @@ class Post {
       }
     }
 
+    // Parse rate action:
+    // * If current post is the first floor in thread, rate action node is in <div id="fj">...</div>.
+    // * If current post is not the first floor, rate action is in <div class="pob cl"><p>...</p></div>
+    // Allow to be empty.
+    String? rateAction;
+    rateAction = element
+        .querySelector('table  div.pob.cl > p')
+        ?.querySelectorAll('a')
+        .firstWhereOrNull((e) => e.firstEndDeepText() == '评分')
+        ?._parseRateAction()
+        ?.prependHost();
+
+    rateAction ??= element
+        .querySelectorAll('div#fj > a')
+        .firstWhereOrNull((e) => e.firstEndDeepText() == '评分')
+        ?._parseRateAction()
+        ?.prependHost();
+
+    rateAction?.prependHost();
+
     return _PostInfo(
       postID: postID,
       postFloor: postFloor,
@@ -158,6 +195,7 @@ class Post {
       locked: locked ?? [],
       replyAction: replyAction,
       rate: rate,
+      rateAction: rateAction,
     );
   }
 

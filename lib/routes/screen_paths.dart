@@ -81,4 +81,7 @@ class ScreenPaths {
   ///
   /// https://tsdm39.com/home.php?mod=forum&searchid=xxx&orderby...
   static const String latestThread = '/latestPage';
+
+  /// Page to rate a post in thread.
+  static const String ratePost = '/ratePost/:username/:pid/:floor/:rateAction';
 }

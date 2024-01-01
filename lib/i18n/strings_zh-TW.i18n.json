@@ -231,6 +231,17 @@
   "latestThreadPage": {
     "title": "最新主題"
   },
+  "ratePostPage": {
+    "title": "評分",
+    "description": "給 $username 在 $floor 樓的貼文評分",
+    "reason": "理由",
+    "noticeAuthor": "通知作者",
+    "invalidNumber": "無效的數字",
+    "notInAllowedRange": "應該在 $range 範圍內",
+    "unknownAllowedRange": "無效的評分區間 $range",
+    "onlyAllowIntegers": "只允許整數",
+    "failedToRate": "评分失败"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"
@@ -296,5 +307,9 @@
   },
   "colorPickerDialog": {
     "title": "選擇顏色"
+  },
+  "postCard": {
+    "rateFetchInfoFailed": "获取评分信息失败",
+    "rateFailed": "评分失败"
   }
 }
