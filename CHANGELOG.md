@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 修复不属于任何类型的帖子的页面内标题为空的问题。
 - 修复无法从帖子的艾特（@）查看用户信息的问题。
+- 修复用户信息页面的头像在头像不可用时未使用默认头像的问题。
 
 ### Changed
 

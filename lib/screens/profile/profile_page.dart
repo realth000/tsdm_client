@@ -111,7 +111,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
     final avatarUrl = document
         .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-        ?.attributes['src'];
+        ?.imageUrl();
 
     // Basic info
     final username = profileRootNode
