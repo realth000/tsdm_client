@@ -307,6 +307,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
           'can not determine the type of user we are accessing, this is IMPOSSIBLE');
     }
 
+    if (profileDoc != null) {
+      return Scaffold(
+        appBar:
+            AppBar(title: Text(t.profilePage.title), actions: appBarActions),
+        body: _buildProfile(context, profileDoc),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(title: Text(t.profilePage.title), actions: appBarActions),
       body: FutureBuilder(
