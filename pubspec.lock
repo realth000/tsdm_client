@@ -473,12 +473,11 @@ packages:
   gitsumu:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "4a410c1af875c89c4daeded52530713111ec9244"
-      resolved-ref: "4a410c1af875c89c4daeded52530713111ec9244"
-      url: "https://github.com/realth000/gitsumu.git"
-    source: git
-    version: "0.0.1"
+      name: gitsumu
+      sha256: "6c44d13377d84fcd288f87df68aa7673ce89bfb8198796cf4d61b848fba3708f"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.1.0"
   glob:
     dependency: transitive
     description:
