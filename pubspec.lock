@@ -382,6 +382,15 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_bbcode_editor:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: fc03d1595adfa7d2e3b672e2407460c61699b82c
+      resolved-ref: fc03d1595adfa7d2e3b672e2407460c61699b82c
+      url: "https://github.com/realth000/flutter_bbcode_editor.git"
+    source: git
+    version: "0.1.0+1"
   flutter_hooks:
     dependency: transitive
     description:
@@ -1260,5 +1269,5 @@ packages:
     source: hosted
     version: "3.1.2"
 sdks:
-  dart: ">=3.2.0-194.0.dev <4.0.0"
+  dart: ">=3.2.0 <4.0.0"
   flutter: ">=3.16.0"
