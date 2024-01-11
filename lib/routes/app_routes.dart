@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
+import 'package:tsdm_client/features/upgrade/view/upgrade_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 
@@ -58,6 +59,11 @@ final router = GoRouter(
       path: ScreenPaths.license,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const AppLicensePage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.upgrade,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const UpgradePage(),
     ),
   ],
 );

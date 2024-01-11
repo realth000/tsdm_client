@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:tsdm_client/models/css_types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
+import 'package:tsdm_client/shared/models/css_types.dart';
 
 CssTypes? parseCssString(String css) {
   Color? color;

@@ -1,4 +1,6 @@
-class UpgradeModel {
+import 'package:equatable/equatable.dart';
+
+class UpgradeModel extends Equatable {
   const UpgradeModel({
     required this.releaseVersion,
     required this.releaseNotes,
@@ -10,4 +12,7 @@ class UpgradeModel {
   final String releaseNotes;
   final Map<String, String> assetsMap;
   final String releaseUrl;
+
+  @override
+  List<Object?> get props => [assetsMap, releaseUrl];
 }

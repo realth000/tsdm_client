@@ -42,8 +42,12 @@ class UpgradeCubit extends Cubit<UpgradeState> {
   UpgradeCubit({required UpgradeRepository upgradeRepository})
       : _upgradeRepository = upgradeRepository,
         super(const UpgradeState()) {
-    _subscription = _upgradeRepository.downloadStatus
-        .listen((status) => emit(state.copyWith(downloadStatus: status)));
+    _subscription = _upgradeRepository.downloadStatus.listen((status) {
+      emit(state.copyWith(
+        status: status.finished ? UpgradeStatus.success : null,
+        downloadStatus: status,
+      ));
+    });
   }
 
   final UpgradeRepository _upgradeRepository;

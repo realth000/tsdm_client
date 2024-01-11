@@ -79,7 +79,10 @@ class _UpgradePageState extends State<UpgradePage> {
   Widget buildContent(BuildContext context, UpgradeState state) {
     var dp = 0.0;
     if (state.downloadStatus.total > 0) {
-      dp = state.downloadStatus.recv / state.downloadStatus.total;
+      dp = double.tryParse(
+              (state.downloadStatus.recv / state.downloadStatus.total * 100)
+                  .toStringAsFixed(1)) ??
+          0;
     }
     return Padding(
       padding: edgeInsetsL15T15R15B15,
@@ -108,7 +111,7 @@ class _UpgradePageState extends State<UpgradePage> {
               Expanded(child: buildReleaseNotesCard(context, state))
             ]),
           if (state.fileName.isNotEmpty)
-            Text(context.t.upgradePage.saveTo(path: state.downloadDir ?? '')),
+            Text(context.t.upgradePage.saveTo(path: state.downloadDir)),
           if (state.fileName.isNotEmpty && state.upgradeModel != null)
             ListTile(
               title: Text(state.fileName),

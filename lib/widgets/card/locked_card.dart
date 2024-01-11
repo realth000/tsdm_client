@@ -3,8 +3,8 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/providers/purchase_provider.dart';
-import 'package:tsdm_client/providers/screen_state_provider.dart';
+//import 'package:tsdm_client/providers/purchase_provider.dart';
+//import 'package:tsdm_client/providers/screen_state_provider.dart';
 import 'package:tsdm_client/shared/models/locked.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 
@@ -42,95 +42,97 @@ class _LockedCardState extends State<LockedCard> {
           _loading = true;
         });
 
+        throw UnimplementedError();
+
         // Fetch confirm info.
-        final info =
-            await ref.read(purchaseProvider.notifier).conformBeforePurchase(
-                  tid: widget.locked.tid!,
-                  pid: widget.locked.pid!,
-                );
+        // final info =
+        //     await ref.read(purchaseProvider.notifier).conformBeforePurchase(
+        //           tid: widget.locked.tid!,
+        //           pid: widget.locked.pid!,
+        //         );
 
-        if (info == null) {
-          setState(() {
-            _loading = false;
-          });
-          if (!mounted) {
-            return;
-          }
-          await showMessageSingleButtonDialog(
-            context: context,
-            title: context.t.lockedCard.purchase.failedPurchase,
-            message: context.t.lockedCard.purchase.failedParsingConfirmInfo,
-          );
-          setState(() {
-            _loading = false;
-          });
-          return;
-        }
+        // if (info == null) {
+        //   setState(() {
+        //     _loading = false;
+        //   });
+        //   if (!mounted) {
+        //     return;
+        //   }
+        //   await showMessageSingleButtonDialog(
+        //     context: context,
+        //     title: context.t.lockedCard.purchase.failedPurchase,
+        //     message: context.t.lockedCard.purchase.failedParsingConfirmInfo,
+        //   );
+        //   setState(() {
+        //     _loading = false;
+        //   });
+        //   return;
+        // }
 
-        if (!mounted) {
-          return;
-        }
+        // if (!mounted) {
+        //   return;
+        // }
 
-        // Confirm purchase.
-        final purchase = await showQuestionDialog(
-          context: context,
-          title: context.t.lockedCard.purchase.confirmPurchase,
-          message: context.t.lockedCard.purchase.confirmInfo(
-            author: info.author ?? '',
-            price: info.price ?? '',
-            authorProfit: info.authorProfit ?? '',
-            coinsLast: info.coinsLast ?? '',
-          ),
-        );
+        // // Confirm purchase.
+        // final purchase = await showQuestionDialog(
+        //   context: context,
+        //   title: context.t.lockedCard.purchase.confirmPurchase,
+        //   message: context.t.lockedCard.purchase.confirmInfo(
+        //     author: info.author ?? '',
+        //     price: info.price ?? '',
+        //     authorProfit: info.authorProfit ?? '',
+        //     coinsLast: info.coinsLast ?? '',
+        //   ),
+        // );
 
-        if (purchase != true) {
-          setState(() {
-            _loading = false;
-          });
-          return;
-        }
-        if (!mounted) {
-          return;
-        }
+        // if (purchase != true) {
+        //   setState(() {
+        //     _loading = false;
+        //   });
+        //   return;
+        // }
+        // if (!mounted) {
+        //   return;
+        // }
 
-        setState(() {
-          _loading = true;
-        });
+        // setState(() {
+        //   _loading = true;
+        // });
 
-        final purchaseResult =
-            await ref.read(purchaseProvider.notifier).purchase(
-                  formHash: info.formHash,
-                  referer: info.referer,
-                  tid: info.tid,
-                  handleKey: info.handleKey,
-                );
+        // final purchaseResult =
+        //     await ref.read(purchaseProvider.notifier).purchase(
+        //           formHash: info.formHash,
+        //           referer: info.referer,
+        //           tid: info.tid,
+        //           handleKey: info.handleKey,
+        //         );
 
-        if (!mounted) {
-          return;
-        }
+        // if (!mounted) {
+        //   return;
+        // }
 
-        if (purchaseResult is PurchaseFailed) {
-          await showMessageSingleButtonDialog(
-            context: context,
-            title: context.t.lockedCard.purchase.failedPurchase,
-            message: purchaseResult.message,
-          );
-        } else {
-          // TODO: Refresh current page after purchase success.
-          await showMessageSingleButtonDialog(
-            context: context,
-            title: context.t.lockedCard.purchase.successPurchase,
-            message: context.t.lockedCard.purchase.successPurchaseInfo,
-          );
+        // if (purchaseResult is PurchaseFailed) {
+        //   await showMessageSingleButtonDialog(
+        //     context: context,
+        //     title: context.t.lockedCard.purchase.failedPurchase,
+        //     message: purchaseResult.message,
+        //   );
+        // } else {
+        //   // TODO: Refresh current page after purchase success.
+        //   await showMessageSingleButtonDialog(
+        //     context: context,
+        //     title: context.t.lockedCard.purchase.successPurchase,
+        //     message: context.t.lockedCard.purchase.successPurchaseInfo,
+        //   );
 
-          // Use the specified provider container to access this provider.
-          screenStateContainer
-              .read(screenStateProvider.notifier)
-              .add(ScreenStateEvent.refresh);
-        }
-        setState(() {
-          _loading = false;
-        });
+        //   // Use the specified provider container to access this provider.
+        //   screenStateContainer
+        //       .read(screenStateProvider.notifier)
+        //       .add(ScreenStateEvent.refresh);
+        // }
+        // setState(() {
+        //   _loading = false;
+        // });
       },
     );
   }
