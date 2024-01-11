@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -8,17 +7,17 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 ///
 /// Contains a [title] and a [content] area.
 /// Holding a button to control the visibility of [content], expand more or expand less.
-class SpoilerCard extends ConsumerStatefulWidget {
+class SpoilerCard extends StatefulWidget {
   const SpoilerCard({required this.title, required this.content, super.key});
 
   final String title;
   final InlineSpan content;
 
   @override
-  ConsumerState<SpoilerCard> createState() => _SpoilerCardState();
+  State<SpoilerCard> createState() => _SpoilerCardState();
 }
 
-class _SpoilerCardState extends ConsumerState<SpoilerCard> {
+class _SpoilerCardState extends State<SpoilerCard> {
   bool _visible = false;
 
   @override

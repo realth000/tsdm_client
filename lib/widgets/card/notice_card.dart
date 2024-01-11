@@ -1,29 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/notice.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/widgets/cached_image_provider.dart';
+import 'package:tsdm_client/shared/models/notice.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
-class NoticeCard extends ConsumerWidget {
+class NoticeCard extends StatelessWidget {
   const NoticeCard({required this.notice, super.key});
 
   final Notice notice;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     late final CircleAvatar userAvatar;
     if (notice.userAvatarUrl != null) {
       userAvatar = CircleAvatar(
         backgroundImage: CachedImageProvider(
           notice.userAvatarUrl!,
           context,
-          ref,
           fallbackImageUrl: noAvatarUrl,
         ),
       );

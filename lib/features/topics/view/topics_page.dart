@@ -8,7 +8,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/retry_snackbar_button.dart';
-import 'package:tsdm_client/widgets/forum_card.dart';
+import 'package:tsdm_client/widgets/card/forum_card.dart';
 
 /// App topic page.
 ///

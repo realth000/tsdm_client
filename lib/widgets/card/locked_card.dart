@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/providers/purchase_provider.dart';
 import 'package:tsdm_client/providers/screen_state_provider.dart';
+import 'package:tsdm_client/shared/models/locked.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 
-class LockedCard extends ConsumerStatefulWidget {
+class LockedCard extends StatefulWidget {
   const LockedCard(this.locked, {super.key});
 
   final Locked locked;
 
   @override
-  ConsumerState<LockedCard> createState() => _LockedCardState();
+  State<LockedCard> createState() => _LockedCardState();
 }
 
-class _LockedCardState extends ConsumerState<LockedCard> {
+class _LockedCardState extends State<LockedCard> {
   var _loading = false;
 
   Widget _buildPurchaseButton(BuildContext context) {

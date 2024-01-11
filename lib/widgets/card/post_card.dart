@@ -2,24 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
-import 'package:tsdm_client/models/post.dart';
-import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/widgets/cached_image_provider.dart';
-import 'package:tsdm_client/widgets/locked_card.dart';
-import 'package:tsdm_client/widgets/rate_card.dart';
+import 'package:tsdm_client/shared/models/post.dart';
+import 'package:tsdm_client/shared/models/user.dart';
+import 'package:tsdm_client/widgets/cached_image//cached_image_provider.dart';
+import 'package:tsdm_client/widgets/card/locked_card.dart';
+import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Card for a [Post] model.
 ///
 /// Usually inside a ThreadPage.
-class PostCard extends ConsumerStatefulWidget {
+class PostCard extends StatefulWidget {
   /// Constructor.
   const PostCard(this.post, {this.replyCallback, super.key});
 
@@ -30,10 +29,10 @@ class PostCard extends ConsumerStatefulWidget {
       replyCallback;
 
   @override
-  ConsumerState<PostCard> createState() => _PostCardState();
+  State<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends ConsumerState<PostCard>
+class _PostCardState extends State<PostCard>
     with AutomaticKeepAliveClientMixin {
   Future<void> _rateCallback() async {
     await context.pushNamed(
@@ -63,7 +62,6 @@ class _PostCardState extends ConsumerState<PostCard>
               backgroundImage: CachedImageProvider(
                 widget.post.author.avatarUrl!,
                 context,
-                ref,
                 fallbackImageUrl: noAvatarUrl,
               ),
             ),
@@ -78,7 +76,7 @@ class _PostCardState extends ConsumerState<PostCard>
               Expanded(child: Container()),
             ],
           ),
-          subtitle: Text('${widget.post.publishTime?.elapsedTillNow(ref)}'),
+          subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
           trailing: widget.post.postFloor == null
               ? null
               : Text('#${widget.post.postFloor}'),

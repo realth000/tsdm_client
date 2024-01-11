@@ -1,23 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
-import 'package:tsdm_client/models/css_types.dart';
-import 'package:tsdm_client/models/latest_thread.dart';
-import 'package:tsdm_client/models/my_thread.dart';
-import 'package:tsdm_client/models/normal_thread.dart';
-import 'package:tsdm_client/models/searched_thread.dart';
-import 'package:tsdm_client/models/thread_type.dart';
-import 'package:tsdm_client/models/user.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/models/css_types.dart';
+import 'package:tsdm_client/shared/models/latest_thread.dart';
+import 'package:tsdm_client/shared/models/my_thread.dart';
+import 'package:tsdm_client/shared/models/normal_thread.dart';
+import 'package:tsdm_client/shared/models/searched_thread.dart';
+import 'package:tsdm_client/shared/models/thread_type.dart';
+import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
-class _CardLayout extends ConsumerWidget {
+class _CardLayout extends StatelessWidget {
   const _CardLayout({
     required this.threadID,
     required this.title,
@@ -48,7 +47,7 @@ class _CardLayout extends ConsumerWidget {
   final Set<ThreadState>? stateSet;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final infoList = [
       if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
       if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
@@ -56,7 +55,7 @@ class _CardLayout extends ConsumerWidget {
       if (latestReplyTime != null)
         (
           Icons.timelapse_outlined,
-          latestReplyTime!.elapsedTillNow(ref),
+          latestReplyTime!.elapsedTillNow(),
         ),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
     ];
@@ -179,7 +178,7 @@ class _CardLayout extends ConsumerWidget {
 }
 
 /// Card to show thread info.
-class NormalThreadCard extends ConsumerWidget {
+class NormalThreadCard extends StatelessWidget {
   /// Constructor.
   const NormalThreadCard(this.thread, {super.key});
 
@@ -187,7 +186,7 @@ class NormalThreadCard extends ConsumerWidget {
   final NormalThread thread;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return _CardLayout(
       threadID: thread.threadID,
       title: thread.title,
@@ -205,13 +204,13 @@ class NormalThreadCard extends ConsumerWidget {
 }
 
 /// Card to show a thread in search result.
-class SearchedThreadCard extends ConsumerWidget {
+class SearchedThreadCard extends StatelessWidget {
   const SearchedThreadCard(this.thread, {super.key});
 
   final SearchedThread thread;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return _CardLayout(
       threadID: '${thread.threadID!}',
       title: thread.title!,
@@ -222,13 +221,13 @@ class SearchedThreadCard extends ConsumerWidget {
 }
 
 /// Card to show current user's thread info in "My Thread" page.
-class MyThreadCard extends ConsumerWidget {
+class MyThreadCard extends StatelessWidget {
   const MyThreadCard(this.thread, {super.key});
 
   final MyThread thread;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return _CardLayout(
       threadID: thread.threadID!,
       title: thread.title!,
@@ -242,13 +241,13 @@ class MyThreadCard extends ConsumerWidget {
 }
 
 /// Card to show result in "Latest thread" page.
-class LatestThreadCard extends ConsumerWidget {
+class LatestThreadCard extends StatelessWidget {
   const LatestThreadCard(this.thread, {super.key});
 
   final LatestThread thread;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return _CardLayout(
       threadID: thread.threadID!,
       title: thread.title!,

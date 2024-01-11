@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/features/topics/models/forum.dart';
+import 'package:tsdm_client/shared/models/forum.dart';
 
 /// A group of [Forum].
 final class ForumGroup extends Equatable {

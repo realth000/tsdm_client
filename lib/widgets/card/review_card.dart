@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/widgets/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
-class ReviewCard extends ConsumerWidget {
+class ReviewCard extends StatelessWidget {
   const ReviewCard({
     required this.name,
     required this.content,
@@ -17,7 +16,7 @@ class ReviewCard extends ConsumerWidget {
   final String content;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -29,7 +28,6 @@ class ReviewCard extends ConsumerWidget {
               backgroundImage: CachedImageProvider(
             avatarUrl ?? noAvatarUrl,
             context,
-            ref,
           )),
           title: Text(name),
           subtitle: Text(content, maxLines: 3),

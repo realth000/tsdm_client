@@ -1,18 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/rate.dart';
-import 'package:tsdm_client/widgets/cached_image_provider.dart';
+import 'package:tsdm_client/shared/models/rate.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
-class RateCard extends ConsumerWidget {
+class RateCard extends StatelessWidget {
   const RateCard(this.rate, {super.key});
 
   final Rate rate;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     // Column width.
     // The first column is user info and last column is always "rate reason",
     // these two columns should have a flex column width.
@@ -44,7 +43,6 @@ class RateCard extends ConsumerWidget {
                           backgroundImage: CachedImageProvider(
                             e.user.avatarUrl ?? noAvatarUrl,
                             context,
-                            ref,
                           ),
                         ),
                       ),
