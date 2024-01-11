@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 /// ListTile support "obscure" state works like [TextField]
 ///
@@ -7,7 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 /// When set visible to false, show the given [obscureWidget] or default obscure
 /// placeholder text.
 /// When set visible to true, show the given [subtitle] widget.
-class ObscureListTile extends ConsumerStatefulWidget {
+class ObscureListTile extends StatefulWidget {
   const ObscureListTile({
     this.leading,
     this.title,
@@ -26,12 +25,12 @@ class ObscureListTile extends ConsumerStatefulWidget {
   final bool initialVisibility;
 
   @override
-  ConsumerState<ObscureListTile> createState() => _ObscureListTile();
+  State<ObscureListTile> createState() => _ObscureListTile();
 }
 
 /// When [_visible] is false, show obscureWidget, otherwise show the given
 /// subtitle widget.
-class _ObscureListTile extends ConsumerState<ObscureListTile> {
+class _ObscureListTile extends State<ObscureListTile> {
   static const _obscurePlaceholder = '********';
 
   late bool _visible = widget.initialVisibility;

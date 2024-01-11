@@ -1,24 +1,20 @@
+import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:responsive_framework/breakpoint.dart';
-import 'package:responsive_framework/responsive_breakpoints.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/providers/color_scheme_provider.dart';
-import 'package:tsdm_client/providers/image_cache_provider.dart';
-import 'package:tsdm_client/providers/settings_provider.dart';
-import 'package:tsdm_client/providers/storage_provider.dart';
-import 'package:tsdm_client/routes/app_routes.dart';
-import 'package:tsdm_client/themes/app_themes.dart';
-import 'package:tsdm_client/utils/global_keys.dart';
+import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/observer.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
+import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await initStorage();
-  await initCache();
-  final container = ProviderContainer();
-  final settingsLocale = container.read(appSettingsProvider).locale;
+  Bloc.observer = const Observer();
+  await initProviders();
+
+  final settingsLocale = getIt.get<SettingsProvider>().getLocale();
   final locale =
       AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
   if (locale == null) {
@@ -38,36 +34,8 @@ Future<void> main() async {
           Breakpoint(start: 650, end: 650, name: 'homepage_welcome_expand'),
           Breakpoint(start: 900, end: 900, name: 'app_expand_side_panel'),
         ],
-        child: UncontrolledProviderScope(
-            container: container, child: const TClientApp()),
+        child: const App(),
       ),
     ),
   );
-}
-
-/// Main app.
-class TClientApp extends ConsumerWidget {
-  /// Constructor.
-  const TClientApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    // Get the router.
-    final routerConfig = ref.watch(routerProvider);
-    final accentColor = ref.watch(appColorSchemeProvider);
-    final lightTheme = AppTheme.makeLight(accentColor);
-    final darkTheme = AppTheme.makeDark(accentColor);
-    return MaterialApp.router(
-      title: context.t.appName,
-      locale: TranslationProvider.of(context).flutterLocale,
-      supportedLocales: AppLocaleUtils.supportedLocales,
-      localizationsDelegates: GlobalMaterialLocalizations.delegates,
-      theme: lightTheme,
-      darkTheme: darkTheme,
-      themeMode: ThemeMode.values[ref.watch(appSettingsProvider).themeMode],
-      routerConfig: routerConfig,
-      scaffoldMessengerKey: globalSnackbarKey,
-    );
-  }
 }

@@ -6,14 +6,14 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/locked.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
-import 'package:tsdm_client/widgets/code_card.dart';
-import 'package:tsdm_client/widgets/locked_card.dart';
+import 'package:tsdm_client/shared/models/locked.dart';
+import 'package:tsdm_client/widgets/card/code_card.dart';
+import 'package:tsdm_client/widgets/card/locked_card.dart';
+import 'package:tsdm_client/widgets/card/review_card.dart';
+import 'package:tsdm_client/widgets/card/spoiler_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
-import 'package:tsdm_client/widgets/review_card.dart';
-import 'package:tsdm_client/widgets/spoiler_card.dart';
 import 'package:universal_html/html.dart' as uh;
 
 /// Munch the html node [rootElement] and its children nodes into a flutter

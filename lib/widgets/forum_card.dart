@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/topics/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/models/forum.dart';
-import 'package:tsdm_client/providers/settings_provider.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Card to show forum information.
-class ForumCard extends ConsumerStatefulWidget {
+class ForumCard extends StatefulWidget {
   /// Constructor.
   const ForumCard(this.forum, {super.key});
 
@@ -21,16 +21,15 @@ class ForumCard extends ConsumerStatefulWidget {
   final Forum forum;
 
   @override
-  ConsumerState<ForumCard> createState() => _ForumCardState();
+  State<ForumCard> createState() => _ForumCardState();
 }
 
-class _ForumCardState extends ConsumerState<ForumCard> {
+class _ForumCardState extends State<ForumCard> {
   bool showingSubThread = false;
   bool showingSubForum = false;
 
   List<Widget> _buildWrapSection(
     BuildContext context,
-    WidgetRef ref,
     String title,
     List<(String, String)> dataList,
     bool state,
@@ -85,7 +84,8 @@ class _ForumCardState extends ConsumerState<ForumCard> {
 
   @override
   Widget build(BuildContext context) {
-    final showShortCut = ref.watch(appSettingsProvider).showShortcutInForumCard;
+    final showShortCut =
+        getIt.get<SettingsProvider>().getShowShortcutInForumCard();
     final forumInfoList = [
       (
         Icons.forum_outlined,
@@ -151,7 +151,7 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                 maxLines: 2,
               ),
               subtitle: widget.forum.latestThreadTime != null
-                  ? Text(widget.forum.latestThreadTime!.elapsedTillNow(ref))
+                  ? Text(widget.forum.latestThreadTime!.elapsedTillNow())
                   : null,
             ),
             if (showShortCut)
@@ -189,23 +189,15 @@ class _ForumCardState extends ConsumerState<ForumCard> {
                       },
                     ),
                   if (widget.forum.subThreadList?.isNotEmpty ?? false)
-                    ..._buildWrapSection(
-                        context,
-                        ref,
-                        context.t.forumCard.links,
-                        widget.forum.subThreadList!,
-                        showingSubThread, () {
+                    ..._buildWrapSection(context, context.t.forumCard.links,
+                        widget.forum.subThreadList!, showingSubThread, () {
                       setState(() {
                         showingSubThread = !showingSubThread;
                       });
                     }),
                   if (widget.forum.subForumList?.isNotEmpty ?? false)
-                    ..._buildWrapSection(
-                        context,
-                        ref,
-                        context.t.forumCard.subForums,
-                        widget.forum.subForumList!,
-                        showingSubForum, () {
+                    ..._buildWrapSection(context, context.t.forumCard.subForums,
+                        widget.forum.subForumList!, showingSubForum, () {
                       setState(() {
                         showingSubForum = !showingSubForum;
                       });

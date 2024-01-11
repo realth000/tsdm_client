@@ -17,7 +17,7 @@
     "settings": "Settings"
   },
   "homepage": {
-    "title": "TSDM Client",
+    "title": "Home",
     "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2"
   },
   "topicPage": {
@@ -50,7 +50,7 @@
         "detail": "Show shortcut entries towards latest thread and subreddits in forum card"
       }
     },
-    "checkInSection": {
+    "checkinSection": {
       "title": "Check In",
       "feeling": "Feeling",
       "anythingToSay": "Anything to say?"
@@ -132,9 +132,9 @@
   "profilePage": {
     "title": "User Profile",
     "userNodeNotFound": "user info root node not found",
-    "checkIn": {
+    "checkin": {
       "title": "Check In",
-      "checkInFailed": "Failed to check in",
+      "checkinFailed": "Failed to check in",
       "success": "Check in success: $msg",
       "failedNotAuthorized": "Not authorized",
       "failedRequest": "Web request status code: $err",
@@ -148,15 +148,15 @@
     "areYouSureToLogout": "Are you sure to logout?",
     "username": "Username",
     "uid": "Uid",
-    "checkInDaysCount": "Check-in Days Count",
-    "checkInDaysInThisMonth": "Check-in Days This Month",
-    "checkInRecentTime": "Recent Check-in Time",
-    "checkInAllCoins": "Check-in All Coins",
-    "checkInLastTimeCoins": "Check-in Last Time Coins",
-    "checkInLevel": "Check-in Level",
-    "checkInNextLevel": "Check-in Next Level",
-    "checkInNextLevelDays": "Days To Next Check-in Level",
-    "checkInTodayStatus": "Check-in Today Status"
+    "checkinDaysCount": "Check-in Days Count",
+    "checkinDaysInThisMonth": "Check-in Days This Month",
+    "checkinRecentTime": "Recent Check-in Time",
+    "checkinAllCoins": "Check-in All Coins",
+    "checkinLastTimeCoins": "Check-in Last Time Coins",
+    "checkinLevel": "Check-in Level",
+    "checkinNextLevel": "Check-in Next Level",
+    "checkinNextLevelDays": "Days To Next Check-in Level",
+    "checkinTodayStatus": "Check-in Today Status"
   },
   "forumPage": {
     "stickThreadTab": {
@@ -252,8 +252,9 @@
     "actionOpenInBrowser": "Open In Browser",
     "actionBackToTop": "Back To Top"
   },
-  "checkInForm": {
-    "shouldMoreThan3": "Should more than 3"
+  "checkinForm": {
+    "shouldMoreThan3": "Should more than 3",
+    "shouldNoMoreThan50": "Should no more than 50"
   },
   "feelingList": {
     "happy": "Happy",

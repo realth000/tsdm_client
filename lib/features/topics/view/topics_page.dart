@@ -1,0 +1,127 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/topics/bloc/topics_bloc.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
+import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
+import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/widgets/forum_card.dart';
+
+/// App topic page.
+///
+/// Contains most subreddits in homepage of server.
+///
+class TopicsPage extends StatefulWidget {
+  /// Constructor.
+  const TopicsPage({super.key});
+
+  // /// Group of forums.
+  // final List<ForumGroup> forumGroupList;
+
+  @override
+  State<TopicsPage> createState() => _TopicsPageState();
+}
+
+/// State of homepage.
+class _TopicsPageState extends State<TopicsPage>
+    with SingleTickerProviderStateMixin {
+  /// Constructor.
+  _TopicsPageState();
+
+  TabController? tabController;
+
+  VoidCallback? _updateIndexListener;
+
+  @override
+  void dispose() {
+    if (tabController != null) {
+      tabController!
+        ..removeListener(_updateIndexListener ?? () {})
+        ..dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => TopicsBloc(
+        forumHomeRepository:
+            RepositoryProvider.of<ForumHomeRepository>(context),
+      )..add(TopicsLoadRequested()),
+      child: BlocBuilder<TopicsBloc, TopicsState>(
+        builder: (context, state) {
+          if (state.status == TopicsStatus.failed) {
+            return buildRetrySnackbarButton(context, () {
+              context.read<TopicsBloc>().add(TopicsRefreshRequested());
+            });
+          }
+
+          if (state.status == TopicsStatus.loading ||
+              state.status == TopicsStatus.initial) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          final forumGroupList = state.forumGroupList;
+
+          // Capture `context` and wrap in a void callback.
+          _updateIndexListener ??= () {
+            if (tabController == null) {
+              return;
+            }
+            RepositoryProvider.of<FragmentsRepository>(context)
+                .topicsPageTabIndex = tabController!.index;
+          };
+
+          tabController ??= TabController(
+            initialIndex: RepositoryProvider.of<FragmentsRepository>(context)
+                .topicsPageTabIndex,
+            length: forumGroupList.length,
+            vsync: this,
+          )..addListener(_updateIndexListener!);
+
+          final groupTabList =
+              forumGroupList.map((e) => Tab(text: e.name)).toList();
+          final groupTabBodyList = forumGroupList
+              .map(
+                (e) => ListView.separated(
+                  padding: edgeInsetsL10T5R10B20,
+                  itemCount: e.forumList.length,
+                  itemBuilder: (context, index) =>
+                      ForumCard(e.forumList[index]),
+                  separatorBuilder: (context, index) => sizedBoxW5H5,
+                ),
+              )
+              .toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.t.navigation.topics),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search_outlined),
+                  onPressed: () async {
+                    await context.pushNamed(ScreenPaths.search);
+                  },
+                )
+              ],
+              bottom: TabBar(
+                controller: tabController,
+                tabs: groupTabList,
+                isScrollable: true,
+                tabAlignment: TabAlignment.start,
+              ),
+            ),
+            body: TabBarView(
+              controller: tabController,
+              children: groupTabBodyList,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}

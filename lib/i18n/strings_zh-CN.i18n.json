@@ -50,7 +50,7 @@
         "detail": "论坛卡片上显示可跳转到最新帖子和子板块的部件"
       }
     },
-    "checkInSection": {
+    "checkinSection": {
       "title": "签到",
       "feeling": "心情",
       "anythingToSay": "有什么想说的吗？"
@@ -132,9 +132,9 @@
   "profilePage": {
     "title": "个人资料",
     "userNodeNotFound": "未找到用户信息节点",
-    "checkIn": {
+    "checkin": {
       "title": "签到",
-      "checkInFailed": "签到失败",
+      "checkinFailed": "签到失败",
       "success": "签到成功：$msg",
       "failedNotAuthorized": "签到失败",
       "failedRequest": "网络请求错误：状态码=$err",
@@ -148,15 +148,15 @@
     "areYouSureToLogout": "确定注销？",
     "username": "用户名",
     "uid": "用户ID",
-    "checkInDaysCount": "累计签到总天数",
-    "checkInDaysInThisMonth": "本月签到天数",
-    "checkInRecentTime": "最近签到时间",
-    "checkInAllCoins": "签到总天使币",
-    "checkInLastTimeCoins": "最近一次签到天使币",
-    "checkInLevel": "签到等级",
-    "checkInNextLevel": "下个签到等级",
-    "checkInNextLevelDays": "距离下个签到等级天数",
-    "checkInTodayStatus": "今日签到状态"
+    "checkinDaysCount": "累计签到总天数",
+    "checkinDaysInThisMonth": "本月签到天数",
+    "checkinRecentTime": "最近签到时间",
+    "checkinAllCoins": "签到总天使币",
+    "checkinLastTimeCoins": "最近一次签到天使币",
+    "checkinLevel": "签到等级",
+    "checkinNextLevel": "下个签到等级",
+    "checkinNextLevelDays": "距离下个签到等级天数",
+    "checkinTodayStatus": "今日签到状态"
   },
   "forumPage": {
     "stickThreadTab": {
@@ -252,8 +252,9 @@
     "actionOpenInBrowser": "在浏览器中打开",
     "actionBackToTop": "回到顶部"
   },
-  "checkInForm": {
-    "shouldMoreThan3": "必须多于三个字"
+  "checkinForm": {
+    "shouldMoreThan3": "必须多于三个字",
+    "shouldNoMoreThan50": "不能多于50个字"
   },
   "feelingList": {
     "happy": "开心",

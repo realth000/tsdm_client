@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/widgets/cached_image.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 
 /// Network image with loading indicator.
 class NetworkIndicatorImage extends StatelessWidget {

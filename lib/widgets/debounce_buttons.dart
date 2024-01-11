@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:tsdm_client/constants/layout.dart';
 
 typedef FutureVoidCallback = Future<void> Function();
@@ -30,7 +29,7 @@ typedef FutureVoidCallback = Future<void> Function();
 ///
 /// Because the **work** maybe a application wide work, it's "single instance"
 /// state should be globally stored.
-class DebounceTextButton extends ConsumerWidget {
+class DebounceTextButton extends StatelessWidget {
   const DebounceTextButton({
     required this.text,
     required this.shouldDebounce,
@@ -43,7 +42,7 @@ class DebounceTextButton extends ConsumerWidget {
   final FutureVoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return TextButton(
       child: shouldDebounce ? sizedCircularProgressIndicator : Text(text),
       onPressed: shouldDebounce ? null : () async => onPressed(),
@@ -51,7 +50,7 @@ class DebounceTextButton extends ConsumerWidget {
   }
 }
 
-class DebounceElevatedButton extends ConsumerWidget {
+class DebounceElevatedButton extends StatelessWidget {
   const DebounceElevatedButton({
     required this.child,
     required this.shouldDebounce,
@@ -64,7 +63,7 @@ class DebounceElevatedButton extends ConsumerWidget {
   final FutureVoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return ElevatedButton(
       child: shouldDebounce ? sizedCircularProgressIndicator : child,
       onPressed: shouldDebounce ? null : () async => onPressed(),
@@ -72,7 +71,7 @@ class DebounceElevatedButton extends ConsumerWidget {
   }
 }
 
-class DebounceIconButton extends ConsumerWidget {
+class DebounceIconButton extends StatelessWidget {
   const DebounceIconButton({
     required this.icon,
     required this.shouldDebounce,
@@ -85,7 +84,7 @@ class DebounceIconButton extends ConsumerWidget {
   final FutureVoidCallback onPressed;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     return IconButton(
       icon: shouldDebounce ? sizedCircularProgressIndicator : icon,
       onPressed: shouldDebounce ? null : () async => onPressed(),

@@ -50,7 +50,7 @@
         "detail": "論壇卡上顯示可跳到最新貼文和子板塊的零件"
       }
     },
-    "checkInSection": {
+    "checkinSection": {
       "title": "簽到",
       "feeling": "心情",
       "anythingToSay": "有什麼想說的嗎？"
@@ -132,9 +132,9 @@
   "profilePage": {
     "title": "個人資料",
     "userNodeNotFound": "未找到使用者資訊節點",
-    "checkIn": {
+    "checkin": {
       "title": "簽到",
-      "checkInFailed": "簽到失敗",
+      "checkinFailed": "簽到失敗",
       "success": "簽到成功：$msg",
       "failedNotAuthorized": "簽到失敗",
       "failedRequest": "網路請求錯誤：狀態碼=$err",
@@ -148,15 +148,15 @@
     "areYouSureToLogout": "確定註銷？",
     "username": "使用者名稱",
     "uid": "用戶ID",
-    "checkInDaysCount": "累計簽到總天數",
-    "checkInDaysInThisMonth": "本月簽到天數",
-    "checkInRecentTime": "最近簽到時間",
-    "checkInAllCoins": "簽到總天使幣",
-    "checkInLastTimeCoins": "最近一次簽到天使幣",
-    "checkInLevel": "簽到等級",
-    "checkInNextLevel": "下個簽到等級",
-    "checkInNextLevelDays": "距離下個簽到等級天數",
-    "checkInTodayStatus": "今日簽到狀態"
+    "checkinDaysCount": "累計簽到總天數",
+    "checkinDaysInThisMonth": "本月簽到天數",
+    "checkinRecentTime": "最近簽到時間",
+    "checkinAllCoins": "簽到總天使幣",
+    "checkinLastTimeCoins": "最近一次簽到天使幣",
+    "checkinLevel": "簽到等級",
+    "checkinNextLevel": "下個簽到等級",
+    "checkinNextLevelDays": "距離下個簽到等級天數",
+    "checkinTodayStatus": "今日簽到狀態"
   },
   "forumPage": {
     "stickThreadTab": {
@@ -252,8 +252,9 @@
     "actionOpenInBrowser": "在瀏覽器中開啟",
     "actionBackToTop": "回到頂部"
   },
-  "checkInForm": {
-    "shouldMoreThan3": "必須多於三個字"
+  "checkinForm": {
+    "shouldMoreThan3": "必須多於三個字",
+    "shouldNoMoreThan50": "不能多於50個字"
   },
   "feelingList": {
     "happy": "開心",

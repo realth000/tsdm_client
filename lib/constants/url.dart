@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 
+const defaultCookieTime = 2592000;
 const baseUrl = 'https://www.tsdm39.com';
 const homePage = '$baseUrl/forum.php';
 const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
@@ -11,6 +12,16 @@ const myThreadThreadUrl =
     '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';
 const myThreadReplyUrl =
     '$baseUrl/home.php?mod=space&do=thread&view=me&type=reply';
+const modifyUserCredentialUrl =
+    '$baseUrl/home.php?mod=spacecp&ac=profile&op=password';
+
+/// Use [modifyUserCredentialUrl] to check user status.
+///
+/// This page contains full user info:
+/// * Username
+/// * UID
+/// * User email
+const checkAuthenticationStateUrl = modifyUserCredentialUrl;
 
 /// Target url to post a reply to thread [tid], forum [fid].
 String formatReplyThreadUrl(String fid, String tid) {
