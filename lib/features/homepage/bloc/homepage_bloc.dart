@@ -131,12 +131,19 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
             // Style 2: With welcome text
             document.querySelector('div#chart > script');
 
-    final picUrlList = _buildKahrpbaPicUrlList(styleNode);
-    final picHrefList = _buildKahrpbaPicHrefList(scriptNode);
-    if (picUrlList.isEmpty && picHrefList.isEmpty) {
+    final picUrlList =
+        _buildKahrpbaPicUrlList(styleNode).whereType<String>().toList();
+    final picHrefList =
+        _buildKahrpbaPicHrefList(scriptNode).whereType<String>().toList();
+    if ((picUrlList.isEmpty && picHrefList.isEmpty) ||
+        (picUrlList.length != picHrefList.length)) {
       debug('root content pinned pic not found: maybe not login');
       // There's no pinned recent threads when not login, just return
-      return const HomepageState(status: HomepageStatus.failed);
+    } else {
+      for (var i = 0; i < picUrlList.length; i++) {
+        swiperUrlList
+            .add(SwiperUrl(coverUrl: picUrlList[i], linkUrl: picHrefList[i]));
+      }
     }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
     final memberInfoList = chartZInfoList
