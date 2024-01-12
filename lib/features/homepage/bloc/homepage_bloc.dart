@@ -9,6 +9,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
+import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -19,8 +20,10 @@ part 'homepage_state.dart';
 class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   HomepageBloc({
     required ForumHomeRepository forumHomeRepository,
+    required ProfileRepository profileRepository,
     required AuthenticationRepository authenticationRepository,
   })  : _forumHomeRepository = forumHomeRepository,
+        _profileRepository = profileRepository,
         _authenticationRepository = authenticationRepository,
         super(forumHomeRepository.hasCache()
             ? _parseStateFromDocument(forumHomeRepository.getCache()!,
@@ -36,6 +39,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   }
 
   final ForumHomeRepository _forumHomeRepository;
+  final ProfileRepository _profileRepository;
 
   /// Do not dispose this repo because it is not the owner.
   final AuthenticationRepository _authenticationRepository;
@@ -56,24 +60,38 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     }
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
-    late final uh.Document document;
-    while (true) {
-      try {
-        document = await _forumHomeRepository.fetchHomePage();
-        break;
-      } on HttpHandshakeFailedException catch (e) {
-        debug('[HomepageBloc]: Failed to fetch home page: $e');
-        await Future.delayed(const Duration(milliseconds: 400));
-      } on HttpRequestFailedException catch (e) {
-        debug('[HomepageBloc]: Failed to fetch home page: $e');
-        await Future.delayed(const Duration(milliseconds: 400));
+    try {
+      final documentList = (await Future.wait([
+        _forumHomeRepository.fetchHomePage(),
+        _profileRepository.fetchProfile()
+      ]))
+          .whereType<uh.Document>()
+          .toList();
+      if (documentList.length != 2) {
+        emit(state.copyWith(status: HomepageStatus.failed));
+        return;
       }
+      final document = documentList[0];
+      final avatarUrl = documentList[1]
+          .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+          ?.imageUrl();
+      await _authenticationRepository.loginWithDocument(document);
+      // Parse data and change state.
+      final s = _parseStateFromDocument(
+        document,
+        _authenticationRepository.currentUser?.username,
+        avatarUrl: avatarUrl,
+      );
+      emit(s);
+    } on HttpHandshakeFailedException catch (e) {
+      debug('[HomepageBloc]: Failed to fetch home page: $e');
+      emit(state.copyWith(status: HomepageStatus.failed));
+      return;
+    } on HttpRequestFailedException catch (e) {
+      debug('[HomepageBloc]: Failed to fetch home page: $e');
+      emit(state.copyWith(status: HomepageStatus.failed));
+      return;
     }
-    await _authenticationRepository.loginWithDocument(document);
-    // Parse data and change state.
-    final s = _parseStateFromDocument(
-        document, _authenticationRepository.currentUser?.username);
-    emit(s);
   }
 
   Future<void> _onHomepageRefreshRequested(
@@ -83,19 +101,29 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     if (state.status.isNeedLogin || state.status.isLoading) {
       return;
     }
-    // Clear data.
-    emit(const HomepageState(status: HomepageStatus.loading));
-    final document = await _forumHomeRepository.fetchHomePage(force: true);
-    await _authenticationRepository.loginWithDocument(document);
-    final loggedUser = _authenticationRepository.currentUser;
-    if (loggedUser == null) {
-      emit(const HomepageState(status: HomepageStatus.needLogin));
-      return;
+    try {
+      // Clear data.
+      emit(const HomepageState(status: HomepageStatus.loading));
+      final document = await _forumHomeRepository.fetchHomePage(force: true);
+      await _authenticationRepository.loginWithDocument(document);
+      final loggedUser = _authenticationRepository.currentUser;
+      if (loggedUser == null) {
+        emit(const HomepageState(status: HomepageStatus.needLogin));
+        return;
+      }
+      final d2 = await _profileRepository.fetchProfile(force: true);
+      final avatarUrl = d2
+          ?.querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+          ?.imageUrl();
+      // Parse data and change state.
+      final s = _parseStateFromDocument(
+          document, _authenticationRepository.currentUser?.username,
+          avatarUrl: avatarUrl);
+      emit(s);
+    } on HttpHandshakeFailedException catch (e) {
+      debug('failed to fetch dom: $e');
+      rethrow;
     }
-    // Parse data and change state.
-    final s = _parseStateFromDocument(
-        document, _authenticationRepository.currentUser?.username);
-    emit(s);
   }
 
   Future<void> _onHomepageAuthChanged(
@@ -111,8 +139,9 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
 
   static HomepageState _parseStateFromDocument(
     uh.Document document,
-    String? username,
-  ) {
+    String? username, {
+    String? avatarUrl,
+  }) {
     final swiperUrlList = <SwiperUrl>[];
     final pinnedThreadGroupList = <PinnedThreadGroup>[];
     ForumStatus? forumStatus;
@@ -162,9 +191,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     final welcomeNode = document
         .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
     final loggedUsername = username ?? '';
-    final loggedUserAvatar = document
-        .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-        ?.attributes['src'];
+    final loggedUserAvatar = avatarUrl ??
+        document
+            .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
+            ?.attributes['src'];
     final navigateHrefsPairs = welcomeNode
         ?.querySelectorAll('a')
         .where((e) => e.attributes.containsKey('href'))
