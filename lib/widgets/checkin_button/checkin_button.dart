@@ -93,11 +93,15 @@ class CheckInButton extends StatelessWidget {
           }
         },
         child: BlocBuilder<CheckinButtonBloc, CheckinButtonState>(
+          buildWhen: (prev, curr) => prev != curr,
           builder: (context, state) {
-            if (CheckinButtonState is CheckinButtonSuccess) {
-              return sizedCircularProgressIndicator;
+            if (state is CheckinButtonLoading) {
+              return const IconButton(
+                icon: sizedCircularProgressIndicator,
+                onPressed: null,
+              );
             }
-            if (CheckinButtonState is CheckinButtonNeedLogin) {
+            if (state is CheckinButtonNeedLogin) {
               return const IconButton(
                 icon: Icon(Icons.domain_verification_outlined),
                 onPressed: null,

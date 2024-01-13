@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
@@ -38,6 +39,7 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
       emit(const CheckinButtonNeedLogin());
       return;
     }
+    emit(const CheckinButtonLoading());
     final checkinFeeling = getIt.get<SettingsProvider>().getCheckinFeeling();
     final checkinMessage = getIt.get<SettingsProvider>().getCheckinMessage();
     final result = await _checkinProvider.checkin(

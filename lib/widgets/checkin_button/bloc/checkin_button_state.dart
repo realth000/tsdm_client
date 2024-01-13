@@ -1,7 +1,10 @@
 part of 'checkin_button_bloc.dart';
 
-sealed class CheckinButtonState {
+sealed class CheckinButtonState extends Equatable {
   const CheckinButtonState();
+
+  @override
+  List<Object?> get props => [];
 }
 
 final class CheckinButtonInitial extends CheckinButtonState {
