@@ -37,7 +37,6 @@ class CookieProvider {
   CookieData build({String? username}) {
     // Specified user override.
     if (username != null) {
-      debug('generate cookie data with override username: $username');
       // Here get the cookie from SettingsProvider's instance.
       final databaseCookie = getIt.get<SettingsProvider>().getCookie(username);
       var cookie = <String, String>{};

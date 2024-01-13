@@ -26,7 +26,7 @@ class ForumHomeRepository {
   ///
   /// * [HttpRequestFailedException] if GET request failed.
   Future<uh.Document> fetchHomePage({bool force = false}) async {
-    debug('[ForumHomeRepo] fetch home page $hashCode');
+    debug('[ForumHomeRepo] fetch home page');
     if (!force && _document != null) {
       debug('[ForumHomeRepo] use cached home page');
       return _document!;
@@ -45,7 +45,7 @@ class ForumHomeRepository {
   ///
   /// * [HttpRequestFailedException] if GET request failed.
   Future<uh.Document> fetchTopicPage({bool force = false}) async {
-    debug('[ForumHomeRepo] fetch topics page $hashCode');
+    debug('[ForumHomeRepo] fetch topics page');
     if (!force && _document != null) {
       debug('[ForumHomeRepo] use cached topics page');
       return _document!;

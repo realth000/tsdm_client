@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -40,6 +41,9 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<UpgradeRepository>(
           create: (_) => UpgradeRepository(),
+        ),
+        RepositoryProvider<ForumRepository>(
+          create: (_) => ForumRepository(),
         ),
       ],
       child: BlocProvider(

@@ -1,17 +1,15 @@
-import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/observer.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  Bloc.observer = const Observer();
+  // Bloc.observer = const Observer();
   await initProviders();
 
   final settingsLocale = getIt.get<SettingsProvider>().getLocale();

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
@@ -64,6 +65,17 @@ final router = GoRouter(
       path: ScreenPaths.upgrade,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const UpgradePage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.forum,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final title = state.uri.queryParameters['appBarTitle'];
+        return ForumPage(
+          title: title,
+          fid: state.pathParameters['fid']!,
+        );
+      },
     ),
   ],
 );

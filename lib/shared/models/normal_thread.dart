@@ -92,9 +92,8 @@ enum ThreadState {
   final IconData icon;
 }
 
-@immutable
-class _NormalThreadInfo {
-  const _NormalThreadInfo({
+class NormalThread {
+  const NormalThread({
     required this.title,
     required this.url,
     required this.threadID,
@@ -170,46 +169,11 @@ class _NormalThreadInfo {
   ///
   /// For example, a thread can be rated and marked pinned at the same time.
   final Set<ThreadState> stateSet;
-}
-
-@immutable
-class NormalThread {
-  NormalThread.fromTBody(uh.Element element) : _info = _buildFromTBody(element);
-
-  final _NormalThreadInfo _info;
-
-  String get title => _info.title;
-
-  String get url => _info.url;
-
-  String get threadID => _info.threadID;
-
-  User get author => _info.author;
-
-  DateTime? get publishDate => _info.publishDate;
-
-  User get latestReplyAuthor => _info.latestReplyAuthor;
-
-  DateTime? get latestReplyTime => _info.latestReplyTime;
-
-  String get iconUrl => _info.iconUrl;
-
-  ThreadType? get threadType => _info.threadType;
-
-  int get replyCount => _info.replyCount;
-
-  int get viewCount => _info.viewCount;
-
-  int? get price => _info.price;
-
-  CssTypes? get css => _info.css;
-
-  Set<ThreadState> get stateSet => _info.stateSet;
 
   /// Build a [NormalThread] model with the given [uh.Element]
   ///
   /// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
-  static _NormalThreadInfo _buildFromTBody(uh.Element threadElement) {
+  static NormalThread? fromTBody(uh.Element threadElement) {
     final stateSet = <ThreadState>{};
 
     final threadIconNode = threadElement.querySelector('tr > td > a > img');
@@ -217,7 +181,12 @@ class NormalThread {
       stateSet.addAll(threadIconNode._parseThreadStateFromImg());
     }
     final threadIconUrl = threadIconNode?.attributes['src']?.prependHost();
+    if (threadIconUrl == null) {
+      debug('failed to build thread: invalid thread icon url');
+      return null;
+    }
 
+    // Allow not found.
     final threadTypeNode =
         threadElement.querySelector('tr > th > em > a:nth-child(1)');
     final threadTypeUrl = threadTypeNode?.attributes['href'];
@@ -227,6 +196,10 @@ class NormalThread {
     final threadUrl = threadUrlNode?.attributes['href'];
     final threadTitle = threadUrlNode?.firstEndDeepText()?.trim();
     final css = parseCssString(threadUrlNode?.attributes['style'] ?? '');
+    if (threadUrl == null || threadTitle == null) {
+      debug('failed to build thread: url or title not found');
+      return null;
+    }
 
     final threadPrice = threadElement
         .querySelector('tr > th > span.xw1')
@@ -242,7 +215,15 @@ class NormalThread {
     final threadPublishDate = threadAuthorNode
         ?.querySelector('em > span')
         ?.firstEndDeepText()
-        ?.trim();
+        ?.trim()
+        .parseToDateTimeUtc8();
+    if (threadAuthorUrl == null ||
+        threadAuthorName == null ||
+        threadPublishDate == null) {
+      debug(
+          'failed to build thread: invalid author or thread publish date not found');
+      return null;
+    }
 
     final threadStatisticsNode = threadElement.querySelector('tr > td.num');
     final threadReplyCount = threadStatisticsNode
@@ -265,11 +246,27 @@ class NormalThread {
         // Within 7 days.
         threadLastReplyNode
                 ?.querySelector('em > a > span')
-                ?.attributes['title'] ??
+                ?.attributes['title']
+                ?.parseToDateTimeUtc8() ??
             // 7 days ago.
-            threadLastReplyNode?.querySelector('em > a')?.firstEndDeepText();
+            threadLastReplyNode
+                ?.querySelector('em > a')
+                ?.firstEndDeepText()
+                ?.parseToDateTimeUtc8();
 
-    final threadID = threadUrl?.uriQueryParameter('tid');
+    if (threadLastReplyAuthorName == null ||
+        threadLastReplyAuthorUrl == null ||
+        threadLastReplyTime == null) {
+      debug(
+          'failed to build thread: invalid last reply user info or last reply time not found');
+      return null;
+    }
+
+    final threadID = threadUrl.uriQueryParameter('tid');
+    if (threadID == null) {
+      debug('failed to build thread: thread ID not found');
+      return null;
+    }
 
     // Parse thread state from images following title text.
     final stateList = threadElement
@@ -280,22 +277,22 @@ class NormalThread {
         .toList();
     stateSet.addAll(stateList);
 
-    return _NormalThreadInfo(
-      title: threadTitle ?? '',
-      url: threadUrl ?? '',
-      threadID: threadID ?? '',
+    return NormalThread(
+      title: threadTitle,
+      url: threadUrl,
+      threadID: threadID,
       author: User(
-        name: threadAuthorName ?? '',
+        name: threadAuthorName,
         uid: threadAuthorUid,
-        url: threadAuthorUrl ?? '',
+        url: threadAuthorUrl,
       ),
-      publishDate: threadPublishDate?.parseToDateTimeUtc8(),
+      publishDate: threadPublishDate,
       latestReplyAuthor: User(
-        name: threadLastReplyAuthorName ?? '',
-        url: threadLastReplyAuthorUrl ?? '',
+        name: threadLastReplyAuthorName,
+        url: threadLastReplyAuthorUrl,
       ),
-      latestReplyTime: threadLastReplyTime?.parseToDateTimeUtc8(),
-      iconUrl: threadIconUrl ?? '',
+      latestReplyTime: threadLastReplyTime,
+      iconUrl: threadIconUrl,
       threadType: parseThreadType(threadTypeName, threadTypeUrl),
       replyCount: threadReplyCount ?? 0,
       viewCount: threadViewCount ?? 0,
@@ -303,23 +300,5 @@ class NormalThread {
       css: css,
       stateSet: stateSet,
     );
-  }
-
-  bool isValid() {
-    if (title.isEmpty ||
-        url.isEmpty ||
-        iconUrl.isEmpty ||
-        threadID.isEmpty ||
-        !author.isValid() ||
-        publishDate == null ||
-        !latestReplyAuthor.isValid() ||
-        latestReplyTime == null) {
-      debug(
-        'failed to parse normal thread page: $title, $url, $iconUrl, $author, $publishDate, $latestReplyAuthor, $latestReplyTime',
-      );
-      return false;
-    }
-
-    return true;
   }
 }
