@@ -2,22 +2,23 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 
 part 'checkin_button_event.dart';
 part 'checkin_button_state.dart';
 
 class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
-  CheckinButtonBloc(
-      {required CheckinProvider checkinProvider,
-      required AuthenticationRepository authenticationRepository})
-      : _checkinProvider = checkinProvider,
+  CheckinButtonBloc({
+    required CheckinProvider checkinProvider,
+    required AuthenticationRepository authenticationRepository,
+    required SettingsRepository settingsRepository,
+  })  : _checkinProvider = checkinProvider,
         _authenticationRepository = authenticationRepository,
+        _settingsRepository = settingsRepository,
         super(const CheckinButtonInitial()) {
     on<CheckinButtonRequested>(_onCheckinButtonRequested);
     on<_CheckinButtonAuthChanged>(_onCheckinButtonAuthChanged);
@@ -30,6 +31,7 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
 
   final CheckinProvider _checkinProvider;
   final AuthenticationRepository _authenticationRepository;
+  final SettingsRepository _settingsRepository;
 
   Future<void> _onCheckinButtonRequested(
     CheckinButtonRequested event,
@@ -40,8 +42,8 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
       return;
     }
     emit(const CheckinButtonLoading());
-    final checkinFeeling = getIt.get<SettingsProvider>().getCheckinFeeling();
-    final checkinMessage = getIt.get<SettingsProvider>().getCheckinMessage();
+    final checkinFeeling = _settingsRepository.getCheckinFeeling();
+    final checkinMessage = _settingsRepository.getCheckinMessage();
     final result = await _checkinProvider.checkin(
         CheckinFeeling.from(checkinFeeling), checkinMessage);
     if (result is CheckinButtonSuccess) {
