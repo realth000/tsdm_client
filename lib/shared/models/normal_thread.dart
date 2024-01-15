@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -92,7 +93,7 @@ enum ThreadState {
   final IconData icon;
 }
 
-class NormalThread {
+class NormalThread extends Equatable {
   const NormalThread({
     required this.title,
     required this.url,
@@ -301,4 +302,22 @@ class NormalThread {
       stateSet: stateSet,
     );
   }
+
+  @override
+  List<Object?> get props => [
+        title,
+        url,
+        threadID,
+        author,
+        publishDate,
+        latestReplyAuthor,
+        latestReplyTime,
+        iconUrl,
+        threadType,
+        replyCount,
+        viewCount,
+        price,
+        css,
+        stateSet,
+      ];
 }

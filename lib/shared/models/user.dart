@@ -1,10 +1,12 @@
 // TODO: Construct from html node.
+import 'package:equatable/equatable.dart';
+
 /// Author of a thread.
 ///
 /// Contains name and user page url.
-class User {
+class User extends Equatable {
   /// Freezed constructor.
-  User({
+  const User({
     required this.name,
     required this.url,
     this.uid,
@@ -12,18 +14,18 @@ class User {
   });
 
   /// User name.
-  String name;
+  final String name;
 
   /// User homepage url.
-  String url;
+  final String url;
 
   /// User id.
   ///
   /// For somewhere we can not get user id, this can not be "required".
-  String? uid;
+  final String? uid;
 
   /// User avatar, may be null.
-  String? avatarUrl;
+  final String? avatarUrl;
 
   bool isValid() {
     if (name.isEmpty || url.isEmpty) {
@@ -32,8 +34,13 @@ class User {
     return true;
   }
 
+  bool isNotValid() => !isValid();
+
   @override
   String toString() {
     return 'User{ $name, $url, $uid, $avatarUrl }';
   }
+
+  @override
+  List<Object?> get props => [name, url, uid, avatarUrl];
 }

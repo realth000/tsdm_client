@@ -1,10 +1,9 @@
-import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 
 /// Thread type
 ///
 /// 宣传、心情、其他……
-@immutable
-class ThreadType {
+class ThreadType extends Equatable {
   /// Constructor.
   const ThreadType({
     required this.name,
@@ -16,6 +15,9 @@ class ThreadType {
 
   /// Url.
   final String url;
+
+  @override
+  List<Object?> get props => [name, url];
 }
 
 /// Parse and build [ThreadType]
