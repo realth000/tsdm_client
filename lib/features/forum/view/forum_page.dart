@@ -172,6 +172,13 @@ class _ForumPageState extends State<ForumPage>
   }
 
   @override
+  void dispose() {
+    _listScrollController.dispose();
+    _refreshController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     tabController ??= TabController(
       initialIndex: _threadTabIndex,
