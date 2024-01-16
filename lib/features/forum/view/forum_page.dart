@@ -198,6 +198,13 @@ class _ForumPageState extends State<ForumPage>
       ],
       child: BlocBuilder<ForumBloc, ForumState>(
         builder: (context, state) {
+          if (state.status == ForumStatus.success &&
+              state.normalThreadList.isEmpty) {
+            tabController?.animateTo(
+              _subredditTabIndex,
+              duration: const Duration(milliseconds: 500),
+            );
+          }
           // Update jump page state.
           context.read<JumpPageCubit>().setPageInfo(
                 currentPage: state.currentPage,
