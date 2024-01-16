@@ -1,4 +1,3 @@
-import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -52,12 +51,6 @@ class _ThreadPageState extends State<ThreadPage>
   final _listScrollController = ScrollController();
 
   final _replyBarController = ReplyBarController();
-
-  /// Controller of the [EasyRefresh] in thread tab.
-  final _refreshController = EasyRefreshController(
-    controlFinishRefresh: true,
-    controlFinishLoad: true,
-  );
 
   Future<void> replyPostCallback(
       User user, int? postFloor, String? replyAction) async {
@@ -121,7 +114,6 @@ class _ThreadPageState extends State<ThreadPage>
   @override
   void dispose() {
     _listScrollController.dispose();
-    _refreshController.dispose();
     super.dispose();
   }
 
@@ -205,17 +197,8 @@ class _ThreadPageState extends State<ThreadPage>
                 onSelected: (value) async {
                   switch (value) {
                     case MenuActions.refresh:
-                      await _listScrollController.animateTo(
-                        0,
-                        curve: Curves.ease,
-                        duration: const Duration(milliseconds: 500),
-                      );
-                      Future.delayed(const Duration(milliseconds: 100),
-                          () async {
-                        await _refreshController.callRefresh(
-                          scrollController: _listScrollController,
-                        );
-                      });
+                      context.read<ThreadBloc>().add(ThreadRefreshRequested());
+
                     case MenuActions.copyUrl:
                       await Clipboard.setData(ClipboardData(text: threadUrl));
                       if (!context.mounted) {

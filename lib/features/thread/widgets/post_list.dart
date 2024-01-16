@@ -68,6 +68,9 @@ class _PostListState<T> extends State<PostList> {
     controlFinishLoad: true,
   );
 
+  /// [ScrollController] comes from outside.
+  ///
+  /// Do NOT dispose it here.
   late final ScrollController _listScrollController;
 
   @override
@@ -80,7 +83,6 @@ class _PostListState<T> extends State<PostList> {
 
   @override
   void dispose() {
-    _listScrollController.dispose();
     _refreshController.dispose();
     super.dispose();
   }
