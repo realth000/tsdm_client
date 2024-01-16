@@ -264,6 +264,7 @@ class _ReplyBarState extends State<ReplyBar> {
 
         // Should update close state of the current reply bar because we may not send reply to closed threads.
         _closed = state.closed;
+        _replyParameters = state.replyParameters;
 
         return _buildContent(context, state);
       },
