@@ -1,12 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-/// Rate record for a single user.
-class SingleRate {
-  SingleRate({
+/// Single rate record for a single user.
+class SingleRate extends Equatable {
+  const SingleRate({
     required this.user,
     required this.attrValueList,
   });
@@ -19,23 +20,20 @@ class SingleRate {
   /// Values for each attr in this rate.
   /// Should have same length with attrList in rate info table.
   final List<String> attrValueList;
+
+  @override
+  List<Object?> get props => [user, attrValueList];
 }
 
-class _RateInfo {
-  _RateInfo({
+/// Rate record for a single user.
+class Rate extends Equatable {
+  const Rate({
     required this.userCount,
     required this.detailUrl,
     required this.attrList,
     required this.records,
     required this.rateStatus,
   });
-
-  _RateInfo.empty()
-      : userCount = null,
-        detailUrl = null,
-        attrList = [],
-        records = [],
-        rateStatus = null;
 
   /// Count of users rated.
   final int? userCount;
@@ -53,50 +51,50 @@ class _RateInfo {
 
   /// Total rate status.
   final String? rateStatus;
-}
 
-/// Rate record for a single post.
-///
-/// Contains a series of [SingleRate]s, including rated attributes and their
-/// values. Users who rated also recorded.
-class Rate {
   /// Build a [Rate] from element <dl id="ratelog_xxx" class="rate">.
-  Rate.fromRateLogNode(uh.Element element)
-      : _info = _buildRateInfoFromNode(element);
-
-  final _RateInfo _info;
-
-  int? get userCount => _info.userCount;
-
-  String? get detailUrl => _info.detailUrl;
-
-  List<String> get attrList => _info.attrList;
-
-  List<SingleRate> get records => _info.records;
-
-  String? get rateStatus => _info.rateStatus;
-
-  static _RateInfo _buildRateInfoFromNode(uh.Element element) {
+  static Rate? fromRateLogNode(uh.Element? element) {
+    if (element == null) {
+      return null;
+    }
     final rateHeaders =
         element.querySelectorAll('table > tbody:nth-child(1) > tr > th');
     if (rateHeaders.length < 2) {
-      return _RateInfo.empty();
+      debug('failed to build rate: invalid rate header');
+      return null;
     }
 
     final infoNode = rateHeaders.firstOrNull?.querySelector('a');
     final userCount =
         infoNode?.querySelector('span.xi1')?.firstEndDeepText()?.parseToInt();
+    if (userCount == null) {
+      debug('failed to build rate: user count not found');
+      return null;
+    }
     final detailUrl = infoNode?.firstHref();
+    if (detailUrl == null) {
+      debug('failed to build rate: detail url not found');
+      return null;
+    }
     final attrList = rateHeaders
         .skip(1)
         .map((e) => e.querySelector('i')?.firstEndDeepText()?.trim())
         .whereType<String>()
         .toList();
+    if (attrList.isEmpty) {
+      debug('failed to build rate: rate attr list is empty');
+      return null;
+    }
 
     final recordNodeList =
         element.querySelectorAll('table > tbody.ratl_l > tr');
     final records =
         recordNodeList.map(_parseSingleRate).whereType<SingleRate>().toList();
+    if (records.isEmpty) {
+      debug('failed to build rate: records is empty');
+      return null;
+    }
+
     final rateStatus = element
         .querySelector('p.ratc')
         ?.querySelectorAll('span')
@@ -104,8 +102,12 @@ class Rate {
         .whereType<String>()
         .toList()
         .join(' ');
+    if (rateStatus == null) {
+      debug('failed to build rate: rate status not found');
+      return null;
+    }
 
-    return _RateInfo(
+    return Rate(
       userCount: userCount,
       detailUrl: detailUrl,
       attrList: attrList,
@@ -141,17 +143,12 @@ class Rate {
     );
   }
 
-  bool isValid() {
-    if (userCount == null ||
-        detailUrl == null ||
-        attrList.isEmpty ||
-        records.isEmpty ||
-        rateStatus == null) {
-      debug(
-          'invalid rate $userCount, $detailUrl, $attrList, $records, $rateStatus');
-      return false;
-    }
-
-    return true;
-  }
+  @override
+  List<Object?> get props => [
+        userCount,
+        detailUrl,
+        attrList,
+        records,
+        rateStatus,
+      ];
 }

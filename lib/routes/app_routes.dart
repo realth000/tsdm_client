@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
+import 'package:tsdm_client/features/thread/view/thread_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
 import 'package:tsdm_client/features/upgrade/view/upgrade_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -77,6 +78,21 @@ final router = GoRouter(
         );
       },
     ),
+    AppRoute(
+        path: ScreenPaths.thread,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final title = state.uri.queryParameters['appBarTitle'];
+          final threadType = state.uri.queryParameters['threadType'];
+          final tid = state.pathParameters['tid']!;
+          final pageNumber = state.uri.queryParameters['pageNumber'];
+          return ThreadPage(
+            title: title,
+            threadType: threadType,
+            threadID: tid,
+            pageNumber: pageNumber ?? '1',
+          );
+        }),
   ],
 );
 

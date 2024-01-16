@@ -1,11 +1,11 @@
+import 'package:equatable/equatable.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:universal_html/html.dart' as uh;
 
 @sealed
-@immutable
-class _LockedInfo {
+class _LockedInfo extends Equatable {
   const _LockedInfo._();
 
   const factory _LockedInfo.points({
@@ -21,10 +21,12 @@ class _LockedInfo {
   }) = _LockedWithPurchase;
 
   const factory _LockedInfo.reply() = _LockedWithReply;
+
+  @override
+  List<Object?> get props => [];
 }
 
 /// This section is invisible because current user does not have enough points.
-@immutable
 final class _LockedWithPoints extends _LockedInfo {
   const _LockedWithPoints({
     required this.requiredPoints,
@@ -36,10 +38,12 @@ final class _LockedWithPoints extends _LockedInfo {
 
   /// Points current user has.
   final int points;
+
+  @override
+  List<Object?> get props => [requiredPoints, points];
 }
 
 /// This section needs purchase to be visible.
-@immutable
 final class _LockedWithPurchase extends _LockedInfo {
   const _LockedWithPurchase(
       {required this.price,
@@ -59,15 +63,17 @@ final class _LockedWithPurchase extends _LockedInfo {
 
   /// How many people have purchased.
   final int purchasedCount;
+
+  @override
+  List<Object?> get props => [tid, pid, price, purchasedCount];
 }
 
 /// This section needs reply to be visible.
-@immutable
 final class _LockedWithReply extends _LockedInfo {
   const _LockedWithReply() : super._();
 }
 
-class Locked {
+class Locked extends Equatable {
   /// Build a [Locked] from html node [element] where [element] is:
   /// <div class="locked">
   ///
@@ -242,4 +248,7 @@ class Locked {
   }
 
   bool isNotValid() => !isValid();
+
+  @override
+  List<Object?> get props => [_info];
 }

@@ -294,7 +294,7 @@ class NormalThread extends Equatable {
       ),
       latestReplyTime: threadLastReplyTime,
       iconUrl: threadIconUrl,
-      threadType: parseThreadType(threadTypeName, threadTypeUrl),
+      threadType: ThreadType.parse(threadTypeName, threadTypeUrl),
       replyCount: threadReplyCount ?? 0,
       viewCount: threadViewCount ?? 0,
       price: threadPrice,

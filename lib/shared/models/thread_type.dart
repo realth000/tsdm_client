@@ -10,6 +10,14 @@ class ThreadType extends Equatable {
     required this.url,
   });
 
+  /// Parse and build [ThreadType]
+  static ThreadType? parse(String? name, String? url) {
+    if (name != null && url != null) {
+      return ThreadType(name: name, url: url);
+    }
+    return null;
+  }
+
   /// Display name.
   final String name;
 
@@ -18,12 +26,4 @@ class ThreadType extends Equatable {
 
   @override
   List<Object?> get props => [name, url];
-}
-
-/// Parse and build [ThreadType]
-ThreadType? parseThreadType(String? name, String? url) {
-  if (name != null && url != null) {
-    return ThreadType(name: name, url: url);
-  }
-  return null;
 }

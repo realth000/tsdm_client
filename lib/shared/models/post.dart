@@ -1,5 +1,5 @@
 import 'package:collection/collection.dart';
-import 'package:flutter/foundation.dart';
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/locked.dart';
@@ -9,16 +9,21 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
 extension _ParseExtension on uh.Element {
+  static final _rateActionRe = RegExp(r"'rate', '(?<url>forum.php[^']*)',");
+
   String? _parseRateAction() {
-    return Post._rateActionRe
+    return _rateActionRe
         .firstMatch(attributes['onclick'] ?? '')
         ?.namedGroup('url');
   }
 }
 
-class _PostInfo {
+/// Post model.
+///
+/// Each [Post] contains a reply.
+class Post extends Equatable {
   /// Constructor.
-  _PostInfo({
+  const Post({
     required this.postID,
     required this.postFloor,
     required this.author,
@@ -31,72 +36,44 @@ class _PostInfo {
   });
 
   /// Post ID.
-  String postID;
+  final String postID;
 
   /// Post floor number.
   /// Make it nullable to be compatible with all web page styles.
-  int? postFloor;
+  final int? postFloor;
 
   /// Post author, can not be null, should have avatar.
-  User author;
+  final User author;
 
   /// Post publish time.
-  DateTime? publishTime;
+  final DateTime? publishTime;
 
   // TODO: Confirm data display.
   /// Post data.
-  String data;
+  final String data;
 
   /// `<div class="locked">` after `<div id="postmessage_xxx">`.
   /// Need purchase to see full thread content.
-  List<Locked> locked;
+  final List<Locked> locked;
 
   /// `<dl id="ratelog_xxx">` in `<div class="pcb">`.
   /// Rate records on this post.
-  Rate? rate;
+  final Rate? rate;
 
   /// Url to reply this post.
-  String? replyAction;
+  final String? replyAction;
 
   /// Url to rate this post.
-  String? rateAction;
-}
+  final String? rateAction;
 
-/// Post model.
-///
-/// Each [Post] contains a reply.
-@immutable
-class Post {
   // [element] has id "post_$postID".
-  Post.fromPostNode(uh.Element element)
-      : _info = _buildPostFromElement(element);
-
-  static final _rateActionRe = RegExp(r"'rate', '(?<url>forum.php[^']*)',");
-
-  final _PostInfo _info;
-
-  String get postID => _info.postID;
-
-  int? get postFloor => _info.postFloor;
-
-  User get author => _info.author;
-
-  DateTime? get publishTime => _info.publishTime;
-
-  String get data => _info.data;
-
-  List<Locked> get locked => _info.locked;
-
-  String? get replyAction => _info.replyAction;
-
-  String? get rateAction => _info.rateAction;
-
-  Rate? get rate => _info.rate;
-
-  /// Build [Post] from [uh.Element].
-  static _PostInfo _buildPostFromElement(uh.Element element) {
+  static Post? fromPostNode(uh.Element element) {
     final trRootNode = element.querySelector('table > tbody > tr');
     final postID = element.id.replaceFirst('post_', '');
+    if (postID.isEmpty) {
+      debug('failed to build post: empty post ID');
+      return null;
+    }
     // <td class="pls">
     final postInfoNode =
         trRootNode?.querySelector('td:nth-child(1) > div#ts_avatar_$postID');
@@ -117,6 +94,11 @@ class Post {
       url: postAuthorUrl?.prependHost() ?? '',
       avatarUrl: postAuthorAvatarUrl,
     );
+
+    if (postAuthor.isNotValid()) {
+      debug('failed to build post: invalid author: $postAuthor');
+      return null;
+    }
 
     final postDataNode = trRootNode?.querySelector('td:nth-child(2)');
     final postPublishTimeNode =
@@ -158,13 +140,7 @@ class Post {
         ?.firstHref();
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');
-    Rate? rate;
-    if (rateNode != null) {
-      final r = Rate.fromRateLogNode(rateNode);
-      if (r.isValid()) {
-        rate = r;
-      }
-    }
+    final rate = Rate.fromRateLogNode(rateNode);
 
     // Parse rate action:
     // * If current post is the first floor in thread, rate action node is in <div id="fj">...</div>.
@@ -186,7 +162,7 @@ class Post {
 
     rateAction?.prependHost();
 
-    return _PostInfo(
+    return Post(
       postID: postID,
       postFloor: postFloor,
       author: postAuthor,
@@ -202,7 +178,10 @@ class Post {
   /// Build a list of [Post] from the given [ThreadData] [uh.Element].
   ///
   /// [element]'s id is "postlist".
-  static List<Post> buildListFromThreadDataNode(uh.Element element) {
+  static List<Post> buildListFromThreadDataNode(uh.Element? element) {
+    if (element == null) {
+      return [];
+    }
     final threadDataRootNode =
         // Style 5
         element.querySelector('div.bm > div') ??
@@ -215,8 +194,9 @@ class Post {
       if ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
         // Build post here.
         final post = Post.fromPostNode(currentElement);
-        if (!post.isValid()) {
+        if (post == null) {
           debug('warning: post is empty');
+          continue;
         }
         tdPostList.add(post);
       }
@@ -228,11 +208,16 @@ class Post {
     return tdPostList;
   }
 
-  bool isValid() {
-    if (postID.isEmpty || !author.isValid()) {
-      debug('failed to parse post: $postID $author');
-      return false;
-    }
-    return true;
-  }
+  @override
+  List<Object?> get props => [
+        postID,
+        postFloor,
+        author,
+        publishTime,
+        data,
+        replyAction,
+        rateAction,
+        locked,
+        rate,
+      ];
 }
