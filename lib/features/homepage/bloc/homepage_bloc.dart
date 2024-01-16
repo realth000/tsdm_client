@@ -16,6 +16,13 @@ import 'package:universal_html/html.dart' as uh;
 part 'homepage_event.dart';
 part 'homepage_state.dart';
 
+extension ExtractProfileAvatar on uh.Document {
+  String? extractAvatar() {
+    return querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+        ?.imageUrl();
+  }
+}
+
 /// Bloc for the homepage of the app.
 class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   HomepageBloc({
@@ -26,8 +33,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
         _profileRepository = profileRepository,
         _authenticationRepository = authenticationRepository,
         super(forumHomeRepository.hasCache()
-            ? _parseStateFromDocument(forumHomeRepository.getCache()!,
-                authenticationRepository.currentUser?.username)
+            ? _parseStateFromDocument(
+                forumHomeRepository.getCache()!,
+                authenticationRepository.currentUser?.username,
+                avatarUrl: profileRepository.getCache()?.extractAvatar(),
+              )
             : const HomepageState()) {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
     on<HomepageRefreshRequested>(_onHomepageRefreshRequested);
@@ -54,7 +64,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     }
     if (_forumHomeRepository.hasCache()) {
       final s = _parseStateFromDocument(_forumHomeRepository.getCache()!,
-          _authenticationRepository.currentUser?.username);
+          _authenticationRepository.currentUser?.username,
+          avatarUrl: state.loggedUserInfo?.avatarUrl);
       emit(s);
       return;
     }
