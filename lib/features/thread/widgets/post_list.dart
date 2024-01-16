@@ -19,6 +19,7 @@ class PostList extends StatefulWidget {
     required this.postList,
     required this.widgetBuilder,
     required this.canLoadMore,
+    required this.scrollController,
     this.title,
     this.pageNumber = 1,
     this.useDivider = false,
@@ -48,6 +49,8 @@ class PostList extends StatefulWidget {
 
   final bool canLoadMore;
 
+  final ScrollController scrollController;
+
   @override
   State<PostList> createState() => _PostListState();
 }
@@ -65,13 +68,14 @@ class _PostListState<T> extends State<PostList> {
     controlFinishLoad: true,
   );
 
-  final _listScrollController = ScrollController();
+  late final ScrollController _listScrollController;
 
   @override
   void initState() {
     super.initState();
     // Try use the thread type in widget which comes from routing.
     _threadType = widget.threadType;
+    _listScrollController = widget.scrollController;
   }
 
   @override

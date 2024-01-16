@@ -86,6 +86,7 @@ class _ThreadPageState extends State<ThreadPage>
             title: widget.title ?? '',
             threadType: widget.threadType,
             pageNumber: pageNumber,
+            scrollController: _listScrollController,
             widgetBuilder: (context, post) => PostCard(
               post,
               replyCallback: replyPostCallback,

@@ -6,10 +6,10 @@ import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/post.dart';
 import 'package:tsdm_client/shared/models/reply_parameters.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh
-;
+import 'package:universal_html/html.dart' as uh;
 
-part 'thread_event.dart';part 'thread_state.dart';
+part 'thread_event.dart';
+part 'thread_state.dart';
 
 typedef ThreadEmitter = Emitter<ThreadState>;
 
