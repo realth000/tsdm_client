@@ -43,5 +43,5 @@ class ReplyState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, replyParameters];
+  List<Object?> get props => [status, replyParameters, closed];
 }
