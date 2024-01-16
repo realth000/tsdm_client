@@ -168,10 +168,13 @@ class _ThreadPageState extends State<ThreadPage>
                   totalPages: state.totalPages,
                 );
 
+            String? title;
+
             // Reset jump page state when every build.
             if (state.status == ThreadStatus.loading ||
                 state.status == ThreadStatus.initial) {
               context.read<JumpPageCubit>().markLoading();
+              title = widget.title;
             } else {
               context.read<JumpPageCubit>().markSuccess();
             }
@@ -182,7 +185,7 @@ class _ThreadPageState extends State<ThreadPage>
 
             return Scaffold(
               appBar: ListAppBar(
-                title: widget.title,
+                title: title,
                 onSearch: () async {
                   await context.pushNamed(ScreenPaths.search);
                 },
