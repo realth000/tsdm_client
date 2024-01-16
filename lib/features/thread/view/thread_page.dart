@@ -169,7 +169,10 @@ class _ThreadPageState extends State<ThreadPage>
                 );
 
             // Reset jump page state when every build.
-            if (state.status != ThreadStatus.loading) {
+            if (state.status == ThreadStatus.loading ||
+                state.status == ThreadStatus.initial) {
+              context.read<JumpPageCubit>().markLoading();
+            } else {
               context.read<JumpPageCubit>().markSuccess();
             }
 
