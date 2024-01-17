@@ -5,6 +5,7 @@ import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
+import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
@@ -79,20 +80,37 @@ final router = GoRouter(
       },
     ),
     AppRoute(
-        path: ScreenPaths.thread,
-        parentNavigatorKey: _rootRouteKey,
-        builder: (state) {
-          final title = state.uri.queryParameters['appBarTitle'];
-          final threadType = state.uri.queryParameters['threadType'];
-          final tid = state.pathParameters['tid']!;
-          final pageNumber = state.uri.queryParameters['pageNumber'];
-          return ThreadPage(
-            title: title,
-            threadType: threadType,
-            threadID: tid,
-            pageNumber: pageNumber ?? '1',
-          );
-        }),
+      path: ScreenPaths.thread,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final title = state.uri.queryParameters['appBarTitle'];
+        final threadType = state.uri.queryParameters['threadType'];
+        final tid = state.pathParameters['tid']!;
+        final pageNumber = state.uri.queryParameters['pageNumber'];
+        return ThreadPage(
+          title: title,
+          threadType: threadType,
+          threadID: tid,
+          pageNumber: pageNumber ?? '1',
+        );
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.search,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final keyword = state.uri.queryParameters['keyword'];
+        final authorUid = state.uri.queryParameters['authorUid'];
+        final fid = state.uri.queryParameters['fid'];
+        final page = state.uri.queryParameters['page'];
+        return SearchPage(
+          keyword: keyword,
+          authorUid: authorUid,
+          fid: fid,
+          page: page,
+        );
+      },
+    ),
   ],
 );
 
