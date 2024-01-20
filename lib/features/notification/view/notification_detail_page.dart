@@ -102,6 +102,17 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
               }),
           };
 
+          // Update thread closed state to reply bar.
+          if (state.threadClosed) {
+            context
+                .read<ReplyBloc>()
+                .add(const ReplyThreadClosed(closed: true));
+          } else {
+            context
+                .read<ReplyBloc>()
+                .add(const ReplyThreadClosed(closed: false));
+          }
+
           return Scaffold(
             appBar: AppBar(
               title: Text(title),

@@ -17,6 +17,7 @@ final class NotificationDetailState extends Equatable {
     this.tid,
     this.page,
     this.replyParameters,
+    this.threadClosed = true,
   });
 
   /// Detail page status.
@@ -32,6 +33,8 @@ final class NotificationDetailState extends Equatable {
   /// Parameters to reply to current carrying [Post].
   final ReplyParameters? replyParameters;
 
+  final bool threadClosed;
+
   NotificationDetailState copyWith({
     NotificationDetailStatus? status,
     Post? post,
@@ -39,6 +42,7 @@ final class NotificationDetailState extends Equatable {
     String? tid,
     String? pid,
     String? page,
+    bool? threadClosed,
   }) {
     return NotificationDetailState(
       status: status ?? this.status,
@@ -47,6 +51,7 @@ final class NotificationDetailState extends Equatable {
       tid: tid ?? this.tid,
       pid: pid ?? this.pid,
       page: page ?? this.page,
+      threadClosed: threadClosed ?? this.threadClosed,
     );
   }
 
@@ -58,5 +63,6 @@ final class NotificationDetailState extends Equatable {
         tid,
         pid,
         page,
+        threadClosed,
       ];
 }

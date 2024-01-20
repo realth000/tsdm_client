@@ -24,6 +24,8 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
       final (document, page) =
           await _notificationRepository.fetchNoticeDetail(url);
 
+      final threadClosed = document.querySelector('form#fastpostform') == null;
+
       final match = _pidRe.firstMatch(url);
       final pid = match?.namedGroup('pid');
       if (pid == null) {
@@ -56,6 +58,7 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
         tid: tid,
         pid: pid,
         page: page,
+        threadClosed: threadClosed,
       ));
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notification detail: $e');
