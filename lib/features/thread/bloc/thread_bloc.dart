@@ -47,7 +47,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     ThreadRefreshRequested event,
     ThreadEmitter emit,
   ) async {
-    emit(state.copyWith(status: ThreadStatus.loading));
+    emit(state.copyWith(status: ThreadStatus.loading, postList: []));
     try {
       final document = await _threadRepository.fetchThread(tid: state.tid);
       emit(await _parseFromDocument(document, 1));
