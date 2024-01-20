@@ -9,6 +9,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
+import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/forum.dart';
@@ -147,14 +148,16 @@ class _ForumPageState extends State<ForumPage>
               .read<ForumBloc>()
               .add(ForumLoadMoreRequested(state.currentPage));
         }),
-      ForumStatus.success => TabBarView(
-          controller: tabController,
-          children: [
-            _buildStickThreadTab(context, state.stickThreadList),
-            _buildNormalThreadTab(context, state.normalThreadList, state),
-            _buildSubredditTab(context, state.subredditList),
-          ],
-        ),
+      ForumStatus.success => state.needLogin
+          ? NeedLoginPage(backUri: GoRouterState.of(context).uri)
+          : TabBarView(
+              controller: tabController,
+              children: [
+                _buildStickThreadTab(context, state.stickThreadList),
+                _buildNormalThreadTab(context, state.normalThreadList, state),
+                _buildSubredditTab(context, state.subredditList),
+              ],
+            ),
     };
   }
 

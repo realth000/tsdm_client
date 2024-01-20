@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
+import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/widgets/post_list.dart';
@@ -107,7 +108,9 @@ class _ThreadPageState extends State<ThreadPage>
               .read<ThreadBloc>()
               .add(ThreadLoadMoreRequested(state.currentPage));
         }),
-      ThreadStatus.success => _buildContent(context, state),
+      ThreadStatus.success => state.needLogin
+          ? NeedLoginPage(backUri: GoRouterState.of(context).uri)
+          : _buildContent(context, state),
     };
   }
 
