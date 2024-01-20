@@ -10,7 +10,7 @@ import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/locked.dart';
 import 'package:tsdm_client/widgets/card/code_card.dart';
-import 'package:tsdm_client/widgets/card/locked_card.dart';
+import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/review_card.dart';
 import 'package:tsdm_client/widgets/card/spoiler_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
