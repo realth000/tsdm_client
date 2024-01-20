@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
+import 'package:tsdm_client/features/notification/models/notice.dart';
+import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
+import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
@@ -109,6 +113,22 @@ final router = GoRouter(
           fid: fid,
           page: page,
         );
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.notice,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const NotificationPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.reply,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final target = state.pathParameters['target']!;
+        final noticeTypeIndex =
+            state.uri.queryParameters['noticeType']!.parseToInt()!;
+        return NoticeDetailPage(
+            url: target, noticeType: NoticeType.values[noticeTypeIndex]);
       },
     ),
   ],

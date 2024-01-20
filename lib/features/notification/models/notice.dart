@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -15,8 +16,9 @@ enum NoticeType {
   mention,
 }
 
-class _NoticeInfo {
-  _NoticeInfo({
+/// A single notice for current user.
+class Notice extends Equatable {
+  const Notice({
     required this.userAvatarUrl,
     required this.username,
     required this.userSpaceUrl,
@@ -79,44 +81,12 @@ class _NoticeInfo {
 
   /// Comment when scoring.
   final String? quotedMessage;
-}
 
-class Notice {
   /// Build a [Notice] from html node [element] :
   /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl (notice=xxx)
   ///
   /// This css selector may work in all web page styles.
-  Notice.fromClNode(uh.Element element) : _info = _buildPostFromClNode(element);
-
-  final _NoticeInfo _info;
-
-  String? get userAvatarUrl => _info.userAvatarUrl;
-
-  String? get username => _info.username;
-
-  String? get userSpaceUrl => _info.userSpaceUrl;
-
-  DateTime? get noticeTime => _info.noticeTime;
-
-  String? get noticeTimeString => _info.noticeTimeString;
-
-  String? get noticeThreadUrl => _info.noticeThreadUrl;
-
-  String? get noticeThreadTitle => _info.noticeThreadTitle;
-
-  String? get redirectUrl => _info.redirectUrl;
-
-  int? get ignoreCount => _info.ignoreCount;
-
-  NoticeType get noticeType => _info.noticeType;
-
-  String? get score => _info.score;
-
-  String? get quotedMessage => _info.quotedMessage;
-
-  /// [element] :
-  /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl (notice=xxx)
-  static _NoticeInfo _buildPostFromClNode(uh.Element element) {
+  static Notice? fromClNode(uh.Element element) {
     final userAvatarUrl = element.querySelector('dd.avt > a > img')?.imageUrl();
     var userSpaceUrl =
         element.querySelector('dd.avt > a')?.firstHref()?.prependHost();
@@ -203,7 +173,24 @@ class Notice {
         .elementAtOrNull(1)
         ?.parseToInt();
 
-    return _NoticeInfo(
+    // Validate
+    if (noticeType == NoticeType.mention) {
+      if (username == null || userSpaceUrl == null || redirectUrl == null) {
+        debug(
+            'failed to parse mention notice: $username, $userSpaceUrl, $noticeTime, $redirectUrl');
+        return null;
+      }
+    } else if (username == null ||
+        userSpaceUrl == null ||
+        noticeTime == null ||
+        noticeThreadTitle == null ||
+        redirectUrl == null) {
+      debug(
+          'failed to parse $noticeType notice: $username, $userSpaceUrl, $noticeTime, $noticeThreadUrl, $noticeThreadTitle, $redirectUrl');
+      return null;
+    }
+
+    return Notice(
       userAvatarUrl: userAvatarUrl,
       noticeTime: noticeTime,
       noticeTimeString: noticeTimeString ?? '',
@@ -219,24 +206,19 @@ class Notice {
     );
   }
 
-  bool isValid() {
-    if (noticeType == NoticeType.mention) {
-      if (username == null || userSpaceUrl == null || redirectUrl == null) {
-        debug(
-            'failed to parse mention notice: $username, $userSpaceUrl, $noticeTime, $redirectUrl');
-        return false;
-      }
-      return true;
-    } else if (username == null ||
-        userSpaceUrl == null ||
-        noticeTime == null ||
-        noticeThreadTitle == null ||
-        redirectUrl == null) {
-      debug(
-          'failed to parse $noticeType notice: $username, $userSpaceUrl, $noticeTime, $noticeThreadUrl, $noticeThreadTitle, $redirectUrl');
-      return false;
-    }
-
-    return true;
-  }
+  @override
+  List<Object?> get props => [
+        userAvatarUrl,
+        username,
+        userSpaceUrl,
+        noticeTime,
+        noticeTimeString,
+        noticeThreadUrl,
+        noticeThreadTitle,
+        redirectUrl,
+        ignoreCount,
+        noticeType,
+        score,
+        quotedMessage,
+      ];
 }

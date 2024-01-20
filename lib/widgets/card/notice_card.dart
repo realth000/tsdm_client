@@ -3,9 +3,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/notice.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
