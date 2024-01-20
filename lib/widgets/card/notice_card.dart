@@ -43,13 +43,14 @@ class NoticeCard extends StatelessWidget {
                 score: notice.score ?? '-',
               ),
             ),
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: edgeInsetsL15T15R15B15,
-                child: Text(notice.quotedMessage ?? ''),
-              ),
-            )
+            if (notice.quotedMessage?.isNotEmpty ?? false)
+              Card(
+                elevation: 2,
+                child: Padding(
+                  padding: edgeInsetsL15T15R15B15,
+                  child: Text(notice.quotedMessage!),
+                ),
+              )
           ],
         ),
       NoticeType.mention => Column(
