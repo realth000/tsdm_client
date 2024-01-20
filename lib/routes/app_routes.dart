@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/authentication/view/login_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
@@ -144,6 +145,19 @@ final router = GoRouter(
       builder: (state) {
         final url = state.uri.queryParameters['url']!;
         return LatestThreadPage(url: url);
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.login,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        if (state.extra == null) {
+          return const LoginPage();
+        }
+        final loginArgsMap = state.extra! as Map<String, dynamic>;
+        final redirectBackState =
+            loginArgsMap['redirectBackState'] as GoRouterState;
+        return LoginPage(redirectBackState: redirectBackState);
       },
     ),
   ],

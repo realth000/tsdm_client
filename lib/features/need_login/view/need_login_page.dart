@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -18,6 +20,7 @@ class NeedLoginPage extends StatelessWidget {
     required this.backUri,
     this.showAppBar = false,
     this.needPop = false,
+    this.popCallback,
     super.key,
   });
 
@@ -29,6 +32,8 @@ class NeedLoginPage extends StatelessWidget {
 
   /// Router uri to redirect back after login.
   final Uri backUri;
+
+  final FutureOr<void> Function(BuildContext context)? popCallback;
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +53,10 @@ class NeedLoginPage extends StatelessWidget {
                   return;
                 }
                 if (needPop) {
+                  await popCallback?.call(context);
+                  if (!context.mounted) {
+                    return;
+                  }
                   context.pushReplacement(
                     backUri.toString(),
                   );

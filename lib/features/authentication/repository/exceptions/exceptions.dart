@@ -1,5 +1,10 @@
 sealed class LoginException implements Exception {}
 
+final class LoginFormHashNotFoundException implements LoginException {}
+
+/// Found form hash, but it's not in the expect format.
+final class LoginInvalidFormHashException implements LoginException {}
+
 final class LoginMessageNotFoundException implements LoginException {}
 
 final class LoginIncorrectCaptchaException implements LoginException {}

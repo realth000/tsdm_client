@@ -18,6 +18,11 @@ class ProfileRepository {
   /// Get the cached [_loggedUserDocument] for logged user.
   uh.Document? getCache() => _loggedUserDocument;
 
+  /// Clear cache as logged out.
+  void logout() {
+    _loggedUserDocument = null;
+  }
+
   /// Profile page document cache;
 
   /// Fetch profile page from server.
@@ -42,7 +47,8 @@ class ProfileRepository {
     } else {
       // Fetching logged user profile.
       final loggedUser = getIt.get<SettingsProvider>().getLoginInfo();
-      if (loggedUser.$1.isEmpty || loggedUser.$2 < 0) {
+      if ((loggedUser.$1?.isEmpty ?? true) ||
+          (loggedUser.$2 == null || (loggedUser.$2! < 0))) {
         // Not logged in.
         return null;
       }

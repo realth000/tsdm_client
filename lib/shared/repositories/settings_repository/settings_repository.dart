@@ -106,7 +106,8 @@ class SettingsRepository {
     _controller.add(_state);
   }
 
-  (String username, int uid) getLoginInfo() => _settingsProvider.getLoginInfo();
+  (String? username, int? uid) getLoginInfo() =>
+      _settingsProvider.getLoginInfo();
 
   /// Update current login user username.
   ///

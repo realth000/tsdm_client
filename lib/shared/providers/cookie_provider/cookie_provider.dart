@@ -49,13 +49,13 @@ class CookieProvider {
       );
     }
     final loggedUsername = getIt.get<SettingsProvider>().getLoginInfo().$1;
-    if (loggedUsername.isEmpty) {
+    if (loggedUsername?.isEmpty ?? true) {
       return CookieData();
     }
 
     // Has user login before, load cookie.
     final databaseCookie =
-        getIt.get<SettingsProvider>().getCookie(loggedUsername);
+        getIt.get<SettingsProvider>().getCookie(loggedUsername!);
     if (databaseCookie == null) {
       debug(
         'failed to init cookie: current login user username=$username not found in database',

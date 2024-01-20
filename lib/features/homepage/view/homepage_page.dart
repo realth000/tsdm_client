@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
 import 'package:tsdm_client/features/homepage/widgets/pin_section.dart';
 import 'package:tsdm_client/features/homepage/widgets/welcome_section.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
@@ -57,8 +57,15 @@ class _HomepagePageState extends State<HomepagePage> {
               HomepageStatus.initial ||
               HomepageStatus.loading =>
                 const Center(child: CircularProgressIndicator()),
-              HomepageStatus.needLogin =>
-                NeedLoginPage(backUri: GoRouterState.of(context).uri),
+              HomepageStatus.needLogin => NeedLoginPage(
+                  backUri: GoRouterState.of(context).uri,
+                  needPop: true,
+                  popCallback: (context) {
+                    context
+                        .read<HomepageBloc>()
+                        .add(HomepageRefreshRequested());
+                  },
+                ),
               HomepageStatus.failed => buildRetryButton(context, () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 }),

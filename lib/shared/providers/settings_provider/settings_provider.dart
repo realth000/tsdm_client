@@ -31,7 +31,8 @@ abstract interface class SettingsProvider {
 
   Future<void> setThemeMode(int themeMode);
 
-  (String username, int uid) getLoginInfo();
+  // Return (null, null) if not logged in.
+  (String? username, int? uid) getLoginInfo();
 
   /// Update current login user username.
   ///
@@ -40,7 +41,7 @@ abstract interface class SettingsProvider {
   ///
   /// Note that the server side does not allow same username so it's safe to
   /// treat username as user identifier.
-  Future<void> setLoginInfo(String username, int uid);
+  Future<void> setLoginInfo(String? username, int? uid);
 
   /// Get a cookie belongs to user with [username].
   ///

@@ -63,6 +63,7 @@ final class HomepageState extends Equatable {
     LoggedUserInfo? loggedUserInfo,
     List<PinnedThreadGroup>? pinnedThreadGroupList,
     List<SwiperUrl>? swiperUrlList,
+    int? documentHashCode,
   }) {
     return HomepageState(
       status: status ?? this.status,

@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
 import 'package:tsdm_client/features/profile/models/user_profile.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
@@ -44,11 +44,26 @@ class _ProfilePageState extends State<ProfilePage> {
         child: BlocBuilder<ProfileBloc, ProfileState>(
           builder: (context, state) {
             return switch (state.status) {
-              ProfileStatus.initial ||
-              ProfileStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
-              ProfileStatus.needLogin =>
-                NeedLoginPage(backUri: GoRouterState.of(context).uri),
+              ProfileStatus.initial || ProfileStatus.loading => Scaffold(
+                  appBar: AppBar(
+                    title: Text(context.t.profilePage.title),
+                  ),
+                  body: const Center(child: CircularProgressIndicator()),
+                ),
+              ProfileStatus.needLogin => Scaffold(
+                  appBar: AppBar(
+                    title: Text(context.t.profilePage.title),
+                  ),
+                  body: NeedLoginPage(
+                    backUri: GoRouterState.of(context).uri,
+                    needPop: true,
+                    popCallback: (context) {
+                      context
+                          .read<ProfileBloc>()
+                          .add(ProfileRefreshRequested());
+                    },
+                  ),
+                ),
               ProfileStatus.failed => buildRetryButton(context, () {
                   context.read<ProfileBloc>().add(ProfileLoadRequested());
                 }),

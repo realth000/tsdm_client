@@ -109,7 +109,13 @@ class _ThreadPageState extends State<ThreadPage>
               .add(ThreadLoadMoreRequested(state.currentPage));
         }),
       ThreadStatus.success => state.needLogin
-          ? NeedLoginPage(backUri: GoRouterState.of(context).uri)
+          ? NeedLoginPage(
+              backUri: GoRouterState.of(context).uri,
+              needPop: true,
+              popCallback: (context) {
+                context.read<ThreadBloc>().add(ThreadRefreshRequested());
+              },
+            )
           : _buildContent(context, state),
     };
   }

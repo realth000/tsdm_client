@@ -98,6 +98,16 @@ class NetClientProvider {
     return resp;
   }
 
+  Future<Response<dynamic>> getImageFromUri(Uri uri) async {
+    final resp = await _dio.getUri(uri,
+        options: Options(
+          responseType: ResponseType.bytes,
+          headers: {'Accept': 'image/avif,image/webp,*/*'},
+        ));
+
+    return resp;
+  }
+
   /// Post [data] to [path] with [queryParameters].
   ///
   /// When post a form data, use [postForm] instead.

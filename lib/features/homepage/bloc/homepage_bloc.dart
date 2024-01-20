@@ -6,8 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -59,9 +59,6 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     HomepageLoadRequested event,
     Emitter<HomepageState> emit,
   ) async {
-    if (state.status.isNeedLogin || state.status.isLoading) {
-      return;
-    }
     if (_forumHomeRepository.hasCache()) {
       final s = _parseStateFromDocument(_forumHomeRepository.getCache()!,
           _authenticationRepository.currentUser?.username,
@@ -114,9 +111,6 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     HomepageRefreshRequested event,
     Emitter<HomepageState> emit,
   ) async {
-    if (state.status.isNeedLogin || state.status.isLoading) {
-      return;
-    }
     try {
       // Clear data.
       emit(const HomepageState(status: HomepageStatus.loading));

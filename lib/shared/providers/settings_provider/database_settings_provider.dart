@@ -118,11 +118,10 @@ class DatabaseSettingsProvider
   }
 
   @override
-  (String username, int uid) getLoginInfo() {
+  (String? username, int? uid) getLoginInfo() {
     final storage = _getStorage();
-    final username =
-        storage.getString(settingsLoginUsername) ?? defaultLoginUsername;
-    final uid = storage.getInt(settingsLoginUid) ?? defaultLoginUid;
+    final username = storage.getString(settingsLoginUsername);
+    final uid = storage.getInt(settingsLoginUid);
     return (username, uid);
   }
 
@@ -134,11 +133,21 @@ class DatabaseSettingsProvider
   /// Note that the server side does not allow same username so it's safe to
   /// treat username as user identifier.
   @override
-  Future<void> setLoginInfo(String username, int uid) async {
+  Future<void> setLoginInfo(String? username, int? uid) async {
     final storage = _getStorage();
 
-    await storage.saveString(settingsLoginUsername, username);
-    await storage.saveInt(settingsLoginUid, uid);
+    // Do NOT allow empty username or uid to represent not logged in state.
+    // Use null value to do that.
+    if (username == null) {
+      await storage.removeByKey(settingsLoginUsername);
+    } else {
+      await storage.saveString(settingsLoginUsername, username);
+    }
+    if (uid == null) {
+      await storage.removeByKey(settingsLoginUid);
+    } else {
+      await storage.saveInt(settingsLoginUid, uid);
+    }
   }
 
   /// Get a cookie belongs to user with [username].
@@ -147,7 +156,8 @@ class DatabaseSettingsProvider
   @override
   DatabaseCookie? getCookie(String username) {
     final storage = _getStorage();
-    return storage.getCookie(username);
+    final cookie = storage.getCookie(username);
+    return cookie;
   }
 
   /// Save cookie into database.

@@ -149,6 +149,21 @@ class StorageProvider {
 
   /*             settings             */
 
+  Future<bool> removeByKey(String key) async {
+    if (!settingsTypeMap.containsKey(key)) {
+      debug('failed to save settings: invalid key $key');
+      return false;
+    }
+    final old = _isar.databaseSettings.where().nameEqualTo(key).findFirst();
+    if (old == null) {
+      return true;
+    }
+    await _isar.writeAsync((isar) {
+      isar.databaseSettings.delete(old.id);
+    });
+    return true;
+  }
+
   /// Get string type value of specified key.
   String? getString(String key) =>
       _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.stringValue;

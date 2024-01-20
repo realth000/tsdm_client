@@ -149,7 +149,13 @@ class _ForumPageState extends State<ForumPage>
               .add(ForumLoadMoreRequested(state.currentPage));
         }),
       ForumStatus.success => state.needLogin
-          ? NeedLoginPage(backUri: GoRouterState.of(context).uri)
+          ? NeedLoginPage(
+              backUri: GoRouterState.of(context).uri,
+              needPop: true,
+              popCallback: (context) {
+                context.read<ForumBloc>().add(ForumRefreshRequested());
+              },
+            )
           : TabBarView(
               controller: tabController,
               children: [

@@ -5,14 +5,15 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
+import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
+import 'package:tsdm_client/features/authentication/repository/internal/user_info.dart';
+import 'package:tsdm_client/features/authentication/repository/models/hash.dart';
+import 'package:tsdm_client/features/authentication/repository/models/user.dart';
+import 'package:tsdm_client/features/authentication/repository/models/user_credential.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/exceptions/exceptions.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/internal/login_result.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/internal/user_info.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/models/user.dart';
-import 'package:tsdm_client/shared/repositories/authentication_repository/models/user_credential.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -55,6 +56,9 @@ class AuthenticationRepository {
       '$baseUrl/member.php?mod=logging&action=login&loginsubmit=yes&frommessage&loginhash=';
   static const _logoutBaseUrl =
       '$baseUrl/member.php?mod=logging&action=logout&formhash=';
+  static const _fakeFormUrl =
+      '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
+  static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
   static final _formHashRe = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 
   static String _buildLoginUrl(String formHash) {
@@ -78,6 +82,44 @@ class AuthenticationRepository {
     _controller.close();
   }
 
+  /// Fetch login hash and form hash for logging in.
+  ///
+  /// # Exception
+  ///
+  /// * **HttpRequestFailedException** when http request failed.
+  /// * **LoginFormHashNotFoundException** when form hash not found.
+  /// * **LoginInvalidFormHashException** when form hash found but not in the expected format.
+  Future<LoginHash> fetchHash() async {
+    // TODO: Parse CDATA.
+    // 返回的data是xml：
+    //
+    // <?xml version="1.0" encoding="utf-8"?>
+    // <root><![CDATA[
+    // <div id="main_messaqge_L5hJN">
+    // <div id="layer_login_L5hJN">
+    //
+    // 其中"main_message_"后面的是本次登录的loginHash，登录时需要加到url上
+    final rawDataResp = await getIt.get<NetClientProvider>().get(_fakeFormUrl);
+    if (rawDataResp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(rawDataResp.statusCode!);
+    }
+    final data = rawDataResp.data as String;
+    final match = _layerLoginRe.firstMatch(data);
+    final loginHash = match?.namedGroup('Hash');
+    if (loginHash == null) {
+      throw LoginFormHashNotFoundException();
+    }
+
+    final formHashMatch = _formHashRe.firstMatch(data);
+    final formHash = formHashMatch?.namedGroup('FormHash');
+    if (formHash == null) {
+      throw LoginInvalidFormHashException();
+    }
+
+    debug('get login hash $loginHash');
+    return LoginHash(formHash: formHash, loginHash: loginHash);
+  }
+
   Future<void> loginWithCookie(Map<String, dynamic> cookieMap) async {
     throw UnimplementedError();
   }
@@ -96,8 +138,8 @@ class AuthenticationRepository {
   Future<void> loginWithPassword(UserCredential credential) async {
     final target = _buildLoginUrl(credential.formHash);
     // FIXME: Now we indicate the login field in credential is always username.
-    final netClient = getIt.get<NetClientProvider>();
-    final resp = await netClient.postForm(target, data: credential);
+    final netClient = NetClientProvider(username: credential.loginFieldValue);
+    final resp = await netClient.postForm(target, data: credential.toJson());
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
     }
@@ -190,7 +232,10 @@ class AuthenticationRepository {
       // Here we'd better to check the failed reason, but it's ok without it.
       throw LogoutFailedException();
     }
-    await getIt.get<SettingsProvider>().setLoginInfo('', -1);
+    await getIt
+        .get<SettingsProvider>()
+        .deleteCookieByUsername(_authedUser?.username ?? '');
+    await getIt.get<SettingsProvider>().setLoginInfo(null, null);
     _authedUser = null;
     _controller.add(AuthenticationStatus.unauthenticated);
   }
