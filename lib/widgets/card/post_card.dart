@@ -52,71 +52,79 @@ class _PostCardState extends State<PostCard>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        ListTile(
-          leading: GestureDetector(
-            onTap: () async => context.dispatchAsUrl(widget.post.author.url),
-            child: CircleAvatar(
-              backgroundImage: CachedImageProvider(
-                widget.post.author.avatarUrl!,
-                context,
-                fallbackImageUrl: noAvatarUrl,
-              ),
-            ),
-          ),
-          title: Row(
-            children: [
-              GestureDetector(
+    return SingleChildScrollView(
+      child: Padding(
+        padding: edgeInsetsL10R10B10,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ListTile(
+              leading: GestureDetector(
                 onTap: () async =>
                     context.dispatchAsUrl(widget.post.author.url),
-                child: Text(widget.post.author.name),
-              ),
-              Expanded(child: Container()),
-            ],
-          ),
-          subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
-          trailing: widget.post.postFloor == null
-              ? null
-              : Text('#${widget.post.postFloor}'),
-        ),
-        GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: () async {
-            await widget.replyCallback?.call(widget.post.author,
-                widget.post.postFloor, widget.post.replyAction);
-          },
-          child: Row(
-            children: [
-              Expanded(
-                child: Padding(
-                  padding: edgeInsetsL15R15B10,
-                  child: munchElement(
-                      context, parseHtmlDocument(widget.post.data).body!),
+                child: CircleAvatar(
+                  backgroundImage: CachedImageProvider(
+                    widget.post.author.avatarUrl!,
+                    context,
+                    fallbackImageUrl: noAvatarUrl,
+                  ),
                 ),
               ),
-            ],
-          ),
-        ),
-        if (widget.post.locked.isNotEmpty)
-          ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
-        if (widget.post.rateAction != null)
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              IconButton(
-                icon: const Icon(Icons.thumb_up_outlined),
-                onPressed: () async => _rateCallback(),
+              title: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async =>
+                        context.dispatchAsUrl(widget.post.author.url),
+                    child: Text(widget.post.author.name),
+                  ),
+                  Expanded(child: Container()),
+                ],
               ),
-            ],
-          ),
-        if (widget.post.rate != null)
-          ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 712),
-            child: RateCard(widget.post.rate!),
-          ),
-      ],
+              subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
+              trailing: widget.post.postFloor == null
+                  ? null
+                  : Text('#${widget.post.postFloor}'),
+            ),
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: () async {
+                await widget.replyCallback?.call(widget.post.author,
+                    widget.post.postFloor, widget.post.replyAction);
+              },
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: edgeInsetsL15R15B10,
+                      child: munchElement(
+                          context, parseHtmlDocument(widget.post.data).body!),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            if (widget.post.locked.isNotEmpty)
+              ...widget.post.locked
+                  .where((e) => e.isValid())
+                  .map(LockedCard.new),
+            if (widget.post.rateAction != null)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.thumb_up_outlined),
+                    onPressed: () async => _rateCallback(),
+                  ),
+                ],
+              ),
+            if (widget.post.rate != null)
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 712),
+                child: RateCard(widget.post.rate!),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
