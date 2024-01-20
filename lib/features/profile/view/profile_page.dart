@@ -9,7 +9,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/authentication_repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
@@ -34,25 +34,33 @@ class _ProfilePageState extends State<ProfilePage> {
         authenticationRepository:
             RepositoryProvider.of<AuthenticationRepository>(context),
       )..add(ProfileLoadRequested()),
-      child: BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          return switch (state.status) {
-            ProfileStatus.initial ||
-            ProfileStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
-            ProfileStatus.needLogin =>
-              NeedLoginPage(backUri: GoRouterState.of(context).uri),
-            ProfileStatus.failed => buildRetrySnackbarButton(context, () {
-                context.read<ProfileBloc>().add(ProfileLoadRequested());
-              }),
-            ProfileStatus.success || ProfileStatus.logout => _buildBody(
-                context,
-                state.userProfile!,
-                failedToLogoutReason: state.failedToLogoutReason,
-                logout: state.status == ProfileStatus.logout,
-              ),
-          };
+      child: BlocListener<ProfileBloc, ProfileState>(
+        listener: (context, state) {
+          if (state.status == ProfileStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.t.general.failedToLoad)));
+          }
         },
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+          builder: (context, state) {
+            return switch (state.status) {
+              ProfileStatus.initial ||
+              ProfileStatus.loading =>
+                const Center(child: CircularProgressIndicator()),
+              ProfileStatus.needLogin =>
+                NeedLoginPage(backUri: GoRouterState.of(context).uri),
+              ProfileStatus.failed => buildRetryButton(context, () {
+                  context.read<ProfileBloc>().add(ProfileLoadRequested());
+                }),
+              ProfileStatus.success || ProfileStatus.logout => _buildBody(
+                  context,
+                  state.userProfile!,
+                  failedToLogoutReason: state.failedToLogoutReason,
+                  logout: state.status == ProfileStatus.logout,
+                ),
+            };
+          },
+        ),
       ),
     );
   }

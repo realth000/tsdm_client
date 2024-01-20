@@ -8,7 +8,7 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
@@ -89,58 +89,67 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
             ..fetchDetail(widget.url),
         )
       ],
-      child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
-        builder: (context, state) {
-          final body = switch (state.status) {
-            NotificationDetailStatus.initial ||
-            NotificationDetailStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
-            NotificationDetailStatus.success => _buildBody(context, state),
-            NotificationDetailStatus.failed =>
-              buildRetrySnackbarButton(context, () {
-                context.read<NotificationDetailCubit>().fetchDetail(widget.url);
-              }),
-          };
-
-          // Update thread closed state to reply bar.
-          if (state.threadClosed) {
-            context
-                .read<ReplyBloc>()
-                .add(const ReplyThreadClosed(closed: true));
-          } else {
-            context
-                .read<ReplyBloc>()
-                .add(const ReplyThreadClosed(closed: false));
+      child: BlocListener<NotificationDetailCubit, NotificationDetailState>(
+        listener: (context, state) {
+          if (state.status == NotificationDetailStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.t.general.failedToLoad)));
           }
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(title),
-              actions: [
-                IconButton(
-                  icon: const Icon(Icons.open_in_new_outlined),
-                  onPressed: () async {
-                    if (_tid == null || _page == null || _pid == null) {
-                      return;
-                    }
-                    debug('find post: tid:$_tid, page:$_page, pid:$_pid');
-                    await context.pushNamed(
-                      ScreenPaths.thread,
-                      pathParameters: <String, String>{
-                        'tid': _tid!,
-                      },
-                      queryParameters: <String, String>{
-                        'pageNumber': _page!,
-                        'pid': _pid!,
-                      },
-                    );
-                  },
-                )
-              ],
-            ),
-            body: body,
-          );
         },
+        child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
+          builder: (context, state) {
+            final body = switch (state.status) {
+              NotificationDetailStatus.initial ||
+              NotificationDetailStatus.loading =>
+                const Center(child: CircularProgressIndicator()),
+              NotificationDetailStatus.success => _buildBody(context, state),
+              NotificationDetailStatus.failed => buildRetryButton(context, () {
+                  context
+                      .read<NotificationDetailCubit>()
+                      .fetchDetail(widget.url);
+                }),
+            };
+
+            // Update thread closed state to reply bar.
+            if (state.threadClosed) {
+              context
+                  .read<ReplyBloc>()
+                  .add(const ReplyThreadClosed(closed: true));
+            } else {
+              context
+                  .read<ReplyBloc>()
+                  .add(const ReplyThreadClosed(closed: false));
+            }
+
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(title),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.open_in_new_outlined),
+                    onPressed: () async {
+                      if (_tid == null || _page == null || _pid == null) {
+                        return;
+                      }
+                      debug('find post: tid:$_tid, page:$_page, pid:$_pid');
+                      await context.pushNamed(
+                        ScreenPaths.thread,
+                        pathParameters: <String, String>{
+                          'tid': _tid!,
+                        },
+                        queryParameters: <String, String>{
+                          'pageNumber': _page!,
+                          'pid': _pid!,
+                        },
+                      );
+                    },
+                  )
+                ],
+              ),
+              body: body,
+            );
+          },
+        ),
       ),
     );
   }

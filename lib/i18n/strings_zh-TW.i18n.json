@@ -4,6 +4,8 @@
   "general": {
     "ok": "確定",
     "cancel": "取消",
+    "failedToLoad": "載入失敗",
+    "retry": "重試",
     "needLoginToSeeThisPage": "登入後才能存取此頁面",
     "pleaseWait": "請稍候",
     "loadFailedAndRetry": "載入失敗，正在重試",

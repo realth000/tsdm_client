@@ -5,7 +5,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/notice_card.dart';
 
 /// Notice page, shows Notice and PrivateMessage of current user.
@@ -68,27 +68,35 @@ class _NotificationPageState extends State<NotificationPage> {
             ..add(NotificationRefreshNoticeRequired()),
         ),
       ],
-      child: BlocBuilder<NotificationBloc, NotificationState>(
-        builder: (context, state) {
-          final body = switch (state.status) {
-            NotificationStatus.initial ||
-            NotificationStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
-            NotificationStatus.success => _buildBody(context, state),
-            NotificationStatus.failed => buildRetrySnackbarButton(context, () {
-                context
-                    .read<NotificationBloc>()
-                    .add(NotificationRefreshNoticeRequired());
-              }),
-          };
-
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(context.t.noticePage.title),
-            ),
-            body: body,
-          );
+      child: BlocListener<NotificationBloc, NotificationState>(
+        listener: (context, state) {
+          if (state.status == NotificationStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.t.general.failedToLoad)));
+          }
         },
+        child: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) {
+            final body = switch (state.status) {
+              NotificationStatus.initial ||
+              NotificationStatus.loading =>
+                const Center(child: CircularProgressIndicator()),
+              NotificationStatus.success => _buildBody(context, state),
+              NotificationStatus.failed => buildRetryButton(context, () {
+                  context
+                      .read<NotificationBloc>()
+                      .add(NotificationRefreshNoticeRequired());
+                }),
+            };
+
+            return Scaffold(
+              appBar: AppBar(
+                title: Text(context.t.noticePage.title),
+              ),
+              body: body,
+            );
+          },
+        ),
       ),
     );
   }

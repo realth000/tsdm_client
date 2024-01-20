@@ -4,6 +4,8 @@
   "general": {
     "ok": "Ok",
     "cancel": "Cancel",
+    "failedToLoad": "Failed to load",
+    "retry": "Retry",
     "needLoginToSeeThisPage": "Need to login to see this page",
     "pleaseWait": "Please wait",
     "loadFailedAndRetry": "Load failed, retrying",

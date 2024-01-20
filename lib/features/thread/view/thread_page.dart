@@ -11,7 +11,7 @@ import 'package:tsdm_client/features/thread/widgets/post_list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
@@ -102,7 +102,7 @@ class _ThreadPageState extends State<ThreadPage>
       ThreadStatus.initial ||
       ThreadStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      ThreadStatus.failed => buildRetrySnackbarButton(context, () {
+      ThreadStatus.failed => buildRetryButton(context, () {
           context
               .read<ThreadBloc>()
               .add(ThreadLoadMoreRequested(state.currentPage));
@@ -160,75 +160,85 @@ class _ThreadPageState extends State<ThreadPage>
                 .add(const ReplyThreadClosed(closed: false));
           }
         },
-        child: BlocBuilder<ThreadBloc, ThreadState>(
-          builder: (context, state) {
-            // Update jump page state.
-            context.read<JumpPageCubit>().setPageInfo(
-                  currentPage: state.currentPage,
-                  totalPages: state.totalPages,
-                );
-
-            String? title;
-
-            // Reset jump page state when every build.
-            if (state.status == ThreadStatus.loading ||
-                state.status == ThreadStatus.initial) {
-              context.read<JumpPageCubit>().markLoading();
-              title = widget.title;
-            } else {
-              context.read<JumpPageCubit>().markSuccess();
+        child: BlocListener<ThreadBloc, ThreadState>(
+          listener: (context, state) {
+            if (state.status == ThreadStatus.failed) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(context.t.general.failedToLoad)));
             }
-
-            final threadUrl = RepositoryProvider.of<ThreadRepository>(context)
-                    .threadUrl ??
-                '$baseUrl/forum.php?mod=viewthread&tid=${widget.threadID}&extra=page%3D1';
-
-            return Scaffold(
-              appBar: ListAppBar(
-                title: title,
-                onSearch: () async {
-                  await context.pushNamed(ScreenPaths.search);
-                },
-                onJumpPage: (pageNumber) async {
-                  if (!mounted) {
-                    return;
-                  }
-                  // Mark loading here.
-                  // Mark state will be removed when loading finishes (next build).
-                  context.read<JumpPageCubit>().markLoading();
-                  context
-                      .read<ThreadBloc>()
-                      .add(ThreadJumpPageRequested(pageNumber));
-                },
-                onSelected: (value) async {
-                  switch (value) {
-                    case MenuActions.refresh:
-                      context.read<ThreadBloc>().add(ThreadRefreshRequested());
-
-                    case MenuActions.copyUrl:
-                      await Clipboard.setData(ClipboardData(text: threadUrl));
-                      if (!context.mounted) {
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          context.t.aboutPage.copiedToClipboard,
-                        ),
-                      ));
-                    case MenuActions.openInBrowser:
-                      await context.dispatchAsUrl(threadUrl, external: true);
-                    case MenuActions.backToTop:
-                      await _listScrollController.animateTo(
-                        0,
-                        curve: Curves.ease,
-                        duration: const Duration(milliseconds: 500),
-                      );
-                  }
-                },
-              ),
-              body: _buildBody(context, state),
-            );
           },
+          child: BlocBuilder<ThreadBloc, ThreadState>(
+            builder: (context, state) {
+              // Update jump page state.
+              context.read<JumpPageCubit>().setPageInfo(
+                    currentPage: state.currentPage,
+                    totalPages: state.totalPages,
+                  );
+
+              String? title;
+
+              // Reset jump page state when every build.
+              if (state.status == ThreadStatus.loading ||
+                  state.status == ThreadStatus.initial) {
+                context.read<JumpPageCubit>().markLoading();
+                title = widget.title;
+              } else {
+                context.read<JumpPageCubit>().markSuccess();
+              }
+
+              final threadUrl = RepositoryProvider.of<ThreadRepository>(context)
+                      .threadUrl ??
+                  '$baseUrl/forum.php?mod=viewthread&tid=${widget.threadID}&extra=page%3D1';
+
+              return Scaffold(
+                appBar: ListAppBar(
+                  title: title,
+                  onSearch: () async {
+                    await context.pushNamed(ScreenPaths.search);
+                  },
+                  onJumpPage: (pageNumber) async {
+                    if (!mounted) {
+                      return;
+                    }
+                    // Mark loading here.
+                    // Mark state will be removed when loading finishes (next build).
+                    context.read<JumpPageCubit>().markLoading();
+                    context
+                        .read<ThreadBloc>()
+                        .add(ThreadJumpPageRequested(pageNumber));
+                  },
+                  onSelected: (value) async {
+                    switch (value) {
+                      case MenuActions.refresh:
+                        context
+                            .read<ThreadBloc>()
+                            .add(ThreadRefreshRequested());
+
+                      case MenuActions.copyUrl:
+                        await Clipboard.setData(ClipboardData(text: threadUrl));
+                        if (!context.mounted) {
+                          return;
+                        }
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          content: Text(
+                            context.t.aboutPage.copiedToClipboard,
+                          ),
+                        ));
+                      case MenuActions.openInBrowser:
+                        await context.dispatchAsUrl(threadUrl, external: true);
+                      case MenuActions.backToTop:
+                        await _listScrollController.animateTo(
+                          0,
+                          curve: Curves.ease,
+                          duration: const Duration(milliseconds: 500),
+                        );
+                    }
+                  },
+                ),
+                body: _buildBody(context, state),
+              );
+            },
+          ),
         ),
       ),
     );

@@ -15,7 +15,7 @@ import 'package:tsdm_client/shared/models/forum.dart';
 import 'package:tsdm_client/shared/models/normal_thread.dart';
 import 'package:tsdm_client/shared/models/stick_thread.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
@@ -142,7 +142,7 @@ class _ForumPageState extends State<ForumPage>
       ForumStatus.initial ||
       ForumStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      ForumStatus.failed => buildRetrySnackbarButton(context, () {
+      ForumStatus.failed => buildRetryButton(context, () {
           context
               .read<ForumBloc>()
               .add(ForumLoadMoreRequested(state.currentPage));
@@ -196,98 +196,107 @@ class _ForumPageState extends State<ForumPage>
         ),
         BlocProvider(create: (context) => JumpPageCubit()),
       ],
-      child: BlocBuilder<ForumBloc, ForumState>(
-        builder: (context, state) {
-          if (state.status == ForumStatus.success &&
-              state.normalThreadList.isEmpty) {
-            tabController?.animateTo(
-              _subredditTabIndex,
-              duration: const Duration(milliseconds: 500),
-            );
+      child: BlocListener<ForumBloc, ForumState>(
+        listener: (context, state) {
+          if (state.status == ForumStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.t.general.failedToLoad)));
           }
-          // Update jump page state.
-          context.read<JumpPageCubit>().setPageInfo(
-                currentPage: state.currentPage,
-                totalPages: state.totalPages,
-              );
-
-          // Reset jump page state when every build.
-          if (state.status != ForumStatus.loading) {
-            context.read<JumpPageCubit>().markSuccess();
-          }
-
-          return Scaffold(
-            appBar: ListAppBar(
-              title: widget.title,
-              bottom: state.permissionDeniedMessage == null
-                  ? TabBar(
-                      controller: tabController,
-                      tabs: [
-                        Tab(
-                            child:
-                                Text(context.t.forumPage.stickThreadTab.title)),
-                        Tab(child: Text(context.t.forumPage.threadTab.title)),
-                        Tab(
-                            child:
-                                Text(context.t.forumPage.subredditTab.title)),
-                      ],
-                    )
-                  : null,
-              onSearch: () async {
-                await context.pushNamed(ScreenPaths.search,
-                    queryParameters: {'fid': widget.fid});
-              },
-              onJumpPage: (pageNumber) async {
-                if (!mounted) {
-                  return;
-                }
-                // Mark loading here.
-                // Mark state will be removed when loading finishes (next build).
-                context.read<JumpPageCubit>().markLoading();
-                context
-                    .read<ForumBloc>()
-                    .add(ForumJumpPageRequested(pageNumber));
-              },
-              onSelected: (value) async {
-                switch (value) {
-                  case MenuActions.refresh:
-                    await _listScrollController.animateTo(
-                      0,
-                      curve: Curves.ease,
-                      duration: const Duration(milliseconds: 500),
-                    );
-                    Future.delayed(const Duration(milliseconds: 100), () async {
-                      await _refreshController.callRefresh(
-                        scrollController: _listScrollController,
-                      );
-                    });
-                  case MenuActions.copyUrl:
-                    await Clipboard.setData(
-                      ClipboardData(text: widget.forumUrl),
-                    );
-                    if (!context.mounted) {
-                      return;
-                    }
-                    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                      content: Text(
-                        context.t.aboutPage.copiedToClipboard,
-                      ),
-                    ));
-                  case MenuActions.openInBrowser:
-                    await context.dispatchAsUrl(widget.forumUrl,
-                        external: true);
-                  case MenuActions.backToTop:
-                    await _listScrollController.animateTo(
-                      0,
-                      curve: Curves.ease,
-                      duration: const Duration(milliseconds: 500),
-                    );
-                }
-              },
-            ),
-            body: _buildBody(context, state),
-          );
         },
+        child: BlocBuilder<ForumBloc, ForumState>(
+          builder: (context, state) {
+            if (state.status == ForumStatus.success &&
+                state.normalThreadList.isEmpty) {
+              tabController?.animateTo(
+                _subredditTabIndex,
+                duration: const Duration(milliseconds: 500),
+              );
+            }
+            // Update jump page state.
+            context.read<JumpPageCubit>().setPageInfo(
+                  currentPage: state.currentPage,
+                  totalPages: state.totalPages,
+                );
+
+            // Reset jump page state when every build.
+            if (state.status != ForumStatus.loading) {
+              context.read<JumpPageCubit>().markSuccess();
+            }
+
+            return Scaffold(
+              appBar: ListAppBar(
+                title: widget.title,
+                bottom: state.permissionDeniedMessage == null
+                    ? TabBar(
+                        controller: tabController,
+                        tabs: [
+                          Tab(
+                              child: Text(
+                                  context.t.forumPage.stickThreadTab.title)),
+                          Tab(child: Text(context.t.forumPage.threadTab.title)),
+                          Tab(
+                              child:
+                                  Text(context.t.forumPage.subredditTab.title)),
+                        ],
+                      )
+                    : null,
+                onSearch: () async {
+                  await context.pushNamed(ScreenPaths.search,
+                      queryParameters: {'fid': widget.fid});
+                },
+                onJumpPage: (pageNumber) async {
+                  if (!mounted) {
+                    return;
+                  }
+                  // Mark loading here.
+                  // Mark state will be removed when loading finishes (next build).
+                  context.read<JumpPageCubit>().markLoading();
+                  context
+                      .read<ForumBloc>()
+                      .add(ForumJumpPageRequested(pageNumber));
+                },
+                onSelected: (value) async {
+                  switch (value) {
+                    case MenuActions.refresh:
+                      await _listScrollController.animateTo(
+                        0,
+                        curve: Curves.ease,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                      Future.delayed(const Duration(milliseconds: 100),
+                          () async {
+                        await _refreshController.callRefresh(
+                          scrollController: _listScrollController,
+                        );
+                      });
+                    case MenuActions.copyUrl:
+                      await Clipboard.setData(
+                        ClipboardData(text: widget.forumUrl),
+                      );
+                      if (!context.mounted) {
+                        return;
+                      }
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                        content: Text(
+                          context.t.aboutPage.copiedToClipboard,
+                        ),
+                      ));
+                    case MenuActions.openInBrowser:
+                      await context.dispatchAsUrl(widget.forumUrl,
+                          external: true);
+                    case MenuActions.backToTop:
+                      await _listScrollController.animateTo(
+                        0,
+                        curve: Curves.ease,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                  }
+                },
+              ),
+              body: _buildBody(context, state),
+            );
+          },
+        ),
       ),
     );
   }

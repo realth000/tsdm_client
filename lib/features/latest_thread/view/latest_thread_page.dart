@@ -5,7 +5,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/latest_thread/bloc/latest_thread_bloc.dart';
 import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/utils/retry_snackbar_button.dart';
+import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 
 class LatestThreadPage extends StatefulWidget {
@@ -80,25 +80,33 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
             ..add(LatestThreadRefreshRequested(widget.url)),
         )
       ],
-      child: BlocBuilder<LatestThreadBloc, LatestThreadState>(
-        builder: (context, state) {
-          final body = switch (state.status) {
-            LatestThreadStatus.initial ||
-            LatestThreadStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
-            LatestThreadStatus.failed => buildRetrySnackbarButton(context, () {
-                context
-                    .read<LatestThreadBloc>()
-                    .add(LatestThreadRefreshRequested(widget.url));
-              }),
-            LatestThreadStatus.success => _buildBody(context, state),
-          };
-
-          return Scaffold(
-            appBar: AppBar(title: Text(context.t.latestThreadPage.title)),
-            body: body,
-          );
+      child: BlocListener<LatestThreadBloc, LatestThreadState>(
+        listener: (context, state) {
+          if (state.status == LatestThreadStatus.failed) {
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text(context.t.general.failedToLoad)));
+          }
         },
+        child: BlocBuilder<LatestThreadBloc, LatestThreadState>(
+          builder: (context, state) {
+            final body = switch (state.status) {
+              LatestThreadStatus.initial ||
+              LatestThreadStatus.loading =>
+                const Center(child: CircularProgressIndicator()),
+              LatestThreadStatus.failed => buildRetryButton(context, () {
+                  context
+                      .read<LatestThreadBloc>()
+                      .add(LatestThreadRefreshRequested(widget.url));
+                }),
+              LatestThreadStatus.success => _buildBody(context, state),
+            };
+
+            return Scaffold(
+              appBar: AppBar(title: Text(context.t.latestThreadPage.title)),
+              body: body,
+            );
+          },
+        ),
       ),
     );
   }
