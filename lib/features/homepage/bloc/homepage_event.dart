@@ -22,4 +22,7 @@ final class HomepageLoginRequested extends HomepageEvent {}
 final class _HomepageAuthChanged extends HomepageEvent {
   const _HomepageAuthChanged({required this.isLogged}) : super();
   final bool isLogged;
+
+  @override
+  List<Object> get props => [isLogged];
 }

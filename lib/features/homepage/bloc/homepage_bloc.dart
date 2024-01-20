@@ -79,8 +79,13 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
           .whereType<uh.Document>()
           .toList();
       if (documentList.length != 2) {
-        emit(state.copyWith(status: HomepageStatus.failed));
-        return;
+        if (_authenticationRepository.currentUser == null) {
+          emit(state.copyWith(status: HomepageStatus.needLogin));
+          return;
+        } else {
+          emit(state.copyWith(status: HomepageStatus.failed));
+          return;
+        }
       }
       final document = documentList[0];
       final avatarUrl = documentList[1]
@@ -256,7 +261,9 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       }
     }
     return HomepageState(
-      status: HomepageStatus.success,
+      status: loggedUsername.isNotEmpty
+          ? HomepageStatus.success
+          : HomepageStatus.needLogin,
       forumStatus: forumStatus ?? const ForumStatus.empty(),
       loggedUserInfo: loggedUserInfo,
       pinnedThreadGroupList: pinnedThreadGroupList,
