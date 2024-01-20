@@ -144,6 +144,7 @@ class _SettingsPageState extends State<SettingsPage> {
             context
                 .read<SettingsBloc>()
                 .add(const SettingsChangeLocaleRequested(''));
+            return;
           }
           if (!mounted) {
             return;
