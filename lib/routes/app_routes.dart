@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
+import 'package:tsdm_client/features/latest_thread/view/latest_thread_page.dart';
 import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
 import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
@@ -136,6 +137,14 @@ final router = GoRouter(
       path: ScreenPaths.myThread,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const MyThreadPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.latestThread,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final url = state.uri.queryParameters['url']!;
+        return LatestThreadPage(url: url);
+      },
     ),
   ],
 );
