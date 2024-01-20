@@ -145,6 +145,8 @@ class _PostListState<T> extends State<PostList> {
 
     _refreshController.finishLoad();
 
+    _threadType ??= state.threadType;
+
     return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
