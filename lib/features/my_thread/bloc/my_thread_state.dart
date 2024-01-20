@@ -78,8 +78,10 @@ final class MyThreadState extends Equatable {
         threadList,
         threadPageNumber,
         nextThreadPageUrl,
+        refreshingThread,
         replyList,
         replyPageNumber,
         nextReplyPageUrl,
+        refreshingReply,
       ];
 }
