@@ -76,7 +76,7 @@ class _ThreadPageState extends State<ThreadPage>
         Expanded(
           child: PostList(
             threadID: widget.threadID,
-            title: widget.title ?? '',
+            title: widget.title ?? state.title,
             threadType: widget.threadType,
             pageNumber: pageNumber,
             scrollController: _listScrollController,
