@@ -1,11 +1,13 @@
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-class _MyThreadInfo {
-  const _MyThreadInfo({
+/// Current user's thread model in user's info page.
+class MyThread extends Equatable {
+  const MyThread({
     required this.title,
     required this.url,
     required this.threadID,
@@ -18,7 +20,7 @@ class _MyThreadInfo {
     required this.quotedMessage,
   });
 
-  const _MyThreadInfo.empty()
+  const MyThread.empty()
       : title = '',
         url = '',
         threadID = '',
@@ -68,33 +70,6 @@ class _MyThreadInfo {
 
   /// Quoted message of last replied user that only exists in reply list.
   final String? quotedMessage;
-}
-
-/// Current user's thread model in user's info page.
-class MyThread {
-  MyThread.fromTr(uh.Element element) : _info = _buildInfoFromTrNode(element);
-
-  final _MyThreadInfo? _info;
-
-  String? get title => _info?.title;
-
-  String? get url => _info?.url;
-
-  String? get threadID => _info?.threadID;
-
-  String? get forumName => _info?.forumName;
-
-  String? get forumUrl => _info?.forumUrl;
-
-  User? get latestReplyAuthor => _info?.latestReplyAuthor;
-
-  DateTime? get latestReplyTime => _info?.latestReplyTime;
-
-  int? get replyCount => _info?.replyCount;
-
-  int? get viewCount => _info?.viewCount;
-
-  String? get quotedMessage => _info?.quotedMessage;
 
   /// <tbody>
   ///   <tr>
@@ -108,7 +83,7 @@ class MyThread {
   ///     <td class="by"></td>
   ///   </tr>
   /// </tbody>
-  static _MyThreadInfo? _buildInfoFromTrNode(uh.Element element) {
+  static MyThread? fromTr(uh.Element element) {
     final titleNode = element.querySelector('th:nth-child(2) > a');
     final title = titleNode?.firstEndDeepText()?.trim();
     final url = titleNode?.firstHref();
@@ -173,7 +148,7 @@ failed to parse MyThread node: {
       return null;
     }
 
-    return _MyThreadInfo(
+    return MyThread(
       title: title,
       threadID: threadID,
       url: url,
@@ -190,7 +165,17 @@ failed to parse MyThread node: {
     );
   }
 
-  bool isValid() {
-    return _info != null;
-  }
+  @override
+  List<Object?> get props => [
+        title,
+        threadID,
+        url,
+        forumName,
+        forumUrl,
+        replyCount,
+        viewCount,
+        latestReplyAuthor,
+        latestReplyTime,
+        quotedMessage,
+      ];
 }
