@@ -33,19 +33,19 @@ dependencies:
     sdk: flutter
   font_awesome_flutter: ^10.6.0
   freezed_annotation: ^2.4.1
-  get_it: ^7.6.6
-  gitsumu: ^0.2.0
+  get_it: ^7.6.7
+  gitsumu: ^0.2.1
   go_router: ^13.0.1
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
   json_annotation: ^4.8.1
   path: any
   path_provider: ^2.1.2
-  permission_handler: ^11.1.0
+  permission_handler: ^11.2.0
   responsive_framework: ^1.1.1
   rxdart: ^0.27.7
-  slang: ^3.28.0
-  slang_flutter: ^3.28.0
+  slang: ^3.29.0
+  slang_flutter: ^3.29.0
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.0.0
   universal_html: ^2.2.4
@@ -59,7 +59,7 @@ dev_dependencies:
     sdk: flutter
   freezed: ^2.4.6
   json_serializable: ^6.7.1
-  slang_build_runner: ^3.28.0
+  slang_build_runner: ^3.29.0
 
 #  dependency_overrides:
 #    # Blocked by custom_lint 0.5.3 and flutter_test
