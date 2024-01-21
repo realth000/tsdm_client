@@ -22,10 +22,13 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
+import 'package:universal_html/html.dart' as uh;
 
-const _pinnedTabIndex = 0;
-const _threadTabIndex = 1;
-const _subredditTabIndex = 2;
+const _tabsCount = 4;
+const _rulesTabIndex = 0;
+const _pinnedTabIndex = 1;
+const _threadTabIndex = 2;
+const _subredditTabIndex = 3;
 
 class ForumPage extends StatefulWidget {
   const ForumPage({required this.fid, this.title, super.key})
@@ -55,6 +58,18 @@ class _ForumPageState extends State<ForumPage>
 
   /// Controller of current tab: thread, subreddit.
   TabController? tabController;
+
+  Widget _buildRulesTab(BuildContext context, uh.Element? element) {
+    if (element == null) {
+      return Center(child: Text(context.t.forumPage.rulesTab.noRules));
+    }
+    return SingleChildScrollView(
+      child: Padding(
+        padding: edgeInsetsL15T15R15B15,
+        child: munchElement(context, element),
+      ),
+    );
+  }
 
   Widget _buildStickThreadTab(
       BuildContext context, List<StickThread> stickThreadList) {
@@ -159,6 +174,7 @@ class _ForumPageState extends State<ForumPage>
       return TabBarView(
         controller: tabController,
         children: [
+          _buildRulesTab(context, state.rulesElement),
           _buildStickThreadTab(context, state.stickThreadList),
           _buildNormalThreadTab(context, state.normalThreadList, state),
           _buildSubredditTab(context, state.subredditList),
@@ -205,7 +221,7 @@ class _ForumPageState extends State<ForumPage>
   Widget build(BuildContext context) {
     tabController ??= TabController(
       initialIndex: _threadTabIndex,
-      length: 3,
+      length: _tabsCount,
       vsync: this,
     );
 
@@ -253,6 +269,7 @@ class _ForumPageState extends State<ForumPage>
                     ? TabBar(
                         controller: tabController,
                         tabs: [
+                          Tab(child: Text(context.t.forumPage.rulesTab.title)),
                           Tab(
                               child: Text(
                                   context.t.forumPage.stickThreadTab.title)),

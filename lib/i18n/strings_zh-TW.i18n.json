@@ -163,6 +163,10 @@
     "checkinTodayStatus": "今日簽到狀態"
   },
   "forumPage": {
+    "rulesTab": {
+      "title": "規則",
+      "noRules": "沒有可顯示的規則"
+    },
     "stickThreadTab": {
       "title": "置頂",
       "noThread": "沒有置頂貼文"

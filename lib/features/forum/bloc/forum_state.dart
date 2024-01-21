@@ -13,6 +13,7 @@ class ForumState extends Equatable {
   const ForumState({
     required this.fid,
     this.status = ForumStatus.initial,
+    this.rulesElement,
     this.stickThreadList = const [],
     this.normalThreadList = const [],
     this.subredditList = const [],
@@ -29,6 +30,9 @@ class ForumState extends Equatable {
 
   /// Forum id.
   final String fid;
+
+  /// Html element of forum rules node.
+  final uh.Element? rulesElement;
 
   /// Pinned thread in this forum.
   ///
@@ -66,6 +70,7 @@ class ForumState extends Equatable {
   ForumState copyWith({
     ForumStatus? status,
     String? fid,
+    uh.Element? rulesElement,
     List<StickThread>? stickThreadList,
     List<NormalThread>? normalThreadList,
     List<Forum>? subredditList,
@@ -79,6 +84,7 @@ class ForumState extends Equatable {
     return ForumState(
       status: status ?? this.status,
       fid: fid ?? this.fid,
+      rulesElement: rulesElement ?? this.rulesElement,
       stickThreadList: stickThreadList ?? this.stickThreadList,
       normalThreadList: normalThreadList ?? this.normalThreadList,
       subredditList: subredditList ?? this.subredditList,
@@ -96,6 +102,7 @@ class ForumState extends Equatable {
   List<Object?> get props => [
         status,
         fid,
+        rulesElement.hashCode,
         stickThreadList,
         normalThreadList,
         subredditList,

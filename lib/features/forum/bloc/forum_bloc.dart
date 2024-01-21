@@ -90,6 +90,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     int pageNumber,
   ) async {
     // Parse data.
+    final rulesElement = document.querySelector('div#forum_rules_${state.fid}');
     List<StickThread>? stickThreadList;
     List<Forum>? subredditList;
     final normalThreadList = _buildThreadList<NormalThread>(
@@ -128,6 +129,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
     return state.copyWith(
       status: ForumStatus.success,
+      rulesElement: rulesElement,
       stickThreadList: stickThreadList,
       normalThreadList: allNormalThread,
       subredditList: subredditList,

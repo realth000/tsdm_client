@@ -163,6 +163,10 @@
     "checkinTodayStatus": "Check-in Today Status"
   },
   "forumPage": {
+    "rulesTab": {
+      "title": "Rules",
+      "noRules": "No rules to show"
+    },
     "stickThreadTab": {
       "title": "Pinned",
       "noThread": "No Pinned Thread"

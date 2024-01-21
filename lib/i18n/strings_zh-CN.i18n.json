@@ -163,6 +163,10 @@
     "checkinTodayStatus": "今日签到状态"
   },
   "forumPage": {
+    "rulesTab": {
+      "title": "版规",
+      "noRules": "没找到版规"
+    },
     "stickThreadTab": {
       "title": "置顶",
       "noThread": "没有置顶帖"
