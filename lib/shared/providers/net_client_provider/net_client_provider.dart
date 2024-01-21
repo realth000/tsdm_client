@@ -92,7 +92,11 @@ class NetClientProvider {
       queryParameters: queryParameters,
       options: Options(
         responseType: ResponseType.bytes,
-        headers: {'Accept': 'image/avif,image/webp,*/*'},
+        headers: {
+          HttpHeaders.acceptHeader:
+              'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8',
+          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+        },
       ),
     );
     return resp;
