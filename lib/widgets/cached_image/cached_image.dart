@@ -58,12 +58,12 @@ class CachedImage extends StatelessWidget {
               fit: BoxFit.contain,
               errorBuilder: (context, e, st) {
                 debug('failed to load image from $imageUrl: $e');
-                return Container();
+                return const FallbackPicture();
               },
             ),
           );
         }
-        return Container();
+        return const FallbackPicture();
       },
     );
   }
