@@ -6,6 +6,7 @@
     "cancel": "Cancel",
     "failedToLoad": "Failed to load",
     "retry": "Retry",
+    "noPermission": "No permission to view this content",
     "needLoginToSeeThisPage": "Need to login to see this page",
     "pleaseWait": "Please wait",
     "loadFailedAndRetry": "Load failed, retrying",

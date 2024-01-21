@@ -56,7 +56,7 @@ class ForumState extends Equatable {
   final bool havePermission;
 
   /// Message showed from server when have no permission.
-  final String? permissionDeniedMessage;
+  final uh.Element? permissionDeniedMessage;
 
   /// Flag indicating whether need to login to see this page or not.
   ///
@@ -72,7 +72,7 @@ class ForumState extends Equatable {
     bool? canLoadMore,
     bool? havePermission,
     bool? needLogin,
-    String? permissionDeniedMessage,
+    uh.Element? permissionDeniedMessage,
     int? currentPage,
     int? totalPages,
   }) {
@@ -101,7 +101,7 @@ class ForumState extends Equatable {
         subredditList,
         canLoadMore,
         havePermission,
-        permissionDeniedMessage,
+        permissionDeniedMessage.hashCode,
         currentPage,
         totalPages,
       ];

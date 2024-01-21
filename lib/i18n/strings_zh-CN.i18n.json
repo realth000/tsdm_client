@@ -6,6 +6,7 @@
     "cancel": "取消",
     "failedToLoad": "加载失败",
     "retry": "重试",
+    "noPermission": "没有权限查看该内容",
     "needLoginToSeeThisPage": "登录后才能访问此页面",
     "pleaseWait": "请稍候",
     "loadFailedAndRetry": "加载失败，正在重试",

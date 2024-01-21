@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 修复设置色调时没有显示当前使用的色调颜色的问题。
 - 修复设置色调时对话框标题会随着滚动的问题。
+- 修复访问没有权限查看的分区时没有提示的问题。
 
 ## [0.4.0] - 2024-01-21
 

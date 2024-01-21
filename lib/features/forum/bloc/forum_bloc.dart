@@ -105,7 +105,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
     var needLogin = false;
     var havePermission = true;
-    String? permissionDeniedMessage;
+    uh.Element? permissionDeniedMessage;
     if (normalThreadList.isEmpty && (subredditList?.isEmpty ?? true)) {
       // Here both normal thread list and subreddit is empty, check permission.
       final docMessage = document.getElementById('messagetext');
@@ -114,7 +114,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
         needLogin = true;
       } else if (docMessage != null) {
         havePermission = false;
-        permissionDeniedMessage = docMessage.querySelector('p')?.innerText;
+        permissionDeniedMessage = docMessage.querySelector('p');
       }
     }
 

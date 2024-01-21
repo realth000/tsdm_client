@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/forum.dart';
 import 'package:tsdm_client/shared/models/normal_thread.dart';
@@ -138,6 +139,34 @@ class _ForumPageState extends State<ForumPage>
     );
   }
 
+  Widget _buildSuccessContent(BuildContext context, ForumState state) {
+    if (state.needLogin) {
+      return NeedLoginPage(
+        backUri: GoRouterState.of(context).uri,
+        needPop: true,
+        popCallback: (context) {
+          context.read<ForumBloc>().add(ForumRefreshRequested());
+        },
+      );
+    } else if (!state.havePermission) {
+      if (state.permissionDeniedMessage != null) {
+        return Center(
+            child: munchElement(context, state.permissionDeniedMessage!));
+      } else {
+        return Center(child: Text(context.t.general.noPermission));
+      }
+    } else {
+      return TabBarView(
+        controller: tabController,
+        children: [
+          _buildStickThreadTab(context, state.stickThreadList),
+          _buildNormalThreadTab(context, state.normalThreadList, state),
+          _buildSubredditTab(context, state.subredditList),
+        ],
+      );
+    }
+  }
+
   Widget _buildBody(BuildContext context, ForumState state) {
     return switch (state.status) {
       ForumStatus.initial ||
@@ -148,22 +177,7 @@ class _ForumPageState extends State<ForumPage>
               .read<ForumBloc>()
               .add(ForumLoadMoreRequested(state.currentPage));
         }),
-      ForumStatus.success => state.needLogin
-          ? NeedLoginPage(
-              backUri: GoRouterState.of(context).uri,
-              needPop: true,
-              popCallback: (context) {
-                context.read<ForumBloc>().add(ForumRefreshRequested());
-              },
-            )
-          : TabBarView(
-              controller: tabController,
-              children: [
-                _buildStickThreadTab(context, state.stickThreadList),
-                _buildNormalThreadTab(context, state.normalThreadList, state),
-                _buildSubredditTab(context, state.subredditList),
-              ],
-            ),
+      ForumStatus.success => _buildSuccessContent(context, state),
     };
   }
 
