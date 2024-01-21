@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -32,6 +33,14 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  final _refreshController = EasyRefreshController(controlFinishRefresh: true);
+
+  @override
+  void dispose() {
+    _refreshController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -125,98 +134,107 @@ class _ProfilePageState extends State<ProfilePage> {
       actions = const [];
     }
 
+    _refreshController.finishRefresh();
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.profilePage.title),
         actions: actions,
       ),
-      body: ListView(
-        padding: edgeInsetsL15R15,
-        children: [
-          if (userProfile.avatarUrl != null)
-            CachedImage(
-              userProfile.avatarUrl!,
-              maxWidth: _avatarWidth,
-              maxHeight: _avatarHeight,
+      body: EasyRefresh(
+        controller: _refreshController,
+        header: const MaterialHeader(),
+        onRefresh: () {
+          context.read<ProfileBloc>().add(ProfileRefreshRequested());
+        },
+        child: ListView(
+          padding: edgeInsetsL15R15,
+          children: [
+            if (userProfile.avatarUrl != null)
+              CachedImage(
+                userProfile.avatarUrl!,
+                maxWidth: _avatarWidth,
+                maxHeight: _avatarHeight,
+              ),
+            if (userProfile.username != null)
+              ListTile(
+                title: Text(context.t.profilePage.username),
+                subtitle: Text(userProfile.username!),
+              ),
+            if (userProfile.uid != null)
+              ListTile(
+                title: Text(context.t.profilePage.uid),
+                subtitle: Text(userProfile.uid!),
+              ),
+            ...userProfile.basicInfoList.map(
+              (e) => ListTile(
+                title: Text(e.$1),
+                subtitle: Text(e.$2),
+              ),
             ),
-          if (userProfile.username != null)
-            ListTile(
-              title: Text(context.t.profilePage.username),
-              subtitle: Text(userProfile.username!),
+            if (userProfile.checkinDaysCount != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinDaysCount),
+                subtitle: Text(userProfile.checkinDaysCount!),
+              ),
+            if (userProfile.checkinThisMonthCount != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinDaysInThisMonth),
+                subtitle: Text(userProfile.checkinThisMonthCount!),
+              ),
+            if (userProfile.checkinRecentTime != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinRecentTime),
+                subtitle: Text(userProfile.checkinRecentTime!),
+              ),
+            if (userProfile.checkinAllCoins != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinAllCoins),
+                subtitle: Text(userProfile.checkinAllCoins!),
+              ),
+            if (userProfile.checkinLastTimeCoin != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinLastTimeCoins),
+                subtitle: Text(userProfile.checkinLastTimeCoin!),
+              ),
+            if (userProfile.checkinLevel != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinLevel),
+                subtitle: Text(userProfile.checkinLevel!),
+              ),
+            if (userProfile.checkinNextLevel != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinNextLevel),
+                subtitle: Text(userProfile.checkinNextLevel!),
+              ),
+            if (userProfile.checkinNextLevelDays != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinNextLevelDays),
+                subtitle: Text(userProfile.checkinNextLevelDays!),
+              ),
+            if (userProfile.checkinTodayStatus != null)
+              ListTile(
+                title: Text(context.t.profilePage.checkinTodayStatus),
+                subtitle: Text(userProfile.checkinTodayStatus!),
+              ),
+            ...userProfile.activityInfoList.map(
+              (e) {
+                // Privacy contents should use ObscureListTile.
+                if (e.$1.contains('IP')) {
+                  return ObscureListTile(
+                    title: Text(e.$1),
+                    subtitle: Text(e.$2),
+                  );
+                } else {
+                  return ListTile(
+                    title: Text(e.$1),
+                    subtitle: Text(e.$2),
+                  );
+                }
+              },
             ),
-          if (userProfile.uid != null)
-            ListTile(
-              title: Text(context.t.profilePage.uid),
-              subtitle: Text(userProfile.uid!),
-            ),
-          ...userProfile.basicInfoList.map(
-            (e) => ListTile(
-              title: Text(e.$1),
-              subtitle: Text(e.$2),
-            ),
-          ),
-          if (userProfile.checkinDaysCount != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinDaysCount),
-              subtitle: Text(userProfile.checkinDaysCount!),
-            ),
-          if (userProfile.checkinThisMonthCount != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinDaysInThisMonth),
-              subtitle: Text(userProfile.checkinThisMonthCount!),
-            ),
-          if (userProfile.checkinRecentTime != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinRecentTime),
-              subtitle: Text(userProfile.checkinRecentTime!),
-            ),
-          if (userProfile.checkinAllCoins != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinAllCoins),
-              subtitle: Text(userProfile.checkinAllCoins!),
-            ),
-          if (userProfile.checkinLastTimeCoin != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinLastTimeCoins),
-              subtitle: Text(userProfile.checkinLastTimeCoin!),
-            ),
-          if (userProfile.checkinLevel != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinLevel),
-              subtitle: Text(userProfile.checkinLevel!),
-            ),
-          if (userProfile.checkinNextLevel != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinNextLevel),
-              subtitle: Text(userProfile.checkinNextLevel!),
-            ),
-          if (userProfile.checkinNextLevelDays != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinNextLevelDays),
-              subtitle: Text(userProfile.checkinNextLevelDays!),
-            ),
-          if (userProfile.checkinTodayStatus != null)
-            ListTile(
-              title: Text(context.t.profilePage.checkinTodayStatus),
-              subtitle: Text(userProfile.checkinTodayStatus!),
-            ),
-          ...userProfile.activityInfoList.map(
-            (e) {
-              // Privacy contents should use ObscureListTile.
-              if (e.$1.contains('IP')) {
-                return ObscureListTile(
-                  title: Text(e.$1),
-                  subtitle: Text(e.$2),
-                );
-              } else {
-                return ListTile(
-                  title: Text(e.$1),
-                  subtitle: Text(e.$2),
-                );
-              }
-            },
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

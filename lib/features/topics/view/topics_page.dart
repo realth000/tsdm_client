@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,8 @@ class _TopicsPageState extends State<TopicsPage>
 
   VoidCallback? _updateIndexListener;
 
+  final _refreshController = EasyRefreshController(controlFinishRefresh: true);
+
   @override
   void dispose() {
     if (tabController != null) {
@@ -42,6 +45,7 @@ class _TopicsPageState extends State<TopicsPage>
         ..removeListener(_updateIndexListener ?? () {})
         ..dispose();
     }
+    _refreshController.dispose();
     super.dispose();
   }
 
@@ -69,7 +73,12 @@ class _TopicsPageState extends State<TopicsPage>
 
             if (state.status == TopicsStatus.loading ||
                 state.status == TopicsStatus.initial) {
-              return const Center(child: CircularProgressIndicator());
+              return Scaffold(
+                appBar: AppBar(
+                  title: Text(context.t.topicPage.title),
+                ),
+                body: const Center(child: CircularProgressIndicator()),
+              );
             }
 
             final forumGroupList = state.forumGroupList;
@@ -104,6 +113,8 @@ class _TopicsPageState extends State<TopicsPage>
                 )
                 .toList();
 
+            _refreshController.finishRefresh();
+
             return Scaffold(
               appBar: AppBar(
                 title: Text(context.t.navigation.topics),
@@ -122,9 +133,16 @@ class _TopicsPageState extends State<TopicsPage>
                   tabAlignment: TabAlignment.start,
                 ),
               ),
-              body: TabBarView(
-                controller: tabController,
-                children: groupTabBodyList,
+              body: EasyRefresh(
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                onRefresh: () {
+                  context.read<TopicsBloc>().add(TopicsRefreshRequested());
+                },
+                child: TabBarView(
+                  controller: tabController,
+                  children: groupTabBodyList,
+                ),
               ),
             );
           },

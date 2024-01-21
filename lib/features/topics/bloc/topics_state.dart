@@ -49,5 +49,5 @@ final class TopicsState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [forumGroupList];
+  List<Object?> get props => [status, forumGroupList];
 }

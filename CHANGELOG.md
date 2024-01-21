@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增支持旅行者主题。
 - 新增支持给帖子评分。
 - 当从网络请求拉取图片失败时，使用默认的图片logo。
+- 现在首页，分区和个人资料页可以下拉刷新。
 
 ### Fixed
 

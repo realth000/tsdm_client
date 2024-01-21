@@ -1,3 +1,4 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -27,10 +28,12 @@ class HomepagePage extends StatefulWidget {
 
 class _HomepagePageState extends State<HomepagePage> {
   final _scrollController = ScrollController();
+  final _refreshController = EasyRefreshController(controlFinishRefresh: true);
 
   @override
   void dispose() {
     _scrollController.dispose();
+    _refreshController.dispose();
     super.dispose();
   }
 
@@ -69,24 +72,36 @@ class _HomepagePageState extends State<HomepagePage> {
               HomepageStatus.failed => buildRetryButton(context, () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 }),
-              HomepageStatus.success => SingleChildScrollView(
-                  controller: _scrollController,
-                  child: Padding(
-                    padding: edgeInsetsL10T5R10B20,
-                    child: Column(
-                      children: [
-                        WelcomeSection(
-                          forumStatus: state.forumStatus,
-                          loggedUserInfo: state.loggedUserInfo,
-                          swiperUrlList: state.swiperUrlList,
-                        ),
-                        sizedBoxW5H5,
-                        PinSection(state.pinnedThreadGroupList),
-                      ],
+              HomepageStatus.success => EasyRefresh(
+                  scrollController: _scrollController,
+                  controller: _refreshController,
+                  header: const MaterialHeader(),
+                  onRefresh: () {
+                    context
+                        .read<HomepageBloc>()
+                        .add(HomepageRefreshRequested());
+                  },
+                  child: SingleChildScrollView(
+                    child: Padding(
+                      padding: edgeInsetsL10T5R10B20,
+                      child: Column(
+                        children: [
+                          WelcomeSection(
+                            forumStatus: state.forumStatus,
+                            loggedUserInfo: state.loggedUserInfo,
+                            swiperUrlList: state.swiperUrlList,
+                          ),
+                          sizedBoxW5H5,
+                          PinSection(state.pinnedThreadGroupList),
+                        ],
+                      ),
                     ),
                   ),
                 ),
             };
+
+            _refreshController.finishRefresh();
+
             return Scaffold(
               appBar: AppBar(
                 title: Text(context.t.homepage.title),
