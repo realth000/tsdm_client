@@ -23,12 +23,12 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
             title: CircleAvatar(radius: 15, backgroundColor: e),
             groupValue: RepositoryProvider.of<SettingsRepository>(context)
                 .getAccentColorValue(),
-            value: e,
+            value: e.value,
             onChanged: (value) async {
               if (value == null) {
                 return;
               }
-              Navigator.of(context).pop((value, false));
+              Navigator.of(context).pop((Color(value), false));
             },
           );
         }).toList(),
