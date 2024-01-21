@@ -81,21 +81,17 @@ class _HomepagePageState extends State<HomepagePage> {
                         .read<HomepageBloc>()
                         .add(HomepageRefreshRequested());
                   },
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: edgeInsetsL10T5R10B20,
-                      child: Column(
-                        children: [
-                          WelcomeSection(
-                            forumStatus: state.forumStatus,
-                            loggedUserInfo: state.loggedUserInfo,
-                            swiperUrlList: state.swiperUrlList,
-                          ),
-                          sizedBoxW5H5,
-                          PinSection(state.pinnedThreadGroupList),
-                        ],
+                  child: ListView(
+                    padding: edgeInsetsL10T5R10B20,
+                    children: [
+                      WelcomeSection(
+                        forumStatus: state.forumStatus,
+                        loggedUserInfo: state.loggedUserInfo,
+                        swiperUrlList: state.swiperUrlList,
                       ),
-                    ),
+                      sizedBoxW5H5,
+                      PinSection(state.pinnedThreadGroupList),
+                    ],
                   ),
                 ),
             };
