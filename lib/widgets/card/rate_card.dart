@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/rate.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
@@ -39,20 +40,31 @@ class RateCard extends StatelessWidget {
                     SizedBox(
                       height: 50,
                       child: Center(
-                        child: CircleAvatar(
-                          backgroundImage: CachedImageProvider(
-                            e.user.avatarUrl ?? noAvatarUrl,
-                            context,
+                        child: GestureDetector(
+                          onTap: () async => context.dispatchAsUrl(e.user.url),
+                          child: CircleAvatar(
+                            backgroundImage: CachedImageProvider(
+                              e.user.avatarUrl ?? noAvatarUrl,
+                              context,
+                            ),
                           ),
                         ),
                       ),
                     ),
                     sizedBoxW5H5,
                     Expanded(
-                        child: Text(
-                      e.user.name,
-                      textAlign: TextAlign.left,
-                    )),
+                      child: GestureDetector(
+                        onTap: () async => context.dispatchAsUrl(e.user.url),
+                        child: Row(
+                          children: [
+                            Text(
+                              e.user.name,
+                              textAlign: TextAlign.left,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 ...e.attrValueList.map(Text.new),

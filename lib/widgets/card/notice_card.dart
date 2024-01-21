@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -86,8 +87,18 @@ class NoticeCard extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              leading: userAvatar,
-              title: SingleLineText(notice.username ?? ''),
+              leading: GestureDetector(
+                onTap: notice.userSpaceUrl == null
+                    ? null
+                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
+                child: userAvatar,
+              ),
+              title: GestureDetector(
+                onTap: notice.userSpaceUrl == null
+                    ? null
+                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
+                child: SingleLineText(notice.username ?? ''),
+              ),
               subtitle: SingleLineText(notice.noticeTime?.yyyyMMDD() ?? ''),
             ),
             sizedBoxW5H5,
