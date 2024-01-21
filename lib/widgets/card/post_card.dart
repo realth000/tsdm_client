@@ -6,6 +6,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/post.dart';
@@ -14,6 +15,11 @@ import 'package:tsdm_client/widgets/cached_image//cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
+
+enum _PostCardActions {
+  reply,
+  rate,
+}
 
 /// Card for a [Post] model.
 ///
@@ -107,21 +113,50 @@ class _PostCardState extends State<PostCard>
               ...widget.post.locked
                   .where((e) => e.isValid())
                   .map(LockedCard.new),
-            if (widget.post.rateAction != null)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.thumb_up_outlined),
-                    onPressed: () async => _rateCallback(),
-                  ),
-                ],
-              ),
             if (widget.post.rate != null)
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 712),
                 child: RateCard(widget.post.rate!),
               ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                PopupMenuButton(
+                  itemBuilder: (context) => [
+                    PopupMenuItem(
+                      value: _PostCardActions.reply,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.reply_outlined),
+                          Text(context.t.postCard.reply),
+                        ],
+                      ),
+                    ),
+                    if (widget.post.rateAction != null)
+                      PopupMenuItem(
+                        value: _PostCardActions.rate,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.rate_review_outlined),
+                            Text(context.t.postCard.rate),
+                          ],
+                        ),
+                      ),
+                  ],
+                  onSelected: (value) async {
+                    switch (value) {
+                      case _PostCardActions.reply:
+                        await widget.replyCallback?.call(widget.post.author,
+                            widget.post.postFloor, widget.post.replyAction);
+                      case _PostCardActions.rate:
+                        if (widget.post.rateAction != null) {
+                          await _rateCallback.call();
+                        }
+                    }
+                  },
+                ),
+              ],
+            ),
           ],
         ),
       ),

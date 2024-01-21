@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -13,8 +13,7 @@ import 'package:universal_html/html.dart' as uh;
 ///
 /// We can tell if here is other type of forms that have more or less than four
 /// columns.
-@immutable
-final class RateWindowScore {
+final class RateWindowScore extends Equatable {
   const RateWindowScore({
     required this.id,
     required this.name,
@@ -42,11 +41,22 @@ final class RateWindowScore {
 
   /// Score that remaining to use in rate today.
   final String remaining;
+
+  @override
+  List<Object?> get props => [
+        id,
+        name,
+        allowedRange,
+        allowedRangeDescription,
+        remaining,
+      ];
 }
 
-@immutable
-final class _RateWindowInfo {
-  const _RateWindowInfo({
+/// Information in rate confirm dialog window.
+///
+/// Used to post a rate action.
+final class RateWindowInfo extends Equatable {
+  const RateWindowInfo({
     required this.rowTitleList,
     required this.scoreList,
     required this.defaultReasonList,
@@ -56,16 +66,6 @@ final class _RateWindowInfo {
     required this.referer,
     required this.handleKey,
   });
-
-  const _RateWindowInfo.empty()
-      : rowTitleList = const [],
-        scoreList = const [],
-        defaultReasonList = const [],
-        formHash = '',
-        tid = '',
-        pid = '',
-        referer = '',
-        handleKey = '';
 
   /// Row title of the rate table.
   /// The second value may be "&nbsp;" that need to be translated into whitespace.
@@ -86,35 +86,10 @@ final class _RateWindowInfo {
   final String pid;
   final String referer;
   final String handleKey;
-}
-
-/// Information in rate confirm dialog window.
-///
-/// Used to post a rate action.
-class RateWindowInfo {
-  /// Build from <div class="c"> node [element] or from the floating window raw
-  /// html.
-  RateWindowInfo.fromDivCNode(uh.Element element)
-      : _info = _buildFromDivCNode(element);
-
-  final _RateWindowInfo _info;
-
-  List<String> get rowTitleList => _info.rowTitleList;
-
-  List<RateWindowScore> get scoreList => _info.scoreList;
-
-  List<String> get defaultReasonList => _info.defaultReasonList;
-
-  /// Form data
-  String get tid => _info.tid;
-  String get pid => _info.pid;
-  String get formHash => _info.formHash;
-  String get referer => _info.referer;
-  String get handleKey => _info.handleKey;
 
   /// Build from <div class="c"> node [element] or from the floating window raw
   /// html.
-  static _RateWindowInfo _buildFromDivCNode(uh.Element element) {
+  static RateWindowInfo? fromDivCNode(uh.Element element) {
     // Parse table row title.
 
     // Rows in table.
@@ -127,7 +102,7 @@ class RateWindowInfo {
     if (rateTableRowsNodeList.length < 2) {
       debug(
           'invalid rate window info: incorrect rateTableRowsNodeList length: ${rateTableRowsNodeList.length}');
-      return const _RateWindowInfo.empty();
+      return null;
     }
 
     // Length of row title list should be 4.
@@ -140,7 +115,7 @@ class RateWindowInfo {
     if (rowTitleList == null || rowTitleList.length != 4) {
       debug(
           'invalid rate window info: incorrect rowTitleList length: ${rowTitleList?.length}');
-      return const _RateWindowInfo.empty();
+      return null;
     }
     // Replace the second column title "&nbsp;" with whitespace.
     rowTitleList[1] = '';
@@ -156,7 +131,7 @@ class RateWindowInfo {
     /// Score types available to rate should not be empty;
     if (scoreList.isEmpty) {
       debug('invalid rate score list: no available score types');
-      return const _RateWindowInfo.empty();
+      return null;
     }
 
     // Parse default reasons.
@@ -186,10 +161,10 @@ class RateWindowInfo {
         handleKey == null) {
       debug(
           'invalid rate window info: invalid form data: formHash=$formHash, tid=$tid, pid=$pid, referer=$referer, handleKey=$handleKey');
-      return const _RateWindowInfo.empty();
+      return null;
     }
 
-    return _RateWindowInfo(
+    return RateWindowInfo(
       rowTitleList: rowTitleList,
       scoreList: scoreList,
       defaultReasonList: defaultReasonList ?? [],
@@ -234,9 +209,15 @@ class RateWindowInfo {
     );
   }
 
-  bool isValid() {
-    return rowTitleList.isNotEmpty && scoreList.isNotEmpty;
-  }
-
-  bool isNotValid() => !isValid();
+  @override
+  List<Object?> get props => [
+        rowTitleList,
+        scoreList,
+        defaultReasonList,
+        formHash,
+        tid,
+        pid,
+        referer,
+        handleKey,
+      ];
 }

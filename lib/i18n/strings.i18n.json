@@ -238,6 +238,7 @@
     "title": "Rate",
     "description": "Rate $username post at floor $floor",
     "reason": "Reason",
+    "success": "Rate success",
     "noticeAuthor": "Notice the author",
     "invalidNumber": "Invalid number",
     "notInAllowedRange": "Should in range $range",
@@ -313,6 +314,8 @@
     "title": "Choose Color"
   },
   "postCard": {
+    "reply": "Reply",
+    "rate": "Rate",
     "rateFetchInfoFailed": "Fetch info failed",
     "rateFailed": "Rate failed"
   }

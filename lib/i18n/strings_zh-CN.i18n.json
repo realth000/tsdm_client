@@ -238,6 +238,7 @@
     "title": "评分",
     "description": "给 $username 在 $floor 楼的帖子评分",
     "reason": "理由",
+    "success": "评分成功",
     "noticeAuthor": "通知作者",
     "invalidNumber": "无效的数字",
     "notInAllowedRange": "应该在 $range 范围内",
@@ -313,6 +314,8 @@
     "title": "选择颜色"
   },
   "postCard": {
+    "reply": "回复",
+    "rate": "评分",
     "rateFetchInfoFailed": "获取评分信息失败",
     "rateFailed": "评分失败"
   }

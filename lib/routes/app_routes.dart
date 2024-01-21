@@ -12,6 +12,7 @@ import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
+import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
@@ -172,6 +173,21 @@ final router = GoRouter(
         return ProfilePage(uid: uid, username: username);
       },
     ),
+    AppRoute(
+        path: ScreenPaths.ratePost,
+        parentNavigatorKey: _rootRouteKey,
+        builder: (state) {
+          final username = state.pathParameters['username']!;
+          final pid = state.pathParameters['pid']!;
+          final floor = state.pathParameters['floor']!;
+          final rateAction = state.pathParameters['rateAction']!;
+          return RatePostPage(
+            username: username,
+            pid: pid,
+            floor: floor,
+            rateAction: rateAction,
+          );
+        }),
   ],
 );
 
