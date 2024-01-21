@@ -19,7 +19,13 @@ const _avatarWidth = 180.0;
 const _avatarHeight = 220.0;
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({super.key});
+  const ProfilePage({this.uid, this.username, super.key});
+
+  /// Other user uid.
+  final String? uid;
+
+  /// Other user username.
+  final String? username;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();
@@ -33,7 +39,7 @@ class _ProfilePageState extends State<ProfilePage> {
         profileRepository: RepositoryProvider.of<ProfileRepository>(context),
         authenticationRepository:
             RepositoryProvider.of<AuthenticationRepository>(context),
-      )..add(ProfileLoadRequested()),
+      )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
       child: BlocListener<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.status == ProfileStatus.failed) {
@@ -65,7 +71,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ProfileStatus.failed => buildRetryButton(context, () {
-                  context.read<ProfileBloc>().add(ProfileLoadRequested());
+                  context.read<ProfileBloc>().add(ProfileLoadRequested(
+                      username: widget.username, uid: widget.uid));
                 }),
               ProfileStatus.success || ProfileStatus.logout => _buildBody(
                   context,
@@ -94,24 +101,34 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       );
     }
+
+    late final List<Widget> actions;
+    if (widget.username == null && widget.uid == null) {
+      // Current is current logged user's profile page.
+      actions = [
+        IconButton(
+          icon: const Icon(Icons.notifications_outlined),
+          onPressed: () async {
+            await context.pushNamed(ScreenPaths.notice);
+          },
+        ),
+        const CheckInButton(),
+        DebounceIconButton(
+          icon: const Icon(Icons.logout_outlined),
+          shouldDebounce: logout,
+          onPressed: () async =>
+              context.read<ProfileBloc>().add(ProfileLogoutRequested()),
+        ),
+      ];
+    } else {
+      // Other user's profile page.
+      actions = const [];
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.profilePage.title),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.notifications_outlined),
-            onPressed: () async {
-              await context.pushNamed(ScreenPaths.notice);
-            },
-          ),
-          const CheckInButton(),
-          DebounceIconButton(
-            icon: const Icon(Icons.logout_outlined),
-            shouldDebounce: logout,
-            onPressed: () async =>
-                context.read<ProfileBloc>().add(ProfileLogoutRequested()),
-          ),
-        ],
+        actions: actions,
       ),
       body: ListView(
         padding: edgeInsetsL15R15,

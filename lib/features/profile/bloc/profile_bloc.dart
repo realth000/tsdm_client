@@ -38,7 +38,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     ProfileLoadRequested event,
     ProfileEmitter emit,
   ) async {
-    if (_profileRepository.hasCache()) {
+    if (event.username == null &&
+        event.uid == null &&
+        _profileRepository.hasCache()) {
       final userProfile = _buildProfile(_profileRepository.getCache()!);
       emit(state.copyWith(
           status: ProfileStatus.success, userProfile: userProfile));
@@ -46,7 +48,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
-      final document = await _profileRepository.fetchProfile();
+      final document = await _profileRepository.fetchProfile(
+          username: event.username, uid: event.uid);
       if (document == null) {
         emit(state.copyWith(status: ProfileStatus.needLogin));
         return;

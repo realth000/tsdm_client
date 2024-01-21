@@ -15,11 +15,16 @@ enum ProfileStatus {
 class ProfileState extends Equatable {
   const ProfileState({
     this.status = ProfileStatus.initial,
+    this.username,
+    this.uid,
     this.userProfile,
     this.failedToLogoutReason,
   });
 
   final ProfileStatus status;
+
+  final String? username;
+  final String? uid;
 
   final UserProfile? userProfile;
 
@@ -30,11 +35,15 @@ class ProfileState extends Equatable {
 
   ProfileState copyWith({
     ProfileStatus? status,
+    String? username,
+    String? uid,
     UserProfile? userProfile,
     Exception? failedToLogoutReason,
   }) {
     return ProfileState(
       status: status ?? this.status,
+      username: username ?? this.username,
+      uid: uid ?? this.uid,
       userProfile: userProfile ?? this.userProfile,
       failedToLogoutReason:
           failedToLogoutReason, // This argument should be cleaned if not set.
@@ -42,5 +51,11 @@ class ProfileState extends Equatable {
   }
 
   @override
-  List<Object?> get props => [status, userProfile];
+  List<Object?> get props => [
+        status,
+        username,
+        uid,
+        userProfile,
+        failedToLogoutReason,
+      ];
 }
