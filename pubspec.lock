@@ -494,14 +494,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "4.0.2"
-  iconsax_flutter:
-    dependency: transitive
-    description:
-      name: iconsax_flutter
-      sha256: "95b65699da8ea98f87c5d232f06b0debaaf1ec1332b697e4d90969ec9a93037d"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.0.0"
   image:
     dependency: transitive
     description:
@@ -710,14 +702,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.2.1"
-  pausable_timer:
-    dependency: transitive
-    description:
-      name: pausable_timer
-      sha256: "35b1f77eb2fb0f42e823360321fbed9b9a8b1c7043a07a58aeda17d01f84659a"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.0.0+1"
   permission_handler:
     dependency: "direct main"
     description:
@@ -987,14 +971,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "1.0.1"
-  toastification:
-    dependency: "direct main"
-    description:
-      name: toastification
-      sha256: "14e7f9178db0393df00509cd921de3d3db310d06c7c122e873f31d3c8d18cf4e"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "1.1.0"
   typed_data:
     dependency: transitive
     description:

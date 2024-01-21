@@ -110,7 +110,7 @@ class _ForumPageState extends State<ForumPage>
         if (state.currentPage >= state.totalPages) {
           debug('already in last page');
           _refreshController.finishLoad(IndicatorResult.noMore);
-          await showNoMoreToast(context);
+          await showNoMoreSnackBar(context);
           return;
         }
         // Load the next page.

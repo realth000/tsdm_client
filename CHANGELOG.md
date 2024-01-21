@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 更新隐藏区域卡片上的按钮样式，更明显。
 - 如果帖子的评分消息中评分理由为空，不显示评分理由。
 - 登录后，加载首页的时机推迟到访问首页时，而不是登录后直接加载。
+- 帖子已经加载完时不再显示toast，而是显示snack bar。
 
 ## [0.3.0] - 2023-12-30
 

@@ -48,7 +48,6 @@ dependencies:
   slang_flutter: ^3.28.0
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.0.0
-  toastification: ^1.1.0
   universal_html: ^2.2.4
   url_launcher: ^6.2.3
   uuid: ^4.3.3

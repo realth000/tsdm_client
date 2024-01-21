@@ -168,7 +168,7 @@ class _PostListState<T> extends State<PostList> {
           return;
         }
         if (!widget.canLoadMore) {
-          await showNoMoreToast(context);
+          await showNoMoreSnackBar(context);
           _refreshController.finishLoad();
           return;
         }
