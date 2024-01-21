@@ -15,23 +15,24 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       clipBehavior: Clip.antiAlias,
-      scrollable: true,
       title: Text(context.t.colorPickerDialog.title),
-      content: Column(
-        children: Colors.primaries.map((e) {
-          return RadioListTile(
-            title: CircleAvatar(radius: 15, backgroundColor: e),
-            groupValue: RepositoryProvider.of<SettingsRepository>(context)
-                .getAccentColorValue(),
-            value: e.value,
-            onChanged: (value) async {
-              if (value == null) {
-                return;
-              }
-              Navigator.of(context).pop((Color(value), false));
-            },
-          );
-        }).toList(),
+      content: SingleChildScrollView(
+        child: Column(
+          children: Colors.primaries.map((e) {
+            return RadioListTile(
+              title: CircleAvatar(radius: 15, backgroundColor: e),
+              groupValue: RepositoryProvider.of<SettingsRepository>(context)
+                  .getAccentColorValue(),
+              value: e.value,
+              onChanged: (value) async {
+                if (value == null) {
+                  return;
+                }
+                Navigator.of(context).pop((Color(value), false));
+              },
+            );
+          }).toList(),
+        ),
       ),
       actions: [
         TextButton(
