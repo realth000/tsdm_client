@@ -292,6 +292,9 @@
     "reply": {
       "title": "部分需要回复才可浏览",
       "detail": "回复以查看该部分内容"
+    },
+    "author": {
+      "title": "仅对作者可见"
     }
   },
   "rateCard": {

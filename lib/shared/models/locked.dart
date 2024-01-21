@@ -22,6 +22,8 @@ class _LockedInfo extends Equatable {
 
   const factory _LockedInfo.reply() = _LockedWithReply;
 
+  const factory _LockedInfo.author() = _LockedWithAuthor;
+
   @override
   List<Object?> get props => [];
 }
@@ -73,6 +75,11 @@ final class _LockedWithReply extends _LockedInfo {
   const _LockedWithReply() : super._();
 }
 
+/// This section is only visible to the author of current thread.
+final class _LockedWithAuthor extends _LockedInfo {
+  const _LockedWithAuthor() : super._();
+}
+
 class Locked extends Equatable {
   /// Build a [Locked] from html node [element] where [element] is:
   /// <div class="locked">
@@ -86,11 +93,13 @@ class Locked extends Equatable {
     bool allowWithPoints = true,
     bool allowWithPurchase = true,
     bool allowWithReply = true,
+    bool allowWithAuthor = true,
   }) : _info = _buildLockedFromNode(
           element,
           allowWithPoints: allowWithPoints,
           allowWithPurchase: allowWithPurchase,
           allowWithReply: allowWithReply,
+          allowWithAuthor: allowWithAuthor,
         );
 
   static final _re =
@@ -103,6 +112,8 @@ class Locked extends Equatable {
   bool get lockedWithPurchase => _info != null && _info is _LockedWithPurchase;
 
   bool get lockedWithReply => _info != null && _info is _LockedWithReply;
+
+  bool get lockedWithAuthor => _info != null && _info is _LockedWithAuthor;
 
   String? get tid {
     if (_info == null) {
@@ -170,7 +181,14 @@ class Locked extends Equatable {
     required bool allowWithPoints,
     required bool allowWithPurchase,
     required bool allowWithReply,
+    required bool allowWithAuthor,
   }) {
+    if (allowWithAuthor &&
+        element.childNodes.length == 1 &&
+        (element.childNodes[0].text?.contains('仅作者可见') ?? false)) {
+      return const _LockedInfo.author();
+    }
+
     // Check if is locked with reply.
     if (allowWithReply && element.innerText.contains('查看本帖隐藏内容请回复')) {
       return const _LockedInfo.reply();
@@ -241,7 +259,7 @@ class Locked extends Equatable {
           tid != null &&
           pid != null;
     }
-    if (_info is _LockedWithPoints) {
+    if (_info is _LockedWithPoints || _info is _LockedWithAuthor) {
       return true;
     }
     return false;

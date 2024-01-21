@@ -125,8 +125,12 @@ class Post extends Equatable {
     final locked = postDataNode
         ?.querySelectorAll('div.locked')
         .where((e) => e.querySelector('span') == null)
-        .map((e) => Locked.fromLockDivNode(e,
-            allowWithPoints: false, allowWithReply: false))
+        .map((e) => Locked.fromLockDivNode(
+              e,
+              allowWithPoints: false,
+              allowWithReply: false,
+              allowWithAuthor: false,
+            ))
         .toList();
 
     final postFloor = postDataNode

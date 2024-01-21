@@ -6,6 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## Added
+- 新增解析仅作者可见的帖子回复。
+
 ### Fixed
 
 - 修复设置色调时没有显示当前使用的色调颜色的问题。

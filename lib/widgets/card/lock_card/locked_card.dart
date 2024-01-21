@@ -163,6 +163,18 @@ class _LockedCardState extends State<LockedCard> {
           style: Theme.of(context).textTheme.labelMedium,
         ),
       ]);
+    } else if (widget.locked.lockedWithAuthor) {
+      widgets.add(Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const Icon(Icons.lock_outline),
+          sizedBoxW5H5,
+          Text(
+            context.t.lockedCard.author.title,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+        ],
+      ));
     }
 
     return Card(
