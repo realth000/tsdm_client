@@ -7,6 +7,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -152,24 +153,36 @@ class WelcomeSection extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: avatarUrl == null
-                          ? null
-                          : CachedImageProvider(
-                              avatarUrl,
-                              context,
-                              fallbackImageUrl: noAvatarUrl,
-                            ),
-                      child: avatarUrl == null && username.isNotEmpty
-                          ? Text(username[0])
-                          : null,
-                      backgroundColor: Colors.transparent,
+                    leading: GestureDetector(
+                      onTap: () async {
+                        context.read<HomeCubit>().setTab(HomeTab.profile);
+                        context.goNamed(ScreenPaths.loggedUserProfile);
+                      },
+                      child: CircleAvatar(
+                        backgroundImage: avatarUrl == null
+                            ? null
+                            : CachedImageProvider(
+                                avatarUrl,
+                                context,
+                                fallbackImageUrl: noAvatarUrl,
+                              ),
+                        child: avatarUrl == null && username.isNotEmpty
+                            ? Text(username[0])
+                            : null,
+                        backgroundColor: Colors.transparent,
+                      ),
                     ),
                     title: Row(
                       children: [
-                        Text(
-                          username,
-                          style: Theme.of(context).textTheme.titleLarge,
+                        GestureDetector(
+                          onTap: () async {
+                            context.read<HomeCubit>().setTab(HomeTab.profile);
+                            context.goNamed(ScreenPaths.loggedUserProfile);
+                          },
+                          child: Text(
+                            username,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
                         ),
                         Expanded(child: Container()),
                         IconButton(
