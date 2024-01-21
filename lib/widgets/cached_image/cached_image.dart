@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -63,7 +64,12 @@ class CachedImage extends StatelessWidget {
             ),
           );
         }
-        return const FallbackPicture();
+        return Shimmer.fromColors(
+          baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
+          highlightColor:
+              Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
+          child: const FallbackPicture(),
+        );
       },
     );
   }

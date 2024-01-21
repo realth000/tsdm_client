@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ## Added
 
 - 新增解析仅作者可见的帖子回复。
+- 加载图片时显示带微光的占位图片以提示加载状态。
 
 ### Fixed
 

@@ -44,6 +44,7 @@ dependencies:
   permission_handler: ^11.2.0
   responsive_framework: ^1.1.1
   rxdart: ^0.27.7
+  shimmer: ^3.0.0
   slang: ^3.29.0
   slang_flutter: ^3.29.0
   stream_transform: ^2.1.0
