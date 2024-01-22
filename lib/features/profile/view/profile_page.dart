@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
@@ -34,10 +35,12 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
+  final _scrollController = ScrollController();
 
   @override
   void dispose() {
     _refreshController.dispose();
+    _scrollController.dispose();
     super.dispose();
   }
 
@@ -143,6 +146,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       body: EasyRefresh(
         controller: _refreshController,
+        scrollController: _scrollController,
         header: const MaterialHeader(),
         onRefresh: () {
           context.read<ProfileBloc>().add(ProfileRefreshRequested());
@@ -150,12 +154,11 @@ class _ProfilePageState extends State<ProfilePage> {
         child: ListView(
           padding: edgeInsetsL15R15,
           children: [
-            if (userProfile.avatarUrl != null)
-              CachedImage(
-                userProfile.avatarUrl!,
-                maxWidth: _avatarWidth,
-                maxHeight: _avatarHeight,
-              ),
+            CachedImage(
+              userProfile.avatarUrl ?? noAvatarUrl,
+              maxWidth: _avatarWidth,
+              maxHeight: _avatarHeight,
+            ),
             if (userProfile.username != null)
               ListTile(
                 title: Text(context.t.profilePage.username),

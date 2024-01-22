@@ -44,6 +44,10 @@ class ImageCacheProvider {
     return cacheFile.readAsBytes();
   }
 
+  File getCacheFile(String fileName) {
+    return File('${_imageCacheDirectory.path}/$fileName');
+  }
+
   /// Update image cached file.
   ///
   /// Update cache file and info in database.

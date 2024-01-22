@@ -27,6 +27,19 @@ class CachedImage extends StatelessWidget {
         child: const FallbackPicture(),
       );
     }
+    final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
+    if (cache != null) {
+      final fileCache =
+          getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
+      if (fileCache.existsSync()) {
+        return Image.file(
+          fileCache,
+          width: maxWidth,
+          height: maxHeight,
+        );
+      }
+    }
+
     return FutureBuilder(
       future: getIt
           .get<ImageCacheProvider>()
@@ -64,11 +77,18 @@ class CachedImage extends StatelessWidget {
             ),
           );
         }
-        return Shimmer.fromColors(
-          baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
-          highlightColor:
-              Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
-          child: const FallbackPicture(),
+        return ConstrainedBox(
+          constraints: BoxConstraints(
+            maxWidth: maxWidth ?? double.infinity,
+            maxHeight: maxHeight ?? double.infinity,
+          ),
+          child: Shimmer.fromColors(
+            baseColor:
+                Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
+            highlightColor:
+                Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
+            child: const FallbackPicture(),
+          ),
         );
       },
     );
