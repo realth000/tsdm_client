@@ -258,7 +258,10 @@ class _ForumPageState extends State<ForumPage>
                 );
 
             // Reset jump page state when every build.
-            if (state.status != ForumStatus.loading) {
+            if (state.status == ForumStatus.initial ||
+                state.status == ForumStatus.loading) {
+              context.read<JumpPageCubit>().markLoading();
+            } else {
               context.read<JumpPageCubit>().markSuccess();
             }
 
