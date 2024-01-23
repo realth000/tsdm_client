@@ -117,7 +117,7 @@ class _ForumPageState extends State<ForumPage>
         context.read<ForumBloc>().add(ForumRefreshRequested());
         _refreshController
           ..finishRefresh()
-          ..resetFooter();
+          ..resetHeader();
       },
       onLoad: () async {
         if (!mounted) {
@@ -298,17 +298,7 @@ class _ForumPageState extends State<ForumPage>
                 onSelected: (value) async {
                   switch (value) {
                     case MenuActions.refresh:
-                      await _listScrollController.animateTo(
-                        0,
-                        curve: Curves.ease,
-                        duration: const Duration(milliseconds: 500),
-                      );
-                      Future.delayed(const Duration(milliseconds: 100),
-                          () async {
-                        await _refreshController.callRefresh(
-                          scrollController: _listScrollController,
-                        );
-                      });
+                      context.read<ForumBloc>().add(ForumRefreshRequested());
                     case MenuActions.copyUrl:
                       await Clipboard.setData(
                         ClipboardData(text: widget.forumUrl),
