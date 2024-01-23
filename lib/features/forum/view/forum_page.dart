@@ -65,7 +65,7 @@ class _ForumPageState extends State<ForumPage>
     }
     return SingleChildScrollView(
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL10T5R5B5,
         child: munchElement(context, element),
       ),
     );
