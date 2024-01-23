@@ -12,6 +12,7 @@ enum ForumStatus {
 class ForumState extends Equatable {
   const ForumState({
     required this.fid,
+    this.title,
     this.status = ForumStatus.initial,
     this.rulesElement,
     this.stickThreadList = const [],
@@ -30,6 +31,9 @@ class ForumState extends Equatable {
 
   /// Forum id.
   final String fid;
+
+  /// Forum title.
+  final String? title;
 
   /// Html element of forum rules node.
   final uh.Element? rulesElement;
@@ -70,6 +74,7 @@ class ForumState extends Equatable {
   ForumState copyWith({
     ForumStatus? status,
     String? fid,
+    String? title,
     uh.Element? rulesElement,
     List<StickThread>? stickThreadList,
     List<NormalThread>? normalThreadList,
@@ -84,6 +89,7 @@ class ForumState extends Equatable {
     return ForumState(
       status: status ?? this.status,
       fid: fid ?? this.fid,
+      title: title ?? this.title,
       rulesElement: rulesElement ?? this.rulesElement,
       stickThreadList: stickThreadList ?? this.stickThreadList,
       normalThreadList: normalThreadList ?? this.normalThreadList,
@@ -102,6 +108,7 @@ class ForumState extends Equatable {
   List<Object?> get props => [
         status,
         fid,
+        title,
         rulesElement.hashCode,
         stickThreadList,
         normalThreadList,

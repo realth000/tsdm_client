@@ -264,7 +264,7 @@ class _ForumPageState extends State<ForumPage>
 
             return Scaffold(
               appBar: ListAppBar(
-                title: widget.title,
+                title: widget.title ?? state.title,
                 bottom: state.permissionDeniedMessage == null
                     ? TabBar(
                         controller: tabController,
