@@ -97,7 +97,7 @@ class NoticeCard extends StatelessWidget {
                 onTap: notice.userSpaceUrl == null
                     ? null
                     : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
-                child: SingleLineText(notice.username ?? ''),
+                child: Row(children: [SingleLineText(notice.username ?? '')]),
               ),
               subtitle: SingleLineText(notice.noticeTime?.yyyyMMDD() ?? ''),
             ),
