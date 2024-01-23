@@ -115,6 +115,10 @@ class _RatePostPageState extends State<RatePostPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (state.status == RateStatus.failed) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
     return Form(
       key: formKey,
       child: ListView(
@@ -186,6 +190,14 @@ class _RatePostPageState extends State<RatePostPage> {
       child: BlocListener<RateBloc, RateState>(
         listener: (context, state) {
           if (state.status == RateStatus.failed) {
+            if (state.shouldRetry == false) {
+              // Show reason and pop back if we should not retry.
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                  content: Text(state.failedReason ??
+                      context.t.ratePostPage.failedToRate)));
+              Navigator.of(context).pop();
+              return;
+            }
             ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text(context.t.ratePostPage.failedToRate)));
             context.read<RateBloc>().add(RateFetchInfoRequested(

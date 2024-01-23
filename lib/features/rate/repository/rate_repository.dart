@@ -52,6 +52,11 @@ final class RateRepository {
     }
     final rateWindowInfo = RateWindowInfo.fromDivCNode(divCNode);
     if (rateWindowInfo == null) {
+      final errorText =
+          divCNode.querySelector('div.alert_error')?.childNodes[0].text;
+      if (errorText != null) {
+        throw RateInfoWithErrorException(errorText);
+      }
       throw const RateInfoInvalidDivCNode();
     }
     debug('get rate formHash: ${rateWindowInfo.formHash}');

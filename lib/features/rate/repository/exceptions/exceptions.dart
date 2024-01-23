@@ -55,3 +55,9 @@ final class RateInfoInvalidDivCNode extends RateInfoException {
   @override
   String toString() => 'RateFetchInfoInvalidCNode';
 }
+
+final class RateInfoWithErrorException extends RateInfoException {
+  const RateInfoWithErrorException(this.message) : super._();
+
+  final String message;
+}

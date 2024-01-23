@@ -33,6 +33,14 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch rate info: $e');
       emit(state.copyWith(status: RateStatus.failed));
+    } on RateInfoWithErrorException catch (e) {
+      debug('failed to fetch rate info: $e');
+      // Do NOT retry if server returns an error.
+      emit(state.copyWith(
+        status: RateStatus.failed,
+        failedReason: e.message,
+        shouldRetry: false,
+      ));
     } on RateInfoException catch (e) {
       debug('failed to fetch rate info: $e');
       emit(state.copyWith(

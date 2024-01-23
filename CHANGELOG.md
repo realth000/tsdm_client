@@ -25,6 +25,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复图片在已有缓存的情况下依然闪烁一次的问题。
 - 修复通知页面内点击用户名可跳转到用户信息页面的部分过宽的问题。
 
+### Changed
+
+- 现在尝试给自己的回复评分时会显示不能评分的提示。
+
 ## [0.4.0] - 2024-01-21
 
 ### Added

@@ -19,6 +19,7 @@ final class RateState extends Equatable {
     this.status = RateStatus.initial,
     this.info,
     this.failedReason,
+    this.shouldRetry = true,
   });
 
   final RateStatus status;
@@ -27,18 +28,27 @@ final class RateState extends Equatable {
 
   final String? failedReason;
 
+  final bool? shouldRetry;
+
   RateState copyWith({
     RateStatus? status,
     RateWindowInfo? info,
     String? failedReason,
+    bool? shouldRetry,
   }) {
     return RateState(
       status: status ?? this.status,
       info: info ?? this.info,
       failedReason: failedReason ?? this.failedReason,
+      shouldRetry: shouldRetry ?? this.shouldRetry,
     );
   }
 
   @override
-  List<Object?> get props => [status, info, failedReason];
+  List<Object?> get props => [
+        status,
+        info,
+        failedReason,
+        shouldRetry,
+      ];
 }
