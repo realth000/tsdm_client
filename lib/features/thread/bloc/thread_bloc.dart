@@ -110,7 +110,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
 
     var needLogin = false;
     var havePermission = true;
-    String? permissionDeniedMessage;
+    uh.Element? permissionDeniedMessage;
     if (postList.isEmpty) {
       // Here both normal thread list and subreddit is empty, check permission.
       final docMessage = document.getElementById('messagetext');
@@ -119,7 +119,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         needLogin = true;
       } else if (docMessage != null) {
         havePermission = false;
-        permissionDeniedMessage = docMessage.querySelector('p')?.innerText;
+        permissionDeniedMessage = docMessage.querySelector('p');
       }
     }
 

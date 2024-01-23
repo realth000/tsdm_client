@@ -10,6 +10,7 @@ import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/widgets/post_list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
@@ -99,6 +100,23 @@ class _ThreadPageState extends State<ThreadPage>
   }
 
   Widget _buildBody(BuildContext context, ThreadState state) {
+    if (state.needLogin) {
+      return NeedLoginPage(
+        backUri: GoRouterState.of(context).uri,
+        needPop: true,
+        popCallback: (context) {
+          context.read<ThreadBloc>().add(ThreadRefreshRequested());
+        },
+      );
+    } else if (!state.havePermission) {
+      if (state.permissionDeniedMessage != null) {
+        return Center(
+            child: munchElement(context, state.permissionDeniedMessage!));
+      } else {
+        return Center(child: Text(context.t.general.noPermission));
+      }
+    }
+
     return switch (state.status) {
       ThreadStatus.initial ||
       ThreadStatus.loading =>
@@ -108,15 +126,7 @@ class _ThreadPageState extends State<ThreadPage>
               .read<ThreadBloc>()
               .add(ThreadLoadMoreRequested(state.currentPage));
         }),
-      ThreadStatus.success => state.needLogin
-          ? NeedLoginPage(
-              backUri: GoRouterState.of(context).uri,
-              needPop: true,
-              popCallback: (context) {
-                context.read<ThreadBloc>().add(ThreadRefreshRequested());
-              },
-            )
-          : _buildContent(context, state),
+      ThreadStatus.success => _buildContent(context, state),
     };
   }
 

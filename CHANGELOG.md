@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复从连接跳转过去的分区缺少标题的问题。
 - 修复分区页面只能在帖子标签页刷新的问题。
 - 修复分区页面在加载时右上角跳页的按钮可以点击的问题。
+- 修复跳转到无权限访问的帖子时没有提示的问题。
 
 ### Changed
 
