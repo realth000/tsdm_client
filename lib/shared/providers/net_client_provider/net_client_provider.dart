@@ -98,6 +98,10 @@ class NetClientProvider {
         },
       ),
     );
+
+    if (resp.statusCode != HttpStatus.ok) {
+      return Future.error('resp code=${resp.statusCode}');
+    }
     return resp;
   }
 
@@ -111,6 +115,9 @@ class NetClientProvider {
           },
         ));
 
+    if (resp.statusCode != HttpStatus.ok) {
+      return Future.error('resp code=${resp.statusCode}');
+    }
     return resp;
   }
 

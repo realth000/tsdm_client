@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复个人信息页面向下滚动后无法滚动回顶部的问题。
 - 修复图片在已有缓存的情况下依然闪烁一次的问题。
 - 修复通知页面内点击用户名可跳转到用户信息页面的部分过宽的问题。
+- 修复一些情况下加载图片失败时没有使用默认图片的问题。
 
 ### Changed
 

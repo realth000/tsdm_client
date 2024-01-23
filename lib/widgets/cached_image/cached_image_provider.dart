@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:dio/dio.dart';
@@ -7,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
 
 // https://github.com/Baseflow/flutter_cached_network_image/blob/develop/cached_network_image/lib/src/image_provider/cached_network_image_provider.dart
 // ${flutter_sdk}/lib/src/painting/_network_image_io.dart
@@ -100,6 +102,10 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
           return getIt.get<NetClientProvider>().getImage(fallbackImageUrl!);
         });
         if (!context.mounted) {
+          return Uint8List(0);
+        }
+        if (resp.statusCode != HttpStatus.ok) {
+          debug('failed to get image from $imageUrl, code=${resp.statusCode}');
           return Uint8List(0);
         }
         final imageData = resp.data as List<int>;
