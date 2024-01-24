@@ -11,6 +11,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增解析仅作者可见的帖子回复。
 - 加载图片时显示带微光的占位图片以提示加载状态。
 - 分区页面的置顶标签页内显示版规。
+- 分区页面的所有标签页均支持下拉刷新。
 - 支持从评分卡片和消息卡片上的用户头像和名称跳转到用户信息页。
 - 支持从首页的用户头像和名称跳转到当前用户信息页面。
 
@@ -36,7 +37,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - 现在尝试给自己的回复评分时会显示不能评分的提示。
-- 现在分区页面通过右上角的菜单刷新页面时会直接将页面刷新。
 
 ## [0.4.0] - 2024-01-21
 

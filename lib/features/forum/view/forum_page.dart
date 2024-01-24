@@ -44,11 +44,18 @@ class ForumPage extends StatefulWidget {
 
 class _ForumPageState extends State<ForumPage>
     with SingleTickerProviderStateMixin {
+  final _pinnedScrollController = ScrollController();
+  final _pinnedRefreshController =
+      EasyRefreshController(controlFinishRefresh: true);
+  final _subredditScrollController = ScrollController();
+  final _subredditRefreshController =
+      EasyRefreshController(controlFinishRefresh: true);
+
   /// Controller of thread tab.
-  final _listScrollController = ScrollController();
+  final _threadScrollController = ScrollController();
 
   /// Controller of the [EasyRefresh] in thread tab.
-  final _refreshController = EasyRefreshController(
+  final _threadRefreshController = EasyRefreshController(
     controlFinishRefresh: true,
     controlFinishLoad: true,
   );
@@ -60,28 +67,46 @@ class _ForumPageState extends State<ForumPage>
     if (state.stickThreadList.isEmpty) {
       return Center(child: Text(context.t.forumPage.stickThreadTab.noThread));
     }
+    late final Widget content;
     if (state.rulesElement == null) {
-      return ListView.separated(
+      content = ListView.separated(
+        controller: _pinnedScrollController,
         padding: edgeInsetsL10T5R10B20,
         itemCount: state.stickThreadList.length,
         itemBuilder: (context, index) =>
             NormalThreadCard(state.stickThreadList[index]),
         separatorBuilder: (context, index) => sizedBoxW5H5,
       );
+    } else {
+      content = ListView.separated(
+        controller: _pinnedScrollController,
+        padding: edgeInsetsL10T5R10B20,
+        itemCount: state.stickThreadList.length + 1,
+        itemBuilder: (context, index) {
+          // TODO: Do NOT add leading rules card by checking index value.
+          if (index == 0) {
+            return Card(child: munchElement(context, state.rulesElement!));
+          } else {
+            return NormalThreadCard(state.stickThreadList[index - 1]);
+          }
+        },
+        separatorBuilder: (context, index) => sizedBoxW5H5,
+      );
     }
 
-    return ListView.separated(
-      padding: edgeInsetsL10T5R10B20,
-      itemCount: state.stickThreadList.length + 1,
-      itemBuilder: (context, index) {
-        // TODO: Do NOT add leading rules card by checking index value.
-        if (index == 0) {
-          return Card(child: munchElement(context, state.rulesElement!));
-        } else {
-          return NormalThreadCard(state.stickThreadList[index - 1]);
+    return EasyRefresh(
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
+          .copyWith(physics: physics, scrollbars: false),
+      header: const MaterialHeader(),
+      controller: _pinnedRefreshController,
+      scrollController: _pinnedScrollController,
+      onRefresh: () async {
+        if (!mounted) {
+          return;
         }
+        context.read<ForumBloc>().add(ForumRefreshRequested());
       },
-      separatorBuilder: (context, index) => sizedBoxW5H5,
+      child: content,
     );
   }
 
@@ -101,23 +126,20 @@ class _ForumPageState extends State<ForumPage>
       );
     }
 
-    _refreshController.finishLoad();
+    _threadRefreshController.finishLoad();
 
     return EasyRefresh(
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
           .copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(position: IndicatorPosition.locator),
       footer: const MaterialFooter(),
-      controller: _refreshController,
-      scrollController: _listScrollController,
+      controller: _threadRefreshController,
+      scrollController: _threadScrollController,
       onRefresh: () async {
         if (!mounted) {
           return;
         }
         context.read<ForumBloc>().add(ForumRefreshRequested());
-        _refreshController
-          ..finishRefresh()
-          ..resetHeader();
       },
       onLoad: () async {
         if (!mounted) {
@@ -125,7 +147,7 @@ class _ForumPageState extends State<ForumPage>
         }
         if (state.currentPage >= state.totalPages) {
           debug('already in last page');
-          _refreshController.finishLoad(IndicatorResult.noMore);
+          _threadRefreshController.finishLoad(IndicatorResult.noMore);
           await showNoMoreSnackBar(context);
           return;
         }
@@ -136,7 +158,7 @@ class _ForumPageState extends State<ForumPage>
         // _refreshController.finishLoad();
       },
       child: CustomScrollView(
-        controller: _listScrollController,
+        controller: _threadScrollController,
         slivers: [
           const HeaderLocator.sliver(),
           if (normalThreadList.isNotEmpty)
@@ -201,18 +223,36 @@ class _ForumPageState extends State<ForumPage>
       return Center(child: Text(context.t.forumPage.subredditTab.noSubreddit));
     }
 
-    return ListView.separated(
-      padding: edgeInsetsL10T5R10B20,
-      itemCount: subredditList.length,
-      itemBuilder: (context, index) => ForumCard(subredditList[index]),
-      separatorBuilder: (context, index) => sizedBoxW5H5,
+    return EasyRefresh(
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
+          .copyWith(physics: physics, scrollbars: false),
+      header: const MaterialHeader(),
+      controller: _subredditRefreshController,
+      scrollController: _subredditScrollController,
+      onRefresh: () async {
+        if (!mounted) {
+          return;
+        }
+        context.read<ForumBloc>().add(ForumRefreshRequested());
+      },
+      child: ListView.separated(
+        controller: _subredditScrollController,
+        padding: edgeInsetsL10T5R10B20,
+        itemCount: subredditList.length,
+        itemBuilder: (context, index) => ForumCard(subredditList[index]),
+        separatorBuilder: (context, index) => sizedBoxW5H5,
+      ),
     );
   }
 
   @override
   void dispose() {
-    _listScrollController.dispose();
-    _refreshController.dispose();
+    _pinnedScrollController.dispose();
+    _pinnedRefreshController.dispose();
+    _threadScrollController.dispose();
+    _threadRefreshController.dispose();
+    _subredditScrollController.dispose();
+    _subredditRefreshController.dispose();
     super.dispose();
   }
 
@@ -299,7 +339,23 @@ class _ForumPageState extends State<ForumPage>
                 onSelected: (value) async {
                   switch (value) {
                     case MenuActions.refresh:
-                      context.read<ForumBloc>().add(ForumRefreshRequested());
+                      if (tabController == null) {
+                        print('>>> tab controller i snuyll');
+                        context.read<ForumBloc>().add(ForumRefreshRequested());
+                        return;
+                      }
+                      switch (tabController!.index) {
+                        case _pinnedTabIndex:
+                          await _pinnedRefreshController.callRefresh();
+                        case _threadTabIndex:
+                          await _threadRefreshController.callRefresh();
+                        case _subredditTabIndex:
+                          await _subredditRefreshController.callRefresh();
+                        default:
+                          context
+                              .read<ForumBloc>()
+                              .add(ForumRefreshRequested());
+                      }
                     case MenuActions.copyUrl:
                       await Clipboard.setData(
                         ClipboardData(text: widget.forumUrl),
@@ -316,7 +372,7 @@ class _ForumPageState extends State<ForumPage>
                       await context.dispatchAsUrl(widget.forumUrl,
                           external: true);
                     case MenuActions.backToTop:
-                      await _listScrollController.animateTo(
+                      await _threadScrollController.animateTo(
                         0,
                         curve: Curves.ease,
                         duration: const Duration(milliseconds: 500),
