@@ -45,6 +45,10 @@ class MunchState {
   bool lineThrough = false;
   bool center = false;
 
+  /// Flag indicating current node's parent is `<div>` or not.
+  /// IF in a div, should make sure current item is in a new line.
+  bool inDiv = false;
+
   /// If true, use [String.trim], if false, use [String.trimLeft].
   bool trimAll = false;
 
@@ -172,7 +176,7 @@ class Muncher {
           state.inRepeatWrapLine = false;
           // TODO: Support text-shadow.
           return TextSpan(
-            text: text,
+            text: state.inDiv ? '${text ?? ""}\n' : text,
             recognizer: recognizer,
             style: style,
           );
@@ -374,12 +378,21 @@ class Muncher {
       'spoiler': _buildSpoiler,
     };
 
+    final alreadyInDiv = state.inDiv;
+
+    if (!alreadyInDiv) {
+      state.inDiv = true;
+    }
     // Find the first munch executor, use `_munch` if none found.
     final executor = _divMap!.entries
             .firstWhereOrNull((e) => element.classes.contains(e.key))
             ?.value ??
         _munch;
-    return executor(element);
+    final ret = executor(element);
+    if (!alreadyInDiv) {
+      state.inDiv = false;
+    }
+    return ret;
   }
 
   InlineSpan _buildBlockCode(uh.Element element) {
