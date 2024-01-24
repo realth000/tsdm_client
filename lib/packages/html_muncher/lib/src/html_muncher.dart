@@ -267,6 +267,8 @@ class Muncher {
   }
 
   InlineSpan _buildP(uh.Element element) {
+    final oldInDiv = state.inDiv;
+    state.inDiv = false;
     // Alignment requires the whole rendered page to a fixed max width that
     // equals to website page, otherwise if is different if we have a "center"
     // or "right" alignment.
@@ -312,6 +314,7 @@ class Muncher {
       ret2 = ret;
     }
 
+    state.inDiv = oldInDiv;
     return ret2;
   }
 
