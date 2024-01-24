@@ -114,7 +114,7 @@ class Post extends Equatable {
     // Sometimes the #postmessage_ID ID does not match postID.
     // e.g. tid=1184238
     // Use div.pcb to match it.
-    final postData = postDataNode?.querySelector('div.pcb')?.innerHtml;
+    final postData = postDataNode?.querySelector('div.t_fsz')?.innerHtml;
 
     // Locked block in this post.
     //
