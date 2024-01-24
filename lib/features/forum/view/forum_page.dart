@@ -15,20 +15,17 @@ import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/forum.dart';
 import 'package:tsdm_client/shared/models/normal_thread.dart';
-import 'package:tsdm_client/shared/models/stick_thread.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
-import 'package:universal_html/html.dart' as uh;
 
-const _tabsCount = 4;
-const _rulesTabIndex = 0;
-const _pinnedTabIndex = 1;
-const _threadTabIndex = 2;
-const _subredditTabIndex = 3;
+const _tabsCount = 3;
+const _pinnedTabIndex = 0;
+const _threadTabIndex = 1;
+const _subredditTabIndex = 2;
 
 class ForumPage extends StatefulWidget {
   const ForumPage({required this.fid, this.title, super.key})
@@ -59,28 +56,31 @@ class _ForumPageState extends State<ForumPage>
   /// Controller of current tab: thread, subreddit.
   TabController? tabController;
 
-  Widget _buildRulesTab(BuildContext context, uh.Element? element) {
-    if (element == null) {
-      return Center(child: Text(context.t.forumPage.rulesTab.noRules));
-    }
-    return SingleChildScrollView(
-      child: Padding(
-        padding: edgeInsetsL10T5R5B5,
-        child: munchElement(context, element),
-      ),
-    );
-  }
-
-  Widget _buildStickThreadTab(
-      BuildContext context, List<StickThread> stickThreadList) {
-    if (stickThreadList.isEmpty) {
+  Widget _buildStickThreadTab(BuildContext context, ForumState state) {
+    if (state.stickThreadList.isEmpty) {
       return Center(child: Text(context.t.forumPage.stickThreadTab.noThread));
+    }
+    if (state.rulesElement == null) {
+      return ListView.separated(
+        padding: edgeInsetsL10T5R10B20,
+        itemCount: state.stickThreadList.length,
+        itemBuilder: (context, index) =>
+            NormalThreadCard(state.stickThreadList[index]),
+        separatorBuilder: (context, index) => sizedBoxW5H5,
+      );
     }
 
     return ListView.separated(
       padding: edgeInsetsL10T5R10B20,
-      itemCount: stickThreadList.length,
-      itemBuilder: (context, index) => NormalThreadCard(stickThreadList[index]),
+      itemCount: state.stickThreadList.length + 1,
+      itemBuilder: (context, index) {
+        // TODO: Do NOT add leading rules card by checking index value.
+        if (index == 0) {
+          return Card(child: munchElement(context, state.rulesElement!));
+        } else {
+          return NormalThreadCard(state.stickThreadList[index - 1]);
+        }
+      },
       separatorBuilder: (context, index) => sizedBoxW5H5,
     );
   }
@@ -174,8 +174,7 @@ class _ForumPageState extends State<ForumPage>
       return TabBarView(
         controller: tabController,
         children: [
-          _buildRulesTab(context, state.rulesElement),
-          _buildStickThreadTab(context, state.stickThreadList),
+          _buildStickThreadTab(context, state),
           _buildNormalThreadTab(context, state.normalThreadList, state),
           _buildSubredditTab(context, state.subredditList),
         ],
@@ -272,7 +271,6 @@ class _ForumPageState extends State<ForumPage>
                     ? TabBar(
                         controller: tabController,
                         tabs: [
-                          Tab(child: Text(context.t.forumPage.rulesTab.title)),
                           Tab(
                               child: Text(
                                   context.t.forumPage.stickThreadTab.title)),
