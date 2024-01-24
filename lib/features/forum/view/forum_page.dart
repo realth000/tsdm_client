@@ -246,6 +246,16 @@ class _ForumPageState extends State<ForumPage>
   }
 
   @override
+  void initState() {
+    super.initState();
+    tabController = TabController(
+      initialIndex: _threadTabIndex,
+      length: _tabsCount,
+      vsync: this,
+    );
+  }
+
+  @override
   void dispose() {
     _pinnedScrollController.dispose();
     _pinnedRefreshController.dispose();
@@ -253,17 +263,12 @@ class _ForumPageState extends State<ForumPage>
     _threadRefreshController.dispose();
     _subredditScrollController.dispose();
     _subredditRefreshController.dispose();
+    tabController?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    tabController ??= TabController(
-      initialIndex: _threadTabIndex,
-      length: _tabsCount,
-      vsync: this,
-    );
-
     return MultiBlocProvider(
       providers: [
         BlocProvider(
@@ -319,6 +324,27 @@ class _ForumPageState extends State<ForumPage>
                               child:
                                   Text(context.t.forumPage.subredditTab.title)),
                         ],
+                        onTap: (index) {
+                          // Here we want to scroll the current tab to the top.
+                          // Only scroll to top when user taps on the current tab, which means index is not changing.
+                          if (tabController?.indexIsChanging ?? true) {
+                            // Do nothing because user tapped another index and want to switch to it.
+                            return;
+                          }
+                          const duration = Duration(milliseconds: 300);
+                          const curve = Curves.ease;
+                          switch (tabController!.index) {
+                            case _pinnedTabIndex:
+                              _pinnedScrollController.animateTo(0,
+                                  duration: duration, curve: curve);
+                            case _threadTabIndex:
+                              _threadScrollController.animateTo(0,
+                                  duration: duration, curve: curve);
+                            case _subredditTabIndex:
+                              _subredditScrollController.animateTo(0,
+                                  duration: duration, curve: curve);
+                          }
+                        },
                       )
                     : null,
                 onSearch: () async {
@@ -340,7 +366,6 @@ class _ForumPageState extends State<ForumPage>
                   switch (value) {
                     case MenuActions.refresh:
                       if (tabController == null) {
-                        print('>>> tab controller i snuyll');
                         context.read<ForumBloc>().add(ForumRefreshRequested());
                         return;
                       }
