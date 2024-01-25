@@ -19,6 +19,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
     on<ReplyThreadClosed>(_onReplyThreadClosed);
     on<ReplyToPostRequested>(_onReplyToPostRequested);
     on<ReplyToThreadRequested>(_onReplyToThreadRequested);
+    on<ReplyResetClearTextStateTriggered>(_onReplyResetClearTextStateTriggered);
   }
 
   final ReplyRepository _replyRepository;
@@ -52,7 +53,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
         replyAction: event.replyAction,
         replyMessage: event.replyMessage,
       );
-      emit(state.copyWith(status: ReplyStatus.success));
+      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
       debug('failed to reply to post: http failed with $e');
       emit(state.copyWith(status: ReplyStatus.failed));
@@ -75,7 +76,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
         replyParameters: event.replyParameters,
         replyMessage: event.replyMessage,
       );
-      emit(state.copyWith(status: ReplyStatus.success));
+      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
       debug('failed to reply to thread: http failed with $e');
       emit(state.copyWith(status: ReplyStatus.failed));
@@ -83,5 +84,12 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       debug('failed to reply to thread: failed result: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     }
+  }
+
+  Future<void> _onReplyResetClearTextStateTriggered(
+    ReplyResetClearTextStateTriggered event,
+    ReplyEmitter emit,
+  ) async {
+    emit(state.copyWith(needClearText: false));
   }
 }

@@ -247,27 +247,36 @@ class _ReplyBarState extends State<ReplyBar> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReplyBloc, ReplyState>(
-      builder: (context, state) {
-        if (state.status == ReplyStatus.loading) {
-          // Now is pending reply actions.
-          isSendingReply = true;
-          canSendReply = false;
-        } else if (state.status == ReplyStatus.success) {
-          // Last reply is succeed, clear reply message.
-          isSendingReply = false;
+    return BlocListener<ReplyBloc, ReplyState>(
+      listener: (context, state) {
+        // Clear text one time when user send request succeed.
+        if (state.status == ReplyStatus.success && state.needClearText) {
           _replyController.clear();
-        } else if (state.status == ReplyStatus.failed) {
-          // Last reply action is failed, only clear pending state.
-          isSendingReply = false;
+          // Reset flag because we only want to clear the sent text.
+          context.read<ReplyBloc>().add(ReplyResetClearTextStateTriggered());
         }
-
-        // Should update close state of the current reply bar because we may not send reply to closed threads.
-        _closed = state.closed;
-        _replyParameters = state.replyParameters;
-
-        return _buildContent(context, state);
       },
+      child: BlocBuilder<ReplyBloc, ReplyState>(
+        builder: (context, state) {
+          if (state.status == ReplyStatus.loading) {
+            // Now is pending reply actions.
+            isSendingReply = true;
+            canSendReply = false;
+          } else if (state.status == ReplyStatus.success) {
+            // Last reply is succeed, clear reply message.
+            isSendingReply = false;
+          } else if (state.status == ReplyStatus.failed) {
+            // Last reply action is failed, only clear pending state.
+            isSendingReply = false;
+          }
+
+          // Should update close state of the current reply bar because we may not send reply to closed threads.
+          _closed = state.closed;
+          _replyParameters = state.replyParameters;
+
+          return _buildContent(context, state);
+        },
+      ),
     );
   }
 }

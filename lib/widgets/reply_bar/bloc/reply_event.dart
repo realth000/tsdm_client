@@ -59,3 +59,8 @@ final class ReplyToThreadRequested extends ReplyEvent {
   @override
   List<Object?> get props => [replyParameters, replyMessage];
 }
+
+/// This event is used to reset the state of flag needClearText in state.
+///
+/// That flag should only be true once when user send post succeed, then reset to false.
+final class ReplyResetClearTextStateTriggered extends ReplyEvent {}
