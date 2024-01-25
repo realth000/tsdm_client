@@ -91,10 +91,18 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     final postList = Post.buildListFromThreadDataNode(threadDataNode);
     String? title;
     // Most threads have thread type node before the title.
-    final titleNode =
-        document.querySelector('div#postlist h1.ts > a:nth-child(2)') ??
-            document.querySelector('div#postlist h1.ts > a:nth-child(1)');
-    title = titleNode?.innerText.trim();
+    title =
+        // Thread belongs to not types.
+        document
+                .querySelector('div#postlist h1.ts > a:nth-child(1)')
+                ?.nextNode
+                ?.text
+                ?.trim() ??
+            // Thread belongs to some type.
+            document
+                .querySelector('div#postlist h1.ts > a:nth-child(1)')
+                ?.innerText
+                .trim();
     if (title?.isEmpty ?? true) {
       // Some thread
       title = document
