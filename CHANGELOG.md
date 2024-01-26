@@ -6,7 +6,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
-## Added
+## [0.5.0] - 2024-01-26
+
+### Added
 
 - 新增解析仅作者可见的帖子回复。
 - 新增支持领取红包。
