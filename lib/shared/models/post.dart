@@ -33,6 +33,7 @@ class Post extends Equatable {
     required this.rateAction,
     this.locked = const [],
     this.rate,
+    this.packetUrl,
   });
 
   /// Post ID.
@@ -58,6 +59,8 @@ class Post extends Equatable {
 
   /// `<dl id="ratelog_xxx">` in `<div class="pcb">`.
   /// Rate records on this post.
+  ///
+  /// Optional.
   final Rate? rate;
 
   /// Url to reply this post.
@@ -65,6 +68,11 @@ class Post extends Equatable {
 
   /// Url to rate this post.
   final String? rateAction;
+
+  /// 红包Url.
+  ///
+  /// Optional.
+  final String? packetUrl;
 
   // [element] has id "post_$postID".
   static Post? fromPostNode(uh.Element element) {
@@ -145,6 +153,10 @@ class Post extends Equatable {
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');
     final rate = Rate.fromRateLogNode(rateNode);
+    final packetUrl = postDataNode
+        ?.querySelector('div.pct > div#ts_packet > a')
+        ?.attributes['href']
+        ?.prependHost();
 
     // Parse rate action:
     // * If current post is the first floor in thread, rate action node is in <div id="fj">...</div>.
@@ -176,6 +188,7 @@ class Post extends Equatable {
       replyAction: replyAction,
       rate: rate,
       rateAction: rateAction,
+      packetUrl: packetUrl,
     );
   }
 
@@ -223,5 +236,6 @@ class Post extends Equatable {
         rateAction,
         locked,
         rate,
+        packetUrl,
       ];
 }

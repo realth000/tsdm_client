@@ -326,5 +326,10 @@
     "rate": "評分",
     "rateFetchInfoFailed": "获取评分信息失败",
     "rateFailed": "评分失败"
+  },
+  "packetCard": {
+    "title": "你找到一個紅包了！",
+    "open": "開啟",
+    "failedToOpen": "打開失敗"
   }
 }

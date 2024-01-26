@@ -13,6 +13,7 @@ import 'package:tsdm_client/shared/models/post.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/widgets/cached_image//cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
+import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -113,6 +114,10 @@ class _PostCardState extends State<PostCard>
               ...widget.post.locked
                   .where((e) => e.isValid())
                   .map(LockedCard.new),
+            if (widget.post.packetUrl != null) ...[
+              PacketCard(widget.post.packetUrl!),
+              sizedBoxW10H10,
+            ],
             if (widget.post.rate != null)
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 712),

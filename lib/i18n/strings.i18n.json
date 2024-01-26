@@ -326,5 +326,10 @@
     "rate": "Rate",
     "rateFetchInfoFailed": "Fetch info failed",
     "rateFailed": "Rate failed"
+  },
+  "packetCard": {
+    "title": "You found a packet!",
+    "open": "Open It",
+    "failedToOpen": "Failed to open"
   }
 }
