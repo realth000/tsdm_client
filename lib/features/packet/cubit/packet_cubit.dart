@@ -22,7 +22,8 @@ class PacketCubit extends Cubit<PacketState> {
           ?.innerText
           .split('setTimeout')
           .firstOrNull;
-      if (result != null && result.contains('已经领取过')) {
+      if (result != null &&
+          (result.contains('已经领取过') || result.contains('领取成功'))) {
         emit(state.copyWith(status: PacketStatus.success, reason: result));
       } else {
         emit(state.copyWith(status: PacketStatus.failed, reason: result));

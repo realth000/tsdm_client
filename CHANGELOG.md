@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- 成功领取红包后关闭红包领取按钮。
+
 ## [0.5.0] - 2024-01-26
 
 ### Added
