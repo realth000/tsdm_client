@@ -8,7 +8,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- 修复不显示仅作者可见的回复区域的问题。
+- 修复了不显示仅作者可见的回复区域的问题。#d93eb1c
+- 修复了主页中展示的分类置顶贴分类标注顺序错误的问题。
 
 ### Changed
 

@@ -232,6 +232,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     if (navNameList != null &&
         navShowList != null &&
         navNameList.length == navShowList.length) {
+      if (navNameList.length >= 7) {
+        navNameList
+          ..swap(4, 6)
+          ..swap(5, 6);
+      }
       final count = navNameList.length;
       for (var i = 0; i < count; i++) {
         final threadList = navShowList[i]
