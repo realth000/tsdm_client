@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- 修复不显示仅作者可见的回复区域的问题。
+
 ### Changed
 
 - 成功领取红包后关闭红包领取按钮。

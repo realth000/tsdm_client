@@ -137,7 +137,7 @@ class Post extends Equatable {
               e,
               allowWithPoints: false,
               allowWithReply: false,
-              allowWithAuthor: false,
+              allowWithPurchase: false,
             ))
         .toList();
 
