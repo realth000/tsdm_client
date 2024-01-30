@@ -97,3 +97,42 @@ jobs:
         with:
           name: tsdm_client-windows-tarball
           path: build/windows/x64/runner/tsdm_client-windows.zip
+  build-macos-and-ios:
+    name: Build MacOS and iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.CI_FLUTTER_VERSION}}
+          cache: true
+      - name: Precompile
+        run: |
+          flutter pub get
+          dart run build_runner build
+      - name: Build MacOS
+        run: |
+          flutter build macos --release
+      - name: Packing MacOS dmg
+        run: |
+          python3 -m pip install setuptools
+          npm install -g appdmg
+          appdmg appdmg.json build/tsdm_client-universal.dmg
+      - name: Upload MacOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: tsdm_client-windows-tarball
+          path: build/tsdm_client-universal.dmg
+      - name: Build iOS ipa
+        run: |
+          flutter build ios --release --no-codesign
+      - name: Packing
+        run: |
+          mkdir Payload
+          mv build/ios/iphoneos/Runner.app Payload
+          zip -r9 tsdm_client.ipa Payload
+      - name: Upload iOS artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: tsdm_client-windows-tarball
+          path: tsdm_client.ipa
