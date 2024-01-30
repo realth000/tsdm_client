@@ -112,6 +112,10 @@ class UpgradeCubit extends Cubit<UpgradeState> {
       downloadPair = upgradeModel!.assetsMap.filterPairs('linux.tar.gz');
     } else if (isWindows) {
       downloadPair = upgradeModel!.assetsMap.filterPairs('windows.zip');
+    } else if (isMacOS) {
+      downloadPair = upgradeModel!.assetsMap.filterPairs('.dmg');
+    } else if (isIOS) {
+      downloadPair = upgradeModel!.assetsMap.filterPairs('.ipa');
     }
 
     if (downloadPair == null) {
