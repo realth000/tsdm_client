@@ -72,9 +72,15 @@ flutter:
     - assets/images/
     - assets/text/
 
+# To generate png from svg, run:
+# rsvg-convert -w 200 -h 300 tsdm_client.svg -o tsdm_client-large-200x300.png
 flutter_launcher_icons:
-  image_path: "assets/images/tsdm_client.png"
+  image_path: "assets/images/tsdm_client-large-300x300.png"
+  ios: true
+  macos:
+    generate: true
+    image_path: "assets/images/tsdm_client-large-300x300.png"
   windows:
     generate: true
-    image_path: "assets/images/tsdm_client.png"
+    image_path: "assets/images/tsdm_client-large-300x300.png"
 
