@@ -134,17 +134,38 @@
 ## 支持平台
 
 * [x] Android
-* [ ] IOS
+* [x] iOS
 * [x] Linux
-* [ ] MacOS
+* [x] MacOS
 * [x] Windows
 * [ ] ~~Web（为什么不试试神奇的浏览器呢？）~~
+
+> [!WARNING]
+>
+> * iOS和MacOS平台的产物由于条件限制未经过测试。如果有问题请提issue，但是不保证解决。欢迎提相应的PR。
+> * iOS和MacOS平台产物并未签名，ipa签名请自行寻找方法。
 
 ## 编译
 
 ``` shell
+# All
 dart run build_runner build
-flutter build windows/linux/apk --release
+
+# Android
+flutter build apk --release
+
+# iOS
+flutter build ios --release --no-codesign
+
+# Linux
+flutter build linux --release
+
+# MacOS
+flutter build macos --release
+
+# Windows
+flutter build windows --release
+
 ```
 
 ## 隐私政策
