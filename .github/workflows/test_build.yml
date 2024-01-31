@@ -121,7 +121,7 @@ jobs:
       - name: Upload MacOS artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: tsdm_client-windows-tarball
+          name: tsdm_client-macos-tarball
           path: build/tsdm_client-universal.dmg
       - name: Build iOS ipa
         run: |
@@ -134,5 +134,5 @@ jobs:
       - name: Upload iOS artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: tsdm_client-windows-tarball
+          name: tsdm_client-ios-tarball
           path: tsdm_client.ipa
