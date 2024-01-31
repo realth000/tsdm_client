@@ -128,3 +128,46 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
+  build-macos-and-ios:
+    name: Build MacOS and iOS
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{env.CI_FLUTTER_VERSION}}
+          cache: true
+      - name: Precompile
+        run: |
+          flutter pub get
+          dart run build_runner build
+      - name: Build MacOS
+        run: |
+          flutter build macos --release
+      - name: Packing MacOS dmg
+        run: |
+          python3 -m pip install setuptools
+          npm install -g appdmg
+          appdmg appdmg.json build/tsdm_client-universal.dmg
+      - name: Release macOS artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
+          artifacts: 'build/tsdm_client-universal.dmg'
+      - name: Build iOS ipa
+        run: |
+          flutter build ios --release --no-codesign
+      - name: Packing
+        run: |
+          mkdir Payload
+          mv build/ios/iphoneos/Runner.app Payload
+          zip -r9 tsdm_client.ipa Payload
+      - name: Release iOS artifacts
+        uses: ncipollo/release-action@v1
+        with:
+          allowUpdates: true
+          omitBody: true
+          omitBodyDuringUpdate: true
+          artifacts: 'tsdm_client.ipa'
