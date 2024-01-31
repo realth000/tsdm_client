@@ -61,6 +61,7 @@ dev_dependencies:
   freezed: ^2.4.6
   json_serializable: ^6.7.1
   slang_build_runner: ^3.29.0
+  very_good_analysis: ^5.1.0
 
 #  dependency_overrides:
 #    # Blocked by custom_lint 0.5.3 and flutter_test

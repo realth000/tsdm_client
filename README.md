@@ -13,11 +13,16 @@
 <p align="center">
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test_build.yml?label=build"/></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Android-19A6E6?logo=android&logoColor=f0f0f0"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-iOS-19A6E6?logo=ios&logoColor=f0f0f0"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Linux-19A6E6?&logo=Linux&logoColor=f0f0f0"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-MacOS-19A6E6?logo=macos&logoColor=f0f0f0"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/-Windows-19A6E6?&logo=Windows&logoColor=f0f0f0"></a>
+  <a href="https://dart.dev/"><img src="https://img.shields.io/badge/Dart-3.2-19A6E6?logo=dart"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.16-19A6E6?logo=flutter"></a>
   <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
+  <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg"></a>
   <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-19A6E6"></a>
 </p>
 
@@ -65,7 +70,7 @@
   * [x] 查看点评
   * [x] 评分/查看评分
   * [x] 代码块
-  * [ ] 复制
+  * [ ] 复制内容
   * [x] 我的帖子
   * [x] 查看新帖
   * [x] 帖子类型（加精，置顶，已关闭等）
@@ -95,12 +100,12 @@
   * [x] 手动签到
   * [ ] 自动签到
 * [ ] 深色模式
+  * [x] 手动设置
   * [x] 跟随系统
   * [ ] 自动调整字体颜色
-* [ ] 论坛任务
-  * [ ] 领取任务
-  * [ ] 领取奖励
-* [x] 更换色调
+* [ ] 主题
+  * [x] 更换主题色
+  * [ ] 动态颜色\(Android\)
 * [ ] 用户信息
   * [x] 查看用户信息
   * [ ] 修改头像
