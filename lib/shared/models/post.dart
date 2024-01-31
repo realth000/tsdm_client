@@ -122,7 +122,29 @@ class Post extends Equatable {
     // Sometimes the #postmessage_ID ID does not match postID.
     // e.g. tid=1184238
     // Use div.pcb to match it.
-    final postData = postDataNode?.querySelector('div.t_fsz')?.innerHtml;
+    //
+    // Some threads have poll area in it, causing dom structure from:
+    // <div class="pcb">
+    //   <div class="t_fsz">
+    //     <table cellspacing="0" cellpadding="0">
+    //       Post Data
+    //     </table>
+    //   </div>
+    // </div>
+    //
+    // to:
+    //
+    // <div class="pcb">
+    //   <div class="pcbs">
+    //     <table cellspacing="0" cellpadding="0">
+    //       Post Data
+    //     </table>
+    //     <form id="poll" name="poll">
+    //     </form>
+    //   </div>
+    // </div>
+    final postData = postDataNode?.querySelector('div.t_fsz')?.innerHtml ??
+        postDataNode?.querySelector('div.pcbs')?.innerHtml;
 
     // Locked block in this post.
     //
