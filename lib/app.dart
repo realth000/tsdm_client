@@ -14,7 +14,9 @@ import 'package:tsdm_client/shared/repositories/profile_repository/profile_repos
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
 
+/// Main app for tsdm_client.
 class App extends StatelessWidget {
+  /// Constructor.
   const App({super.key});
 
   @override

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:uuid/uuid.dart';
@@ -6,19 +5,28 @@ import 'package:uuid/uuid.dart';
 const Uuid _uuid = Uuid();
 
 /// Result when parsing [String] to route succeed.
-@immutable
+///
+/// Represents a route that can be directed to.
 class RecognizedRoute {
+  /// Constructor.
   const RecognizedRoute(
     this.screenPath, {
     this.pathParameters = const {},
     this.queryParameters = const {},
   });
 
+  /// Available screen path that defines in `screen_path.dart`.
   final String screenPath;
+
+  /// Path parameters of the route.
   final Map<String, String> pathParameters;
+
+  /// Query parameters of the route.
   final Map<String, String> queryParameters;
 }
 
+/// Extension on [String] that provides methods to parsing [String] as app
+/// routes.
 extension ParseUrl on String {
   /// Try parse string to [RecognizedRoute] with arguments.
   /// Return null if string is unsupported route.
@@ -88,6 +96,7 @@ extension ParseUrl on String {
   }
 }
 
+/// Extension on [String] that enhances modification.
 extension EnhanceModification on String {
   /// Prepend [prefix].
   String? prepend(String prefix) {
@@ -108,12 +117,17 @@ extension EnhanceModification on String {
         : this;
   }
 
+  /// Trim the trailing web page title.
   String trimTitle() {
     return replaceFirst(' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!', '');
   }
 }
 
+/// Extension on [String] that parses [String] to other types.
 extension ParseStringTo on String {
+  /// Try to parse [String] to [int].
+  ///
+  /// Return null if is invalid [int].
   int? parseToInt() {
     return int.tryParse(this);
   }
@@ -132,15 +146,18 @@ extension ParseStringTo on String {
       // Should not happen.
       return DateTime.tryParse(this);
     }
-    final formattedDateString =
-        '${datePartList[0]}-${datePartList[1].padLeft(2, '0')}-${datePartList[2].padLeft(2, '0')}';
+    final formattedDateString = '${datePartList[0]}-'
+        '${datePartList[1].padLeft(2, '0')}-'
+        '${datePartList[2].padLeft(2, '0')}';
     return DateTime.tryParse(
       timePart == null ? formattedDateString : '$formattedDateString $timePart',
     );
   }
 }
 
+/// Extension on [String] that provides info used in caching images.
 extension ImageCacheFileName on String {
+  /// Return a valid UUID-v5 format string of current string.
   String fileNameV5() {
     return _uuid.v5(Namespace.URL, this);
   }

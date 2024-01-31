@@ -1,6 +1,7 @@
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
+/// Extension on [Map] that provides ability to check archiver urls.
 extension ParseRoute on Map<String, String> {
   /// Parse to archiver url.
   ///
@@ -21,6 +22,7 @@ extension ParseRoute on Map<String, String> {
   }
 }
 
+/// Extension on [Map] that provides methods about modification.
 extension ModifyMap<K, V> on Map<K, V> {
   /// Return a new map that copies current map and [other] together.
   Map<K, V> copyWith(Map<K, V> other) {

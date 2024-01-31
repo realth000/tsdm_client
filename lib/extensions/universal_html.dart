@@ -5,6 +5,8 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:universal_html/html.dart';
 
+/// Extension on [Document] that provides methods to grep specified elements
+/// and contents inside [Document].
 extension GrepDocumentExtension on Document {
   /// Parse the current page number of current document.
   int? currentPage() {
@@ -60,6 +62,9 @@ extension AccessExtension on Element {
   /// Get the child at [index] in [children], return null if not exist.
   Element? childAtOrNull(int index) => children.elementAtOrNull(index);
 
+  /// Return the inner html string.
+  ///
+  /// Return empty string if unavailable.
   String innerHtmlEx() => innerHtml ?? '';
 }
 
@@ -193,6 +198,13 @@ extension GrepExtension on Element {
     return attributes['data-original'] ?? attributes['src'];
   }
 
+  /// Return the image url in attributes in current node.
+  ///
+  /// There is a priority difference between different node attributes.
+  ///
+  /// zoomfile > data-original > src > file.
+  ///
+  /// Return null if no available image url found.
   String? imageUrl() {
     final str = attributes['zoomfile']?.prependHost() ??
         attributes['data-original'] ??
