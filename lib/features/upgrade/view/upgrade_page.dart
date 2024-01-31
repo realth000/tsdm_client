@@ -27,23 +27,9 @@ class _UpgradePageState extends State<UpgradePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Text(
-                  context.t.upgradePage.releaseNotes,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                Expanded(child: Container()),
-                IconButton(
-                  icon: const Icon(Icons.launch_outlined),
-                  onPressed: () async {
-                    await launchUrl(
-                      Uri.parse(state.upgradeModel!.releaseUrl),
-                      mode: LaunchMode.externalApplication,
-                    );
-                  },
-                )
-              ],
+            Text(
+              context.t.upgradePage.releaseNotes,
+              style: Theme.of(context).textTheme.titleLarge,
             ),
             sizedBoxW5H5,
             munchElement(
@@ -157,7 +143,20 @@ class _UpgradePageState extends State<UpgradePage> {
         child: BlocBuilder<UpgradeCubit, UpgradeState>(
           builder: (context, state) {
             return Scaffold(
-              appBar: AppBar(title: Text(context.t.upgradePage.title)),
+              appBar: AppBar(
+                title: Text(context.t.upgradePage.title),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.launch_outlined),
+                    onPressed: () async {
+                      await launchUrl(
+                        Uri.parse(state.upgradeModel!.releaseUrl),
+                        mode: LaunchMode.externalApplication,
+                      );
+                    },
+                  ),
+                ],
+              ),
               body: ScrollConfiguration(
                 behavior:
                     ScrollConfiguration.of(context).copyWith(scrollbars: false),

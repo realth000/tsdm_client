@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - 成功领取红包后关闭红包领取按钮。
+- 现在更新页面中会始终显示跳转到github realease的按钮。
 
 ## [0.5.0] - 2024-01-26
 
