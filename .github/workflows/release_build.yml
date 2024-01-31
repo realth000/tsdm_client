@@ -131,6 +131,8 @@ jobs:
   build-macos-and-ios:
     name: Build MacOS and iOS
     runs-on: macos-latest
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
       - uses: subosito/flutter-action@v2
