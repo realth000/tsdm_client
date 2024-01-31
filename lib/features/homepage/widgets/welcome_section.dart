@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
@@ -39,7 +40,7 @@ class WelcomeSection extends StatelessWidget {
         constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
         child: Swiper(
           itemBuilder: (context, index) {
-            return Image.network(swiperUrlList[index].coverUrl);
+            return CachedImage(swiperUrlList[index].coverUrl);
           },
           itemCount: swiperUrlList.length,
           itemWidth: _kahrpbaPicWidth,
