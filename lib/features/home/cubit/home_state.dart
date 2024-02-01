@@ -25,6 +25,7 @@ enum HomeTab {
 
 /// State of the homepage of the app.
 final class HomeState extends Equatable {
+  /// Constructor.
   const HomeState({this.tab = HomeTab.home});
 
   /// Current tab.
@@ -34,8 +35,10 @@ final class HomeState extends Equatable {
   List<Object?> get props => [tab];
 }
 
+/// Bar item in app navigator.
 class NavigationBarItem {
-  NavigationBarItem({
+  /// Constructor.
+  const NavigationBarItem({
     required this.icon,
     required this.selectedIcon,
     required this.label,
@@ -43,13 +46,27 @@ class NavigationBarItem {
     required this.tab,
   });
 
+  /// Item icon.
+  ///
+  /// Use outline style icons.
   final Icon icon;
+
+  /// Item icon when selected.
+  ///
+  /// Use normal style icons.
   final Icon selectedIcon;
+
+  /// Name of the item.
   final String label;
+
+  /// Screen path of the item.
   final String targetPath;
+
+  /// Tab index.
   final HomeTab tab;
 }
 
+/// All navigation bar items.
 final barItems = [
   NavigationBarItem(
     icon: const Icon(Icons.home_outlined),

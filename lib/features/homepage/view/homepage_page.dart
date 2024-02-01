@@ -20,6 +20,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 ///
 /// This page is in the Homepage of the app, already wrapped in a [Scaffold].
 class HomepagePage extends StatefulWidget {
+  /// Constructor.
   const HomepagePage({super.key});
 
   @override
@@ -51,7 +52,12 @@ class _HomepagePageState extends State<HomepagePage> {
         listener: (context, state) {
           if (state.status == HomepageStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+              SnackBar(
+                content: Text(
+                  context.t.general.failedToLoad,
+                ),
+              ),
+            );
           }
         },
         child: BlocBuilder<HomepageBloc, HomepageState>(
@@ -107,7 +113,7 @@ class _HomepagePageState extends State<HomepagePage> {
                     onPressed: () async {
                       await context.pushNamed(ScreenPaths.search);
                     },
-                  )
+                  ),
                 ],
               ),
               body: body,

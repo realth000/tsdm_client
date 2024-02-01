@@ -19,19 +19,25 @@ enum HomepageStatus {
   /// Failed to load data.
   failed;
 
+  /// Is [initial]?
   bool get isInitial => this == HomepageStatus.initial;
 
+  /// Is [needLogin]?
   bool get isNeedLogin => this == HomepageStatus.needLogin;
 
+  /// Is [loading]?
   bool get isLoading => this == HomepageStatus.loading;
 
+  /// Is [success]?
   bool get isSuccess => this == HomepageStatus.success;
 
+  /// Is [failed]?
   bool get isFailed => this == HomepageStatus.failed;
 }
 
 /// State of homepage.
 final class HomepageState extends Equatable {
+  /// Constructor.
   const HomepageState({
     this.status = HomepageStatus.initial,
     this.forumStatus = const ForumStatus.empty(),
@@ -57,6 +63,7 @@ final class HomepageState extends Equatable {
   /// Swiper urls in the homepage.
   final List<SwiperUrl> swiperUrlList;
 
+  /// Copy with
   HomepageState copyWith({
     HomepageStatus? status,
     ForumStatus? forumStatus,

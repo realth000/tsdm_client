@@ -2,8 +2,13 @@ import 'package:tsdm_client/constants/url.dart';
 
 /// User name field type, pair with password.
 enum LoginField {
+  /// Username
   username,
+
+  /// Email address.
   email,
+
+  /// Uid
   uid;
 
   @override
@@ -18,17 +23,22 @@ enum LoginField {
 
 /// Additional security question.
 class SecurityQuestion {
+  /// Constructor.
   const SecurityQuestion({
     required this.questionId,
     required this.answer,
   });
 
+  /// The question id of security question chose by user.
   final String questionId;
+
+  /// The answer text that user texted.
   final String answer;
 }
 
 /// Login credential.
 class UserCredential {
+  /// Constructor.
   const UserCredential({
     required this.loginField,
     required this.loginFieldValue,
@@ -76,6 +86,7 @@ class UserCredential {
   /// Can be null.
   final SecurityQuestion? securityQuestion;
 
+  /// Method to convert to json.
   Map<String, dynamic> toJson() {
     final m = {
       'loginfield': loginField.toString(),

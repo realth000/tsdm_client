@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 /// * The logged user may have an avatar url or not, depending on the theme of
 ///   website.
 final class LoggedUserInfo extends Equatable {
+  /// Constructor.
   const LoggedUserInfo({
     required this.username,
     required this.relatedLinkPairList,

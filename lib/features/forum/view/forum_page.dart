@@ -27,12 +27,16 @@ const _pinnedTabIndex = 0;
 const _threadTabIndex = 1;
 const _subredditTabIndex = 2;
 
+/// Page to show all forum status.
 class ForumPage extends StatefulWidget {
+  /// Constructor.
   const ForumPage({required this.fid, this.title, super.key})
       : forumUrl = '$baseUrl/forum.php?mod=forumdisplay&fid=$fid';
 
   /// Forum ID.
   final String fid;
+
+  /// Forum title.
   final String? title;
 
   /// The url is used to provide features like "open in external browser".
@@ -188,7 +192,8 @@ class _ForumPageState extends State<ForumPage>
     } else if (!state.havePermission) {
       if (state.permissionDeniedMessage != null) {
         return Center(
-            child: munchElement(context, state.permissionDeniedMessage!));
+          child: munchElement(context, state.permissionDeniedMessage!),
+        );
       } else {
         return Center(child: Text(context.t.general.noPermission));
       }
@@ -348,15 +353,18 @@ class _ForumPageState extends State<ForumPage>
                       )
                     : null,
                 onSearch: () async {
-                  await context.pushNamed(ScreenPaths.search,
-                      queryParameters: {'fid': widget.fid});
+                  await context.pushNamed(
+                    ScreenPaths.search,
+                    queryParameters: {'fid': widget.fid},
+                  );
                 },
                 onJumpPage: (pageNumber) async {
                   if (!mounted) {
                     return;
                   }
                   // Mark loading here.
-                  // Mark state will be removed when loading finishes (next build).
+                  // Mark state will be removed when
+                  // loading finishes (next build).
                   context.read<JumpPageCubit>().markLoading();
                   context
                       .read<ForumBloc>()
@@ -388,14 +396,18 @@ class _ForumPageState extends State<ForumPage>
                       if (!context.mounted) {
                         return;
                       }
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          context.t.aboutPage.copiedToClipboard,
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            context.t.aboutPage.copiedToClipboard,
+                          ),
                         ),
-                      ));
+                      );
                     case MenuActions.openInBrowser:
-                      await context.dispatchAsUrl(widget.forumUrl,
-                          external: true);
+                      await context.dispatchAsUrl(
+                        widget.forumUrl,
+                        external: true,
+                      );
                     case MenuActions.backToTop:
                       await _threadScrollController.animateTo(
                         0,

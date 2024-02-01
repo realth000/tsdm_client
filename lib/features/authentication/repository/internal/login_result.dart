@@ -51,7 +51,8 @@ enum LoginResult {
         return LoginResult.success;
       }
 
-      // Impossible unless server response page updated and changed these messages.
+      // Impossible unless server response page updated and changed these
+      // messages.
       debug(
         'login result check passed but message check maybe outdated: $message',
       );
@@ -65,7 +66,8 @@ enum LoginResult {
 
       // Other unrecognized error.
       debug(
-        'login result check not passed: alert_info class with unknown message: $message',
+        'login result check not passed: '
+        'alert_info class with unknown message: $message',
       );
       return LoginResult.otherError;
     }
@@ -85,7 +87,8 @@ enum LoginResult {
 
       // Other unrecognized error.
       debug(
-        'login result check not passed: alert_error with unknown message: $message',
+        'login result check not passed: '
+        'alert_error with unknown message: $message',
       );
       return LoginResult.otherError;
     }

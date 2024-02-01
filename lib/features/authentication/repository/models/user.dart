@@ -1,7 +1,15 @@
 import 'package:equatable/equatable.dart';
 
 /// Authenticated user.
+///
+/// [username], [uid] and [email] should have the same priority in identifying
+/// the user.
+///
+/// * Though we may not know the all info above when trying to login.
+/// * All the info above MUST be provided before save logged info info local
+///   storage.
 class User extends Equatable {
+  /// Constructor.
   const User({
     this.username,
     this.uid,
@@ -9,9 +17,18 @@ class User extends Equatable {
     this.email,
   });
 
+  /// Username.
   final String? username;
+
+  /// Uid.
   final String? uid;
+
+  /// Password.
+  ///
+  /// Never save this to local store.
   final String? password;
+
+  /// Email address.
   final String? email;
 
   @override

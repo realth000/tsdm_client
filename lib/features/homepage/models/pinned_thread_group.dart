@@ -3,6 +3,7 @@ import 'package:tsdm_client/features/homepage/models/pinned_thread.dart';
 
 /// A list of recommended thread with grouped name in the website homepage.
 final class PinnedThreadGroup extends Equatable {
+  /// Constructor.
   const PinnedThreadGroup({required this.title, required this.threadList});
 
   /// Title of this thread group.

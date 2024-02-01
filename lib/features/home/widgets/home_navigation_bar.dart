@@ -4,7 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+/// Navigation bar or rail of the home page.
+///
+/// Root page.
 class HomeNavigationBar extends StatefulWidget {
+  /// Constructor.
   const HomeNavigationBar({super.key});
 
   @override
@@ -19,8 +23,13 @@ class _HomeNavigationBarState extends State<HomeNavigationBar> {
 
     return NavigationBar(
       destinations: barItems
-          .map((e) => NavigationDestination(
-              icon: e.icon, selectedIcon: e.selectedIcon, label: e.label))
+          .map(
+            (e) => NavigationDestination(
+              icon: e.icon,
+              selectedIcon: e.selectedIcon,
+              label: e.label,
+            ),
+          )
           .toList(),
       selectedIndex:
           context.select<HomeCubit, HomeTab>((cubit) => cubit.state.tab).index,

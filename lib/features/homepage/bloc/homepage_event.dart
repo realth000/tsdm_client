@@ -8,9 +8,14 @@ sealed class HomepageEvent extends Equatable {
   List<Object> get props => [];
 }
 
+/// User request to load the homepage.
+///
+/// This will load from cache if available.
 final class HomepageLoadRequested extends HomepageEvent {}
 
 /// User requests to refresh homepage.
+///
+/// Directly load homepage from server.
 final class HomepageRefreshRequested extends HomepageEvent {}
 
 /// User requests to login.

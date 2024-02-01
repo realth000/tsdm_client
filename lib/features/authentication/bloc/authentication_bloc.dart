@@ -10,16 +10,22 @@ import 'package:tsdm_client/utils/debug.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
+/// Emitter
 typedef AuthenticationEmitter = Emitter<AuthenticationState>;
 
+/// Bloc the authentication, including login and logout.
+///
+/// This bloc should be used as a global long-live bloc.
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  AuthenticationBloc(
-      {required AuthenticationRepository authenticationRepository})
-      : _authenticationRepository = authenticationRepository,
+  /// Constructor
+  AuthenticationBloc({
+    required AuthenticationRepository authenticationRepository,
+  })  : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState()) {
     on<AuthenticationFetchLoginHashRequested>(
-        _onAuthenticationFetchLoginHashRequested);
+      _onAuthenticationFetchLoginHashRequested,
+    );
     on<AuthenticationLoginRequested>(_onAuthenticationLoginRequested);
   }
 
@@ -32,15 +38,23 @@ class AuthenticationBloc
     emit(state.copyWith(status: AuthenticationStatus.fetchingHash));
     try {
       final loginHash = await _authenticationRepository.fetchHash();
-      emit(state.copyWith(
-          status: AuthenticationStatus.gotHash, loginHash: loginHash));
+      emit(
+        state.copyWith(
+          status: AuthenticationStatus.gotHash,
+          loginHash: loginHash,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch login hash: $e');
       emit(state.copyWith(status: AuthenticationStatus.failed));
     } on LoginException catch (e) {
       debug('failed to fetch login hash: $e');
-      emit(state.copyWith(
-          status: AuthenticationStatus.failed, loginException: e));
+      emit(
+        state.copyWith(
+          status: AuthenticationStatus.failed,
+          loginException: e,
+        ),
+      );
     }
   }
 
@@ -57,8 +71,12 @@ class AuthenticationBloc
       emit(state.copyWith(status: AuthenticationStatus.failed));
     } on LoginException catch (e) {
       debug('failed to login: $e');
-      emit(state.copyWith(
-          status: AuthenticationStatus.failed, loginException: e));
+      emit(
+        state.copyWith(
+          status: AuthenticationStatus.failed,
+          loginException: e,
+        ),
+      );
     }
   }
 }

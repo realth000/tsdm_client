@@ -18,10 +18,12 @@ final _loginQuestions = [
   '您其中一位老师的名字',
   '您个人计算机的型号',
   '您最喜欢的餐馆名称',
-  '驾驶执照的最后四位数字'
+  '驾驶执照的最后四位数字',
 ];
 
+/// Form for user to fill login info.
 class LoginForm extends StatefulWidget {
+  /// Constructor.
   const LoginForm({
     this.redirectPath,
     this.redirectPathParameters,
@@ -29,8 +31,13 @@ class LoginForm extends StatefulWidget {
     super.key,
   });
 
+  /// The url path to redirect back once login succeed.
   final String? redirectPath;
+
+  /// The path parameters of url to redirect back.
   final Map<String, String>? redirectPathParameters;
+
+  /// The extra object of url to redirect back.
   final Object? redirectExtra;
 
   @override
@@ -212,7 +219,9 @@ class _LoginFormState extends State<LoginForm> {
             Navigator.of(context).pop();
           } else {
             debug(
-              'login success, redirect back to: path=${widget.redirectPath} with parameters=${widget.redirectPathParameters}, extra=${widget.redirectExtra}',
+              'login success, redirect back to: path=${widget.redirectPath} '
+              'with parameters=${widget.redirectPathParameters}, '
+              'extra=${widget.redirectExtra}',
             );
             context.pushReplacementNamed(
               widget.redirectPath!,

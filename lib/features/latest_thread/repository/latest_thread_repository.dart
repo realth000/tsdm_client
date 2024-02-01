@@ -7,6 +7,7 @@ import 'package:tsdm_client/shared/providers/server_time_provider/sevrer_time_pr
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
+/// Repository of the latest thread feature.
 class LatestThreadRepository {
   /// Fetch html document from [url].
   ///

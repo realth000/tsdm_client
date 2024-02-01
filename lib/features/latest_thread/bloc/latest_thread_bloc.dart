@@ -11,10 +11,13 @@ import 'package:universal_html/html.dart' as uh;
 part 'latest_thread_event.dart';
 part 'latest_thread_state.dart';
 
+/// Emitter
 typedef LatestThreadEmitter = Emitter<LatestThreadState>;
 
+/// Bloc the the latest thread feature.
 final class LatestThreadBloc
     extends Bloc<LatestThreadEvent, LatestThreadState> {
+  /// Constructor.
   LatestThreadBloc({required LatestThreadRepository latestThreadRepository})
       : _latestThreadRepository = latestThreadRepository,
         super(const LatestThreadState()) {
@@ -37,12 +40,14 @@ final class LatestThreadBloc
       final document =
           await _latestThreadRepository.fetchDocument(state.nextPageUrl!);
       final (threadList, nextPageUrl) = _parseThreadList(document);
-      emit(state.copyWith(
-        status: LatestThreadStatus.success,
-        threadList: [...state.threadList, ...?threadList],
-        pageNumber: state.pageNumber + 1,
-        nextPageUrl: nextPageUrl,
-      ));
+      emit(
+        state.copyWith(
+          status: LatestThreadStatus.success,
+          threadList: [...state.threadList, ...?threadList],
+          pageNumber: state.pageNumber + 1,
+          nextPageUrl: nextPageUrl,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to load latest thread next page: $e');
       emit(state.copyWith(status: LatestThreadStatus.failed));
@@ -57,12 +62,14 @@ final class LatestThreadBloc
     try {
       final document = await _latestThreadRepository.fetchDocument(event.url);
       final (threadList, nextPageUrl) = _parseThreadList(document);
-      emit(state.copyWith(
-        status: LatestThreadStatus.success,
-        threadList: threadList,
-        pageNumber: 1,
-        nextPageUrl: nextPageUrl,
-      ));
+      emit(
+        state.copyWith(
+          status: LatestThreadStatus.success,
+          threadList: threadList,
+          pageNumber: 1,
+          nextPageUrl: nextPageUrl,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to load latest thread page: $e');
       emit(state.copyWith(status: LatestThreadStatus.failed));
@@ -70,7 +77,8 @@ final class LatestThreadBloc
   }
 
   (List<LatestThread>?, String? nextPageUrl) _parseThreadList(
-      uh.Document document) {
+    uh.Document document,
+  ) {
     final data = document
         .querySelector('div#threadlist > ul')
         ?.querySelectorAll('li')

@@ -6,9 +6,12 @@ import 'package:tsdm_client/features/authentication/repository/exceptions/except
 import 'package:tsdm_client/features/authentication/widgets/login_form.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+/// Page of user to login.
 class LoginPage extends StatefulWidget {
+  /// Constructor.
   const LoginPage({this.redirectBackState, super.key});
 
+  /// The redirect back route that navigator will push when logged in succeed.
   final GoRouterState? redirectBackState;
 
   @override
@@ -24,8 +27,8 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: BlocProvider(
         create: (context) => AuthenticationBloc(
-            authenticationRepository: RepositoryProvider.of(context))
-          ..add(AuthenticationFetchLoginHashRequested()),
+          authenticationRepository: RepositoryProvider.of(context),
+        )..add(AuthenticationFetchLoginHashRequested()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state.status == AuthenticationStatus.failed) {

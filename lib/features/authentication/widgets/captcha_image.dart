@@ -15,7 +15,9 @@ const _captchaImageHeight = 150;
 /// So indicator should use (150 / 60) * 320 width.
 const _indicatorBoxWidth = (60 / _captchaImageHeight) * _captchaImageWidth;
 
+/// The captcha image used in login form.
 class CaptchaImage extends StatefulWidget {
+  /// Constructor.
   const CaptchaImage({super.key});
 
   static final Uri _fakeFormVerifyUri =
@@ -78,10 +80,11 @@ class _VerityImageState extends State<CaptchaImage> {
             return Image.memory(bytes, height: 60);
           }
           return const SizedBox(
-              width: _indicatorBoxWidth,
-              child: Center(
-                child: CircularProgressIndicator(),
-              ));
+            width: _indicatorBoxWidth,
+            child: Center(
+              child: CircularProgressIndicator(),
+            ),
+          );
         },
       ),
     );

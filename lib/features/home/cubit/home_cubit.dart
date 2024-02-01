@@ -10,6 +10,7 @@ part 'home_state.dart';
 ///
 /// Not the home tab nor the homepage of website.
 class HomeCubit extends Cubit<HomeState> {
+  /// Constructor.
   HomeCubit() : super(const HomeState());
 
   /// Change the current home page state.

@@ -1,12 +1,20 @@
 part of 'jump_page_cubit.dart';
 
+/// status of jumping page.
 enum JumpPageStatus {
+  /// Initial.
   initial,
+
+  /// Loading the new page.
   loading,
+
+  /// Load succeed.
   success,
 }
 
+/// State of jumping page.
 final class JumpPageState extends Equatable {
+  /// Constructor.
   const JumpPageState({
     this.status = JumpPageStatus.initial,
     this.currentPage = 1,
@@ -14,6 +22,7 @@ final class JumpPageState extends Equatable {
     this.canJumpPage = true,
   });
 
+  /// Status of jumping.
   final JumpPageStatus status;
 
   /// Current page number
@@ -21,8 +30,11 @@ final class JumpPageState extends Equatable {
 
   /// Total page number.
   final int totalPages;
+
+  /// Flag indicates can jump page or not.
   final bool canJumpPage;
 
+  /// Copy with.
   JumpPageState copyWith({
     JumpPageStatus? status,
     int? currentPage,

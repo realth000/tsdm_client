@@ -1,11 +1,9 @@
-import 'package:flutter/foundation.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-@immutable
 class _LatestThreadInfo {
   const _LatestThreadInfo({
     required this.title,
@@ -60,31 +58,43 @@ class _LatestThreadInfo {
   final String? quotedMessage;
 }
 
+/// Latest thread model.
 class LatestThread {
+  /// Build from <li> node.
   LatestThread.fromLi(uh.Element element) : _info = _buildFromLiNode(element);
 
   final _LatestThreadInfo? _info;
 
   static final _re = RegExp(r'(?<count>\d+)');
 
+  /// Thread title.
   String? get title => _info?.title;
 
+  /// Thread url.
   String? get url => _info?.url;
 
+  /// Thread id.
   String? get threadID => _info?.threadID;
 
+  /// Forum name the thread belongs to.
   String? get forumName => _info?.forumName;
 
+  /// Forum url the thread belongs to.
   String? get forumUrl => _info?.forumUrl;
 
+  /// The user info of latest replied user.
   User? get latestReplyAuthor => _info?.latestReplyAuthor;
 
+  /// Time of latest reply.
   DateTime? get latestReplyTime => _info?.latestReplyTime;
 
+  /// Total replies count.
   int? get replyCount => _info?.replyCount;
 
+  /// View times count.
   int? get viewCount => _info?.viewCount;
 
+  /// Quoted message to show.
   String? get quotedMessage => _info?.quotedMessage;
 
   /// <div id="threadlist">
@@ -179,6 +189,7 @@ failed to parse LatestThread node: {
     );
   }
 
+  /// Is valid or not.
   bool isValid() {
     return _info != null;
   }

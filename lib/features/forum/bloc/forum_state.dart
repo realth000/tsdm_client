@@ -2,14 +2,22 @@ part of 'forum_bloc.dart';
 
 /// Page status.
 enum ForumStatus {
+  /// Initial.
   initial,
+
+  /// Loading.
   loading,
+
+  /// Load succeed.
   success,
+
+  /// Failed to load.
   failed,
 }
 
 /// State of forum page of the app.
 class ForumState extends Equatable {
+  /// Constructor.
   const ForumState({
     required this.fid,
     this.title,
@@ -40,9 +48,11 @@ class ForumState extends Equatable {
 
   /// Pinned thread in this forum.
   ///
-  /// Only load in the first page and never update because other numbers of pages do not have pinned threads at all.
+  /// Only load in the first page and never update because other numbers of
+  /// pages do not have pinned threads at all.
   final List<StickThread> stickThreadList;
 
+  /// All normal thread list.
   final List<NormalThread> normalThreadList;
 
   /// All subreddits in this forum.
@@ -56,11 +66,13 @@ class ForumState extends Equatable {
   /// Current pageNumber
   final int currentPage;
 
+  /// How many pages in this forum
   final int totalPages;
 
   /// Flag indicating current user has permission to see this page or not.
   ///
-  /// Only works with logged user. If no user logged in, use [needLogin] flag instead.
+  /// Only works with logged user. If no user logged in, use [needLogin] flag
+  /// instead.
   final bool havePermission;
 
   /// Message showed from server when have no permission.
@@ -71,6 +83,7 @@ class ForumState extends Equatable {
   /// Only works when no user logged.
   final bool needLogin;
 
+  /// Copy with
   ForumState copyWith({
     ForumStatus? status,
     String? fid,

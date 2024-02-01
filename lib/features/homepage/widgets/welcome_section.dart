@@ -16,7 +16,9 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
+/// A section of homepage, contains swiper and user info.
 class WelcomeSection extends StatelessWidget {
+  /// Constructor.
   const WelcomeSection({
     required this.forumStatus,
     required this.loggedUserInfo,
@@ -24,15 +26,24 @@ class WelcomeSection extends StatelessWidget {
     super.key,
   });
 
+  /// Forum status.
   final ForumStatus forumStatus;
+
+  /// Current logged user info.
+  ///
+  /// Null if no one logged.
   final LoggedUserInfo? loggedUserInfo;
+
+  /// All urls used in swiper.
   final List<SwiperUrl> swiperUrlList;
 
   static const double _kahrpbaPicWidth = 300;
   static const double _kahrpbaPicHeight = 218;
 
   Widget _buildKahrpbaSwiper(
-      BuildContext context, List<SwiperUrl> swiperUrlList) {
+    BuildContext context,
+    List<SwiperUrl> swiperUrlList,
+  ) {
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,

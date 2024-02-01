@@ -4,12 +4,14 @@ import 'package:equatable/equatable.dart';
 ///
 /// Including threads/replies in today and yesterday, and member count.
 final class ForumStatus extends Equatable {
+  /// Constructor.
   const ForumStatus({
     required this.todayCount,
     required this.yesterdayCount,
     required this.threadCount,
   });
 
+  /// Construct an empty forum status.
   const ForumStatus.empty()
       : todayCount = '0',
         yesterdayCount = '0',

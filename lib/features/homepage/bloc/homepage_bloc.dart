@@ -16,7 +16,9 @@ import 'package:universal_html/html.dart' as uh;
 part 'homepage_event.dart';
 part 'homepage_state.dart';
 
+/// Extension on [uh.Document] to extract user info.
 extension ExtractProfileAvatar on uh.Document {
+  /// Extract the user avatar url.
   String? extractAvatar() {
     return querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
         ?.imageUrl();
@@ -25,6 +27,7 @@ extension ExtractProfileAvatar on uh.Document {
 
 /// Bloc for the homepage of the app.
 class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
+  /// Constructor.
   HomepageBloc({
     required ForumHomeRepository forumHomeRepository,
     required ProfileRepository profileRepository,
@@ -32,20 +35,26 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   })  : _forumHomeRepository = forumHomeRepository,
         _profileRepository = profileRepository,
         _authenticationRepository = authenticationRepository,
-        super(forumHomeRepository.hasCache()
-            ? _parseStateFromDocument(
-                forumHomeRepository.getCache()!,
-                authenticationRepository.currentUser?.username,
-                avatarUrl: profileRepository.getCache()?.extractAvatar(),
-              )
-            : const HomepageState()) {
+        super(
+          forumHomeRepository.hasCache()
+              ? _parseStateFromDocument(
+                  forumHomeRepository.getCache()!,
+                  authenticationRepository.currentUser?.username,
+                  avatarUrl: profileRepository.getCache()?.extractAvatar(),
+                )
+              : const HomepageState(),
+        ) {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
     on<HomepageRefreshRequested>(_onHomepageRefreshRequested);
     on<_HomepageAuthChanged>(_onHomepageAuthChanged);
 
-    _authStatusSub = _authenticationRepository.status.listen((status) => add(
+    _authStatusSub = _authenticationRepository.status.listen(
+      (status) => add(
         _HomepageAuthChanged(
-            isLogged: status == AuthenticationStatus.authenticated)));
+          isLogged: status == AuthenticationStatus.authenticated,
+        ),
+      ),
+    );
   }
 
   final ForumHomeRepository _forumHomeRepository;
@@ -60,19 +69,23 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     Emitter<HomepageState> emit,
   ) async {
     if (_forumHomeRepository.hasCache()) {
-      final s = _parseStateFromDocument(_forumHomeRepository.getCache()!,
-          _authenticationRepository.currentUser?.username,
-          avatarUrl: state.loggedUserInfo?.avatarUrl);
+      final s = _parseStateFromDocument(
+        _forumHomeRepository.getCache()!,
+        _authenticationRepository.currentUser?.username,
+        avatarUrl: state.loggedUserInfo?.avatarUrl,
+      );
       emit(s);
       return;
     }
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
     try {
-      final documentList = (await Future.wait([
-        _forumHomeRepository.fetchHomePage(),
-        _profileRepository.fetchProfile()
-      ]))
+      final documentList = (await Future.wait(
+        [
+          _forumHomeRepository.fetchHomePage(),
+          _profileRepository.fetchProfile(),
+        ],
+      ))
           .whereType<uh.Document>()
           .toList();
       if (documentList.length != 2) {
@@ -127,8 +140,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
           ?.imageUrl();
       // Parse data and change state.
       final s = _parseStateFromDocument(
-          document, _authenticationRepository.currentUser?.username,
-          avatarUrl: avatarUrl);
+        document,
+        _authenticationRepository.currentUser?.username,
+        avatarUrl: avatarUrl,
+      );
       emit(s);
     } on HttpHandshakeFailedException catch (e) {
       debug('failed to fetch dom: $e');
@@ -251,8 +266,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
         pinnedThreadGroupList.add(group);
       }
 
-      // The sort on server side is not as displayed, fix the sort to keep the same
-      // with website appearance.
+      // The sort on server side is not as displayed, fix the sort to keep the
+      // same with website appearance.
       if (pinnedThreadGroupList.length >= 7) {
         pinnedThreadGroupList
           ..swap(4, 5)
@@ -301,12 +316,14 @@ List<String?> _buildKahrpbaPicHrefList(uh.Element? scriptNode) {
       .innerHtmlEx()
       .split('\n')
       .where((e) => e.contains("window.location='"))
-      .map((e) => e
-          .split("window.location='")
-          .lastOrNull
-          ?.split("'")
-          .firstOrNull
-          ?.replaceFirst('&amp;', '&'))
+      .map(
+        (e) => e
+            .split("window.location='")
+            .lastOrNull
+            ?.split("'")
+            .firstOrNull
+            ?.replaceFirst('&amp;', '&'),
+      )
       .toList();
 }
 

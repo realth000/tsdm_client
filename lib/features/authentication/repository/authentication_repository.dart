@@ -38,8 +38,15 @@ import 'package:universal_html/parsing.dart';
 
 /// Status of authentication.
 enum AuthenticationStatus {
+  /// Unknown state.
+  ///
+  /// Same with [unauthenticated].
   unknown,
+
+  /// Have user logged.
   authenticated,
+
+  /// No one logged.
   unauthenticated,
 }
 
@@ -49,6 +56,7 @@ enum AuthenticationStatus {
 ///
 /// **Need to call dispose.**
 class AuthenticationRepository {
+  /// Constructor.
   AuthenticationRepository({User? user}) : _authedUser = user;
 
   static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
@@ -74,10 +82,13 @@ class AuthenticationRepository {
 
   User? _authedUser;
 
+  /// The current logged user.
   User? get currentUser => _authedUser;
 
+  /// Authentication status stream.
   Stream<AuthenticationStatus> get status => _controller.asBroadcastStream();
 
+  /// Dispose the resources.
   void dispose() {
     _controller.close();
   }
@@ -88,7 +99,8 @@ class AuthenticationRepository {
   ///
   /// * **HttpRequestFailedException** when http request failed.
   /// * **LoginFormHashNotFoundException** when form hash not found.
-  /// * **LoginInvalidFormHashException** when form hash found but not in the expected format.
+  /// * **LoginInvalidFormHashException** when form hash found but not in the
+  ///   expected format.
   Future<LoginHash> fetchHash() async {
     // TODO: Parse CDATA.
     // 返回的data是xml：
@@ -118,10 +130,6 @@ class AuthenticationRepository {
 
     debug('get login hash $loginHash');
     return LoginHash(formHash: formHash, loginHash: loginHash);
-  }
-
-  Future<void> loginWithCookie(Map<String, dynamic> cookieMap) async {
-    throw UnimplementedError();
   }
 
   /// Login with password and other parameters in [credential].

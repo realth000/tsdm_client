@@ -13,7 +13,7 @@ enum MenuActions {
   backToTop,
 }
 
-class ListAppBar<T> extends StatelessWidget implements PreferredSizeWidget {
+class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ListAppBar({
     required this.onSearch,
     this.title,

@@ -8,9 +8,12 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 
+/// Page to show info about latest thread page.
 class LatestThreadPage extends StatefulWidget {
+  /// Constructor.
   const LatestThreadPage({required this.url, super.key});
 
+  /// Url the the page.
   final String url;
 
   @override
@@ -58,7 +61,9 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
   void initState() {
     super.initState();
     _refreshController = EasyRefreshController(
-        controlFinishLoad: true, controlFinishRefresh: true);
+      controlFinishLoad: true,
+      controlFinishRefresh: true,
+    );
   }
 
   @override
@@ -76,15 +81,18 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
         ),
         BlocProvider(
           create: (context) => LatestThreadBloc(
-              latestThreadRepository: RepositoryProvider.of(context))
-            ..add(LatestThreadRefreshRequested(widget.url)),
-        )
+            latestThreadRepository: RepositoryProvider.of(context),
+          )..add(LatestThreadRefreshRequested(widget.url)),
+        ),
       ],
       child: BlocListener<LatestThreadBloc, LatestThreadState>(
         listener: (context, state) {
           if (state.status == LatestThreadStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+              SnackBar(
+                content: Text(context.t.general.failedToLoad),
+              ),
+            );
           }
         },
         child: BlocBuilder<LatestThreadBloc, LatestThreadState>(

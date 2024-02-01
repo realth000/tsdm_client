@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 ///
 /// Contains thread info and the author's info.
 final class PinnedThread extends Equatable {
+  /// Constructor.
   const PinnedThread({
     required this.threadUrl,
     required this.threadTitle,

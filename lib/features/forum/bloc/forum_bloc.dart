@@ -12,16 +12,17 @@ import 'package:universal_html/html.dart' as uh;
 part 'forum_event.dart';
 part 'forum_state.dart';
 
+/// Emitter
 typedef ForumEmitter = Emitter<ForumState>;
 
 /// Bloc of forum page.
 class ForumBloc extends Bloc<ForumEvent, ForumState> {
+  /// Constructor.
   ForumBloc({
     required String fid,
     required ForumRepository forumRepository,
   })  : _forumRepository = forumRepository,
         super(ForumState(fid: fid)) {
-    //
     on<ForumLoadMoreRequested>(_onForumLoadMoreRequested);
     on<ForumRefreshRequested>(_onForumRefreshRequested);
     on<ForumJumpPageRequested>(_onForumJumpPageRequested);
@@ -40,8 +41,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug(
-          'failed to load forum page: fid=${state.fid}, pageNumber=${event.pageNumber}: $e');
+      debug('failed to load forum page: fid=${state.fid}, '
+          'pageNumber=${event.pageNumber}: $e');
       emit(state.copyWith(status: ForumStatus.failed));
     }
   }
@@ -52,10 +53,11 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
   ) async {
     emit(
       state.copyWith(
-          status: ForumStatus.loading,
-          stickThreadList: [],
-          normalThreadList: [],
-          subredditList: []),
+        status: ForumStatus.loading,
+        stickThreadList: [],
+        normalThreadList: [],
+        subredditList: [],
+      ),
     );
 
     try {
@@ -95,13 +97,20 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     List<StickThread>? stickThreadList;
     List<Forum>? subredditList;
     final normalThreadList = _buildThreadList<NormalThread>(
-        document, 'tsdm_normalthread', NormalThread.fromTBody);
+      document,
+      'tsdm_normalthread',
+      NormalThread.fromTBody,
+    );
 
-    // When jump to other pages, pinned thread and subreddits should be reserved in state.
+    // When jump to other pages, pinned thread and subreddits should be
+    // reserved in state.
     // Only the first page has pinned threads and subreddits.
     if (pageNumber == 1) {
       stickThreadList = _buildThreadList<StickThread>(
-          document, 'tsdm_stickthread', StickThread.fromTBody);
+        document,
+        'tsdm_stickthread',
+        StickThread.fromTBody,
+      );
       subredditList = _buildForumList(document, state.fid);
     }
 

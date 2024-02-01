@@ -11,12 +11,16 @@ import 'package:tsdm_client/widgets/single_line_text.dart';
 ///
 /// Threads are separated into different groups.
 class PinSection extends StatelessWidget {
+  /// Constructor.
   const PinSection(this.pinnedThreadGroup, {super.key});
 
+  /// All pinned thread gathered in groups.
   final List<PinnedThreadGroup> pinnedThreadGroup;
 
   Widget _sectionThreadBuilder(
-      BuildContext context, PinnedThread pinnedThread) {
+    BuildContext context,
+    PinnedThread pinnedThread,
+  ) {
     return ListTile(
       title: SingleLineText(
         pinnedThread.threadTitle,
@@ -64,23 +68,25 @@ class PinSection extends StatelessWidget {
       final sectionName = pinnedThreadGroup[i].title;
       final threadWidgetList =
           _buildSectionThreads(context, pinnedThreadGroup[i].threadList);
-      ret.add(Card(
-        clipBehavior: Clip.hardEdge,
-        margin: EdgeInsets.zero,
-        child: Padding(
-          padding: edgeInsetsT10,
-          child: Column(
-            children: [
-              Text(
-                sectionName,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              sizedBoxW10H10,
-              threadWidgetList,
-            ],
+      ret.add(
+        Card(
+          clipBehavior: Clip.hardEdge,
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: edgeInsetsT10,
+            child: Column(
+              children: [
+                Text(
+                  sectionName,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
+                sizedBoxW10H10,
+                threadWidgetList,
+              ],
+            ),
           ),
         ),
-      ));
+      );
     }
 
     return GridView(
@@ -89,7 +95,8 @@ class PinSection extends StatelessWidget {
       // TODO: Not hardcode these Extent sizes.
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 800,
-        // Set to at least 552 to ensure not overflow when scaling window size down.
+        // Set to at least 552 to ensure not overflow when scaling window
+        // size down.
         mainAxisSpacing: 5,
         mainAxisExtent: 552,
         crossAxisSpacing: 5,
