@@ -143,8 +143,9 @@ class Post extends Equatable {
     //     </form>
     //   </div>
     // </div>
-    final postData = postDataNode?.querySelector('div.t_fsz')?.innerHtml ??
-        postDataNode?.querySelector('div.pcbs')?.innerHtml;
+    //
+    // Now we only search for the first <table> node in <div class="pcb"> node.
+    final postData = postDataNode?.querySelector('div.pcb table')?.innerHtml;
 
     // Locked block in this post.
     //
