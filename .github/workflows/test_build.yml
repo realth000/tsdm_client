@@ -3,7 +3,7 @@ name: Test build
 on:
   push:
     tags-ignore:
-      - 'v**'
+      - '**'
   pull_request:
     branches: [ "master" ]
   workflow_dispatch:
