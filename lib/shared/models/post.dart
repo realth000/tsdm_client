@@ -153,16 +153,17 @@ class Post extends Equatable {
     // Already purchased locked block has `<span>已购买人数: xx</span>`, here
     // only need not purchased ones.
     //
-    // Should not build locked with points which must be built in "postmessage" munching.
+    // Should not build locked with points which must be built in "postmessage"munching.
     final locked = postDataNode
         ?.querySelectorAll('div.locked')
         .where((e) => e.querySelector('span') == null)
-        .map((e) => Locked.fromLockDivNode(
-              e,
-              allowWithPoints: false,
-              allowWithReply: false,
-              allowWithPurchase: false,
-            ))
+        .map(
+          (e) => Locked.fromLockDivNode(
+            e,
+            allowWithPoints: false,
+            allowWithReply: false,
+          ),
+        )
         .toList();
 
     final postFloor = postDataNode
