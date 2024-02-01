@@ -46,7 +46,7 @@ env:
 jobs:
   build-linux-android:
     name: Build Linux and Android
-    if: ${{ github.event_name == "push" || inputs.build_linux || inputs.build_android }}
+    if: ${{ github.event_name == 'push' || inputs.build_linux || inputs.build_android }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -66,16 +66,16 @@ jobs:
           flutter pub get
           dart run build_runner build
       - name: Build Linux
-        if: ${{ github.event_name == "push" || inputs.build_linux }}
+        if: ${{ github.event_name == 'push' || inputs.build_linux }}
         run: flutter build linux --release
       - name: Pre Packing
-        if: ${{ github.event_name == "push" || inputs.build_linux }}
+        if: ${{ github.event_name == 'push' || inputs.build_linux }}
         run: |
           pushd build/linux/x64/release/
           mv bundle tsdm_client
           popd
       - name: Pack Linux tarball
-        if: ${{ github.event_name == "push" || inputs.build_linux }}
+        if: ${{ github.event_name == 'push' || inputs.build_linux }}
         uses: thedoctor0/zip-release@master
         with:
           type: 'tar'
@@ -83,29 +83,29 @@ jobs:
           directory: build/linux/x64/release/
           path: tsdm_client
       - name: Upload Linux artifacts
-        if: ${{ github.event_name != "push" && inputs.build_linux && !inputs.dry_run }}
+        if: ${{ github.event_name != 'push' && inputs.build_linux && !inputs.dry_run }}
         uses: actions/upload-artifact@v3
         with:
           name: tsdm_client-linux-tarball
           path: build/linux/x64/release/tsdm_client-linux.tar.gz
       - name: Setup Android sign key
-        if: ${{ github.event_name == "push" || inputs.build_android }}
+        if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
           echo '${{ secrets.KEYSTORE }}' | base64 --decode > android/app/key.jks
           echo '${{ secrets.KEY_PROPERTIES }}' > android/key.properties
       - name: Build Android
-        if: ${{ github.event_name == "push" || inputs.build_android }}
+        if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
           flutter build apk --release
       - name: Pack Android apk
-        if: ${{ github.event_name == "push" || inputs.build_android }}
+        if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
           pushd build/app/outputs/flutter-apk/
           mv app-arm64-v8a-release.apk tsdm_client-arm64_v8a.apk
           mv app-armeabi-v7a-release.apk tsdm_client-armeabi_v7a.apk
           popd
       - name: Upload Android artifacts
-        if: ${{ github.event_name != "push" && inputs.build_android && !inputs.dry_run }}
+        if: ${{ github.event_name != 'push' && inputs.build_android && !inputs.dry_run }}
         uses: actions/upload-artifact@v3
         with:
           name: tsdm_client-apk-arm64_v8a
@@ -113,7 +113,7 @@ jobs:
             build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk
   build-windows:
     name: Build Windows
-    if: ${{ github.event_name == "push" || inputs.build_windows }}
+    if: ${{ github.event_name == 'push' || inputs.build_windows }}
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v4
@@ -140,14 +140,14 @@ jobs:
           directory: build/windows/x64/runner
           path: tsdm_client
       - name: Upload Windows artifacts
-        if: ${{ github.event_name != "push" && !inputs.dry_run }}
+        if: ${{ github.event_name != 'push' && !inputs.dry_run }}
         uses: actions/upload-artifact@v3
         with:
           name: tsdm_client-windows-tarball
           path: build/windows/x64/runner/tsdm_client-windows.zip
   build-macos-and-ios:
     name: Build MacOS and iOS
-    if: ${{ github.event_name == "push" || inputs.build_macos || inputs.build_ios }}
+    if: ${{ github.event_name == 'push' || inputs.build_macos || inputs.build_ios }}
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
@@ -160,33 +160,33 @@ jobs:
           flutter pub get
           dart run build_runner build
       - name: Build MacOS
-        if: ${{ github.event_name == "push" || inputs.build_macos }}
+        if: ${{ github.event_name == 'push' || inputs.build_macos }}
         run: |
           flutter build macos --release
       - name: Packing MacOS dmg
-        if: ${{ github.event_name == "push" || inputs.build_macos }}
+        if: ${{ github.event_name == 'push' || inputs.build_macos }}
         run: |
           python3 -m pip install setuptools
           npm install -g appdmg
           appdmg appdmg.json build/tsdm_client-universal.dmg
       - name: Upload MacOS artifacts
-        if: ${{ github.event_name != "push" && inputs.build_macos && !inputs.dry_run }}
+        if: ${{ github.event_name != 'push' && inputs.build_macos && !inputs.dry_run }}
         uses: actions/upload-artifact@v3
         with:
           name: tsdm_client-macos-tarball
           path: build/tsdm_client-universal.dmg
       - name: Build iOS ipa
-        if: ${{ github.event_name == "push" || inputs.build_ios }}
+        if: ${{ github.event_name == 'push' || inputs.build_ios }}
         run: |
           flutter build ios --release --no-codesign
       - name: Packing
-        if: ${{ github.event_name == "push" || inputs.build_ios }}
+        if: ${{ github.event_name == 'push' || inputs.build_ios }}
         run: |
           mkdir Payload
           mv build/ios/iphoneos/Runner.app Payload
           zip -r9 tsdm_client.ipa Payload
       - name: Upload iOS artifacts
-        if: ${{ github.event_name != "push" && inputs.build_ios && !inputs.dry_run }}
+        if: ${{ github.event_name != 'push' && inputs.build_ios && !inputs.dry_run }}
         uses: actions/upload-artifact@v3
         with:
           name: tsdm_client-ios-tarball
