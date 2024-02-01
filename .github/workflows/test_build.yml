@@ -2,10 +2,11 @@ name: Test build
 
 on:
   push:
-    tags-ignore:
-      - '**'
+    branches:
+      - master
   pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
   workflow_dispatch:
     inputs:
       build_android:
