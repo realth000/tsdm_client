@@ -32,6 +32,7 @@ class ThreadState extends Equatable {
     this.postList = const [],
     this.replyParameters,
     this.threadType,
+    this.onlyVisibleUid,
   });
 
   /// Status.
@@ -80,6 +81,12 @@ class ThreadState extends Equatable {
   /// Thread type.
   final String? threadType;
 
+  /// Indicating only show posts published by the user who has the given uid
+  /// in current thread.
+  ///
+  /// Show all posts if value is null;
+  final String? onlyVisibleUid;
+
   /// Copy with.
   ThreadState copyWith({
     ThreadStatus? status,
@@ -94,6 +101,7 @@ class ThreadState extends Equatable {
     bool? threadClosed,
     List<Post>? postList,
     ReplyParameters? replyParameters,
+    String? onlyVisibleUid,
   }) {
     return ThreadState(
       status: status ?? this.status,
@@ -109,6 +117,7 @@ class ThreadState extends Equatable {
       threadClosed: threadClosed ?? this.threadClosed,
       postList: postList ?? this.postList,
       replyParameters: replyParameters ?? this.replyParameters,
+      onlyVisibleUid: onlyVisibleUid ?? this.onlyVisibleUid,
     );
   }
 
@@ -126,5 +135,6 @@ class ThreadState extends Equatable {
         threadClosed,
         postList,
         replyParameters,
+        onlyVisibleUid,
       ];
 }

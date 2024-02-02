@@ -28,10 +28,14 @@ class ThreadRepository {
   Future<uh.Document> fetchThread({
     required String tid,
     int pageNumber = 1,
+    String? onlyVisibleUid,
   }) async {
+    /// Only visible uid.
+    final visibleUid =
+        onlyVisibleUid == null ? '' : '&authorid=$onlyVisibleUid';
     _pageNumber = pageNumber;
     _threadUrl =
-        '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1&page=$pageNumber';
+        '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1$visibleUid&page=$pageNumber';
 
     final resp = await getIt.get<NetClientProvider>().get(_threadUrl!);
     if (resp.statusCode != HttpStatus.ok) {

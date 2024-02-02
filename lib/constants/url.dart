@@ -51,7 +51,8 @@ const modifyUserCredentialUrl =
 /// * User email
 const checkAuthenticationStateUrl = modifyUserCredentialUrl;
 
-const upgradeGithubRelaseUrl =
+/// Url to get the latest app on Github.
+const upgradeGithubReleaseUrl =
     'https://github.com/realth000/tsdm_client/releases/latest';
 
 /// Target url to post a reply to thread [tid], forum [fid].

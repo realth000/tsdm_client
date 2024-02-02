@@ -159,7 +159,7 @@ class _UpgradePageState extends State<UpgradePage> {
                     icon: const Icon(Icons.launch_outlined),
                     onPressed: () async {
                       await launchUrl(
-                        Uri.parse(upgradeGithubRelaseUrl),
+                        Uri.parse(upgradeGithubReleaseUrl),
                         mode: LaunchMode.externalApplication,
                       );
                     },

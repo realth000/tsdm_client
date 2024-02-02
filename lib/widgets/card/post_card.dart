@@ -1,11 +1,13 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -17,9 +19,20 @@ import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
+/// Actions in post context menu.
+///
+/// * State of [viewTheAuthor] and [viewAllAuthors] are thread level state so
+///   this state is stored by the parent thread. Disable these actions when
+///   there is no available thread above current post in the widget tree.
 enum _PostCardActions {
   reply,
   rate,
+
+  /// Only view posts published by current author.
+  viewTheAuthor,
+
+  /// View all authors.
+  viewAllAuthors,
 }
 
 /// Card for a [Post] model.
@@ -60,6 +73,9 @@ class _PostCardState extends State<PostCard>
   @override
   Widget build(BuildContext context) {
     super.build(context);
+
+    final threadBloc = context.readOrNull<ThreadBloc>();
+    final onlyVisibleUid = threadBloc?.state.onlyVisibleUid;
 
     return SingleChildScrollView(
       child: Padding(
@@ -154,6 +170,34 @@ class _PostCardState extends State<PostCard>
                           ],
                         ),
                       ),
+
+                    /// Viewing all authors, can switch to only view current
+                    /// author mode.
+                    if (threadBloc != null &&
+                        onlyVisibleUid == null &&
+                        widget.post.author.uid != null)
+                      PopupMenuItem(
+                        value: _PostCardActions.viewTheAuthor,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.person_outlined),
+                            Text(context.t.postCard.onlyViewAuthor),
+                          ],
+                        ),
+                      ),
+
+                    /// Viewing specified author now, can switch to view all
+                    /// authors mode.
+                    if (threadBloc != null && onlyVisibleUid != null)
+                      PopupMenuItem(
+                        value: _PostCardActions.viewAllAuthors,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.group_outlined),
+                            Text(context.t.postCard.viewAllAuthors),
+                          ],
+                        ),
+                      ),
                   ],
                   onSelected: (value) async {
                     switch (value) {
@@ -167,6 +211,19 @@ class _PostCardState extends State<PostCard>
                         if (widget.post.rateAction != null) {
                           await _rateCallback.call();
                         }
+                      case _PostCardActions.viewTheAuthor:
+                        // Here is guaranteed a not-null `ThreadBloc`.
+                        context.read<ThreadBloc>().add(
+                              ThreadOnlyViewAuthorRequested(
+                                widget.post.author.uid!,
+                              ),
+                            );
+                      case _PostCardActions.viewAllAuthors:
+                        // Here is guaranteed a not-null `ThreadBloc` and a
+                        // not-null author uid.
+                        context
+                            .read<ThreadBloc>()
+                            .add(ThreadViewAllAuthorsRequested());
                     }
                   },
                 ),

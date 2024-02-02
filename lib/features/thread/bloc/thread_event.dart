@@ -54,3 +54,24 @@ final class ThreadClosedStateUpdated extends ThreadEvent {
 
 /// Clear current reply parameters.
 final class ThreadClearReplyParameterRequested extends ThreadEvent {}
+
+/// User requested to only view the posts published by user with [uid] in
+/// current thread.
+///
+/// Note that triggering this event **will not change the current page number**.
+/// We behave like what it acts in browser.
+final class ThreadOnlyViewAuthorRequested extends ThreadEvent {
+  /// Constructor.
+  const ThreadOnlyViewAuthorRequested(this.uid);
+
+  /// The only author to view in current thread.
+  final String uid;
+}
+
+/// User requested to view posts published by all authors in current thread.
+///
+/// This is the default behavior when display threads.
+///
+/// Note that triggering this event **will not change the current page number**.
+/// We behave like what it acts in browser.
+final class ThreadViewAllAuthorsRequested extends ThreadEvent {}

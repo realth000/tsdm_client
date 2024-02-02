@@ -26,6 +26,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     on<ThreadRefreshRequested>(_onThreadRefreshRequested);
     on<ThreadJumpPageRequested>(_onThreadJumpPageRequested);
     on<ThreadClosedStateUpdated>(_onThreadUpdateClosedState);
+    on<ThreadOnlyViewAuthorRequested>(_onThreadOnlyViewAuthorRequested);
+    on<ThreadViewAllAuthorsRequested>(_onThreadViewAllAuthorsRequested);
   }
 
   final ThreadRepository _threadRepository;
@@ -38,6 +40,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
         pageNumber: event.pageNumber,
+        onlyVisibleUid: state.onlyVisibleUid,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
@@ -52,7 +55,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
   ) async {
     emit(state.copyWith(status: ThreadStatus.loading, postList: []));
     try {
-      final document = await _threadRepository.fetchThread(tid: state.tid);
+      final document = await _threadRepository.fetchThread(
+        tid: state.tid,
+        onlyVisibleUid: state.onlyVisibleUid,
+      );
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
       debug('failed to load thread page: $e');
@@ -70,6 +76,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
         pageNumber: event.pageNumber,
+        onlyVisibleUid: state.onlyVisibleUid,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
@@ -85,10 +92,59 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     emit(state.copyWith(threadClosed: event.closed));
   }
 
+  Future<void> _onThreadOnlyViewAuthorRequested(
+    ThreadOnlyViewAuthorRequested event,
+    ThreadEmitter emit,
+  ) async {
+    emit(state.copyWith(status: ThreadStatus.loading, postList: []));
+
+    try {
+      final document = await _threadRepository.fetchThread(
+        tid: state.tid,
+        pageNumber: state.currentPage,
+        onlyVisibleUid: event.uid,
+      );
+      // Use "1" as current page number to prevent page number overflow.
+      final s = await _parseFromDocument(document, 1);
+      emit(s.copyWith(onlyVisibleUid: event.uid));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ThreadStatus.failed));
+    }
+  }
+
+  Future<void> _onThreadViewAllAuthorsRequested(
+    ThreadViewAllAuthorsRequested event,
+    ThreadEmitter emit,
+  ) async {
+    emit(state.copyWith(status: ThreadStatus.loading, postList: []));
+
+    try {
+      // Switching from "only view specified author" to "view all authors"
+      // will have more posts and pages so there is no page number overflow
+      // risk.
+      final document = await _threadRepository.fetchThread(
+        tid: state.tid,
+        pageNumber: state.currentPage,
+      );
+      // Use "1" as current page number to prevent page number overflow.
+      final s = await _parseFromDocument(
+        document,
+        state.currentPage,
+        clearOnlyVisibleUid: true,
+      );
+      emit(s.copyWith(onlyVisibleUid: state.onlyVisibleUid));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ThreadStatus.failed));
+    }
+  }
+
   Future<ThreadState> _parseFromDocument(
     uh.Document document,
-    int pageNumber,
-  ) async {
+    int pageNumber, {
+    bool? clearOnlyVisibleUid,
+  }) async {
     final threadClosed = document.querySelector('form#fastpostform') == null;
     final threadDataNode = document.querySelector('div#postlist');
     final postList = Post.buildListFromThreadDataNode(threadDataNode);
@@ -184,6 +240,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       threadClosed: threadClosed,
       postList: [...state.postList, ...postList],
       threadType: threadType,
+      onlyVisibleUid:
+          (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
     );
   }
 }

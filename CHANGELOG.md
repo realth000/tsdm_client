@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Added
 
 - 新增提示帖子内的红包已经领完了。
+- 新增支持看帖时只看某个作者的楼层。
+  * 楼层右下角菜单 -> 只看该作者/看所有作者。
 - 缓存首页轮播图。
 
 ### Fixed

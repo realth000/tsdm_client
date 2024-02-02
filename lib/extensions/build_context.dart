@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -34,5 +35,20 @@ extension DispatchUrl on BuildContext {
     }
     // Launch in external browser if is unsupported url.
     await launchUrl(u, mode: LaunchMode.externalApplication);
+  }
+}
+
+/// Extension on [BuildContext] provides methods to access the widget tree.
+extension AccessContext on BuildContext {
+  /// Try to read the bloc type [T] on context.
+  ///
+  /// * Return [T] if bloc found.
+  /// * Return null if bloc not found.
+  T? readOrNull<T>() {
+    try {
+      return read<T>();
+    } catch (e) {
+      return null;
+    }
   }
 }
