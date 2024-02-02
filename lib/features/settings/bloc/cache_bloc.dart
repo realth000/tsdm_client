@@ -5,7 +5,9 @@ import 'package:tsdm_client/shared/repositories/cache_repository/cache_repositor
 part 'cache_event.dart';
 part 'cache_state.dart';
 
+/// Bloc of using cached cubit.
 class CacheBloc extends Bloc<CacheEvent, CacheState> {
+  /// Constructor.
   CacheBloc({
     required CacheRepository cacheRepository,
   })  : _cacheRepository = cacheRepository,
@@ -22,10 +24,12 @@ class CacheBloc extends Bloc<CacheEvent, CacheState> {
   ) async {
     emit(state.copyWith(status: CacheStatus.calculating));
     final cacheSize = await _cacheRepository.calculateCache();
-    emit(state.copyWith(
-      status: CacheStatus.success,
-      cacheSize: cacheSize,
-    ));
+    emit(
+      state.copyWith(
+        status: CacheStatus.success,
+        cacheSize: cacheSize,
+      ),
+    );
   }
 
   Future<void> _onCacheClearCacheRequested(
@@ -36,9 +40,11 @@ class CacheBloc extends Bloc<CacheEvent, CacheState> {
     await _cacheRepository.clearCache();
     emit(state.copyWith(status: CacheStatus.calculating));
     final cacheSize = await _cacheRepository.calculateCache();
-    emit(state.copyWith(
-      status: CacheStatus.success,
-      cacheSize: cacheSize,
-    ));
+    emit(
+      state.copyWith(
+        status: CacheStatus.success,
+        cacheSize: cacheSize,
+      ),
+    );
   }
 }

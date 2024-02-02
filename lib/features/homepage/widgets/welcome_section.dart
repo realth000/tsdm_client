@@ -143,7 +143,7 @@ class WelcomeSection extends StatelessWidget {
 
     linkTileList
       ..addAll(_buildKahrpbaLinkTileList(
-          context, loggedUserInfo?.relatedLinkPairList))
+          context, loggedUserInfo?.relatedLinkPairList,),)
       ..add(_buildForumStatusRow(context, forumStatus));
 
     final needExpand = ResponsiveBreakpoints.of(context)
@@ -178,10 +178,10 @@ class WelcomeSection extends StatelessWidget {
                                 context,
                                 fallbackImageUrl: noAvatarUrl,
                               ),
+                        backgroundColor: Colors.transparent,
                         child: avatarUrl == null && username.isNotEmpty
                             ? Text(username[0])
                             : null,
-                        backgroundColor: Colors.transparent,
                       ),
                     ),
                     title: Row(

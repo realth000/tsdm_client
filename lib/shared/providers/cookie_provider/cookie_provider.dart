@@ -30,9 +30,9 @@ import 'package:tsdm_client/utils/debug.dart';
 /// Load cookies from database and save them in memory. When required cookie to
 /// use in web requests, build a [CookieData] with current user info.
 class CookieProvider {
-  CookieProvider._();
 
   factory CookieProvider() => CookieProvider._();
+  CookieProvider._();
 
   CookieData build({String? username}) {
     // Specified user override.

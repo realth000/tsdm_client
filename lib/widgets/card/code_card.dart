@@ -20,7 +20,7 @@ class CodeCard extends StatelessWidget {
       content: Text(
         context.t.aboutPage.copiedToClipboard,
       ),
-    ));
+    ),);
   }
 
   @override

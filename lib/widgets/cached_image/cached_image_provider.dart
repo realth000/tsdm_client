@@ -51,7 +51,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
 
   @override
   ImageStreamCompleter loadImage(
-      CachedImageProvider key, ImageDecoderCallback decode) {
+      CachedImageProvider key, ImageDecoderCallback decode,) {
     // Ownership of this controller is handed off to [_loadAsync]; it is that
     // method's responsibility to close the controller's stream when the image
     // has been loaded or an error is thrown.

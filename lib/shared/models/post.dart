@@ -173,7 +173,7 @@ class Post extends Equatable {
 
     final replyAction = element
         .querySelector(
-            'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > div > em > a')
+            'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > div > em > a',)
         ?.firstHref();
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');

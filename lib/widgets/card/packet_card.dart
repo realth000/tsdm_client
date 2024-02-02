@@ -31,7 +31,7 @@ class PacketCard extends StatelessWidget {
                   .showSnackBar(SnackBar(content: Text(state.reason!)));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.t.packetCard.failedToOpen)));
+                  SnackBar(content: Text(context.t.packetCard.failedToOpen)),);
             }
           } else if (state.status == PacketStatus.success) {
             ScaffoldMessenger.of(context)
@@ -80,7 +80,7 @@ class PacketCard extends StatelessWidget {
                         label: label,
                         onPressed: callback,
                       ),
-                    )
+                    ),
                   ],
                 ),
               ),

@@ -12,6 +12,7 @@ import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
 /// Page to rate a post in thread.
 class RatePostPage extends StatefulWidget {
+  /// Constructor.
   const RatePostPage({
     required this.username,
     required this.pid,
@@ -20,9 +21,16 @@ class RatePostPage extends StatefulWidget {
     super.key,
   });
 
+  /// Username.
   final String username;
+
+  /// Post id.
   final String pid;
+
+  /// Post floor.
   final String floor;
+
+  /// Url to do the rate action.
   final String rateAction;
 
   @override
@@ -106,8 +114,10 @@ class _RatePostPageState extends State<RatePostPage> {
 
   Widget _buildBody(BuildContext context, RateState state) {
     if (state.status == RateStatus.gotInfo) {
-      scoreMap ??= Map.fromEntries(state.info!.scoreList
-          .map((e) => MapEntry(e.id, TextEditingController(text: '0'))));
+      scoreMap ??= Map.fromEntries(
+        state.info!.scoreList
+            .map((e) => MapEntry(e.id, TextEditingController(text: '0'))),
+      );
     }
 
     if (state.status == RateStatus.initial ||
@@ -183,8 +193,12 @@ class _RatePostPageState extends State<RatePostPage> {
         BlocProvider(
           create: (context) =>
               RateBloc(rateRepository: RepositoryProvider.of(context))
-                ..add(RateFetchInfoRequested(
-                    pid: widget.pid, rateAction: widget.rateAction)),
+                ..add(
+                  RateFetchInfoRequested(
+                    pid: widget.pid,
+                    rateAction: widget.rateAction,
+                  ),
+                ),
         ),
       ],
       child: BlocListener<RateBloc, RateState>(
@@ -192,19 +206,29 @@ class _RatePostPageState extends State<RatePostPage> {
           if (state.status == RateStatus.failed) {
             if (state.shouldRetry == false) {
               // Show reason and pop back if we should not retry.
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                  content: Text(state.failedReason ??
-                      context.t.ratePostPage.failedToRate)));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.failedReason ?? context.t.ratePostPage.failedToRate,
+                  ),
+                ),
+              );
               Navigator.of(context).pop();
               return;
             }
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.ratePostPage.failedToRate)));
-            context.read<RateBloc>().add(RateFetchInfoRequested(
-                pid: widget.pid, rateAction: widget.rateAction));
+              SnackBar(content: Text(context.t.ratePostPage.failedToRate)),
+            );
+            context.read<RateBloc>().add(
+                  RateFetchInfoRequested(
+                    pid: widget.pid,
+                    rateAction: widget.rateAction,
+                  ),
+                );
           } else if (state.status == RateStatus.success) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.ratePostPage.success)));
+              SnackBar(content: Text(context.t.ratePostPage.success)),
+            );
             Navigator.of(context).pop();
           }
         },

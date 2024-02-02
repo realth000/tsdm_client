@@ -98,7 +98,7 @@ class _ForumCardState extends State<ForumCard> {
       (
         Icons.mark_chat_unread_outlined,
         widget.forum.threadTodayCount ?? 0,
-      )
+      ),
     ];
 
     final forumInfoWidgets = forumInfoList
@@ -115,7 +115,7 @@ class _ForumCardState extends State<ForumCard> {
                     maxLines: 1,
                     overflow: TextOverflow.clip,
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -178,7 +178,7 @@ class _ForumCardState extends State<ForumCard> {
                             widget.forum.latestThreadUrl?.parseUrlToRoute();
                         if (target == null) {
                           debug(
-                              'invalid latest thread url: ${widget.forum.latestThreadUrl}');
+                              'invalid latest thread url: ${widget.forum.latestThreadUrl}',);
                           return;
                         }
                         await context.pushNamed(

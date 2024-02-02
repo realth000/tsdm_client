@@ -96,7 +96,7 @@ class _PostCardState extends State<PostCard>
               behavior: HitTestBehavior.opaque,
               onTap: () async {
                 await widget.replyCallback?.call(widget.post.author,
-                    widget.post.postFloor, widget.post.replyAction);
+                    widget.post.postFloor, widget.post.replyAction,);
               },
               child: Row(
                 children: [
@@ -104,7 +104,7 @@ class _PostCardState extends State<PostCard>
                     child: Padding(
                       padding: edgeInsetsL15R15B10,
                       child: munchElement(
-                          context, parseHtmlDocument(widget.post.data).body!),
+                          context, parseHtmlDocument(widget.post.data).body!,),
                     ),
                   ),
                 ],
@@ -152,7 +152,7 @@ class _PostCardState extends State<PostCard>
                     switch (value) {
                       case _PostCardActions.reply:
                         await widget.replyCallback?.call(widget.post.author,
-                            widget.post.postFloor, widget.post.replyAction);
+                            widget.post.postFloor, widget.post.replyAction,);
                       case _PostCardActions.rate:
                         if (widget.post.rateAction != null) {
                           await _rateCallback.call();

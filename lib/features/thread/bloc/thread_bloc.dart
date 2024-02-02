@@ -11,9 +11,12 @@ import 'package:universal_html/html.dart' as uh;
 part 'thread_event.dart';
 part 'thread_state.dart';
 
+/// Emitter.
 typedef ThreadEmitter = Emitter<ThreadState>;
 
+/// Bloc the thread page.
 class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
+  /// Constructor.
   ThreadBloc({
     required String tid,
     required ThreadRepository threadRepository,
@@ -154,7 +157,9 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         formHash == null ||
         subject == null) {
       debug(
-          'failed to get reply form hash: fid=$fid postTime=$postTime formHash=$formHash subject=$subject');
+        'failed to get reply form hash: fid=$fid postTime=$postTime '
+        'formHash=$formHash subject=$subject',
+      );
     } else {
       replyParameters = ReplyParameters(
         fid: fid,

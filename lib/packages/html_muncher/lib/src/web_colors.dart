@@ -3,6 +3,8 @@ import 'dart:ui';
 import 'package:slang/builder/model/enums.dart';
 import 'package:slang/builder/utils/string_extensions.dart';
 
+// ignore_for_file: public_member_api_docs
+
 enum WebColors {
   aliceBlue(Color(0xFFF0F8FF)),
   antiqueWhite(Color(0xFFFAEBD7)),

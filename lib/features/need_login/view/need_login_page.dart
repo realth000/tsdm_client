@@ -16,6 +16,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// When using like 1., will `pushNamed` back.
 /// When using like 2., will `pushReplacementNamed` back.
 class NeedLoginPage extends StatelessWidget {
+  /// Constructor.
   const NeedLoginPage({
     required this.backUri,
     this.showAppBar = false,
@@ -33,6 +34,8 @@ class NeedLoginPage extends StatelessWidget {
   /// Router uri to redirect back after login.
   final Uri backUri;
 
+  /// Callback funtion that will be called when login succeed before navigate
+  /// back.
   final FutureOr<void> Function(BuildContext context)? popCallback;
 
   @override

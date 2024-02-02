@@ -9,9 +9,12 @@ import 'package:tsdm_client/utils/debug.dart';
 part 'purchase_event.dart';
 part 'purchase_state.dart';
 
+/// Emitter
 typedef PurchaseEmitter = Emitter<PurchaseState>;
 
+/// Bloc of purchasing.
 final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
+  /// Constructor.
   PurchaseBloc({required PurchaseRepository purchaseRepository})
       : _purchaseRepository = purchaseRepository,
         super(const PurchaseState()) {
@@ -29,9 +32,15 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     emit(state.copyWith(status: PurchaseStatus.loading));
     try {
       final confirmInfo = await _purchaseRepository.fetchPurchaseConfirmInfo(
-          tid: event.tid, pid: event.pid);
-      emit(state.copyWith(
-          status: PurchaseStatus.gotInfo, confirmInfo: confirmInfo));
+        tid: event.tid,
+        pid: event.pid,
+      );
+      emit(
+        state.copyWith(
+          status: PurchaseStatus.gotInfo,
+          confirmInfo: confirmInfo,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch purchase info: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));

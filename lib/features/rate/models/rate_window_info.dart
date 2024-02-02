@@ -14,6 +14,7 @@ import 'package:universal_html/html.dart' as uh;
 /// We can tell if here is other type of forms that have more or less than four
 /// columns.
 final class RateWindowScore extends Equatable {
+  /// Constructor.
   const RateWindowScore({
     required this.id,
     required this.name,
@@ -56,6 +57,7 @@ final class RateWindowScore extends Equatable {
 ///
 /// Used to post a rate action.
 final class RateWindowInfo extends Equatable {
+  /// Constructor.
   const RateWindowInfo({
     required this.rowTitleList,
     required this.scoreList,
@@ -68,7 +70,8 @@ final class RateWindowInfo extends Equatable {
   });
 
   /// Row title of the rate table.
-  /// The second value may be "&nbsp;" that need to be translated into whitespace.
+  /// The second value may be "&nbsp;" that need to be translated into
+  /// whitespace.
   ///
   /// Expected title list:
   /// ["Factor 1", "&nbsp;", "评分区间", "今日剩余"]
@@ -82,9 +85,17 @@ final class RateWindowInfo extends Equatable {
 
   /// Form data.
   final String formHash;
+
+  /// Thread id.
   final String tid;
+
+  /// Post id to rate.
   final String pid;
+
+  /// Referer in url parameter.
   final String referer;
+
+  /// Handle key in parameter.
   final String handleKey;
 
   /// Build from <div class="c"> node [element] or from the floating window raw
@@ -101,7 +112,9 @@ final class RateWindowInfo extends Equatable {
     // list elements.
     if (rateTableRowsNodeList.length < 2) {
       debug(
-          'invalid rate window info: incorrect rateTableRowsNodeList length: ${rateTableRowsNodeList.length}');
+        'invalid rate window info: incorrect rateTableRowsNodeList '
+        'length: ${rateTableRowsNodeList.length}',
+      );
       return null;
     }
 
@@ -114,7 +127,9 @@ final class RateWindowInfo extends Equatable {
     // Explicitly check null here just make the compiler happy.
     if (rowTitleList == null || rowTitleList.length != 4) {
       debug(
-          'invalid rate window info: incorrect rowTitleList length: ${rowTitleList?.length}');
+        'invalid rate window info: incorrect rowTitleList length: '
+        '${rowTitleList?.length}',
+      );
       return null;
     }
     // Replace the second column title "&nbsp;" with whitespace.
@@ -160,7 +175,9 @@ final class RateWindowInfo extends Equatable {
         referer == null ||
         handleKey == null) {
       debug(
-          'invalid rate window info: invalid form data: formHash=$formHash, tid=$tid, pid=$pid, referer=$referer, handleKey=$handleKey');
+        'invalid rate window info: invalid form data: formHash=$formHash, '
+        'tid=$tid, pid=$pid, referer=$referer, handleKey=$handleKey',
+      );
       return null;
     }
 
@@ -196,7 +213,10 @@ final class RateWindowInfo extends Equatable {
         allowedRangeDescription == null ||
         remaining == null) {
       debug(
-          'invalid rate score row: name=$name, id=$id, allowedRange=$allowedRange, allowedRangeDescription=$allowedRangeDescription');
+        'invalid rate score row: name=$name, id=$id, '
+        'allowedRange=$allowedRange, '
+        'allowedRangeDescription=$allowedRangeDescription',
+      );
       return null;
     }
 

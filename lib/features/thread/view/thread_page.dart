@@ -20,7 +20,9 @@ import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
+/// Page to show thread.
 class ThreadPage extends StatefulWidget {
+  /// Constructor.
   const ThreadPage({
     required this.threadID,
     required this.pageNumber,
@@ -32,6 +34,7 @@ class ThreadPage extends StatefulWidget {
   /// Thread ID, tid.
   final String threadID;
 
+  /// Thread title.
   final String? title;
 
   /// Thread current page number.
@@ -55,7 +58,10 @@ class _ThreadPageState extends State<ThreadPage>
   final _replyBarController = ReplyBarController();
 
   Future<void> replyPostCallback(
-      User user, int? postFloor, String? replyAction) async {
+    User user,
+    int? postFloor,
+    String? replyAction,
+  ) async {
     if (replyAction == null) {
       return;
     }
@@ -63,7 +69,9 @@ class _ThreadPageState extends State<ThreadPage>
     _replyBarController
       ..replyAction = replyAction
       ..setHintText(
-          '${context.t.threadPage.sendReplyHint} ${user.name} ${postFloor == null ? "" : "#$postFloor"}')
+        '${context.t.threadPage.sendReplyHint} ${user.name} '
+        '${postFloor == null ? "" : "#$postFloor"}',
+      )
       ..requestFocus();
   }
 
@@ -111,7 +119,8 @@ class _ThreadPageState extends State<ThreadPage>
     } else if (!state.havePermission) {
       if (state.permissionDeniedMessage != null) {
         return Center(
-            child: munchElement(context, state.permissionDeniedMessage!));
+          child: munchElement(context, state.permissionDeniedMessage!),
+        );
       } else {
         return Center(child: Text(context.t.general.noPermission));
       }
@@ -183,7 +192,8 @@ class _ThreadPageState extends State<ThreadPage>
           listener: (context, state) {
             if (state.status == ThreadStatus.failed) {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.t.general.failedToLoad)));
+                SnackBar(content: Text(context.t.general.failedToLoad)),
+              );
             }
           },
           child: BlocBuilder<ThreadBloc, ThreadState>(
@@ -220,7 +230,8 @@ class _ThreadPageState extends State<ThreadPage>
                       return;
                     }
                     // Mark loading here.
-                    // Mark state will be removed when loading finishes (next build).
+                    // Mark state will be removed when loading finishes
+                    // in next build.
                     context.read<JumpPageCubit>().markLoading();
                     context
                         .read<ThreadBloc>()
@@ -238,11 +249,13 @@ class _ThreadPageState extends State<ThreadPage>
                         if (!context.mounted) {
                           return;
                         }
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text(
-                            context.t.aboutPage.copiedToClipboard,
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              context.t.aboutPage.copiedToClipboard,
+                            ),
                           ),
-                        ));
+                        );
                       case MenuActions.openInBrowser:
                         await context.dispatchAsUrl(threadUrl, external: true);
                       case MenuActions.backToTop:

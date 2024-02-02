@@ -25,11 +25,12 @@ extension _Regexp on String {
   }
 }
 
+/// Repository of purchasing.
 class PurchaseRepository {
   static const _purchaseTarget =
       'https://tsdm39.com/forum.php?mod=misc&action=pay&paysubmit=yes&infloat=yes&inajax=1';
   static final _valueRe = RegExp(' value="(?<value>.+)" />');
-  static final _authorRe = RegExp(r'<td><a.*>(?<author>.+)</a></td>');
+  static final _authorRe = RegExp('<td><a.*>(?<author>.+)</a></td>');
   static final _coinsRe = RegExp(r'<td>(?<coins>\d+).*</td>');
 
   /// Fetch confirm info before purchase post [pid] in thread [tid].
@@ -42,8 +43,8 @@ class PurchaseRepository {
   ///
   /// # Sealed Exception
   ///
-  /// * **PurchaseInfoInvalidParameterCountException** when fetched parameter count
-  ///   in confirm info window is incorrect.
+  /// * **PurchaseInfoInvalidParameterCountException** when fetched parameter
+  ///   count in confirm info window is incorrect.
   /// * **PurchaseInfoIncompleteException** when fetched confirm info
   ///   parameter is incomplete.
   /// * **PurchaseInfoInvalidNoticeException** when confirm info to display
@@ -65,7 +66,9 @@ class PurchaseRepository {
         dataList.where((e) => e.startsWith('<input type="hidden"')).toList();
     if (inputList.length != 4) {
       debug(
-          'parse purchase dialog failed: invalid input length ${inputList.length}');
+        'parse purchase dialog failed: invalid input length '
+        '${inputList.length}',
+      );
       throw PurchaseInfoInvalidParameterCountException();
     }
     final formHash = inputList[0].matchValue();
@@ -77,7 +80,9 @@ class PurchaseRepository {
         tidInDialog == null ||
         handleKey == null) {
       debug(
-          'parse purchase dialog failed: formHash=$formHash, referer=$referer, tid=$tidInDialog, handleKey=$handleKey');
+        'parse purchase dialog failed: formHash=$formHash, referer=$referer, '
+        'tid=$tidInDialog, handleKey=$handleKey',
+      );
       throw PurchaseInfoIncompleteException();
     }
 

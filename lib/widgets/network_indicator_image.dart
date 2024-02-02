@@ -5,7 +5,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 class NetworkIndicatorImage extends StatelessWidget {
   /// Constructor.
   const NetworkIndicatorImage(this.src,
-      {this.maxWidth, this.maxHeight, super.key});
+      {this.maxWidth, this.maxHeight, super.key,});
 
   /// Image network source url.
   final String src;

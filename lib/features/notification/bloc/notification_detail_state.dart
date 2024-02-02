@@ -2,14 +2,24 @@ import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/shared/models/post.dart';
 import 'package:tsdm_client/shared/models/reply_parameters.dart';
 
+/// Status of notification detail.
 enum NotificationDetailStatus {
+  /// Inital status.
   initial,
+
+  /// Loading data.
   loading,
+
+  /// Load succeed.
   success,
+
+  /// Load failed.
   failed,
 }
 
+/// State of notification detail.
 final class NotificationDetailState extends Equatable {
+  /// Constructor.
   const NotificationDetailState({
     this.status = NotificationDetailStatus.initial,
     this.post,
@@ -26,15 +36,22 @@ final class NotificationDetailState extends Equatable {
   /// Current carrying post.
   final Post? post;
 
+  /// Thread id the current notification belongs to.
   final String? tid;
+
+  /// Coresponding post id of the current notification.
   final String? pid;
+
+  /// Thread page number that contains the related post.
   final String? page;
 
   /// Parameters to reply to current carrying [Post].
   final ReplyParameters? replyParameters;
 
+  /// Flag indicating current thread is closed or not.
   final bool threadClosed;
 
+  /// Copy with.
   NotificationDetailState copyWith({
     NotificationDetailStatus? status,
     Post? post,

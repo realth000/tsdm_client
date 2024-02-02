@@ -9,7 +9,9 @@ import 'package:tsdm_client/shared/repositories/cache_repository/cache_repositor
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 
+/// Widget to the cache size.
 class CacheStatusWidget extends StatelessWidget {
+  /// Constructor.
   const CacheStatusWidget({super.key});
 
   Future<void> _showClearCacheDialog(BuildContext context) async {
@@ -37,7 +39,7 @@ class CacheStatusWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => CacheBloc(
-          cacheRepository: RepositoryProvider.of<CacheRepository>(context))
+          cacheRepository: RepositoryProvider.of<CacheRepository>(context),)
         ..add(CacheCalculateRequested()),
       child: BlocBuilder<CacheBloc, CacheState>(
         builder: (context, state) {

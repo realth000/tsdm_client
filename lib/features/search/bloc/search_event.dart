@@ -1,5 +1,6 @@
 part of 'search_bloc.dart';
 
+/// Event of search.
 sealed class SearchEvent extends Equatable {
   const SearchEvent();
 
@@ -9,6 +10,7 @@ sealed class SearchEvent extends Equatable {
 
 /// User requested a search action.
 final class SearchRequested extends SearchEvent {
+  /// Constructor.
   const SearchRequested({
     required this.keyword,
     required this.fid,
@@ -16,9 +18,20 @@ final class SearchRequested extends SearchEvent {
     required this.pageNumer,
   }) : super();
 
+  /// Keyword to search.
   final String keyword;
+
+  /// Forum id to search.
+  ///
+  /// '0' represents any forum.
   final String fid;
+
+  /// Author's uid to search.
+  ///
+  /// '0' represents any published by user.
   final String uid;
+
+  /// Page number of search result.
   final int pageNumer;
 
   @override
@@ -27,7 +40,10 @@ final class SearchRequested extends SearchEvent {
 
 /// User requested to jump to another page [pageNumber].
 final class SearchJumpPageRequested extends SearchEvent {
+  /// Constructor.
   const SearchJumpPageRequested(this.pageNumber) : super();
+
+  /// Page number to jump to.
   final int pageNumber;
 }
 

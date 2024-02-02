@@ -7,7 +7,9 @@ import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.d
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 
+/// Page to show the threads and replies published by current logged user.
 class MyThreadPage extends StatefulWidget {
+  /// Constructor.
   const MyThreadPage({super.key});
 
   @override

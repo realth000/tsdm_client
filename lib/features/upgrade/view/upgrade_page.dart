@@ -13,6 +13,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Page of upgrade of the app.
 class UpgradePage extends StatefulWidget {
+  /// Constructor.
   const UpgradePage({super.key});
 
   @override
@@ -66,8 +67,9 @@ class _UpgradePageState extends State<UpgradePage> {
     var dp = 0.0;
     if (state.downloadStatus.total > 0) {
       dp = double.tryParse(
-              (state.downloadStatus.recv / state.downloadStatus.total * 100)
-                  .toStringAsFixed(1)) ??
+            (state.downloadStatus.recv / state.downloadStatus.total * 100)
+                .toStringAsFixed(1),
+          ) ??
           0;
     }
     return Padding(
@@ -89,13 +91,16 @@ class _UpgradePageState extends State<UpgradePage> {
           ),
           Text(
             context.t.upgradePage.latestVersion(
-                latestVersion: state.upgradeModel?.releaseVersion ?? ''),
+              latestVersion: state.upgradeModel?.releaseVersion ?? '',
+            ),
             style: Theme.of(context).textTheme.titleMedium,
           ),
           if (state.upgradeModel != null)
-            Row(children: [
-              Expanded(child: buildReleaseNotesCard(context, state))
-            ]),
+            Row(
+              children: [
+                Expanded(child: buildReleaseNotesCard(context, state)),
+              ],
+            ),
           if (state.fileName.isNotEmpty)
             Text(context.t.upgradePage.saveTo(path: state.downloadDir)),
           if (state.fileName.isNotEmpty && state.upgradeModel != null)
@@ -112,7 +117,7 @@ class _UpgradePageState extends State<UpgradePage> {
                         state.status == UpgradeStatus.fetching
                     ? const Center(child: sizedCircularProgressIndicator)
                     : buildActionButton(context, state),
-              )
+              ),
             ],
           ),
         ].insertBetween(sizedBoxW5H5),
@@ -129,9 +134,12 @@ class _UpgradePageState extends State<UpgradePage> {
       child: BlocListener<UpgradeCubit, UpgradeState>(
         listener: (context, state) async {
           if (state.status == UpgradeStatus.noPermission) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-              content: Text(context.t.upgradePage.storagePermissionNotGranted),
-            ));
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content:
+                    Text(context.t.upgradePage.storagePermissionNotGranted),
+              ),
+            );
           } else if (state.status == UpgradeStatus.noVersionFound) {
             await showMessageSingleButtonDialog(
               context: context,

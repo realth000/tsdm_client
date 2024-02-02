@@ -19,6 +19,7 @@ import 'package:tsdm_client/widgets/section_title_text.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
+  /// Constructor.
   const SettingsPage({super.key});
 
   @override
@@ -49,7 +50,8 @@ class _SettingsPageState extends State<SettingsPage> {
   /// * Return (null, true) if user chose to use default color.
   /// * Return (color, false) if user chose to use specified color.
   Future<(Color?, bool)?> _showAccentColorPickerDialog(
-      BuildContext context) async {
+    BuildContext context,
+  ) async {
     return showDialog<(Color?, bool)>(
       context: context,
       builder: (context) => const ColorPickerDialog(),
@@ -159,10 +161,14 @@ class _SettingsPageState extends State<SettingsPage> {
       /// Shortcut in forum card.
       SwitchListTile(
         secondary: const Icon(Icons.shortcut_outlined),
-        title: Text(context
-            .t.settingsPage.appearanceSection.showShortcutInForumCard.title),
-        subtitle: Text(context
-            .t.settingsPage.appearanceSection.showShortcutInForumCard.detail),
+        title: Text(
+          context
+              .t.settingsPage.appearanceSection.showShortcutInForumCard.title,
+        ),
+        subtitle: Text(
+          context
+              .t.settingsPage.appearanceSection.showShortcutInForumCard.detail,
+        ),
         contentPadding: edgeInsetsL18R18,
         value: showForumCardShortcut,
         onChanged: (v) async {
@@ -213,7 +219,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<String?> _showSetCheckinMessageDialog(
-      BuildContext context, String defaultMessage) async {
+    BuildContext context,
+    String defaultMessage,
+  ) async {
     return showDialog<String>(
       context: context,
       builder: (context) => CheckinMessageDialog(defaultMessage),
@@ -244,8 +252,10 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
           context.read<SettingsBloc>().add(
-              SettingsChangeCheckinFeelingRequested(
-                  CheckinFeeling.from(result)));
+                SettingsChangeCheckinFeelingRequested(
+                  CheckinFeeling.from(result),
+                ),
+              );
         },
       ),
       // Message
@@ -314,10 +324,10 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => SettingsBloc(
-          fragmentsRepository:
-              RepositoryProvider.of<FragmentsRepository>(context),
-          settingsRepository:
-              RepositoryProvider.of<SettingsRepository>(context)),
+        fragmentsRepository:
+            RepositoryProvider.of<FragmentsRepository>(context),
+        settingsRepository: RepositoryProvider.of<SettingsRepository>(context),
+      ),
       child: BlocBuilder<SettingsBloc, SettingsState>(
         builder: (context, state) {
           return Scaffold(

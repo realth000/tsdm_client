@@ -150,7 +150,7 @@ class _LockedCardState extends State<LockedCard> {
               .purchasedInfo(num: widget.locked.purchasedCount!),
           style: Theme.of(context).textTheme.labelMedium,
         ),
-        _buildPurchaseBody(context)
+        _buildPurchaseBody(context),
       ]);
     } else if (widget.locked.lockedWithReply) {
       widgets.addAll([
@@ -174,7 +174,7 @@ class _LockedCardState extends State<LockedCard> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
         ],
-      ));
+      ),);
     }
 
     return Card(

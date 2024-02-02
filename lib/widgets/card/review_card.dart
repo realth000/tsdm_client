@@ -22,13 +22,13 @@ class ReviewCard extends StatelessWidget {
       children: [
         const Divider(),
         Text(context.t.reviewCard.title,
-            style: Theme.of(context).textTheme.titleMedium),
+            style: Theme.of(context).textTheme.titleMedium,),
         ListTile(
           leading: CircleAvatar(
               backgroundImage: CachedImageProvider(
             avatarUrl ?? noAvatarUrl,
             context,
-          )),
+          ),),
           title: Text(name),
           subtitle: Text(content, maxLines: 3),
         ),

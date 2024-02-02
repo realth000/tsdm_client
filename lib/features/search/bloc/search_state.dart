@@ -1,16 +1,26 @@
 part of 'search_bloc.dart';
 
+/// Status of search.
 enum SearchStatus {
+  /// Initial.
   initial,
+
+  /// Loading.
   loading,
+
+  /// Load succeed.
   success,
+
+  /// Load failed.
   failed;
 
+  /// Is in searching.
   bool isSearching() => this == SearchStatus.loading;
 }
 
 /// State of search page.
 class SearchState extends Equatable {
+  /// Constructor.
   const SearchState({
     this.status = SearchStatus.initial,
     this.keyword,
@@ -22,6 +32,7 @@ class SearchState extends Equatable {
     this.hasPreviousPage = false,
   });
 
+  /// Status.
   final SearchStatus status;
 
   /// Search keyword;
@@ -42,8 +53,10 @@ class SearchState extends Equatable {
   /// Flag indicating have a next page to jump to or not.
   final bool hasNextPage;
 
+  /// Search result.
   final SearchResult? searchResult;
 
+  /// Copy with.
   SearchState copyWith({
     SearchStatus? status,
     String? keyword,

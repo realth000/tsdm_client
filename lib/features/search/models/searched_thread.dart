@@ -7,6 +7,7 @@ import 'package:universal_html/html.dart' as uh;
 
 /// Thread in search result.
 class SearchedThread extends Equatable {
+  /// Constructor.
   const SearchedThread({
     required this.tid,
     required this.title,
@@ -49,7 +50,9 @@ class SearchedThread extends Equatable {
         forumName == null ||
         forumUrl == null) {
       debug(
-          'invalid searched thread: $title, $url, $username, $userUrl, $publishTime, $forumName, $forumUrl');
+        'invalid searched thread: $title, $url, $username, $userUrl, '
+        '$publishTime, $forumName, $forumUrl',
+      );
       return null;
     }
 
@@ -66,8 +69,10 @@ class SearchedThread extends Equatable {
     );
   }
 
+  /// Thread id.
   final int tid;
 
+  /// Getter of thread id.
   int get threadID => tid;
 
   /// Thread title.
@@ -90,7 +95,8 @@ class SearchedThread extends Equatable {
 
   @override
   String toString() {
-    return 'SearchThread{ id=$tid, title=$title, url=$url, author=$author, publishTime=$publishTime, forumName=$forumName, forumUrl=$forumUrl }';
+    return 'SearchThread{ id=$tid, title=$title, url=$url, author=$author, '
+        'publishTime=$publishTime, forumName=$forumName, forumUrl=$forumUrl }';
   }
 
   @override

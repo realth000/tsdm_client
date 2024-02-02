@@ -288,7 +288,7 @@ class _ForumPageState extends State<ForumPage>
         listener: (context, state) {
           if (state.status == ForumStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+                SnackBar(content: Text(context.t.general.failedToLoad)),);
           }
         },
         child: BlocBuilder<ForumBloc, ForumState>(
@@ -323,11 +323,11 @@ class _ForumPageState extends State<ForumPage>
                         tabs: [
                           Tab(
                               child: Text(
-                                  context.t.forumPage.stickThreadTab.title)),
+                                  context.t.forumPage.stickThreadTab.title,),),
                           Tab(child: Text(context.t.forumPage.threadTab.title)),
                           Tab(
                               child:
-                                  Text(context.t.forumPage.subredditTab.title)),
+                                  Text(context.t.forumPage.subredditTab.title),),
                         ],
                         onTap: (index) {
                           // Here we want to scroll the current tab to the top.
@@ -341,13 +341,13 @@ class _ForumPageState extends State<ForumPage>
                           switch (tabController!.index) {
                             case _pinnedTabIndex:
                               _pinnedScrollController.animateTo(0,
-                                  duration: duration, curve: curve);
+                                  duration: duration, curve: curve,);
                             case _threadTabIndex:
                               _threadScrollController.animateTo(0,
-                                  duration: duration, curve: curve);
+                                  duration: duration, curve: curve,);
                             case _subredditTabIndex:
                               _subredditScrollController.animateTo(0,
-                                  duration: duration, curve: curve);
+                                  duration: duration, curve: curve,);
                           }
                         },
                       )

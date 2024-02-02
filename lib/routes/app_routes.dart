@@ -26,6 +26,7 @@ import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home
 final _rootRouteKey = GlobalKey<NavigatorState>();
 final _shellRouteKey = GlobalKey<NavigatorState>();
 
+/// App router instance.
 final router = GoRouter(
   navigatorKey: _rootRouteKey,
   initialLocation: ScreenPaths.homepage,
@@ -132,7 +133,9 @@ final router = GoRouter(
         final noticeTypeIndex =
             state.uri.queryParameters['noticeType']!.parseToInt()!;
         return NoticeDetailPage(
-            url: target, noticeType: NoticeType.values[noticeTypeIndex]);
+          url: target,
+          noticeType: NoticeType.values[noticeTypeIndex],
+        );
       },
     ),
     AppRoute(
@@ -174,20 +177,21 @@ final router = GoRouter(
       },
     ),
     AppRoute(
-        path: ScreenPaths.ratePost,
-        parentNavigatorKey: _rootRouteKey,
-        builder: (state) {
-          final username = state.pathParameters['username']!;
-          final pid = state.pathParameters['pid']!;
-          final floor = state.pathParameters['floor']!;
-          final rateAction = state.pathParameters['rateAction']!;
-          return RatePostPage(
-            username: username,
-            pid: pid,
-            floor: floor,
-            rateAction: rateAction,
-          );
-        }),
+      path: ScreenPaths.ratePost,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final username = state.pathParameters['username']!;
+        final pid = state.pathParameters['pid']!;
+        final floor = state.pathParameters['floor']!;
+        final rateAction = state.pathParameters['rateAction']!;
+        return RatePostPage(
+          username: username,
+          pid: pid,
+          floor: floor,
+          rateAction: rateAction,
+        );
+      },
+    ),
   ],
 );
 

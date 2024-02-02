@@ -222,7 +222,7 @@ class NormalThread extends Equatable {
         threadAuthorName == null ||
         threadPublishDate == null) {
       debug(
-          'failed to build thread: invalid author or thread publish date not found');
+          'failed to build thread: invalid author or thread publish date not found',);
       return null;
     }
 
@@ -259,7 +259,7 @@ class NormalThread extends Equatable {
         threadLastReplyAuthorUrl == null ||
         threadLastReplyTime == null) {
       debug(
-          'failed to build thread: invalid last reply user info or last reply time not found');
+          'failed to build thread: invalid last reply user info or last reply time not found',);
       return null;
     }
 

@@ -60,7 +60,7 @@ class _TopicsPageState extends State<TopicsPage>
         listener: (context, state) {
           if (state.status == TopicsStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+                SnackBar(content: Text(context.t.general.failedToLoad)),);
           }
         },
         child: BlocBuilder<TopicsBloc, TopicsState>(
@@ -124,7 +124,7 @@ class _TopicsPageState extends State<TopicsPage>
                     onPressed: () async {
                       await context.pushNamed(ScreenPaths.search);
                     },
-                  )
+                  ),
                 ],
                 bottom: TabBar(
                   controller: tabController,

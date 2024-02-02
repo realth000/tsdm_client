@@ -15,15 +15,22 @@ import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
 /// Show details for a single notice, also provides interaction:
-/// * Reply to the notice if notice type is [NoticeType.reply] or [NoticeType.mention].
+/// * Reply to the notice if notice type is [NoticeType.reply]
+/// or [NoticeType.mention].
 class NoticeDetailPage extends StatefulWidget {
+  /// Constructor.
   const NoticeDetailPage({
     required this.url,
     required this.noticeType,
     super.key,
   });
 
+  /// [NoticeType] of current notice.
+  ///
+  /// Determines different UI layout.
   final NoticeType noticeType;
+
+  /// Url to fetch the notice.
   final String url;
 
   @override
@@ -42,7 +49,8 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
     _pid = state.pid;
     _page = state.page;
 
-    // Post can not be null because we only call this function when in success state.
+    // Post can not be null because we only call this function when in
+    // success state.
     final post = state.post!;
     if (widget.noticeType == NoticeType.rate) {
       return PostCard(post);
@@ -85,15 +93,16 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
         ),
         BlocProvider(
           create: (context) => NotificationDetailCubit(
-              notificationRepository: RepositoryProvider.of(context))
-            ..fetchDetail(widget.url),
-        )
+            notificationRepository: RepositoryProvider.of(context),
+          )..fetchDetail(widget.url),
+        ),
       ],
       child: BlocListener<NotificationDetailCubit, NotificationDetailState>(
         listener: (context, state) {
           if (state.status == NotificationDetailStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+              SnackBar(content: Text(context.t.general.failedToLoad)),
+            );
           }
         },
         child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
@@ -143,7 +152,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
                         },
                       );
                     },
-                  )
+                  ),
                 ],
               ),
               body: body,

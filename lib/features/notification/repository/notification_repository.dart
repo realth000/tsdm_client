@@ -10,6 +10,7 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
+/// Repository of notification.
 class NotificationRepository {
   /// Get and parse a list of [Notice] from the given [url].
   ///
@@ -38,7 +39,8 @@ class NotificationRepository {
 
     final noticeList = document
         .querySelectorAll(
-            'div#ct div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl')
+          'div#ct div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl',
+        )
         .map(Notice.fromClNode)
         .whereType<Notice>()
         .toList();
@@ -55,7 +57,7 @@ class NotificationRepository {
 
     final data = await Future.wait([
       _fetchNotice(netClient, noticeUrl),
-      _fetchNotice(netClient, readNoticeUrl)
+      _fetchNotice(netClient, readNoticeUrl),
     ]);
 
     final d1 = data[0];
@@ -69,9 +71,11 @@ class NotificationRepository {
 
     // Filter duplicate notices.
     // Only filter on reply type notices for now.
-    final d3 = d1.$1!.where((x) =>
-        x.redirectUrl == null ||
-        !d2.$1!.any((y) => y.redirectUrl == x.redirectUrl));
+    final d3 = d1.$1!.where(
+      (x) =>
+          x.redirectUrl == null ||
+          !d2.$1!.any((y) => y.redirectUrl == x.redirectUrl),
+    );
 
     return [...d3, ...?d2.$1];
   }

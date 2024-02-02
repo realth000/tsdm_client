@@ -1,5 +1,6 @@
 part of 'profile_bloc.dart';
 
+/// Event of profile page.
 sealed class ProfileEvent extends Equatable {
   const ProfileEvent();
 
@@ -9,6 +10,7 @@ sealed class ProfileEvent extends Equatable {
 
 /// Load current logged user profile if both [username] and [uid] are null.
 final class ProfileLoadRequested extends ProfileEvent {
+  /// Constructor.
   const ProfileLoadRequested({
     required this.username,
     required this.uid,
@@ -21,6 +23,10 @@ final class ProfileLoadRequested extends ProfileEvent {
   final String? uid;
 }
 
+/// User required to refresh the profile page.
 final class ProfileRefreshRequested extends ProfileEvent {}
 
+/// User required to logout.
+///
+/// Only available when in current logged user's profile page.
 final class ProfileLogoutRequested extends ProfileEvent {}

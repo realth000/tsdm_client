@@ -17,6 +17,7 @@ class ThreadRepository {
 
   int? _pageNumber;
 
+  /// getter of current thread page number.
   int? get pageNumber => _pageNumber;
 
   /// Fetch the thread page with [tid] on page [pageNumber].

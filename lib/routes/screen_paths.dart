@@ -50,7 +50,8 @@ class ScreenPaths {
   /// Other not logged user profile page.
   ///
   ///
-  /// User identity MUST be provided in **queryParameters** because we need to accept both uid and username.
+  /// User identity MUST be provided in **queryParameters** because we need to
+  ///  accept both uid and username.
   /// When both are available, use uid in advance.
   static const String profile = '/profile';
 

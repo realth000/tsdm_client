@@ -14,22 +14,28 @@ part 'settings_state.dart';
 
 const _scrollDebounceDuration = Duration(milliseconds: 300);
 
+/// Emitter.
 typedef SettingsEmitter = Emitter<SettingsState>;
 
+/// Dobounce of scroll offset changed event.
 EventTransformer<Event> debounce<Event>(Duration duration) {
   return (events, mapper) => events.debounce(duration).switchMap(mapper);
 }
 
+/// Bloc of app settings.
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
+  /// Constructor.
   SettingsBloc({
     required SettingsRepository settingsRepository,
     required FragmentsRepository fragmentsRepository,
   })  : _settingsRepository = settingsRepository,
         _fragmentsRepository = fragmentsRepository,
-        super(SettingsState(
-          settingsMap: settingsRepository.currentSettings,
-          scrollOffset: fragmentsRepository.settingsPageScrollOffset,
-        )) {
+        super(
+          SettingsState(
+            settingsMap: settingsRepository.currentSettings,
+            scrollOffset: fragmentsRepository.settingsPageScrollOffset,
+          ),
+        ) {
     // Subscribe to settings map.
     _settingsMapSub = _settingsRepository.settings
         .listen((settings) => add(_SettingsMapChanged(settings)));
@@ -42,14 +48,18 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsChangeThemeModeRequested>(_onSettingsChangeThemeModeRequested);
     on<SettingsChangeLocaleRequested>(_onSettingsChangeLocaleRequested);
     on<SettingsChangeForumCardShortcutRequested>(
-        _onSettingsChangeForumCardShortcutRequested);
+      _onSettingsChangeForumCardShortcutRequested,
+    );
     on<SettingsChangeAccentColorRequested>(
-        _onSettingsChangeAccentColorRequested);
+      _onSettingsChangeAccentColorRequested,
+    );
     on<SettingClearAccentColorRequested>(_onSettingsClearAccentColorRequested);
     on<SettingsChangeCheckinFeelingRequested>(
-        _onSettingsChangeCheckinFeelingRequested);
+      _onSettingsChangeCheckinFeelingRequested,
+    );
     on<SettingsChangeCheckingMessageRequested>(
-        _onSettingsChangeCheckinMessageRequested);
+      _onSettingsChangeCheckinMessageRequested,
+    );
   }
 
   final SettingsRepository _settingsRepository;
@@ -90,7 +100,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEmitter emit,
   ) async {
     await _settingsRepository.setShowShortcutInForumCard(
-        visible: event.showShortcut);
+      visible: event.showShortcut,
+    );
   }
 
   Future<void> _onSettingsChangeAccentColorRequested(

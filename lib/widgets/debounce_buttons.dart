@@ -44,8 +44,8 @@ class DebounceTextButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: shouldDebounce ? sizedCircularProgressIndicator : Text(text),
       onPressed: shouldDebounce ? null : () async => onPressed(),
+      child: shouldDebounce ? sizedCircularProgressIndicator : Text(text),
     );
   }
 }
@@ -65,8 +65,8 @@ class DebounceElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: shouldDebounce ? sizedCircularProgressIndicator : child,
       onPressed: shouldDebounce ? null : () async => onPressed(),
+      child: shouldDebounce ? sizedCircularProgressIndicator : child,
     );
   }
 }

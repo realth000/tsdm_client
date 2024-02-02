@@ -20,13 +20,13 @@ class RateCard extends StatelessWidget {
     final fixedColumnWidths = List.filled(rate.attrList.length - 1, 50);
     final columnWidths = <int, TableColumnWidth>{
       for (final (i, v) in fixedColumnWidths.indexed)
-        i + 1: FixedColumnWidth(v.toDouble())
+        i + 1: FixedColumnWidth(v.toDouble()),
     };
     columnWidths[0] = const FixedColumnWidth(150);
     columnWidths[rate.attrList.length + 1] = const FixedColumnWidth(200);
     final tableHeaders = [
       context.t.rateCard.title(userCount: '${rate.userCount}'),
-      ...rate.attrList
+      ...rate.attrList,
     ].map(Text.new).toList();
 
     final bottom =
@@ -69,7 +69,7 @@ class RateCard extends StatelessWidget {
                 ),
                 ...e.attrValueList.map(Text.new),
               ],
-            ))
+            ),)
         .toList();
 
     return Card(

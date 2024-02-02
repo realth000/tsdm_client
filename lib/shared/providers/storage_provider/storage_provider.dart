@@ -79,7 +79,7 @@ class StorageProvider {
         id: currentCookie?.id ?? isar.databaseCookies.autoIncrement(),
         username: username,
         cookie: c,
-      ));
+      ),);
     });
   }
 
@@ -120,7 +120,7 @@ class StorageProvider {
         fileName: fileName ?? cache?.fileName,
         lastCachedTime: lastCacheTime,
         lastUsedTime: lastUsedTime,
-      ));
+      ),);
     });
   }
 
@@ -137,7 +137,7 @@ class StorageProvider {
         imageUrl: imageUrl,
         fileName: cache?.fileName,
         lastCachedTime: cache?.lastUsedTime,
-      ));
+      ),);
     });
   }
 
@@ -179,7 +179,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         stringValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -199,7 +199,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         intValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -219,7 +219,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         boolValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -239,7 +239,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         doubleValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -260,7 +260,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         dateTimeValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -283,7 +283,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         stringListValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -303,7 +303,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         intListValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -326,7 +326,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         doubleListValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -349,7 +349,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         boolListValue: value,
-      ));
+      ),);
     });
     return true;
   }
@@ -372,7 +372,7 @@ class StorageProvider {
         id: isar.databaseSettings.autoIncrement(),
         name: key,
         dateTimeListValue: value,
-      ));
+      ),);
     });
     return true;
   }

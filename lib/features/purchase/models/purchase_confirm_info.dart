@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// Info to check before purchasing.
 class PurchaseConfirmInfo extends Equatable {
+  /// Constructor.
   const PurchaseConfirmInfo({
     required this.author,
     required this.price,
@@ -27,8 +28,14 @@ class PurchaseConfirmInfo extends Equatable {
 
   /// Data used in purchasing.
   final String formHash;
+
+  /// Referer parameter in request.
   final String referer;
+
+  /// Thread id.
   final String tid;
+
+  /// Handle key parameter in request.
   final String handleKey;
 
   @override

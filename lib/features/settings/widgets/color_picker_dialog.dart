@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 
+/// Dialog to let user pick the app accent color.
 class ColorPickerDialog extends StatefulWidget {
+  /// Constructor.
   const ColorPickerDialog({super.key});
 
   @override
@@ -40,7 +42,7 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
           onPressed: () async {
             Navigator.of(context).pop((null, true));
           },
-        )
+        ),
       ],
     );
   }

@@ -6,13 +6,16 @@ import 'package:tsdm_client/utils/debug.dart';
 
 part 'packet_state.dart';
 
+/// Cubit of read packets.
 class PacketCubit extends Cubit<PacketState> {
+  /// Constructor.
   PacketCubit({required PacketRepository packetRepository})
       : _packetRepository = packetRepository,
         super(const PacketState());
 
   final PacketRepository _packetRepository;
 
+  /// Try to get coins from the packet.
   Future<void> receivePacket(String url) async {
     emit(state.copyWith(status: PacketStatus.loading));
     try {
@@ -30,10 +33,12 @@ class PacketCubit extends Cubit<PacketState> {
       }
     } on HttpRequestFailedException catch (e) {
       debug('failed to receive packet: $e');
-      emit(state.copyWith(
-        status: PacketStatus.failed,
-        reason: e.toString(),
-      ));
+      emit(
+        state.copyWith(
+          status: PacketStatus.failed,
+          reason: e.toString(),
+        ),
+      );
     }
   }
 }

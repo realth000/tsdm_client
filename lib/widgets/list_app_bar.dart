@@ -74,10 +74,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
         ),
         if (onJumpPage != null)
           TextButton(
-            child: Text('${canJumpPage ? currentPage : "-"}'),
             onPressed: canJumpPage
                 ? () async => _jumpPage(context, currentPage, totalPages)
                 : null,
+            child: Text('${canJumpPage ? currentPage : "-"}'),
           ),
         PopupMenuButton(
           itemBuilder: (context) => [
@@ -86,28 +86,28 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(children: [
                 const Icon(Icons.refresh_outlined),
                 Text(context.t.networkList.actionRefresh),
-              ]),
+              ],),
             ),
             PopupMenuItem(
               value: MenuActions.copyUrl,
               child: Row(children: [
                 const Icon(Icons.copy_outlined),
                 Text(context.t.networkList.actionCopyUrl),
-              ]),
+              ],),
             ),
             PopupMenuItem(
               value: MenuActions.openInBrowser,
               child: Row(children: [
                 const Icon(Icons.launch_outlined),
                 Text(context.t.networkList.actionOpenInBrowser),
-              ]),
+              ],),
             ),
             PopupMenuItem(
               value: MenuActions.backToTop,
               child: Row(children: [
                 const Icon(Icons.vertical_align_top_outlined),
                 Text(context.t.networkList.actionBackToTop),
-              ]),
+              ],),
             ),
           ],
           onSelected: onSelected,

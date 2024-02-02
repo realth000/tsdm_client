@@ -2,6 +2,7 @@ part of 'upgrade_cubit.dart';
 
 /// Status of upgrade action.
 enum UpgradeStatus {
+  /// Ready for response.
   ready,
 
   /// Fetching latest version info.
@@ -18,10 +19,14 @@ enum UpgradeStatus {
 
   /// Error occurred.
   failed,
+
+  /// Download success.
   success,
 }
 
+/// State of upgrading.
 class UpgradeState extends Equatable {
+  /// Constructor.
   const UpgradeState({
     this.status = UpgradeStatus.ready,
     this.upgradeModel,
@@ -30,8 +35,10 @@ class UpgradeState extends Equatable {
     this.downloadStatus = const DownloadStatus(recv: 0, total: 0),
   });
 
+  /// Status.
   final UpgradeStatus status;
 
+  /// Model that contains upgrade info.
   final UpgradeModel? upgradeModel;
 
   /// Save path.
@@ -40,8 +47,10 @@ class UpgradeState extends Equatable {
   /// Latest file version file name.
   final String fileName;
 
+  /// Status of download assets.
   final DownloadStatus downloadStatus;
 
+  /// Copy with.
   UpgradeState copyWith({
     UpgradeStatus? status,
     UpgradeModel? upgradeModel,

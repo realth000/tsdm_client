@@ -23,7 +23,7 @@ Future<void> showMessageSingleButtonDialog({
               Navigator.pop(context);
             },
             child: Text(context.t.general.ok),
-          )
+          ),
         ],
       );
     },
@@ -59,7 +59,7 @@ Future<bool?> showQuestionDialog({
             onPressed: () {
               Navigator.pop(context, true);
             },
-          )
+          ),
         ],
       );
     },

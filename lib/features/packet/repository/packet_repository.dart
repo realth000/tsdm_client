@@ -7,7 +7,7 @@ import 'package:tsdm_client/shared/providers/server_time_provider/sevrer_time_pr
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
-// 红包
+/// 红包
 final class PacketRepository {
   /// Receive a packet from [url].
   ///

@@ -9,18 +9,23 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/parsing.dart';
 
+/// Extension on [String] that provides filling rate url methods.
 extension _FillRateTarget on String {
   /// Some query parameters not exists in incoming rateTarget.
   String _fillRateTarget() {
-    return '$this&infloat=yes&handlekey=rate&t=${DateTime.now().millisecondsSinceEpoch}&inajax=1&ajaxtarget=fwin_content_rate';
+    return '$this&infloat=yes&handlekey=rate&t='
+        '${DateTime.now().millisecondsSinceEpoch}&'
+        'inajax=1&ajaxtarget=fwin_content_rate';
   }
 }
 
+/// Repository of rate.
 final class RateRepository {
   static const _rateTarget =
       '$baseUrl/forum.php?mod=misc&action=rate&ratesubmit=yes&infloat=yes&inajax=1';
 
-  static final _errorTextRe = RegExp(r'alert_error">(?<error>[^<]+)<');
+  /// Regexp to grep the error text from response html body.
+  static final _errorTextRe = RegExp('alert_error">(?<error>[^<]+)<');
 
   /// Fetch rate info for given [pid].
   ///

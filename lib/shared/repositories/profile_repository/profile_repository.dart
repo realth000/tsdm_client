@@ -35,7 +35,7 @@ class ProfileRepository {
   ///
   /// * [HttpRequestFailedException] when http request failed.
   Future<uh.Document?> fetchProfile(
-      {String? username, String? uid, bool force = false}) async {
+      {String? username, String? uid, bool force = false,}) async {
     late final String targetUrl;
     late final bool isLoggedUserProfile;
     if (uid != null) {

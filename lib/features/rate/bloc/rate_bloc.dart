@@ -9,9 +9,12 @@ import 'package:tsdm_client/utils/debug.dart';
 part 'rate_event.dart';
 part 'rate_state.dart';
 
+/// Emitter
 typedef RateEmitter = Emitter<RateState>;
 
+/// Bloc to rate.
 final class RateBloc extends Bloc<RateEvent, RateState> {
+  /// Constructor.
   RateBloc({required RateRepository rateRepository})
       : _rateRepository = rateRepository,
         super(const RateState()) {
@@ -28,7 +31,9 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
     emit(state.copyWith(status: RateStatus.fetchingInfo));
     try {
       final rateInfo = await _rateRepository.fetchInfo(
-          pid: event.pid, rateTarget: event.rateAction);
+        pid: event.pid,
+        rateTarget: event.rateAction,
+      );
       emit(state.copyWith(status: RateStatus.gotInfo, info: rateInfo));
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch rate info: $e');
@@ -36,15 +41,21 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
     } on RateInfoWithErrorException catch (e) {
       debug('failed to fetch rate info: $e');
       // Do NOT retry if server returns an error.
-      emit(state.copyWith(
-        status: RateStatus.failed,
-        failedReason: e.message,
-        shouldRetry: false,
-      ));
+      emit(
+        state.copyWith(
+          status: RateStatus.failed,
+          failedReason: e.message,
+          shouldRetry: false,
+        ),
+      );
     } on RateInfoException catch (e) {
       debug('failed to fetch rate info: $e');
-      emit(state.copyWith(
-          status: RateStatus.failed, failedReason: e.toString()));
+      emit(
+        state.copyWith(
+          status: RateStatus.failed,
+          failedReason: e.toString(),
+        ),
+      );
     }
   }
 

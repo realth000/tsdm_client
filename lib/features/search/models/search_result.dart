@@ -3,18 +3,13 @@ import 'package:tsdm_client/features/search/models/searched_thread.dart';
 
 /// Result of a search action.
 class SearchResult extends Equatable {
+  /// Constructor.
   const SearchResult({
     required this.currentPage,
     required this.totalPages,
     required this.count,
     required this.data,
   });
-
-  const SearchResult.empty()
-      : currentPage = 0,
-        totalPages = 0,
-        count = 0,
-        data = null;
 
   /// Current search result page number.
   final int currentPage;
@@ -27,10 +22,6 @@ class SearchResult extends Equatable {
 
   /// Thread list.
   final List<SearchedThread>? data;
-
-  bool isValid() {
-    return currentPage > 0 && totalPages > 0 && currentPage <= totalPages;
-  }
 
   @override
   String toString() {

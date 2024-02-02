@@ -24,7 +24,7 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
     on<_CheckinButtonAuthChanged>(_onCheckinButtonAuthChanged);
     _authStreamSub = _authenticationRepository.status.listen((status) => add(
         _CheckinButtonAuthChanged(
-            authed: status == AuthenticationStatus.authenticated)));
+            authed: status == AuthenticationStatus.authenticated,),),);
   }
 
   late StreamSubscription<AuthenticationStatus> _authStreamSub;
@@ -45,7 +45,7 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
     final checkinFeeling = _settingsRepository.getCheckinFeeling();
     final checkinMessage = _settingsRepository.getCheckinMessage();
     final result = await _checkinProvider.checkin(
-        CheckinFeeling.from(checkinFeeling), checkinMessage);
+        CheckinFeeling.from(checkinFeeling), checkinMessage,);
     if (result is CheckinButtonSuccess) {
       emit(CheckinButtonSuccess((result as CheckinButtonSuccess).message));
       return;

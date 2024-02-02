@@ -1,11 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/locked.dart';
@@ -38,11 +36,19 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
 
 /// State of [Muncher].
 class MunchState {
+  /// State of munching html document.
   MunchState();
 
+  /// Use bold font.
   bool bold = false;
+
+  /// User underline.
   bool underline = false;
+
+  /// Add line strikte.
   bool lineThrough = false;
+
+  /// Align span in center.
   bool center = false;
 
   /// Flag indicating current node's parent is `<div>` or not.
@@ -54,9 +60,21 @@ class MunchState {
 
   /// Flag to indicate whether in state of repeated line wrapping.
   bool inRepeatWrapLine = false;
+
+  /// Text alignment.
   TextAlign? textAlign;
+
+  /// All colors currently used.
+  ///
+  /// Use as a stack because only the latest font works on font.
   final colorStack = <Color>[];
+
+  /// All font sizes currently used.
+  ///
+  /// Use as a stack because only the latest size works on font.
   final fontSizeStack = <double>[];
+
+  /// Url to open when tap on the text.
   String? tapUrl;
 
   /// An internal field to save field current values.
@@ -90,15 +108,20 @@ class MunchState {
 
   @override
   String toString() {
-    return 'MunchState {bold=$bold, underline=$underline, lineThrough=$lineThrough, color=$colorStack}';
+    return 'MunchState {bold=$bold, underline=$underline, '
+        'lineThrough=$lineThrough, color=$colorStack}';
   }
 }
 
 /// Munch html nodes into flutter widgets.
 class Muncher {
+  /// Constructor.
   Muncher(this.context);
 
+  /// Context to build widget when munching.
   final BuildContext context;
+
+  /// Munch state to use when munching.
   final MunchState state = MunchState();
 
   /// Map to store div classes and corresponding munch functions.
@@ -124,6 +147,7 @@ class Muncher {
     return TextSpan(children: spanList);
   }
 
+  /// Munch a [node] and its children.
   InlineSpan? munchNode(uh.Node? node) {
     if (node == null) {
       // Reach end.
@@ -283,9 +307,9 @@ class Muncher {
 
     // Setup text align.
     //
-    // Text align only have effect on the [RichText]'s children, not its children's
-    // children. Remember every time we build a [RichText] with "children" we
-    // need to apply the current text alignment.
+    // Text align only have effect on the [RichText]'s children, not its
+    /// children's children. Remember every time we build a [RichText]
+    /// with "children" we need to apply the current text alignment.
     if (align != null) {
       state.textAlign = align;
     }
@@ -353,24 +377,31 @@ class Muncher {
 
   InlineSpan _buildBlockQuote(uh.Element element) {
     // Try isolate the munch state inside quoted message.
-    // Bug is that when the original quoted message "truncated" at unclosed tags like "foo[s]bar...", the unclosed tag
-    // will affect all following contents in current post, that is, all texts are marked with line through.
-    // This is unfixable after rendered into html because we do not know whether a whole decoration tag (e.g. <strike>)
-    // contains the all following post messages is user added or caused by the bug above.
-    // Here just try to save and restore munch state to avoid potential issued about "styles inside quoted blocks
-    // affects outside main content".
+    // Bug is that when the original quoted message "truncated" at unclosed
+    // tags like "foo[s]bar...", the unclosed tag will affect all
+    // following contents in current post, that is, all texts are marked with
+    // line through.
+    // This is unfixable after rendered into html because we do not know whether
+    // a whole decoration tag (e.g. <strike>) contains the all following post
+    // messages is user added or caused by the bug above. Here just try to save
+    // and restore munch state to avoid potential issued about "styles inside
+    // quoted blocks  affects outside main content".
     state.save();
     final ret = _munch(element);
     state.restore();
-    return TextSpan(children: [
-      WidgetSpan(
+    return TextSpan(
+      children: [
+        WidgetSpan(
           child: Card(
-              child: Padding(
-        padding: edgeInsetsL15T15R15B15,
-        child: RichText(text: ret),
-      ))),
-      const TextSpan(text: '\n'),
-    ]);
+            child: Padding(
+              padding: edgeInsetsL15T15R15B15,
+              child: RichText(text: ret),
+            ),
+          ),
+        ),
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _munchDiv(uh.Element element) {
@@ -401,34 +432,6 @@ class Muncher {
   InlineSpan _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
     return WidgetSpan(child: CodeCard(code: text));
-    return TextSpan(
-      recognizer: TapGestureRecognizer()
-        ..onTap = () async {
-          await Clipboard.setData(
-            ClipboardData(text: text),
-          );
-          if (!context.mounted) {
-            return;
-          }
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              context.t.aboutPage.copiedToClipboard,
-            ),
-          ));
-        },
-      style: const TextStyle(
-        decoration: TextDecoration.underline,
-        decorationStyle: TextDecorationStyle.dashed,
-      ),
-      text: text,
-    );
-    // FIXME: Remove duplicate white space when using `WidgetSpan` here.
-    return WidgetSpan(
-        child: Card(
-            child: Padding(
-      padding: const EdgeInsets.all(15),
-      child: Text(text),
-    )));
   }
 
   InlineSpan _buildLockedArea(uh.Element element) {
@@ -438,10 +441,12 @@ class Muncher {
       return const TextSpan();
     }
 
-    return TextSpan(children: [
-      WidgetSpan(child: LockedCard(lockedArea)),
-      const TextSpan(text: '\n'),
-    ]);
+    return TextSpan(
+      children: [
+        WidgetSpan(child: LockedCard(lockedArea)),
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildReview(uh.Element element) {
@@ -462,11 +467,12 @@ class Muncher {
     //     ?.parseToDateTimeUtc8();
 
     return WidgetSpan(
-        child: ReviewCard(
-      name: name ?? '',
-      content: content ?? '',
-      avatarUrl: avatarUrl,
-    ));
+      child: ReviewCard(
+        name: name ?? '',
+        content: content ?? '',
+        avatarUrl: avatarUrl,
+      ),
+    );
   }
 
   /// Spoiler is a button with an area of contents.
@@ -481,20 +487,22 @@ class Muncher {
       return const TextSpan();
     }
     final content = _munch(contentNode);
-    return TextSpan(children: [
-      WidgetSpan(
-        child: SpoilerCard(
-          title: title,
-          content: content,
+    return TextSpan(
+      children: [
+        WidgetSpan(
+          child: SpoilerCard(
+            title: title,
+            content: content,
+          ),
         ),
-      ),
-      const TextSpan(text: '\n'),
-    ]);
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildA(uh.Element element) {
     if (element.attributes.containsKey('href')) {
-      state.tapUrl = element.attributes['href']!;
+      state.tapUrl = element.attributes['href'];
       final ret = _munch(element);
       state.tapUrl = null;
       return ret;
@@ -520,57 +528,68 @@ class Muncher {
     state.fontSizeStack.add(FontSize.size6.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
-    return TextSpan(children: [
-      const TextSpan(text: '\n'),
-      ret,
-      const TextSpan(text: '\n')
-    ]);
+    return TextSpan(
+      children: [
+        const TextSpan(text: '\n'),
+        ret,
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildH2(uh.Element element) {
     state.fontSizeStack.add(FontSize.size5.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
-    return TextSpan(children: [
-      const TextSpan(text: '\n'),
-      ret,
-      const TextSpan(text: '\n')
-    ]);
+    return TextSpan(
+      children: [
+        const TextSpan(text: '\n'),
+        ret,
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildH3(uh.Element element) {
     state.fontSizeStack.add(FontSize.size4.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
-    return TextSpan(children: [
-      const TextSpan(text: '\n'),
-      ret,
-      const TextSpan(text: '\n')
-    ]);
+    return TextSpan(
+      children: [
+        const TextSpan(text: '\n'),
+        ret,
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildH4(uh.Element element) {
     state.fontSizeStack.add(FontSize.size3.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
-    return TextSpan(children: [
-      const TextSpan(text: '\n'),
-      ret,
-      const TextSpan(text: '\n')
-    ]);
+    return TextSpan(
+      children: [
+        const TextSpan(text: '\n'),
+        ret,
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   InlineSpan _buildLi(uh.Element element) {
     final ret = _munch(element);
-    return TextSpan(children: [
-      WidgetSpan(
+    return TextSpan(
+      children: [
+        WidgetSpan(
           child: Icon(
-        Icons.radio_button_unchecked,
-        size: FontSize.size2.value(),
-      )),
-      const TextSpan(text: ' '),
-      ret,
-    ]);
+            Icons.radio_button_unchecked,
+            size: FontSize.size2.value(),
+          ),
+        ),
+        const TextSpan(text: ' '),
+        ret,
+      ],
+    );
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
@@ -603,8 +622,9 @@ class Muncher {
     int? colorValue;
     if (attr != null && attr.startsWith('#')) {
       colorValue = int.tryParse(
-          element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
-          radix: 16);
+        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
+        radix: 16,
+      );
     }
     Color? color;
     if (colorValue != null) {

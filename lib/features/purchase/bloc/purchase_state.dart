@@ -1,5 +1,6 @@
 part of 'purchase_bloc.dart';
 
+/// Status of purchase.
 enum PurchaseStatus {
   /// Initial state.
   initial,
@@ -17,7 +18,9 @@ enum PurchaseStatus {
   failed,
 }
 
+/// State of purchase.
 final class PurchaseState extends Equatable {
+  /// Constructor.
   const PurchaseState({
     this.status = PurchaseStatus.initial,
     this.confirmInfo,
@@ -29,8 +32,11 @@ final class PurchaseState extends Equatable {
   /// MUST get this info before purchase.
   final PurchaseConfirmInfo? confirmInfo;
 
-  PurchaseState copyWith(
-      {PurchaseStatus? status, PurchaseConfirmInfo? confirmInfo}) {
+  /// Copy with.
+  PurchaseState copyWith({
+    PurchaseStatus? status,
+    PurchaseConfirmInfo? confirmInfo,
+  }) {
     return PurchaseState(
       status: status ?? this.status,
       confirmInfo: confirmInfo ?? this.confirmInfo,

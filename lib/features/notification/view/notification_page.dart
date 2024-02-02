@@ -10,6 +10,7 @@ import 'package:tsdm_client/widgets/card/notice_card.dart';
 
 /// Notice page, shows Notice and PrivateMessage of current user.
 class NotificationPage extends StatefulWidget {
+  /// Constructor.
   const NotificationPage({super.key});
 
   @override
@@ -24,7 +25,8 @@ class _NotificationPageState extends State<NotificationPage> {
   Widget _buildBody(BuildContext context, NotificationState state) {
     return EasyRefresh(
       scrollBehaviorBuilder: (physics) {
-        // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+        // Should use ERScrollBehavior instead of
+        // ScrollConfiguration.of(context)
         return ERScrollBehavior(physics)
             .copyWith(physics: physics, scrollbars: false);
       },
@@ -64,15 +66,16 @@ class _NotificationPageState extends State<NotificationPage> {
         ),
         BlocProvider(
           create: (context) => NotificationBloc(
-              notificationRepository: RepositoryProvider.of(context))
-            ..add(NotificationRefreshNoticeRequired()),
+            notificationRepository: RepositoryProvider.of(context),
+          )..add(NotificationRefreshNoticeRequired()),
         ),
       ],
       child: BlocListener<NotificationBloc, NotificationState>(
         listener: (context, state) {
           if (state.status == NotificationStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+              SnackBar(content: Text(context.t.general.failedToLoad)),
+            );
           }
         },
         child: BlocBuilder<NotificationBloc, NotificationState>(

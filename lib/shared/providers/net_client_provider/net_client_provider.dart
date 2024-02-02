@@ -113,7 +113,7 @@ class NetClientProvider {
             HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
             HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
           },
-        ));
+        ),);
 
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error('resp code=${resp.statusCode}');

@@ -14,7 +14,7 @@ class CheckInButton extends StatelessWidget {
   const CheckInButton({super.key});
 
   Future<void> _showCheckinFailedDialog(
-      BuildContext context, CheckinResult result) async {
+      BuildContext context, CheckinResult result,) async {
     if (!context.mounted) {
       return;
     }

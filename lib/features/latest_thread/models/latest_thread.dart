@@ -188,9 +188,4 @@ failed to parse LatestThread node: {
       quotedMessage: quotedMessage,
     );
   }
-
-  /// Is valid or not.
-  bool isValid() {
-    return _info != null;
-  }
 }

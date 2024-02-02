@@ -4,9 +4,12 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 
+/// Dialog to let user select a checkin feeling.
 class CheckinFeelingDialog extends StatelessWidget {
+  /// Constructor.
   const CheckinFeelingDialog(this.defaultFeeling, {super.key});
 
+  /// Current using feeling.
   final String defaultFeeling;
 
   @override
@@ -37,9 +40,12 @@ class CheckinFeelingDialog extends StatelessWidget {
   }
 }
 
+/// Dialog to let user change the checkin message.
 class CheckinMessageDialog extends StatefulWidget {
+  /// Constructor.
   const CheckinMessageDialog(this.defaultMessage, {super.key});
 
+  /// Current using mesage content.
   final String defaultMessage;
 
   @override
@@ -89,6 +95,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
                   if (v.length > 50) {
                     return context.t.checkinForm.shouldNoMoreThan50;
                   }
+                  return null;
                 },
                 onChanged: (value) {
                   setState(() {
@@ -97,7 +104,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
                 },
                 controller: textController,
                 inputFormatters: [
-                  LengthLimitingTextInputFormatter(_maxTextLength)
+                  LengthLimitingTextInputFormatter(_maxTextLength),
                 ],
               ),
             ),
@@ -123,7 +130,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
             }
             Navigator.of(context).pop(textController.text);
           },
-        )
+        ),
       ],
     );
   }

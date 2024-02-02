@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+/// Dialog to let user choose app locale.
 class LanguageDialog extends StatelessWidget {
+  /// Constructor.
   const LanguageDialog(this.currentLocale, {super.key});
 
+  /// Current using locale.
   final String currentLocale;
 
   @override

@@ -166,8 +166,8 @@ class _CardLayout extends StatelessWidget {
               Padding(
                 padding: edgeInsetsL15R15B10,
                 child: Row(
-                  children: infoWidgetList,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: infoWidgetList,
                 ),
               ),
           ].insertBetween(sizedBoxW10H10),
@@ -229,11 +229,11 @@ class MyThreadCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return _CardLayout(
-      threadID: thread.threadID!,
-      title: thread.title!,
+      threadID: thread.threadID,
+      title: thread.title,
       author: thread.latestReplyAuthor!,
       // FIXME: Do not use thread type to represent forum.
-      threadType: ThreadType(name: thread.forumName!, url: thread.forumUrl!),
+      threadType: ThreadType(name: thread.forumName, url: thread.forumUrl),
       publishTime: thread.latestReplyTime,
       quotedMessage: thread.quotedMessage,
     );

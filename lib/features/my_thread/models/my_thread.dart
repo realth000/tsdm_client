@@ -7,6 +7,7 @@ import 'package:universal_html/html.dart' as uh;
 
 /// Current user's thread model in user's info page.
 class MyThread extends Equatable {
+  /// Constructor.
   const MyThread({
     required this.title,
     required this.url,
@@ -19,18 +20,6 @@ class MyThread extends Equatable {
     required this.latestReplyTime,
     required this.quotedMessage,
   });
-
-  const MyThread.empty()
-      : title = '',
-        url = '',
-        threadID = '',
-        forumName = '',
-        forumUrl = '',
-        replyCount = -1,
-        viewCount = -1,
-        latestReplyAuthor = null,
-        latestReplyTime = null,
-        quotedMessage = null;
 
   /// Thread title.
   final String title;

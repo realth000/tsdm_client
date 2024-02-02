@@ -26,7 +26,7 @@ enum FontSize {
   /// "7": 49px
   size7,
 
-  // Not support size.
+  /// Not support size.
   notSupport;
 
   factory FontSize.fromString(String? size) {
@@ -46,6 +46,7 @@ enum FontSize {
     };
   }
 
+  /// Return the font size value.
   double value() {
     return switch (this) {
       FontSize.size1 => 11.0,
@@ -59,7 +60,9 @@ enum FontSize {
     };
   }
 
+  /// Is the font size valid.
   bool get isValid => this != FontSize.notSupport;
 
+  /// Is the font size invalid.
   bool get isNotValid => !isValid;
 }

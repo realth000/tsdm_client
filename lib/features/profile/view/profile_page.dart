@@ -20,7 +20,9 @@ import 'package:tsdm_client/widgets/obscure_list_tile.dart';
 const _avatarWidth = 180.0;
 const _avatarHeight = 220.0;
 
+/// Page of user profile.
 class ProfilePage extends StatefulWidget {
+  /// Constructor.
   const ProfilePage({this.uid, this.username, super.key});
 
   /// Other user uid.
@@ -56,7 +58,8 @@ class _ProfilePageState extends State<ProfilePage> {
         listener: (context, state) {
           if (state.status == ProfileStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)));
+              SnackBar(content: Text(context.t.general.failedToLoad)),
+            );
           }
         },
         child: BlocBuilder<ProfileBloc, ProfileState>(
@@ -83,8 +86,12 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
               ProfileStatus.failed => buildRetryButton(context, () {
-                  context.read<ProfileBloc>().add(ProfileLoadRequested(
-                      username: widget.username, uid: widget.uid));
+                  context.read<ProfileBloc>().add(
+                        ProfileLoadRequested(
+                          username: widget.username,
+                          uid: widget.uid,
+                        ),
+                      );
                 }),
               ProfileStatus.success || ProfileStatus.logout => _buildBody(
                   context,

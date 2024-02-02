@@ -1,15 +1,23 @@
 part of 'thread_bloc.dart';
 
+/// Status of thread.
 enum ThreadStatus {
+  /// Initial.
   initial,
 
   /// Loading date for the first time.
   loading,
+
+  /// Load succeed.
   success,
+
+  /// Load failed.
   failed,
 }
 
+/// State of thread.
 class ThreadState extends Equatable {
+  /// Constructor.
   const ThreadState({
     required this.tid,
     this.status = ThreadStatus.initial,
@@ -26,10 +34,13 @@ class ThreadState extends Equatable {
     this.threadType,
   });
 
+  /// Status.
   final ThreadStatus status;
 
+  /// Thread id.
   final String tid;
 
+  /// Thread title.
   final String? title;
 
   /// Flag indicating can load more pages or not.
@@ -38,11 +49,13 @@ class ThreadState extends Equatable {
   /// Current pageNumber
   final int currentPage;
 
+  /// Total pages number in the thread.
   final int totalPages;
 
   /// Flag indicating current user has permission to see this page or not.
   ///
-  /// Only works with logged user. If no user logged in, use [needLogin] flag instead.
+  /// Only works with logged user. If no user logged in, use [needLogin] flag
+  /// instead.
   final bool havePermission;
 
   /// Message showed from server when have no permission.
@@ -64,8 +77,10 @@ class ThreadState extends Equatable {
   /// Save in state and should pass to reply bar.
   final ReplyParameters? replyParameters;
 
+  /// Thread type.
   final String? threadType;
 
+  /// Copy with.
   ThreadState copyWith({
     ThreadStatus? status,
     String? tid,

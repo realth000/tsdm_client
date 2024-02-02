@@ -8,9 +8,12 @@ import 'package:tsdm_client/utils/debug.dart';
 part 'notification_event.dart';
 part 'notification_state.dart';
 
+/// Emitter
 typedef NotificationEmitter = Emitter<NotificationState>;
 
+/// Bloc of notification.
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
+  /// Constructor.
   NotificationBloc({required NotificationRepository notificationRepository})
       : _notificationRepository = notificationRepository,
         super(const NotificationState()) {
@@ -27,7 +30,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     try {
       final noticeList = await _notificationRepository.fetchNotice();
       emit(state.copyWith(
-          status: NotificationStatus.success, noticeList: noticeList));
+          status: NotificationStatus.success, noticeList: noticeList,),);
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notice: $e');
       emit(state.copyWith(status: NotificationStatus.failed));

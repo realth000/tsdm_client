@@ -51,7 +51,7 @@ class NoticeCard extends StatelessWidget {
                   padding: edgeInsetsL15T15R15B15,
                   child: Text(notice.quotedMessage!),
                 ),
-              )
+              ),
           ],
         ),
       NoticeType.mention => Column(
@@ -81,7 +81,7 @@ class NoticeCard extends StatelessWidget {
                     },
                     queryParameters: {
                       'noticeType': '${notice.noticeType.index}',
-                    });
+                    },);
               }
             : null,
         child: Column(

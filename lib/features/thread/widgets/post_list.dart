@@ -26,6 +26,7 @@ class PostList extends StatefulWidget {
     super.key,
   });
 
+  /// Thread title.
   final String? title;
 
   /// Fetch page number "&page=[pageNumber]".
@@ -45,17 +46,20 @@ class PostList extends StatefulWidget {
   /// Use [Divider] instead of [SizedBox] between list items.
   final bool useDivider;
 
+  /// List of [Post] content.
   final List<Post> postList;
 
+  /// Flag indicating can load more pages in current post list.
   final bool canLoadMore;
 
+  /// The [ScrollController] passed from outside.
   final ScrollController scrollController;
 
   @override
   State<PostList> createState() => _PostListState();
 }
 
-class _PostListState<T> extends State<PostList> {
+class _PostListState extends State<PostList> {
   /// Thread type name.
   /// Actually this should provided by [nt.NormalThread].
   /// But till now we haven't parse this attr in forum page.
@@ -86,8 +90,6 @@ class _PostListState<T> extends State<PostList> {
     _refreshController.dispose();
     super.dispose();
   }
-
-  Future<void> _refreshData(BuildContext context) async {}
 
   Widget _buildHeader(
     BuildContext context,
@@ -123,7 +125,8 @@ class _PostListState<T> extends State<PostList> {
         ? ElevationOverlay.applySurfaceTint(
             Theme.of(context).colorScheme.surface,
             Theme.of(context).colorScheme.surfaceTint,
-            Theme.of(context).navigationBarTheme.elevation ?? 3)
+            Theme.of(context).navigationBarTheme.elevation ?? 3,
+          )
         : Colors.transparent;
     return ColoredBox(
       color: bg,
@@ -149,7 +152,8 @@ class _PostListState<T> extends State<PostList> {
 
     return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) {
-        // Should use ERScrollBehavior instead of ScrollConfiguration.of(context)
+        // Should use ERScrollBehavior instead of
+        // ScrollConfiguration.of(context)
         return ERScrollBehavior(physics)
             .copyWith(physics: physics, scrollbars: false);
       },
@@ -185,7 +189,11 @@ class _PostListState<T> extends State<PostList> {
             SliverPersistentHeader(
               floating: true,
               delegate: SliverAppBarPersistentDelegate(
-                buildHeader: (context, shrinkOffset, overlapsContent) {
+                buildHeader: (
+                  context,
+                  shrinkOffset, {
+                  required bool overlapsContent,
+                }) {
                   return _buildHeader(context, shrinkOffset, safeHeight);
                 },
                 headerMaxExtent: safeHeight,
@@ -195,8 +203,10 @@ class _PostListState<T> extends State<PostList> {
             SliverPadding(
               padding: edgeInsetsL10R10B10,
               sliver: SliverToBoxAdapter(
-                child: Text(widget.title ?? '',
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: Text(
+                  widget.title ?? '',
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
             ),
             if (widget.postList.isNotEmpty)
@@ -206,7 +216,9 @@ class _PostListState<T> extends State<PostList> {
                   itemCount: widget.postList.length,
                   itemBuilder: (context, index) {
                     return widget.widgetBuilder(
-                        context, widget.postList[index]);
+                      context,
+                      widget.postList[index],
+                    );
                   },
                   separatorBuilder: widget.useDivider
                       ? (context, index) => const Divider(thickness: 0.5)
@@ -225,22 +237,32 @@ class _PostListState<T> extends State<PostList> {
   }
 }
 
+/// Delegate to build a persistant sliver app bar.
 class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
+  /// Constructor.
   SliverAppBarPersistentDelegate({
     required this.buildHeader,
     required this.headerMaxExtent,
     required this.headerMinExtent,
   });
 
-  final Widget Function(BuildContext, double, bool) buildHeader;
+  /// Builder to build the app bar.
+  final Widget Function(BuildContext, double, {required bool overlapsContent})
+      buildHeader;
 
+  /// Max extent of top header.
   final double headerMaxExtent;
+
+  /// Min extent of top header.
   final double headerMinExtent;
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return buildHeader(context, shrinkOffset, overlapsContent);
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
+    return buildHeader(context, shrinkOffset, overlapsContent: overlapsContent);
   }
 
   @override

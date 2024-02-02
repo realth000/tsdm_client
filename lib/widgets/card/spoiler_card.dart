@@ -34,7 +34,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
               child: ElevatedButton(
                 child: Text(_visible
                     ? context.t.spoilerCard.expandLess
-                    : context.t.spoilerCard.expandMore),
+                    : context.t.spoilerCard.expandMore,),
                 onPressed: () {
                   setState(() {
                     _visible = !_visible;

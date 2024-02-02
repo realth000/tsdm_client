@@ -12,14 +12,17 @@ import 'package:universal_html/html.dart' as uh;
 part 'profile_event.dart';
 part 'profile_state.dart';
 
+/// Emitter
 typedef ProfileEmitter = Emitter<ProfileState>;
 
 /// Bloc of user profile page.
 ///
 /// This profile page is for current logged user.
 ///
-/// Actually other user's profile page should have a similar bloc but without [ProfileStatus.needLogin] status.
+/// Actually other user's profile page should have a similar bloc but
+/// without [ProfileStatus.needLogin] status.
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+  /// Constructor.
   ProfileBloc({
     required ProfileRepository profileRepository,
     required AuthenticationRepository authenticationRepository,
@@ -42,14 +45,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         event.uid == null &&
         _profileRepository.hasCache()) {
       final userProfile = _buildProfile(_profileRepository.getCache()!);
-      emit(state.copyWith(
-          status: ProfileStatus.success, userProfile: userProfile));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.success,
+          userProfile: userProfile,
+        ),
+      );
       return;
     }
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
       final document = await _profileRepository.fetchProfile(
-          username: event.username, uid: event.uid);
+        username: event.username,
+        uid: event.uid,
+      );
       if (document == null) {
         emit(state.copyWith(status: ProfileStatus.needLogin));
         return;
@@ -60,10 +69,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
-      emit(state.copyWith(
-        status: ProfileStatus.success,
-        userProfile: userProfile,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.success,
+          userProfile: userProfile,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to load profile: $e');
       emit(state.copyWith(status: ProfileStatus.failed));
@@ -87,10 +98,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
-      emit(state.copyWith(
-        status: ProfileStatus.success,
-        userProfile: userProfile,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.success,
+          userProfile: userProfile,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to refresh profile: $e');
       emit(state.copyWith(status: ProfileStatus.failed));
@@ -108,15 +121,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       _profileRepository.logout();
       emit(state.copyWith(status: ProfileStatus.needLogin));
     } on HttpRequestFailedException catch (e) {
-      emit(state.copyWith(
-        status: ProfileStatus.success,
-        failedToLogoutReason: e,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.success,
+          failedToLogoutReason: e,
+        ),
+      );
     } on LogoutException catch (e) {
-      emit(state.copyWith(
-        status: ProfileStatus.success,
-        failedToLogoutReason: e,
-      ));
+      emit(
+        state.copyWith(
+          status: ProfileStatus.success,
+          failedToLogoutReason: e,
+        ),
+      );
     }
   }
 

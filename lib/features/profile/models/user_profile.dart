@@ -2,6 +2,7 @@ import 'package:equatable/equatable.dart';
 
 /// User profile model.
 class UserProfile extends Equatable {
+  /// Constructor.
   const UserProfile({
     required this.avatarUrl,
     required this.username,
@@ -19,19 +20,50 @@ class UserProfile extends Equatable {
     required this.activityInfoList,
   });
 
+  /// Url of user avatar.
   final String? avatarUrl;
+
+  /// Username.
   final String? username;
+
+  /// User id.
   final String? uid;
+
+  /// Group of basic info.
+  ///
+  /// Each group contains a string of title and a string of subtitle.
   final List<(String title, String subtitle)> basicInfoList;
+
+  /// Total checkin days count.
   final String? checkinDaysCount;
+
+  /// Checkin days in current month.
   final String? checkinThisMonthCount;
+
+  /// Last checkin time.
   final String? checkinRecentTime;
+
+  /// All coins got by checking.
   final String? checkinAllCoins;
+
+  /// Coins got in last checkin.
   final String? checkinLastTimeCoin;
+
+  /// Level of checkin.
   final String? checkinLevel;
+
+  /// Next level of checkin.
   final String? checkinNextLevel;
+
+  /// Days till next level of chekcin.
   final String? checkinNextLevelDays;
+
+  /// Today checked or not.
   final String? checkinTodayStatus;
+
+  /// Group of user activity information.
+  ///
+  /// Each group contains a string of title and a string of subtitle.
   final List<(String title, String subtitle)> activityInfoList;
 
   @override

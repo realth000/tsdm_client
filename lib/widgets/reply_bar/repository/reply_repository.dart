@@ -64,9 +64,9 @@ class ReplyRepository {
         repPid == null ||
         repPost == null) {
       debug(
-          'failed to fetch reply to post parameters: formHash=$formHash, handleKey=$handleKey, noticeAuthor=$noticeAuthor');
+          'failed to fetch reply to post parameters: formHash=$formHash, handleKey=$handleKey, noticeAuthor=$noticeAuthor',);
       debug(
-          'failed to fetch reply to post parameters: noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, reppid=$repPid, reppost=$repPost');
+          'failed to fetch reply to post parameters: noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, reppid=$repPid, reppost=$repPost',);
       throw ReplyToPostFetchParameterFailedException();
     }
 

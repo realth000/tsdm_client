@@ -7,7 +7,9 @@ import 'package:tsdm_client/shared/models/reply_parameters.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+/// Cubit of the notification detail page.
 class NotificationDetailCubit extends Cubit<NotificationDetailState> {
+  /// Constructor.
   NotificationDetailCubit({
     required NotificationRepository notificationRepository,
   })  : _notificationRepository = notificationRepository,
@@ -18,6 +20,10 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
 
   final NotificationRepository _notificationRepository;
 
+  /// Fetch notification detail from [url].
+  ///
+  /// Usually the [url] is a thread page and the logic below is trying to get
+  /// the conresponding post in thread.
   Future<void> fetchDetail(String url) async {
     emit(state.copyWith(status: NotificationDetailStatus.loading));
     try {
@@ -51,15 +57,17 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
         return;
       }
       final replyParameters = _parseParameters(document, tid);
-      emit(state.copyWith(
-        status: NotificationDetailStatus.success,
-        post: postData,
-        replyParameters: replyParameters,
-        tid: tid,
-        pid: pid,
-        page: page,
-        threadClosed: threadClosed,
-      ));
+      emit(
+        state.copyWith(
+          status: NotificationDetailStatus.success,
+          post: postData,
+          replyParameters: replyParameters,
+          tid: tid,
+          pid: pid,
+          page: page,
+          threadClosed: threadClosed,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notification detail: $e');
       emit(state.copyWith(status: NotificationDetailStatus.failed));
@@ -81,7 +89,9 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
         formHash == null ||
         subject == null) {
       debug(
-          'failed to get reply form hash: fid=$fid postTime=$postTime formHash=$formHash subject=$subject');
+        'failed to get reply form hash: fid=$fid postTime=$postTime '
+        'formHash=$formHash subject=$subject',
+      );
       return null;
     }
     return ReplyParameters(

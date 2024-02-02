@@ -10,7 +10,9 @@ import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+/// Page to show the about information.
 class AboutPage extends StatelessWidget {
+  /// Constructor.
   const AboutPage({super.key});
 
   @override
@@ -33,11 +35,13 @@ class AboutPage extends StatelessWidget {
               if (!context.mounted) {
                 return;
               }
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                content: Text(context.t.aboutPage.copiedToClipboard),
-              ));
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(context.t.aboutPage.copiedToClipboard),
+                ),
+              );
             },
-          )
+          ),
         ],
       ),
       body: ListView(
@@ -110,7 +114,7 @@ class AboutPage extends StatelessWidget {
             title: Text(context.t.aboutPage.license),
             subtitle: const Text('MIT license'),
             onTap: () async => context.pushNamed(ScreenPaths.license),
-          )
+          ),
         ],
       ),
     );

@@ -7,6 +7,7 @@ import 'package:universal_html/html.dart' as uh;
 
 /// Data model for subreddit.
 final class Forum extends Equatable {
+  /// Constructor.
   const Forum({
     required this.forumID,
     required this.url,
@@ -27,24 +28,55 @@ final class Forum extends Equatable {
     this.latestThreadUserUrl,
   });
 
+  /// Forum id.
   final int forumID;
+
+  /// Url of forum page.
   final String url;
+
+  /// Forum name.
   final String name;
+
+  /// Forum icon url.
   final String iconUrl;
+
+  /// Total thread count.
   final int threadCount;
+
+  /// Total reply count.
   final int replyCount;
+
+  /// The url of latest thread in the forum.
   final String? latestThreadUrl;
+
+  /// The publish time of the latest thread in forum.
   final DateTime? latestThreadTime;
+
+  /// Text format of [latestThreadTime].
   final String? latestThreadTimeText;
+
+  /// Count of thread published today.
   final int? threadTodayCount;
 
   /// Expanded layout only.
+
+  /// Subreddit list.
   final List<(String subForumName, String url)>? subForumList;
+
+  /// All sub-thread.
   final List<(String threadTitle, String url)>? subThreadList;
+
+  /// Latest thread title.
   final String? latestThreadTitle;
+
+  /// User name of the latest reply in latest thread.
   final String? latestThreadUserName;
+
+  /// Url of the latest thread.
   final String? latestThreadUserUrl;
 
+  /// Is current forum in expanded layout when parsing from server side
+  /// html document.
   bool get isExpanded =>
       latestThreadTitle != null && latestThreadUserName != null;
 
@@ -62,7 +94,9 @@ final class Forum extends Equatable {
     final forumID = url?.split('fid=').lastOrNull?.parseToInt();
     if (name == null || forumID == null || url == null) {
       debug(
-          'failed to build forum: name or fid or url not found: name=$name, fid=$forumID, url=$url');
+        'failed to build forum: name or fid or url not found: name=$name, '
+        'fid=$forumID, url=$url',
+      );
       return null;
     }
 
@@ -105,7 +139,8 @@ final class Forum extends Equatable {
             (element.querySelector('td:nth-child(2) > h2 > em:nth-child(3)') ??
                     // 旅行者 theme
                     element.querySelector(
-                        'td:nth-child(2) > h2 > em:nth-child(3)'))
+                      'td:nth-child(2) > h2 > em:nth-child(3)',
+                    ))
                 ?.firstEndDeepText()
                 ?.parseToInt();
 

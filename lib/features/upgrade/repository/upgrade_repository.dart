@@ -7,7 +7,9 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
+/// Repository of upgrading the app.
 class UpgradeRepository {
+  /// Constructor.
   UpgradeRepository();
 
   static const _githubReleaseInfoUrl =
@@ -17,9 +19,11 @@ class UpgradeRepository {
 
   final _downloadStream = BehaviorSubject<DownloadStatus>();
 
+  /// Get the [Stream] of download status.
   Stream<DownloadStatus> get downloadStatus =>
       _downloadStream.asBroadcastStream();
 
+  /// Get url of realse info.
   String get releaseInfoUrl => _githubReleaseInfoUrl;
 
   /// Fetch the latest version info from github.
@@ -53,6 +57,7 @@ class UpgradeRepository {
     return document;
   }
 
+  /// Download assets from [downloadUrl] and save to [savePath].
   Future<void> download({
     required String downloadUrl,
     required String savePath,
@@ -65,10 +70,10 @@ class UpgradeRepository {
         _downloadStream.add(DownloadStatus(recv: recv, total: total));
         // downloadProgress = ((recv / total) * 100).toStringAsFixed(0);
       },
-      deleteOnError: true,
     );
   }
 
+  /// Dispose the stream.
   void dispose() {
     _downloadStream.close();
   }

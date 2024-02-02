@@ -79,7 +79,7 @@ class _ReplyBarState extends State<ReplyBar> {
     }
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       content: Text(context.t.threadPage.replySuccess),
-    ));
+    ),);
     setState(() {
       _hintText = null;
     });
@@ -118,7 +118,7 @@ class _ReplyBarState extends State<ReplyBar> {
           replyParameters: _replyParameters!,
           replyAction: _replyAction!,
           replyMessage: _replyController.text,
-        ));
+        ),);
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
@@ -144,7 +144,7 @@ class _ReplyBarState extends State<ReplyBar> {
                           _hintText = null;
                           _replyAction = null;
                         });
-                      }),
+                      },),
                 ],
               ),
             ),
@@ -205,24 +205,24 @@ class _ReplyBarState extends State<ReplyBar> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  child: isSendingReply
-                      ? sizedCircularProgressIndicator
-                      : const Icon(Icons.send_outlined),
                   onPressed: (canSendReply && !isSendingReply && !_closed)
                       ? () async {
                           if (_replyAction == null &&
                               _replyParameters == null) {
                             debug(
-                                'failed to send reply: null action and parameters');
+                                'failed to send reply: null action and parameters',);
                             return;
                           }
                           debug(
-                              'ReplyBar: send reply $_replyAction, $_replyParameters');
+                              'ReplyBar: send reply $_replyAction, $_replyParameters',);
                           _replyAction == null
                               ? await _sendReplyThreadMessage()
                               : await _sendReplyPostMessage();
                         }
                       : null,
+                  child: isSendingReply
+                      ? sizedCircularProgressIndicator
+                      : const Icon(Icons.send_outlined),
                 ),
               ],
             ),

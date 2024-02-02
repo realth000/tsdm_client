@@ -168,7 +168,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
             //
             element
                 .querySelector(
-                    'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)')
+                    'div.tsdm_fl_inf > dl > dd > em:nth-child(1) > font:nth-child(2)',)
                 ?.firstEndDeepText()
                 ?.parseToInt() ??
             // Style 5
@@ -202,7 +202,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
             //
             element
                 .querySelector(
-                    'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)')
+                    'div.tsdm_fl_inf > dl > dd > em:nth-child(2) > font:nth-child(2)',)
                 ?.firstEndDeepText()
                 ?.parseToInt() ??
 
@@ -233,7 +233,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
         //
         element
             .querySelector(
-                'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)')
+                'div.tsdm_fl_inf > dl > dd > em:nth-child(3) > font:nth-child(2)',)
             ?.firstEndDeepText()
             ?.parseToInt() ??
         // Style 5
@@ -317,7 +317,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
             (element.querySelector('td:nth-child(2) > h2 > em:nth-child(3)') ??
                     // 旅行者 theme
                     element.querySelector(
-                        'td:nth-child(2) > h2 > em:nth-child(3)'))
+                        'td:nth-child(2) > h2 > em:nth-child(3)',))
                 ?.firstEndDeepText()
                 ?.parseToInt();
 

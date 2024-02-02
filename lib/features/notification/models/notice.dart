@@ -4,7 +4,8 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-// TODO: Refactor with sealed class.
+/// TODO: Refactor with sealed class.
+/// Different notice types.
 enum NoticeType {
   /// Another user replied current user's thread or post.
   reply,
@@ -18,6 +19,7 @@ enum NoticeType {
 
 /// A single notice for current user.
 class Notice extends Equatable {
+  /// Constructor.
   const Notice({
     required this.userAvatarUrl,
     required this.username,
@@ -83,7 +85,7 @@ class Notice extends Equatable {
   final String? quotedMessage;
 
   /// Build a [Notice] from html node [element] :
-  /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl (notice=xxx)
+  /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl
   ///
   /// This css selector may work in all web page styles.
   static Notice? fromClNode(uh.Element element) {
@@ -177,7 +179,9 @@ class Notice extends Equatable {
     if (noticeType == NoticeType.mention) {
       if (username == null || userSpaceUrl == null || redirectUrl == null) {
         debug(
-            'failed to parse mention notice: $username, $userSpaceUrl, $noticeTime, $redirectUrl');
+          'failed to parse mention notice: $username, $userSpaceUrl, '
+          '$noticeTime, $redirectUrl',
+        );
         return null;
       }
     } else if (username == null ||
@@ -186,7 +190,9 @@ class Notice extends Equatable {
         noticeThreadTitle == null ||
         redirectUrl == null) {
       debug(
-          'failed to parse $noticeType notice: $username, $userSpaceUrl, $noticeTime, $noticeThreadUrl, $noticeThreadTitle, $redirectUrl');
+        'failed to parse $noticeType notice: $username, $userSpaceUrl, '
+        '$noticeTime, $noticeThreadUrl, $noticeThreadTitle, $redirectUrl',
+      );
       return null;
     }
 

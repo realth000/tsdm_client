@@ -19,15 +19,19 @@ import 'package:universal_html/html.dart' as uh;
 part 'upgrade_state.dart';
 
 extension _FilterExt on Map<String, String> {
-  String? filter(String condition) {
-    for (final entry in entries) {
-      if (entry.key.endsWith(condition)) {
-        return entry.value;
-      }
-    }
-    return null;
-  }
+  // /// Filter on [Map] and return the first value with key end
+  // /// with [condition].
+  // String? filter(String condition) {
+  //   for (final entry in entries) {
+  //     if (entry.key.endsWith(condition)) {
+  //       return entry.value;
+  //     }
+  //   }
+  //   return null;
+  // }
 
+  /// Filter on [Map] and return the first pair end
+  /// with [condition].
   (String, String)? filterPairs(String condition) {
     for (final entry in entries) {
       if (entry.key.endsWith(condition)) {
@@ -38,15 +42,19 @@ extension _FilterExt on Map<String, String> {
   }
 }
 
+/// Cubit of upgrading the app.
 class UpgradeCubit extends Cubit<UpgradeState> {
+  /// Constructor.
   UpgradeCubit({required UpgradeRepository upgradeRepository})
       : _upgradeRepository = upgradeRepository,
         super(const UpgradeState()) {
     _subscription = _upgradeRepository.downloadStatus.listen((status) {
-      emit(state.copyWith(
-        status: status.finished ? UpgradeStatus.success : null,
-        downloadStatus: status,
-      ));
+      emit(
+        state.copyWith(
+          status: status.finished ? UpgradeStatus.success : null,
+          downloadStatus: status,
+        ),
+      );
     });
   }
 
@@ -64,16 +72,19 @@ class UpgradeCubit extends Cubit<UpgradeState> {
         emit(state.copyWith(status: UpgradeStatus.failed));
         return;
       }
-      emit(state.copyWith(
-        status: UpgradeStatus.ready,
-        upgradeModel: model,
-      ));
+      emit(
+        state.copyWith(
+          status: UpgradeStatus.ready,
+          upgradeModel: model,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch latest release info: $e');
       emit(state.copyWith(status: UpgradeStatus.failed));
     }
   }
 
+  /// Download the latest version assets.
   Future<void> downloadLatestVersion() async {
     if (state.upgradeModel == null) {
       return;
@@ -123,21 +134,24 @@ class UpgradeCubit extends Cubit<UpgradeState> {
       return;
     }
     final sysDownloadPath = path.join(
-        isAndroid
-            ? '/storage/emulated/0/download'
-            : (await getDownloadsDirectory())!.path,
-        'tsdm_client');
+      isAndroid
+          ? '/storage/emulated/0/download'
+          : (await getDownloadsDirectory())!.path,
+      'tsdm_client',
+    );
     downloadFileName = downloadPair.$1;
     downloadUrl = downloadPair.$2;
     final savePath = path.join(sysDownloadPath, downloadFileName);
 
     final saveDir = sysDownloadPath.replaceFirst('/storage/emulated/0/', '');
     final fileName = downloadFileName;
-    emit(state.copyWith(
-      status: UpgradeStatus.downloading,
-      downloadDir: saveDir,
-      fileName: fileName,
-    ));
+    emit(
+      state.copyWith(
+        status: UpgradeStatus.downloading,
+        downloadDir: saveDir,
+        fileName: fileName,
+      ),
+    );
 
     debug('upgrade: download latest version from $downloadUrl');
     debug('upgrade: save download file to $savePath');

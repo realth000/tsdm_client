@@ -51,7 +51,7 @@ final class _LockedWithPurchase extends _LockedInfo {
       {required this.price,
       required this.purchasedCount,
       required this.tid,
-      required this.pid})
+      required this.pid,})
       : super._();
 
   /// Thread id.

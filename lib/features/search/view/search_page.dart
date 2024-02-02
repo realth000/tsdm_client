@@ -10,9 +10,10 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
-/// Page of search, including a form to fill search parameters and search results.
-
+/// Page of search, including a form to fill search parameters and search
+/// results.
 class SearchPage extends StatefulWidget {
+  /// Constructor.
   const SearchPage({
     this.keyword,
     this.authorUid,
@@ -21,9 +22,16 @@ class SearchPage extends StatefulWidget {
     super.key,
   });
 
+  /// Keyword to search.
   final String? keyword;
+
+  /// Author's uid.
   final String? authorUid;
+
+  /// Forum id to search.
   final String? fid;
+
+  /// Page number of search result.
   final String? page;
 
   @override
@@ -78,14 +86,18 @@ class _SearchPageState extends State<SearchPage> {
     required int page,
   }) async {
     debug(
-        'search with args: keyword=$keyword, authorUid=$authorUid, fid=$fid, page=$page');
+      'search with args: keyword=$keyword, authorUid=$authorUid, '
+      'fid=$fid, page=$page',
+    );
 
-    context.read<SearchBloc>().add(SearchRequested(
-          keyword: keyword,
-          uid: authorUid,
-          fid: fid,
-          pageNumer: page,
-        ));
+    context.read<SearchBloc>().add(
+          SearchRequested(
+            keyword: keyword,
+            uid: authorUid,
+            fid: fid,
+            pageNumer: page,
+          ),
+        );
 
     setState(() {
       // Only return to top when attached (not the first search).
@@ -99,13 +111,15 @@ class _SearchPageState extends State<SearchPage> {
     });
   }
 
-  /// Search with given keyword, authorUid and fid, return the [page] index in result pages.
+  /// Search with given keyword, authorUid and fid, return the [page] index
+  /// in result pages.
   /// Always validate search parameters.
   Future<void> _search(BuildContext context, [int page = 0]) async {
     if (formKey.currentState == null) {
       // Collapsed.
       // If lastKeyword is not empty, indicates there is a valid last search.
-      // User want to jump to another page so use the last used parameters and parameter page.
+      // User want to jump to another page so use the last used parameters
+      // and parameter page.
       if (lastKeyword.isNotEmpty) {
         await _doSearch(
           context,
@@ -135,8 +149,13 @@ class _SearchPageState extends State<SearchPage> {
       _ => fidController.text,
     };
 
-    await _doSearch(context,
-        keyword: keyword, authorUid: authorUid, fid: fid, page: page);
+    await _doSearch(
+      context,
+      keyword: keyword,
+      authorUid: authorUid,
+      fid: fid,
+      page: page,
+    );
     lastKeyword = keyword;
     lastAuthorUid = authorUid;
     lastFid = fid;
@@ -154,9 +173,12 @@ class _SearchPageState extends State<SearchPage> {
 
   /// show a dialog and jump to the specified page.
   ///
-  /// `state.SearchResult` is guaranteed to not be null before calling this function.
+  /// `state.SearchResult` is guaranteed to not be null before calling
+  /// this function.
   Future<void> _gotoSpecifiedPage(
-      BuildContext context, SearchState state) async {
+    BuildContext context,
+    SearchState state,
+  ) async {
     final page = await showDialog<int>(
       context: context,
       builder: (context) => JumpPageDialog(
@@ -176,7 +198,9 @@ class _SearchPageState extends State<SearchPage> {
 
   /// Search result is guaranteed to not be null before calling this function.
   Future<void> _searchPreviousPage(
-      BuildContext context, SearchState state) async {
+    BuildContext context,
+    SearchState state,
+  ) async {
     if (!_hasPreviousPage(state)) {
       return;
     }
@@ -206,7 +230,7 @@ class _SearchPageState extends State<SearchPage> {
               child: Text(context.t.searchPage.form.search),
             ),
           ),
-        )
+        ),
       ],
     );
   }
@@ -248,7 +272,8 @@ class _SearchPageState extends State<SearchPage> {
               });
             },
             validator: (v) {
-              // Allow empty value because the default parameter in searching is zero.
+              // Allow empty value because the default parameter in searching
+              // is zero.
               if (v!.isEmpty) {
                 setState(() {
                   authorUidController.text = '0';
@@ -277,7 +302,8 @@ class _SearchPageState extends State<SearchPage> {
               });
             },
             validator: (v) {
-              // Allow empty value because the default parameter in searching is zero.
+              // Allow empty value because the default parameter in searching
+              // is zero.
               if (v!.isEmpty) {
                 setState(() {
                   fidController.text = '0';
@@ -302,7 +328,8 @@ class _SearchPageState extends State<SearchPage> {
     final searching = state.status.isSearching();
     final r = context.t.searchPage.result;
     final searchResultCount =
-        '${r.totalThreadCount(count: '${state.searchResult?.count ?? "-"}')} ${r.pageInfo(total: state.searchResult?.totalPages ?? "-")}';
+        '${r.totalThreadCount(count: '${state.searchResult?.count ?? "-"}')} '
+        '${r.pageInfo(total: state.searchResult?.totalPages ?? "-")}';
     return Row(
       children: [
         Expanded(
@@ -323,7 +350,6 @@ class _SearchPageState extends State<SearchPage> {
               : null,
         ),
         TextButton(
-          child: Text('${state.searchResult?.currentPage ?? "-"}'),
           onPressed: !searching &&
                   (_hasPreviousPage(state) || _hasNextPage(state)) &&
                   state.searchResult != null
@@ -331,6 +357,7 @@ class _SearchPageState extends State<SearchPage> {
                   await _gotoSpecifiedPage(context, state);
                 }
               : null,
+          child: Text('${state.searchResult?.currentPage ?? "-"}'),
         ),
         IconButton(
           icon: const Icon(Icons.arrow_right_outlined),
@@ -389,8 +416,9 @@ class _SearchPageState extends State<SearchPage> {
       providers: [
         RepositoryProvider(create: (_) => SearchRepository()),
         BlocProvider(
-            create: (context) =>
-                SearchBloc(searchRepository: RepositoryProvider.of(context))),
+          create: (context) =>
+              SearchBloc(searchRepository: RepositoryProvider.of(context)),
+        ),
       ],
       child: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
@@ -406,7 +434,7 @@ class _SearchPageState extends State<SearchPage> {
                       expandForm = !expandForm;
                     });
                   },
-                )
+                ),
               ],
             ),
             body: _buildBody(context, state),
