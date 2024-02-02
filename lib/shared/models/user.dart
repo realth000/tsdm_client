@@ -27,14 +27,16 @@ class User extends Equatable {
   /// User avatar, may be null.
   final String? avatarUrl;
 
-  // bool isValid() {
-  //   if (name.isEmpty || url.isEmpty) {
-  //     return false;
-  //   }
-  //   return true;
-  // }
+  /// Check is valid user or not.
+  bool isValid() {
+    if (name.isEmpty || url.isEmpty) {
+      return false;
+    }
+    return true;
+  }
 
-  // bool isNotValid() => !isValid();
+  /// Check is invalid user or not.
+  bool isNotValid() => !isValid();
 
   @override
   String toString() {
