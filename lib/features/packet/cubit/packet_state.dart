@@ -13,6 +13,9 @@ enum PacketStatus {
 
   /// Load failed.
   failed,
+
+  /// All packets were taken away.
+  takenAway,
 }
 
 /// 红包

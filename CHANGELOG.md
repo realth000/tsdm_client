@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- 新增提示帖子内的红包已经领完了。
 - 缓存首页轮播图。
 
 ### Fixed

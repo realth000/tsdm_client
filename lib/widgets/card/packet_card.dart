@@ -40,6 +40,10 @@ class PacketCard extends StatelessWidget {
           } else if (state.status == PacketStatus.success) {
             ScaffoldMessenger.of(context)
                 .showSnackBar(SnackBar(content: Text(state.reason!)));
+          } else if (state.status == PacketStatus.takenAway) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.t.packetCard.allTakenAway)),
+            );
           }
         },
         child: BlocBuilder<PacketCubit, PacketState>(
@@ -49,7 +53,8 @@ class PacketCard extends StatelessWidget {
                 const Center(child: sizedCircularProgressIndicator),
               PacketStatus.initial ||
               PacketStatus.success ||
-              PacketStatus.failed =>
+              PacketStatus.failed ||
+              PacketStatus.takenAway =>
                 const Icon(FontAwesomeIcons.solidEnvelopeOpen),
             };
 
@@ -57,12 +62,16 @@ class PacketCard extends StatelessWidget {
               PacketStatus.loading => const Text(''),
               PacketStatus.initial ||
               PacketStatus.success ||
-              PacketStatus.failed =>
+              PacketStatus.failed ||
+              PacketStatus.takenAway =>
                 Text(context.t.packetCard.open),
             };
 
             final callback = switch (state.status) {
-              PacketStatus.loading || PacketStatus.success => null,
+              PacketStatus.loading ||
+              PacketStatus.success ||
+              PacketStatus.takenAway =>
+                null,
               PacketStatus.initial || PacketStatus.failed => () async =>
                   context.read<PacketCubit>().receivePacket(packetUrl),
             };

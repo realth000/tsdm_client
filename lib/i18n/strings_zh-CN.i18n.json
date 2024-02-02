@@ -330,6 +330,7 @@
   "packetCard": {
     "title": "你找到了一个红包！",
     "open": "打开",
-    "failedToOpen": "打开失败"
+    "failedToOpen": "打开失败",
+    "allTakenAway": "红包都领完了"
   }
 }

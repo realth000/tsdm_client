@@ -330,6 +330,7 @@
   "packetCard": {
     "title": "You found a packet!",
     "open": "Open It",
-    "failedToOpen": "Failed to open"
+    "failedToOpen": "Failed to open",
+    "allTakenAway": "All packets were taken away"
   }
 }
