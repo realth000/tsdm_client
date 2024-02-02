@@ -6,6 +6,7 @@ part '../../../../../generated/shared/providers/storage_provider/models/database
 /// Image cache schema.
 @Collection()
 class DatabaseImageCache {
+  /// Constructor.
   DatabaseImageCache({
     required this.id,
     required this.imageUrl,
@@ -14,6 +15,8 @@ class DatabaseImageCache {
     required this.lastUsedTime,
   });
 
+  /// Construct a cached image model for database from
+  /// given [id] and [imageUrl].
   DatabaseImageCache.fromData({
     required this.id,
     required this.imageUrl,
@@ -24,15 +27,20 @@ class DatabaseImageCache {
         lastCachedTime = lastCachedTime ?? DateTime.now(),
         lastUsedTime = lastUsedTime ?? DateTime.now();
 
+  /// Database item id.
   @Id()
   int id;
 
+  /// Url to get this image.
   @Index(unique: true)
   String imageUrl;
 
+  /// File name when save as file cache.
   String fileName;
 
+  /// Last updated and cached time.
   DateTime lastCachedTime;
 
+  /// Last visited and used time.
   DateTime lastUsedTime;
 }

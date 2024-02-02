@@ -15,14 +15,17 @@ import 'package:tsdm_client/utils/debug.dart';
 ///
 /// Use the [getIt] to access database.
 class CookieData implements Storage {
+  /// Construct with no user name.
   CookieData() : _username = null;
 
+  /// Construct with [username] and [cookie].
   CookieData.withUsername({
     required String username,
     required Map<String, String> cookie,
   })  : _username = username,
         _cookieMap = cookie;
 
+  /// Construct with data.
   CookieData.withData({
     required String username,
     required Map<String, String> cookie,
@@ -36,7 +39,8 @@ class CookieData implements Storage {
 
   /// Check if user info completed or not.
   ///
-  /// We should not do anything with cookie storage when user info is not complete.
+  /// We should not do anything with cookie storage when user info is not
+  /// complete.
   bool _isUserInfoComplete() {
     /// Note that the server side does not allow same username so it's safe to
     /// do this.
@@ -73,13 +77,15 @@ class CookieData implements Storage {
 
   /// Delete current user [_username]'s cookie from database.
   ///
-  /// Return false if delete failed (maybe user not found in database) or missing
+  /// Return false if delete failed (maybe user not found in database) or
+  /// missing
   /// user info.
   /// Return true is success.
   Future<bool> _deleteUserCookie() async {
     if (!_isUserInfoComplete()) {
       debug(
-        'refuse to delete single user cookie from database: user info incomplete',
+        'refuse to delete single user cookie from database: '
+        'user info incomplete',
       );
       return false;
     }

@@ -7,6 +7,7 @@ import 'package:universal_html/html.dart' as uh;
 
 /// Single rate record for a single user.
 class SingleRate extends Equatable {
+  /// Constructor.
   const SingleRate({
     required this.user,
     required this.attrValueList,
@@ -27,6 +28,7 @@ class SingleRate extends Equatable {
 
 /// Rate record for a single user.
 class Rate extends Equatable {
+  /// Constructor.
   const Rate({
     required this.userCount,
     required this.detailUrl,

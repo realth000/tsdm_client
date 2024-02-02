@@ -7,10 +7,11 @@ import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.d
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/sevrer_time_provider.dart';
+import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/parsing.dart';
 
+///
 class CheckInProviderImpl implements CheckinProvider {
   static const _checkInPageUrl = '$baseUrl/plugin.php?id=dsu_paulsign:sign';
   static const _checkInRequestUrl =
@@ -26,7 +27,8 @@ class CheckInProviderImpl implements CheckinProvider {
     final resp = await netClient.get(_checkInPageUrl);
     if (resp.statusCode != HttpStatus.ok) {
       debug(
-        'failed to check in: web request failed with status code ${resp.statusCode}',
+        'failed to check in: web request failed with status code '
+        '${resp.statusCode}',
       );
       return CheckinWebRequestFailed(resp.statusCode!);
     }

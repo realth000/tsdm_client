@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 
+/// [ListTile] with certain style used as sections.
 class SectionListTile extends ListTile {
+  /// Constructor.
   const SectionListTile({
     super.key,
     super.leading,

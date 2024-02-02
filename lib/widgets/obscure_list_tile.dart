@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 /// placeholder text.
 /// When set visible to true, show the given [subtitle] widget.
 class ObscureListTile extends StatefulWidget {
+  /// Constructor.
   const ObscureListTile({
     this.leading,
     this.title,
@@ -16,9 +17,16 @@ class ObscureListTile extends StatefulWidget {
     super.key,
   });
 
+  /// Leading widget.
   final Widget? leading;
+
+  /// Title widget.
   final Widget? title;
+
+  /// Subtitle widget.
   final Widget? subtitle;
+
+  /// Widget that visibility is under control.
   final Widget? obscureWidget;
 
   /// Whether content is visible when first build this widget.

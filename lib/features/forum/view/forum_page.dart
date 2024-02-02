@@ -288,7 +288,8 @@ class _ForumPageState extends State<ForumPage>
         listener: (context, state) {
           if (state.status == ForumStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.general.failedToLoad)),);
+              SnackBar(content: Text(context.t.general.failedToLoad)),
+            );
           }
         },
         child: BlocBuilder<ForumBloc, ForumState>(
@@ -322,32 +323,47 @@ class _ForumPageState extends State<ForumPage>
                         controller: tabController,
                         tabs: [
                           Tab(
-                              child: Text(
-                                  context.t.forumPage.stickThreadTab.title,),),
+                            child: Text(
+                              context.t.forumPage.stickThreadTab.title,
+                            ),
+                          ),
                           Tab(child: Text(context.t.forumPage.threadTab.title)),
                           Tab(
-                              child:
-                                  Text(context.t.forumPage.subredditTab.title),),
+                            child: Text(
+                              context.t.forumPage.subredditTab.title,
+                            ),
+                          ),
                         ],
                         onTap: (index) {
                           // Here we want to scroll the current tab to the top.
-                          // Only scroll to top when user taps on the current tab, which means index is not changing.
+                          // Only scroll to top when user taps on the current
+                          // tab, which means index is not changing.
                           if (tabController?.indexIsChanging ?? true) {
-                            // Do nothing because user tapped another index and want to switch to it.
+                            // Do nothing because user tapped another index
+                            // and want to switch to it.
                             return;
                           }
                           const duration = Duration(milliseconds: 300);
                           const curve = Curves.ease;
                           switch (tabController!.index) {
                             case _pinnedTabIndex:
-                              _pinnedScrollController.animateTo(0,
-                                  duration: duration, curve: curve,);
+                              _pinnedScrollController.animateTo(
+                                0,
+                                duration: duration,
+                                curve: curve,
+                              );
                             case _threadTabIndex:
-                              _threadScrollController.animateTo(0,
-                                  duration: duration, curve: curve,);
+                              _threadScrollController.animateTo(
+                                0,
+                                duration: duration,
+                                curve: curve,
+                              );
                             case _subredditTabIndex:
-                              _subredditScrollController.animateTo(0,
-                                  duration: duration, curve: curve,);
+                              _subredditScrollController.animateTo(
+                                0,
+                                duration: duration,
+                                curve: curve,
+                              );
                           }
                         },
                       )

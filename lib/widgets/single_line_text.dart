@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
+/// Text but limited to one line.
 class SingleLineText extends Text {
+  /// Constructor.
   const SingleLineText(
     super.data, {
     super.key,

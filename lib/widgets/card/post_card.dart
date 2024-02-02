@@ -32,6 +32,8 @@ class PostCard extends StatefulWidget {
   /// [Post] model to show.
   final Post post;
 
+  /// A callback function that will be called every time when user try to
+  /// reply to the post.
   final FutureOr<void> Function(User user, int? postFloor, String? replyAction)?
       replyCallback;
 
@@ -95,8 +97,11 @@ class _PostCardState extends State<PostCard>
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
-                await widget.replyCallback?.call(widget.post.author,
-                    widget.post.postFloor, widget.post.replyAction,);
+                await widget.replyCallback?.call(
+                  widget.post.author,
+                  widget.post.postFloor,
+                  widget.post.replyAction,
+                );
               },
               child: Row(
                 children: [
@@ -104,7 +109,9 @@ class _PostCardState extends State<PostCard>
                     child: Padding(
                       padding: edgeInsetsL15R15B10,
                       child: munchElement(
-                          context, parseHtmlDocument(widget.post.data).body!,),
+                        context,
+                        parseHtmlDocument(widget.post.data).body!,
+                      ),
                     ),
                   ),
                 ],
@@ -151,8 +158,11 @@ class _PostCardState extends State<PostCard>
                   onSelected: (value) async {
                     switch (value) {
                       case _PostCardActions.reply:
-                        await widget.replyCallback?.call(widget.post.author,
-                            widget.post.postFloor, widget.post.replyAction,);
+                        await widget.replyCallback?.call(
+                          widget.post.author,
+                          widget.post.postFloor,
+                          widget.post.replyAction,
+                        );
                       case _PostCardActions.rate:
                         if (widget.post.rateAction != null) {
                           await _rateCallback.call();

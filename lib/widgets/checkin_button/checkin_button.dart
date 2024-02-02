@@ -10,11 +10,15 @@ import 'package:tsdm_client/shared/repositories/settings_repository/settings_rep
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/checkin_button/bloc/checkin_button_bloc.dart';
 
+/// Widget provides ability to checkin.
 class CheckInButton extends StatelessWidget {
+  /// Constructor.
   const CheckInButton({super.key});
 
   Future<void> _showCheckinFailedDialog(
-      BuildContext context, CheckinResult result,) async {
+    BuildContext context,
+    CheckinResult result,
+  ) async {
     if (!context.mounted) {
       return;
     }

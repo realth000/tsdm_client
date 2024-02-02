@@ -4,7 +4,7 @@ import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider_i
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/sevrer_time_provider.dart';
+import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/database_settings_provider.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';

@@ -9,7 +9,7 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
 extension _ParseExtension on uh.Element {
-  static final _rateActionRe = RegExp(r"'rate', '(?<url>forum.php[^']*)',");
+  static final _rateActionRe = RegExp("'rate', '(?<url>forum.php[^']*)',");
 
   String? _parseRateAction() {
     return _rateActionRe
@@ -74,7 +74,7 @@ class Post extends Equatable {
   /// Optional.
   final String? packetUrl;
 
-  // [element] has id "post_$postID".
+  /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element) {
     final trRootNode = element.querySelector('table > tbody > tr');
     final postID = element.id.replaceFirst('post_', '');
@@ -153,7 +153,8 @@ class Post extends Equatable {
     // Already purchased locked block has `<span>已购买人数: xx</span>`, here
     // only need not purchased ones.
     //
-    // Should not build locked with points which must be built in "postmessage"munching.
+    // Should not build locked with points which must be built in "postmessage"
+    // munching.
     final locked = postDataNode
         ?.querySelectorAll('div.locked')
         .where((e) => e.querySelector('span') == null)
@@ -173,7 +174,9 @@ class Post extends Equatable {
 
     final replyAction = element
         .querySelector(
-            'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > div > em > a',)
+          'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > '
+          'div > em > a',
+        )
         ?.firstHref();
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');

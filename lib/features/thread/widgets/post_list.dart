@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -237,7 +235,7 @@ class _PostListState extends State<PostList> {
   }
 }
 
-/// Delegate to build a persistant sliver app bar.
+/// Delegate to build a persistent sliver app bar.
 class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   /// Constructor.
   SliverAppBarPersistentDelegate({

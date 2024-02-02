@@ -4,13 +4,20 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 /// Network image with loading indicator.
 class NetworkIndicatorImage extends StatelessWidget {
   /// Constructor.
-  const NetworkIndicatorImage(this.src,
-      {this.maxWidth, this.maxHeight, super.key,});
+  const NetworkIndicatorImage(
+    this.src, {
+    this.maxWidth,
+    this.maxHeight,
+    super.key,
+  });
 
   /// Image network source url.
   final String src;
 
+  /// Max image width.
   final double? maxWidth;
+
+  /// Max image height.
   final double? maxHeight;
 
   @override

@@ -78,7 +78,8 @@ class ScreenPaths {
   /// Page to show "My thread" on web side.
   ///
   /// https://tsdm39.com/home.php?mod=space&do=thread&view=me
-  /// Even when redirect to this route, query parameters contain uid, only the page of current user is visible.
+  /// Even when redirect to this route, query parameters contain uid, only the
+  /// page of current user is visible.
   /// https://tsdm39.com/home.php?mod=space&uid=xxx&do=thread&view=me
   static const String myThread = '/myThread';
 

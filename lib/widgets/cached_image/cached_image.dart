@@ -9,11 +9,23 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/fallback_picture.dart';
 
+/// Image that supports caching.
+///
+/// * First try to read from cache.
+/// * If no cache available, fetch image from [imageUrl].
 class CachedImage extends StatelessWidget {
+  /// Constructor.
   const CachedImage(this.imageUrl, {this.maxWidth, this.maxHeight, super.key});
 
+  /// Image to fetch url.
+  ///
+  /// Also the key to find cached image data.
   final String imageUrl;
+
+  /// Max image width.
   final double? maxWidth;
+
+  /// Max image height.
   final double? maxHeight;
 
   @override

@@ -5,8 +5,10 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 /// Card to display code block, from html node type <div class="blockcode">.
 class CodeCard extends StatelessWidget {
+  /// Constructor.
   const CodeCard({required this.code, super.key});
 
+  /// Code text to show.
   final String code;
 
   Future<void> _copyToClipboard(BuildContext context) async {
@@ -16,11 +18,13 @@ class CodeCard extends StatelessWidget {
     if (!context.mounted) {
       return;
     }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(
-        context.t.aboutPage.copiedToClipboard,
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          context.t.aboutPage.copiedToClipboard,
+        ),
       ),
-    ),);
+    );
   }
 
   @override

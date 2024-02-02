@@ -11,9 +11,12 @@ import 'package:tsdm_client/shared/models/locked.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 
 // TODO: Separate purchase widget.
+/// Widget shows a locked area in `post`.
 class LockedCard extends StatefulWidget {
+  /// Constructor.
   const LockedCard(this.locked, {super.key});
 
+  /// Locked area model.
   final Locked locked;
 
   @override
@@ -164,17 +167,19 @@ class _LockedCardState extends State<LockedCard> {
         ),
       ]);
     } else if (widget.locked.lockedWithAuthor) {
-      widgets.add(Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const Icon(Icons.lock_outline),
-          sizedBoxW5H5,
-          Text(
-            context.t.lockedCard.author.title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
-        ],
-      ),);
+      widgets.add(
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const Icon(Icons.lock_outline),
+            sizedBoxW5H5,
+            Text(
+              context.t.lockedCard.author.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+          ],
+        ),
+      );
     }
 
     return Card(

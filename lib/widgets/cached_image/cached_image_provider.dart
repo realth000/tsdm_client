@@ -10,39 +10,45 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
-// https://github.com/Baseflow/flutter_cached_network_image/blob/develop/cached_network_image/lib/src/image_provider/cached_network_image_provider.dart
-// ${flutter_sdk}/lib/src/painting/_network_image_io.dart
+/// A provider that provides cached image.
+///
+/// Refer:
+/// * https://github.com/Baseflow/flutter_cached_network_image/blob/develop/cached_network_image/lib/src/image_provider/cached_network_image_provider.dart
+/// * ${flutter_sdk}/lib/src/painting/_network_image_io.dart
 @immutable
 class CachedImageProvider extends ImageProvider<CachedImageProvider> {
+  /// Constructor.
   const CachedImageProvider(
     this.imageUrl,
     this.context, {
     this.scale = 1.0,
     this.maxWidth,
     this.maxHeight,
-    this.headers = const <String, String>{
-      'Accept': 'image/avif,image/webp,*/*',
-    },
     this.fallbackImageUrl,
   });
 
+  /// Url of image.
   final String imageUrl;
 
   /// Use check widget mounted.
   ///
   /// Workaround to fix "ref used after widget dispose" exception.
   final BuildContext context;
+
+  /// Max image width.
   final double? maxWidth;
+
+  /// Max image height.
   final double? maxHeight;
 
+  /// Image scale factor.
   final double scale;
 
   /// Use this image if [imageUrl] is unavailable.
   final String? fallbackImageUrl;
 
+  /// Get the image url.
   String get url => imageUrl;
-
-  final Map<String, String>? headers;
 
   @override
   Future<CachedImageProvider> obtainKey(ImageConfiguration configuration) {
@@ -51,7 +57,9 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
 
   @override
   ImageStreamCompleter loadImage(
-      CachedImageProvider key, ImageDecoderCallback decode,) {
+    CachedImageProvider key,
+    ImageDecoderCallback decode,
+  ) {
     // Ownership of this controller is handed off to [_loadAsync]; it is that
     // method's responsibility to close the controller's stream when the image
     // has been loaded or an error is thrown.
@@ -75,7 +83,7 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
     required ImageDecoderCallback decode,
   }) async {
     try {
-      assert(key == this);
+      assert(key == this, 'check instance in load async');
 
       final bytes = await getIt
           .get<ImageCacheProvider>()
@@ -146,6 +154,6 @@ class CachedImageProvider extends ImageProvider<CachedImageProvider> {
   int get hashCode => Object.hash(url, scale);
 
   @override
-  String toString() =>
-      '${objectRuntimeType(this, 'CachedImageProvider')}("$url", scale: $scale)';
+  String toString() => '${objectRuntimeType(this, 'CachedImageProvider')}'
+      '("$url", scale: $scale)';
 }

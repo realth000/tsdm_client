@@ -13,6 +13,7 @@ part '../../../../../generated/shared/providers/storage_provider/models/database
 /// Till now one cookie is enough for one user.
 @Collection()
 class DatabaseCookie {
+  /// Constructor.
   DatabaseCookie({
     required this.id,
     required this.username,
@@ -21,6 +22,7 @@ class DatabaseCookie {
     this.persistSession,
   });
 
+  /// Database item id.
   @Id()
   int id;
 

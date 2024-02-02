@@ -44,6 +44,10 @@ class ImageCacheProvider {
     return cacheFile.readAsBytes();
   }
 
+  /// Get the cached file with [fileName] synchronously.
+  ///
+  /// **WARNING**: Make sure the [fileName] exists and safe to read before
+  /// calling this function.
   File getCacheFile(String fileName) {
     return File('${_imageCacheDirectory.path}/$fileName');
   }
@@ -71,6 +75,7 @@ class ImageCacheProvider {
     await getIt.get<StorageProvider>().updateImageCacheUsedTime(imageUrl);
   }
 
+  /// Calculate cache size in bytes.
   Future<int> calculateCache() async {
     final fileList = _imageCacheDirectory.listSync(recursive: true);
     return fileList.fold<int>(0, (acc, x) {
@@ -81,8 +86,10 @@ class ImageCacheProvider {
   /// Clear cache in [_imageCacheDirectory].
   Future<void> clearCache() async {
     await getIt.get<StorageProvider>().clearImageCache();
-    // FIXME: It is not clear why use this ref first can avoid use after dispose exception.
-    // Clear cache in database first, otherwise will get exception when cache size is large enough (50mb):
+    // FIXME: It is not clear why use this ref first can avoid use after
+    //  dispose exception.
+    // Clear cache in database first, otherwise will get exception when cache
+    // size is large enough (50mb):
     //  "Bad state: Tried to use a notifier in an uninitialized state."
     // Currently all cached images are in _imageCacheDirectory, not sub dirs.
     for (final f in _imageCacheDirectory.listSync()) {

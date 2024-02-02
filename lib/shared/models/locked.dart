@@ -47,12 +47,12 @@ final class _LockedWithPoints extends _LockedInfo {
 
 /// This section needs purchase to be visible.
 final class _LockedWithPurchase extends _LockedInfo {
-  const _LockedWithPurchase(
-      {required this.price,
-      required this.purchasedCount,
-      required this.tid,
-      required this.pid,})
-      : super._();
+  const _LockedWithPurchase({
+    required this.price,
+    required this.purchasedCount,
+    required this.tid,
+    required this.pid,
+  }) : super._();
 
   /// Thread id.
   final String? tid;
@@ -80,14 +80,22 @@ final class _LockedWithAuthor extends _LockedInfo {
   const _LockedWithAuthor() : super._();
 }
 
+/// Describe a locked area in `Post`.
+///
+/// Different types may be locked with different reasons:
+/// * [_LockedWithPoints] : Requires the viewer to have at least xxx points.
+/// * [_LockedWithPurchase] : Requires the viewer to purchase.
+/// * [_LockedWithReply] : Requires the view to reply.
+/// * [_LockedWithAuthor] : Only visible to the author and forum moderator.
 class Locked extends Equatable {
   /// Build a [Locked] from html node [element] where [element] is:
   /// <div class="locked">
   ///
   /// Currently only support locked by purchasing.
   ///
-  /// For better layout, when a section is locked with points and inside "postmessage", we should only build it inside
-  /// "postmessage" too, [allowWithPoints] is the flag caller shall specify.
+  /// For better layout, when a section is locked with points and inside
+  /// "postmessage", we should only build it inside "postmessage" too,
+  /// [allowWithPoints] is the flag caller shall specify.
   Locked.fromLockDivNode(
     uh.Element element, {
     bool allowWithPoints = true,
@@ -107,14 +115,19 @@ class Locked extends Equatable {
 
   final _LockedInfo? _info;
 
+  /// Is locked with view's points.
   bool get lockedWithPoints => _info != null && _info is _LockedWithPoints;
 
+  /// Is locked with purchase.
   bool get lockedWithPurchase => _info != null && _info is _LockedWithPurchase;
 
+  /// Is locked with reply.
   bool get lockedWithReply => _info != null && _info is _LockedWithReply;
 
+  /// Is it only visible to the author and forum moderator.
   bool get lockedWithAuthor => _info != null && _info is _LockedWithAuthor;
 
+  /// Get the tid of current locked model.
   String? get tid {
     if (_info == null) {
       return null;
@@ -125,6 +138,7 @@ class Locked extends Equatable {
     return null;
   }
 
+  /// Get the pid of current locked model.
   String? get pid {
     if (_info == null) {
       return null;
@@ -135,6 +149,9 @@ class Locked extends Equatable {
     return null;
   }
 
+  /// Get the price of current locked model.
+  ///
+  /// Only not null when locked with purchase.
   int? get price {
     if (_info == null) {
       return null;
@@ -145,6 +162,9 @@ class Locked extends Equatable {
     return null;
   }
 
+  /// Get the purchase times count.
+  ///
+  /// Only not null when locked with purchase.
   int? get purchasedCount {
     if (_info == null) {
       return null;
@@ -155,6 +175,9 @@ class Locked extends Equatable {
     return null;
   }
 
+  /// Get the required points to view this area.
+  ///
+  /// Only not null when locked with points.
   int? get requiredPoints {
     if (_info == null) {
       return null;
@@ -165,6 +188,9 @@ class Locked extends Equatable {
     return null;
   }
 
+  /// Get the points that the current user has.
+  ///
+  /// Only not null when locked with points.
   int? get points {
     if (_info == null) {
       return null;
@@ -246,6 +272,7 @@ class Locked extends Equatable {
     );
   }
 
+  /// Check is valid locked area or not.
   bool isValid() {
     if (_info == null) {
       return false;
@@ -265,6 +292,7 @@ class Locked extends Equatable {
     return false;
   }
 
+  /// Check is invalid locked area or not.
   bool isNotValid() => !isValid();
 
   @override

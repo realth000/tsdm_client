@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+// ignore_for_file: public_member_api_docs
+
+/// All checkin feelings.
 enum CheckinFeeling {
   happy,
   sad,
@@ -42,6 +45,7 @@ enum CheckinFeeling {
     };
   }
 
+  /// Translate [CheckinFeeling] into human readable string.
   String translate(BuildContext context) {
     return switch (this) {
       CheckinFeeling.happy => context.t.feelingList.happy,

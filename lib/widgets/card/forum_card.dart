@@ -178,7 +178,9 @@ class _ForumCardState extends State<ForumCard> {
                             widget.forum.latestThreadUrl?.parseUrlToRoute();
                         if (target == null) {
                           debug(
-                              'invalid latest thread url: ${widget.forum.latestThreadUrl}',);
+                            'invalid latest thread url: '
+                            '${widget.forum.latestThreadUrl}',
+                          );
                           return;
                         }
                         await context.pushNamed(

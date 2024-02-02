@@ -205,8 +205,10 @@ class NormalThreadCard extends StatelessWidget {
 
 /// Card to show a thread in search result.
 class SearchedThreadCard extends StatelessWidget {
+  /// Constructor.
   const SearchedThreadCard(this.thread, {super.key});
 
+  /// Thread model.
   final SearchedThread thread;
 
   @override
@@ -222,8 +224,10 @@ class SearchedThreadCard extends StatelessWidget {
 
 /// Card to show current user's thread info in "My Thread" page.
 class MyThreadCard extends StatelessWidget {
+  /// Constructor.
   const MyThreadCard(this.thread, {super.key});
 
+  /// Thread model.
   final MyThread thread;
 
   @override
@@ -242,8 +246,10 @@ class MyThreadCard extends StatelessWidget {
 
 /// Card to show result in "Latest thread" page.
 class LatestThreadCard extends StatelessWidget {
+  /// Constructor.
   const LatestThreadCard(this.thread, {super.key});
 
+  /// Thread model.
   final LatestThread thread;
 
   @override

@@ -10,9 +10,12 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
+/// Widget to show a single [Notice].
 class NoticeCard extends StatelessWidget {
+  /// Constructor.
   const NoticeCard({required this.notice, super.key});
 
+  /// Notice model.
   final Notice notice;
 
   @override
@@ -75,13 +78,15 @@ class NoticeCard extends StatelessWidget {
       child: InkWell(
         onTap: notice.redirectUrl != null
             ? () async {
-                await context.pushNamed(ScreenPaths.reply,
-                    pathParameters: <String, String>{
-                      'target': notice.redirectUrl!,
-                    },
-                    queryParameters: {
-                      'noticeType': '${notice.noticeType.index}',
-                    },);
+                await context.pushNamed(
+                  ScreenPaths.reply,
+                  pathParameters: <String, String>{
+                    'target': notice.redirectUrl!,
+                  },
+                  queryParameters: {
+                    'noticeType': '${notice.noticeType.index}',
+                  },
+                );
               }
             : null,
         child: Column(

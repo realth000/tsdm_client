@@ -15,6 +15,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 class DatabaseSettingsProvider
     with SettingsDefaultMapMixin
     implements SettingsProvider {
+  /// Constructor.
   DatabaseSettingsProvider();
 
   StorageProvider _getStorage() {

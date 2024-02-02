@@ -15,7 +15,8 @@ extension _ParseThreadState on uh.Element {
   ///
   /// Return an empty set if current node is not <img> node.
   ///
-  /// Till now a <img> node may only have one state, but not for sure, so returns a set of state.
+  /// Till now a <img> node may only have one state, but not for sure, so
+  /// returns a set of state.
   Set<ThreadState> _parseThreadStateFromImg() {
     final ret = <ThreadState>{};
 
@@ -58,8 +59,8 @@ extension _ParseThreadState on uh.Element {
 
 /// Thread state shown on thread entry.
 ///
-/// The definition of "state" is not clear, just added some related info that can be displayed at the trailing of
-/// UI which going to display later.
+/// The definition of "state" is not clear, just added some related info that
+/// can be displayed at the trailing of UI which going to display later.
 enum ThreadState {
   /// Closed and can not reply.
   closed(Icons.lock_outline),
@@ -90,10 +91,13 @@ enum ThreadState {
 
   const ThreadState(this.icon);
 
+  /// Icon of thread.
   final IconData icon;
 }
 
+/// Model of normal thread, widely used in forum.
 class NormalThread extends Equatable {
+  /// Constructor.
   const NormalThread({
     required this.title,
     required this.url,
@@ -173,7 +177,9 @@ class NormalThread extends Equatable {
 
   /// Build a [NormalThread] model with the given [uh.Element]
   ///
-  /// <tbody id="normalthread_xxxxxxx" class="tsdm_normalthread" name="tsdm_normalthread">
+  /// <tbody id="normalthread_xxxxxxx"
+  ///   class="tsdm_normalthread"
+  ///   name="tsdm_normalthread">
   static NormalThread? fromTBody(uh.Element threadElement) {
     final stateSet = <ThreadState>{};
 
@@ -222,7 +228,9 @@ class NormalThread extends Equatable {
         threadAuthorName == null ||
         threadPublishDate == null) {
       debug(
-          'failed to build thread: invalid author or thread publish date not found',);
+        'failed to build thread: invalid author or thread publish '
+        'date not found',
+      );
       return null;
     }
 
@@ -259,7 +267,9 @@ class NormalThread extends Equatable {
         threadLastReplyAuthorUrl == null ||
         threadLastReplyTime == null) {
       debug(
-          'failed to build thread: invalid last reply user info or last reply time not found',);
+        'failed to build thread: invalid last reply user info or last '
+        'reply time not found',
+      );
       return null;
     }
 

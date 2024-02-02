@@ -3,6 +3,7 @@ import 'package:universal_html/html.dart' as uh;
 
 /// Pinned thread.
 class StickThread extends NormalThread {
+  /// Constructor.
   const StickThread({
     required super.title,
     required super.url,

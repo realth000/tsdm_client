@@ -6,17 +6,20 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/reply_parameters.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/widgets/reply_bar/execptions/exceptions.dart';
+import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:universal_html/parsing.dart';
 
+/// Repository of reply.
 class ReplyRepository {
   /// Reply to a post.
   ///
   /// # Exception
   ///
   /// * **HttpRequestFailedException** when http request failed.
-  /// * **ReplyToPostFetchParameterFailedException** when failed to fetch parameters in reply window.
-  /// * **ReplyToPostResultFailedException** when reply finished but no successful result found in response.
+  /// * **ReplyToPostFetchParameterFailedException** when failed to fetch
+  ///   parameters in reply window.
+  /// * **ReplyToPostResultFailedException** when reply finished but no
+  ///   successful result found in response.
   Future<void> replyToPost({
     required ReplyParameters replyParameters,
     required String replyAction,
@@ -64,9 +67,14 @@ class ReplyRepository {
         repPid == null ||
         repPost == null) {
       debug(
-          'failed to fetch reply to post parameters: formHash=$formHash, handleKey=$handleKey, noticeAuthor=$noticeAuthor',);
+        'failed to fetch reply to post parameters: formHash=$formHash, '
+        'handleKey=$handleKey, noticeAuthor=$noticeAuthor',
+      );
       debug(
-          'failed to fetch reply to post parameters: noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, reppid=$repPid, reppost=$repPost',);
+        'failed to fetch reply to post parameters: '
+        'noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, '
+        'reppid=$repPid, reppost=$repPost',
+      );
       throw ReplyToPostFetchParameterFailedException();
     }
 
@@ -102,7 +110,8 @@ class ReplyRepository {
   /// # Exception
   ///
   /// * **HttpRequestFailedException** when http request failed.
-  /// * **ReplyToThreadResultFailedException** when reply finished but no successful result found in response.
+  /// * **ReplyToThreadResultFailedException** when reply finished but no
+  /// successful result found in response.
   Future<void> replyToThread({
     required ReplyParameters replyParameters,
     required String replyMessage,

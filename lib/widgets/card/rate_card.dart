@@ -6,9 +6,12 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/rate.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
+/// Widget to show the rate statistics for a post.
 class RateCard extends StatelessWidget {
+  /// Constructor.
   const RateCard(this.rate, {super.key});
 
+  /// Rate model.
   final Rate rate;
 
   @override
@@ -33,43 +36,45 @@ class RateCard extends StatelessWidget {
         Text(context.t.rateCard.total(total: rate.rateStatus ?? '-'));
 
     final tableContent = rate.records
-        .map((e) => TableRow(
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      height: 50,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () async => context.dispatchAsUrl(e.user.url),
-                          child: CircleAvatar(
-                            backgroundImage: CachedImageProvider(
-                              e.user.avatarUrl ?? noAvatarUrl,
-                              context,
-                            ),
+        .map(
+          (e) => TableRow(
+            children: [
+              Row(
+                children: [
+                  SizedBox(
+                    height: 50,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () async => context.dispatchAsUrl(e.user.url),
+                        child: CircleAvatar(
+                          backgroundImage: CachedImageProvider(
+                            e.user.avatarUrl ?? noAvatarUrl,
+                            context,
                           ),
                         ),
                       ),
                     ),
-                    sizedBoxW5H5,
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () async => context.dispatchAsUrl(e.user.url),
-                        child: Row(
-                          children: [
-                            Text(
-                              e.user.name,
-                              textAlign: TextAlign.left,
-                            ),
-                          ],
-                        ),
+                  ),
+                  sizedBoxW5H5,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async => context.dispatchAsUrl(e.user.url),
+                      child: Row(
+                        children: [
+                          Text(
+                            e.user.name,
+                            textAlign: TextAlign.left,
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-                ...e.attrValueList.map(Text.new),
-              ],
-            ),)
+                  ),
+                ],
+              ),
+              ...e.attrValueList.map(Text.new),
+            ],
+          ),
+        )
         .toList();
 
     return Card(

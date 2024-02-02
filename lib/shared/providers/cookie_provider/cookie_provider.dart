@@ -4,7 +4,8 @@ import 'package:tsdm_client/shared/providers/settings_provider/settings_provider
 import 'package:tsdm_client/utils/debug.dart';
 
 // TODO: Adapt with uid and email after can login with uid and email.
-/// Provides a [CookieData] that implement `Storage` class so can be used in `NetClient`.
+/// Provides a [CookieData] that implement `Storage` class so can be used in
+/// `NetClient`.
 ///
 /// [CookieProvider] has an unique `username` representing an unique user.
 ///
@@ -30,10 +31,15 @@ import 'package:tsdm_client/utils/debug.dart';
 /// Load cookies from database and save them in memory. When required cookie to
 /// use in web requests, build a [CookieData] with current user info.
 class CookieProvider {
-
+  /// Constructor.
   factory CookieProvider() => CookieProvider._();
+
   CookieProvider._();
 
+  /// Build a [CookieData] with [username].
+  ///
+  /// * First look in storage and find the cached cookie related to [username].
+  /// * Return empty cookie if not found in cache.
   CookieData build({String? username}) {
     // Specified user override.
     if (username != null) {
@@ -58,7 +64,8 @@ class CookieProvider {
         getIt.get<SettingsProvider>().getCookie(loggedUsername!);
     if (databaseCookie == null) {
       debug(
-        'failed to init cookie: current login user username=$username not found in database',
+        'failed to init cookie: current login user '
+        'username=$username not found in database',
       );
       return CookieData();
     }

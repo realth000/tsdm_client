@@ -20,6 +20,7 @@ class StorageProvider {
 
   bool _initialized = false;
 
+  /// Init the storage provider.
   Future<StorageProvider> init() async {
     if (_initialized) {
       return this;
@@ -48,6 +49,7 @@ class StorageProvider {
   }
 
   // TODO: Dispose before app exits.
+  // ignore: unused_element
   void _dispose() {
     // Only try to close isar instance when already initialized
     if (_initialized) {
@@ -57,10 +59,12 @@ class StorageProvider {
 
   /*             cookie             */
 
+  /// Get [DatabaseCookie] with [username].
   DatabaseCookie? getCookie(String username) {
     return _isar.databaseCookies.where().usernameEqualTo(username).findFirst();
   }
 
+  /// Save cookie with [username].
   Future<void> saveCookie(
     String username,
     Map<String, String> cookie,
@@ -73,16 +77,20 @@ class StorageProvider {
     final c = currentCookie?.cookie ?? {};
 
     /// Combine two map together, do not directly use [cookie].
+    // ignore: cascade_invocations
     c.addAll(cookie);
     await _isar.writeAsync((isar) {
-      isar.databaseCookies.put(DatabaseCookie(
-        id: currentCookie?.id ?? isar.databaseCookies.autoIncrement(),
-        username: username,
-        cookie: c,
-      ),);
+      isar.databaseCookies.put(
+        DatabaseCookie(
+          id: currentCookie?.id ?? isar.databaseCookies.autoIncrement(),
+          username: username,
+          cookie: c,
+        ),
+      );
     });
   }
 
+  /// Delete cookie for [username].
   Future<bool> deleteCookieByUsername(String username) async {
     return _isar.writeAsync((isar) {
       return isar.databaseCookies
@@ -94,6 +102,7 @@ class StorageProvider {
 
   /*            image cache           */
 
+  /// Get the image cache for [imageUrl].
   DatabaseImageCache? getImageCache(String imageUrl) {
     return _isar.databaseImageCaches
         .where()
@@ -114,13 +123,15 @@ class StorageProvider {
         .findFirstAsync();
 
     await _isar.writeAsync((isar) {
-      isar.databaseImageCaches.put(DatabaseImageCache.fromData(
-        id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
-        imageUrl: imageUrl,
-        fileName: fileName ?? cache?.fileName,
-        lastCachedTime: lastCacheTime,
-        lastUsedTime: lastUsedTime,
-      ),);
+      isar.databaseImageCaches.put(
+        DatabaseImageCache.fromData(
+          id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
+          imageUrl: imageUrl,
+          fileName: fileName ?? cache?.fileName,
+          lastCachedTime: lastCacheTime,
+          lastUsedTime: lastUsedTime,
+        ),
+      );
     });
   }
 
@@ -132,15 +143,18 @@ class StorageProvider {
         .findFirstAsync();
 
     await _isar.writeAsync((isar) {
-      isar.databaseImageCaches.put(DatabaseImageCache.fromData(
-        id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
-        imageUrl: imageUrl,
-        fileName: cache?.fileName,
-        lastCachedTime: cache?.lastUsedTime,
-      ),);
+      isar.databaseImageCaches.put(
+        DatabaseImageCache.fromData(
+          id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
+          imageUrl: imageUrl,
+          fileName: cache?.fileName,
+          lastCachedTime: cache?.lastUsedTime,
+        ),
+      );
     });
   }
 
+  /// Clear all image cache in database.
   Future<void> clearImageCache() async {
     await _isar.writeAsync((isar) {
       isar.databaseImageCaches.clear();
@@ -149,6 +163,7 @@ class StorageProvider {
 
   /*             settings             */
 
+  /// Remove a settings with given [key].
   Future<bool> removeByKey(String key) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
@@ -175,11 +190,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(DatabaseSettings.fromString(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        stringValue: value,
-      ),);
+      isar.databaseSettings.put(
+        DatabaseSettings.fromString(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          stringValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -195,11 +212,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(DatabaseSettings.fromInt(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        intValue: value,
-      ),);
+      isar.databaseSettings.put(
+        DatabaseSettings.fromInt(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          intValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -215,11 +234,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(DatabaseSettings.fromBool(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        boolValue: value,
-      ),);
+      isar.databaseSettings.put(
+        DatabaseSettings.fromBool(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          boolValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -235,32 +256,38 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(DatabaseSettings.fromDouble(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        doubleValue: value,
-      ),);
+      isar.databaseSettings.put(
+        DatabaseSettings.fromDouble(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          doubleValue: value,
+        ),
+      );
     });
     return true;
   }
 
+  /// Get [DateTime] type settings value with given [key].
   DateTime? getDateTime(String key) => _isar.databaseSettings
       .where()
       .nameEqualTo(key)
       .findFirst()
       ?.dateTimeValue;
 
+  /// Save [DateTime] with given settings [key].
   Future<bool> saveDateTime(String key, DateTime value) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
       return false;
     }
     await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(DatabaseSettings.fromDateTime(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        dateTimeValue: value,
-      ),);
+      isar.databaseSettings.put(
+        DatabaseSettings.fromDateTime(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          dateTimeValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -279,11 +306,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(DatabaseSettings.fromStringList(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        stringListValue: value,
-      ),);
+      _isar.databaseSettings.put(
+        DatabaseSettings.fromStringList(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          stringListValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -299,11 +328,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(DatabaseSettings.fromIntList(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        intListValue: value,
-      ),);
+      _isar.databaseSettings.put(
+        DatabaseSettings.fromIntList(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          intListValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -322,11 +353,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(DatabaseSettings.fromDoubleList(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        doubleListValue: value,
-      ),);
+      _isar.databaseSettings.put(
+        DatabaseSettings.fromDoubleList(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          doubleListValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -345,11 +378,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(DatabaseSettings.fromBoolList(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        boolListValue: value,
-      ),);
+      _isar.databaseSettings.put(
+        DatabaseSettings.fromBoolList(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          boolListValue: value,
+        ),
+      );
     });
     return true;
   }
@@ -368,11 +403,13 @@ class StorageProvider {
       return false;
     }
     await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(DatabaseSettings.fromDateTimeList(
-        id: isar.databaseSettings.autoIncrement(),
-        name: key,
-        dateTimeListValue: value,
-      ),);
+      _isar.databaseSettings.put(
+        DatabaseSettings.fromDateTimeList(
+          id: isar.databaseSettings.autoIncrement(),
+          name: key,
+          dateTimeListValue: value,
+        ),
+      );
     });
     return true;
   }

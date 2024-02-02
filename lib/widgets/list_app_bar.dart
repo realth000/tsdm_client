@@ -6,14 +6,28 @@ import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+/// App bar actions.
 enum MenuActions {
+  /// Refresh current page.
   refresh,
+
+  /// Copy the url of current page to clipboard.
   copyUrl,
+
+  /// Open the url of current page in external  browser.
   openInBrowser,
+
+  /// Go back to top of the page.
   backToTop,
 }
 
+/// A app bar contains list and provides features including:
+///
+/// * Jump to the global search page.
+/// * Specified title.
+/// * Jump page.
 class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
+  /// Constructor.
   const ListAppBar({
     required this.onSearch,
     this.title,
@@ -23,12 +37,21 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     super.key,
   });
 
+  /// Callback that should navigate to global search page.
   final FutureOr<void> Function() onSearch;
 
+  /// Jump to another page in the list.
+  ///
+  /// Parameter is the page number.
   final FutureOr<void> Function(int)? onJumpPage;
+
+  /// Widget title.
   final String? title;
 
+  /// Callback when app bar actions selected.
   final PopupMenuItemSelected<MenuActions>? onSelected;
+
+  /// Extra bottom widget.
   final PreferredSizeWidget? bottom;
 
   Future<void> _jumpPage(
@@ -83,31 +106,39 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
           itemBuilder: (context) => [
             PopupMenuItem(
               value: MenuActions.refresh,
-              child: Row(children: [
-                const Icon(Icons.refresh_outlined),
-                Text(context.t.networkList.actionRefresh),
-              ],),
+              child: Row(
+                children: [
+                  const Icon(Icons.refresh_outlined),
+                  Text(context.t.networkList.actionRefresh),
+                ],
+              ),
             ),
             PopupMenuItem(
               value: MenuActions.copyUrl,
-              child: Row(children: [
-                const Icon(Icons.copy_outlined),
-                Text(context.t.networkList.actionCopyUrl),
-              ],),
+              child: Row(
+                children: [
+                  const Icon(Icons.copy_outlined),
+                  Text(context.t.networkList.actionCopyUrl),
+                ],
+              ),
             ),
             PopupMenuItem(
               value: MenuActions.openInBrowser,
-              child: Row(children: [
-                const Icon(Icons.launch_outlined),
-                Text(context.t.networkList.actionOpenInBrowser),
-              ],),
+              child: Row(
+                children: [
+                  const Icon(Icons.launch_outlined),
+                  Text(context.t.networkList.actionOpenInBrowser),
+                ],
+              ),
             ),
             PopupMenuItem(
               value: MenuActions.backToTop,
-              child: Row(children: [
-                const Icon(Icons.vertical_align_top_outlined),
-                Text(context.t.networkList.actionBackToTop),
-              ],),
+              child: Row(
+                children: [
+                  const Icon(Icons.vertical_align_top_outlined),
+                  Text(context.t.networkList.actionBackToTop),
+                ],
+              ),
             ),
           ],
           onSelected: onSelected,

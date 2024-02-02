@@ -1,19 +1,19 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/reply_parameters.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 
+/// Widget provides the reply feature.
 class ReplyBar extends StatefulWidget {
+  /// Constructor.
   const ReplyBar({required this.controller, super.key});
 
+  /// Controller passed from outside.
   final ReplyBarController controller;
 
   @override
@@ -51,40 +51,40 @@ class _ReplyBarState extends State<ReplyBar> {
     });
   }
 
-  /// Check reply request result in response [resp].
-  /// Return true if success.
-  Future<bool> _checkReplyResult(Response<dynamic> resp) async {
-    if (resp.statusCode != HttpStatus.ok) {
-      if (!context.mounted) {
-        return false;
-      }
-      await showMessageSingleButtonDialog(
-        context: context,
-        title: context.t.threadPage.sendReply,
-        message: context.t.threadPage.replyFailed(err: '${resp.statusCode}'),
-      );
-    }
-    if (!context.mounted) {
-      _hintText = null;
-      return true;
-    }
-    final result = (resp.data as String).contains('回复发布成功');
-    if (!result) {
-      await showMessageSingleButtonDialog(
-        context: context,
-        title: context.t.threadPage.sendReply,
-        message: context.t.threadPage.replyFailed(err: resp.data as String),
-      );
-      return false;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text(context.t.threadPage.replySuccess),
-    ),);
-    setState(() {
-      _hintText = null;
-    });
-    return true;
-  }
+  // /// Check reply request result in response [resp].
+  // /// Return true if success.
+  // Future<bool> _checkReplyResult(Response<dynamic> resp) async {
+  //   if (resp.statusCode != HttpStatus.ok) {
+  //     if (!context.mounted) {
+  //       return false;
+  //     }
+  //     await showMessageSingleButtonDialog(
+  //       context: context,
+  //       title: context.t.threadPage.sendReply,
+  //       message: context.t.threadPage.replyFailed(err: '${resp.statusCode}'),
+  //     );
+  //   }
+  //   if (!context.mounted) {
+  //     _hintText = null;
+  //     return true;
+  //   }
+  //   final result = (resp.data as String).contains('回复发布成功');
+  //   if (!result) {
+  //     await showMessageSingleButtonDialog(
+  //       context: context,
+  //       title: context.t.threadPage.sendReply,
+  //       message: context.t.threadPage.replyFailed(err: resp.data as String),
+  //     );
+  //     return false;
+  //   }
+  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+  //     content: Text(context.t.threadPage.replySuccess),
+  //   ),);
+  //   setState(() {
+  //     _hintText = null;
+  //   });
+  //   return true;
+  // }
 
   /// Post reply to thread tid/fid.
   /// This will add a post in thread, as reply to that thread.
@@ -114,11 +114,13 @@ class _ReplyBarState extends State<ReplyBar> {
       return;
     }
 
-    context.read<ReplyBloc>().add(ReplyToPostRequested(
-          replyParameters: _replyParameters!,
-          replyAction: _replyAction!,
-          replyMessage: _replyController.text,
-        ),);
+    context.read<ReplyBloc>().add(
+          ReplyToPostRequested(
+            replyParameters: _replyParameters!,
+            replyAction: _replyAction!,
+            replyMessage: _replyController.text,
+          ),
+        );
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
@@ -138,13 +140,14 @@ class _ReplyBarState extends State<ReplyBar> {
                   ),
                   Expanded(child: Container()),
                   IconButton(
-                      icon: const Icon(Icons.clear_outlined),
-                      onPressed: () {
-                        setState(() {
-                          _hintText = null;
-                          _replyAction = null;
-                        });
-                      },),
+                    icon: const Icon(Icons.clear_outlined),
+                    onPressed: () {
+                      setState(() {
+                        _hintText = null;
+                        _replyAction = null;
+                      });
+                    },
+                  ),
                 ],
               ),
             ),
@@ -176,24 +179,24 @@ class _ReplyBarState extends State<ReplyBar> {
                       ),
                     ),
                   ),
-                  if (false)
-                    Padding(
-                      padding: edgeInsetsT10,
-                      child: IconButton(
-                        icon: Icon(
-                          isExpanded
-                              ? Icons.close_fullscreen_outlined
-                              : Icons.open_in_full_outlined,
-                        ),
-                        onPressed: () {
-                          setState(() {
-                            isExpanded = !isExpanded;
-                            // Reset focus to the text field.
-                            _replyFocusNode.requestFocus();
-                          });
-                        },
-                      ),
-                    ),
+                  // if (false)
+                  //   Padding(
+                  //     padding: edgeInsetsT10,
+                  //     child: IconButton(
+                  //       icon: Icon(
+                  //         isExpanded
+                  //             ? Icons.close_fullscreen_outlined
+                  //             : Icons.open_in_full_outlined,
+                  //       ),
+                  //       onPressed: () {
+                  //         setState(() {
+                  //           isExpanded = !isExpanded;
+                  //           // Reset focus to the text field.
+                  //           _replyFocusNode.requestFocus();
+                  //         });
+                  //       },
+                  //     ),
+                  //   ),
                 ],
               ),
             ),
@@ -210,11 +213,15 @@ class _ReplyBarState extends State<ReplyBar> {
                           if (_replyAction == null &&
                               _replyParameters == null) {
                             debug(
-                                'failed to send reply: null action and parameters',);
+                              'failed to send reply: null action and '
+                              'parameters',
+                            );
                             return;
                           }
                           debug(
-                              'ReplyBar: send reply $_replyAction, $_replyParameters',);
+                            'ReplyBar: send reply $_replyAction, '
+                            '$_replyParameters',
+                          );
                           _replyAction == null
                               ? await _sendReplyThreadMessage()
                               : await _sendReplyPostMessage();
@@ -270,7 +277,8 @@ class _ReplyBarState extends State<ReplyBar> {
             isSendingReply = false;
           }
 
-          // Should update close state of the current reply bar because we may not send reply to closed threads.
+          // Should update close state of the current reply bar because we may
+          // not send reply to closed threads.
           _closed = state.closed;
           _replyParameters = state.replyParameters;
 
@@ -281,6 +289,9 @@ class _ReplyBarState extends State<ReplyBar> {
   }
 }
 
+/// Controller of [ReplyBar].
+///
+/// Used to fill parameters and update state.
 class ReplyBarController {
   _ReplyBarState? _state;
 
@@ -315,6 +326,7 @@ class ReplyBarController {
     debug('update reply parameters');
   }
 
+  /// Thread closed or not.
   bool get closed => _state?._closed ?? _closed ?? false;
 
   set closed(bool closed) {
@@ -325,10 +337,12 @@ class ReplyBarController {
     _state!._closed = closed;
   }
 
+  /// Set the hint text.
   void setHintText(String hintText) {
     _state?._setHintText(hintText);
   }
 
+  /// Let the [ReplyBar] get the focus.
   void requestFocus() {
     if (_closed ?? false) {
       _state?._replyFocusNode.requestFocus();

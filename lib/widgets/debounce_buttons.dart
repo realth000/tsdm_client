@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 
+/// Function returns Future of void.
 typedef FutureVoidCallback = Future<void> Function();
 
 /// [TextButton] with debounce check.
@@ -30,6 +31,7 @@ typedef FutureVoidCallback = Future<void> Function();
 /// Because the **work** maybe a application wide work, it's "single instance"
 /// state should be globally stored.
 class DebounceTextButton extends StatelessWidget {
+  /// Constructor.
   const DebounceTextButton({
     required this.text,
     required this.shouldDebounce,
@@ -37,8 +39,13 @@ class DebounceTextButton extends StatelessWidget {
     super.key,
   });
 
+  /// Should in debounce state.
   final bool shouldDebounce;
+
+  /// Text body.
   final String text;
+
+  /// Callback when pressed the button.
   final FutureVoidCallback onPressed;
 
   @override
@@ -50,7 +57,9 @@ class DebounceTextButton extends StatelessWidget {
   }
 }
 
+/// Debounce button in [ElevatedButton] style.
 class DebounceElevatedButton extends StatelessWidget {
+  /// Constructor.
   const DebounceElevatedButton({
     required this.child,
     required this.shouldDebounce,
@@ -58,8 +67,13 @@ class DebounceElevatedButton extends StatelessWidget {
     super.key,
   });
 
+  /// Should in debounce state.
   final bool shouldDebounce;
+
+  /// Child body.
   final Widget child;
+
+  /// Callback when pressed the button.
   final FutureVoidCallback onPressed;
 
   @override
@@ -71,7 +85,9 @@ class DebounceElevatedButton extends StatelessWidget {
   }
 }
 
+/// Debounce button in [IconButton] style.
 class DebounceIconButton extends StatelessWidget {
+  /// Constructor.
   const DebounceIconButton({
     required this.icon,
     required this.shouldDebounce,
@@ -79,8 +95,13 @@ class DebounceIconButton extends StatelessWidget {
     super.key,
   });
 
+  /// Should in debounce state.
   final bool shouldDebounce;
+
+  /// Icon.
   final Widget icon;
+
+  /// Callback when pressed the button.
   final FutureVoidCallback onPressed;
 
   @override

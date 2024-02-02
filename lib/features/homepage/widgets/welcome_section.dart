@@ -114,7 +114,8 @@ class WelcomeSection extends StatelessWidget {
       child: Padding(
         padding: edgeInsetsL10T10R10,
         child: SingleLineText(
-          '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} 帖子:${forumStatus.threadCount}',
+          '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
+          '帖子:${forumStatus.threadCount}',
           style: TextStyle(
             color: Theme.of(context).colorScheme.secondary,
           ),
@@ -142,8 +143,12 @@ class WelcomeSection extends StatelessWidget {
     final avatarUrl = loggedUserInfo?.avatarUrl;
 
     linkTileList
-      ..addAll(_buildKahrpbaLinkTileList(
-          context, loggedUserInfo?.relatedLinkPairList,),)
+      ..addAll(
+        _buildKahrpbaLinkTileList(
+          context,
+          loggedUserInfo?.relatedLinkPairList,
+        ),
+      )
       ..add(_buildForumStatusRow(context, forumStatus));
 
     final needExpand = ResponsiveBreakpoints.of(context)

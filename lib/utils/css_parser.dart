@@ -3,6 +3,9 @@ import 'dart:ui';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/css_types.dart';
 
+/// Parse a [String] of css to [CssTypes].
+///
+/// Return null if is invalid css.
 CssTypes? parseCssString(String css) {
   Color? color;
   FontWeight? fontWeight;
@@ -58,17 +61,17 @@ FontWeight? _parseFontWeight(String data) {
 
 /// FIXME: Separate web color parsing.
 Color? _parseColor(String data) {
+  final webColor = WebColors.fromString(data);
+  if (webColor.isValid) {
+    return webColor.color;
+  }
+
   if (data.startsWith('#')) {
-    final v =
-        int.tryParse(data.substring(1).padLeft(8, 'ff') ?? 'g', radix: 16);
+    final v = int.tryParse(data.substring(1).padLeft(8, 'ff'), radix: 16);
     if (v == null) {
       return null;
     }
     return Color(v);
   }
-  final webColor = WebColors.fromString(data);
-  if (webColor.isNotValid) {
-    return null;
-  }
-  return webColor.color;
+  return null;
 }

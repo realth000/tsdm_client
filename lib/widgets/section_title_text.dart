@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 
+/// Text used as a title of section.
 class SectionTitleText extends StatelessWidget {
+  /// Constructor.
   const SectionTitleText(
     this.data, {
     super.key,
   });
 
+  /// Title text.
   final String data;
 
   @override

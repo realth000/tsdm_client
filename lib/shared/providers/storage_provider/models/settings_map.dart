@@ -1,5 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+// ignore_for_file: public_member_api_docs
+
 part '../../../../generated/shared/providers/storage_provider/models/settings_map.freezed.dart';
 
 /// Settings map.

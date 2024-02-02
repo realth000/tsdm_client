@@ -6,11 +6,16 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 /// SpoilerCard is an area munched from html document.
 ///
 /// Contains a [title] and a [content] area.
-/// Holding a button to control the visibility of [content], expand more or expand less.
+/// Holding a button to control the visibility of [content], expand more or
+/// expand less.
 class SpoilerCard extends StatefulWidget {
+  /// Constructor.
   const SpoilerCard({required this.title, required this.content, super.key});
 
+  /// Title of this expand more/less area.
   final String title;
+
+  /// Content to show when expanded.
   final InlineSpan content;
 
   @override
@@ -32,9 +37,11 @@ class _SpoilerCardState extends State<SpoilerCard> {
             SizedBox(
               width: sizeButtonInCardMinWidth,
               child: ElevatedButton(
-                child: Text(_visible
-                    ? context.t.spoilerCard.expandLess
-                    : context.t.spoilerCard.expandMore,),
+                child: Text(
+                  _visible
+                      ? context.t.spoilerCard.expandLess
+                      : context.t.spoilerCard.expandMore,
+                ),
                 onPressed: () {
                   setState(() {
                     _visible = !_visible;

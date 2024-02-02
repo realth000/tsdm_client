@@ -6,9 +6,12 @@ import 'package:tsdm_client/features/packet/cubit/packet_cubit.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
+/// 红包
 class PacketCard extends StatelessWidget {
+  /// Constructor.
   const PacketCard(this.packetUrl, {super.key});
 
+  /// Url to fetch/receive the packet.
   final String packetUrl;
 
   @override
@@ -31,7 +34,8 @@ class PacketCard extends StatelessWidget {
                   .showSnackBar(SnackBar(content: Text(state.reason!)));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.t.packetCard.failedToOpen)),);
+                SnackBar(content: Text(context.t.packetCard.failedToOpen)),
+              );
             }
           } else if (state.status == PacketStatus.success) {
             ScaffoldMessenger.of(context)

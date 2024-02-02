@@ -34,6 +34,7 @@ extension _WithFormExt<T> on Dio {
 ///
 /// Instance should be unique when making requests.
 class NetClientProvider {
+  /// Constructor.
   NetClientProvider({Dio? dio, String? username, bool disableCookie = false})
       : _dio = dio ?? _buildDefaultDio() {
     if (disableCookie) {
@@ -78,7 +79,8 @@ class NetClientProvider {
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {
-    final resp = await _dio.get(path, queryParameters: queryParameters);
+    final resp =
+        await _dio.get<dynamic>(path, queryParameters: queryParameters);
     return resp;
   }
 
@@ -87,7 +89,7 @@ class NetClientProvider {
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {
-    final resp = await _dio.get(
+    final resp = await _dio.get<dynamic>(
       path,
       queryParameters: queryParameters,
       options: Options(
@@ -105,15 +107,18 @@ class NetClientProvider {
     return resp;
   }
 
+  /// Get a image from the given [uri].
   Future<Response<dynamic>> getImageFromUri(Uri uri) async {
-    final resp = await _dio.getUri(uri,
-        options: Options(
-          responseType: ResponseType.bytes,
-          headers: {
-            HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-            HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-          },
-        ),);
+    final resp = await _dio.getUri<dynamic>(
+      uri,
+      options: Options(
+        responseType: ResponseType.bytes,
+        headers: {
+          HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+        },
+      ),
+    );
 
     if (resp.statusCode != HttpStatus.ok) {
       return Future.error('resp code=${resp.statusCode}');
@@ -129,7 +134,8 @@ class NetClientProvider {
     Object? data,
     Map<String, dynamic>? queryParameters,
   }) async {
-    final resp = _dio.post(path, data: data, queryParameters: queryParameters);
+    final resp =
+        _dio.post<dynamic>(path, data: data, queryParameters: queryParameters);
     return resp;
   }
 
@@ -146,6 +152,7 @@ class NetClientProvider {
     return resp;
   }
 
+  /// Download the file from url [path] and save to [savePath].
   Future<void> download(
     String path,
     dynamic savePath, {
@@ -157,7 +164,7 @@ class NetClientProvider {
     Object? data,
     Options? options,
   }) async {
-    final resp = _dio.download(
+    await _dio.download(
       path,
       savePath,
       onReceiveProgress: onReceiveProgress,

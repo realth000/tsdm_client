@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+/// Mixin that provides default settings values.
 mixin SettingsDefaultMapMixin {
   /// Net client config: Accept.
   String get defaultNetClientAccept =>
@@ -7,7 +8,8 @@ mixin SettingsDefaultMapMixin {
 
   /// Net client config: Accept-Encoding.
   ///
-  /// FormatException happens in some page, current found in 301 request in redirect
+  /// FormatException happens in some page, current found in 301 request in
+  /// redirect
   /// url in notice page.
   /// After debugging like this:
   /// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
@@ -61,7 +63,8 @@ mixin SettingsDefaultMapMixin {
   /// Default check in message when check in
   String get defaultCheckInMessage => '每日签到';
 
-  /// Show shortcut widget that to redirect to latest thread or subreddit in forum card.
+  /// Show shortcut widget that to redirect to latest thread or subreddit in
+  /// forum card.
   bool get defaultShowRedirectInForumCard => false;
 
   /// Default accent color.

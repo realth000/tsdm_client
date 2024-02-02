@@ -11,6 +11,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart
 ///
 /// **Need to call dispose** before dispose.
 class SettingsRepository {
+  /// Constructor.
   SettingsRepository({SettingsProvider? settingsProvider})
       : _settingsProvider = settingsProvider ?? DatabaseSettingsProvider() {
     _state = _initMap();
@@ -64,12 +65,15 @@ class SettingsRepository {
     );
   }
 
+  /// Dispose settings repository instance.
   void dispose() {
     _controller.close();
   }
 
+  /// Get the current app window size.
   Size getWindowSize() => _settingsProvider.getWindowSize();
 
+  /// Set the app window size.
   Future<void> setWindowSize(Size size) async {
     await _settingsProvider.setWindowSize(size);
     _state = _state.copyWith(
@@ -79,8 +83,10 @@ class SettingsRepository {
     _controller.add(_state);
   }
 
+  /// Get app window position.
   Offset getWindowPosition() => _settingsProvider.getWindowPosition();
 
+  /// Set app window position.
   Future<void> setWindowPosition(Offset offset) async {
     await _settingsProvider.setWindowPosition(offset);
     _state = _state.copyWith(
@@ -90,22 +96,29 @@ class SettingsRepository {
     _controller.add(_state);
   }
 
+  /// Get status of app window in center of screen.
   bool getWindowInCenter() => _settingsProvider.getWindowInCenter();
 
+  /// Set status of app window in center of screen.
   Future<void> setWindowInCenter({required bool inCenter}) async {
     await _settingsProvider.setWindowInCenter(inCenter: inCenter);
     _state = _state.copyWith(windowInCenter: inCenter);
     _controller.add(_state);
   }
 
+  /// Get app theme mode index.
   int getThemeMode() => _settingsProvider.getThemeMode();
 
+  /// Set app theme mode index.
   Future<void> setThemeMode(int themeMode) async {
     await _settingsProvider.setThemeMode(themeMode);
     _state = _state.copyWith(themeMode: themeMode);
     _controller.add(_state);
   }
 
+  /// Get current logged user info.
+  ///
+  /// Return (null, null) if no user logged.
   (String? username, int? uid) getLoginInfo() =>
       _settingsProvider.getLoginInfo();
 
@@ -140,33 +153,41 @@ class SettingsRepository {
   Future<bool> deleteCookieByUsername(String username) async =>
       _settingsProvider.deleteCookieByUsername(username);
 
+  /// Get app locale.
   String getLocale() => _settingsProvider.getLocale();
 
+  /// Set app locale.
   Future<void> setLocale(String locale) async {
     await _settingsProvider.setLocale(locale);
     _state = _state.copyWith(locale: locale);
     _controller.add(_state);
   }
 
+  /// Get checkin feeling.
   String getCheckinFeeling() => _settingsProvider.getCheckinFeeling();
 
+  /// Set checkin feeling.
   Future<void> setCheckinFeeling(String feeling) async {
     await _settingsProvider.setCheckinFeeling(feeling);
     _state = _state.copyWith(checkinFeeling: feeling);
     _controller.add(_state);
   }
 
+  /// Get checkin message.
   String getCheckinMessage() => _settingsProvider.getCheckinMessage();
 
+  /// Set checkin message.
   Future<void> setCheckinMessage(String message) async {
     await _settingsProvider.setCheckinMessage(message);
     _state = _state.copyWith(checkinMessage: message.truncate(50));
     _controller.add(_state);
   }
 
+  /// Get visibility of shortcut on forum card.
   bool getShowShortcutInForumCard() =>
       _settingsProvider.getShowShortcutInForumCard();
 
+  /// Set visibility of shortcut on forum card.
   Future<void> setShowShortcutInForumCard({required bool visible}) async {
     await _settingsProvider.setShowShortcutInForumCard(visible: visible);
     _state = _state.copyWith(showShortcutInForumCard: visible);
@@ -176,12 +197,14 @@ class SettingsRepository {
   /// [Color]'s value.
   int getAccentColorValue() => _settingsProvider.getAccentColorValue();
 
+  /// Get app accent color.
   Future<void> setAccentColor(Color color) async {
     await _settingsProvider.setAccentColor(color);
     _state = _state.copyWith(accentColor: color.value);
     _controller.add(_state);
   }
 
+  /// Reset app accent color to default.
   Future<void> clearAccentColor() async {
     await _settingsProvider.clearAccentColor();
     _state = _state.copyWith(accentColor: -1);

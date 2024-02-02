@@ -20,5 +20,6 @@ class HttpHandshakeFailedException implements Exception {
   /// Constructor.
   const HttpHandshakeFailedException(this.message);
 
+  /// Error message.
   final String message;
 }

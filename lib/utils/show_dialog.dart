@@ -66,6 +66,7 @@ Future<bool?> showQuestionDialog({
   );
 }
 
+/// Show a dialog while doing [work] and close after work finished.
 Future<void> showModalWorkDialog({
   required BuildContext context,
   required String message,
@@ -89,7 +90,7 @@ Future<void> showModalWorkDialog({
     dialogContext = null;
   });
 
-  final atLeast = Future.delayed(const Duration(seconds: 1));
+  final atLeast = Future<void>.delayed(const Duration(seconds: 1));
 
   if (work is Future<void> Function()) {
     await Future.wait([work(), atLeast]);

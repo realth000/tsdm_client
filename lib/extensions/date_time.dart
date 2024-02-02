@@ -1,5 +1,5 @@
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/sevrer_time_provider.dart';
+import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 
 /// Extension of [DateTime] that provides some transformation and calculation.
 extension DateTimeExtension on DateTime {

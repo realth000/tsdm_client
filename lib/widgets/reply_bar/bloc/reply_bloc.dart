@@ -3,15 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/shared/models/reply_parameters.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/widgets/reply_bar/execptions/exceptions.dart';
+import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
 part 'reply_event.dart';
 part 'reply_state.dart';
 
+/// Emitter
 typedef ReplyEmitter = Emitter<ReplyState>;
 
+/// Bloc of reply
 class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
+  /// Constructor.
   ReplyBloc({required ReplyRepository replyRepository})
       : _replyRepository = replyRepository,
         super(const ReplyState()) {
