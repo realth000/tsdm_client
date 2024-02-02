@@ -28,6 +28,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     on<ThreadClosedStateUpdated>(_onThreadUpdateClosedState);
     on<ThreadOnlyViewAuthorRequested>(_onThreadOnlyViewAuthorRequested);
     on<ThreadViewAllAuthorsRequested>(_onThreadViewAllAuthorsRequested);
+    on<ThreadChangeViewOrderRequested>(_onThreadChangeViewOrderRequested);
   }
 
   final ThreadRepository _threadRepository;
@@ -41,6 +42,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         tid: state.tid,
         pageNumber: event.pageNumber,
         onlyVisibleUid: state.onlyVisibleUid,
+        reverseOrder: state.reverseOrder,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
@@ -58,6 +60,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
         onlyVisibleUid: state.onlyVisibleUid,
+        reverseOrder: state.reverseOrder,
       );
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
@@ -77,6 +80,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         tid: state.tid,
         pageNumber: event.pageNumber,
         onlyVisibleUid: state.onlyVisibleUid,
+        reverseOrder: state.reverseOrder,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
@@ -103,13 +107,19 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         tid: state.tid,
         pageNumber: state.currentPage,
         onlyVisibleUid: event.uid,
+        reverseOrder: state.reverseOrder,
       );
       // Use "1" as current page number to prevent page number overflow.
       final s = await _parseFromDocument(document, 1);
       emit(s.copyWith(onlyVisibleUid: event.uid));
     } on HttpRequestFailedException catch (e) {
       debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ThreadStatus.failed));
+      emit(
+        state.copyWith(
+          status: ThreadStatus.failed,
+          onlyVisibleUid: event.uid,
+        ),
+      );
     }
   }
 
@@ -126,6 +136,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
         pageNumber: state.currentPage,
+        reverseOrder: state.reverseOrder,
       );
       // Use "1" as current page number to prevent page number overflow.
       final s = await _parseFromDocument(
@@ -137,6 +148,41 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     } on HttpRequestFailedException catch (e) {
       debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
       emit(state.copyWith(status: ThreadStatus.failed));
+    }
+  }
+
+  Future<void> _onThreadChangeViewOrderRequested(
+    ThreadChangeViewOrderRequested event,
+    ThreadEmitter emit,
+  ) async {
+    emit(
+      state.copyWith(
+        status: ThreadStatus.loading,
+        postList: [],
+        reverseOrder: !state.reverseOrder,
+      ),
+    );
+    try {
+      final document = await _threadRepository.fetchThread(
+        tid: state.tid,
+        pageNumber: state.currentPage,
+        onlyVisibleUid: state.onlyVisibleUid,
+        reverseOrder: state.reverseOrder,
+      );
+      final s = await _parseFromDocument(
+        document,
+        state.currentPage,
+        clearOnlyVisibleUid: true,
+      );
+      emit(s.copyWith(reverseOrder: state.reverseOrder));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      emit(
+        state.copyWith(
+          status: ThreadStatus.failed,
+          reverseOrder: state.reverseOrder,
+        ),
+      );
     }
   }
 
@@ -242,6 +288,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       threadType: threadType,
       onlyVisibleUid:
           (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
+      reverseOrder: state.reverseOrder,
     );
   }
 }

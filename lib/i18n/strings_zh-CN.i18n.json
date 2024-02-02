@@ -259,7 +259,9 @@
     "actionRefresh": "刷新",
     "actionCopyUrl": "复制链接",
     "actionOpenInBrowser": "在浏览器中打开",
-    "actionBackToTop": "回到顶部"
+    "actionBackToTop": "回到顶部",
+    "actionForwardOrder": "正序浏览",
+    "actionReverseOrder": "倒序浏览"
   },
   "checkinForm": {
     "shouldMoreThan3": "必须多于三个字",

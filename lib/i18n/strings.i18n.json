@@ -259,7 +259,9 @@
     "actionRefresh": "Refresh",
     "actionCopyUrl": "Copy Url",
     "actionOpenInBrowser": "Open In Browser",
-    "actionBackToTop": "Back To Top"
+    "actionBackToTop": "Back To Top",
+    "actionForwardOrder": "Forward order",
+    "actionReverseOrder": "Reverse order"
   },
   "checkinForm": {
     "shouldMoreThan3": "Should more than 3",

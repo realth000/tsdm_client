@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
+import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 /// App bar actions.
@@ -19,6 +21,11 @@ enum MenuActions {
 
   /// Go back to top of the page.
   backToTop,
+
+  /// Change the order when viewing current page.
+  ///
+  /// Only available to thread pages.
+  reverseOrder,
 }
 
 /// A app bar contains list and provides features including:
@@ -34,6 +41,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bottom,
     this.onSelected,
     this.onJumpPage,
+    this.showReverseOrderAction = false,
     super.key,
   });
 
@@ -53,6 +61,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   /// Extra bottom widget.
   final PreferredSizeWidget? bottom;
+
+  /// Show the action to change "view order" between forward order and reverse
+  /// order.
+  final bool showReverseOrderAction;
 
   Future<void> _jumpPage(
     BuildContext context,
@@ -87,6 +99,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
       totalPages = jumpPageState.totalPages;
       canJumpPage = jumpPageState.canJumpPage;
     }
+
+    final threadBloc = context.readOrNull<ThreadBloc>();
+    final reverseOrder = threadBloc?.state.reverseOrder;
+
     return AppBar(
       title: title == null ? null : Text(title!),
       bottom: bottom,
@@ -140,6 +156,24 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
+            if (showReverseOrderAction && reverseOrder != null)
+              PopupMenuItem(
+                value: MenuActions.reverseOrder,
+                child: Row(
+                  children: [
+                    Icon(
+                      reverseOrder
+                          ? Icons.align_vertical_bottom_outlined
+                          : Icons.align_vertical_top_outlined,
+                    ),
+                    Text(
+                      reverseOrder
+                          ? context.t.networkList.actionForwardOrder
+                          : context.t.networkList.actionReverseOrder,
+                    ),
+                  ],
+                ),
+              ),
           ],
           onSelected: onSelected,
         ),

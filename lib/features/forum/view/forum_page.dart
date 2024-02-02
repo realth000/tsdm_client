@@ -430,6 +430,8 @@ class _ForumPageState extends State<ForumPage>
                         curve: Curves.ease,
                         duration: const Duration(milliseconds: 500),
                       );
+                    case MenuActions.reverseOrder:
+                      ;
                   }
                 },
               ),

@@ -33,6 +33,7 @@ class ThreadState extends Equatable {
     this.replyParameters,
     this.threadType,
     this.onlyVisibleUid,
+    this.reverseOrder = false,
   });
 
   /// Status.
@@ -87,6 +88,9 @@ class ThreadState extends Equatable {
   /// Show all posts if value is null;
   final String? onlyVisibleUid;
 
+  /// View posts in current thread in forward order or reverse order.
+  final bool reverseOrder;
+
   /// Copy with.
   ThreadState copyWith({
     ThreadStatus? status,
@@ -102,6 +106,7 @@ class ThreadState extends Equatable {
     List<Post>? postList,
     ReplyParameters? replyParameters,
     String? onlyVisibleUid,
+    bool? reverseOrder,
   }) {
     return ThreadState(
       status: status ?? this.status,
@@ -118,6 +123,7 @@ class ThreadState extends Equatable {
       postList: postList ?? this.postList,
       replyParameters: replyParameters ?? this.replyParameters,
       onlyVisibleUid: onlyVisibleUid ?? this.onlyVisibleUid,
+      reverseOrder: reverseOrder ?? this.reverseOrder,
     );
   }
 
@@ -136,5 +142,6 @@ class ThreadState extends Equatable {
         postList,
         replyParameters,
         onlyVisibleUid,
+        reverseOrder,
       ];
 }

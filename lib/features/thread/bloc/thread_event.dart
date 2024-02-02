@@ -75,3 +75,16 @@ final class ThreadOnlyViewAuthorRequested extends ThreadEvent {
 /// Note that triggering this event **will not change the current page number**.
 /// We behave like what it acts in browser.
 final class ThreadViewAllAuthorsRequested extends ThreadEvent {}
+
+/// User requested to change the order when viewing posts in current thread.
+///
+/// The default behavior is forward order.
+///
+/// Note that the "reversed order" seems conflict with "only view specified
+/// user" on the server side on UI, but here do implement it by reserving both
+/// query parameters in thread url so there is no conflict any more. Different
+/// from the behavior in browser but it's ok, even better.
+final class ThreadChangeViewOrderRequested extends ThreadEvent {
+  /// Constructor.
+  const ThreadChangeViewOrderRequested();
+}

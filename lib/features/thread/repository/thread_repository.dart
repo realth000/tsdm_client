@@ -29,13 +29,16 @@ class ThreadRepository {
     required String tid,
     int pageNumber = 1,
     String? onlyVisibleUid,
+    bool reverseOrder = false,
   }) async {
     /// Only visible uid.
     final visibleUid =
         onlyVisibleUid == null ? '' : '&authorid=$onlyVisibleUid';
+    final orderType = reverseOrder ? '&ordertype=1' : '';
     _pageNumber = pageNumber;
-    _threadUrl =
-        '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1$visibleUid&page=$pageNumber';
+    _threadUrl = '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1'
+        '$orderType$visibleUid'
+        '&page=$pageNumber';
 
     final resp = await getIt.get<NetClientProvider>().get(_threadUrl!);
     if (resp.statusCode != HttpStatus.ok) {

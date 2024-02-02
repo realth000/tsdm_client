@@ -222,6 +222,7 @@ class _ThreadPageState extends State<ThreadPage>
               return Scaffold(
                 appBar: ListAppBar(
                   title: title,
+                  showReverseOrderAction: true,
                   onSearch: () async {
                     await context.pushNamed(ScreenPaths.search);
                   },
@@ -264,6 +265,10 @@ class _ThreadPageState extends State<ThreadPage>
                           curve: Curves.ease,
                           duration: const Duration(milliseconds: 500),
                         );
+                      case MenuActions.reverseOrder:
+                        context
+                            .readOrNull<ThreadBloc>()
+                            ?.add(const ThreadChangeViewOrderRequested());
                     }
                   },
                 ),
