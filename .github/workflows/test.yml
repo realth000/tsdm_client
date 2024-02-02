@@ -31,6 +31,9 @@ jobs:
         run: |
           flutter pub get
           dart run build_runner build
+      - name: Run flutter analyze
+        run: |
+          flutter analyze --suggestions --fatal-infos --fatal-warnings
       - name: Run flutter test
         run: |
           flutter test
