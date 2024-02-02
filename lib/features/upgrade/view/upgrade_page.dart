@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/upgrade/cubit/upgrade_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
@@ -158,7 +159,7 @@ class _UpgradePageState extends State<UpgradePage> {
                     icon: const Icon(Icons.launch_outlined),
                     onPressed: () async {
                       await launchUrl(
-                        Uri.parse(state.upgradeModel!.releaseUrl),
+                        Uri.parse(upgradeGithubRelaseUrl),
                         mode: LaunchMode.externalApplication,
                       );
                     },
