@@ -172,7 +172,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final s = await _parseFromDocument(
         document,
         state.currentPage,
-        clearOnlyVisibleUid: true,
       );
       emit(s.copyWith(reverseOrder: state.reverseOrder));
     } on HttpRequestFailedException catch (e) {
