@@ -61,7 +61,7 @@ class FilterState extends Equatable {
 
   /// Copy with
   FilterState copyWith({
-    String? filter,
+    required String? filter,
     FilterType? filterType,
     FilterSpecialType? filterSpecialType,
     FilterDateline? filterDateline,
