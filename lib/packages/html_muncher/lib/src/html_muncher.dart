@@ -211,6 +211,11 @@ class Muncher {
           final element = node as uh.Element;
           final localName = element.localName;
 
+          // Skip invisible nodes.
+          if (element.attributes['style']?.contains('display: none') ?? false) {
+            return null;
+          }
+
           // TODO: Handle <ul> and <li> marker
           // Parse according to element types.
           final span = switch (localName) {
@@ -239,6 +244,8 @@ class Muncher {
             'table' ||
             'tbody' ||
             'ul' ||
+            'dl' ||
+            'dd' ||
             'pre' =>
               _munch(node),
             String() => null,
