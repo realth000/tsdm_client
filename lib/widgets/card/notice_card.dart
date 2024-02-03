@@ -114,6 +114,7 @@ class NoticeCard extends StatelessWidget {
                     : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
                 child: Row(children: [SingleLineText(notice.username ?? '')]),
               ),
+              trailing: Text(notice.noticeTimeString),
               subtitle: SingleLineText(notice.noticeTime?.yyyyMMDD() ?? ''),
             ),
             sizedBoxW5H5,

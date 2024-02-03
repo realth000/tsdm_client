@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * 帖子右上角菜单 -> 倒序浏览/正序浏览。
 - 新增支持从好友邀请参与话题的消息跳转到相应帖子。
 - 新增支持筛选帖子。
+- 在消息提醒卡片上显示是多久以前的消息。~~终于分得清哪个是哪个了~~
 - 缓存首页轮播图。
 
 ### Fixed
