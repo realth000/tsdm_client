@@ -173,7 +173,13 @@
     },
     "threadTab": {
       "title": "貼文",
-      "noThread": "沒有貼文"
+      "noThread": "沒有貼文",
+      "threadType": "分類",
+      "threadSpecialType": "特殊分類",
+      "threadDateline": "活躍時間",
+      "threadOrder": "排序",
+      "threadDigested": "加精",
+      "threadRecommended": "推薦"
     },
     "subredditTab": {
       "title": "子版塊",

@@ -84,6 +84,12 @@ class NetClientProvider {
     return resp;
   }
 
+  /// Make a GET request to the given [uri].
+  Future<Response<dynamic>> getUri(Uri uri) async {
+    final resp = await _dio.getUri<dynamic>(uri);
+    return resp;
+  }
+
   /// Make a GET request to [path], with options set to image types.
   Future<Response<dynamic>> getImage(
     String path, {

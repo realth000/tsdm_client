@@ -32,6 +32,11 @@ class ForumState extends Equatable {
     this.havePermission = true,
     this.permissionDeniedMessage,
     this.needLogin = false,
+    this.filterState = const FilterState(),
+    this.filterTypeList = const [],
+    this.filterSpecialTypeList = const [],
+    this.filterOrderList = const [],
+    this.filterDatelineList = const [],
   });
 
   /// Page status.
@@ -83,6 +88,21 @@ class ForumState extends Equatable {
   /// Only works when no user logged.
   final bool needLogin;
 
+  /// State of thread filter.
+  final FilterState filterState;
+
+  /// All available [FilterType] list.
+  final List<FilterType> filterTypeList;
+
+  /// All available [FilterSpecialType] list.
+  final List<FilterSpecialType> filterSpecialTypeList;
+
+  /// All available [FilterOrder] list.
+  final List<FilterOrder> filterOrderList;
+
+  /// All available [FilterDateline] list.
+  final List<FilterDateline> filterDatelineList;
+
   /// Copy with
   ForumState copyWith({
     ForumStatus? status,
@@ -98,6 +118,11 @@ class ForumState extends Equatable {
     uh.Element? permissionDeniedMessage,
     int? currentPage,
     int? totalPages,
+    FilterState? filterState,
+    List<FilterType>? filterTypeList,
+    List<FilterSpecialType>? filterSpecialTypeList,
+    List<FilterOrder>? filterOrderList,
+    List<FilterDateline>? filterDatelineList,
   }) {
     return ForumState(
       status: status ?? this.status,
@@ -114,6 +139,12 @@ class ForumState extends Equatable {
           permissionDeniedMessage ?? this.permissionDeniedMessage,
       currentPage: currentPage ?? this.currentPage,
       totalPages: totalPages ?? this.totalPages,
+      filterState: filterState ?? this.filterState,
+      filterTypeList: filterTypeList ?? this.filterTypeList,
+      filterSpecialTypeList:
+          filterSpecialTypeList ?? this.filterSpecialTypeList,
+      filterOrderList: filterOrderList ?? this.filterOrderList,
+      filterDatelineList: filterDatelineList ?? this.filterDatelineList,
     );
   }
 
@@ -131,5 +162,10 @@ class ForumState extends Equatable {
         permissionDeniedMessage.hashCode,
         currentPage,
         totalPages,
+        filterState,
+        filterTypeList,
+        filterSpecialTypeList,
+        filterOrderList,
+        filterDatelineList,
       ];
 }

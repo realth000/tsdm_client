@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/features/forum/models/thread_filter.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/shared/models/forum.dart';
 import 'package:tsdm_client/shared/models/normal_thread.dart';
@@ -15,6 +16,11 @@ part 'forum_state.dart';
 /// Emitter
 typedef ForumEmitter = Emitter<ForumState>;
 
+final _typeIDRe = RegExp(r'&typeid=(?<id>\d+)');
+final _specialTypeRe = RegExp('&specialtype=(?<type>[a-z]+)');
+final _orderByRe = RegExp('&orderby=(?<orderby>[a-z]+)');
+final _datelineRe = RegExp(r'&dateline=(?<dateline>\d+)');
+
 /// Bloc of forum page.
 class ForumBloc extends Bloc<ForumEvent, ForumState> {
   /// Constructor.
@@ -26,6 +32,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     on<ForumLoadMoreRequested>(_onForumLoadMoreRequested);
     on<ForumRefreshRequested>(_onForumRefreshRequested);
     on<ForumJumpPageRequested>(_onForumJumpPageRequested);
+    on<ForumChangeThreadFilterStateRequested>(
+      _onForumChangeThreadFilterStateRequested,
+    );
   }
 
   final ForumRepository _forumRepository;
@@ -38,6 +47,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       final document = await _forumRepository.fetchForum(
         fid: state.fid,
         pageNumber: event.pageNumber,
+        filterState: state.filterState,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
@@ -61,7 +71,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     );
 
     try {
-      final document = await _forumRepository.fetchForum(fid: state.fid);
+      final document = await _forumRepository.fetchForum(
+        fid: state.fid,
+        filterState: state.filterState,
+      );
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
       debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
@@ -79,8 +92,34 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       final document = await _forumRepository.fetchForum(
         fid: state.fid,
         pageNumber: event.pageNumber,
+        filterState: state.filterState,
       );
       emit(await _parseFromDocument(document, event.pageNumber));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failed));
+    }
+  }
+
+  Future<void> _onForumChangeThreadFilterStateRequested(
+    ForumChangeThreadFilterStateRequested event,
+    ForumEmitter emit,
+  ) async {
+    emit(
+      state.copyWith(
+        status: ForumStatus.loading,
+        normalThreadList: [],
+        filterState: event.filterState,
+      ),
+    );
+
+    try {
+      final document = await _forumRepository.fetchForum(
+        fid: state.fid,
+        filterState: state.filterState,
+      );
+
+      emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
       debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
       emit(state.copyWith(status: ForumStatus.failed));
@@ -137,6 +176,63 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     final currentPage = document.currentPage();
     final totalPages = document.totalPages();
 
+    // Update thread filter config.
+    final filterTypeList = document
+        .querySelector('ul#thread_types')
+        ?.querySelectorAll('li > a')
+        .where((e) => e.innerText.isNotEmpty)
+        .map(
+          (e) => FilterType(
+            name: e.innerText.trim(),
+            typeID: _typeIDRe
+                .firstMatch(e.attributes['href'] ?? '')
+                ?.namedGroup('id'),
+          ),
+        )
+        .toList();
+
+    final filterSpecialTypeList = document
+        .querySelector('div#filter_special_menu')
+        ?.querySelectorAll('ul > li > a')
+        .where((e) => e.innerText.isNotEmpty)
+        .map(
+          (e) => FilterSpecialType(
+            name: e.innerText.trim(),
+            specialType: _specialTypeRe
+                .firstMatch(e.attributes['href'] ?? '')
+                ?.namedGroup('type'),
+          ),
+        )
+        .toList();
+
+    final filterOrderList = document
+        .querySelector('div#filter_orderby_menu')
+        ?.querySelectorAll('ul > li > a')
+        .where((e) => e.innerText.isNotEmpty)
+        .map(
+          (e) => FilterOrder(
+            name: e.innerText.trim(),
+            orderBy: _orderByRe
+                .firstMatch(e.attributes['href'] ?? '')
+                ?.namedGroup('orderby'),
+          ),
+        )
+        .toList();
+
+    final filterDatelineList = document
+        .querySelector('div#filter_dateline_menu')
+        ?.querySelectorAll('ul > li > a')
+        .where((e) => e.innerText.isNotEmpty)
+        .map(
+          (e) => FilterDateline(
+            name: e.innerText.trim(),
+            dateline: _datelineRe
+                .firstMatch(e.attributes['href'] ?? '')
+                ?.namedGroup('dateline'),
+          ),
+        )
+        .toList();
+
     return state.copyWith(
       status: ForumStatus.success,
       title: title,
@@ -150,6 +246,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       permissionDeniedMessage: permissionDeniedMessage,
       currentPage: currentPage ?? pageNumber,
       totalPages: totalPages ?? currentPage ?? pageNumber,
+      filterTypeList: filterTypeList,
+      filterSpecialTypeList: filterSpecialTypeList,
+      filterOrderList: filterOrderList,
+      filterDatelineList: filterDatelineList,
     );
   }
 

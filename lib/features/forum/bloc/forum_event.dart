@@ -28,3 +28,12 @@ final class ForumJumpPageRequested extends ForumEvent {
   /// Page number to jump to.
   final int pageNumber;
 }
+
+/// User requested to change the current thread filter state.
+final class ForumChangeThreadFilterStateRequested extends ForumEvent {
+  /// Constructor.
+  const ForumChangeThreadFilterStateRequested(this.filterState);
+
+  /// [FilterState] to change to.
+  final FilterState filterState;
+}

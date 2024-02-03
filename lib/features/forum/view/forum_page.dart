@@ -6,8 +6,10 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
+import 'package:tsdm_client/features/forum/widgets/thread_filter_chip.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -66,6 +68,154 @@ class _ForumPageState extends State<ForumPage>
 
   /// Controller of current tab: thread, subreddit.
   TabController? tabController;
+
+  PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
+    return ListAppBar(
+      title: widget.title ?? state.title,
+      bottom: state.permissionDeniedMessage == null
+          ? TabBar(
+              controller: tabController,
+              tabs: [
+                Tab(
+                  child: Text(
+                    context.t.forumPage.stickThreadTab.title,
+                  ),
+                ),
+                Tab(child: Text(context.t.forumPage.threadTab.title)),
+                Tab(
+                  child: Text(
+                    context.t.forumPage.subredditTab.title,
+                  ),
+                ),
+              ],
+              onTap: (index) {
+                // Here we want to scroll the current tab to the top.
+                // Only scroll to top when user taps on the current
+                // tab, which means index is not changing.
+                if (tabController?.indexIsChanging ?? true) {
+                  // Do nothing because user tapped another index
+                  // and want to switch to it.
+                  return;
+                }
+                const duration = Duration(milliseconds: 300);
+                const curve = Curves.ease;
+                switch (tabController!.index) {
+                  case _pinnedTabIndex:
+                    _pinnedScrollController.animateTo(
+                      0,
+                      duration: duration,
+                      curve: curve,
+                    );
+                  case _threadTabIndex:
+                    _threadScrollController.animateTo(
+                      0,
+                      duration: duration,
+                      curve: curve,
+                    );
+                  case _subredditTabIndex:
+                    _subredditScrollController.animateTo(
+                      0,
+                      duration: duration,
+                      curve: curve,
+                    );
+                }
+              },
+            )
+          : null,
+      onSearch: () async {
+        await context.pushNamed(
+          ScreenPaths.search,
+          queryParameters: {'fid': widget.fid},
+        );
+      },
+      onJumpPage: (pageNumber) async {
+        if (!mounted) {
+          return;
+        }
+        // Mark loading here.
+        // Mark state will be removed when
+        // loading finishes (next build).
+        context.read<JumpPageCubit>().markLoading();
+        context.read<ForumBloc>().add(ForumJumpPageRequested(pageNumber));
+      },
+      onSelected: (value) async {
+        switch (value) {
+          case MenuActions.refresh:
+            if (tabController == null) {
+              context.read<ForumBloc>().add(ForumRefreshRequested());
+              return;
+            }
+            switch (tabController!.index) {
+              case _pinnedTabIndex:
+                await _pinnedRefreshController.callRefresh();
+              case _threadTabIndex:
+                await _threadRefreshController.callRefresh();
+              case _subredditTabIndex:
+                await _subredditRefreshController.callRefresh();
+              default:
+                context.read<ForumBloc>().add(ForumRefreshRequested());
+            }
+          case MenuActions.copyUrl:
+            await Clipboard.setData(
+              ClipboardData(text: widget.forumUrl),
+            );
+            if (!context.mounted) {
+              return;
+            }
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  context.t.aboutPage.copiedToClipboard,
+                ),
+              ),
+            );
+          case MenuActions.openInBrowser:
+            await context.dispatchAsUrl(
+              widget.forumUrl,
+              external: true,
+            );
+          case MenuActions.backToTop:
+            await _threadScrollController.animateTo(
+              0,
+              curve: Curves.ease,
+              duration: const Duration(milliseconds: 500),
+            );
+          case MenuActions.reverseOrder:
+            ;
+        }
+      },
+    );
+  }
+
+  Widget _buildNormalThreadFilterRow(BuildContext context, ForumState state) {
+    return SliverPadding(
+      padding: edgeInsetsL10T5R10,
+      sliver: SliverToBoxAdapter(
+        // title: Text('123'),
+        // automaticallyImplyLeading: false,
+        // primary: false,
+        // floating: true,
+        // snap: true,
+        child: SizedBox(
+          height: 40,
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const ThreadTypeChip(),
+                const ThreadSpecialTypeChip(),
+                const ThreadDatelineChip(),
+                const ThreadOrderChip(),
+                const ThreadDigestChip(),
+                const ThreadRecommendedChip(),
+              ].insertBetween(sizedBoxW10H10),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
 
   Widget _buildStickThreadTab(BuildContext context, ForumState state) {
     if (state.stickThreadList.isEmpty) {
@@ -132,7 +282,7 @@ class _ForumPageState extends State<ForumPage>
 
     _threadRefreshController.finishLoad();
 
-    return EasyRefresh(
+    return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
           .copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(position: IndicatorPosition.locator),
@@ -161,10 +311,12 @@ class _ForumPageState extends State<ForumPage>
             .add(ForumLoadMoreRequested(state.currentPage + 1));
         // _refreshController.finishLoad();
       },
-      child: CustomScrollView(
+      childBuilder: (context, physics) => CustomScrollView(
         controller: _threadScrollController,
+        physics: physics,
         slivers: [
           const HeaderLocator.sliver(),
+          _buildNormalThreadFilterRow(context, state),
           if (normalThreadList.isNotEmpty)
             SliverPadding(
               padding: edgeInsetsL10T5R10B20,
@@ -316,125 +468,7 @@ class _ForumPageState extends State<ForumPage>
             }
 
             return Scaffold(
-              appBar: ListAppBar(
-                title: widget.title ?? state.title,
-                bottom: state.permissionDeniedMessage == null
-                    ? TabBar(
-                        controller: tabController,
-                        tabs: [
-                          Tab(
-                            child: Text(
-                              context.t.forumPage.stickThreadTab.title,
-                            ),
-                          ),
-                          Tab(child: Text(context.t.forumPage.threadTab.title)),
-                          Tab(
-                            child: Text(
-                              context.t.forumPage.subredditTab.title,
-                            ),
-                          ),
-                        ],
-                        onTap: (index) {
-                          // Here we want to scroll the current tab to the top.
-                          // Only scroll to top when user taps on the current
-                          // tab, which means index is not changing.
-                          if (tabController?.indexIsChanging ?? true) {
-                            // Do nothing because user tapped another index
-                            // and want to switch to it.
-                            return;
-                          }
-                          const duration = Duration(milliseconds: 300);
-                          const curve = Curves.ease;
-                          switch (tabController!.index) {
-                            case _pinnedTabIndex:
-                              _pinnedScrollController.animateTo(
-                                0,
-                                duration: duration,
-                                curve: curve,
-                              );
-                            case _threadTabIndex:
-                              _threadScrollController.animateTo(
-                                0,
-                                duration: duration,
-                                curve: curve,
-                              );
-                            case _subredditTabIndex:
-                              _subredditScrollController.animateTo(
-                                0,
-                                duration: duration,
-                                curve: curve,
-                              );
-                          }
-                        },
-                      )
-                    : null,
-                onSearch: () async {
-                  await context.pushNamed(
-                    ScreenPaths.search,
-                    queryParameters: {'fid': widget.fid},
-                  );
-                },
-                onJumpPage: (pageNumber) async {
-                  if (!mounted) {
-                    return;
-                  }
-                  // Mark loading here.
-                  // Mark state will be removed when
-                  // loading finishes (next build).
-                  context.read<JumpPageCubit>().markLoading();
-                  context
-                      .read<ForumBloc>()
-                      .add(ForumJumpPageRequested(pageNumber));
-                },
-                onSelected: (value) async {
-                  switch (value) {
-                    case MenuActions.refresh:
-                      if (tabController == null) {
-                        context.read<ForumBloc>().add(ForumRefreshRequested());
-                        return;
-                      }
-                      switch (tabController!.index) {
-                        case _pinnedTabIndex:
-                          await _pinnedRefreshController.callRefresh();
-                        case _threadTabIndex:
-                          await _threadRefreshController.callRefresh();
-                        case _subredditTabIndex:
-                          await _subredditRefreshController.callRefresh();
-                        default:
-                          context
-                              .read<ForumBloc>()
-                              .add(ForumRefreshRequested());
-                      }
-                    case MenuActions.copyUrl:
-                      await Clipboard.setData(
-                        ClipboardData(text: widget.forumUrl),
-                      );
-                      if (!context.mounted) {
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            context.t.aboutPage.copiedToClipboard,
-                          ),
-                        ),
-                      );
-                    case MenuActions.openInBrowser:
-                      await context.dispatchAsUrl(
-                        widget.forumUrl,
-                        external: true,
-                      );
-                    case MenuActions.backToTop:
-                      await _threadScrollController.animateTo(
-                        0,
-                        curve: Curves.ease,
-                        duration: const Duration(milliseconds: 500),
-                      );
-                    case MenuActions.reverseOrder:
-                      ;
-                  }
-                },
-              ),
+              appBar: _buildListAppBar(context, state),
               body: _buildBody(context, state),
             );
           },

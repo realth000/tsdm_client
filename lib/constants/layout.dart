@@ -51,6 +51,9 @@ const edgeInsetsL20R20B10 = EdgeInsets.only(left: 20, right: 20, bottom: 10);
 const edgeInsetsL10T5R5B5 =
     EdgeInsets.only(left: 10, top: 5, right: 5, bottom: 5);
 
+/// An [EdgeInsets] with 10 at left, 5 at top and 10 at right.
+const edgeInsetsL10T5R10 = EdgeInsets.only(left: 10, top: 5, right: 10);
+
 /// An [EdgeInsets] with 10 at left, 5 at top, 10 at right and 20 at bottom.
 const edgeInsetsL10T5R10B20 =
     EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 20);

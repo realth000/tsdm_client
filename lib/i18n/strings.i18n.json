@@ -173,7 +173,13 @@
     },
     "threadTab": {
       "title": "Thread",
-      "noThread": "No Thread"
+      "noThread": "No Thread",
+      "threadType": "Types",
+      "threadSpecialType": "Special type",
+      "threadDateline": "Active time",
+      "threadOrder": "Order",
+      "threadDigested": "Digested",
+      "threadRecommended": "Recommended"
     },
     "subredditTab": {
       "title": "Subreddit",

@@ -173,7 +173,13 @@
     },
     "threadTab": {
       "title": "帖子",
-      "noThread": "没有帖子"
+      "noThread": "没有帖子",
+      "threadType": "分类",
+      "threadSpecialType": "特殊分类",
+      "threadDateline": "活跃时间",
+      "threadOrder": "排序",
+      "threadDigested": "加精",
+      "threadRecommended": "推荐"
     },
     "subredditTab": {
       "title": "子版块",
