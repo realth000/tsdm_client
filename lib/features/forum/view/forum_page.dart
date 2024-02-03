@@ -372,9 +372,15 @@ class _ForumPageState extends State<ForumPage>
 
   Widget _buildBody(BuildContext context, ForumState state) {
     return switch (state.status) {
-      ForumStatus.initial ||
-      ForumStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
+      ForumStatus.initial || ForumStatus.loading => CustomScrollView(
+          slivers: [
+            if (state.filterState.isFiltering())
+              _buildNormalThreadFilterRow(context, state),
+            const SliverFillRemaining(
+              child: Center(child: CircularProgressIndicator()),
+            ),
+          ],
+        ),
       ForumStatus.failed => buildRetryButton(context, () {
           context
               .read<ForumBloc>()

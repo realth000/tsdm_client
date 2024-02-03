@@ -57,18 +57,20 @@ class ThreadChip extends StatelessWidget {
         return FilterChip(
           label: Text(chipLabel),
           selected: chipSelected,
-          onSelected: (v) async {
-            // bottom sheet.
-            await showModalBottomSheet<void>(
-              context: context,
-              builder: (_) => BlocProvider.value(
-                value: context.read<ForumBloc>(),
-                child: BlocBuilder<ForumBloc, ForumState>(
-                  builder: _buildContent,
-                ),
-              ),
-            );
-          },
+          onSelected: state.status.isLoading()
+              ? null
+              : (v) async {
+                  // bottom sheet.
+                  await showModalBottomSheet<void>(
+                    context: context,
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<ForumBloc>(),
+                      child: BlocBuilder<ForumBloc, ForumState>(
+                        builder: _buildContent,
+                      ),
+                    ),
+                  );
+                },
         );
       },
     );
@@ -252,16 +254,18 @@ class ThreadDigestChip extends StatelessWidget {
         return FilterChip(
           label: Text(context.t.forumPage.threadTab.threadDigested),
           selected: state.filterState.filterDigest.digest,
-          onSelected: (v) async {
-            context.read<ForumBloc>().add(
-                  ForumChangeThreadFilterStateRequested(
-                    state.filterState.copyWith(
-                      filter: state.filterState.filterDigest.filterName,
-                      filterDigest: FilterDigest(digest: v),
-                    ),
-                  ),
-                );
-          },
+          onSelected: state.status.isLoading()
+              ? null
+              : (v) async {
+                  context.read<ForumBloc>().add(
+                        ForumChangeThreadFilterStateRequested(
+                          state.filterState.copyWith(
+                            filter: state.filterState.filterDigest.filterName,
+                            filterDigest: FilterDigest(digest: v),
+                          ),
+                        ),
+                      );
+                },
         );
       },
     );
@@ -280,16 +284,21 @@ class ThreadRecommendedChip extends StatelessWidget {
         return FilterChip(
           label: Text(context.t.forumPage.threadTab.threadRecommended),
           selected: state.filterState.filterRecommend.recommend,
-          onSelected: (v) async {
-            context.read<ForumBloc>().add(
-                  ForumChangeThreadFilterStateRequested(
-                    state.filterState.copyWith(
-                      filter: state.filterState.filterRecommend.filterName,
-                      filterRecommend: FilterRecommend(recommend: v),
-                    ),
-                  ),
-                );
-          },
+          onSelected: state.status.isLoading()
+              ? null
+              : state.status.isLoading()
+                  ? null
+                  : (v) async {
+                      context.read<ForumBloc>().add(
+                            ForumChangeThreadFilterStateRequested(
+                              state.filterState.copyWith(
+                                filter: state
+                                    .filterState.filterRecommend.filterName,
+                                filterRecommend: FilterRecommend(recommend: v),
+                              ),
+                            ),
+                          );
+                    },
         );
       },
     );
