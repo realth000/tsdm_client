@@ -8,6 +8,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
+import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -154,6 +155,10 @@ class WelcomeSection extends StatelessWidget {
     final needExpand = ResponsiveBreakpoints.of(context)
         .largerOrEqualTo('homepage_welcome_expand');
 
+    final homePageState = context.read<HomepageBloc>().state;
+    final hasUnreadInfo =
+        homePageState.hasUnreadMessage || homePageState.hasUnreadNotice;
+
     return ConstrainedBox(
       constraints: BoxConstraints(
         maxHeight: needExpand ? _kahrpbaPicHeight : _kahrpbaPicHeight * 2 + 20,
@@ -203,7 +208,11 @@ class WelcomeSection extends StatelessWidget {
                         ),
                         Expanded(child: Container()),
                         IconButton(
-                          icon: const Icon(Icons.notifications_outlined),
+                          icon: hasUnreadInfo
+                              ? const Badge(
+                                  child: Icon(Icons.notifications_outlined),
+                                )
+                              : const Icon(Icons.notifications_outlined),
                           onPressed: () async {
                             await context.pushNamed(ScreenPaths.notice);
                           },

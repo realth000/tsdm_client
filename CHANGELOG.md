@@ -29,6 +29,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - 不再显示被设置为不显示的html节点。
+- 尝试在首页和我的页面内提醒有未读的消息。
 
 ## [0.5.1] - 2024-01-31
 

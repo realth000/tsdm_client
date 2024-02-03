@@ -30,6 +30,8 @@ class ProfileState extends Equatable {
     this.uid,
     this.userProfile,
     this.failedToLogoutReason,
+    this.hasUnreadNotice = false,
+    this.hasUnreadMessage = false,
   });
 
   /// Status.
@@ -50,6 +52,12 @@ class ProfileState extends Equatable {
   /// page content is as same as [ProfileStatus.success].
   final Exception? failedToLogoutReason;
 
+  /// Flag indicating has unread notices or not.
+  final bool hasUnreadNotice;
+
+  /// Flag indicating has unread messages or not.
+  final bool hasUnreadMessage;
+
   /// Copy with.
   ProfileState copyWith({
     ProfileStatus? status,
@@ -57,14 +65,18 @@ class ProfileState extends Equatable {
     String? uid,
     UserProfile? userProfile,
     Exception? failedToLogoutReason,
+    bool? hasUnreadNotice,
+    bool? hasUnreadMessage,
   }) {
     return ProfileState(
       status: status ?? this.status,
       username: username ?? this.username,
       uid: uid ?? this.uid,
       userProfile: userProfile ?? this.userProfile,
-      failedToLogoutReason:
-          failedToLogoutReason, // This argument should be cleaned if not set.
+      // This argument should be cleaned if not set.
+      failedToLogoutReason: failedToLogoutReason,
+      hasUnreadNotice: hasUnreadNotice ?? this.hasUnreadNotice,
+      hasUnreadMessage: hasUnreadMessage ?? this.hasUnreadMessage,
     );
   }
 
@@ -75,5 +87,7 @@ class ProfileState extends Equatable {
         uid,
         userProfile,
         failedToLogoutReason,
+        hasUnreadNotice,
+        hasUnreadMessage,
       ];
 }

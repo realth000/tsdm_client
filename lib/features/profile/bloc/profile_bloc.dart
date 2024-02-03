@@ -45,10 +45,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         event.uid == null &&
         _profileRepository.hasCache()) {
       final userProfile = _buildProfile(_profileRepository.getCache()!);
+      final (hasUnreadNotice, hasUnreadMessage) =
+          _buildUnreadInfoStatus(_profileRepository.getCache()!);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
+          hasUnreadNotice: hasUnreadNotice,
+          hasUnreadMessage: hasUnreadMessage,
         ),
       );
       return;
@@ -69,10 +73,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
+      final (hasUnreadNotice, hasUnreadMessage) =
+          _buildUnreadInfoStatus(document);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
+          hasUnreadNotice: hasUnreadNotice,
+          hasUnreadMessage: hasUnreadMessage,
         ),
       );
     } on HttpRequestFailedException catch (e) {
@@ -98,10 +106,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
+      final (hasUnreadNotice, hasUnreadMessage) =
+          _buildUnreadInfoStatus(document);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
+          hasUnreadNotice: hasUnreadNotice,
+          hasUnreadMessage: hasUnreadMessage,
         ),
       );
     } on HttpRequestFailedException catch (e) {
@@ -221,5 +233,17 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       checkinTodayStatus: checkinTodayStatus,
       activityInfoList: activityInfoList,
     );
+  }
+
+  (bool hasUnreadNotice, bool hasUnreadMessage) _buildUnreadInfoStatus(
+    uh.Document document,
+  ) {
+    // Check notice status.
+    final hasUnreadNotice =
+        document.querySelector('a#myprompt')?.classes.contains('new') ?? false;
+    final hasUnreadMessage =
+        document.querySelector('a#pm_ntc')?.classes.contains('new') ?? false;
+
+    return (hasUnreadNotice, hasUnreadMessage);
   }
 }

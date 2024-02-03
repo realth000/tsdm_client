@@ -44,6 +44,8 @@ final class HomepageState extends Equatable {
     this.loggedUserInfo,
     this.pinnedThreadGroupList = const [],
     this.swiperUrlList = const [],
+    this.hasUnreadNotice = false,
+    this.hasUnreadMessage = false,
   });
 
   /// Loading status.
@@ -63,6 +65,12 @@ final class HomepageState extends Equatable {
   /// Swiper urls in the homepage.
   final List<SwiperUrl> swiperUrlList;
 
+  /// Flag indicating has unread notices or not.
+  final bool hasUnreadNotice;
+
+  /// Flag indicating has unread messages or not.
+  final bool hasUnreadMessage;
+
   /// Copy with
   HomepageState copyWith({
     HomepageStatus? status,
@@ -71,6 +79,8 @@ final class HomepageState extends Equatable {
     List<PinnedThreadGroup>? pinnedThreadGroupList,
     List<SwiperUrl>? swiperUrlList,
     int? documentHashCode,
+    bool? hasUnreadNotice,
+    bool? hasUnreadMessage,
   }) {
     return HomepageState(
       status: status ?? this.status,
@@ -79,6 +89,8 @@ final class HomepageState extends Equatable {
       pinnedThreadGroupList:
           pinnedThreadGroupList ?? this.pinnedThreadGroupList,
       swiperUrlList: swiperUrlList ?? this.swiperUrlList,
+      hasUnreadNotice: hasUnreadNotice ?? this.hasUnreadNotice,
+      hasUnreadMessage: hasUnreadMessage ?? this.hasUnreadMessage,
     );
   }
 
@@ -89,5 +101,6 @@ final class HomepageState extends Equatable {
         loggedUserInfo,
         pinnedThreadGroupList,
         swiperUrlList,
+        hasUnreadNotice,
       ];
 }

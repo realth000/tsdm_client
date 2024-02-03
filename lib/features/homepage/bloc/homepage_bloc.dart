@@ -185,6 +185,12 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
             // Style 2: With welcome text
             document.querySelector('div#chart > script');
 
+    final hasUnreadNotice =
+        document.querySelector('a#myprompt')?.classes.contains('new') ?? false;
+
+    final hasUnreadMessage =
+        document.querySelector('a#pm_ntc')?.classes.contains('new') ?? false;
+
     final picUrlList =
         _buildKahrpbaPicUrlList(styleNode).whereType<String>().toList();
     final picHrefList =
@@ -282,6 +288,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       loggedUserInfo: loggedUserInfo,
       pinnedThreadGroupList: pinnedThreadGroupList,
       swiperUrlList: swiperUrlList,
+      hasUnreadNotice: hasUnreadNotice,
+      hasUnreadMessage: hasUnreadMessage,
     );
   }
 
