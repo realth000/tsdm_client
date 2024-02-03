@@ -272,12 +272,21 @@ class _ForumPageState extends State<ForumPage>
     // Use _haveNoThread to ensure we parsed the web page and there really
     // no thread in the forum.
     if (normalThreadList.isEmpty) {
-      return Center(
+      final emptyContentHint = Center(
         child: Text(
           context.t.forumPage.threadTab.noThread,
           style: Theme.of(context).inputDecorationTheme.hintStyle,
         ),
       );
+      if (state.filterState.isFiltering()) {
+        return CustomScrollView(
+          slivers: [
+            _buildNormalThreadFilterRow(context, state),
+            SliverFillRemaining(child: emptyContentHint),
+          ],
+        );
+      }
+      return emptyContentHint;
     }
 
     _threadRefreshController.finishLoad();
@@ -447,7 +456,9 @@ class _ForumPageState extends State<ForumPage>
         child: BlocBuilder<ForumBloc, ForumState>(
           builder: (context, state) {
             if (state.status == ForumStatus.success &&
-                state.normalThreadList.isEmpty) {
+                state.normalThreadList.isEmpty &&
+                // Do not switch tab if filtering but filtering non result left.
+                !state.filterState.isFiltering()) {
               tabController?.animateTo(
                 _subredditTabIndex,
                 duration: const Duration(milliseconds: 500),

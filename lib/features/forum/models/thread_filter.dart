@@ -59,6 +59,16 @@ class FilterState extends Equatable {
   /// Only show threads marked with recommend (推荐贴).
   final FilterRecommend filterRecommend;
 
+  /// Return whether thread filter is on.
+  bool isFiltering() {
+    return filterType?.typeID != null ||
+        filterSpecialType?.specialType != null ||
+        filterDateline?.dateline != null ||
+        filterOrder?.orderBy != null ||
+        filterDigest.digest ||
+        filterRecommend.recommend;
+  }
+
   /// Copy with
   FilterState copyWith({
     required String? filter,
