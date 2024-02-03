@@ -78,6 +78,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
       NoticeType.reply => context.t.noticePage.noticeDetailPage.titleReply,
       NoticeType.rate => context.t.noticePage.noticeDetailPage.titleRate,
       NoticeType.mention => context.t.noticePage.noticeDetailPage.titleMention,
+      NoticeType.invite => '', // No detail page for invites, impossible.
     };
     return MultiBlocProvider(
       providers: [

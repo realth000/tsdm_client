@@ -70,6 +70,10 @@ class NoticeCard extends StatelessWidget {
             ),
           ],
         ),
+      NoticeType.invite => Text(
+          context.t.noticePage.noticeTab
+              .inviteBody(threadTitle: notice.noticeThreadTitle ?? ''),
+        ),
     };
 
     return Card(
@@ -78,6 +82,12 @@ class NoticeCard extends StatelessWidget {
       child: InkWell(
         onTap: notice.redirectUrl != null
             ? () async {
+                // The redirect url in invite type notice is a thread page.
+                // Do NOT go to the notice detail page.
+                if (notice.noticeType == NoticeType.invite) {
+                  return context.dispatchAsUrl(notice.redirectUrl!);
+                }
+
                 await context.pushNamed(
                   ScreenPaths.reply,
                   pathParameters: <String, String>{

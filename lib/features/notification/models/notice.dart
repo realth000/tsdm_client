@@ -15,6 +15,9 @@ enum NoticeType {
 
   /// Another mentioned current user in a post.
   mention,
+
+  /// Another user invited the current user to take part in specified thread.
+  invite,
 }
 
 /// A single notice for current user.
@@ -123,6 +126,7 @@ class Notice extends Equatable {
     // </dd>
     final quoteNode = element.querySelector('dd.ntc_body > div.quote');
     final mentionNode = element.querySelector('dd.ntc_body > blockquote');
+    final litNode = element.querySelector('dd.ntc_body > a.lit');
     late final NoticeType noticeType;
     if (quoteNode != null) {
       noticeType = NoticeType.rate;
@@ -131,6 +135,8 @@ class Notice extends Equatable {
       quotedMessage = quoteNode.innerText;
     } else if (mentionNode != null) {
       noticeType = NoticeType.mention;
+    } else if (litNode?.attributes['href']?.contains('&tid=') ?? false) {
+      noticeType = NoticeType.invite;
     } else {
       noticeType = NoticeType.reply;
     }
@@ -142,7 +148,7 @@ class Notice extends Equatable {
 
     final a1Node = element.querySelector('dd.ntc_body > a:nth-child(1)');
     final a2Node = element.querySelector('dd.ntc_body > a:nth-child(2)');
-    if (noticeType == NoticeType.reply) {
+    if (noticeType == NoticeType.reply || noticeType == NoticeType.invite) {
       username = a1Node?.firstEndDeepText();
       noticeThreadUrl = a2Node?.firstHref();
       noticeThreadTitle = a2Node?.firstEndDeepText();

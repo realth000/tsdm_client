@@ -200,7 +200,8 @@
       "title": "Notice",
       "replyBody": "replied in $threadTitle",
       "rateBody": "scored your thread in $threadTitle $score",
-      "mentionBody": "mentioned you in thread"
+      "mentionBody": "mentioned you in thread",
+      "inviteBody": "invite you to participate in the topic $threadTitle"
     },
     "messageTab": {
       "title": "Messages"

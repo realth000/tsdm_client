@@ -200,7 +200,8 @@
       "title": "提醒",
       "replyBody": "在 $threadTitle 中回复了",
       "rateBody": "在 $threadTitle 中给您的帖子评分 $score",
-      "mentionBody": "在帖子中提到了你"
+      "mentionBody": "在帖子中提到了你",
+      "inviteBody": "邀请您参与话题 $threadTitle"
     },
     "messageTab": {
       "title": "消息"
