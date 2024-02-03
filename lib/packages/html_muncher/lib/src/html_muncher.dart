@@ -240,11 +240,11 @@ class Muncher {
             'h4' => _buildH4(node),
             'li' => _buildLi(node),
             'code' => _buildCode(node),
+            'dl' => _buildDl(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
             'ul' ||
-            'dl' ||
             'dd' ||
             'pre' =>
               _munch(node),
@@ -614,6 +614,14 @@ class Muncher {
         child: RichText(text: ret),
       ),
     );
+  }
+
+  InlineSpan _buildDl(uh.Element element) {
+    // Skip rate log area.
+    if (element.id.startsWith('ratelog_')) {
+      return const TextSpan();
+    }
+    return _munch(element);
   }
 
   /*                Setup Functions                      */
