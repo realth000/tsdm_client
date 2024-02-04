@@ -122,19 +122,27 @@ class _ProfilePageState extends State<ProfilePage> {
     }
 
     final profileState = context.read<ProfileBloc>().state;
-    final hasUnreadInfo =
-        profileState.hasUnreadNotice || profileState.hasUnreadMessage;
+    final unreadNoticeCount = profileState.unreadNoticeCount;
+    final hasUnreadMessage = profileState.hasUnreadMessage;
+
+    late final Widget noticeIcon;
+    if (unreadNoticeCount > 0) {
+      noticeIcon = Badge(
+        label: Text('$unreadNoticeCount'),
+        child: const Icon(Icons.notifications_outlined),
+      );
+    } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
+      noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+    } else {
+      noticeIcon = const Icon(Icons.notifications_outlined);
+    }
 
     late final List<Widget> actions;
     if (widget.username == null && widget.uid == null) {
       // Current is current logged user's profile page.
       actions = [
         IconButton(
-          icon: hasUnreadInfo
-              ? const Badge(
-                  child: Icon(Icons.notifications_outlined),
-                )
-              : const Icon(Icons.notifications_outlined),
+          icon: noticeIcon,
           onPressed: () async {
             await context.pushNamed(ScreenPaths.notice);
           },

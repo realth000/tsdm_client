@@ -156,8 +156,20 @@ class WelcomeSection extends StatelessWidget {
         .largerOrEqualTo('homepage_welcome_expand');
 
     final homePageState = context.read<HomepageBloc>().state;
-    final hasUnreadInfo =
-        homePageState.hasUnreadMessage || homePageState.hasUnreadNotice;
+    final unreadNoticeCount = homePageState.unreadNoticeCount;
+    final hasUnreadMessage = homePageState.hasUnreadMessage;
+
+    late final Widget noticeIcon;
+    if (unreadNoticeCount > 0) {
+      noticeIcon = Badge(
+        label: Text('$unreadNoticeCount'),
+        child: const Icon(Icons.notifications_outlined),
+      );
+    } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
+      noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+    } else {
+      noticeIcon = const Icon(Icons.notifications_outlined);
+    }
 
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -208,11 +220,7 @@ class WelcomeSection extends StatelessWidget {
                         ),
                         Expanded(child: Container()),
                         IconButton(
-                          icon: hasUnreadInfo
-                              ? const Badge(
-                                  child: Icon(Icons.notifications_outlined),
-                                )
-                              : const Icon(Icons.notifications_outlined),
+                          icon: noticeIcon,
                           onPressed: () async {
                             await context.pushNamed(ScreenPaths.notice);
                           },

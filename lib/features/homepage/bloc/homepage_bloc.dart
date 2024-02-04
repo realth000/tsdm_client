@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
@@ -185,8 +186,17 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
             // Style 2: With welcome text
             document.querySelector('div#chart > script');
 
-    final hasUnreadNotice =
-        document.querySelector('a#myprompt')?.classes.contains('new') ?? false;
+    var hasUnreadNotice = 0;
+    final noticeNode = document.querySelector('a#myprompt');
+    if (noticeNode?.classes.contains('new') ?? false) {
+      hasUnreadNotice = noticeNode?.innerText
+              .split('(')
+              .lastOrNull
+              ?.split(')')
+              .firstOrNull
+              ?.parseToInt() ??
+          0;
+    }
 
     final hasUnreadMessage =
         document.querySelector('a#pm_ntc')?.classes.contains('new') ?? false;
@@ -288,7 +298,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       loggedUserInfo: loggedUserInfo,
       pinnedThreadGroupList: pinnedThreadGroupList,
       swiperUrlList: swiperUrlList,
-      hasUnreadNotice: hasUnreadNotice,
+      unreadNoticeCount: hasUnreadNotice,
       hasUnreadMessage: hasUnreadMessage,
     );
   }

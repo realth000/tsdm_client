@@ -44,7 +44,7 @@ final class HomepageState extends Equatable {
     this.loggedUserInfo,
     this.pinnedThreadGroupList = const [],
     this.swiperUrlList = const [],
-    this.hasUnreadNotice = false,
+    this.unreadNoticeCount = 0,
     this.hasUnreadMessage = false,
   });
 
@@ -65,8 +65,8 @@ final class HomepageState extends Equatable {
   /// Swiper urls in the homepage.
   final List<SwiperUrl> swiperUrlList;
 
-  /// Flag indicating has unread notices or not.
-  final bool hasUnreadNotice;
+  /// The count of unread notices.
+  final int unreadNoticeCount;
 
   /// Flag indicating has unread messages or not.
   final bool hasUnreadMessage;
@@ -79,7 +79,7 @@ final class HomepageState extends Equatable {
     List<PinnedThreadGroup>? pinnedThreadGroupList,
     List<SwiperUrl>? swiperUrlList,
     int? documentHashCode,
-    bool? hasUnreadNotice,
+    int? unreadNoticeCount,
     bool? hasUnreadMessage,
   }) {
     return HomepageState(
@@ -89,7 +89,7 @@ final class HomepageState extends Equatable {
       pinnedThreadGroupList:
           pinnedThreadGroupList ?? this.pinnedThreadGroupList,
       swiperUrlList: swiperUrlList ?? this.swiperUrlList,
-      hasUnreadNotice: hasUnreadNotice ?? this.hasUnreadNotice,
+      unreadNoticeCount: unreadNoticeCount ?? this.unreadNoticeCount,
       hasUnreadMessage: hasUnreadMessage ?? this.hasUnreadMessage,
     );
   }
@@ -101,6 +101,6 @@ final class HomepageState extends Equatable {
         loggedUserInfo,
         pinnedThreadGroupList,
         swiperUrlList,
-        hasUnreadNotice,
+        unreadNoticeCount,
       ];
 }

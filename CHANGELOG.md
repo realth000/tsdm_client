@@ -15,6 +15,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   * 帖子右上角菜单 -> 倒序浏览/正序浏览。
 - 新增支持从好友邀请参与话题的消息跳转到相应帖子。
 - 新增支持筛选帖子。
+- 在首页和我的页面内提醒有未读的消息。
+  * 有提醒时显示提醒数量，只有短消息时显示红点。
 - 在消息提醒卡片上显示是多久以前的消息。~~终于分得清哪个是哪个了~~
 - 缓存首页轮播图。
 
@@ -29,7 +31,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - 不再显示被设置为不显示的html节点。
-- 尝试在首页和我的页面内提醒有未读的消息。
 
 ## [0.5.1] - 2024-01-31
 

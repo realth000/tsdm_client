@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
@@ -45,13 +46,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         event.uid == null &&
         _profileRepository.hasCache()) {
       final userProfile = _buildProfile(_profileRepository.getCache()!);
-      final (hasUnreadNotice, hasUnreadMessage) =
+      final (unreadNoticeCount, hasUnreadMessage) =
           _buildUnreadInfoStatus(_profileRepository.getCache()!);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
-          hasUnreadNotice: hasUnreadNotice,
+          unreadNoticeCount: unreadNoticeCount,
           hasUnreadMessage: hasUnreadMessage,
         ),
       );
@@ -73,13 +74,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
-      final (hasUnreadNotice, hasUnreadMessage) =
+      final (unreadNoticeCount, hasUnreadMessage) =
           _buildUnreadInfoStatus(document);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
-          hasUnreadNotice: hasUnreadNotice,
+          unreadNoticeCount: unreadNoticeCount,
           hasUnreadMessage: hasUnreadMessage,
         ),
       );
@@ -106,13 +107,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
-      final (hasUnreadNotice, hasUnreadMessage) =
+      final (unreadNoticeCount, hasUnreadMessage) =
           _buildUnreadInfoStatus(document);
       emit(
         state.copyWith(
           status: ProfileStatus.success,
           userProfile: userProfile,
-          hasUnreadNotice: hasUnreadNotice,
+          unreadNoticeCount: unreadNoticeCount,
           hasUnreadMessage: hasUnreadMessage,
         ),
       );
@@ -235,12 +236,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     );
   }
 
-  (bool hasUnreadNotice, bool hasUnreadMessage) _buildUnreadInfoStatus(
+  (int unreadNoticeCount, bool hasUnreadMessage) _buildUnreadInfoStatus(
     uh.Document document,
   ) {
     // Check notice status.
-    final hasUnreadNotice =
-        document.querySelector('a#myprompt')?.classes.contains('new') ?? false;
+    var hasUnreadNotice = 0;
+    final noticeNode = document.querySelector('a#myprompt');
+    if (noticeNode?.classes.contains('new') ?? false) {
+      hasUnreadNotice = noticeNode?.innerText
+              .split('(')
+              .lastOrNull
+              ?.split(')')
+              .firstOrNull
+              ?.parseToInt() ??
+          0;
+    }
+
     final hasUnreadMessage =
         document.querySelector('a#pm_ntc')?.classes.contains('new') ?? false;
 
