@@ -205,7 +205,8 @@
       "replyBody": "在 $threadTitle 中回复了",
       "rateBody": "在 $threadTitle 中给您的帖子评分 $score",
       "mentionBody": "在帖子中提到了你",
-      "inviteBody": "邀请您参与话题 $threadTitle"
+      "inviteBody": "邀请您参与话题 $threadTitle",
+      "newFriendBody": "和您成为了好友"
     },
     "messageTab": {
       "title": "消息"

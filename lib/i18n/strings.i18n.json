@@ -205,7 +205,8 @@
       "replyBody": "replied in $threadTitle",
       "rateBody": "scored your thread in $threadTitle $score",
       "mentionBody": "mentioned you in thread",
-      "inviteBody": "invite you to participate in the topic $threadTitle"
+      "inviteBody": "invite you to participate in the topic $threadTitle",
+      "newFriendBody": "became your friend"
     },
     "messageTab": {
       "title": "Messages"

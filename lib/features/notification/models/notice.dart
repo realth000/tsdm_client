@@ -18,6 +18,11 @@ enum NoticeType {
 
   /// Another user invited the current user to take part in specified thread.
   invite,
+
+  /// Another user has became the friend of current user.
+  ///
+  /// xxx 和您成为了好友
+  newFriend,
 }
 
 /// A single notice for current user.
@@ -137,6 +142,8 @@ class Notice extends Equatable {
       noticeType = NoticeType.mention;
     } else if (litNode?.attributes['href']?.contains('&tid=') ?? false) {
       noticeType = NoticeType.invite;
+    } else if (element.querySelectorAll('dd.ntc_body > a').length == 1) {
+      noticeType = NoticeType.newFriend;
     } else {
       noticeType = NoticeType.reply;
     }
@@ -166,6 +173,9 @@ class Notice extends Equatable {
           : n?.substring(usernameBeginOffset, usernameEndOffset);
       redirectUrl = a1Node?.firstHref();
       quotedMessage = mentionNode!.firstEndDeepText()?.trim();
+    } else if (noticeType == NoticeType.newFriend) {
+      username = a1Node?.firstEndDeepText();
+      userSpaceUrl = a1Node?.attributes['href'];
     } else {
       noticeThreadTitle = a1Node?.firstEndDeepText();
       redirectUrl = a1Node?.firstHref()?.prependHost();
@@ -188,6 +198,11 @@ class Notice extends Equatable {
           'failed to parse mention notice: $username, $userSpaceUrl, '
           '$noticeTime, $redirectUrl',
         );
+        return null;
+      }
+    } else if (noticeType == NoticeType.newFriend) {
+      if (username == null || userSpaceUrl == null) {
+        debug('failed to parse new friend notice: $username, $userSpaceUrl');
         return null;
       }
     } else if (username == null ||

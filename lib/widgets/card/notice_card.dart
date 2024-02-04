@@ -74,6 +74,8 @@ class NoticeCard extends StatelessWidget {
           context.t.noticePage.noticeTab
               .inviteBody(threadTitle: notice.noticeThreadTitle ?? ''),
         ),
+      NoticeType.newFriend =>
+        Text(context.t.noticePage.noticeTab.newFriendBody),
     };
 
     return Card(
