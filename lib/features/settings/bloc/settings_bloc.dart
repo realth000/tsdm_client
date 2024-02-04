@@ -60,6 +60,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsChangeCheckingMessageRequested>(
       _onSettingsChangeCheckinMessageRequested,
     );
+    on<SettingsChangeUnreadInfoHintRequested>(
+      _onSettingsChangeUnreadInfoHintRequested,
+    );
   }
 
   final SettingsRepository _settingsRepository;
@@ -131,6 +134,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEmitter emit,
   ) async {
     await _settingsRepository.setCheckinMessage(event.checkinMessage);
+  }
+
+  Future<void> _onSettingsChangeUnreadInfoHintRequested(
+    SettingsChangeUnreadInfoHintRequested event,
+    SettingsEmitter emit,
+  ) async {
+    await _settingsRepository.setShowUnreadInfoHint(enabled: event.enabled);
   }
 
   @override

@@ -62,6 +62,7 @@ class SettingsRepository {
       checkinMessage: _settingsProvider.getCheckinMessage(),
       showShortcutInForumCard: _settingsProvider.getShowShortcutInForumCard(),
       accentColor: _settingsProvider.getAccentColorValue(),
+      showUnreadInfoHint: _settingsProvider.getShowUnreadInfoHint(),
     );
   }
 
@@ -208,6 +209,16 @@ class SettingsRepository {
   Future<void> clearAccentColor() async {
     await _settingsProvider.clearAccentColor();
     _state = _state.copyWith(accentColor: -1);
+    _controller.add(_state);
+  }
+
+  /// Get the current visibility of unread info hint.
+  bool getShowUnreadInfoHint() => _settingsProvider.getShowUnreadInfoHint();
+
+  /// Set the visibility of unread info hint.
+  Future<void> setShowUnreadInfoHint({required bool enabled}) async {
+    await _settingsProvider.setShowUnreadInfoHint(enabled: enabled);
+    _state = _state.copyWith(showUnreadInfoHint: enabled);
     _controller.add(_state);
   }
 }

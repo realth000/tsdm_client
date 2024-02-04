@@ -265,4 +265,18 @@ class DatabaseSettingsProvider
     final storage = _getStorage();
     await storage.saveInt(settingsAccentColor, -1);
   }
+
+  @override
+  bool getShowUnreadInfoHint() {
+    final storage = _getStorage();
+    final isEnabled = storage.getBool(settingsShowUnreadInfoHint) ??
+        defaultShowUnreadInfoHint;
+    return isEnabled;
+  }
+
+  @override
+  Future<void> setShowUnreadInfoHint({required bool enabled}) async {
+    final storage = _getStorage();
+    await storage.saveBool(settingsShowUnreadInfoHint, value: enabled);
+  }
 }

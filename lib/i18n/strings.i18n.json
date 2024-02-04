@@ -51,6 +51,10 @@
       "showShortcutInForumCard": {
         "title": "Forum Card Shortcut Entries",
         "detail": "Show shortcut entries towards latest thread and subreddits in forum card"
+      },
+      "showUnreadInfoHint": {
+        "title": "Unread Info Hint",
+        "detail": "Show badge or count for user unread info on notice button"
       }
     },
     "checkinSection": {

@@ -26,6 +26,7 @@ class SettingsMap with _$SettingsMap {
     required String checkinMessage,
     required bool showShortcutInForumCard,
     required int accentColor,
+    required bool showUnreadInfoHint,
   }) = _SettingsMap;
 }
 
@@ -46,6 +47,7 @@ const settingsCheckinFeeling = 'checkInFeeling';
 const settingsCheckinMessage = 'checkInMessage';
 const settingsShowShortcutInForumCard = 'showShortcutInForumCard';
 const settingsAccentColor = 'accentColor';
+const settingsShowUnreadInfoHint = 'showUnreadInfoHint';
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsTypeMap = <String, Type>{
@@ -66,4 +68,5 @@ const settingsTypeMap = <String, Type>{
   settingsCheckinMessage: String,
   settingsShowShortcutInForumCard: bool,
   settingsAccentColor: int,
+  settingsShowUnreadInfoHint: bool,
 };

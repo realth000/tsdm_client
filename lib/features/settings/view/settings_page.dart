@@ -79,6 +79,9 @@ class _SettingsPageState extends State<SettingsPage> {
     // Accent color.
     final accentColor = state.settingsMap.accentColor;
 
+    // Show badge or unread info count on logged user's unread messages;
+    final showUnreadInfoHint = state.settingsMap.showUnreadInfoHint;
+
     return [
       SectionTitleText(context.t.settingsPage.appearanceSection.title),
       // Theme mode
@@ -177,6 +180,7 @@ class _SettingsPageState extends State<SettingsPage> {
               .add(SettingsChangeForumCardShortcutRequested(showShortcut: v));
         },
       ),
+      // Accent color
       SectionListTile(
         leading: const Icon(Icons.color_lens_outlined),
         title: Text(context.t.settingsPage.appearanceSection.colorScheme.title),
@@ -203,6 +207,22 @@ class _SettingsPageState extends State<SettingsPage> {
           context
               .read<SettingsBloc>()
               .add(SettingsChangeAccentColorRequested(color.$1!));
+        },
+      ),
+      SwitchListTile(
+        secondary: const Icon(Icons.notifications_outlined),
+        title: Text(
+          context.t.settingsPage.appearanceSection.showUnreadInfoHint.title,
+        ),
+        subtitle: Text(
+          context.t.settingsPage.appearanceSection.showUnreadInfoHint.detail,
+        ),
+        contentPadding: edgeInsetsL18R18,
+        value: showUnreadInfoHint,
+        onChanged: (v) async {
+          context
+              .read<SettingsBloc>()
+              .add(SettingsChangeUnreadInfoHintRequested(enabled: v));
         },
       ),
     ];

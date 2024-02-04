@@ -99,3 +99,16 @@ final class SettingsChangeCheckingMessageRequested extends SettingsEvent {
   @override
   List<Object?> get props => [checkinMessage];
 }
+
+/// User required to change the visibility of unread info hint.
+final class SettingsChangeUnreadInfoHintRequested extends SettingsEvent {
+  /// Constructor.
+  const SettingsChangeUnreadInfoHintRequested({required this.enabled})
+      : super();
+
+  /// Enable shortcuts or not.
+  final bool enabled;
+
+  @override
+  List<Object?> get props => [enabled];
+}

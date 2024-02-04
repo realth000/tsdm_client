@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/profile/models/user_profile.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
@@ -126,13 +127,18 @@ class _ProfilePageState extends State<ProfilePage> {
     final hasUnreadMessage = profileState.hasUnreadMessage;
 
     late final Widget noticeIcon;
-    if (unreadNoticeCount > 0) {
-      noticeIcon = Badge(
-        label: Text('$unreadNoticeCount'),
-        child: const Icon(Icons.notifications_outlined),
-      );
-    } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-      noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+    if (RepositoryProvider.of<SettingsRepository>(context)
+        .getShowUnreadInfoHint()) {
+      if (unreadNoticeCount > 0) {
+        noticeIcon = Badge(
+          label: Text('$unreadNoticeCount'),
+          child: const Icon(Icons.notifications_outlined),
+        );
+      } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
+        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+      } else {
+        noticeIcon = const Icon(Icons.notifications_outlined);
+      }
     } else {
       noticeIcon = const Icon(Icons.notifications_outlined);
     }

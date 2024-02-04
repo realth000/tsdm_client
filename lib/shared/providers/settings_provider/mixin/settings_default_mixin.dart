@@ -71,4 +71,9 @@ mixin SettingsDefaultMapMixin {
   ///
   /// Less than zero represents default color.
   int get defaultAccentColor => -1;
+
+  /// Show badge or unread notice count on notice button.
+  ///
+  /// Default is enabled.
+  bool get defaultShowUnreadInfoHint => true;
 }

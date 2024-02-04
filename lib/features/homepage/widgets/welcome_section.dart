@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
@@ -160,13 +161,18 @@ class WelcomeSection extends StatelessWidget {
     final hasUnreadMessage = homePageState.hasUnreadMessage;
 
     late final Widget noticeIcon;
-    if (unreadNoticeCount > 0) {
-      noticeIcon = Badge(
-        label: Text('$unreadNoticeCount'),
-        child: const Icon(Icons.notifications_outlined),
-      );
-    } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-      noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+    if (RepositoryProvider.of<SettingsRepository>(context)
+        .getShowUnreadInfoHint()) {
+      if (unreadNoticeCount > 0) {
+        noticeIcon = Badge(
+          label: Text('$unreadNoticeCount'),
+          child: const Icon(Icons.notifications_outlined),
+        );
+      } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
+        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+      } else {
+        noticeIcon = const Icon(Icons.notifications_outlined);
+      }
     } else {
       noticeIcon = const Icon(Icons.notifications_outlined);
     }

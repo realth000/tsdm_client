@@ -51,6 +51,10 @@
       "showShortcutInForumCard": {
         "title": "论坛卡片可跳转",
         "detail": "论坛卡片上显示可跳转到最新帖子和子板块的部件"
+      },
+      "showUnreadInfoHint": {
+        "title": "未读信息提示",
+        "detail": "有未读消息时消息按钮上显示红点或数量"
       }
     },
     "checkinSection": {

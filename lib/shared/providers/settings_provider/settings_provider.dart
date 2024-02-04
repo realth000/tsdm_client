@@ -105,4 +105,10 @@ abstract interface class SettingsProvider {
 
   /// Reset app accent color to default.
   Future<void> clearAccentColor();
+
+  /// Get the set visibility of badge or notice count of user unread messages.
+  bool getShowUnreadInfoHint();
+
+  /// Set the visibility of badge or notice count of user unread messages.
+  Future<void> setShowUnreadInfoHint({required bool enabled});
 }
