@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
 import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
+import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
@@ -191,6 +192,11 @@ final router = GoRouter(
           rateAction: rateAction,
         );
       },
+    ),
+    AppRoute(
+      path: ScreenPaths.points,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const PointsPage(),
     ),
   ],
 );

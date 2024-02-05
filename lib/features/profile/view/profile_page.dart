@@ -148,6 +148,12 @@ class _ProfilePageState extends State<ProfilePage> {
       // Current is current logged user's profile page.
       actions = [
         IconButton(
+          icon: const Icon(Icons.show_chart_outlined),
+          onPressed: () async {
+            await context.pushNamed(ScreenPaths.points);
+          },
+        ),
+        IconButton(
           icon: noticeIcon,
           onPressed: () async {
             await context.pushNamed(ScreenPaths.notice);

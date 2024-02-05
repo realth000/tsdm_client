@@ -177,7 +177,7 @@ extension GrepExtension on Element {
     if (children.length > 1) {
       // The value here is not a plain text, it's a normal node.
       // TODO: If we have a normal node value, parse it's link, img even styles.
-      value = childAtOrNull(1)?.firstEndDeepText();
+      value = nodes.elementAtOrNull(1)?.text;
     } else {
       value = nodes.lastOrNull?.text?.trim();
     }
