@@ -28,7 +28,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 修复无法解析部分带有隐藏区域的楼层的问题。
 - 修复上个版本引入的无法解析购买区域的问题。
 - 修复更新页面无法跳转到github release的问题。
-- 修复部分楼层中处于<dl>和<dd>标签内的内容无法显示的问题。
+- 修复部分楼层中处于\<dl\>和\<dd\>标签内的内容无法显示的问题。
+- 修复部分楼层中自定义字体周围多余换行的问题。
 
 ### Changed
 

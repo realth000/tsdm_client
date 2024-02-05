@@ -257,6 +257,8 @@ class Muncher {
   }
 
   InlineSpan _buildFont(uh.Element element) {
+    final oldInDiv = state.inDiv;
+    state.inDiv = false;
     // Setup color
     final hasColor = _tryPushColor(element);
     // Setup font size.
@@ -272,6 +274,7 @@ class Muncher {
       state.fontSizeStack.removeLast();
     }
 
+    state.inDiv = oldInDiv;
     // Restore color.
     return ret;
   }
