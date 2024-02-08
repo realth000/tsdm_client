@@ -19,7 +19,8 @@ enum ThreadStatus {
 class ThreadState extends Equatable {
   /// Constructor.
   const ThreadState({
-    required this.tid,
+    this.tid,
+    this.pid,
     this.status = ThreadStatus.initial,
     this.title,
     this.canLoadMore = false,
@@ -40,7 +41,12 @@ class ThreadState extends Equatable {
   final ThreadStatus status;
 
   /// Thread id.
-  final String tid;
+  final String? tid;
+
+  /// Post id.
+  ///
+  /// Use this when "mod=redirect&goto=findpost&pid=[pid]".
+  final String? pid;
 
   /// Thread title.
   final String? title;
@@ -95,6 +101,7 @@ class ThreadState extends Equatable {
   ThreadState copyWith({
     ThreadStatus? status,
     String? tid,
+    String? pid,
     String? title,
     bool? canLoadMore,
     int? currentPage,
@@ -111,6 +118,7 @@ class ThreadState extends Equatable {
     return ThreadState(
       status: status ?? this.status,
       tid: tid ?? this.tid,
+      pid: pid ?? this.pid,
       title: title ?? this.title,
       canLoadMore: canLoadMore ?? this.canLoadMore,
       currentPage: currentPage ?? this.currentPage,
@@ -131,6 +139,7 @@ class ThreadState extends Equatable {
   List<Object?> get props => [
         status,
         tid,
+        pid,
         title,
         canLoadMore,
         currentPage,

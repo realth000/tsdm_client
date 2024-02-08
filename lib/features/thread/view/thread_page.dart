@@ -25,14 +25,33 @@ class ThreadPage extends StatefulWidget {
   /// Constructor.
   const ThreadPage({
     required this.threadID,
+    required this.findPostID,
     required this.pageNumber,
     this.title,
     this.threadType,
     super.key,
-  });
+  }) : assert(
+          threadID != null || findPostID != null,
+          'MUST provide threadID or findPostID',
+        );
 
   /// Thread ID, tid.
-  final String threadID;
+  final String? threadID;
+
+  /// Post ID to find and redirect before accessing the real thread page.
+  ///
+  /// In some situations we do not know the [threadID] but only a post id to
+  /// find.
+  /// e.g. Redirect from points statistics changelog event:
+  ///
+  /// * $baseUrl/forum.php?mod=redirect&goto=findpost&pid=xxx
+  ///
+  /// So In this situation we need to allow this type of url and assume it is
+  /// thread page.
+  /// With mod=redirect and goto=findpost and the pid parameter is here.
+  ///
+  /// This field MUST only used when [threadID] is empty.
+  final String? findPostID;
 
   /// Thread title.
   final String? title;
@@ -158,6 +177,7 @@ class _ThreadPageState extends State<ThreadPage>
         BlocProvider(
           create: (context) => ThreadBloc(
             tid: widget.threadID,
+            pid: widget.findPostID,
             threadRepository: RepositoryProvider.of(context),
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
@@ -215,9 +235,17 @@ class _ThreadPageState extends State<ThreadPage>
                 context.read<JumpPageCubit>().markSuccess();
               }
 
-              final threadUrl = RepositoryProvider.of<ThreadRepository>(context)
-                      .threadUrl ??
-                  '$baseUrl/forum.php?mod=viewthread&tid=${widget.threadID}&extra=page%3D1';
+              var threadUrl =
+                  RepositoryProvider.of<ThreadRepository>(context).threadUrl;
+              if (widget.threadID != null) {
+                threadUrl ??= '$baseUrl/forum.php?mod=viewthread&'
+                    'tid=${widget.threadID}&extra=page%3D1';
+              } else {
+                // Here we don;t have threadID, thus the findPostID is
+                // definitely not null.
+                threadUrl ??= '$baseUrl/forum.php?mode=redirect&goto=findpost&'
+                    'pid=${widget.findPostID}';
+              }
 
               return Scaffold(
                 appBar: ListAppBar(
@@ -246,7 +274,9 @@ class _ThreadPageState extends State<ThreadPage>
                             .add(ThreadRefreshRequested());
 
                       case MenuActions.copyUrl:
-                        await Clipboard.setData(ClipboardData(text: threadUrl));
+                        await Clipboard.setData(
+                          ClipboardData(text: threadUrl!),
+                        );
                         if (!context.mounted) {
                           return;
                         }
@@ -258,7 +288,7 @@ class _ThreadPageState extends State<ThreadPage>
                           ),
                         );
                       case MenuActions.openInBrowser:
-                        await context.dispatchAsUrl(threadUrl, external: true);
+                        await context.dispatchAsUrl(threadUrl!, external: true);
                       case MenuActions.backToTop:
                         await _listScrollController.animateTo(
                           0,

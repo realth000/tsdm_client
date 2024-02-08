@@ -18,10 +18,11 @@ typedef ThreadEmitter = Emitter<ThreadState>;
 class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
   /// Constructor.
   ThreadBloc({
-    required String tid,
+    required String? tid,
+    required String? pid,
     required ThreadRepository threadRepository,
   })  : _threadRepository = threadRepository,
-        super(ThreadState(tid: tid)) {
+        super(ThreadState(tid: tid, pid: pid)) {
     on<ThreadLoadMoreRequested>(_onThreadLoadMoreRequested);
     on<ThreadRefreshRequested>(_onThreadRefreshRequested);
     on<ThreadJumpPageRequested>(_onThreadJumpPageRequested);
@@ -40,6 +41,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     try {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         pageNumber: event.pageNumber,
         onlyVisibleUid: state.onlyVisibleUid,
         reverseOrder: state.reverseOrder,
@@ -59,6 +61,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     try {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         onlyVisibleUid: state.onlyVisibleUid,
         reverseOrder: state.reverseOrder,
       );
@@ -78,6 +81,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     try {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         pageNumber: event.pageNumber,
         onlyVisibleUid: state.onlyVisibleUid,
         reverseOrder: state.reverseOrder,
@@ -105,6 +109,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     try {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         pageNumber: state.currentPage,
         onlyVisibleUid: event.uid,
         reverseOrder: state.reverseOrder,
@@ -135,6 +140,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       // risk.
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         pageNumber: state.currentPage,
         reverseOrder: state.reverseOrder,
       );
@@ -165,6 +171,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     try {
       final document = await _threadRepository.fetchThread(
         tid: state.tid,
+        pid: state.pid,
         pageNumber: state.currentPage,
         onlyVisibleUid: state.onlyVisibleUid,
         reverseOrder: state.reverseOrder,
@@ -190,6 +197,9 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     int pageNumber, {
     bool? clearOnlyVisibleUid,
   }) async {
+    // Reset the thread id from document.
+    final threadID = document.querySelector('head > link')?.attributes['href'];
+
     final threadClosed = document.querySelector('form#fastpostform') == null;
     final threadDataNode = document.querySelector('div#postlist');
     final postList = Post.buildListFromThreadDataNode(threadDataNode);
@@ -264,7 +274,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     } else {
       replyParameters = ReplyParameters(
         fid: fid,
-        tid: state.tid,
+        tid: threadID!,
         postTime: postTime,
         formHash: formHash,
         subject: subject,
@@ -272,7 +282,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
     }
 
     return ThreadState(
-      tid: state.tid,
+      tid: threadID,
+      pid: state.pid,
       replyParameters: replyParameters,
       status: ThreadStatus.success,
       title: title ?? state.title,

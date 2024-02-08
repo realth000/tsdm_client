@@ -2,9 +2,12 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
+import 'package:tsdm_client/features/points/widgets/points_card.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/attr_block.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Page to show current logged user's points statistics and changelog.
 class PointsPage extends StatefulWidget {
@@ -28,54 +31,109 @@ class _PointsPageState extends State<PointsPage>
     PointsStatisticsState state,
   ) {
     if (state.status == PointsStatus.loading) {
-      return const Center(child: sizedCircularProgressIndicator);
+      return const Center(child: CircularProgressIndicator());
     }
     _statisticsRefreshController.finishRefresh();
-    return Padding(
-      padding: edgeInsetsL10T5R10B20,
-      child: EasyRefresh(
-        controller: _statisticsRefreshController,
-        scrollController: _statisticsScrollController,
-        header: const MaterialHeader(),
-        onRefresh: () {
-          context
-              .read<PointsStatisticsBloc>()
-              .add(PointsStatisticsRefreshRequired());
-        },
-        child: SingleChildScrollView(
-          controller: _statisticsScrollController,
+
+    final attrList = state.pointsMap.entries.toList();
+
+    return EasyRefresh(
+      controller: _statisticsRefreshController,
+      scrollController: _statisticsScrollController,
+      header: const MaterialHeader(),
+      onRefresh: () {
+        context
+            .read<PointsStatisticsBloc>()
+            .add(PointsStatisticsRefreshRequested());
+      },
+      child: SingleChildScrollView(
+        controller: _statisticsScrollController,
+        child: Padding(
+          padding: edgeInsetsL10T5R10B20,
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              ...state.pointsMap.entries.map(
-                (e) => ListTile(title: Text('${e.key} ${e.value}')),
-              ),
-              ...state.pointsRecentChangelog.map(
-                (e) => Card(
-                  clipBehavior: Clip.hardEdge,
-                  child: InkWell(
-                    onTap: e.redirectUrl == null
-                        ? null
-                        : () async {
-                            // TODO: Handle find post type url.
-                            await context.dispatchAsUrl(e.redirectUrl!);
-                          },
-                    child: Padding(
-                      padding: edgeInsetsL15T15R15B15,
-                      child: Column(
-                        children: [
-                          Text(e.operation),
-                          Text(e.changeMapString),
-                          Text(e.detail),
-                        ],
-                      ),
-                    ),
-                  ),
+              sizedBoxW5H5,
+              GridView.builder(
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 3,
+                  mainAxisExtent: 70,
                 ),
+                itemCount: attrList.length,
+                itemBuilder: (context, index) {
+                  final attr = attrList[index];
+                  return AttrBlock(name: attr.key, value: attr.value);
+                },
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
               ),
+              Row(
+                children: [
+                  SingleLineText(
+                    context.t.pointsPage.statisticsTab.recentChangelog,
+                    style: Theme.of(context).textTheme.titleSmall,
+                  ),
+                  const Spacer(),
+                  TextButton(
+                    child: Text(context.t.general.more),
+                    onPressed: () {
+                      _tabController.animateTo(1);
+                    },
+                  ),
+                ],
+              ),
+              sizedBoxW10H10,
+              ...state.recentChangelog.map(PointsChangeCard.new),
             ],
           ),
         ),
       ),
+    );
+  }
+
+  Widget _buildChangelogTab(
+    BuildContext context,
+    PointsChangelogState state,
+  ) {
+    if (state.status == PointsStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    _changelogRefreshController
+      ..finishLoad()
+      ..finishRefresh();
+
+    final changelogList = EasyRefresh(
+      controller: _changelogRefreshController,
+      scrollController: _changelogScrollController,
+      header: const MaterialHeader(),
+      footer: const MaterialFooter(),
+      onLoad: () {
+        context
+            .read<PointsChangelogBloc>()
+            .add(PointsChangelogLoadMoreRequested(state.currentPage));
+      },
+      onRefresh: () {
+        context
+            .read<PointsChangelogBloc>()
+            .add(PointsChangelogRefreshRequested());
+      },
+      child: ListView.separated(
+        shrinkWrap: true,
+        padding: edgeInsetsL10T5R10B20,
+        itemCount: state.fullChangelog.length,
+        itemBuilder: (context, index) {
+          return PointsChangeCard(state.fullChangelog[index]);
+        },
+        separatorBuilder: (context, index) => sizedBoxW5H5,
+      ),
+    );
+
+    return Column(
+      children: [
+        Expanded(
+          child: changelogList,
+        ),
+      ],
     );
   }
 
@@ -114,7 +172,12 @@ class _PointsPageState extends State<PointsPage>
         BlocProvider(
           create: (context) => PointsStatisticsBloc(
             pointsRepository: RepositoryProvider.of(context),
-          )..add(PointsStatisticsRefreshRequired()),
+          )..add(PointsStatisticsRefreshRequested()),
+        ),
+        BlocProvider(
+          create: (context) => PointsChangelogBloc(
+            pointsRepository: RepositoryProvider.of(context),
+          )..add(PointsChangelogRefreshRequested()),
         ),
       ],
       child: MultiBlocListener(
@@ -126,15 +189,25 @@ class _PointsPageState extends State<PointsPage>
           ),
         ],
         child: Scaffold(
-          appBar: AppBar(),
+          appBar: AppBar(
+            title: Text(context.t.pointsPage.title),
+            bottom: TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: context.t.pointsPage.statisticsTab.title),
+                Tab(text: context.t.pointsPage.changelogTab.title),
+              ],
+            ),
+          ),
           body: TabBarView(
             controller: _tabController,
             children: [
               BlocBuilder<PointsStatisticsBloc, PointsStatisticsState>(
                 builder: _buildStatisticsTab,
               ),
-              // TODO: Changelog tab.
-              Text('changelog page'),
+              BlocBuilder<PointsChangelogBloc, PointsChangelogState>(
+                builder: _buildChangelogTab,
+              ),
             ],
           ),
         ),

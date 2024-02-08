@@ -11,7 +11,8 @@
     "pleaseWait": "請稍候",
     "loadFailedAndRetry": "載入失敗，正在重試",
     "noMoreData": "已經到頭了",
-    "reset": "重置为默认值"
+    "reset": "重置为默认值",
+    "more": "更多"
   },
   "navigation": {
     "homepage": "首頁",
@@ -262,6 +263,16 @@
     "unknownAllowedRange": "無效的評分區間 $range",
     "onlyAllowIntegers": "只允許整數",
     "failedToRate": "评分失败"
+  },
+  "pointsPage": {
+    "title": "積分統計",
+    "statisticsTab": {
+      "title": "我的點數",
+      "recentChangelog": "近期積分記錄"
+    },
+    "changelogTab": {
+      "title": "積分記錄"
+    }
   },
   "forumCard": {
     "links": "連結",

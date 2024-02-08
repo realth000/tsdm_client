@@ -89,10 +89,8 @@ class _CardLayout extends StatelessWidget {
         onTap: () async {
           await context.pushNamed(
             ScreenPaths.thread,
-            pathParameters: <String, String>{
-              'tid': threadID,
-            },
             queryParameters: {
+              'tid': threadID,
               'appBarTitle': title,
               'threadType': threadType?.name,
             },

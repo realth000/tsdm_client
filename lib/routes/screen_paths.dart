@@ -59,7 +59,21 @@ class ScreenPaths {
   static const String settings = '/settings';
 
   /// Thread page.
-  static const String thread = '/thread/:tid';
+  ///
+  /// Parameters MUST provided within the queryParameters.
+  ///
+  /// Especially the `tid` or `pid` parameters. Thr former one is used in most
+  /// situations to locate and represent  an unique thread and the later one is
+  /// used in some situation that we do not know the actual thread ID but we
+  /// redirect by finding a post.
+  ///
+  /// Now the parameter is **implicitly** required by the related UI page, which
+  /// is really a bad idea.
+  ///
+  /// # Parameters
+  ///
+  /// `tid` or `pid` MUST be provided through query parameter.
+  static const String thread = '/thread';
 
   /// Notice page.
   ///

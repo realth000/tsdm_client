@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/points/models/points_change.dart';
+import 'package:tsdm_client/features/points/repository/model/changelog_parameter.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -13,6 +14,9 @@ part 'points_state.dart';
 /// Statistics emitter.
 typedef PointsStatisticsEmitter = Emitter<PointsStatisticsState>;
 
+/// Changelog emitter.
+typedef PointsChangelogEmitter = Emitter<PointsChangelogState>;
+
 /// Bloc of user points statistics page.
 final class PointsStatisticsBloc
     extends Bloc<PointsStatisticsEvent, PointsStatisticsState> {
@@ -20,13 +24,13 @@ final class PointsStatisticsBloc
   PointsStatisticsBloc({required PointsRepository pointsRepository})
       : _pointsRepository = pointsRepository,
         super(const PointsStatisticsState()) {
-    on<PointsStatisticsRefreshRequired>(_onPointsStatisticsRefreshRequired);
+    on<PointsStatisticsRefreshRequested>(_onPointsStatisticsRefreshRequested);
   }
 
   final PointsRepository _pointsRepository;
 
-  Future<void> _onPointsStatisticsRefreshRequired(
-    PointsStatisticsRefreshRequired event,
+  Future<void> _onPointsStatisticsRefreshRequested(
+    PointsStatisticsRefreshRequested event,
     PointsStatisticsEmitter emit,
   ) async {
     emit(state.copyWith(status: PointsStatus.loading));
@@ -41,7 +45,7 @@ final class PointsStatisticsBloc
         state.copyWith(
           status: PointsStatus.success,
           pointsMap: result.$1,
-          pointsRecentChangelog: result.$2,
+          recentChangelog: result.$2,
         ),
       );
     } on HttpRequestFailedException catch (e) {
@@ -62,7 +66,7 @@ final class PointsStatisticsBloc
         .querySelectorAll('ul.creditl > li')
         .map((e) => e.parseLiEmNode())
         .whereType<(String, String)>()
-        .map((e) => MapEntry(e.$1, e.$2));
+        .map((e) => MapEntry(e.$1.split(':').first, e.$2));
     final pointsMap = Map<String, String>.fromEntries(pointsMapEntries);
 
     final tableNode = rootNode.querySelector('table.dt');
@@ -73,15 +77,81 @@ final class PointsStatisticsBloc
     final pointsChangeList = _buildChangeListFromTable(tableNode);
     return (pointsMap, pointsChangeList);
   }
+}
 
-  /// Build a list of [PointsChange] from <table class="dt">
-  List<PointsChange> _buildChangeListFromTable(uh.Element element) {
-    final ret = element
-        .querySelectorAll('table > tbody > tr')
-        .skip(1)
-        .map(PointsChange.fromTrNode)
-        .whereType<PointsChange>()
-        .toList();
-    return ret;
+/// Bloc of the points changelog page.
+final class PointsChangelogBloc
+    extends Bloc<PointsChangelogEvent, PointsChangelogState> {
+  /// Constructor.
+  PointsChangelogBloc({required PointsRepository pointsRepository})
+      : _pointsRepository = pointsRepository,
+        super(const PointsChangelogState()) {
+    on<PointsChangelogRefreshRequested>(_onPointsChangelogRefreshRequested);
+    on<PointsChangelogLoadMoreRequested>(_onPointsChangelogLoadMoreRequested);
   }
+
+  /// Repository of changelog.
+  final PointsRepository _pointsRepository;
+
+  Future<void> _onPointsChangelogRefreshRequested(
+    PointsChangelogRefreshRequested event,
+    PointsChangelogEmitter emit,
+  ) async {
+    emit(state.copyWith(status: PointsStatus.loading, fullChangelog: []));
+    try {
+      final document = await _pointsRepository
+          .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));
+      emit(_parseDocument(document, state.currentPage));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to refresh changelog tab: $e');
+      emit(state.copyWith(status: PointsStatus.failed));
+    }
+  }
+
+  Future<void> _onPointsChangelogLoadMoreRequested(
+    PointsChangelogLoadMoreRequested event,
+    PointsChangelogEmitter emit,
+  ) async {
+    try {
+      final document = await _pointsRepository.fetchChangelogPage(
+        state.parameter.copyWith(pageNumber: state.currentPage + 1),
+      );
+      emit(_parseDocument(document, event.pageNumber));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to load more points changelog: $e');
+      emit(state.copyWith(status: PointsStatus.failed));
+    }
+  }
+
+  /// parse [document] into state.
+  ///
+  /// * [pageNumber] is the current recorded current page number. Used as a
+  /// fallback page number if current page or total pages not found in document.
+  PointsChangelogState _parseDocument(uh.Document document, int pageNumber) {
+    final tableNode = document.querySelector('table.dt');
+    if (tableNode == null) {
+      debug('points change table not found');
+      return state.copyWith(status: PointsStatus.failed);
+    }
+    final changeList = _buildChangeListFromTable(tableNode);
+    final currentPage = document.currentPage() ?? pageNumber;
+    final totalPages = document.totalPages() ?? pageNumber;
+    return state.copyWith(
+      status: PointsStatus.success,
+      fullChangelog: [...state.fullChangelog, ...changeList],
+      currentPage: currentPage,
+      totalPages: totalPages,
+    );
+  }
+}
+
+/// Build a list of [PointsChange] from <table class="dt">
+List<PointsChange> _buildChangeListFromTable(uh.Element element) {
+  final ret = element
+      .querySelectorAll('table > tbody > tr')
+      .skip(1)
+      .map(PointsChange.fromTrNode)
+      .whereType<PointsChange>()
+      .toList();
+  return ret;
 }

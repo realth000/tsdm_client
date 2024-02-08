@@ -11,7 +11,8 @@
     "pleaseWait": "Please wait",
     "loadFailedAndRetry": "Load failed, retrying",
     "noMoreData": "No more data",
-    "reset": "Reset to default"
+    "reset": "Reset to default",
+    "more": "More"
   },
   "navigation": {
     "homepage": "Home",
@@ -262,6 +263,16 @@
     "unknownAllowedRange": "Unknown allowed range $range",
     "onlyAllowIntegers": "Only integers are allowed",
     "failedToRate": "Rate failed"
+  },
+  "pointsPage": {
+    "title": "Points Statistics",
+    "statisticsTab": {
+      "title": "My Points",
+      "recentChangelog": "Recent Changelog"
+    },
+    "changelogTab": {
+      "title": "Points Changelog"
+    }
   },
   "forumCard": {
     "links": "Links",

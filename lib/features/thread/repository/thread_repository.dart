@@ -26,19 +26,30 @@ class ThreadRepository {
   ///
   /// * **HttpRequestedFailedException** when http request failed.
   Future<uh.Document> fetchThread({
-    required String tid,
+    String? tid,
+    String? pid,
     int pageNumber = 1,
     String? onlyVisibleUid,
     bool reverseOrder = false,
   }) async {
+    assert(
+      tid != null || pid != null,
+      'tid and pid MUST not be null at the same time',
+    );
+
     /// Only visible uid.
     final visibleUid =
         onlyVisibleUid == null ? '' : '&authorid=$onlyVisibleUid';
     final orderType = reverseOrder ? '&ordertype=1' : '';
     _pageNumber = pageNumber;
-    _threadUrl = '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1'
-        '$orderType$visibleUid'
-        '&page=$pageNumber';
+    if (tid != null) {
+      _threadUrl = '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1'
+          '$orderType$visibleUid'
+          '&page=$pageNumber';
+    } else {
+      // The page came from where we redirect by finding a post.
+      _threadUrl = '$baseUrl/forum.php?mod=redirect&goto=findpost&pid=$pid';
+    }
 
     final resp = await getIt.get<NetClientProvider>().get(_threadUrl!);
     if (resp.statusCode != HttpStatus.ok) {

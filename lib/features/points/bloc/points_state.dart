@@ -24,7 +24,7 @@ final class PointsStatisticsState extends Equatable {
   const PointsStatisticsState({
     this.status = PointsStatus.initial,
     this.pointsMap = const {},
-    this.pointsRecentChangelog = const [],
+    this.recentChangelog = const [],
   });
 
   /// Status.
@@ -42,20 +42,19 @@ final class PointsStatisticsState extends Equatable {
   ///
   /// The length is expected to be no more than 10.
   ///
-  /// For full changelog, see [PointsChangelogState.pointsFullChangelog].
-  final List<PointsChange> pointsRecentChangelog;
+  /// For full changelog, see [PointsChangelogState.fullChangelog].
+  final List<PointsChange> recentChangelog;
 
   /// Copy with
   PointsStatisticsState copyWith({
     PointsStatus? status,
     Map<String, String>? pointsMap,
-    List<PointsChange>? pointsRecentChangelog,
+    List<PointsChange>? recentChangelog,
   }) {
     return PointsStatisticsState(
       status: status ?? this.status,
       pointsMap: pointsMap ?? this.pointsMap,
-      pointsRecentChangelog:
-          pointsRecentChangelog ?? this.pointsRecentChangelog,
+      recentChangelog: recentChangelog ?? this.recentChangelog,
     );
   }
 
@@ -63,7 +62,7 @@ final class PointsStatisticsState extends Equatable {
   List<Object?> get props => [
         status,
         pointsMap,
-        pointsRecentChangelog,
+        recentChangelog,
       ];
 }
 
@@ -72,9 +71,10 @@ final class PointsChangelogState extends Equatable {
   /// Constructor.
   const PointsChangelogState({
     this.status = PointsStatus.initial,
-    this.pointsFullChangelog = const [],
-    this.pointsLogPageCurrentNumber = 1,
-    this.pointsLogPageTotalNumber = 1,
+    this.parameter = const ChangelogParameter.empty(),
+    this.fullChangelog = const [],
+    this.currentPage = 1,
+    this.totalPages = 1,
   });
 
   /// Status.
@@ -85,35 +85,41 @@ final class PointsChangelogState extends Equatable {
   /// This field contains all queried changes on user's points, may contains
   /// a long period.
   ///
-  /// For recent changes, see [PointsStatisticsState.pointsRecentChangelog].
-  final List<PointsChange> pointsFullChangelog;
+  /// For recent changes, see [PointsStatisticsState.recentChangelog].
+  final List<PointsChange> fullChangelog;
 
   /// Current page number of user's points changelog page.
-  final int pointsLogPageCurrentNumber;
+  final int currentPage;
 
   /// Total pages count of user's points changelog page.
-  final int pointsLogPageTotalNumber;
+  final int totalPages;
+
+  /// Parameters used to do the changelog query.
+  final ChangelogParameter parameter;
 
   /// Copy with.
   PointsChangelogState copyWith({
-    List<PointsChange>? pointsFullChangelog,
-    int? pointsLogPageCurrentNumber,
-    int? pointsLogPageTotalNumber,
+    PointsStatus? status,
+    ChangelogParameter? parameter,
+    List<PointsChange>? fullChangelog,
+    int? currentPage,
+    int? totalPages,
   }) {
     return PointsChangelogState(
-      pointsFullChangelog: pointsFullChangelog ?? this.pointsFullChangelog,
-      pointsLogPageCurrentNumber:
-          pointsLogPageCurrentNumber ?? this.pointsLogPageCurrentNumber,
-      pointsLogPageTotalNumber:
-          pointsLogPageTotalNumber ?? this.pointsLogPageTotalNumber,
+      status: status ?? this.status,
+      parameter: parameter ?? this.parameter,
+      fullChangelog: fullChangelog ?? this.fullChangelog,
+      currentPage: currentPage ?? this.currentPage,
+      totalPages: totalPages ?? this.totalPages,
     );
   }
 
   @override
   List<Object?> get props => [
         status,
-        pointsFullChangelog,
-        pointsLogPageCurrentNumber,
-        pointsLogPageTotalNumber,
+        parameter,
+        fullChangelog,
+        currentPage,
+        totalPages,
       ];
 }

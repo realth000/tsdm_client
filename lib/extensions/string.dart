@@ -45,7 +45,7 @@ extension ParseUrl on String {
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
       return RecognizedRoute(
         ScreenPaths.thread,
-        pathParameters: {'tid': "${queryParameters['tid']}"},
+        queryParameters: {'tid': "${queryParameters['tid']}"},
       );
     }
 
@@ -65,7 +65,16 @@ extension ParseUrl on String {
     if (mod == 'redirect' && queryParameters['tid'] != null) {
       return RecognizedRoute(
         ScreenPaths.thread,
-        pathParameters: {'tid': "${queryParameters['tid']}"},
+        queryParameters: {'tid': "${queryParameters['tid']}"},
+      );
+    }
+
+    if (mod == 'redirect' &&
+        queryParameters['goto'] == 'findpost' &&
+        queryParameters['pid'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.thread,
+        queryParameters: {'pid': "${queryParameters['pid']}"},
       );
     }
 

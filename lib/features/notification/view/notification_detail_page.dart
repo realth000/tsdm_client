@@ -146,10 +146,8 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
                       debug('find post: tid:$_tid, page:$_page, pid:$_pid');
                       await context.pushNamed(
                         ScreenPaths.thread,
-                        pathParameters: <String, String>{
-                          'tid': _tid!,
-                        },
                         queryParameters: <String, String>{
+                          'tid': _tid!,
                           'pageNumber': _page!,
                           'pid': _pid!,
                         },

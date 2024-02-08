@@ -95,12 +95,18 @@ final router = GoRouter(
       builder: (state) {
         final title = state.uri.queryParameters['appBarTitle'];
         final threadType = state.uri.queryParameters['threadType'];
-        final tid = state.pathParameters['tid']!;
+        final tid = state.uri.queryParameters['tid'];
+        final pid = state.uri.queryParameters['pid'];
+        assert(
+          tid != null || pid != null,
+          'MUST provide tid or pid through query parameters',
+        );
         final pageNumber = state.uri.queryParameters['pageNumber'];
         return ThreadPage(
           title: title,
           threadType: threadType,
           threadID: tid,
+          findPostID: pid,
           pageNumber: pageNumber ?? '1',
         );
       },
