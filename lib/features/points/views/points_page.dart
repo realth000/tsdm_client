@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/features/points/widgets/points_card.dart';
@@ -83,7 +84,11 @@ class _PointsPageState extends State<PointsPage>
                 ],
               ),
               sizedBoxW10H10,
-              ...state.recentChangelog.map(PointsChangeCard.new),
+              ...state.recentChangelog
+                  .map(PointsChangeCard.new)
+                  .toList()
+                  .cast<Widget>()
+                  .insertBetween(sizedBoxW5H5),
             ],
           ),
         ),
