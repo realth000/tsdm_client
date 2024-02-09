@@ -73,6 +73,7 @@ final class PointsChangelogState extends Equatable {
     this.status = PointsStatus.initial,
     this.parameter = const ChangelogParameter.empty(),
     this.fullChangelog = const [],
+    this.allParameters = const ChangelogAllParameters.empty(),
     this.currentPage = 1,
     this.totalPages = 1,
   });
@@ -97,10 +98,23 @@ final class PointsChangelogState extends Equatable {
   /// Parameters used to do the changelog query.
   final ChangelogParameter parameter;
 
+  /// All available parameters that can fill in the query filter.
+  ///
+  /// Some parameters in query filters are choices provided by the server side.
+  /// This parameter holds those parameters.
+  ///
+  /// e.g. points type, operation type, points change type.
+  ///
+  /// Also there are some parameters that not came from the server side.
+  ///
+  /// e.g. start time, end time.
+  final ChangelogAllParameters allParameters;
+
   /// Copy with.
   PointsChangelogState copyWith({
     PointsStatus? status,
     ChangelogParameter? parameter,
+    ChangelogAllParameters? allParameters,
     List<PointsChange>? fullChangelog,
     int? currentPage,
     int? totalPages,
@@ -108,6 +122,7 @@ final class PointsChangelogState extends Equatable {
     return PointsChangelogState(
       status: status ?? this.status,
       parameter: parameter ?? this.parameter,
+      allParameters: allParameters ?? this.allParameters,
       fullChangelog: fullChangelog ?? this.fullChangelog,
       currentPage: currentPage ?? this.currentPage,
       totalPages: totalPages ?? this.totalPages,
@@ -118,6 +133,7 @@ final class PointsChangelogState extends Equatable {
   List<Object?> get props => [
         status,
         parameter,
+        allParameters,
         fullChangelog,
         currentPage,
         totalPages,

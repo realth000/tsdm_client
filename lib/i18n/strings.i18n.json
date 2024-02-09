@@ -271,7 +271,12 @@
       "recentChangelog": "Recent Changelog"
     },
     "changelogTab": {
-      "title": "Points Changelog"
+      "title": "Points Changelog",
+      "extType": "Points Type",
+      "changeType": "Change Type",
+      "operationType": "Operation Type",
+      "dateRange": "Date Range",
+      "query": "Query"
     }
   },
   "forumCard": {

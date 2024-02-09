@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/points/repository/model/changelog_parameter
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
@@ -40,7 +41,9 @@ final class PointsRepository {
   /// * **HttpRequestFailedException** when http request failed.
   Future<uh.Document> fetchChangelogPage(ChangelogParameter parameter) async {
     final netClient = getIt.get<NetClientProvider>();
-    final resp = await netClient.get('$_changelogPageUrl$parameter');
+    final target = '$_changelogPageUrl$parameter';
+    debug('fetch changelog page from $target');
+    final resp = await netClient.get(target);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
     }

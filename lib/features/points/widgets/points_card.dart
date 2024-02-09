@@ -38,7 +38,7 @@ class PointsChangeCard extends StatelessWidget {
                       Icons.trending_down_outlined,
                       color: Color(0x99999999),
                     ),
-                  PointsChangeType.unknown =>
+                  PointsChangeType.unlimited =>
                     const Icon(Icons.trending_flat_outlined),
                 },
                 title: Text(pointsChange.operation),

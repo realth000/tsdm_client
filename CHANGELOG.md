@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 支持筛选积分变更历史。
+
 ### Fixed
 
 - 修复积分统计页面我的积分标签页中缺少空隙的问题。

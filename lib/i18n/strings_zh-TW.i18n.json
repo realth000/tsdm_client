@@ -271,7 +271,12 @@
       "recentChangelog": "近期積分記錄"
     },
     "changelogTab": {
-      "title": "積分記錄"
+      "title": "積分記錄",
+      "extType": "積分",
+      "changeType": "收支",
+      "operationType": "操作類型",
+      "dateRange": "日期範圍",
+      "query": "查詢"
     }
   },
   "forumCard": {

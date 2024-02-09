@@ -6,7 +6,9 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/features/points/widgets/points_card.dart';
+import 'package:tsdm_client/features/points/widgets/points_query_form.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -100,44 +102,59 @@ class _PointsPageState extends State<PointsPage>
     BuildContext context,
     PointsChangelogState state,
   ) {
+    late final Widget body;
     if (state.status == PointsStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
+      body = const Expanded(
+        child: Center(child: CircularProgressIndicator()),
+      );
+    } else {
+      final changelogList = EasyRefresh(
+        controller: _changelogRefreshController,
+        scrollController: _changelogScrollController,
+        header: const MaterialHeader(),
+        footer: const MaterialFooter(),
+        onLoad: () async {
+          if (state.currentPage >= state.totalPages) {
+            _changelogRefreshController.finishLoad(IndicatorResult.noMore);
+            await showNoMoreSnackBar(context);
+            return;
+          }
+          context
+              .read<PointsChangelogBloc>()
+              .add(PointsChangelogLoadMoreRequested(state.currentPage));
+        },
+        onRefresh: () {
+          context
+              .read<PointsChangelogBloc>()
+              .add(PointsChangelogRefreshRequested());
+        },
+        child: ListView.separated(
+          shrinkWrap: true,
+          padding: edgeInsetsL10T5R10B20,
+          itemCount: state.fullChangelog.length,
+          itemBuilder: (context, index) {
+            return PointsChangeCard(state.fullChangelog[index]);
+          },
+          separatorBuilder: (context, index) => sizedBoxW5H5,
+        ),
+      );
+
+      body = Expanded(child: changelogList);
     }
+
     _changelogRefreshController
       ..finishLoad()
       ..finishRefresh();
 
-    final changelogList = EasyRefresh(
-      controller: _changelogRefreshController,
-      scrollController: _changelogScrollController,
-      header: const MaterialHeader(),
-      footer: const MaterialFooter(),
-      onLoad: () {
-        context
-            .read<PointsChangelogBloc>()
-            .add(PointsChangelogLoadMoreRequested(state.currentPage));
-      },
-      onRefresh: () {
-        context
-            .read<PointsChangelogBloc>()
-            .add(PointsChangelogRefreshRequested());
-      },
-      child: ListView.separated(
-        shrinkWrap: true,
-        padding: edgeInsetsL10T5R10B20,
-        itemCount: state.fullChangelog.length,
-        itemBuilder: (context, index) {
-          return PointsChangeCard(state.fullChangelog[index]);
-        },
-        separatorBuilder: (context, index) => sizedBoxW5H5,
-      ),
-    );
-
     return Column(
       children: [
-        Expanded(
-          child: changelogList,
+        sizedBoxW5H5,
+        Padding(
+          padding: edgeInsetsL10T5R10,
+          child: PointsQueryForm(state.allParameters),
         ),
+        sizedBoxW10H10,
+        body,
       ],
     );
   }

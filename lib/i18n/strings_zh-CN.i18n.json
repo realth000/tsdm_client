@@ -271,7 +271,12 @@
       "recentChangelog": "近期积分记录"
     },
     "changelogTab": {
-      "title": "积分记录"
+      "title": "积分记录",
+      "extType": "积分",
+      "changeType": "收支",
+      "operationType": "操作类型",
+      "dateRange": "日期范围",
+      "query": "查询"
     }
   },
   "forumCard": {

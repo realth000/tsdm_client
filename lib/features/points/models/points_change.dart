@@ -17,7 +17,7 @@ enum PointsChangeType {
   /// We do not know the points become more or less.
   ///
   /// Use as a fallback type.
-  unknown,
+  unlimited,
 }
 
 /// A single change on the user's points.
@@ -134,7 +134,7 @@ class PointsChange extends Equatable {
       'xg1' => PointsChangeType.less,
       // Fallback to unknown type.
       // This might not happen but we should consider it.
-      String() || null => PointsChangeType.unknown,
+      String() || null => PointsChangeType.unlimited,
     };
     final changeMap = <String, String>{};
     for (var i = 0; i < attrNameList.length; i++) {

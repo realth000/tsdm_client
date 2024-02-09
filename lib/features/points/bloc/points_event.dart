@@ -41,3 +41,12 @@ final class PointsChangelogJumpPageRequested extends PointsChangelogEvent {
   /// Page number to jump to.
   final int pageNumber;
 }
+
+/// User requested to do a query action with given [parameter].
+final class PointsChangelogQueryRequested extends PointsChangelogEvent {
+  /// Constructor.
+  const PointsChangelogQueryRequested(this.parameter);
+
+  /// Parameter to use in query.
+  final ChangelogParameter parameter;
+}

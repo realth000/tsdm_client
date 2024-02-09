@@ -3,6 +3,7 @@ import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/points/models/points_change.dart';
+import 'package:tsdm_client/features/points/repository/model/changelog_all_parameters.dart';
 import 'package:tsdm_client/features/points/repository/model/changelog_parameter.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -88,6 +89,7 @@ final class PointsChangelogBloc
         super(const PointsChangelogState()) {
     on<PointsChangelogRefreshRequested>(_onPointsChangelogRefreshRequested);
     on<PointsChangelogLoadMoreRequested>(_onPointsChangelogLoadMoreRequested);
+    on<PointsChangelogQueryRequested>(_onPointsChangelogQueryRequested);
   }
 
   /// Repository of changelog.
@@ -97,11 +99,16 @@ final class PointsChangelogBloc
     PointsChangelogRefreshRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    emit(state.copyWith(status: PointsStatus.loading, fullChangelog: []));
+    emit(state.copyWith(
+      status: PointsStatus.loading,
+      fullChangelog: [],
+    ));
     try {
       final document = await _pointsRepository
           .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));
-      emit(_parseDocument(document, state.currentPage));
+      final s = _parseDocument(document, state.currentPage);
+      final allParameters = _parseAllParameters(document);
+      emit(s.copyWith(allParameters: allParameters));
     } on HttpRequestFailedException catch (e) {
       debug('failed to refresh changelog tab: $e');
       emit(state.copyWith(status: PointsStatus.failed));
@@ -121,6 +128,75 @@ final class PointsChangelogBloc
       debug('failed to load more points changelog: $e');
       emit(state.copyWith(status: PointsStatus.failed));
     }
+  }
+
+  Future<void> _onPointsChangelogQueryRequested(
+    PointsChangelogQueryRequested event,
+    PointsChangelogEmitter emit,
+  ) async {
+    emit(
+      state.copyWith(
+        status: PointsStatus.loading,
+        fullChangelog: [],
+        parameter: event.parameter,
+      ),
+    );
+    try {
+      final document = await _pointsRepository
+          .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));
+      final s = _parseDocument(document, state.currentPage);
+      final allParameters = _parseAllParameters(document);
+      emit(s.copyWith(allParameters: allParameters));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to refresh changelog tab: $e');
+      emit(state.copyWith(status: PointsStatus.failed));
+    }
+  }
+
+  ChangelogAllParameters _parseAllParameters(uh.Document document) {
+    // These options seem invisible in browser but exist.
+    // <select id="optype" name="optype">
+    //   <option value="">Choose</option>
+    //   <option value="TRC">Task</option>
+    //   ...
+    // </select>
+    final extTypeList = document
+        .querySelectorAll('select#exttype > option')
+        .where((e) => e.attributes['value'] != null)
+        .map(
+          (e) => ChangelogPointsType(
+            name: e.innerText.trim(),
+            extType: e.attributes['value']!,
+          ),
+        )
+        .toList();
+    final optTypeList = document
+        .querySelectorAll('select#optype > option')
+        .where((e) => e.attributes['value'] != null)
+        .map(
+          (e) => ChangelogOperationType(
+            name: e.innerText.trim(),
+            operation: e.attributes['value']!,
+          ),
+        )
+        .toList();
+
+    final changeTypeList = document
+        .querySelectorAll('select#income > option')
+        .where((e) => e.attributes['value'] != null)
+        .map(
+          (e) => ChangelogChangeType(
+            name: e.innerText.trim(),
+            changeType: e.attributes['value']!,
+          ),
+        )
+        .toList();
+
+    return ChangelogAllParameters(
+      extTypeList: extTypeList,
+      operationTypeList: optTypeList,
+      changeTypeList: changeTypeList,
+    );
   }
 
   /// parse [document] into state.
