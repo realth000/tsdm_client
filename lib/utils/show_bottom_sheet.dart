@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 
+/// Show a bottom sheet with given [title] and build children
+/// with [childrenBuilder].
 Future<void> showCustomBottomSheet({
   required BuildContext context,
   required String title,

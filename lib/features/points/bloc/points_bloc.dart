@@ -99,10 +99,12 @@ final class PointsChangelogBloc
     PointsChangelogRefreshRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    emit(state.copyWith(
-      status: PointsStatus.loading,
-      fullChangelog: [],
-    ));
+    emit(
+      state.copyWith(
+        status: PointsStatus.loading,
+        fullChangelog: [],
+      ),
+    );
     try {
       final document = await _pointsRepository
           .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));

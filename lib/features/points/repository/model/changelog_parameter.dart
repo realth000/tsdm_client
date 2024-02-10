@@ -54,7 +54,7 @@ final class ChangelogParameter extends Equatable {
     String? extType,
     String? startTime,
     String? endTime,
-    String? incomeType,
+    String? changeType,
     String? operation,
     int? pageNumber,
   }) {
@@ -62,7 +62,7 @@ final class ChangelogParameter extends Equatable {
       extType: extType ?? this.extType,
       startTime: startTime ?? this.startTime,
       endTime: endTime ?? this.endTime,
-      changeType: incomeType ?? this.changeType,
+      changeType: changeType ?? this.changeType,
       operation: operation ?? this.operation,
       pageNumber: pageNumber ?? this.pageNumber,
     );
