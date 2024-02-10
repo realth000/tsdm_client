@@ -241,6 +241,7 @@ class Muncher {
             'li' => _buildLi(node),
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
+            'b' => _buildB(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -276,7 +277,7 @@ class Muncher {
 
     state.inDiv = oldInDiv;
     // Restore color.
-    return ret;
+    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
   }
 
   InlineSpan _buildStrong(uh.Element element) {
@@ -625,6 +626,11 @@ class Muncher {
       return const TextSpan();
     }
     return _munch(element);
+  }
+
+  InlineSpan _buildB(uh.Element element) {
+    final ret = _munch(element);
+    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
   }
 
   /*                Setup Functions                      */
