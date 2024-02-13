@@ -12,7 +12,8 @@
     "loadFailedAndRetry": "載入失敗，正在重試",
     "noMoreData": "已經到頭了",
     "reset": "重置为默认值",
-    "more": "更多"
+    "more": "更多",
+    "pageIndex": "第 $index 頁"
   },
   "navigation": {
     "homepage": "首頁",

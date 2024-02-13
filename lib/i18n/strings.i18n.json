@@ -12,7 +12,8 @@
     "loadFailedAndRetry": "Load failed, retrying",
     "noMoreData": "No more data",
     "reset": "Reset to default",
-    "more": "More"
+    "more": "More",
+    "pageIndex": "Page $index"
   },
   "navigation": {
     "homepage": "Home",

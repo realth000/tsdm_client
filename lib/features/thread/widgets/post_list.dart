@@ -1,8 +1,12 @@
+import 'dart:core';
+
+import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
+import 'package:tsdm_client/features/thread/widgets/post_group.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/normal_thread.dart' as nt;
 import 'package:tsdm_client/shared/models/post.dart';
@@ -141,6 +145,44 @@ class _PostListState extends State<PostList> {
     );
   }
 
+  List<Widget> _buildPostList(BuildContext context) {
+    if (widget.postList.isEmpty) {
+      return [];
+    }
+    final ret = <Widget>[];
+
+    // Current sliver group index.
+    //
+    // All posts in the same page will be gathered in a group.
+    // Each page has at most 10 posts.
+    final postGroupList = widget.postList.slices(10);
+    for (final postGroup in postGroupList) {
+      final pageNumber =
+          ((postGroup.firstOrNull?.postFloor ?? 0) / 10).floor() + 1;
+      ret.add(
+        SliverMainAxisGroup(
+          slivers: [
+            SliverPersistentHeader(
+              pinned: true,
+              delegate: PostGroupHeaderDelegate(groupIndex: '$pageNumber'),
+            ),
+            SliverList.separated(
+              itemCount: postGroup.length,
+              itemBuilder: (context, index) {
+                return widget.widgetBuilder(context, postGroup[index]);
+              },
+              separatorBuilder: (context, index) => widget.useDivider
+                  ? const Divider(thickness: 0.5)
+                  : sizedBoxW5H5,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return ret;
+  }
+
   Widget _buildBody(BuildContext context, ThreadState state) {
     const safeHeight = 40.0;
 
@@ -207,22 +249,7 @@ class _PostListState extends State<PostList> {
                 ),
               ),
             ),
-            if (widget.postList.isNotEmpty)
-              SliverPadding(
-                padding: edgeInsetsL10R10B20,
-                sliver: SliverList.separated(
-                  itemCount: widget.postList.length,
-                  itemBuilder: (context, index) {
-                    return widget.widgetBuilder(
-                      context,
-                      widget.postList[index],
-                    );
-                  },
-                  separatorBuilder: widget.useDivider
-                      ? (context, index) => const Divider(thickness: 0.5)
-                      : (context, index) => sizedBoxW5H5,
-                ),
-              ),
+            ..._buildPostList(context),
           ],
         );
       },

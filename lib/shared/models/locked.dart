@@ -133,7 +133,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPurchase) {
-      return (_info! as _LockedWithPurchase).tid;
+      return _info.tid;
     }
     return null;
   }
@@ -144,7 +144,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPurchase) {
-      return (_info! as _LockedWithPurchase).pid;
+      return _info.pid;
     }
     return null;
   }
@@ -157,7 +157,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPurchase) {
-      return (_info! as _LockedWithPurchase).price;
+      return _info.price;
     }
     return null;
   }
@@ -170,7 +170,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPurchase) {
-      return (_info! as _LockedWithPurchase).purchasedCount;
+      return _info.purchasedCount;
     }
     return null;
   }
@@ -183,7 +183,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPoints) {
-      return (_info! as _LockedWithPoints).requiredPoints;
+      return _info.requiredPoints;
     }
     return null;
   }
@@ -196,7 +196,7 @@ class Locked extends Equatable {
       return null;
     }
     if (_info is _LockedWithPoints) {
-      return (_info! as _LockedWithPoints).points;
+      return _info.points;
     }
     return null;
   }
@@ -282,9 +282,7 @@ class Locked extends Equatable {
     }
 
     if (_info is _LockedWithPurchase) {
-      return (_info! as _LockedWithPurchase).price > 0 &&
-          tid != null &&
-          pid != null;
+      return _info.price > 0 && tid != null && pid != null;
     }
     if (_info is _LockedWithPoints || _info is _LockedWithAuthor) {
       return true;
