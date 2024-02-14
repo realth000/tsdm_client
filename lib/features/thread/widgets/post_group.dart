@@ -1,4 +1,3 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
@@ -20,7 +19,11 @@ class PostGroupHeaderDelegate extends SliverPersistentHeaderDelegate {
   ) {
     return Container(
       alignment: Alignment.centerLeft,
-      color: Theme.of(context).colorScheme.outlineVariant.darken(),
+      color: ElevationOverlay.applySurfaceTint(
+        Theme.of(context).colorScheme.surface,
+        Theme.of(context).colorScheme.surfaceTint,
+        Theme.of(context).navigationBarTheme.elevation ?? 3,
+      ),
       padding: const EdgeInsets.only(left: 20),
       height: _headerHeight,
       child: Text(context.t.general.pageIndex(index: groupIndex)),
