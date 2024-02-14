@@ -124,6 +124,8 @@ class Muncher {
   /// Munch state to use when munching.
   final MunchState state = MunchState();
 
+  static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
+
   /// Map to store div classes and corresponding munch functions.
   Map<String, InlineSpan Function(uh.Element)>? _divMap;
 
@@ -644,11 +646,18 @@ class Muncher {
     // Set to an invalid color value if "color" attribute not found.
     final attr = colorString ?? element.attributes['color'];
     int? colorValue;
-    if (attr != null && attr.startsWith('#')) {
-      colorValue = int.tryParse(
-        element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
-        radix: 16,
-      );
+    if (attr != null && _colorRe.hasMatch(attr)) {
+      if (attr.startsWith('#')) {
+        colorValue = int.tryParse(
+          element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
+          radix: 16,
+        );
+      } else {
+        colorValue = int.tryParse(
+          element.attributes['color']?.padLeft(8, 'ff') ?? 'g',
+          radix: 16,
+        );
+      }
     }
     Color? color;
     if (colorValue != null) {
