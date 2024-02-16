@@ -60,7 +60,7 @@ class _LockedCardState extends State<LockedCard> {
                 coinsLast: info.coinsLast ?? '',
               ),
             );
-            if (!mounted) {
+            if (!context.mounted) {
               return;
             }
 
@@ -77,7 +77,7 @@ class _LockedCardState extends State<LockedCard> {
               title: context.t.lockedCard.purchase.successPurchase,
               message: context.t.lockedCard.purchase.successPurchaseInfo,
             );
-            if (!mounted) {
+            if (!context.mounted) {
               return;
             }
             context.read<ThreadBloc>().add(ThreadRefreshRequested());
@@ -87,7 +87,7 @@ class _LockedCardState extends State<LockedCard> {
               title: context.t.lockedCard.purchase.failedPurchase,
               message: context.t.lockedCard.purchase.failedPurchase,
             );
-            if (!mounted) {
+            if (!context.mounted) {
               return;
             }
             // Reset purchase state.

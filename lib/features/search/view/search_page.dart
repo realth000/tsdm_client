@@ -190,7 +190,7 @@ class _SearchPageState extends State<SearchPage> {
     if (page == null || page == state.searchResult!.currentPage) {
       return;
     }
-    if (!mounted) {
+    if (!context.mounted) {
       return;
     }
     await _search(context, page);

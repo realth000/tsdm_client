@@ -143,7 +143,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (localeGroup.$2) {
             // Use system language.
             LocaleSettings.useDeviceLocale();
-            if (!mounted) {
+            if (!context.mounted) {
               return;
             }
             context
@@ -151,7 +151,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 .add(const SettingsChangeLocaleRequested(''));
             return;
           }
-          if (!mounted) {
+          if (!context.mounted) {
             return;
           }
           LocaleSettings.setLocale(localeGroup.$1!);
@@ -192,7 +192,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (color == null) {
             return;
           }
-          if (!mounted) {
+          if (!context.mounted) {
             return;
           }
           if (color.$2) {
@@ -268,7 +268,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (result == null) {
             return;
           }
-          if (!mounted) {
+          if (!context.mounted) {
             return;
           }
           context.read<SettingsBloc>().add(
@@ -289,7 +289,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (result == null) {
             return;
           }
-          if (!mounted) {
+          if (!context.mounted) {
             return;
           }
           context
