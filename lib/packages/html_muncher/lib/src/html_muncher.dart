@@ -559,19 +559,19 @@ class Muncher {
   ///
   /// ```html
   /// <div class="rwdbst">
-  //    <h3 class="psth">最佳答案</h3>
-  //    <div class="pstl">
-  //      <div class="psta">
-  //        <img src="${USER_AVATAR_URL">
-  //      </div>
-  //      <div class="psti">
-  //        <p class="xi2">
-  //          <a href="${USER_SPACE_URL}" class="xw1">${USERNAME}</a>
-  //          <a href="javascript:;" onclick="window.open('forum.php?mod=redirect&amp;goto=findpost&amp;ptid=${PTID}&amp;pid=${PID}')">查看完整内容</a></p>
-  //        <div class="mtn">${USER_ANSWER}</div>
-  //      </div>
-  //    </div>
-  //  </div>
+  ///    <h3 class="psth">最佳答案</h3>
+  ///    <div class="pstl">
+  ///      <div class="psta">
+  ///        <img src="${USER_AVATAR_URL">
+  ///      </div>
+  ///      <div class="psti">
+  ///        <p class="xi2">
+  ///          <a href="${USER_SPACE_URL}" class="xw1">${USERNAME}</a>
+  ///          <a href="javascript:;" onclick="window.open('forum.php?mod=redirect&amp;goto=findpost&amp;ptid=${PTID}&amp;pid=${PID}')">查看完整内容</a></p>
+  ///        <div class="mtn">${USER_ANSWER}</div>
+  ///      </div>
+  ///    </div>
+  ///  </div>
   /// ```
   InlineSpan _buildBountyBestAnswer(uh.Element element) {
     final userAvatarUrl =
