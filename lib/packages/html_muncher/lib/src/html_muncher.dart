@@ -279,7 +279,7 @@ class Muncher {
 
     state.inDiv = oldInDiv;
     // Restore color.
-    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+    return ret;
   }
 
   InlineSpan _buildStrong(uh.Element element) {
