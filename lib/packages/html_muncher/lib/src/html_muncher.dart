@@ -529,7 +529,13 @@ class Muncher {
   /// </div>
   InlineSpan _buildUnresolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
-    return WidgetSpan(child: BountyCard(price: price, resolved: false));
+    return TextSpan(
+      children: [
+        WidgetSpan(child: BountyCard(price: price, resolved: false)),
+        // Ensure an empty line space between post content.
+        const TextSpan(text: '\n\n'),
+      ],
+    );
   }
 
   /// Build for the thread bounty info area.
@@ -543,7 +549,13 @@ class Muncher {
   /// ```
   InlineSpan _buildResolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
-    return WidgetSpan(child: BountyCard(price: price, resolved: true));
+    return TextSpan(
+      children: [
+        WidgetSpan(child: BountyCard(price: price, resolved: true)),
+        // Ensure an empty line space between post content.
+        const TextSpan(text: '\n\n'),
+      ],
+    );
   }
 
   /// Build for the best answer of bounty area.
