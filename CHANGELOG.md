@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- 新增显示帖子的悬赏状态及对应的最佳答案。
 - 支持筛选积分变更历史。
 - 帖子内按页数显示分组。
 

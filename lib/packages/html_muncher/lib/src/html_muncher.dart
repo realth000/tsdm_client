@@ -7,6 +7,9 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/locked.dart';
+import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
+import 'package:tsdm_client/widgets/card/bounty_card.dart';
 import 'package:tsdm_client/widgets/card/code_card.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/review_card.dart';
@@ -423,6 +426,9 @@ class Muncher {
       'locked': _buildLockedArea,
       'cm': _buildReview,
       'spoiler': _buildSpoiler,
+      'rusld': _buildUnresolvedBounty,
+      'rsld': _buildResolvedBounty,
+      'rwdbst': _buildBountyBestAnswer,
     };
 
     final alreadyInDiv = state.inDiv;
@@ -510,6 +516,91 @@ class Muncher {
         ),
         const TextSpan(text: '\n'),
       ],
+    );
+  }
+
+  /// Build for the thread bounty info area.
+  ///
+  /// The bounty is processing, not resolved.
+  ///
+  /// ```html
+  /// <div class="rusld z">
+  ///   <cite>${price}<cite>
+  /// </div>
+  InlineSpan _buildUnresolvedBounty(uh.Element element) {
+    final price = element.querySelector('cite')?.innerText ?? '';
+    return WidgetSpan(child: BountyCard(price: price, resolved: false));
+  }
+
+  /// Build for the thread bounty info area.
+  ///
+  /// The bounty is resolved.
+  ///
+  /// ```html
+  /// <div class="rsld z">
+  ///   <cite>${price}<cite>
+  /// </div>
+  /// ```
+  InlineSpan _buildResolvedBounty(uh.Element element) {
+    final price = element.querySelector('cite')?.innerText ?? '';
+    return WidgetSpan(child: BountyCard(price: price, resolved: true));
+  }
+
+  /// Build for the best answer of bounty area.
+  ///
+  /// This answer only occurs with already resolved bounty.
+  ///
+  /// * `USER_AVATAR_URL`: Avatar url of the answered user.
+  /// * `USER_SPACE_URL`: Profile url of the answered user.
+  /// * `USERNAME`: Username of the answered user.
+  /// * `PTID`: Thread id of the answer.
+  /// * `PID`: Post id of the answer.
+  /// * `USER_ANSWER`: Answer content.
+  ///
+  /// ```html
+  /// <div class="rwdbst">
+  //    <h3 class="psth">最佳答案</h3>
+  //    <div class="pstl">
+  //      <div class="psta">
+  //        <img src="${USER_AVATAR_URL">
+  //      </div>
+  //      <div class="psti">
+  //        <p class="xi2">
+  //          <a href="${USER_SPACE_URL}" class="xw1">${USERNAME}</a>
+  //          <a href="javascript:;" onclick="window.open('forum.php?mod=redirect&amp;goto=findpost&amp;ptid=${PTID}&amp;pid=${PID}')">查看完整内容</a></p>
+  //        <div class="mtn">${USER_ANSWER}</div>
+  //      </div>
+  //    </div>
+  //  </div>
+  /// ```
+  InlineSpan _buildBountyBestAnswer(uh.Element element) {
+    final userAvatarUrl =
+        element.querySelector('div.pstl > div.psta > img')?.imageUrl();
+    final userInfoNode =
+        element.querySelector('div.pstl > div.psti > p.xi2 > a');
+    final username = userInfoNode?.innerText.trim();
+    final userSpaceUrl = userInfoNode?.attributes['href'];
+    final answer = element
+        .querySelector('div.pstl > div.psti > div.mtn')
+        ?.innerText
+        .trim();
+    if (userAvatarUrl == null ||
+        username == null ||
+        userSpaceUrl == null ||
+        answer == null) {
+      debug('failed to parse bounty answer: '
+          'avatar=$userAvatarUrl, username=$username, '
+          'userSpaceUrl=$userSpaceUrl, answer=$answer');
+      return const TextSpan();
+    }
+
+    return WidgetSpan(
+      child: BountyAnswerCard(
+        userAvatarUrl: userAvatarUrl,
+        username: username,
+        userSpaceUrl: userSpaceUrl,
+        answer: answer,
+      ),
     );
   }
 

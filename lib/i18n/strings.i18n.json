@@ -365,5 +365,14 @@
     "open": "Open It",
     "failedToOpen": "Failed to open",
     "allTakenAway": "All packets were taken away"
+  },
+  "bountyCard": {
+    "title": "Bounty",
+    "price": "$price coins",
+    "resolved": "RESOLVED",
+    "processing": "PROCESSING"
+  },
+  "bountyAnswerCard": {
+    "title": "Best Answer"
   }
 }

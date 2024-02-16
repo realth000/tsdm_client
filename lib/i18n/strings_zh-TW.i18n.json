@@ -365,5 +365,14 @@
     "open": "開啟",
     "failedToOpen": "打開失敗",
     "allTakenAway": "红包都領完了"
+  },
+  "bountyCard": {
+    "title": "懸賞",
+    "price": "$price 天使幣",
+    "resolved": "已解決",
+    "processing": "進行中"
+  },
+  "bountyAnswerCard": {
+    "title": "最佳答案"
   }
 }
