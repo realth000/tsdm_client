@@ -68,7 +68,7 @@ class App extends StatelessWidget {
             final darkTheme = AppTheme.makeDark(accentColor);
 
             return MaterialApp.router(
-              title: 'tsdm_client',
+              title: context.t.appName,
               routerConfig: router,
               locale: TranslationProvider.of(context).flutterLocale,
               supportedLocales: AppLocaleUtils.supportedLocales,

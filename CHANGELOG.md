@@ -11,11 +11,18 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 新增显示帖子的悬赏状态及对应的最佳答案。
 - 支持筛选积分变更历史。
 - 帖子内按页数显示分组。
+- 现在在安卓和IOS上尝试使用和当前语言的应用标题。
 
 ### Fixed
 
 - 修复积分统计页面我的积分标签页中缺少空隙的问题。
 - 修复部分楼层丢失字体颜色的问题。
+
+### Changed
+
+- internal: 支持flutter 3.19。
+- internal: 去除安卓gradle构建脚本中标记为弃用的部分。
+- internal: 提高最低依赖版本：flutter 3.19和dart 3.3。
 
 ## [0.6.0] - 2024-02-08
 
