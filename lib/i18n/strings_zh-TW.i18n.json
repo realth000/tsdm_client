@@ -208,7 +208,8 @@
       "rateBody": "在 $threadTitle 中給您的帖子評分 $score",
       "mentionBody": "在話題中提到了你",
       "inviteBody": "邀請您參與話題 $threadTitle",
-      "newFriendBody": "和您成為好友了"
+      "newFriendBody": "和您成為好友了",
+      "ignoredSameNotice": "還有 $count 個相同通知被忽略"
     },
     "messageTab": {
       "title": "訊息"
