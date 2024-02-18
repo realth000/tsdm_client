@@ -4,6 +4,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -20,6 +21,11 @@ class NoticeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final ignoreHintStyle = Theme.of(context)
+        .textTheme
+        .labelMedium
+        ?.copyWith(color: Theme.of(context).colorScheme.outline);
+
     late final CircleAvatar userAvatar;
     if (notice.userAvatarUrl != null) {
       userAvatar = CircleAvatar(
@@ -122,12 +128,18 @@ class NoticeCard extends StatelessWidget {
             sizedBoxW5H5,
             Padding(
               padding: edgeInsetsL15R15B10,
-              child: Row(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: noticeBody,
-                  ),
-                ],
+                  Row(children: [Expanded(child: noticeBody)]),
+                  if (notice.ignoreCount != null && notice.ignoreCount! > 0)
+                    Text(
+                      context.t.noticePage.noticeTab
+                          .ignoredSameNotice(count: notice.ignoreCount!),
+                      style: ignoreHintStyle,
+                    ),
+                ].insertBetween(sizedBoxW5H5),
               ),
             ),
           ],
