@@ -33,6 +33,11 @@ enum _PostCardActions {
 
   /// View all authors.
   viewAllAuthors,
+
+  /// Edit the post.
+  ///
+  /// Only available when the current user is the author of post.
+  edit,
 }
 
 /// Card for a [Post] model.
@@ -198,6 +203,16 @@ class _PostCardState extends State<PostCard>
                           ],
                         ),
                       ),
+                    if (widget.post.editUrl != null)
+                      PopupMenuItem(
+                        value: _PostCardActions.edit,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.edit_outlined),
+                            Text(context.t.postCard.edit),
+                          ],
+                        ),
+                      ),
                   ],
                   onSelected: (value) async {
                     switch (value) {
@@ -224,6 +239,8 @@ class _PostCardState extends State<PostCard>
                         context
                             .read<ThreadBloc>()
                             .add(ThreadViewAllAuthorsRequested());
+                      case _PostCardActions.edit:
+                        await context.dispatchAsUrl(widget.post.editUrl!);
                     }
                   },
                 ),

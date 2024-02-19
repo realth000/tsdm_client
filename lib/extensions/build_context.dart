@@ -6,35 +6,35 @@ import 'package:url_launcher/url_launcher.dart';
 
 /// Extension on [BuildContext] that provides ability to dispatch a [String]
 /// as an url.
-extension DispatchUrl on BuildContext {
+extension DispatchUrl<T> on BuildContext {
   /// If [url] is an valid url:
   /// * Try parse route and push route to the corresponding page.
   /// * If is unrecognized route, launch url in external browser.
   ///
   /// If current string is not an valid url:
   /// * Do nothing.
-  Future<void> dispatchAsUrl(String url, {bool external = false}) async {
+  Future<T?> dispatchAsUrl(String url, {bool external = false}) async {
     final u = Uri.tryParse(url);
     if (u == null) {
       // Do nothing if is invalid url.
-      return;
+      return null;
     }
     if (external) {
       await launchUrl(u, mode: LaunchMode.externalApplication);
-      return;
+      return null;
     }
     final route = url.parseUrlToRoute();
     if (route != null) {
       // Push route to the page if is recognized route.
-      await pushNamed(
+      return pushNamed<T>(
         route.screenPath,
         pathParameters: route.pathParameters,
         queryParameters: route.queryParameters,
       );
-      return;
     }
     // Launch in external browser if is unsupported url.
     await launchUrl(u, mode: LaunchMode.externalApplication);
+    return null;
   }
 }
 

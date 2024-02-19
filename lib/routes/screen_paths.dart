@@ -110,4 +110,15 @@ class ScreenPaths {
   ///
   /// Need to login before see the content.
   static const String points = '/points';
+
+  /// Page to edit a post or thread.
+  ///
+  /// Contains:
+  ///
+  /// * Write a new post.
+  /// * Write a new thread (post at the first floor).
+  /// * Edit an existing post.
+  ///
+  /// Index of `PostEditType` is needed to specify the reason.
+  static const String editPost = '/editPost/:editType/:fid/:tid/:pid';
 }

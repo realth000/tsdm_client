@@ -359,7 +359,8 @@
     "onlyViewAuthor": "Only view the author",
     "viewAllAuthors": "View all authors",
     "rateFetchInfoFailed": "Fetch info failed",
-    "rateFailed": "Rate failed"
+    "rateFailed": "Rate failed",
+    "edit": "Edit"
   },
   "packetCard": {
     "title": "You found a packet!",

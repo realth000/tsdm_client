@@ -359,7 +359,8 @@
     "onlyViewAuthor": "只看该作者",
     "viewAllAuthors": "查看所有作者",
     "rateFetchInfoFailed": "获取评分信息失败",
-    "rateFailed": "评分失败"
+    "rateFailed": "评分失败",
+    "edit": "编辑"
   },
   "packetCard": {
     "title": "你找到了一个红包！",

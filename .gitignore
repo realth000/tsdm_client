@@ -1,4 +1,6 @@
 /lib/generated
+*.g.dart
+*.mapper.dart
 *.freezed.dart
 # Miscellaneous
 *.class

@@ -34,6 +34,7 @@ class Post extends Equatable {
     this.locked = const [],
     this.rate,
     this.packetUrl,
+    this.editUrl,
   });
 
   /// Post ID.
@@ -73,6 +74,18 @@ class Post extends Equatable {
   ///
   /// Optional.
   final String? packetUrl;
+
+  /// Url to edit this post.
+  ///
+  /// Generally this field is not null only when current user is the author
+  /// of the post.
+  ///
+  /// Format: $HOME?mod=post&action=edit&fid=${fid}&tid=${tid}&pid=${pid}
+  ///
+  /// Though we can manually format this edit url, it is not available when
+  /// the current user is not the author. So just parse the url and never
+  /// manually format it.
+  final String? editUrl;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element) {
@@ -206,6 +219,14 @@ class Post extends Equatable {
 
     rateAction?.prependHost();
 
+    // Url to edit the post is also in the `<div id=fj>` node.
+    // We can only find it by the content text "编辑"。
+    final editUrl = element
+        .querySelectorAll('div#fj > a')
+        .firstWhereOrNull((e) => e.firstEndDeepText() == '编辑')
+        ?.attributes['href']
+        ?.prependHost();
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -217,6 +238,7 @@ class Post extends Equatable {
       rate: rate,
       rateAction: rateAction,
       packetUrl: packetUrl,
+      editUrl: editUrl,
     );
   }
 
@@ -265,5 +287,6 @@ class Post extends Equatable {
         locked,
         rate,
         packetUrl,
+        editUrl,
       ];
 }

@@ -12,6 +12,8 @@ import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
+import 'package:tsdm_client/features/post/models/post_edit_type.dart';
+import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
@@ -203,6 +205,30 @@ final router = GoRouter(
       path: ScreenPaths.points,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const PointsPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.editPost,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final editType = state.pathParameters['editType']?.parseToInt();
+        final fid = state.pathParameters['fid']!;
+        final tid = state.pathParameters['tid']!;
+        final pid = state.pathParameters['pid']!;
+        assert(
+          editType != null,
+          'PostEditType enum value is not a integer: $editType',
+        );
+        assert(
+          PostEditType.values.length > editType!,
+          'invalid PostEditType enum value: $editType',
+        );
+        return PostEditPage(
+          editType: PostEditType.values[editType!],
+          fid: fid,
+          tid: tid,
+          pid: pid,
+        );
+      },
     ),
   ],
 );

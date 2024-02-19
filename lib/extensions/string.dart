@@ -1,4 +1,5 @@
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:uuid/uuid.dart';
 
@@ -94,6 +95,23 @@ extension ParseUrl on String {
           queryParameters: {'username': '${queryParameters["username"]}'},
         );
       }
+    }
+
+    // Edit post.
+    if (mod == 'post' &&
+        queryParameters['action'] == 'edit' &&
+        queryParameters['fid'] != null &&
+        queryParameters['pid'] != null &&
+        queryParameters['pid'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.editPost,
+        pathParameters: {
+          'editType': '${PostEditType.editPost.index}',
+          'fid': '${queryParameters["fid"]}',
+          'tid': '${queryParameters["tid"]}',
+          'pid': '${queryParameters["pid"]}',
+        },
+      );
     }
 
     return null;
