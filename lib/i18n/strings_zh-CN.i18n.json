@@ -294,7 +294,8 @@
     "threadTypeShouldNotBeEmpty": "分类不能为空",
     "titleShouldNotBeEmpty": "标题不能为空",
     "titleTooLong": "标题太长",
-    "threadBodyTooShort": "正文太短"
+    "threadBodyTooShort": "正文太短",
+    "editSuccess": "编辑成功"
   },
   "forumCard": {
     "links": "链接",

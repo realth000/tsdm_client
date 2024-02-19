@@ -11,6 +11,9 @@ const sizedBoxW5H5 = SizedBox(width: 5, height: 5);
 /// A [SizedBox] with 10 width and 10 height.
 const sizedBoxW10H10 = SizedBox(width: 10, height: 10);
 
+/// A [SizedBox] with 15 width and 15 height.
+const sizedBoxW15H15 = SizedBox(width: 15, height: 15);
+
 /// A [SizedBox] with 20 width and 20 height.
 const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
 

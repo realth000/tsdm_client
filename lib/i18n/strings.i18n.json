@@ -294,7 +294,8 @@
     "threadTypeShouldNotBeEmpty": "Thread type should not be empty",
     "titleShouldNotBeEmpty": "Title should not be empty",
     "titleTooLong": "Title too long",
-    "threadBodyTooShort": "Thread body too short"
+    "threadBodyTooShort": "Thread body too short",
+    "editSuccess": "Edit success"
   },
   "forumCard": {
     "links": "Links",

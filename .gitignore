@@ -2,6 +2,7 @@
 *.g.dart
 *.mapper.dart
 *.freezed.dart
+/devtools_options.yaml
 # Miscellaneous
 *.class
 *.log

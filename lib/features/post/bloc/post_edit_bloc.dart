@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/post/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -21,6 +22,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
       : _postEditRepository = postEditRepository,
         super(const PostEditState()) {
     on<PostEditLoadDataRequested>(_onPostEditLoadDataRequested);
+    on<PostEditCompleteEditRequested>(_onPostEditCompleteEditRequested);
   }
 
   final PostEditRepository _postEditRepository;
@@ -34,13 +36,52 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
       final document = await _postEditRepository.fetchData(event.editUrl);
       final content = _parseContent(document);
       if (content == null) {
-        emit(state.copyWith(status: PostEditStatus.failed));
+        emit(state.copyWith(status: PostEditStatus.failedToLoad));
         return;
       }
-      emit(state.copyWith(status: PostEditStatus.success, content: content));
+      emit(state.copyWith(status: PostEditStatus.editing, content: content));
     } on HttpRequestFailedException catch (e) {
       debug('failed to load post edit data: $e');
-      emit(state.copyWith(status: PostEditStatus.failed));
+      emit(state.copyWith(status: PostEditStatus.failedToLoad));
+    }
+  }
+
+  Future<void> _onPostEditCompleteEditRequested(
+    PostEditCompleteEditRequested event,
+    PostEditEmit emit,
+  ) async {
+    emit(state.copyWith(status: PostEditStatus.uploading));
+    try {
+      await _postEditRepository.postEditedContent(
+        formHash: event.formHash,
+        postTime: event.postTime,
+        delattachop: event.delattachop,
+        wysiwyg: event.wysiwyg,
+        fid: event.fid,
+        tid: event.tid,
+        pid: event.pid,
+        page: event.page,
+        threadType: event.threadType?.typeID,
+        threadTitle: event.threadTitle,
+        data: event.data,
+        options: Map.fromEntries(
+          event.options
+              .where((e) => !e.disabled && e.checked)
+              .map((e) => MapEntry(e.name, e.value)),
+        ),
+      );
+      emit(state.copyWith(status: PostEditStatus.success));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to post edited post data: $e');
+      emit(state.copyWith(status: PostEditStatus.failedToUpload));
+    } on PostEditFailedToUploadResult catch (e) {
+      debug('failed to post edited post data: $e');
+      emit(
+        state.copyWith(
+          status: PostEditStatus.failedToUpload,
+          errorText: e.errorText,
+        ),
+      );
     }
   }
 
@@ -139,13 +180,19 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
               e.querySelector('label') != null,
         )
         .map(
-          (e) => PostEditContentOption(
-            name: e.querySelector('input')!.id,
-            readableName: e.querySelector('label')!.innerText,
-            value: e.querySelector('input')!.attributes['value']!,
-          ),
-        )
-        .toList();
+      (e) {
+        final input = e.querySelector('input')!;
+        final label = e.querySelector('label')!;
+
+        return PostEditContentOption(
+          name: input.id,
+          readableName: label.innerText,
+          disabled: input.attributes.containsKey('disabled'),
+          checked: input.attributes.containsKey('checked'),
+          value: input.attributes['value']!,
+        );
+      },
+    ).toList();
 
     if (formHash == null ||
         postTime == null ||

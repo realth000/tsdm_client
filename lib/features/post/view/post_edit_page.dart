@@ -124,6 +124,16 @@ class _PostEditPageState extends State<PostEditPage> {
   /// This is ugly.
   bool init = false;
 
+  /// Additional options used here.
+  ///
+  /// Here we copy and save the additional options in state to here. This avoid
+  /// updating state when user just changed an option. Only apply these options
+  /// to state when posting the data to server.
+  ///
+  /// Key is option's attribute name.
+  /// Value is the option itself.
+  Map<String, PostEditContentOption>? additionalOptionsMap;
+
   /// Show a modal bottom sheet to let user select a thread type.
   ///
   /// Note that the content data [state.content.threadTypeList] MUST be
@@ -135,23 +145,55 @@ class _PostEditPageState extends State<PostEditPage> {
     await showCustomBottomSheet(
       context: context,
       title: context.t.postEditPage.editPostTitle,
-      childrenBuilder: (BuildContext context) {
-        return state.content!.threadTypeList!
-            .map(
-              (e) => ListTile(
-                title: Text(e.name),
-                trailing: e.name == threadTypeController.text
-                    ? const Icon(Icons.check_outlined)
-                    : null,
-                onTap: () {
-                  threadType = e;
-                  threadTypeController.text = e.name;
-                  context.pop();
-                },
-              ),
-            )
-            .toList();
-      },
+      childrenBuilder: (context) => state.content!.threadTypeList!
+          .map(
+            (e) => ListTile(
+              title: Text(e.name),
+              trailing: e.name == threadTypeController.text
+                  ? const Icon(Icons.check_outlined)
+                  : null,
+              onTap: () {
+                threadType = e;
+                threadTypeController.text = e.name;
+                context.pop();
+              },
+            ),
+          )
+          .toList(),
+    );
+  }
+
+  /// Show a bottom sheet to let user configure the additional options provided
+  /// by the server side.
+  ///
+  /// Options are a list of checkbox.
+  ///
+  /// Note that the additional options map MUST NOT a null value.
+  Future<void> _showAdditionalOptionBottomSheet(
+    BuildContext context,
+    PostEditState state,
+  ) async {
+    await showCustomBottomSheet(
+      context: context,
+      title: context.t.postEditPage.additionalOptions,
+      childrenBuilder: (context) => additionalOptionsMap!.values
+          .map(
+            (e) => StatefulBuilder(
+              builder: (context, setState) {
+                return SwitchListTile(
+                  title: Text(e.readableName),
+                  value: additionalOptionsMap![e.name]!.checked,
+                  onChanged: e.disabled
+                      ? null
+                      : (value) => setState(() {
+                            additionalOptionsMap![e.name] =
+                                e.copyWith(checked: value);
+                          }),
+                );
+              },
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -161,7 +203,7 @@ class _PostEditPageState extends State<PostEditPage> {
         (state.content?.threadTypeList?.isNotEmpty ?? false)) {
       ret.add(
         ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 150),
+          constraints: const BoxConstraints(maxWidth: 100),
           child: TextFormField(
             key: formKey,
             controller: threadTypeController,
@@ -199,7 +241,7 @@ class _PostEditPageState extends State<PostEditPage> {
             controller: threadTitleController,
             decoration: InputDecoration(
               labelText: context.t.postEditPage.threadTitle,
-              suffixText: '$threadTitleRestLength',
+              suffixText: ' $threadTitleRestLength',
             ),
             onChanged: (value) {
               setState(() {
@@ -234,7 +276,51 @@ class _PostEditPageState extends State<PostEditPage> {
     if (ret.isEmpty) {
       return Container();
     }
-    return Row(children: ret.insertBetween(sizedBoxW5H5));
+    return Row(children: ret.insertBetween(sizedBoxW10H10));
+  }
+
+  Widget _buildControlRow(BuildContext context, PostEditState state) {
+    return Row(
+      children: [
+        IconButton(
+          icon: const Icon(Icons.settings_outlined),
+          onPressed: additionalOptionsMap != null
+              ? () async => _showAdditionalOptionBottomSheet(context, state)
+              : null,
+        ),
+        const Spacer(),
+        ElevatedButton.icon(
+          icon: state.status == PostEditStatus.uploading
+              ? sizedCircularProgressIndicator
+              : const Icon(Icons.send_outlined),
+          label: Text(context.t.postEditPage.saveAndBack),
+          onPressed: state.status == PostEditStatus.uploading
+              ? null
+              : () {
+                  if (widget.editType.isEditingPost) {
+                    final event = PostEditCompleteEditRequested(
+                      formHash: state.content!.formHash,
+                      postTime: state.content!.postTime,
+                      delattachop: state.content!.delattachop,
+                      page: state.content!.page,
+                      wysiwyg: state.content!.wysiwyg,
+                      fid: widget.fid,
+                      tid: widget.tid,
+                      pid: widget.pid,
+                      threadType: threadType,
+                      threadTitle: threadTitleController.text,
+                      data: dataController.text,
+                      options: additionalOptionsMap?.values.toList() ?? [],
+                    );
+                    context.read<PostEditBloc>().add(event);
+                    return;
+                  }
+                  // TODO: Handle creating a post.
+                  // TODO: Handle creating a thread.
+                },
+        ),
+      ],
+    );
   }
 
   Widget _buildBody(BuildContext context) {
@@ -259,10 +345,21 @@ class _PostEditPageState extends State<PostEditPage> {
       ],
       child: BlocListener<PostEditBloc, PostEditState>(
         listener: (context, state) {
-          if (state.status == PostEditStatus.failed) {
+          if (state.status == PostEditStatus.failedToLoad) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(context.t.postEditPage.failedToLoadData)),
             );
+          } else if (state.status == PostEditStatus.failedToUpload &&
+              state.errorText != null) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.errorText!)),
+            );
+          } else if (state.status == PostEditStatus.success &&
+              widget.editType.isEditingPost) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.t.postEditPage.editSuccess)),
+            );
+            context.pop();
           }
         },
         child: BlocBuilder<PostEditBloc, PostEditState>(
@@ -271,7 +368,7 @@ class _PostEditPageState extends State<PostEditPage> {
                 state.status == PostEditStatus.loading) {
               return const Center(child: CircularProgressIndicator());
             }
-            if (state.status == PostEditStatus.failed) {
+            if (state.status == PostEditStatus.failedToLoad) {
               return buildRetryButton(context, () {
                 context.read<PostEditBloc>().add(
                       PostEditLoadDataRequested(
@@ -289,12 +386,19 @@ class _PostEditPageState extends State<PostEditPage> {
             if (!init) {
               threadTypeController.text =
                   state.content?.threadType?.name ?? '  ';
+              threadType = state.content?.threadType;
               threadTitleController.text = state.content?.threadTitle ?? '';
               // Update the length of chars user can still input.
               // Bytes of chars for title in utf-8 encoding.
               threadTitleRestLength = (state.content?.threadTitleMaxLength ??
                       _defaultThreadTitleMaxlength) -
                   threadTitleController.text.parseUtf8Length;
+              dataController.text = state.content?.data ?? '';
+              if (state.content?.options != null) {
+                additionalOptionsMap = Map.fromEntries(
+                  state.content!.options!.map((e) => MapEntry(e.name, e)),
+                );
+              }
               init = true;
             }
 
@@ -322,7 +426,8 @@ class _PostEditPageState extends State<PostEditPage> {
                     },
                   ),
                 ),
-              ].insertBetween(sizedBoxW10H10),
+                _buildControlRow(context, state),
+              ].insertBetween(sizedBoxW15H15),
             );
           },
         ),

@@ -158,6 +158,31 @@ class NetClientProvider {
     return resp;
   }
 
+  /// Post a form [data] to url [path] in `Content-Type` multipart/form-data.
+  ///
+  /// Automatically set `Content-Type` to `multipart/form-data`.
+  Future<Response<dynamic>> postMultipartForm(
+    String path, {
+    required Map<String, String> data,
+  }) async {
+    final resp = _dio.post<dynamic>(
+      path,
+      options: Options(
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: Headers.multipartFormDataContentType,
+        },
+        validateStatus: (code) {
+          if (code == 301 || code == 200) {
+            return true;
+          }
+          return false;
+        },
+      ),
+      data: FormData.fromMap(data),
+    );
+    return resp;
+  }
+
   /// Download the file from url [path] and save to [savePath].
   Future<void> download(
     String path,

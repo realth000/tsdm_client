@@ -36,14 +36,41 @@ final class PostEditContentOption with PostEditContentOptionMappable {
   const PostEditContentOption({
     required this.name,
     required this.value,
+    required this.disabled,
+    required this.checked,
     required this.readableName,
   });
 
   /// Attribute "name".
+  ///
+  /// This value is the name parameter in form.
   final String name;
 
   /// Attribute "value".
+  ///
+  /// When this checkbox meets all the following conditions:
+  /// * Do not have [disabled] attribute.
+  /// * Have [checked] attribute.
+  ///
+  /// This [value] will be added in form when submit to the server.
   final String value;
+
+  /// Attribute "disabled".
+  ///
+  /// Html checkbox "disabled" attribute.
+  ///
+  /// Have this attribute (no matter has value or not) means the checkbox is
+  /// disabled.
+  final bool disabled;
+
+  /// Attribute "checked".
+  ///
+  /// Have this attribute (no matter has value or not) means the checkbox is in
+  /// checked state.
+  ///
+  /// When in checked state, the [value] will be added in form data when submit
+  /// form to server.
+  final bool checked;
 
   /// Human readable name inside <input> node.
   final String readableName;

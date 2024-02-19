@@ -6,14 +6,23 @@ enum PostEditStatus {
   /// Initial.
   initial,
 
-  /// Loading data or posting edit result.
+  /// Loading data.
   loading,
+
+  /// Failed to load data.
+  failedToLoad,
+
+  /// Waiting for user to edit.
+  editing,
+
+  /// Uploading data.
+  uploading,
+
+  /// Failed to load data.
+  failedToUpload,
 
   /// Post edit result success.
   success,
-
-  /// Failed to post the edit result to server.
-  failed,
 }
 
 /// State of mappable.
@@ -23,6 +32,7 @@ final class PostEditState with PostEditStateMappable {
   const PostEditState({
     this.status = PostEditStatus.initial,
     this.content,
+    this.errorText,
   });
 
   /// Status.
@@ -30,4 +40,9 @@ final class PostEditState with PostEditStateMappable {
 
   /// Post content.
   final PostEditContent? content;
+
+  /// Error text html element.
+  ///
+  /// Use this to show the error message.
+  final String? errorText;
 }
