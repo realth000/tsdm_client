@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -98,7 +99,14 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
     // Thread title.
     // Max length is 210 bytes (utf-8).
     final threadTitle =
-        postBoxNode?.querySelector('div.z > span')?.attributes['value'];
+        postBoxNode?.querySelector('div.z > span > input')?.attributes['value'];
+    final threadTitleMaxLength = postBoxNode
+        ?.querySelector('div.z > span > input')
+        ?.attributes['onkeyup']
+        ?.split(' ')
+        .lastOrNull
+        ?.replaceFirst(');', '')
+        .parseToInt();
 
     // Parse response parameters.
     final formHash =
@@ -159,6 +167,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
       threadType: threadType,
       threadTypeList: threadTypeList,
       threadTitle: threadTitle,
+      threadTitleMaxLength: threadTitleMaxLength,
       formHash: formHash,
       postTime: postTime,
       delattachop: delattachop,

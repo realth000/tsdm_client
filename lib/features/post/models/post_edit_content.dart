@@ -57,6 +57,7 @@ final class PostEditContent with PostEditContentMappable {
     required this.threadType,
     required this.threadTypeList,
     required this.threadTitle,
+    required this.threadTitleMaxLength,
     required this.formHash,
     required this.postTime,
     required this.delattachop,
@@ -78,6 +79,12 @@ final class PostEditContent with PostEditContentMappable {
   ///
   /// Only not null when editing a thread (post on the first floor).
   final List<PostEditThreadType>? threadTypeList;
+
+  /// Max title length (bytes in utf8).
+  ///
+  /// Title length is limited by the server side and this value is a common used
+  /// value. We parse the max length from page.
+  final int? threadTitleMaxLength;
 
   /// Thread title
   ///

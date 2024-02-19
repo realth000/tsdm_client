@@ -281,6 +281,21 @@
       "query": "查詢"
     }
   },
+  "postEditPage": {
+    "editPostTitle": "編輯貼文",
+    "newThreadTitle": "新貼文",
+    "newPostTitle": "新回覆",
+    "threadType": "貼文分類",
+    "threadTitle": "貼文標題",
+    "body": "正文",
+    "additionalOptions": "附加選項",
+    "saveAndBack": "儲存並返回",
+    "failedToLoadData": "無法載入資料",
+    "threadTypeShouldNotBeEmpty": "分類不能為空",
+    "titleShouldNotBeEmpty": "標題不能為空",
+    "titleTooLong": "標題太長",
+    "threadBodyTooShort": "正文太短"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

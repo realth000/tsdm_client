@@ -281,6 +281,21 @@
       "query": "Query"
     }
   },
+  "postEditPage": {
+    "editPostTitle": "Edit Thread",
+    "newThreadTitle": "New Thread",
+    "newPostTitle": "New Post",
+    "threadType": "Thread Type",
+    "threadTitle": "Thread Title",
+    "body": "Post",
+    "additionalOptions": "Additional Options",
+    "saveAndBack": "Save And Back",
+    "failedToLoadData": "Failed to load data",
+    "threadTypeShouldNotBeEmpty": "Thread type should not be empty",
+    "titleShouldNotBeEmpty": "Title should not be empty",
+    "titleTooLong": "Title too long",
+    "threadBodyTooShort": "Thread body too short"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

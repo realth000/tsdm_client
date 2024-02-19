@@ -10,5 +10,5 @@ enum PostEditType {
   editPost;
 
   /// Check whether the edit type is editing something.
-  bool get isEditType => this == editPost;
+  bool get isEditingPost => this == editPost;
 }

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -180,6 +182,9 @@ extension ParseStringTo on String {
       timePart == null ? formattedDateString : '$formattedDateString $timePart',
     );
   }
+
+  /// Parse the string bytes size in utf-8 encoding.
+  int get parseUtf8Length => utf8.encode(this).length;
 }
 
 /// Extension on [String] that provides info used in caching images.

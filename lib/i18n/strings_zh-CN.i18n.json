@@ -281,6 +281,21 @@
       "query": "查询"
     }
   },
+  "postEditPage": {
+    "editPostTitle": "编辑帖子",
+    "newThreadTitle": "新帖子",
+    "newPostTitle": "新回复",
+    "threadType": "帖子分类",
+    "threadTitle": "帖子标题",
+    "body": "正文",
+    "additionalOptions": "附加选项",
+    "saveAndBack": "保存并返回",
+    "failedToLoadData": "无法加载数据",
+    "threadTypeShouldNotBeEmpty": "分类不能为空",
+    "titleShouldNotBeEmpty": "标题不能为空",
+    "titleTooLong": "标题太长",
+    "threadBodyTooShort": "正文太短"
+  },
   "forumCard": {
     "links": "链接",
     "subForums": "子版块"
