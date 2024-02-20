@@ -21,6 +21,14 @@ class NoticeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryStyle = Theme.of(context)
+        .textTheme
+        .bodyMedium
+        ?.copyWith(color: Theme.of(context).colorScheme.primary);
+    final secondaryStyle = Theme.of(context)
+        .textTheme
+        .bodyMedium
+        ?.copyWith(color: Theme.of(context).colorScheme.secondary);
     final outlineStyle = Theme.of(context)
         .textTheme
         .labelMedium
@@ -40,17 +48,27 @@ class NoticeCard extends StatelessWidget {
     }
 
     final noticeBody = switch (notice.noticeType) {
-      NoticeType.reply => Text(
-          context.t.noticePage.noticeTab
-              .replyBody(threadTitle: notice.noticeThreadTitle ?? '-'),
+      NoticeType.reply => Text.rich(
+          context.t.noticePage.noticeTab.replyBody(
+            threadTitle: TextSpan(
+              text: notice.noticeThreadTitle ?? '-',
+              style: primaryStyle,
+            ),
+          ),
         ),
       NoticeType.rate || NoticeType.batchRate => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
+            Text.rich(
               context.t.noticePage.noticeTab.rateBody(
-                threadTitle: notice.noticeThreadTitle ?? '-',
-                score: notice.score ?? '-',
+                threadTitle: TextSpan(
+                  text: notice.noticeThreadTitle ?? '-',
+                  style: primaryStyle,
+                ),
+                score: TextSpan(
+                  text: notice.score ?? '-',
+                  style: secondaryStyle,
+                ),
               ),
             ),
             if (notice.quotedMessage?.isNotEmpty ?? false)
@@ -82,9 +100,13 @@ class NoticeCard extends StatelessWidget {
             ),
           ],
         ),
-      NoticeType.invite => Text(
-          context.t.noticePage.noticeTab
-              .inviteBody(threadTitle: notice.noticeThreadTitle ?? ''),
+      NoticeType.invite => Text.rich(
+          context.t.noticePage.noticeTab.inviteBody(
+            threadTitle: TextSpan(
+              text: notice.noticeThreadTitle ?? '',
+              style: primaryStyle,
+            ),
+          ),
         ),
       NoticeType.newFriend =>
         Text(context.t.noticePage.noticeTab.newFriendBody),

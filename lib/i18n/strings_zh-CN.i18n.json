@@ -204,10 +204,10 @@
     "title": "通知",
     "noticeTab": {
       "title": "提醒",
-      "replyBody": "在 $threadTitle 中回复了",
-      "rateBody": "在 $threadTitle 中给您的帖子评分 $score",
+      "replyBody(rich)": "在 $threadTitle 中回复了",
+      "rateBody(rich)": "在 $threadTitle 中给您的帖子评分 $score",
       "mentionBody": "在帖子中提到了你",
-      "inviteBody": "邀请您参与话题 $threadTitle",
+      "inviteBody(rich)": "邀请您参与话题 $threadTitle",
       "newFriendBody": "和您成为了好友",
       "ignoredSameNotice": "还有 $count 个相同通知被忽略",
       "taskID": "任务ID：$taskId"

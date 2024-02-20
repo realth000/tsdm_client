@@ -204,10 +204,10 @@
     "title": "Notifications",
     "noticeTab": {
       "title": "Notice",
-      "replyBody": "replied in $threadTitle",
-      "rateBody": "scored your thread in $threadTitle $score",
+      "replyBody(rich)": "replied in $threadTitle",
+      "rateBody(rich)": "scored your thread in $threadTitle $score",
       "mentionBody": "mentioned you in thread",
-      "inviteBody": "invite you to participate in the topic $threadTitle",
+      "inviteBody(rich)": "invite you to participate in the topic $threadTitle",
       "newFriendBody": "became your friend",
       "ignoredSameNotice": "$count more same notice ignored",
       "taskID": "Task ID: $taskId"

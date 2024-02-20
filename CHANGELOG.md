@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- 高亮显示通知卡片中的帖子标题和积分变动。
 - internal: 支持flutter 3.19。
 - internal: 去除安卓gradle构建脚本中标记为弃用的部分。
 - internal: 提高最低依赖版本：flutter 3.19和dart 3.3。
