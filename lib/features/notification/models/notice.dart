@@ -13,6 +13,11 @@ enum NoticeType {
   /// Another user rated current user's thread or post.
   rate,
 
+  /// Another user rated current user's thread or post using batch task.
+  ///
+  /// Usually the plugin is "Project Minerva" but do not reply on it.
+  batchRate,
+
   /// Another mentioned current user in a post.
   mention,
 
@@ -41,6 +46,7 @@ class Notice extends Equatable {
     required this.noticeType,
     required this.score,
     required this.quotedMessage,
+    required this.taskId,
   });
 
   /// User avatar.
@@ -92,6 +98,11 @@ class Notice extends Equatable {
   /// Comment when scoring.
   final String? quotedMessage;
 
+  /// Task id of batch operation.
+  ///
+  /// Only useful when NoticeType is batchRate.
+  final String? taskId;
+
   /// Build a [Notice] from html node [element] :
   /// div#ct > div.mn > div.bm.bw0 > div.xld.xlda > div.nts > div.cl
   ///
@@ -107,6 +118,7 @@ class Notice extends Equatable {
 
     String? score;
     String? quotedMessage;
+    String? taskId;
 
     // score:
     // <dd class="ntc_body" style="">
@@ -129,6 +141,12 @@ class Notice extends Equatable {
     //   您也可以直接回复：
     //   <a class="lit" href="...mode=post&action=reply&tid=xxx&repquote=xxx"></a>
     // </dd>
+    //
+    // batchRate:
+    // <dd class="ntc_body" style="">
+    //   您在主题 <a href="" target="_blank"> $ThreadTitle</a> 的帖子被 <a href="$UserSpace" target="_blank">$Username</a> 评分 $rate<br>
+    //   <b>执行者：</b><a href="$UserSpace" target="_blank">$Username</a><br><b>理由：</b>$Reason<br><b>任务ID：</b>TaskID
+    // </dd>
     final quoteNode = element.querySelector('dd.ntc_body > div.quote');
     final mentionNode = element.querySelector('dd.ntc_body > blockquote');
     final litNode = element.querySelector('dd.ntc_body > a.lit');
@@ -144,6 +162,13 @@ class Notice extends Equatable {
       noticeType = NoticeType.invite;
     } else if (element.querySelectorAll('dd.ntc_body > a').length == 1) {
       noticeType = NoticeType.newFriend;
+    } else if (element
+            .querySelectorAll('dd.ntc_body > b')
+            .lastOrNull
+            ?.innerText
+            .contains('任务ID') ??
+        false) {
+      noticeType = NoticeType.batchRate;
     } else {
       noticeType = NoticeType.reply;
     }
@@ -176,6 +201,19 @@ class Notice extends Equatable {
     } else if (noticeType == NoticeType.newFriend) {
       username = a1Node?.firstEndDeepText();
       userSpaceUrl = a1Node?.attributes['href'];
+    } else if (noticeType == NoticeType.batchRate) {
+      noticeThreadTitle = a1Node?.firstEndDeepText();
+      redirectUrl = a1Node?.firstHref()?.prependHost();
+      // Here we should use `:last-of-type` but dart html package does not
+      // support it, and we also dont want to use `querySelectorAll.lastOrNull`.
+      //
+      // Assume the user node is always the 5th child.
+      final a3Node = element.querySelector('dd.ntc_body > a:nth-child(5)');
+      userSpaceUrl = a3Node?.firstHref();
+      username = a3Node?.firstEndDeepText();
+      final n = element.querySelector('dd.ntc_body');
+      score = n?.nodes.elementAtOrNull(4)?.text?.trim().replaceFirst('评分 ', '');
+      taskId = n?.nodes.lastOrNull?.text?.trim();
     } else {
       noticeThreadTitle = a1Node?.firstEndDeepText();
       redirectUrl = a1Node?.firstHref()?.prependHost();
@@ -205,6 +243,12 @@ class Notice extends Equatable {
         debug('failed to parse new friend notice: $username, $userSpaceUrl');
         return null;
       }
+    } else if (noticeType == NoticeType.batchRate) {
+      if (username == null || userSpaceUrl == null || taskId == null) {
+        debug('failed to parse batch rate notice: '
+            '$username, $userSpaceUrl, $taskId');
+        return null;
+      }
     } else if (username == null ||
         userSpaceUrl == null ||
         noticeTime == null ||
@@ -230,6 +274,7 @@ class Notice extends Equatable {
       noticeType: noticeType,
       score: score,
       quotedMessage: quotedMessage,
+      taskId: taskId,
     );
   }
 
@@ -247,5 +292,6 @@ class Notice extends Equatable {
         noticeType,
         score,
         quotedMessage,
+        taskId,
       ];
 }

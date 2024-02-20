@@ -21,7 +21,7 @@ class NoticeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final ignoreHintStyle = Theme.of(context)
+    final outlineStyle = Theme.of(context)
         .textTheme
         .labelMedium
         ?.copyWith(color: Theme.of(context).colorScheme.outline);
@@ -44,7 +44,7 @@ class NoticeCard extends StatelessWidget {
           context.t.noticePage.noticeTab
               .replyBody(threadTitle: notice.noticeThreadTitle ?? '-'),
         ),
-      NoticeType.rate => Column(
+      NoticeType.rate || NoticeType.batchRate => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
@@ -60,6 +60,12 @@ class NoticeCard extends StatelessWidget {
                   padding: edgeInsetsL15T15R15B15,
                   child: Text(notice.quotedMessage!),
                 ),
+              ),
+            if (notice.taskId != null) sizedBoxW5H5,
+            if (notice.taskId != null)
+              Text(
+                context.t.noticePage.noticeTab.taskID(taskId: notice.taskId!),
+                style: outlineStyle,
               ),
           ],
         ),
@@ -137,7 +143,7 @@ class NoticeCard extends StatelessWidget {
                     Text(
                       context.t.noticePage.noticeTab
                           .ignoredSameNotice(count: notice.ignoreCount!),
-                      style: ignoreHintStyle,
+                      style: outlineStyle,
                     ),
                 ].insertBetween(sizedBoxW5H5),
               ),

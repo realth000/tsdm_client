@@ -209,7 +209,8 @@
       "mentionBody": "在話題中提到了你",
       "inviteBody": "邀請您參與話題 $threadTitle",
       "newFriendBody": "和您成為好友了",
-      "ignoredSameNotice": "還有 $count 個相同通知被忽略"
+      "ignoredSameNotice": "還有 $count 個相同通知被忽略",
+      "taskID": "任務ID：$taskId"
     },
     "messageTab": {
       "title": "訊息"

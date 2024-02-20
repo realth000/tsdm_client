@@ -209,7 +209,8 @@
       "mentionBody": "mentioned you in thread",
       "inviteBody": "invite you to participate in the topic $threadTitle",
       "newFriendBody": "became your friend",
-      "ignoredSameNotice": "$count more same notice ignored"
+      "ignoredSameNotice": "$count more same notice ignored",
+      "taskID": "Task ID: $taskId"
     },
     "messageTab": {
       "title": "Messages"
