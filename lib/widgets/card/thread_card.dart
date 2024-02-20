@@ -14,6 +14,7 @@ import 'package:tsdm_client/shared/models/normal_thread.dart';
 import 'package:tsdm_client/shared/models/thread_type.dart';
 import 'package:tsdm_client/shared/models/user.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 class _CardLayout extends StatelessWidget {
@@ -148,17 +149,7 @@ class _CardLayout extends StatelessWidget {
             ),
             if (quotedMessage != null)
               Row(
-                children: [
-                  Expanded(
-                    child: Card(
-                      elevation: 2,
-                      child: Padding(
-                        padding: edgeInsetsL15T15R15B15,
-                        child: Text(quotedMessage!),
-                      ),
-                    ),
-                  ),
-                ],
+                children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
               ),
             if (infoWidgetList.isNotEmpty)
               Padding(

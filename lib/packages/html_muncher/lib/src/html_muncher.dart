@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
@@ -15,6 +14,7 @@ import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/review_card.dart';
 import 'package:tsdm_client/widgets/card/spoiler_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:universal_html/html.dart' as uh;
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
@@ -408,12 +408,7 @@ class Muncher {
     return TextSpan(
       children: [
         WidgetSpan(
-          child: Card(
-            child: Padding(
-              padding: edgeInsetsL15T15R15B15,
-              child: RichText(text: ret),
-            ),
-          ),
+          child: QuotedText.rich(ret),
         ),
         const TextSpan(text: '\n'),
       ],

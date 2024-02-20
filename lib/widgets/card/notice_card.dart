@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/notification/models/notice.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Widget to show a single [Notice].
@@ -71,14 +72,10 @@ class NoticeCard extends StatelessWidget {
                 ),
               ),
             ),
-            if (notice.quotedMessage?.isNotEmpty ?? false)
-              Card(
-                elevation: 2,
-                child: Padding(
-                  padding: edgeInsetsL15T15R15B15,
-                  child: Text(notice.quotedMessage!),
-                ),
-              ),
+            if (notice.quotedMessage?.isNotEmpty ?? false) ...[
+              sizedBoxW5H5,
+              QuotedText(notice.quotedMessage ?? ''),
+            ],
             if (notice.taskId != null) sizedBoxW5H5,
             if (notice.taskId != null)
               Text(
@@ -89,16 +86,10 @@ class NoticeCard extends StatelessWidget {
         ),
       NoticeType.mention => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+          children: <Widget>[
             Text(context.t.noticePage.noticeTab.mentionBody),
-            Card(
-              elevation: 2,
-              child: Padding(
-                padding: edgeInsetsL15T15R15B15,
-                child: Text(notice.quotedMessage ?? ''),
-              ),
-            ),
-          ],
+            QuotedText(notice.quotedMessage ?? ''),
+          ].insertBetween(sizedBoxW5H5),
         ),
       NoticeType.invite => Text.rich(
           context.t.noticePage.noticeTab.inviteBody(
