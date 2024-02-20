@@ -218,7 +218,6 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         .querySelectorAll(
           'div.bm.bw0 > div.tl > form > table > tbody > tr.bw0_all',
         )
-        .skip(1)
         .map(MyThread.fromTr)
         .whereType<MyThread>()
         .toList();
