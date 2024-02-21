@@ -217,6 +217,7 @@ class _ThreadPageState extends State<ThreadPage>
             },
           ),
           BlocListener<ReplyBloc, ReplyState>(
+            listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
                 ScaffoldMessenger.of(context).showSnackBar(
