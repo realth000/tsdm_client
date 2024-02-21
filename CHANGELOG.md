@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 支持筛选积分变更历史。
 - 帖子内按页数显示分组。
 - 现在在安卓和IOS上尝试使用和当前语言的应用标题。
+- 现在发送回复后会提示发送成功。
 
 ### Fixed
 
