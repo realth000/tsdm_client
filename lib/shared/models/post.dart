@@ -31,6 +31,8 @@ class Post extends Equatable {
     required this.data,
     required this.replyAction,
     required this.rateAction,
+    required this.lastEditUsername,
+    required this.lastEditTime,
     this.locked = const [],
     this.rate,
     this.packetUrl,
@@ -86,6 +88,12 @@ class Post extends Equatable {
   /// the current user is not the author. So just parse the url and never
   /// manually format it.
   final String? editUrl;
+
+  /// Name of user who last edited this post.
+  final String? lastEditUsername;
+
+  /// Time of last edited.
+  final String? lastEditTime;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element) {
@@ -227,6 +235,19 @@ class Post extends Equatable {
         ?.attributes['href']
         ?.prependHost();
 
+    // Check for last edit status.
+    final lastEditText =
+        element.querySelector('i.pstatus')?.innerText.trim().split(' ');
+    String? lastEditUsername;
+    String? lastEditTime;
+    // 本帖最后由 $username 于 xxxx-xx-xx xx:xx:xx 编辑
+    // 0         1         2 3          4        5
+    if (lastEditText != null) {
+      lastEditUsername = lastEditText.elementAtOrNull(1);
+      lastEditTime = '${lastEditText.elementAtOrNull(3)} '
+          '${lastEditText.elementAtOrNull(4)}';
+    }
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -239,6 +260,8 @@ class Post extends Equatable {
       rateAction: rateAction,
       packetUrl: packetUrl,
       editUrl: editUrl,
+      lastEditUsername: lastEditUsername,
+      lastEditTime: lastEditTime,
     );
   }
 
@@ -288,5 +311,7 @@ class Post extends Equatable {
         rate,
         packetUrl,
         editUrl,
+        lastEditUsername,
+        lastEditTime,
       ];
 }

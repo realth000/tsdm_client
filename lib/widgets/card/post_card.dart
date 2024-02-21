@@ -88,6 +88,7 @@ class _PostCardState extends State<PostCard>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            // User info.
             ListTile(
               leading: GestureDetector(
                 onTap: () async =>
@@ -115,6 +116,22 @@ class _PostCardState extends State<PostCard>
                   ? null
                   : Text('#${widget.post.postFloor}'),
             ),
+            // Last edit status.
+            if (widget.post.lastEditUsername != null &&
+                widget.post.lastEditTime != null)
+              Padding(
+                padding: edgeInsetsL10T5R10,
+                child: Text(
+                  context.t.postCard.lastEditInfo(
+                    username: widget.post.lastEditUsername!,
+                    time: widget.post.lastEditTime!,
+                  ),
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
+              ),
+            // Post body
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
@@ -138,6 +155,7 @@ class _PostCardState extends State<PostCard>
                 ],
               ),
             ),
+            // 红包 if any.
             if (widget.post.locked.isNotEmpty)
               ...widget.post.locked
                   .where((e) => e.isValid())
@@ -146,11 +164,13 @@ class _PostCardState extends State<PostCard>
               PacketCard(widget.post.packetUrl!),
               sizedBoxW10H10,
             ],
+            // Rate status if any.
             if (widget.post.rate != null)
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 712),
                 child: RateCard(widget.post.rate!),
               ),
+            // Context menu.
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [

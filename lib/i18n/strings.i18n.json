@@ -377,7 +377,8 @@
     "viewAllAuthors": "View all authors",
     "rateFetchInfoFailed": "Fetch info failed",
     "rateFailed": "Rate failed",
-    "edit": "Edit"
+    "edit": "Edit",
+    "lastEditInfo": "Last edited by $username at $time"
   },
   "packetCard": {
     "title": "You found a packet!",

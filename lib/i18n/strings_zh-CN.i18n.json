@@ -377,7 +377,8 @@
     "viewAllAuthors": "查看所有作者",
     "rateFetchInfoFailed": "获取评分信息失败",
     "rateFailed": "评分失败",
-    "edit": "编辑"
+    "edit": "编辑",
+    "lastEditInfo": "本帖最后由 $username 于 $time 编辑"
   },
   "packetCard": {
     "title": "你找到了一个红包！",
