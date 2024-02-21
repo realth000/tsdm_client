@@ -148,8 +148,11 @@ class _CardLayout extends StatelessWidget {
               ),
             ),
             if (quotedMessage != null)
-              Row(
-                children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
+              Padding(
+                padding: edgeInsetsL15R15B10,
+                child: Row(
+                  children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
+                ),
               ),
             if (infoWidgetList.isNotEmpty)
               Padding(
