@@ -214,6 +214,10 @@ class Notice extends Equatable {
       final n = element.querySelector('dd.ntc_body');
       score = n?.nodes.elementAtOrNull(4)?.text?.trim().replaceFirst('评分 ', '');
       taskId = n?.nodes.lastOrNull?.text?.trim();
+      final bList = n?.querySelectorAll('b');
+      if (bList?.length == 3) {
+        quotedMessage = bList!.elementAt(1).nextNode?.text;
+      }
     } else {
       noticeThreadTitle = a1Node?.firstEndDeepText();
       redirectUrl = a1Node?.firstHref()?.prependHost();
