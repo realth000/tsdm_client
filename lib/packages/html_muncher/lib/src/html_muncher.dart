@@ -247,6 +247,7 @@ class Muncher {
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
             'b' => _buildB(node),
+            'hr' => _buildHr(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -731,6 +732,10 @@ class Muncher {
   InlineSpan _buildB(uh.Element element) {
     final ret = _munch(element);
     return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+  }
+
+  InlineSpan _buildHr(uh.Element element) {
+    return const WidgetSpan(child: Divider());
   }
 
   /*                Setup Functions                      */
