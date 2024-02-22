@@ -57,6 +57,9 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
         return;
       }
       final replyParameters = _parseParameters(document, tid);
+      if (isClosed) {
+        return;
+      }
       emit(
         state.copyWith(
           status: NotificationDetailStatus.success,
