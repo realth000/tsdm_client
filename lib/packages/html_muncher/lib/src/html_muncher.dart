@@ -54,9 +54,9 @@ class MunchState {
   /// Align span in center.
   bool center = false;
 
-  /// Flag indicating current node's parent is `<div>` or not.
-  /// IF in a div, should make sure current item is in a new line.
-  bool inDiv = false;
+  /// Flag indicating current node's is inside a `<pre>` node or not.
+  /// When in a `<pre>`, all text should be treated as raw text.
+  bool inPre = false;
 
   /// If true, use [String.trim], if false, use [String.trimLeft].
   bool trimAll = false;
@@ -162,8 +162,16 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
-          final text =
-              state.trimAll ? node.text?.trim() : node.text?.trimLeft();
+          String? text;
+          // When inPre is true, current node is inside a `<pre>` node.
+          // Should reserve the original style.
+          if (state.inPre) {
+            text = node.text;
+          } else if (state.trimAll) {
+            text = node.text?.trim();
+          } else {
+            node.text?.trimLeft();
+          }
           // If text is trimmed to empty, maybe it is an '\n' before trimming.
           if (text?.isEmpty ?? true) {
             if (state.trimAll) {
@@ -205,7 +213,7 @@ class Muncher {
           state.inRepeatWrapLine = false;
           // TODO: Support text-shadow.
           return TextSpan(
-            text: state.inDiv ? '${text ?? ""}\n' : text,
+            text: text, //state.inPre ? '${text ?? ""}\n' : text,
             recognizer: recognizer,
             style: style,
           );
@@ -248,6 +256,7 @@ class Muncher {
             'dl' => _buildDl(node),
             'b' => _buildB(node),
             'hr' => _buildHr(node),
+            'pre' => _buildPre(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -264,8 +273,6 @@ class Muncher {
   }
 
   InlineSpan _buildFont(uh.Element element) {
-    final oldInDiv = state.inDiv;
-    state.inDiv = false;
     // Setup color
     final hasColor = _tryPushColor(element);
     // Setup font size.
@@ -281,7 +288,6 @@ class Muncher {
       state.fontSizeStack.removeLast();
     }
 
-    state.inDiv = oldInDiv;
     // Restore color.
     return ret;
   }
@@ -308,8 +314,6 @@ class Muncher {
   }
 
   InlineSpan _buildP(uh.Element element) {
-    final oldInDiv = state.inDiv;
-    state.inDiv = false;
     // Alignment requires the whole rendered page to a fixed max width that
     // equals to website page, otherwise if is different if we have a "center"
     // or "right" alignment.
@@ -355,7 +359,6 @@ class Muncher {
       ret2 = ret;
     }
 
-    state.inDiv = oldInDiv;
     return ret2;
   }
 
@@ -427,20 +430,12 @@ class Muncher {
       'rwdbst': _buildBountyBestAnswer,
     };
 
-    final alreadyInDiv = state.inDiv;
-
-    if (!alreadyInDiv) {
-      state.inDiv = true;
-    }
     // Find the first munch executor, use `_munch` if none found.
     final executor = _divMap!.entries
             .firstWhereOrNull((e) => element.classes.contains(e.key))
             ?.value ??
         _munch;
     final ret = executor(element);
-    if (!alreadyInDiv) {
-      state.inDiv = false;
-    }
     return ret;
   }
 
@@ -736,6 +731,19 @@ class Muncher {
 
   InlineSpan _buildHr(uh.Element element) {
     return const WidgetSpan(child: Divider());
+  }
+
+  InlineSpan _buildPre(uh.Element element) {
+    // Avoid reset parent's inPre state.
+    final alreadyInPre = state.inPre;
+    if (!alreadyInPre) {
+      state.inPre = true;
+    }
+    final ret = _munch(element);
+    if (!alreadyInPre) {
+      state.inPre = false;
+    }
+    return ret;
   }
 
   /*                Setup Functions                      */

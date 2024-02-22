@@ -27,6 +27,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 积分：修复积分统计页面我的积分标签页中缺少空隙的问题。
 - 帖子：修复部分楼层丢失字体颜色的问题。
 - 我的帖子：修复我的帖子页面的丢失最新一条回复的问题。
+- app: 修复了很多处解析html时多余或缺少换行的问题。
 
 ### Changed
 
