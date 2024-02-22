@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.7.0] - 2024-02-23
+
 ### Added
 
 - 帖子：显示悬赏状态及对应的最佳答案。
