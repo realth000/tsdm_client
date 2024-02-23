@@ -12,8 +12,8 @@
 
 <p align="center">
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test"/></a>
-  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test_build.yml?label=build"/></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client"></a>
+  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/release_build.yml?label=release"/></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=version"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_iOS_Linux_MacOS_Windows-19A6E6"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.19-19A6E6?logo=flutter"></a>
@@ -75,6 +75,8 @@
   * [x] 置顶帖
   * [x] 领取红包
   * [x] 悬赏/悬赏答案
+  * [ ] 用户积分信息
+  * [ ] 签名档
 * [ ] 回帖
   * [x] 回复文字
   * [ ] 回复表情
@@ -123,11 +125,13 @@
   * [ ] 动态颜色（Android）
 * [ ] 用户信息
   * [x] 查看用户信息
+  * [ ] 积分信息
+  * [ ] 签名档
   * [ ] 修改头像
   * [ ] 修改个人资料
 * [ ] 互动
-  * [x] 查看提醒 - 回复 评分 提及 邀请参与话题 已添加好友
-  * [ ] 查看提醒 - 批量评分 好友申请 转账
+  * [x] 查看提醒 - 回复 评分 提及 邀请参与话题 已添加好友 批量评分
+  * [ ] 查看提醒 - 好友申请 转账
   * [x] 回复提醒
   * [x] 跳转到提醒的帖子
   * [ ] 查看消息
@@ -169,6 +173,10 @@
 >
 > * iOS和MacOS平台的产物由于条件限制未经过测试。如果有问题请提issue，但是不保证解决。欢迎提相应的PR。
 > * iOS和MacOS平台产物并未签名，ipa签名请自行寻找方法。
+
+## 下载
+
+* [GitHub Release](https://github.com/realth000/tsdm_client/releases/latest)
 
 ## 编译
 
