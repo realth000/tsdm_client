@@ -20,7 +20,7 @@ dependencies:
   cupertino_icons: ^1.0.6
   dart_mappable: ^4.2.0
   device_info_plus: ^9.1.2
-  dio: ^5.4.0
+  dio: ^5.4.1
   dio_cookie_manager: ^3.1.1
   easy_refresh: ^3.3.4
   equatable: ^2.0.5
@@ -54,7 +54,7 @@ dependencies:
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.0.0
   universal_html: ^2.2.4
-  url_launcher: ^6.2.4
+  url_launcher: ^6.2.5
   uuid: ^4.3.3
 
 dev_dependencies:
