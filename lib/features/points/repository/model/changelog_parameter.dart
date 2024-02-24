@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Query parameters used in log request.
-final class ChangelogParameter extends Equatable {
+@MappableClass()
+final class ChangelogParameter with ChangelogParameterMappable {
   /// Constructor.
   const ChangelogParameter({
     required this.extType,
@@ -48,39 +49,4 @@ final class ChangelogParameter extends Equatable {
 
   /// Result page number;
   final int pageNumber;
-
-  /// Copy with.
-  ChangelogParameter copyWith({
-    String? extType,
-    String? startTime,
-    String? endTime,
-    String? changeType,
-    String? operation,
-    int? pageNumber,
-  }) {
-    return ChangelogParameter(
-      extType: extType ?? this.extType,
-      startTime: startTime ?? this.startTime,
-      endTime: endTime ?? this.endTime,
-      changeType: changeType ?? this.changeType,
-      operation: operation ?? this.operation,
-      pageNumber: pageNumber ?? this.pageNumber,
-    );
-  }
-
-  @override
-  String toString() {
-    return '&exttype=$extType&income=$changeType&optype=$operation&'
-        'starttime=$startTime&endtime=$endTime&page=$pageNumber';
-  }
-
-  @override
-  List<Object?> get props => [
-        extType,
-        startTime,
-        endTime,
-        changeType,
-        operation,
-        pageNumber,
-      ];
 }

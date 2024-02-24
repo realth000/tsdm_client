@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 
+part '../../../generated/features/jump_page/cubit/jump_page_cubit.mapper.dart';
 part 'jump_page_state.dart';
 
 /// Cubit of jump page feature.

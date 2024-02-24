@@ -1,18 +1,18 @@
 part of 'rate_bloc.dart';
 
 /// Event of rate.
-sealed class RateEvent extends Equatable {
+@MappableClass()
+sealed class RateEvent with RateEventMappable {
   const RateEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Request to fetch rate info.
 ///
 /// This should be triggered once opened the rate page.
 /// Before this event complete, user should be unable to interact with the page.
-final class RateFetchInfoRequested extends RateEvent {
+@MappableClass()
+final class RateFetchInfoRequested extends RateEvent
+    with RateFetchInfoRequestedMappable {
   /// Constructor.
   const RateFetchInfoRequested({
     required this.pid,
@@ -30,13 +30,11 @@ final class RateFetchInfoRequested extends RateEvent {
 }
 
 /// User requested to rate.
-final class RateRateRequested extends RateEvent {
+@MappableClass()
+final class RateRateRequested extends RateEvent with RateRateRequestedMappable {
   /// Constructor.
   const RateRateRequested(this.rateInfo) : super();
 
   /// Rate detail info for each field user can rate.
   final Map<String, String> rateInfo;
-
-  @override
-  List<Object?> get props => [rateInfo];
 }

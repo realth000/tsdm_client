@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// User profile model.
-class UserProfile extends Equatable {
+@MappableClass()
+class UserProfile with UserProfileMappable {
   /// Constructor.
   const UserProfile({
     required this.avatarUrl,
@@ -65,20 +66,4 @@ class UserProfile extends Equatable {
   ///
   /// Each group contains a string of title and a string of subtitle.
   final List<(String title, String subtitle)> activityInfoList;
-
-  @override
-  List<Object?> get props => [
-        avatarUrl,
-        username,
-        basicInfoList,
-        checkinDaysCount,
-        checkinThisMonthCount,
-        checkinRecentTime,
-        checkinAllCoins,
-        checkinLastTimeCoin,
-        checkinLevel,
-        checkinNextLevel,
-        checkinNextLevelDays,
-        activityInfoList,
-      ];
 }

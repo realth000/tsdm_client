@@ -1,15 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/forum.dart';
-import 'package:tsdm_client/shared/models/forum_group.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/topics/bloc/topics_bloc.mapper.dart';
 part 'topics_event.dart';
 part 'topics_state.dart';
 

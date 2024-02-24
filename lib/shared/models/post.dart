@@ -1,12 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/locked.dart';
-import 'package:tsdm_client/shared/models/rate.dart';
-import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 extension _ParseExtension on uh.Element {
   static final _rateActionRe = RegExp("'rate', '(?<url>forum.php[^']*)',");
@@ -21,7 +13,8 @@ extension _ParseExtension on uh.Element {
 /// Post model.
 ///
 /// Each [Post] contains a reply.
-class Post extends Equatable {
+@MappableClass()
+class Post with PostMappable {
   /// Constructor.
   const Post({
     required this.postID,
@@ -297,21 +290,4 @@ class Post extends Equatable {
     }
     return tdPostList;
   }
-
-  @override
-  List<Object?> get props => [
-        postID,
-        postFloor,
-        author,
-        publishTime,
-        data,
-        replyAction,
-        rateAction,
-        locked,
-        rate,
-        packetUrl,
-        editUrl,
-        lastEditUsername,
-        lastEditTime,
-      ];
 }

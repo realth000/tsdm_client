@@ -1,19 +1,23 @@
 part of 'cache_bloc.dart';
 
-/// Status of cacheing
+/// Status of caching
 enum CacheStatus {
   /// Initial.
   initial,
+
   /// Calculating cache size.
   calculating,
+
   /// Clearing cache files.
   clearing,
+
   /// Operation succeed.
   success,
 }
 
 /// State of cache.
-class CacheState extends Equatable {
+@MappableClass()
+class CacheState with CacheStateMappable {
   /// Constructor.
   const CacheState({
     this.status = CacheStatus.initial,
@@ -22,20 +26,7 @@ class CacheState extends Equatable {
 
   /// Status.
   final CacheStatus status;
+
   /// Calculated cache file size.
   final int cacheSize;
-
-  /// Copy with.
-  CacheState copyWith({
-    CacheStatus? status,
-    int? cacheSize,
-  }) {
-    return CacheState(
-      status: status ?? this.status,
-      cacheSize: cacheSize ?? this.cacheSize,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, cacheSize];
 }

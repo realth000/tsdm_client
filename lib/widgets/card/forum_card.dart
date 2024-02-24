@@ -6,7 +6,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/forum.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/debug.dart';

@@ -1,8 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/shared/models/forum.dart';
+part of 'models.dart';
 
 /// A group of [Forum].
-final class ForumGroup extends Equatable {
+@MappableClass()
+final class ForumGroup with ForumGroupMappable {
   /// Constructor.
   const ForumGroup({
     required this.name,
@@ -18,7 +18,4 @@ final class ForumGroup extends Equatable {
 
   /// All subreddit in the forum.
   final List<Forum> forumList;
-
-  @override
-  List<Object?> get props => [name, url, forumList];
 }

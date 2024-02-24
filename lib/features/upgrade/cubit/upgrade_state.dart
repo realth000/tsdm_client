@@ -25,7 +25,8 @@ enum UpgradeStatus {
 }
 
 /// State of upgrading.
-class UpgradeState extends Equatable {
+@MappableClass()
+class UpgradeState with UpgradeStateMappable {
   /// Constructor.
   const UpgradeState({
     this.status = UpgradeStatus.ready,
@@ -49,25 +50,4 @@ class UpgradeState extends Equatable {
 
   /// Status of download assets.
   final DownloadStatus downloadStatus;
-
-  /// Copy with.
-  UpgradeState copyWith({
-    UpgradeStatus? status,
-    UpgradeModel? upgradeModel,
-    String? downloadDir,
-    String? fileName,
-    DownloadStatus? downloadStatus,
-  }) {
-    return UpgradeState(
-      status: status ?? this.status,
-      upgradeModel: upgradeModel ?? this.upgradeModel,
-      downloadDir: downloadDir ?? this.downloadDir,
-      fileName: fileName ?? this.fileName,
-      downloadStatus: downloadStatus ?? this.downloadStatus,
-    );
-  }
-
-  @override
-  List<Object?> get props =>
-      [status, upgradeModel, downloadDir, fileName, downloadStatus];
 }

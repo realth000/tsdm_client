@@ -1,17 +1,17 @@
 part of 'purchase_bloc.dart';
 
 /// Event of purchase.
-sealed class PurchaseEvent extends Equatable {
+@MappableClass()
+sealed class PurchaseEvent with PurchaseEventMappable {
   const PurchaseEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Require the user to confirm related purchase info.
 ///
-/// Should do this before the purchase acition.
-final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent {
+/// Should do this before the purchase action.
+@MappableClass()
+final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent
+    with PurchaseFetchConfirmInfoRequestedMappable {
   /// Constructor.
   const PurchaseFetchConfirmInfoRequested({
     required this.tid,
@@ -28,9 +28,13 @@ final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent {
 /// User requested to purchase.
 ///
 /// Should let user confirmed the info related to purchasing.
-final class PurchasePurchaseRequested extends PurchaseEvent {}
+@MappableClass()
+final class PurchasePurchaseRequested extends PurchaseEvent
+    with PurchasePurchaseRequestedMappable {}
 
 /// User required to cancel the purchase.
 ///
 /// This is likely to trigger by closing the confirm dialog.
-final class PurchasePurchasedCanceled extends PurchaseEvent {}
+@MappableClass()
+final class PurchasePurchasedCanceled extends PurchaseEvent
+    with PurchasePurchasedCanceledMappable {}

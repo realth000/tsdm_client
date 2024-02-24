@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/purchase/bloc/purchase_bloc.dart';
 import 'package:tsdm_client/features/purchase/repository/purchase_repository.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/models/locked.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 
 // TODO: Separate purchase widget.

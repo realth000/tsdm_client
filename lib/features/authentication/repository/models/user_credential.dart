@@ -1,4 +1,4 @@
-import 'package:tsdm_client/constants/url.dart';
+part of 'models.dart';
 
 /// User name field type, pair with password.
 enum LoginField {
@@ -22,7 +22,8 @@ enum LoginField {
 }
 
 /// Additional security question.
-class SecurityQuestion {
+@MappableClass()
+class SecurityQuestion with SecurityQuestionMappable {
   /// Constructor.
   const SecurityQuestion({
     required this.questionId,
@@ -37,7 +38,11 @@ class SecurityQuestion {
 }
 
 /// Login credential.
-class UserCredential {
+@MappableClass(
+  generateMethods:
+      GenerateMethods.stringify | GenerateMethods.copy | GenerateMethods.equals,
+)
+class UserCredential with UserCredentialMappable {
   /// Constructor.
   const UserCredential({
     required this.loginField,

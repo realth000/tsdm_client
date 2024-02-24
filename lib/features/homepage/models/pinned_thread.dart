@@ -1,9 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// A pinned thread in home page.
 ///
 /// Contains thread info and the author's info.
-final class PinnedThread extends Equatable {
+@MappableClass()
+final class PinnedThread with PinnedThreadMappable {
   /// Constructor.
   const PinnedThread({
     required this.threadUrl,
@@ -26,7 +27,4 @@ final class PinnedThread extends Equatable {
   /// Only username here, not including avatar, user space url and other info.
   /// This is due to the web page status.
   final String authorName;
-
-  @override
-  List<Object> get props => [threadUrl, threadTitle, authorUrl, authorName];
 }

@@ -1,12 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Thread in search result.
-class SearchedThread extends Equatable {
+@MappableClass()
+class SearchedThread with SearchedThreadMappable {
   /// Constructor.
   const SearchedThread({
     required this.tid,
@@ -92,21 +88,4 @@ class SearchedThread extends Equatable {
 
   /// Forum url this thread belongs to.
   final String forumUrl;
-
-  @override
-  String toString() {
-    return 'SearchThread{ id=$tid, title=$title, url=$url, author=$author, '
-        'publishTime=$publishTime, forumName=$forumName, forumUrl=$forumUrl }';
-  }
-
-  @override
-  List<Object?> get props => [
-        tid,
-        title,
-        url,
-        author,
-        publishTime,
-        forumName,
-        forumUrl,
-      ];
 }

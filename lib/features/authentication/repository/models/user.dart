@@ -1,4 +1,4 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Authenticated user.
 ///
@@ -8,7 +8,8 @@ import 'package:equatable/equatable.dart';
 /// * Though we may not know the all info above when trying to login.
 /// * All the info above MUST be provided before save logged info info local
 ///   storage.
-class User extends Equatable {
+@MappableClass()
+class User with UserMappable {
   /// Constructor.
   const User({
     this.username,
@@ -30,7 +31,4 @@ class User extends Equatable {
 
   /// Email address.
   final String? email;
-
-  @override
-  List<Object?> get props => [username, uid, password, email];
 }

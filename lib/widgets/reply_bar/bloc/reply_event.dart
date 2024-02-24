@@ -1,12 +1,10 @@
 part of 'reply_bloc.dart';
 
 /// Event of reply
-sealed class ReplyEvent extends Equatable {
+@MappableClass()
+sealed class ReplyEvent with ReplyEventMappable {
   /// Constructor.
   const ReplyEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Parameters used in reply.
@@ -18,7 +16,9 @@ sealed class ReplyEvent extends Equatable {
 /// When those bloc parsed the latest reply parameters from html document,
 /// they should call this event
 /// to sync parameters with here.
-final class ReplyParametersUpdated extends ReplyEvent {
+@MappableClass()
+final class ReplyParametersUpdated extends ReplyEvent
+    with ReplyParametersUpdatedMappable {
   /// Constructor.
   const ReplyParametersUpdated(this.replyParameters) : super();
 
@@ -36,7 +36,9 @@ final class ReplyParametersUpdated extends ReplyEvent {
 /// When those bloc parsed the latest reply parameters from html document, they
 /// should call this event
 /// to sync parameters with here.
-final class ReplyThreadClosed extends ReplyEvent {
+@MappableClass()
+final class ReplyThreadClosed extends ReplyEvent
+    with ReplyThreadClosedMappable {
   /// Constructor.
   const ReplyThreadClosed({required this.closed}) : super();
 
@@ -45,7 +47,9 @@ final class ReplyThreadClosed extends ReplyEvent {
 }
 
 /// User required to reply to another post.
-final class ReplyToPostRequested extends ReplyEvent {
+@MappableClass()
+final class ReplyToPostRequested extends ReplyEvent
+    with ReplyToPostRequestedMappable {
   /// Constructor.
   const ReplyToPostRequested({
     required this.replyParameters,
@@ -61,13 +65,12 @@ final class ReplyToPostRequested extends ReplyEvent {
 
   /// Message to reply.
   final String replyMessage;
-
-  @override
-  List<Object?> get props => [replyParameters, replyAction, replyMessage];
 }
 
 /// User required to reply to a thread.
-final class ReplyToThreadRequested extends ReplyEvent {
+@MappableClass()
+final class ReplyToThreadRequested extends ReplyEvent
+    with ReplyToThreadRequestedMappable {
   /// Constructor.
   const ReplyToThreadRequested({
     required this.replyParameters,
@@ -79,13 +82,12 @@ final class ReplyToThreadRequested extends ReplyEvent {
 
   /// Message to reply.
   final String replyMessage;
-
-  @override
-  List<Object?> get props => [replyParameters, replyMessage];
 }
 
 /// This event is used to reset the state of flag needClearText in state.
 ///
 /// That flag should only be true once when user send post succeed, then reset
 /// to false.
-final class ReplyResetClearTextStateTriggered extends ReplyEvent {}
+@MappableClass()
+final class ReplyResetClearTextStateTriggered extends ReplyEvent
+    with ReplyResetClearTextStateTriggeredMappable {}

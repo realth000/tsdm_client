@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';

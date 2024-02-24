@@ -1,33 +1,39 @@
 part of 'homepage_bloc.dart';
 
 /// All events happen in HomepagePage.
-sealed class HomepageEvent extends Equatable {
+@MappableClass()
+sealed class HomepageEvent with HomepageEventMappable {
   const HomepageEvent();
-
-  @override
-  List<Object> get props => [];
 }
 
 /// User request to load the homepage.
 ///
 /// This will load from cache if available.
-final class HomepageLoadRequested extends HomepageEvent {}
+@MappableClass()
+final class HomepageLoadRequested extends HomepageEvent
+    with HomepageLoadRequestedMappable {}
 
 /// User requests to refresh homepage.
 ///
 /// Directly load homepage from server.
-final class HomepageRefreshRequested extends HomepageEvent {}
+@MappableClass()
+final class HomepageRefreshRequested extends HomepageEvent
+    with HomepageRefreshRequestedMappable {}
 
 /// User requests to login.
-final class HomepageLoginRequested extends HomepageEvent {}
+@MappableClass()
+final class HomepageLoginRequested extends HomepageEvent
+    with HomepageLoginRequestedMappable {}
 
 /// Current logged user changed.
 ///
 /// This is a passive event.
-final class _HomepageAuthChanged extends HomepageEvent {
-  const _HomepageAuthChanged({required this.isLogged}) : super();
-  final bool isLogged;
+@MappableClass()
+final class HomepageAuthChanged extends HomepageEvent
+    with HomepageAuthChangedMappable {
+  /// Constructor.
+  const HomepageAuthChanged({required this.isLogged}) : super();
 
-  @override
-  List<Object> get props => [isLogged];
+  /// Flag indicating logged in or not.
+  final bool isLogged;
 }

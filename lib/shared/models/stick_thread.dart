@@ -1,8 +1,8 @@
-import 'package:tsdm_client/shared/models/normal_thread.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Pinned thread.
-class StickThread extends NormalThread {
+@MappableClass()
+class StickThread extends NormalThread with StickThreadMappable {
   /// Constructor.
   const StickThread({
     required super.title,

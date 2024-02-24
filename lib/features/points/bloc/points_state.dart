@@ -19,7 +19,8 @@ enum PointsStatus {
 ///
 /// This page has no pagination and the length of points changelog is expected
 /// to no more than 10.
-final class PointsStatisticsState extends Equatable {
+@MappableClass()
+final class PointsStatisticsState with PointsStatisticsStateMappable {
   /// Constructor.
   const PointsStatisticsState({
     this.status = PointsStatus.initial,
@@ -44,30 +45,11 @@ final class PointsStatisticsState extends Equatable {
   ///
   /// For full changelog, see [PointsChangelogState.fullChangelog].
   final List<PointsChange> recentChangelog;
-
-  /// Copy with
-  PointsStatisticsState copyWith({
-    PointsStatus? status,
-    Map<String, String>? pointsMap,
-    List<PointsChange>? recentChangelog,
-  }) {
-    return PointsStatisticsState(
-      status: status ?? this.status,
-      pointsMap: pointsMap ?? this.pointsMap,
-      recentChangelog: recentChangelog ?? this.recentChangelog,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        pointsMap,
-        recentChangelog,
-      ];
 }
 
 /// State of points changelog page.
-final class PointsChangelogState extends Equatable {
+@MappableClass()
+final class PointsChangelogState with PointsChangelogStateMappable {
   /// Constructor.
   const PointsChangelogState({
     this.status = PointsStatus.initial,
@@ -109,33 +91,4 @@ final class PointsChangelogState extends Equatable {
   ///
   /// e.g. start time, end time.
   final ChangelogAllParameters allParameters;
-
-  /// Copy with.
-  PointsChangelogState copyWith({
-    PointsStatus? status,
-    ChangelogParameter? parameter,
-    ChangelogAllParameters? allParameters,
-    List<PointsChange>? fullChangelog,
-    int? currentPage,
-    int? totalPages,
-  }) {
-    return PointsChangelogState(
-      status: status ?? this.status,
-      parameter: parameter ?? this.parameter,
-      allParameters: allParameters ?? this.allParameters,
-      fullChangelog: fullChangelog ?? this.fullChangelog,
-      currentPage: currentPage ?? this.currentPage,
-      totalPages: totalPages ?? this.totalPages,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        parameter,
-        allParameters,
-        fullChangelog,
-        currentPage,
-        totalPages,
-      ];
 }

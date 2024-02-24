@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 
+part '../../../generated/features/settings/bloc/settings_bloc.mapper.dart';
 part 'settings_event.dart';
 part 'settings_state.dart';
 
@@ -17,7 +18,7 @@ const _scrollDebounceDuration = Duration(milliseconds: 300);
 /// Emitter.
 typedef SettingsEmitter = Emitter<SettingsState>;
 
-/// Dobounce of scroll offset changed event.
+/// Debounce of scroll offset changed event.
 EventTransformer<Event> debounce<Event>(Duration duration) {
   return (events, mapper) => events.debounce(duration).switchMap(mapper);
 }
@@ -38,10 +39,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         ) {
     // Subscribe to settings map.
     _settingsMapSub = _settingsRepository.settings
-        .listen((settings) => add(_SettingsMapChanged(settings)));
+        .listen((settings) => add(SettingsMapChanged(settings)));
 
-    on<_SettingsMapChanged>(_onSettingsMapChanged);
-    on<_SettingsScrollOffsetChanged>(
+    on<SettingsMapChanged>(_onSettingsMapChanged);
+    on<SettingsScrollOffsetChanged>(
       _onSettingsScrollOffsetChanged,
       transformer: debounce(_scrollDebounceDuration),
     );
@@ -71,14 +72,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
 
   /// Update settings map state.
   Future<void> _onSettingsMapChanged(
-    _SettingsMapChanged event,
+    SettingsMapChanged event,
     SettingsEmitter emit,
   ) async {
     emit(state.copyWith(settingsMap: event.settingsMap));
   }
 
   Future<void> _onSettingsScrollOffsetChanged(
-    _SettingsScrollOffsetChanged event,
+    SettingsScrollOffsetChanged event,
     SettingsEmitter emit,
   ) async {
     _fragmentsRepository.settingsPageScrollOffset = event.offset;

@@ -28,7 +28,8 @@ enum TopicsStatus {
 }
 
 /// State of topics page.
-final class TopicsState extends Equatable {
+@MappableClass()
+final class TopicsState with TopicsStateMappable {
   /// Constructor.
   const TopicsState({
     this.status = TopicsStatus.initial,
@@ -44,20 +45,4 @@ final class TopicsState extends Equatable {
 
   /// All forums to show.
   final List<ForumGroup> forumGroupList;
-
-  /// Copy with.
-  TopicsState copyWith({
-    TopicsStatus? status,
-    int? topicsTab,
-    List<ForumGroup>? forumGroupList,
-  }) {
-    return TopicsState(
-      status: status ?? this.status,
-      topicsTab: topicsTab ?? this.topicsTab,
-      forumGroupList: forumGroupList ?? this.forumGroupList,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, forumGroupList];
 }

@@ -1,12 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/authentication/repository/models/hash.dart';
-import 'package:tsdm_client/features/authentication/repository/models/user_credential.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
+part '../../../generated/features/authentication/bloc/authentication_bloc.mapper.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 

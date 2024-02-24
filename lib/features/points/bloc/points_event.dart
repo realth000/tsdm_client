@@ -1,31 +1,33 @@
 part of 'points_bloc.dart';
 
 /// Event of points statistics page.
-sealed class PointsStatisticsEvent extends Equatable {
+@MappableClass()
+sealed class PointsStatisticsEvent with PointsStatisticsEventMappable {
   /// Constructor.
   const PointsStatisticsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User required to refresh the points statistics page.
-final class PointsStatisticsRefreshRequested extends PointsStatisticsEvent {}
+@MappableClass()
+final class PointsStatisticsRefreshRequested extends PointsStatisticsEvent
+    with PointsStatisticsRefreshRequestedMappable {}
 
 /// Event of points changelog page.
-sealed class PointsChangelogEvent extends Equatable {
+@MappableClass()
+sealed class PointsChangelogEvent with PointsChangelogEventMappable {
   /// Constructor.
   const PointsChangelogEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User requested to refresh the points changelog page.
-final class PointsChangelogRefreshRequested extends PointsChangelogEvent {}
+@MappableClass()
+final class PointsChangelogRefreshRequested extends PointsChangelogEvent
+    with PointsChangelogRefreshRequestedMappable {}
 
 /// User requested to load more page in points changelog page.
-final class PointsChangelogLoadMoreRequested extends PointsChangelogEvent {
+@MappableClass()
+final class PointsChangelogLoadMoreRequested extends PointsChangelogEvent
+    with PointsChangelogLoadMoreRequestedMappable {
   /// Constructor.
   const PointsChangelogLoadMoreRequested(this.pageNumber);
 
@@ -34,7 +36,9 @@ final class PointsChangelogLoadMoreRequested extends PointsChangelogEvent {
 }
 
 /// User requested to jump to another page.
-final class PointsChangelogJumpPageRequested extends PointsChangelogEvent {
+@MappableClass()
+final class PointsChangelogJumpPageRequested extends PointsChangelogEvent
+    with PointsChangelogJumpPageRequestedMappable {
   /// Constructor.
   const PointsChangelogJumpPageRequested(this.pageNumber);
 
@@ -43,7 +47,9 @@ final class PointsChangelogJumpPageRequested extends PointsChangelogEvent {
 }
 
 /// User requested to do a query action with given [parameter].
-final class PointsChangelogQueryRequested extends PointsChangelogEvent {
+@MappableClass()
+final class PointsChangelogQueryRequested extends PointsChangelogEvent
+    with PointsChangelogQueryRequestedMappable {
   /// Constructor.
   const PointsChangelogQueryRequested(this.parameter);
 

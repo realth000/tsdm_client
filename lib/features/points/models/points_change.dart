@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Describe the change is lifting points up or down.
 ///
@@ -24,7 +21,8 @@ enum PointsChangeType {
 ///
 /// Contains of change operation, attr points change list, change detail and
 /// happened datetime.
-class PointsChange extends Equatable {
+@MappableClass()
+class PointsChange with PointsChangeMappable {
   /// Constructor
   const PointsChange({
     required this.operation,
@@ -165,15 +163,4 @@ class PointsChange extends Equatable {
   /// Get tht formatted change.
   String get changeMapString =>
       changeMap.entries.map((e) => '${e.key} ${e.value}').join(',');
-
-  @override
-  List<Object?> get props => [
-        operation,
-        operationFilterUrl,
-        pointsChangeType,
-        changeMap,
-        detail,
-        redirectUrl,
-        time,
-      ];
 }

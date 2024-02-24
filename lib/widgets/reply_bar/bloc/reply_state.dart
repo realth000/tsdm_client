@@ -16,7 +16,8 @@ enum ReplyStatus {
 }
 
 /// State of reply.
-class ReplyState extends Equatable {
+@MappableClass()
+class ReplyState with ReplyStateMappable {
   /// Constructor.
   const ReplyState({
     this.status = ReplyStatus.initial,
@@ -42,21 +43,6 @@ class ReplyState extends Equatable {
   /// This should be set to true once sending request success, only one time.
   final bool needClearText;
 
-  /// Copy with
-  ReplyState copyWith({
-    ReplyStatus? status,
-    ReplyParameters? replyParameters,
-    bool? closed,
-    bool? needClearText,
-  }) {
-    return ReplyState(
-      status: status ?? this.status,
-      replyParameters: replyParameters ?? this.replyParameters,
-      closed: closed ?? this.closed,
-      needClearText: needClearText ?? this.needClearText,
-    );
-  }
-
   /// Copy with, but make the `replyParameters` to null.
   ReplyState copyWithNullReplyParameters() {
     return ReplyState(
@@ -65,7 +51,4 @@ class ReplyState extends Equatable {
       needClearText: needClearText,
     );
   }
-
-  @override
-  List<Object?> get props => [status, replyParameters, closed, needClearText];
 }

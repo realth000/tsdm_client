@@ -19,7 +19,8 @@ enum PurchaseStatus {
 }
 
 /// State of purchase.
-final class PurchaseState extends Equatable {
+@MappableClass()
+final class PurchaseState with PurchaseStateMappable {
   /// Constructor.
   const PurchaseState({
     this.status = PurchaseStatus.initial,
@@ -31,18 +32,4 @@ final class PurchaseState extends Equatable {
 
   /// MUST get this info before purchase.
   final PurchaseConfirmInfo? confirmInfo;
-
-  /// Copy with.
-  PurchaseState copyWith({
-    PurchaseStatus? status,
-    PurchaseConfirmInfo? confirmInfo,
-  }) {
-    return PurchaseState(
-      status: status ?? this.status,
-      confirmInfo: confirmInfo ?? this.confirmInfo,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, confirmInfo];
 }

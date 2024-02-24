@@ -1,21 +1,22 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:device_info_plus/device_info_plus.dart';
-import 'package:equatable/equatable.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/features/upgrade/models/upgrade_model.dart';
-import 'package:tsdm_client/features/upgrade/repository/models/download_status.dart';
+import 'package:tsdm_client/features/upgrade/models/models.dart';
+import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/upgrade/cubit/upgrade_cubit.mapper.dart';
 part 'upgrade_state.dart';
 
 extension _FilterExt on Map<String, String> {

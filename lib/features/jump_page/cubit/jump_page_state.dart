@@ -13,7 +13,8 @@ enum JumpPageStatus {
 }
 
 /// State of jumping page.
-final class JumpPageState extends Equatable {
+@MappableClass()
+final class JumpPageState with JumpPageStateMappable {
   /// Constructor.
   const JumpPageState({
     this.status = JumpPageStatus.initial,
@@ -33,22 +34,4 @@ final class JumpPageState extends Equatable {
 
   /// Flag indicates can jump page or not.
   final bool canJumpPage;
-
-  /// Copy with.
-  JumpPageState copyWith({
-    JumpPageStatus? status,
-    int? currentPage,
-    int? totalPages,
-    bool? canJumpPage,
-  }) {
-    return JumpPageState(
-      status: status ?? this.status,
-      currentPage: currentPage ?? this.currentPage,
-      totalPages: totalPages ?? this.totalPages,
-      canJumpPage: canJumpPage ?? this.canJumpPage,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, currentPage, totalPages, canJumpPage];
 }

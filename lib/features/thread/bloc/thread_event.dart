@@ -1,39 +1,37 @@
 part of 'thread_bloc.dart';
 
 /// Event of thread page.
-sealed class ThreadEvent extends Equatable {
+@MappableClass()
+sealed class ThreadEvent with ThreadEventMappable {
   /// Constructor.
   const ThreadEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User requested to refresh the page.
-final class ThreadRefreshRequested extends ThreadEvent {}
+@MappableClass()
+final class ThreadRefreshRequested extends ThreadEvent
+    with ThreadRefreshRequestedMappable {}
 
 /// User requested to load more thread pages.
-final class ThreadLoadMoreRequested extends ThreadEvent {
+@MappableClass()
+final class ThreadLoadMoreRequested extends ThreadEvent
+    with ThreadLoadMoreRequestedMappable {
   /// Constructor.
   const ThreadLoadMoreRequested(this.pageNumber) : super();
 
   /// Page number to load.
   final int pageNumber;
-
-  @override
-  List<Object?> get props => [pageNumber];
 }
 
 /// User request to jump to another page.
-final class ThreadJumpPageRequested extends ThreadEvent {
+@MappableClass()
+final class ThreadJumpPageRequested extends ThreadEvent
+    with ThreadJumpPageRequestedMappable {
   /// Constructor.
   const ThreadJumpPageRequested(this.pageNumber) : super();
 
   /// Page number to jump to.
   final int pageNumber;
-
-  @override
-  List<Object?> get props => [pageNumber];
 }
 
 /// Mark thread as closed or not.
@@ -41,26 +39,29 @@ final class ThreadJumpPageRequested extends ThreadEvent {
 /// Closed threads should disable the reply bar.
 ///
 /// Persistent in state.
-final class ThreadClosedStateUpdated extends ThreadEvent {
+@MappableClass()
+final class ThreadClosedStateUpdated extends ThreadEvent
+    with ThreadClosedStateUpdatedMappable {
   /// Constructor.
   const ThreadClosedStateUpdated({required this.closed}) : super();
 
   /// Current thread is closed or not.
   final bool closed;
-
-  @override
-  List<Object?> get props => [closed];
 }
 
 /// Clear current reply parameters.
-final class ThreadClearReplyParameterRequested extends ThreadEvent {}
+@MappableClass()
+final class ThreadClearReplyParameterRequested extends ThreadEvent
+    with ThreadClearReplyParameterRequestedMappable {}
 
 /// User requested to only view the posts published by user with [uid] in
 /// current thread.
 ///
 /// Note that triggering this event **will not change the current page number**.
 /// We behave like what it acts in browser.
-final class ThreadOnlyViewAuthorRequested extends ThreadEvent {
+@MappableClass()
+final class ThreadOnlyViewAuthorRequested extends ThreadEvent
+    with ThreadOnlyViewAuthorRequestedMappable {
   /// Constructor.
   const ThreadOnlyViewAuthorRequested(this.uid);
 
@@ -74,7 +75,9 @@ final class ThreadOnlyViewAuthorRequested extends ThreadEvent {
 ///
 /// Note that triggering this event **will not change the current page number**.
 /// We behave like what it acts in browser.
-final class ThreadViewAllAuthorsRequested extends ThreadEvent {}
+@MappableClass()
+final class ThreadViewAllAuthorsRequested extends ThreadEvent
+    with ThreadViewAllAuthorsRequestedMappable {}
 
 /// User requested to change the order when viewing posts in current thread.
 ///
@@ -84,7 +87,9 @@ final class ThreadViewAllAuthorsRequested extends ThreadEvent {}
 /// user" on the server side on UI, but here do implement it by reserving both
 /// query parameters in thread url so there is no conflict any more. Different
 /// from the behavior in browser but it's ok, even better.
-final class ThreadChangeViewOrderRequested extends ThreadEvent {
+@MappableClass()
+final class ThreadChangeViewOrderRequested extends ThreadEvent
+    with ThreadChangeViewOrderRequestedMappable {
   /// Constructor.
   const ThreadChangeViewOrderRequested();
 }

@@ -1,5 +1,8 @@
-export 'forum_status.dart';
-export 'logged_user_info.dart';
-export 'pinned_thread.dart';
-export 'pinned_thread_group.dart';
-export 'swiper_url.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+
+part '../../../generated/features/homepage/models/models.mapper.dart';
+part 'forum_status.dart';
+part 'logged_user_info.dart';
+part 'pinned_thread.dart';
+part 'pinned_thread_group.dart';
+part 'swiper_url.dart';

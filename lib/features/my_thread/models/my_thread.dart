@@ -1,12 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Current user's thread model in user's info page.
-class MyThread extends Equatable {
+@MappableClass()
+class MyThread with MyThreadMappable {
   /// Constructor.
   const MyThread({
     required this.title,
@@ -153,18 +149,4 @@ failed to parse MyThread node: {
       quotedMessage: quotedMessage,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        title,
-        threadID,
-        url,
-        forumName,
-        forumUrl,
-        replyCount,
-        viewCount,
-        latestReplyAuthor,
-        latestReplyTime,
-        quotedMessage,
-      ];
 }

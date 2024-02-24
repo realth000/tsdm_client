@@ -1,12 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Single rate record for a single user.
-class SingleRate extends Equatable {
+@MappableClass()
+class SingleRate with SingleRateMappable {
   /// Constructor.
   const SingleRate({
     required this.user,
@@ -21,13 +17,11 @@ class SingleRate extends Equatable {
   /// Values for each attr in this rate.
   /// Should have same length with attrList in rate info table.
   final List<String> attrValueList;
-
-  @override
-  List<Object?> get props => [user, attrValueList];
 }
 
 /// Rate record for a single user.
-class Rate extends Equatable {
+@MappableClass()
+class Rate with RateMappable {
   /// Constructor.
   const Rate({
     required this.userCount,
@@ -144,13 +138,4 @@ class Rate extends Equatable {
       attrValueList: attrValueList,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        userCount,
-        detailUrl,
-        attrList,
-        records,
-        rateStatus,
-      ];
 }

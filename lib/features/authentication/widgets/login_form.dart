@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
-import 'package:tsdm_client/features/authentication/repository/models/user_credential.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/authentication/widgets/captcha_image.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/debug.dart';

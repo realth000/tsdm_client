@@ -1,20 +1,35 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
+part '../../../generated/features/purchase/exceptions/exceptions.mapper.dart';
+
 /// Basic exception class that may happen in purchasing.
-sealed class PurchaseInfoFailedException implements Exception {}
+@MappableClass()
+sealed class PurchaseInfoFailedException
+    with PurchaseInfoFailedExceptionMappable
+    implements Exception {}
 
 /// Failed to parse purchase info because the parameter in
 /// confirm info is incorrect.
+@MappableClass()
 final class PurchaseInfoInvalidParameterCountException
-    extends PurchaseInfoFailedException {}
+    extends PurchaseInfoFailedException
+    with PurchaseInfoInvalidParameterCountExceptionMappable {}
 
 /// Confirm info is incomplete.
-final class PurchaseInfoIncompleteException
-    extends PurchaseInfoFailedException {}
+@MappableClass()
+final class PurchaseInfoIncompleteException extends PurchaseInfoFailedException
+    with PurchaseInfoIncompleteExceptionMappable {}
 
 /// Some info that need to display in the confirm process is invalid.
 ///
 /// Maybe invalid username or uid.
+@MappableClass()
 final class PurchaseInfoInvalidNoticeException
-    extends PurchaseInfoFailedException {}
+    extends PurchaseInfoFailedException
+    with PurchaseInfoInvalidNoticeExceptionMappable {}
 
 /// Failed to do the purchase action.
-final class PurchaseActionFailedException implements Exception {}
+@MappableClass()
+final class PurchaseActionFailedException
+    with PurchaseActionFailedExceptionMappable
+    implements Exception {}

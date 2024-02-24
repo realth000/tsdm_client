@@ -1,12 +1,8 @@
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// Data model for subreddit.
-final class Forum extends Equatable {
+@MappableClass()
+final class Forum with ForumMappable {
   /// Constructor.
   const Forum({
     required this.forumID,
@@ -199,7 +195,4 @@ final class Forum extends Equatable {
       subThreadList: subThreadList,
     );
   }
-
-  @override
-  List<Object?> get props => [forumID];
 }

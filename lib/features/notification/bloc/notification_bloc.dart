@@ -1,10 +1,11 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/notification/models/notice.dart';
+import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
+part '../../../generated/features/notification/bloc/notification_bloc.mapper.dart';
 part 'notification_event.dart';
 part 'notification_state.dart';
 
@@ -29,8 +30,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     emit(state.copyWith(status: NotificationStatus.loading));
     try {
       final noticeList = await _notificationRepository.fetchNotice();
-      emit(state.copyWith(
-          status: NotificationStatus.success, noticeList: noticeList,),);
+      emit(
+        state.copyWith(
+          status: NotificationStatus.success,
+          noticeList: noticeList,
+        ),
+      );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notice: $e');
       emit(state.copyWith(status: NotificationStatus.failed));

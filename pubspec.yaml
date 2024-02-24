@@ -36,7 +36,6 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   font_awesome_flutter: ^10.7.0
-  freezed_annotation: ^2.4.1
   get_it: ^7.6.7
   gitsumu: ^0.3.0
   go_router: ^13.2.0
@@ -67,7 +66,6 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
-  freezed: ^2.4.7
   json_serializable: ^6.7.1
   slang_build_runner: ^3.29.0
   very_good_analysis: ^5.1.0

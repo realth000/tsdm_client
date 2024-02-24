@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tsdm_client/shared/models/post.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Common user data to pass post data building.

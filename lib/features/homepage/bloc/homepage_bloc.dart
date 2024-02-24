@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -14,6 +14,7 @@ import 'package:tsdm_client/shared/repositories/profile_repository/profile_repos
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/homepage/bloc/homepage_bloc.mapper.dart';
 part 'homepage_event.dart';
 part 'homepage_state.dart';
 
@@ -47,11 +48,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
         ) {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
     on<HomepageRefreshRequested>(_onHomepageRefreshRequested);
-    on<_HomepageAuthChanged>(_onHomepageAuthChanged);
+    on<HomepageAuthChanged>(_onHomepageAuthChanged);
 
     _authStatusSub = _authenticationRepository.status.listen(
       (status) => add(
-        _HomepageAuthChanged(
+        HomepageAuthChanged(
           isLogged: status == AuthenticationStatus.authenticated,
         ),
       ),
@@ -153,7 +154,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   }
 
   Future<void> _onHomepageAuthChanged(
-    _HomepageAuthChanged event,
+    HomepageAuthChanged event,
     Emitter<HomepageState> emit,
   ) async {
     if (event.isLogged) {

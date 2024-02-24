@@ -1,15 +1,14 @@
 part of 'search_bloc.dart';
 
 /// Event of search.
-sealed class SearchEvent extends Equatable {
+@MappableClass()
+sealed class SearchEvent with SearchEventMappable {
   const SearchEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User requested a search action.
-final class SearchRequested extends SearchEvent {
+@MappableClass()
+final class SearchRequested extends SearchEvent with SearchRequestedMappable {
   /// Constructor.
   const SearchRequested({
     required this.keyword,
@@ -33,13 +32,12 @@ final class SearchRequested extends SearchEvent {
 
   /// Page number of search result.
   final int pageNumer;
-
-  @override
-  List<Object?> get props => [keyword, fid, uid, pageNumer];
 }
 
 /// User requested to jump to another page [pageNumber].
-final class SearchJumpPageRequested extends SearchEvent {
+@MappableClass()
+final class SearchJumpPageRequested extends SearchEvent
+    with SearchJumpPageRequestedMappable {
   /// Constructor.
   const SearchJumpPageRequested(this.pageNumber) : super();
 
@@ -48,7 +46,11 @@ final class SearchJumpPageRequested extends SearchEvent {
 }
 
 /// User requested to jump to the next page.
-final class SearchGotoNextPageRequested extends SearchEvent {}
+@MappableClass()
+final class SearchGotoNextPageRequested extends SearchEvent
+    with SearchGotoNextPageRequestedMappable {}
 
 /// User requested to jump to the previous page.
-final class SearchGotoPreviousPageRequested extends SearchEvent {}
+@MappableClass()
+final class SearchGotoPreviousPageRequested extends SearchEvent
+    with SearchGotoPreviousPageRequestedMappable {}

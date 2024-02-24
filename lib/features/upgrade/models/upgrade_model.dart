@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Model describes the info about available upgrade.
-class UpgradeModel extends Equatable {
+@MappableClass()
+class UpgradeModel with UpgradeModelMappable {
   /// Constructor.
   const UpgradeModel({
     required this.releaseVersion,
@@ -10,7 +11,7 @@ class UpgradeModel extends Equatable {
     required this.releaseUrl,
   });
 
-  /// Lated releae version.
+  /// Latest release version.
   ///
   /// This version has a "v" prefix.
   final String releaseVersion;
@@ -23,7 +24,4 @@ class UpgradeModel extends Equatable {
 
   /// Url to fetch release download info.
   final String releaseUrl;
-
-  @override
-  List<Object?> get props => [assetsMap, releaseUrl];
 }

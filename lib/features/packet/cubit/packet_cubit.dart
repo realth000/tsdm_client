@@ -1,9 +1,10 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
+part '../../../generated/features/packet/cubit/packet_cubit.mapper.dart';
 part 'packet_state.dart';
 
 /// Cubit of read packets.

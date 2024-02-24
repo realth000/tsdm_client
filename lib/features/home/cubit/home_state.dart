@@ -24,19 +24,17 @@ enum HomeTab {
 }
 
 /// State of the homepage of the app.
-final class HomeState extends Equatable {
+@MappableClass()
+final class HomeState with HomeStateMappable {
   /// Constructor.
   const HomeState({this.tab = HomeTab.home});
 
   /// Current tab.
   final HomeTab tab;
-
-  @override
-  List<Object?> get props => [tab];
 }
 
 /// Bar item in app navigator.
-class NavigationBarItem {
+final class NavigationBarItem {
   /// Constructor.
   const NavigationBarItem({
     required this.icon,

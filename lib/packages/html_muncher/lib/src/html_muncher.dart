@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
-import 'package:tsdm_client/shared/models/locked.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
 import 'package:tsdm_client/widgets/card/bounty_card.dart';

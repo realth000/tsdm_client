@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/features/points/models/points_change.dart';
-import 'package:tsdm_client/features/points/repository/model/changelog_all_parameters.dart';
-import 'package:tsdm_client/features/points/repository/model/changelog_parameter.dart';
+import 'package:tsdm_client/features/points/models/models.dart';
+import 'package:tsdm_client/features/points/repository/model/models.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/points/bloc/points_bloc.mapper.dart';
 part 'points_event.dart';
 part 'points_state.dart';
 

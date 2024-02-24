@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Info of the logged user in homepage.
 ///
 /// * Maybe have a logged user.
 /// * The logged user may have an avatar url or not, depending on the theme of
 ///   website.
-final class LoggedUserInfo extends Equatable {
+@MappableClass()
+final class LoggedUserInfo with LoggedUserInfoMappable {
   /// Constructor.
   const LoggedUserInfo({
     required this.username,
@@ -21,7 +22,4 @@ final class LoggedUserInfo extends Equatable {
 
   /// Optional user avatar url, depending on the theme used in website.
   final String? avatarUrl;
-
-  @override
-  List<Object?> get props => [username, relatedLinkPairList, avatarUrl];
 }

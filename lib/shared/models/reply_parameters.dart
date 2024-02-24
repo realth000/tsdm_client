@@ -1,10 +1,11 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Model contains parameters to make a reply to:
 ///
 /// * Thread.
 /// * Post.
-class ReplyParameters extends Equatable {
+@MappableClass()
+class ReplyParameters with ReplyParametersMappable {
   /// Constructor.
   const ReplyParameters({
     required this.fid,
@@ -28,13 +29,4 @@ class ReplyParameters extends Equatable {
 
   /// Subject usually is an empty string.
   final String subject;
-
-  @override
-  String toString() {
-    return 'ReplyParameters { fid=$fid, postTime=$postTime, '
-        'formHash=$formHash, subject=$subject }';
-  }
-
-  @override
-  List<Object?> get props => [fid, tid, postTime, formHash, subject];
 }

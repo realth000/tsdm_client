@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/shared/repositories/cache_repository/cache_repository.dart';
 
+part '../../../generated/features/settings/bloc/cache_bloc.mapper.dart';
 part 'cache_event.dart';
 part 'cache_state.dart';
 

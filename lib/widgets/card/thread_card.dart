@@ -6,13 +6,10 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
-import 'package:tsdm_client/features/my_thread/models/my_thread.dart';
-import 'package:tsdm_client/features/search/models/searched_thread.dart';
+import 'package:tsdm_client/features/my_thread/models/models.dart';
+import 'package:tsdm_client/features/search/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/css_types.dart';
-import 'package:tsdm_client/shared/models/normal_thread.dart';
-import 'package:tsdm_client/shared/models/thread_type.dart';
-import 'package:tsdm_client/shared/models/user.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
@@ -45,7 +42,7 @@ class _CardLayout extends StatelessWidget {
   final int? price;
   final String? quotedMessage;
   final CssTypes? css;
-  final Set<ThreadState>? stateSet;
+  final Set<ThreadStateModel>? stateSet;
 
   @override
   Widget build(BuildContext context) {

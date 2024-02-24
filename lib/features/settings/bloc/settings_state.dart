@@ -2,7 +2,7 @@ part of 'settings_bloc.dart';
 
 /// Settings page only have success status.
 enum SettingsStatus {
-  /// Inital.
+  /// Initial.
   initial,
 
   /// Success.
@@ -10,7 +10,8 @@ enum SettingsStatus {
 }
 
 /// State of settings page.
-class SettingsState extends Equatable {
+@MappableClass()
+class SettingsState with SettingsStateMappable {
   /// Constructor.
   const SettingsState({
     required this.settingsMap,
@@ -26,20 +27,4 @@ class SettingsState extends Equatable {
 
   /// Scroll offset.
   final Offset scrollOffset;
-
-  /// Copy with.
-  SettingsState copyWith({
-    SettingsStatus? status,
-    SettingsMap? settingsMap,
-    Offset? scrollOffset,
-  }) {
-    return SettingsState(
-      status: status ?? this.status,
-      settingsMap: settingsMap ?? this.settingsMap,
-      scrollOffset: scrollOffset ?? this.scrollOffset,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, settingsMap, scrollOffset];
 }

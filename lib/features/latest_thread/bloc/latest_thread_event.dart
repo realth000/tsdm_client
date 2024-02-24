@@ -1,18 +1,20 @@
 part of 'latest_thread_bloc.dart';
 
 /// Events of latest thread feature.
-sealed class LatestThreadEvent extends Equatable {
+@MappableClass()
+sealed class LatestThreadEvent with LatestThreadEventMappable {
   const LatestThreadEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// No more page to load.
-final class LatestThreadLoadMoreRequested extends LatestThreadEvent {}
+@MappableClass()
+final class LatestThreadLoadMoreRequested extends LatestThreadEvent
+    with LatestThreadLoadMoreRequestedMappable {}
 
 /// User request to refresh.
-final class LatestThreadRefreshRequested extends LatestThreadEvent {
+@MappableClass()
+final class LatestThreadRefreshRequested extends LatestThreadEvent
+    with LatestThreadRefreshRequestedMappable {
   /// Constructor.
   const LatestThreadRefreshRequested(this.url) : super();
 

@@ -1,9 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Points type.
 ///
 /// Contains type readable [name] and parameter [extType] used in parameters.
-class ChangelogPointsType extends Equatable {
+@MappableClass()
+class ChangelogPointsType with ChangelogPointsTypeMappable {
   /// Constructor.
   const ChangelogPointsType({
     required this.name,
@@ -19,16 +20,14 @@ class ChangelogPointsType extends Equatable {
   ///
   /// e.g. 1
   final String extType;
-
-  @override
-  List<Object?> get props => [name, extType];
 }
 
 /// Changelog event operation type.
 ///
 /// Contains a human readable [name] and an [operation] name used in query
 /// filter parameters.
-final class ChangelogOperationType extends Equatable {
+@MappableClass()
+final class ChangelogOperationType with ChangelogOperationTypeMappable {
   /// Constructor.
   const ChangelogOperationType({required this.name, required this.operation});
 
@@ -41,16 +40,14 @@ final class ChangelogOperationType extends Equatable {
   ///
   /// e.g. RCV
   final String operation;
-
-  @override
-  List<Object?> get props => [name, operation];
 }
 
 /// Changelog event points change type.
 ///
 /// Contains a human readable [name] and an [changeType] name used in query
 /// filter parameters.
-final class ChangelogChangeType extends Equatable {
+@MappableClass()
+final class ChangelogChangeType with ChangelogChangeTypeMappable {
   /// Constructor.
   const ChangelogChangeType({required this.name, required this.changeType});
 
@@ -63,13 +60,11 @@ final class ChangelogChangeType extends Equatable {
   ///
   /// e.g. 1
   final String changeType;
-
-  @override
-  List<Object?> get props => [name, changeType];
 }
 
 /// Represent all parameters that user can use to make a query.
-class ChangelogAllParameters extends Equatable {
+@MappableClass()
+class ChangelogAllParameters with ChangelogAllParametersMappable {
   /// Constructor.
   const ChangelogAllParameters({
     required this.extTypeList,
@@ -91,11 +86,4 @@ class ChangelogAllParameters extends Equatable {
 
   /// All available change types.
   final List<ChangelogChangeType> changeTypeList;
-
-  @override
-  List<Object?> get props => [
-        extTypeList,
-        operationTypeList,
-        changeTypeList,
-      ];
 }

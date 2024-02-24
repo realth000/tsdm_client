@@ -1,11 +1,20 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
+part '../../../generated/features/post/exceptions/exceptions.mapper.dart';
+
 /// Exceptions used in editing post.
-sealed class PostEditException implements Exception {
+@MappableClass()
+sealed class PostEditException
+    with PostEditExceptionMappable
+    implements Exception {
   /// Constructor.
   const PostEditException() : super();
 }
 
 /// Failed to upload edit result.
-final class PostEditFailedToUploadResult extends PostEditException {
+@MappableClass()
+final class PostEditFailedToUploadResult extends PostEditException
+    with PostEditFailedToUploadResultMappable {
   /// Constructor.
   const PostEditFailedToUploadResult(this.errorText) : super();
 

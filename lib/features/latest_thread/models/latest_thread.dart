@@ -1,6 +1,6 @@
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/user.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 

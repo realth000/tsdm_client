@@ -1,11 +1,12 @@
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
+part '../../../generated/widgets/reply_bar/bloc/reply_bloc.mapper.dart';
 part 'reply_event.dart';
 part 'reply_state.dart';
 

@@ -1,25 +1,29 @@
 part of 'topics_bloc.dart';
 
 /// Event of topics page.
-sealed class TopicsEvent extends Equatable {
+@MappableClass()
+sealed class TopicsEvent with TopicsEventMappable {
   const TopicsEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User requested to load page.
 ///
 /// Load from cache if available.
-final class TopicsLoadRequested extends TopicsEvent {}
+@MappableClass()
+final class TopicsLoadRequested extends TopicsEvent
+    with TopicsLoadRequestedMappable {}
 
 /// User requested to refresh page.
 ///
 /// Directly load from server.
-final class TopicsRefreshRequested extends TopicsEvent {}
+@MappableClass()
+final class TopicsRefreshRequested extends TopicsEvent
+    with TopicsRefreshRequestedMappable {}
 
 /// User changed the current tab.
-final class TopicsTabSelected extends TopicsEvent {
+@MappableClass()
+final class TopicsTabSelected extends TopicsEvent
+    with TopicsTabSelectedMappable {
   /// Constructor.
   const TopicsTabSelected(this.tabIndex) : super();
 

@@ -431,22 +431,6 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "10.7.0"
-  freezed:
-    dependency: "direct dev"
-    description:
-      name: freezed
-      sha256: "57247f692f35f068cae297549a46a9a097100685c6780fe67177503eea5ed4e5"
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.4.7"
-  freezed_annotation:
-    dependency: "direct main"
-    description:
-      name: freezed_annotation
-      sha256: c3fd9336eb55a38cc1bbd79ab17573113a8deccd0ecbbf926cca3c62803b5c2d
-      url: "https://pub.flutter-io.cn"
-    source: hosted
-    version: "2.4.1"
   frontend_server_client:
     dependency: transitive
     description:

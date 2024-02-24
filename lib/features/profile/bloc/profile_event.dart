@@ -1,15 +1,15 @@
 part of 'profile_bloc.dart';
 
 /// Event of profile page.
-sealed class ProfileEvent extends Equatable {
+@MappableClass()
+sealed class ProfileEvent with ProfileEventMappable {
   const ProfileEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Load current logged user profile if both [username] and [uid] are null.
-final class ProfileLoadRequested extends ProfileEvent {
+@MappableClass()
+final class ProfileLoadRequested extends ProfileEvent
+    with ProfileLoadRequestedMappable {
   /// Constructor.
   const ProfileLoadRequested({
     required this.username,
@@ -24,9 +24,13 @@ final class ProfileLoadRequested extends ProfileEvent {
 }
 
 /// User required to refresh the profile page.
-final class ProfileRefreshRequested extends ProfileEvent {}
+@MappableClass()
+final class ProfileRefreshRequested extends ProfileEvent
+    with ProfileRefreshRequestedMappable {}
 
 /// User required to logout.
 ///
 /// Only available when in current logged user's profile page.
-final class ProfileLogoutRequested extends ProfileEvent {}
+@MappableClass()
+final class ProfileLogoutRequested extends ProfileEvent
+    with ProfileLogoutRequestedMappable {}

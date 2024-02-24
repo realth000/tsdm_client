@@ -1,13 +1,16 @@
 part of 'checkin_button_bloc.dart';
 
 /// Event of checkin.
-sealed class CheckinButtonEvent {
+@MappableClass()
+sealed class CheckinButtonEvent with CheckinButtonEventMappable {
   /// Constructor.
   const CheckinButtonEvent();
 }
 
 /// User required to checkin.
-final class CheckinButtonRequested extends CheckinButtonEvent {
+@MappableClass()
+final class CheckinButtonRequested extends CheckinButtonEvent
+    with CheckinButtonRequestedMappable {
   /// Constructor.
   const CheckinButtonRequested() : super();
 }
@@ -15,9 +18,13 @@ final class CheckinButtonRequested extends CheckinButtonEvent {
 /// Auth status changed.
 ///
 /// Triggered by [CheckinButtonBloc].
-final class _CheckinButtonAuthChanged extends CheckinButtonEvent {
+///
+/// Passive event.
+@MappableClass()
+final class CheckinButtonAuthChanged extends CheckinButtonEvent
+    with CheckinButtonAuthChangedMappable {
   /// Constructor.
-  const _CheckinButtonAuthChanged({required this.authed}) : super();
+  const CheckinButtonAuthChanged({required this.authed}) : super();
 
   /// Latest auth status.
   final bool authed;

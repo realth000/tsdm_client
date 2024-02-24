@@ -1,11 +1,11 @@
-// TODO: Construct from html node.
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Author of a thread.
 ///
 /// Contains name and user page url.
-class User extends Equatable {
-  /// Freezed constructor.
+@MappableClass()
+class User with UserMappable {
+  /// Constructor.
   const User({
     required this.name,
     required this.url,
@@ -37,12 +37,4 @@ class User extends Equatable {
 
   /// Check is invalid user or not.
   bool isNotValid() => !isValid();
-
-  @override
-  String toString() {
-    return 'User{ $name, $url, $uid, $avatarUrl }';
-  }
-
-  @override
-  List<Object?> get props => [name, url, uid, avatarUrl];
 }

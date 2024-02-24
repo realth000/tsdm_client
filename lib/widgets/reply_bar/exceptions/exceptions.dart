@@ -1,8 +1,21 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
+part '../../../generated/widgets/reply_bar/exceptions/exceptions.mapper.dart';
+
 /// Failed to fetch parameters used in replying to a post.
-class ReplyToPostFetchParameterFailedException implements Exception {}
+@MappableClass()
+class ReplyToPostFetchParameterFailedException
+    with ReplyToPostFetchParameterFailedExceptionMappable
+    implements Exception {}
 
 /// Reply to a post, but no successful result found in response.
-class ReplyToPostResultFailedException implements Exception {}
+@MappableClass()
+class ReplyToPostResultFailedException
+    with ReplyToPostResultFailedExceptionMappable
+    implements Exception {}
 
 /// Reply to thread, but no successful result found in response.
-class ReplyToThreadResultFailedException implements Exception {}
+@MappableClass()
+class ReplyToThreadResultFailedException
+    with ReplyToThreadResultFailedExceptionMappable
+    implements Exception {}

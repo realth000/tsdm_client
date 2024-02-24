@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/rate/models/rate_window_info.dart';
+import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';

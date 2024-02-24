@@ -19,7 +19,8 @@ enum SearchStatus {
 }
 
 /// State of search page.
-class SearchState extends Equatable {
+@MappableClass()
+class SearchState with SearchStateMappable {
   /// Constructor.
   const SearchState({
     this.status = SearchStatus.initial,
@@ -55,39 +56,4 @@ class SearchState extends Equatable {
 
   /// Search result.
   final SearchResult? searchResult;
-
-  /// Copy with.
-  SearchState copyWith({
-    SearchStatus? status,
-    String? keyword,
-    String? fid,
-    String? uid,
-    int? pageNumber,
-    bool? hasPreviousPage,
-    bool? hasNextPage,
-    SearchResult? searchResult,
-  }) {
-    return SearchState(
-      status: status ?? this.status,
-      keyword: keyword ?? this.keyword,
-      fid: fid ?? this.fid,
-      uid: uid ?? this.uid,
-      searchResult: searchResult ?? this.searchResult,
-      hasNextPage: hasNextPage ?? this.hasNextPage,
-      hasPreviousPage: hasPreviousPage ?? this.hasPreviousPage,
-      pageNumber: pageNumber ?? this.pageNumber,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        keyword,
-        fid,
-        uid,
-        searchResult,
-        hasNextPage,
-        hasPreviousPage,
-        pageNumber,
-      ];
 }

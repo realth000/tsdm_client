@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- app: 从Equatable迁移到dart_mappable。
+
 ## [0.7.1] - 2024-02-23
 
 ### Fixed

@@ -1,14 +1,14 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/features/search/models/search_result.dart';
-import 'package:tsdm_client/features/search/models/searched_thread.dart';
+import 'package:tsdm_client/features/search/models/models.dart';
 import 'package:tsdm_client/features/search/repository/search_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/search/bloc/search_bloc.mapper.dart';
 part 'search_event.dart';
 part 'search_state.dart';
 

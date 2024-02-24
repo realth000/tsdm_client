@@ -1,14 +1,15 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Model describes the download status.
-class DownloadStatus extends Equatable {
+@MappableClass()
+class DownloadStatus with DownloadStatusMappable {
   /// Constructor.
   const DownloadStatus({
     required this.recv,
     required this.total,
   });
 
-  /// Recved bytes.
+  /// Received bytes.
   final int recv;
 
   /// Total bytes.
@@ -16,7 +17,4 @@ class DownloadStatus extends Equatable {
 
   /// Download finished or not.
   bool get finished => recv == total;
-
-  @override
-  List<Object?> get props => [recv, total];
 }

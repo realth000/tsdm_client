@@ -1,33 +1,39 @@
 part of 'checkin_button_bloc.dart';
 
 /// State of checkin button.
-sealed class CheckinButtonState extends Equatable {
+@MappableClass()
+sealed class CheckinButtonState with CheckinButtonStateMappable {
   const CheckinButtonState();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Initial state.
-final class CheckinButtonInitial extends CheckinButtonState {
+@MappableClass()
+final class CheckinButtonInitial extends CheckinButtonState
+    with CheckinButtonInitialMappable {
   /// Constructor.
   const CheckinButtonInitial() : super();
 }
 
 /// Loading data: checking in.
-final class CheckinButtonLoading extends CheckinButtonState {
+@MappableClass()
+final class CheckinButtonLoading extends CheckinButtonState
+    with CheckinButtonLoadingMappable {
   /// Constructor.
   const CheckinButtonLoading() : super();
 }
 
 /// Need to login to checkin.
-final class CheckinButtonNeedLogin extends CheckinButtonState {
+@MappableClass()
+final class CheckinButtonNeedLogin extends CheckinButtonState
+    with CheckinButtonNeedLoginMappable {
   /// Constructor.
   const CheckinButtonNeedLogin() : super();
 }
 
 /// Checkin failed.
-final class CheckinButtonFailed extends CheckinButtonState {
+@MappableClass()
+final class CheckinButtonFailed extends CheckinButtonState
+    with CheckinButtonFailedMappable {
   /// Constructor.
   const CheckinButtonFailed(this.result) : super();
 
@@ -36,7 +42,9 @@ final class CheckinButtonFailed extends CheckinButtonState {
 }
 
 /// Checkin succeed.
-final class CheckinButtonSuccess extends CheckinButtonState {
+@MappableClass()
+final class CheckinButtonSuccess extends CheckinButtonState
+    with CheckinButtonSuccessMappable {
   /// Constructor.
   const CheckinButtonSuccess(this.message) : super();
 

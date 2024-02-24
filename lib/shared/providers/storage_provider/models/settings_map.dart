@@ -1,33 +1,52 @@
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 // ignore_for_file: public_member_api_docs
 
-part '../../../../generated/shared/providers/storage_provider/models/settings_map.freezed.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+
+part '../../../../generated/shared/providers/storage_provider/models/settings_map.mapper.dart';
 
 /// Settings map.
-@freezed
-class SettingsMap with _$SettingsMap {
+@MappableClass()
+class SettingsMap with SettingsMapMappable {
   /// Freezed constructor.
-  const factory SettingsMap({
-    required String netClientAccept,
-    required String netClientAcceptEncoding,
-    required String netClientAcceptLanguage,
-    required String netClientUserAgent,
-    required double windowWidth,
-    required double windowHeight,
-    required double windowPositionDx,
-    required double windowPositionDy,
-    required bool windowInCenter,
-    required String? loginUsername,
-    required int? loginUid,
-    required int themeMode,
-    required String locale,
-    required String checkinFeeling,
-    required String checkinMessage,
-    required bool showShortcutInForumCard,
-    required int accentColor,
-    required bool showUnreadInfoHint,
-  }) = _SettingsMap;
+  SettingsMap({
+    required this.netClientAccept,
+    required this.netClientAcceptEncoding,
+    required this.netClientAcceptLanguage,
+    required this.netClientUserAgent,
+    required this.windowWidth,
+    required this.windowHeight,
+    required this.windowPositionDx,
+    required this.windowPositionDy,
+    required this.windowInCenter,
+    required this.loginUsername,
+    required this.loginUid,
+    required this.themeMode,
+    required this.locale,
+    required this.checkinFeeling,
+    required this.checkinMessage,
+    required this.showShortcutInForumCard,
+    required this.accentColor,
+    required this.showUnreadInfoHint,
+  });
+
+  final String netClientAccept;
+  final String netClientAcceptEncoding;
+  final String netClientAcceptLanguage;
+  final String netClientUserAgent;
+  final double windowWidth;
+  final double windowHeight;
+  final double windowPositionDx;
+  final double windowPositionDy;
+  final bool windowInCenter;
+  final String? loginUsername;
+  final int? loginUid;
+  final int themeMode;
+  final String locale;
+  final String checkinFeeling;
+  final String checkinMessage;
+  final bool showShortcutInForumCard;
+  final int accentColor;
+  final bool showUnreadInfoHint;
 }
 
 const settingsNetClientAccept = 'dioAccept';

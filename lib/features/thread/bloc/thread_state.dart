@@ -16,7 +16,8 @@ enum ThreadStatus {
 }
 
 /// State of thread.
-class ThreadState extends Equatable {
+@MappableClass()
+class ThreadState with ThreadStateMappable {
   /// Constructor.
   const ThreadState({
     this.tid,
@@ -96,61 +97,4 @@ class ThreadState extends Equatable {
 
   /// View posts in current thread in forward order or reverse order.
   final bool reverseOrder;
-
-  /// Copy with.
-  ThreadState copyWith({
-    ThreadStatus? status,
-    String? tid,
-    String? pid,
-    String? title,
-    bool? canLoadMore,
-    int? currentPage,
-    int? totalPages,
-    bool? havePermission = true,
-    uh.Element? permissionDeniedMessage,
-    bool? needLogin,
-    bool? threadClosed,
-    List<Post>? postList,
-    ReplyParameters? replyParameters,
-    String? onlyVisibleUid,
-    bool? reverseOrder,
-  }) {
-    return ThreadState(
-      status: status ?? this.status,
-      tid: tid ?? this.tid,
-      pid: pid ?? this.pid,
-      title: title ?? this.title,
-      canLoadMore: canLoadMore ?? this.canLoadMore,
-      currentPage: currentPage ?? this.currentPage,
-      totalPages: totalPages ?? this.totalPages,
-      havePermission: havePermission ?? this.havePermission,
-      permissionDeniedMessage:
-          permissionDeniedMessage ?? this.permissionDeniedMessage,
-      needLogin: needLogin ?? this.needLogin,
-      threadClosed: threadClosed ?? this.threadClosed,
-      postList: postList ?? this.postList,
-      replyParameters: replyParameters ?? this.replyParameters,
-      onlyVisibleUid: onlyVisibleUid ?? this.onlyVisibleUid,
-      reverseOrder: reverseOrder ?? this.reverseOrder,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        tid,
-        pid,
-        title,
-        canLoadMore,
-        currentPage,
-        totalPages,
-        havePermission,
-        permissionDeniedMessage,
-        needLogin,
-        threadClosed,
-        postList,
-        replyParameters,
-        onlyVisibleUid,
-        reverseOrder,
-      ];
 }

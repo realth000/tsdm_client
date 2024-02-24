@@ -1,13 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 
+part '../../../generated/widgets/checkin_button/bloc/checkin_button_bloc.mapper.dart';
 part 'checkin_button_event.dart';
 part 'checkin_button_state.dart';
 
@@ -23,10 +24,10 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
         _settingsRepository = settingsRepository,
         super(const CheckinButtonInitial()) {
     on<CheckinButtonRequested>(_onCheckinButtonRequested);
-    on<_CheckinButtonAuthChanged>(_onCheckinButtonAuthChanged);
+    on<CheckinButtonAuthChanged>(_onCheckinButtonAuthChanged);
     _authStreamSub = _authenticationRepository.status.listen(
       (status) => add(
-        _CheckinButtonAuthChanged(
+        CheckinButtonAuthChanged(
           authed: status == AuthenticationStatus.authenticated,
         ),
       ),
@@ -62,7 +63,7 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
   }
 
   void _onCheckinButtonAuthChanged(
-    _CheckinButtonAuthChanged event,
+    CheckinButtonAuthChanged event,
     Emitter<CheckinButtonState> emit,
   ) {
     if (event.authed) {

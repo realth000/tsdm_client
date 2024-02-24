@@ -5,9 +5,8 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
-import 'package:tsdm_client/features/points/models/points_change.dart';
-import 'package:tsdm_client/features/points/repository/model/changelog_all_parameters.dart';
-import 'package:tsdm_client/features/points/repository/model/changelog_parameter.dart';
+import 'package:tsdm_client/features/points/models/models.dart';
+import 'package:tsdm_client/features/points/repository/model/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 

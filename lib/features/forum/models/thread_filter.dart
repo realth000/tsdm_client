@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Thread filter applied on current forum.
-class FilterState extends Equatable {
+@MappableClass()
+class FilterState with FilterStateMappable {
   /// Constructor.
   const FilterState({
     this.filter,
@@ -68,56 +69,23 @@ class FilterState extends Equatable {
         filterDigest.digest ||
         filterRecommend.recommend;
   }
-
-  /// Copy with
-  FilterState copyWith({
-    required String? filter,
-    FilterType? filterType,
-    FilterSpecialType? filterSpecialType,
-    FilterDateline? filterDateline,
-    FilterOrder? filterOrder,
-    FilterDigest? filterDigest,
-    FilterRecommend? filterRecommend,
-  }) {
-    return FilterState(
-      filter: filter ?? this.filter,
-      filterType: filterType ?? this.filterType,
-      filterSpecialType: filterSpecialType ?? this.filterSpecialType,
-      filterDateline: filterDateline ?? this.filterDateline,
-      filterOrder: filterOrder ?? this.filterOrder,
-      filterDigest: filterDigest ?? this.filterDigest,
-      filterRecommend: filterRecommend ?? this.filterRecommend,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        filter,
-        filterType,
-        filterSpecialType,
-        filterDateline,
-        filterOrder,
-        filterDigest,
-        filterRecommend,
-      ];
 }
 
 /// Basic filter definition.
-sealed class FilterBase extends Equatable {
+@MappableClass()
+sealed class FilterBase with FilterBaseMappable {
   const FilterBase(this.filterName);
 
   /// Parameter "&filer=" in url.
   ///
   final String filterName;
-
-  @override
-  List<Object?> get props => [filterName];
 }
 
 /// Filter threads with thread "typeid".
 ///
 /// 其他、心情、领糖……
-final class FilterType extends FilterBase {
+@MappableClass()
+final class FilterType extends FilterBase with FilterTypeMappable {
   /// Constructor.
   const FilterType({required this.name, required this.typeID})
       : super('typeid');
@@ -133,15 +101,14 @@ final class FilterType extends FilterBase {
   ///
   /// Null value means do not filter by thread type.
   final String? typeID;
-
-  @override
-  List<Object?> get props => [name, typeID];
 }
 
 /// Thread special type.
 ///
 /// 投票、商品、悬赏……
-final class FilterSpecialType extends FilterBase {
+@MappableClass()
+final class FilterSpecialType extends FilterBase
+    with FilterSpecialTypeMappable {
   /// Constructor.
   const FilterSpecialType({required this.name, required this.specialType})
       : super('specialtype');
@@ -157,15 +124,13 @@ final class FilterSpecialType extends FilterBase {
   ///
   /// Null value means do not filter by thread special type.
   final String? specialType;
-
-  @override
-  List<Object?> get props => [name, specialType];
 }
 
 /// Duration elapsed since thread published in seconds.
 ///
 /// 一天、两天、一周……
-final class FilterDateline extends FilterBase {
+@MappableClass()
+final class FilterDateline extends FilterBase with FilterDatelineMappable {
   /// Constructor.
   const FilterDateline({
     required this.name,
@@ -183,13 +148,11 @@ final class FilterDateline extends FilterBase {
   ///
   /// Null value means do not filter by dateline.
   final String? dateline;
-
-  @override
-  List<Object?> get props => [name, dateline];
 }
 
 /// Filter thread by sorting order.
-final class FilterOrder extends FilterBase {
+@MappableClass()
+final class FilterOrder extends FilterBase with FilterOrderMappable {
   /// Constructor.
   const FilterOrder({required this.name, required this.orderBy})
       : super('orderby');
@@ -203,9 +166,6 @@ final class FilterOrder extends FilterBase {
   ///
   /// e.g. dateline
   final String? orderBy;
-
-  @override
-  List<Object?> get props => [name, orderBy];
 }
 
 /// Only show threads marked with digest (精华贴).
@@ -214,15 +174,13 @@ final class FilterOrder extends FilterBase {
 /// [FilterRecommend] filter, we bypass this conflict by reserving both
 /// parameters when fetching forum content, which behaves different but ok,
 /// even better.
-final class FilterDigest extends FilterBase {
+@MappableClass()
+final class FilterDigest extends FilterBase with FilterDigestMappable {
   /// Constructor.
   const FilterDigest({required this.digest}) : super('digest');
 
   /// Only show thread marked as digest.
   final bool digest;
-
-  @override
-  List<Object?> get props => [filterName, digest];
 }
 
 /// Only show threads marked with recommend (推荐贴).
@@ -230,13 +188,11 @@ final class FilterDigest extends FilterBase {
 /// Note that on the browser platform this filter is conflict with
 /// [FilterDigest] filter, we bypass this conflict by reserving both parameters
 /// when fetching forum content, which behaves different but ok, even better.
-final class FilterRecommend extends FilterBase {
+@MappableClass()
+final class FilterRecommend extends FilterBase with FilterRecommendMappable {
   /// Constructor.
   const FilterRecommend({required this.recommend}) : super('recommends');
 
   /// Only show thread marked as recommend.
   final bool recommend;
-
-  @override
-  List<Object?> get props => [filterName, recommend];
 }

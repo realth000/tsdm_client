@@ -1,24 +1,14 @@
-import 'package:collection/collection.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/shared/models/css_types.dart';
-import 'package:tsdm_client/shared/models/thread_type.dart';
-import 'package:tsdm_client/shared/models/user.dart';
-import 'package:tsdm_client/utils/css_parser.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 extension _ParseThreadState on uh.Element {
-  /// Parse the [ThreadState] represented by the image node.
+  /// Parse the [ThreadStateModel] represented by the image node.
   ///
   /// Return an empty set if current node is not <img> node.
   ///
   /// Till now a <img> node may only have one state, but not for sure, so
   /// returns a set of state.
-  Set<ThreadState> _parseThreadStateFromImg() {
-    final ret = <ThreadState>{};
+  Set<ThreadStateModel> _parseThreadStateFromImg() {
+    final ret = <ThreadStateModel>{};
 
     if (tagName != 'IMG') {
       return ret;
@@ -29,28 +19,28 @@ extension _ParseThreadState on uh.Element {
     /// FIXME: Better checking state.
     if (src != null) {
       if (src.contains('folder_lock')) {
-        ret.add(ThreadState.closed);
+        ret.add(ThreadStateModel.closed);
       } else if (src.contains('poll')) {
-        ret.add(ThreadState.poll);
+        ret.add(ThreadStateModel.poll);
       } else if (src.contains('reward')) {
-        ret.add(ThreadState.rewarded);
+        ret.add(ThreadStateModel.rewarded);
       } else if (src.contains('pin_3')) {
-        ret.add(ThreadState.pinnedGlobally);
+        ret.add(ThreadStateModel.pinnedGlobally);
       } else if (src.contains('pin_2')) {
-        ret.add(ThreadState.pinnedInType);
+        ret.add(ThreadStateModel.pinnedInType);
       } else if (src.contains('pin_1')) {
-        ret.add(ThreadState.pinnedInForum);
+        ret.add(ThreadStateModel.pinnedInForum);
       }
     }
 
     final alt = attributes['alt'];
     switch (alt) {
       case 'agree':
-        ret.add(ThreadState.agreed);
+        ret.add(ThreadStateModel.agreed);
       case 'digest':
-        ret.add(ThreadState.digested);
+        ret.add(ThreadStateModel.digested);
       case 'attach_img':
-        ret.add(ThreadState.pictureAttached);
+        ret.add(ThreadStateModel.pictureAttached);
     }
 
     return ret;
@@ -61,7 +51,7 @@ extension _ParseThreadState on uh.Element {
 ///
 /// The definition of "state" is not clear, just added some related info that
 /// can be displayed at the trailing of UI which going to display later.
-enum ThreadState {
+enum ThreadStateModel {
   /// Closed and can not reply.
   closed(Icons.lock_outline),
 
@@ -89,14 +79,15 @@ enum ThreadState {
   /// Asks for help and provides reward.
   rewarded(Icons.live_help_outlined);
 
-  const ThreadState(this.icon);
+  const ThreadStateModel(this.icon);
 
   /// Icon of thread.
   final IconData icon;
 }
 
 /// Model of normal thread, widely used in forum.
-class NormalThread extends Equatable {
+@MappableClass()
+class NormalThread with NormalThreadMappable {
   /// Constructor.
   const NormalThread({
     required this.title,
@@ -173,7 +164,7 @@ class NormalThread extends Equatable {
   /// List of thread state.
   ///
   /// For example, a thread can be rated and marked pinned at the same time.
-  final Set<ThreadState> stateSet;
+  final Set<ThreadStateModel> stateSet;
 
   /// Build a [NormalThread] model with the given [uh.Element]
   ///
@@ -181,7 +172,7 @@ class NormalThread extends Equatable {
   ///   class="tsdm_normalthread"
   ///   name="tsdm_normalthread">
   static NormalThread? fromTBody(uh.Element threadElement) {
-    final stateSet = <ThreadState>{};
+    final stateSet = <ThreadStateModel>{};
 
     final threadIconNode = threadElement.querySelector('tr > td > a > img');
     if (threadIconNode != null) {
@@ -312,22 +303,4 @@ class NormalThread extends Equatable {
       stateSet: stateSet,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        title,
-        url,
-        threadID,
-        author,
-        publishDate,
-        latestReplyAuthor,
-        latestReplyTime,
-        iconUrl,
-        threadType,
-        replyCount,
-        viewCount,
-        price,
-        css,
-        stateSet,
-      ];
 }

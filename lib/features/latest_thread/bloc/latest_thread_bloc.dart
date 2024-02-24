@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -8,6 +9,7 @@ import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repo
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/latest_thread/bloc/latest_thread_bloc.mapper.dart';
 part 'latest_thread_event.dart';
 part 'latest_thread_state.dart';
 

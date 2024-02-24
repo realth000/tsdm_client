@@ -20,7 +20,8 @@ enum MyThreadStatus {
 }
 
 /// State of MyThread.
-final class MyThreadState extends Equatable {
+@MappableClass()
+final class MyThreadState with MyThreadStateMappable {
   /// Constructor.
   const MyThreadState({
     this.status = MyThreadStatus.initial,
@@ -60,42 +61,4 @@ final class MyThreadState extends Equatable {
 
   /// Flag indicates refreshing reply tab.
   final bool refreshingReply;
-
-  /// Copy with.
-  MyThreadState copyWith({
-    MyThreadStatus? status,
-    List<MyThread>? threadList,
-    int? threadPageNumber,
-    String? nextThreadPageUrl,
-    bool? refreshingThread,
-    List<MyThread>? replyList,
-    int? replyPageNumber,
-    String? nextReplyPageUrl,
-    bool? refreshingReply,
-  }) {
-    return MyThreadState(
-      status: status ?? this.status,
-      threadList: threadList ?? this.threadList,
-      threadPageNumber: threadPageNumber ?? this.threadPageNumber,
-      nextThreadPageUrl: nextThreadPageUrl ?? this.nextThreadPageUrl,
-      refreshingThread: refreshingThread ?? this.refreshingThread,
-      replyList: replyList ?? this.replyList,
-      replyPageNumber: replyPageNumber ?? this.replyPageNumber,
-      nextReplyPageUrl: nextReplyPageUrl ?? this.nextReplyPageUrl,
-      refreshingReply: refreshingReply ?? this.refreshingReply,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        threadList,
-        threadPageNumber,
-        nextThreadPageUrl,
-        refreshingThread,
-        replyList,
-        replyPageNumber,
-        nextReplyPageUrl,
-        refreshingReply,
-      ];
 }

@@ -16,7 +16,8 @@ enum LatestThreadStatus {
 }
 
 /// State of the latest thread feature.
-final class LatestThreadState extends Equatable {
+@MappableClass()
+final class LatestThreadState with LatestThreadStateMappable {
   /// Constructor.
   const LatestThreadState({
     this.status = LatestThreadStatus.initial,
@@ -36,22 +37,4 @@ final class LatestThreadState extends Equatable {
 
   /// Url to fetch the next page.
   final String? nextPageUrl;
-
-  /// Copy with
-  LatestThreadState copyWith({
-    LatestThreadStatus? status,
-    List<LatestThread>? threadList,
-    int? pageNumber,
-    String? nextPageUrl,
-  }) {
-    return LatestThreadState(
-      status: status ?? this.status,
-      threadList: threadList ?? this.threadList,
-      pageNumber: pageNumber ?? this.pageNumber,
-      nextPageUrl: nextPageUrl ?? this.nextPageUrl,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, threadList, pageNumber, nextPageUrl];
 }

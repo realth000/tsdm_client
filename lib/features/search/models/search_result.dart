@@ -1,8 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/features/search/models/searched_thread.dart';
+part of 'models.dart';
 
 /// Result of a search action.
-class SearchResult extends Equatable {
+@MappableClass()
+class SearchResult with SearchResultMappable {
   /// Constructor.
   const SearchResult({
     required this.currentPage,
@@ -22,21 +22,4 @@ class SearchResult extends Equatable {
 
   /// Thread list.
   final List<SearchedThread>? data;
-
-  @override
-  String toString() {
-    final dataString = data?.map((e) => e.toString()).join('\n    ');
-    return '''
-SearchResult{
-  currentPage=$currentPage,
-  totalPage=$totalPages,
-  count=$count,
-  data=
-    $dataString
-}
-''';
-  }
-
-  @override
-  List<Object?> get props => [currentPage, totalPages, count, data];
 }

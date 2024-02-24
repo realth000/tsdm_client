@@ -1,11 +1,6 @@
-import 'package:equatable/equatable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
-@sealed
-class _LockedInfo extends Equatable {
+sealed class _LockedInfo extends Equatable {
   const _LockedInfo._();
 
   const factory _LockedInfo.points({

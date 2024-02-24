@@ -10,7 +10,7 @@ import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/models/thread_type.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 

@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Info to check before purchasing.
-class PurchaseConfirmInfo extends Equatable {
+@MappableClass()
+class PurchaseConfirmInfo with PurchaseConfirmInfoMappable {
   /// Constructor.
   const PurchaseConfirmInfo({
     required this.author,
@@ -37,16 +38,4 @@ class PurchaseConfirmInfo extends Equatable {
 
   /// Handle key parameter in request.
   final String handleKey;
-
-  @override
-  List<Object?> get props => [
-        author,
-        price,
-        authorProfit,
-        coinsLast,
-        formHash,
-        referer,
-        tid,
-        handleKey,
-      ];
 }

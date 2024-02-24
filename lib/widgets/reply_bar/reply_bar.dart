@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 

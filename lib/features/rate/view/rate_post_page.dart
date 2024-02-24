@@ -4,7 +4,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
-import 'package:tsdm_client/features/rate/models/rate_window_info.dart';
+import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/debug.dart';

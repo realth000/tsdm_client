@@ -12,7 +12,7 @@ import 'package:tsdm_client/features/thread/widgets/post_list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/user.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';

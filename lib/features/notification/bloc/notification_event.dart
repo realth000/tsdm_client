@@ -1,12 +1,12 @@
 part of 'notification_bloc.dart';
 
 /// Event of notification.
-sealed class NotificationEvent extends Equatable {
+@MappableClass()
+sealed class NotificationEvent with NotificationEventMappable {
   const NotificationEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User required to refresh the notification page.
-final class NotificationRefreshNoticeRequired extends NotificationEvent {}
+@MappableClass()
+final class NotificationRefreshNoticeRequired extends NotificationEvent
+    with NotificationRefreshNoticeRequiredMappable {}

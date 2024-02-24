@@ -1,7 +1,8 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// A group of login hash used in login or logout progress.
-class LoginHash extends Equatable {
+@MappableClass()
+class LoginHash with LoginHashMappable {
   /// Constructor.
   const LoginHash({
     required this.formHash,
@@ -15,7 +16,4 @@ class LoginHash extends Equatable {
   ///
   /// Seems not used.
   final String loginHash;
-
-  @override
-  List<Object?> get props => [formHash, loginHash];
 }

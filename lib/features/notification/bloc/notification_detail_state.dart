@@ -1,10 +1,8 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/shared/models/post.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+part of 'notification_detail_cubit.dart';
 
 /// Status of notification detail.
 enum NotificationDetailStatus {
-  /// Inital status.
+  /// Initial status.
   initial,
 
   /// Loading data.
@@ -18,7 +16,8 @@ enum NotificationDetailStatus {
 }
 
 /// State of notification detail.
-final class NotificationDetailState extends Equatable {
+@MappableClass()
+final class NotificationDetailState with NotificationDetailStateMappable {
   /// Constructor.
   const NotificationDetailState({
     this.status = NotificationDetailStatus.initial,
@@ -39,7 +38,7 @@ final class NotificationDetailState extends Equatable {
   /// Thread id the current notification belongs to.
   final String? tid;
 
-  /// Coresponding post id of the current notification.
+  /// Corresponding post id of the current notification.
   final String? pid;
 
   /// Thread page number that contains the related post.
@@ -50,36 +49,4 @@ final class NotificationDetailState extends Equatable {
 
   /// Flag indicating current thread is closed or not.
   final bool threadClosed;
-
-  /// Copy with.
-  NotificationDetailState copyWith({
-    NotificationDetailStatus? status,
-    Post? post,
-    ReplyParameters? replyParameters,
-    String? tid,
-    String? pid,
-    String? page,
-    bool? threadClosed,
-  }) {
-    return NotificationDetailState(
-      status: status ?? this.status,
-      post: post ?? this.post,
-      replyParameters: replyParameters ?? this.replyParameters,
-      tid: tid ?? this.tid,
-      pid: pid ?? this.pid,
-      page: page ?? this.page,
-      threadClosed: threadClosed ?? this.threadClosed,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        post,
-        replyParameters,
-        tid,
-        pid,
-        page,
-        threadClosed,
-      ];
 }

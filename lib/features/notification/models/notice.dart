@@ -1,8 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// TODO: Refactor with sealed class.
 /// Different notice types.
@@ -31,7 +27,8 @@ enum NoticeType {
 }
 
 /// A single notice for current user.
-class Notice extends Equatable {
+@MappableClass()
+class Notice with NoticeMappable {
   /// Constructor.
   const Notice({
     required this.userAvatarUrl,
@@ -281,21 +278,4 @@ class Notice extends Equatable {
       taskId: taskId,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        userAvatarUrl,
-        username,
-        userSpaceUrl,
-        noticeTime,
-        noticeTimeString,
-        noticeThreadUrl,
-        noticeThreadTitle,
-        redirectUrl,
-        ignoreCount,
-        noticeType,
-        score,
-        quotedMessage,
-        taskId,
-      ];
 }

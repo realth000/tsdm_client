@@ -1,15 +1,16 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/profile/models/user_profile.dart';
+import 'package:tsdm_client/features/profile/models/models.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/profile/bloc/profile_bloc.mapper.dart';
 part 'profile_event.dart';
 part 'profile_state.dart';
 
@@ -54,6 +55,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           userProfile: userProfile,
           unreadNoticeCount: unreadNoticeCount,
           hasUnreadMessage: hasUnreadMessage,
+          failedToLogoutReason: null,
         ),
       );
       return;

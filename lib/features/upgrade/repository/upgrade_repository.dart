@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/upgrade/repository/models/download_status.dart';
+import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';

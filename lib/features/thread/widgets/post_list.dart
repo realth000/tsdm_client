@@ -8,8 +8,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/widgets/post_group.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/models/normal_thread.dart' as nt;
-import 'package:tsdm_client/shared/models/post.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 /// A widget that retrieve data from network and supports refresh.
@@ -63,7 +62,7 @@ class PostList extends StatefulWidget {
 
 class _PostListState extends State<PostList> {
   /// Thread type name.
-  /// Actually this should provided by [nt.NormalThread].
+  /// Actually this should provided by [NormalThread].
   /// But till now we haven't parse this attr in forum page.
   /// So parse here directly from thread page.
   /// But only parse once because every page shall have the same thread type.

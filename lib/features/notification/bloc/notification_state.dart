@@ -16,7 +16,8 @@ enum NotificationStatus {
 }
 
 /// State of notification.
-class NotificationState extends Equatable {
+@MappableClass()
+class NotificationState with NotificationStateMappable {
   /// Constructor.
   const NotificationState({
     this.status = NotificationStatus.initial,
@@ -28,18 +29,4 @@ class NotificationState extends Equatable {
 
   /// All fetched [Notice].
   final List<Notice> noticeList;
-
-  /// Copy with.
-  NotificationState copyWith({
-    NotificationStatus? status,
-    List<Notice>? noticeList,
-  }) {
-    return NotificationState(
-      status: status ?? this.status,
-      noticeList: noticeList ?? this.noticeList,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, noticeList];
 }

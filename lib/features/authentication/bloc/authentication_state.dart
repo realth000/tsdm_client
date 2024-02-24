@@ -24,7 +24,8 @@ enum AuthenticationStatus {
 /// State of authentication.
 ///
 /// Carrying all current logged user info and login status.
-final class AuthenticationState extends Equatable {
+@MappableClass()
+final class AuthenticationState with AuthenticationStateMappable {
   /// Constructor.
   const AuthenticationState({
     this.status = AuthenticationStatus.initial,
@@ -42,20 +43,4 @@ final class AuthenticationState extends Equatable {
 
   /// Exception happened in login.
   final LoginException? loginException;
-
-  /// Copy with.
-  AuthenticationState copyWith({
-    AuthenticationStatus? status,
-    LoginHash? loginHash,
-    LoginException? loginException,
-  }) {
-    return AuthenticationState(
-      status: status ?? this.status,
-      loginHash: loginHash ?? this.loginHash,
-      loginException: loginException ?? this.loginException,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status];
 }

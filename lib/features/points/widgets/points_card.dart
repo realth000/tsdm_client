@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
-import 'package:tsdm_client/features/points/models/points_change.dart';
+import 'package:tsdm_client/features/points/models/models.dart';
 
 /// A card to a change event of user's points.
 class PointsChangeCard extends StatelessWidget {

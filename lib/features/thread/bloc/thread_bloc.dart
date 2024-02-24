@@ -1,13 +1,13 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
-import 'package:tsdm_client/shared/models/post.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part '../../../generated/features/thread/bloc/thread_bloc.mapper.dart';
 part 'thread_event.dart';
 part 'thread_state.dart';
 

@@ -1,15 +1,17 @@
 part of 'cache_bloc.dart';
 
 /// Event of cache.
-sealed class CacheEvent extends Equatable {
+@MappableClass()
+sealed class CacheEvent with CacheEventMappable {
   const CacheEvent() : super();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// Required to calculate cache size.
-final class CacheCalculateRequested extends CacheEvent {}
+@MappableClass()
+final class CacheCalculateRequested extends CacheEvent
+    with CacheCalculateRequestedMappable {}
 
 /// User requested to clear cache.
-final class CacheClearCacheRequested extends CacheEvent {}
+@MappableClass()
+final class CacheClearCacheRequested extends CacheEvent
+    with CacheClearCacheRequestedMappable {}

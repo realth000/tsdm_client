@@ -3,7 +3,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/models/rate.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 /// Widget to show the rate statistics for a post.

@@ -1,11 +1,12 @@
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/rate/models/rate_window_info.dart';
+import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
+part '../../../generated/features/rate/bloc/rate_bloc.mapper.dart';
 part 'rate_event.dart';
 part 'rate_state.dart';
 

@@ -19,7 +19,8 @@ enum ForumStatus {
 }
 
 /// State of forum page of the app.
-class ForumState extends Equatable {
+@MappableClass()
+class ForumState with ForumStateMappable {
   /// Constructor.
   const ForumState({
     required this.fid,
@@ -105,70 +106,4 @@ class ForumState extends Equatable {
 
   /// All available [FilterDateline] list.
   final List<FilterDateline> filterDatelineList;
-
-  /// Copy with
-  ForumState copyWith({
-    ForumStatus? status,
-    String? fid,
-    String? title,
-    uh.Element? rulesElement,
-    List<StickThread>? stickThreadList,
-    List<NormalThread>? normalThreadList,
-    List<Forum>? subredditList,
-    bool? canLoadMore,
-    bool? havePermission,
-    bool? needLogin,
-    uh.Element? permissionDeniedMessage,
-    int? currentPage,
-    int? totalPages,
-    FilterState? filterState,
-    List<FilterType>? filterTypeList,
-    List<FilterSpecialType>? filterSpecialTypeList,
-    List<FilterOrder>? filterOrderList,
-    List<FilterDateline>? filterDatelineList,
-  }) {
-    return ForumState(
-      status: status ?? this.status,
-      fid: fid ?? this.fid,
-      title: title ?? this.title,
-      rulesElement: rulesElement ?? this.rulesElement,
-      stickThreadList: stickThreadList ?? this.stickThreadList,
-      normalThreadList: normalThreadList ?? this.normalThreadList,
-      subredditList: subredditList ?? this.subredditList,
-      canLoadMore: canLoadMore ?? this.canLoadMore,
-      havePermission: havePermission ?? this.havePermission,
-      needLogin: needLogin ?? this.needLogin,
-      permissionDeniedMessage:
-          permissionDeniedMessage ?? this.permissionDeniedMessage,
-      currentPage: currentPage ?? this.currentPage,
-      totalPages: totalPages ?? this.totalPages,
-      filterState: filterState ?? this.filterState,
-      filterTypeList: filterTypeList ?? this.filterTypeList,
-      filterSpecialTypeList:
-          filterSpecialTypeList ?? this.filterSpecialTypeList,
-      filterOrderList: filterOrderList ?? this.filterOrderList,
-      filterDatelineList: filterDatelineList ?? this.filterDatelineList,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        fid,
-        title,
-        rulesElement.hashCode,
-        stickThreadList,
-        normalThreadList,
-        subredditList,
-        canLoadMore,
-        havePermission,
-        permissionDeniedMessage.hashCode,
-        currentPage,
-        totalPages,
-        filterState,
-        filterTypeList,
-        filterSpecialTypeList,
-        filterOrderList,
-        filterDatelineList,
-      ];
 }

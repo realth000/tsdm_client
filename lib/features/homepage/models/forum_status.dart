@@ -1,9 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Some forum status information showed in homepage.
 ///
 /// Including threads/replies in today and yesterday, and member count.
-final class ForumStatus extends Equatable {
+@MappableClass()
+final class ForumStatus with ForumStatusMappable {
   /// Constructor.
   const ForumStatus({
     required this.todayCount,
@@ -25,7 +26,4 @@ final class ForumStatus extends Equatable {
 
   /// "帖子"
   final String threadCount;
-
-  @override
-  List<Object?> get props => [todayCount, yesterdayCount, threadCount];
 }

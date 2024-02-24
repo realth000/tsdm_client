@@ -19,7 +19,8 @@ enum PacketStatus {
 }
 
 /// 红包
-final class PacketState extends Equatable {
+@MappableClass()
+final class PacketState with PacketStateMappable {
   /// Constructor.
   const PacketState({
     this.status = PacketStatus.initial,
@@ -31,18 +32,4 @@ final class PacketState extends Equatable {
 
   /// Success reason or failed reason text.
   final String? reason;
-
-  /// Copy with.
-  PacketState copyWith({
-    PacketStatus? status,
-    String? reason,
-  }) {
-    return PacketState(
-      status: status ?? this.status,
-      reason: reason ?? this.reason,
-    );
-  }
-
-  @override
-  List<Object?> get props => [status, reason];
 }

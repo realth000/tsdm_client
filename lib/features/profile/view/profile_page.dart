@@ -7,7 +7,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
-import 'package:tsdm_client/features/profile/models/user_profile.dart';
+import 'package:tsdm_client/features/profile/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';

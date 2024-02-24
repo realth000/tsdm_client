@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
-import 'package:tsdm_client/features/forum/models/thread_filter.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 /// Construct a chip that controlling and mutating thread filter state.

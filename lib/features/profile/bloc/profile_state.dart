@@ -22,7 +22,11 @@ enum ProfileStatus {
 }
 
 /// State of profile page of the app.
-class ProfileState extends Equatable {
+@MappableClass(
+  generateMethods:
+      GenerateMethods.decode | GenerateMethods.encode | GenerateMethods.equals,
+)
+class ProfileState with ProfileStateMappable {
   /// Constructor.
   const ProfileState({
     this.status = ProfileStatus.initial,
@@ -79,15 +83,4 @@ class ProfileState extends Equatable {
       hasUnreadMessage: hasUnreadMessage ?? this.hasUnreadMessage,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        status,
-        username,
-        uid,
-        userProfile,
-        failedToLogoutReason,
-        unreadNoticeCount,
-        hasUnreadMessage,
-      ];
 }

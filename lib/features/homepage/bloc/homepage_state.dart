@@ -36,7 +36,8 @@ enum HomepageStatus {
 }
 
 /// State of homepage.
-final class HomepageState extends Equatable {
+@MappableClass()
+final class HomepageState with HomepageStateMappable {
   /// Constructor.
   const HomepageState({
     this.status = HomepageStatus.initial,
@@ -70,37 +71,4 @@ final class HomepageState extends Equatable {
 
   /// Flag indicating has unread messages or not.
   final bool hasUnreadMessage;
-
-  /// Copy with
-  HomepageState copyWith({
-    HomepageStatus? status,
-    ForumStatus? forumStatus,
-    LoggedUserInfo? loggedUserInfo,
-    List<PinnedThreadGroup>? pinnedThreadGroupList,
-    List<SwiperUrl>? swiperUrlList,
-    int? documentHashCode,
-    int? unreadNoticeCount,
-    bool? hasUnreadMessage,
-  }) {
-    return HomepageState(
-      status: status ?? this.status,
-      forumStatus: forumStatus ?? this.forumStatus,
-      loggedUserInfo: loggedUserInfo ?? this.loggedUserInfo,
-      pinnedThreadGroupList:
-          pinnedThreadGroupList ?? this.pinnedThreadGroupList,
-      swiperUrlList: swiperUrlList ?? this.swiperUrlList,
-      unreadNoticeCount: unreadNoticeCount ?? this.unreadNoticeCount,
-      hasUnreadMessage: hasUnreadMessage ?? this.hasUnreadMessage,
-    );
-  }
-
-  @override
-  List<Object?> get props => [
-        status,
-        forumStatus,
-        loggedUserInfo,
-        pinnedThreadGroupList,
-        swiperUrlList,
-        unreadNoticeCount,
-      ];
 }

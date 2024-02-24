@@ -1,7 +1,4 @@
-import 'package:equatable/equatable.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
+part of 'models.dart';
 
 /// A type of score in rate window.
 ///
@@ -13,7 +10,8 @@ import 'package:universal_html/html.dart' as uh;
 ///
 /// We can tell if here is other type of forms that have more or less than four
 /// columns.
-final class RateWindowScore extends Equatable {
+@MappableClass()
+final class RateWindowScore with RateWindowScoreMappable {
   /// Constructor.
   const RateWindowScore({
     required this.id,
@@ -42,21 +40,13 @@ final class RateWindowScore extends Equatable {
 
   /// Score that remaining to use in rate today.
   final String remaining;
-
-  @override
-  List<Object?> get props => [
-        id,
-        name,
-        allowedRange,
-        allowedRangeDescription,
-        remaining,
-      ];
 }
 
 /// Information in rate confirm dialog window.
 ///
 /// Used to post a rate action.
-final class RateWindowInfo extends Equatable {
+@MappableClass()
+final class RateWindowInfo with RateWindowInfoMappable {
   /// Constructor.
   const RateWindowInfo({
     required this.rowTitleList,
@@ -228,16 +218,4 @@ final class RateWindowInfo extends Equatable {
       remaining: remaining,
     );
   }
-
-  @override
-  List<Object?> get props => [
-        rowTitleList,
-        scoreList,
-        defaultReasonList,
-        formHash,
-        tid,
-        pid,
-        referer,
-        handleKey,
-      ];
 }

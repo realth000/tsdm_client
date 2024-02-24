@@ -1,11 +1,13 @@
 import 'package:bloc/bloc.dart';
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/notification/bloc/notification_detail_state.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
-import 'package:tsdm_client/shared/models/post.dart';
-import 'package:tsdm_client/shared/models/reply_parameters.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
+
+part '../../../generated/features/notification/bloc/notification_detail_cubit.mapper.dart';
+part 'notification_detail_state.dart';
 
 /// Cubit of the notification detail page.
 class NotificationDetailCubit extends Cubit<NotificationDetailState> {
@@ -23,7 +25,7 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
   /// Fetch notification detail from [url].
   ///
   /// Usually the [url] is a thread page and the logic below is trying to get
-  /// the conresponding post in thread.
+  /// the corresponding post in thread.
   Future<void> fetchDetail(String url) async {
     emit(state.copyWith(status: NotificationDetailStatus.loading));
     try {

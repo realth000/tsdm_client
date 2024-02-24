@@ -1,9 +1,10 @@
-import 'package:equatable/equatable.dart';
+part of 'models.dart';
 
 /// Thread type
 ///
 /// 宣传、心情、其他……
-class ThreadType extends Equatable {
+@MappableClass()
+class ThreadType with ThreadTypeMappable {
   /// Constructor.
   const ThreadType({
     required this.name,
@@ -23,7 +24,4 @@ class ThreadType extends Equatable {
 
   /// Url.
   final String url;
-
-  @override
-  List<Object?> get props => [name, url];
 }

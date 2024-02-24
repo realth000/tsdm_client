@@ -1,18 +1,20 @@
 part of 'forum_bloc.dart';
 
 /// Forum event.
-sealed class ForumEvent extends Equatable {
+@MappableClass()
+sealed class ForumEvent with ForumEventMappable {
   const ForumEvent();
-
-  @override
-  List<Object?> get props => [];
 }
 
 /// User request to refresh the forum page.
-final class ForumRefreshRequested extends ForumEvent {}
+@MappableClass()
+final class ForumRefreshRequested extends ForumEvent
+    with ForumRefreshRequestedMappable {}
 
 /// User requested to load page [pageNumber].
-final class ForumLoadMoreRequested extends ForumEvent {
+@MappableClass()
+final class ForumLoadMoreRequested extends ForumEvent
+    with ForumLoadMoreRequestedMappable {
   /// Constructor.
   const ForumLoadMoreRequested(this.pageNumber) : super();
 
@@ -21,7 +23,9 @@ final class ForumLoadMoreRequested extends ForumEvent {
 }
 
 /// User request to jump to another page.
-final class ForumJumpPageRequested extends ForumEvent {
+@MappableClass()
+final class ForumJumpPageRequested extends ForumEvent
+    with ForumJumpPageRequestedMappable {
   /// Constructor.
   const ForumJumpPageRequested(this.pageNumber) : super();
 
@@ -30,7 +34,9 @@ final class ForumJumpPageRequested extends ForumEvent {
 }
 
 /// User requested to change the current thread filter state.
-final class ForumChangeThreadFilterStateRequested extends ForumEvent {
+@MappableClass()
+final class ForumChangeThreadFilterStateRequested extends ForumEvent
+    with ForumChangeThreadFilterStateRequestedMappable {
   /// Constructor.
   const ForumChangeThreadFilterStateRequested(this.filterState);
 

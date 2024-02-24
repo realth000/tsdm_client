@@ -8,7 +8,7 @@ import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
 import 'package:tsdm_client/features/latest_thread/view/latest_thread_page.dart';
 import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
-import 'package:tsdm_client/features/notification/models/notice.dart';
+import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
