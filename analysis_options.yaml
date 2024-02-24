@@ -9,6 +9,7 @@ analyzer:
   exclude:
     - lib/**.g.dart
     - lib/**.freezed.dart
+    - lib/**.mapper.dart
 
 linter:
   rules:

@@ -851,10 +851,10 @@ packages:
     dependency: "direct main"
     description:
       name: responsive_framework
-      sha256: "23aa7be5d5136922df708f6ddccb5ec4e0eb8bc576c3f105f5093f31d6b68e50"
+      sha256: "0ea7309003917d5af687c46e892c503b2c50ae502d75709f3b62efb3747caa47"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.1.1"
+    version: "1.2.0"
   rxdart:
     dependency: "direct main"
     description:

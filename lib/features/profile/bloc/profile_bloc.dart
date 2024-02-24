@@ -55,7 +55,6 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
           userProfile: userProfile,
           unreadNoticeCount: unreadNoticeCount,
           hasUnreadMessage: hasUnreadMessage,
-          failedToLogoutReason: null,
         ),
       );
       return;

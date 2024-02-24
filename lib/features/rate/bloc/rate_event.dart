@@ -3,6 +3,7 @@ part of 'rate_bloc.dart';
 /// Event of rate.
 @MappableClass()
 sealed class RateEvent with RateEventMappable {
+  /// Constructor.
   const RateEvent();
 }
 
@@ -24,9 +25,6 @@ final class RateFetchInfoRequested extends RateEvent
 
   /// Rate action url to do the rate.
   final String rateAction;
-
-  @override
-  List<Object?> get props => [pid, rateAction];
 }
 
 /// User requested to rate.
