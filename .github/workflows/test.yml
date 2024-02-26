@@ -31,9 +31,10 @@ jobs:
         run: |
           flutter pub get
           dart run build_runner build
+          git submodule update --init --recursive --force
       - name: Run flutter analyze
         run: |
-          flutter analyze --fatal-infos --fatal-warnings
+          flutter analyze --fatal-infos --fatal-warnings lib
       - name: Run flutter test
         run: |
           flutter test

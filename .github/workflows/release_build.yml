@@ -50,6 +50,7 @@ jobs:
         run: |
           flutter pub get
           dart run build_runner build
+          git submodule update --init --recursive --force
       - name: Build Linux
         run: flutter build linux --release
       - name: Pre Packing
@@ -106,6 +107,7 @@ jobs:
         run: |
           flutter pub get
           dart run build_runner build
+          git submodule update --init --recursive --force
       - name: Build Windows
         run: flutter build windows --release
       - name: Pre Packing
@@ -143,6 +145,7 @@ jobs:
         run: |
           flutter pub get
           dart run build_runner build
+          git submodule update --init --recursive --force
       - name: Build MacOS
         run: |
           flutter build macos --release
