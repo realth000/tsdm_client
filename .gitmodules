@@ -1,0 +1,3 @@
+[submodule "packages/flutter_bbcode_editor"]
+	path = packages/flutter_bbcode_editor
+	url = https://github.com/realth000/flutter_bbcode_editor

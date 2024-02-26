@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -133,6 +134,8 @@ class _PostEditPageState extends State<PostEditPage> {
   /// Key is option's attribute name.
   /// Value is the option itself.
   Map<String, PostEditContentOption>? additionalOptionsMap;
+
+  final bbcodeController = BBCodeEditorController();
 
   /// Show a modal bottom sheet to let user select a thread type.
   ///
@@ -407,24 +410,33 @@ class _PostEditPageState extends State<PostEditPage> {
                 _buildTitleRow(context, state),
                 // Post data editor.
                 Expanded(
-                  child: TextFormField(
+                  child: InputDecorator(
                     decoration: InputDecoration(
                       labelText: context.t.postEditPage.body,
                       alignLabelWithHint: true,
                     ),
-                    textAlignVertical: TextAlignVertical.top,
-                    controller: dataController,
-                    maxLines: null,
-                    expands: true,
-                    keyboardType: TextInputType.multiline,
-                    autofocus: widget.editType.isEditingPost,
-                    validator: (v) {
-                      if (v == null || v.parseUtf8Length < 8) {
-                        return context.t.postEditPage.threadBodyTooShort;
-                      }
-                      return null;
-                    },
+                    child: BBCodeEditor(
+                      controller: bbcodeController,
+                    ),
                   ),
+                  // TextFormField(
+                  //   decoration: InputDecoration(
+                  //     labelText: context.t.postEditPage.body,
+                  //     alignLabelWithHint: true,
+                  //   ),
+                  //   textAlignVertical: TextAlignVertical.top,
+                  //   controller: dataController,
+                  //   maxLines: null,
+                  //   expands: true,
+                  //   keyboardType: TextInputType.multiline,
+                  //   autofocus: widget.editType.isEditingPost,
+                  //   validator: (v) {
+                  //     if (v == null || v.parseUtf8Length < 8) {
+                  //       return context.t.postEditPage.threadBodyTooShort;
+                  //     }
+                  //     return null;
+                  //   },
+                  // ),
                 ),
                 _buildControlRow(context, state),
               ].insertBetween(sizedBoxW15H15),

@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   isar_flutter_libs
+  rich_clipboard_linux
   url_launcher_linux
 )
 
