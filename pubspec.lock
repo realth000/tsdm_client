@@ -937,10 +937,10 @@ packages:
     dependency: "direct main"
     description:
       name: responsive_framework
-      sha256: "0ea7309003917d5af687c46e892c503b2c50ae502d75709f3b62efb3747caa47"
+      sha256: "52367ab0c3479b3a5342dec3b74a3d47c4cc1b45bb5d38f720c2e002ebccd4ee"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "1.2.0"
+    version: "1.4.0"
   rich_clipboard:
     dependency: transitive
     description:

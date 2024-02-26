@@ -46,7 +46,7 @@ dependencies:
   path: any
   path_provider: ^2.1.2
   permission_handler: ^11.3.0
-  responsive_framework: ^1.1.1
+  responsive_framework: ^1.4.0
   rxdart: ^0.27.7
   shimmer: ^3.0.0
   slang: ^3.29.0
