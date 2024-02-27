@@ -131,6 +131,7 @@ class _PostCardState extends State<PostCard>
                 ),
               ),
             // Post body
+            sizedBoxW10H10,
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: () async {
@@ -144,7 +145,7 @@ class _PostCardState extends State<PostCard>
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: edgeInsetsL15R15B10,
+                      padding: edgeInsetsL15R15,
                       child: munchElement(
                         context,
                         parseHtmlDocument(widget.post.data).body!,

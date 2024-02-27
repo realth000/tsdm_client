@@ -64,6 +64,12 @@ class MunchState {
   /// Flag to indicate whether in state of repeated line wrapping.
   bool inRepeatWrapLine = false;
 
+  /// Flag indicating has already munched all heading br nodes.
+  ///
+  /// Use this flag to filter all br node ahead of the real content to avoid
+  /// large white space ahead of post text data.
+  bool headingBrNodePassed = false;
+
   /// Text alignment.
   TextAlign? textAlign;
 
@@ -162,6 +168,8 @@ class Muncher {
       // Text node does not have children.
       case uh.Node.TEXT_NODE:
         {
+          // Mark already munched text, all heading br nodes were passed.
+
           String? text;
           // When inPre is true, current node is inside a `<pre>` node.
           // Should reserve the original style.
@@ -181,7 +189,7 @@ class Muncher {
               return null;
             }
             state.inRepeatWrapLine = true;
-            return const TextSpan(text: '\n');
+            return const TextSpan();
           }
 
           // Base text style.
@@ -210,7 +218,9 @@ class Muncher {
             );
           }
 
-          state.inRepeatWrapLine = false;
+          state
+            ..headingBrNodePassed = true
+            ..inRepeatWrapLine = false;
           // TODO: Support text-shadow.
           return TextSpan(
             text: text, //state.inPre ? '${text ?? ""}\n' : text,
@@ -235,7 +245,9 @@ class Muncher {
             'img' when node.imageUrl() != null => WidgetSpan(
                 child: NetworkIndicatorImage(node.imageUrl()!),
               ),
-            'br' => const TextSpan(text: '\n'),
+            'br' => state.headingBrNodePassed
+                ? const TextSpan(text: '\n')
+                : const TextSpan(),
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
