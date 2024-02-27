@@ -727,7 +727,7 @@ class Muncher {
 
   InlineSpan _buildB(uh.Element element) {
     final ret = _munch(element);
-    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+    return TextSpan(children: [ret]);
   }
 
   InlineSpan _buildHr(uh.Element element) {
