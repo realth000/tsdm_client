@@ -282,6 +282,7 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(children: ret.insertBetween(sizedBoxW10H10));
   }
 
+  /// Build the row to control a
   Widget _buildControlRow(BuildContext context, PostEditState state) {
     return Row(
       children: [
@@ -290,6 +291,15 @@ class _PostEditPageState extends State<PostEditPage> {
           onPressed: additionalOptionsMap != null
               ? () async => _showAdditionalOptionBottomSheet(context, state)
               : null,
+        ),
+        IconButton(
+          icon: Icon(
+            Icons.format_bold_outlined,
+            color:
+                // FIXME: Update state.
+                bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+          ),
+          onPressed: () async => bbcodeController.triggerBold(),
         ),
         const Spacer(),
         ElevatedButton.icon(
