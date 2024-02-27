@@ -95,6 +95,11 @@ class PostEditPage extends StatefulWidget {
 }
 
 class _PostEditPageState extends State<PostEditPage> {
+  /// Enable using testing bbcode editor.
+  ///
+  /// This flag is for testing only and SHOULD remove before next release.
+  bool useExperimentalEditor = false;
+
   /// Key of the form.
   final formKey = GlobalKey<FormState>();
 
@@ -287,20 +292,31 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(
       children: [
         IconButton(
+          icon: const Icon(Icons.science_outlined),
+          onPressed: () {
+            setState(() {
+              useExperimentalEditor = !useExperimentalEditor;
+            });
+          },
+        ),
+        IconButton(
           icon: const Icon(Icons.settings_outlined),
           onPressed: additionalOptionsMap != null
               ? () async => _showAdditionalOptionBottomSheet(context, state)
               : null,
         ),
-        IconButton(
-          icon: Icon(
-            Icons.format_bold_outlined,
-            color:
-                // FIXME: Update state.
-                bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        if (useExperimentalEditor)
+          IconButton(
+            icon: Icon(
+              Icons.format_bold_outlined,
+              color:
+                  // FIXME: Update state.
+                  bbcodeController.isBold
+                      ? Theme.of(context).primaryColor
+                      : null,
+            ),
+            onPressed: () async => bbcodeController.triggerBold(),
           ),
-          onPressed: () async => bbcodeController.triggerBold(),
-        ),
         const Spacer(),
         ElevatedButton.icon(
           icon: state.status == PostEditStatus.uploading
@@ -420,33 +436,34 @@ class _PostEditPageState extends State<PostEditPage> {
                 _buildTitleRow(context, state),
                 // Post data editor.
                 Expanded(
-                  child: InputDecorator(
-                    decoration: InputDecoration(
-                      labelText: context.t.postEditPage.body,
-                      alignLabelWithHint: true,
-                    ),
-                    child: BBCodeEditor(
-                      controller: bbcodeController,
-                    ),
-                  ),
-                  // TextFormField(
-                  //   decoration: InputDecoration(
-                  //     labelText: context.t.postEditPage.body,
-                  //     alignLabelWithHint: true,
-                  //   ),
-                  //   textAlignVertical: TextAlignVertical.top,
-                  //   controller: dataController,
-                  //   maxLines: null,
-                  //   expands: true,
-                  //   keyboardType: TextInputType.multiline,
-                  //   autofocus: widget.editType.isEditingPost,
-                  //   validator: (v) {
-                  //     if (v == null || v.parseUtf8Length < 8) {
-                  //       return context.t.postEditPage.threadBodyTooShort;
-                  //     }
-                  //     return null;
-                  //   },
-                  // ),
+                  child: useExperimentalEditor
+                      ? InputDecorator(
+                          decoration: InputDecoration(
+                            labelText: context.t.postEditPage.body,
+                            alignLabelWithHint: true,
+                          ),
+                          child: BBCodeEditor(
+                            controller: bbcodeController,
+                          ),
+                        )
+                      : TextFormField(
+                          decoration: InputDecoration(
+                            labelText: context.t.postEditPage.body,
+                            alignLabelWithHint: true,
+                          ),
+                          textAlignVertical: TextAlignVertical.top,
+                          controller: dataController,
+                          maxLines: null,
+                          expands: true,
+                          keyboardType: TextInputType.multiline,
+                          autofocus: widget.editType.isEditingPost,
+                          validator: (v) {
+                            if (v == null || v.parseUtf8Length < 8) {
+                              return context.t.postEditPage.threadBodyTooShort;
+                            }
+                            return null;
+                          },
+                        ),
                 ),
                 _buildControlRow(context, state),
               ].insertBetween(sizedBoxW15H15),
