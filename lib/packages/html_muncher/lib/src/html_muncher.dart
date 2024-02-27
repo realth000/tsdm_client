@@ -695,6 +695,7 @@ class Muncher {
         ),
         const TextSpan(text: ' '),
         ret,
+        const TextSpan(text: '\n'),
       ],
     );
   }
