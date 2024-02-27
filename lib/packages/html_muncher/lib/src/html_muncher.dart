@@ -189,7 +189,11 @@ class Muncher {
               return null;
             }
             state.inRepeatWrapLine = true;
-            return const TextSpan();
+            // FIXME: ??? Large space in tid 1192348 pid 71962342 when returned
+            // TextSpan is TextSpan() or TextSpan(text: '').
+            //
+            // Temporarily return a space to avoid large space.
+            return const TextSpan(text: ' ');
           }
 
           // Base text style.
