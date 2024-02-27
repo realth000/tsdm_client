@@ -49,4 +49,10 @@ final class ChangelogParameter with ChangelogParameterMappable {
 
   /// Result page number;
   final int pageNumber;
+
+  @override
+  String toString() {
+    return '&exttype=$extType&income=$changeType&optype=$operation&'
+        'starttime=$startTime&endtime=$endTime&page=$pageNumber';
+  }
 }
