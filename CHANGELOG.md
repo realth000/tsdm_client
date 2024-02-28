@@ -6,6 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 编辑：提供实验性的bbcode编辑器，支持所见即所得。
+  - WIP: 显示文本样式包括粗体、斜体、下划线、删除线、颜色、背景色。
+  - WIP: 支持使用markdown语法书写bbcode（默认关闭）。
+  - WIP: 支持引用、表情、图片、网页链接、多级标题、有序/无序列表、代码块、折叠/展开、表格、分隔符。
+
 ### Fixed
 
 - 帖子: 依旧是修复了很多多余或缺少的空行。

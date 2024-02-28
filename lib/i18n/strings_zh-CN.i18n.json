@@ -394,5 +394,10 @@
   },
   "bountyAnswerCard": {
     "title": "最佳答案"
+  },
+  "bbcodeEditor": {
+    "experimentalInfo": "实验性bbcode编辑器",
+    "experimentalInfoTitle": "实验性bbcode编辑器",
+    "experimentalInfoDetail": "此bbcode编辑器支持所见即所得，可以方便地添加文本样式和其他bbcode组件。\n但处于实验阶段：已经经过测试，但可能有bug。"
   }
 }

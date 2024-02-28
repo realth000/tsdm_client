@@ -14,6 +14,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -292,7 +293,11 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.science_outlined),
+          icon: Icon(
+            Icons.science_outlined,
+            color:
+                useExperimentalEditor ? Theme.of(context).primaryColor : null,
+          ),
           onPressed: () {
             setState(() {
               useExperimentalEditor = !useExperimentalEditor;
@@ -351,6 +356,26 @@ class _PostEditPageState extends State<PostEditPage> {
                   // TODO: Handle creating a thread.
                 },
         ),
+      ],
+    );
+  }
+
+  Widget _buildUsingExperimentalEditorHintRow(BuildContext context) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextButton.icon(
+          icon: const Icon(Icons.info_outline),
+          label: Text(context.t.bbcodeEditor.experimentalInfo),
+          onPressed: () async {
+            await showMessageSingleButtonDialog(
+              context: context,
+              title: context.t.bbcodeEditor.experimentalInfoTitle,
+              message: context.t.bbcodeEditor.experimentalInfoDetail,
+            );
+          },
+        ),
+        const Spacer(),
       ],
     );
   }
@@ -468,6 +493,8 @@ class _PostEditPageState extends State<PostEditPage> {
                           },
                         ),
                 ),
+                if (useExperimentalEditor)
+                  _buildUsingExperimentalEditorHintRow(context),
                 _buildControlRow(context, state),
               ].insertBetween(sizedBoxW15H15),
             );
