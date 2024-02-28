@@ -161,15 +161,17 @@ class _PostCardState extends State<PostCard>
                   .where((e) => e.isValid())
                   .map(LockedCard.new),
             if (widget.post.packetUrl != null) ...[
-              PacketCard(widget.post.packetUrl!),
               sizedBoxW10H10,
+              PacketCard(widget.post.packetUrl!),
             ],
             // Rate status if any.
-            if (widget.post.rate != null)
+            if (widget.post.rate != null) ...[
+              sizedBoxW10H10,
               ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 712),
                 child: RateCard(widget.post.rate!),
               ),
+            ],
             // Context menu.
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

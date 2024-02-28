@@ -18,7 +18,7 @@ import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:universal_html/html.dart' as uh;
 
 /// Use an empty span.
-final emptySpan = WidgetSpan(child: Container());
+// final null = WidgetSpan(child: Container());
 
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
@@ -29,6 +29,11 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     context,
   );
 
+  final ret = muncher._munch(rootElement);
+  if (ret == null) {
+    return const SizedBox.shrink();
+  }
+
   // Alignment in this page requires a fixed max width that equals to website
   // page width.
   // Currently is 712.
@@ -36,7 +41,7 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     constraints: const BoxConstraints(
       maxWidth: 712,
     ),
-    child: RichText(text: muncher._munch(rootElement)),
+    child: RichText(text: ret),
   );
 }
 
@@ -139,9 +144,9 @@ class Muncher {
   static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
 
   /// Map to store div classes and corresponding munch functions.
-  Map<String, InlineSpan Function(uh.Element)>? _divMap;
+  Map<String, InlineSpan? Function(uh.Element)>? _divMap;
 
-  InlineSpan _munch(uh.Element rootElement) {
+  InlineSpan? _munch(uh.Element rootElement) {
     final spanList = <InlineSpan>[];
 
     for (final node in rootElement.nodes) {
@@ -152,7 +157,7 @@ class Muncher {
     }
     if (spanList.isEmpty) {
       // Not intend to happen.
-      return emptySpan;
+      return null;
     }
     // Do not wrap in another layout when there is only one span.
     if (spanList.length == 1) {
@@ -245,12 +250,9 @@ class Muncher {
           // TODO: Handle <ul> and <li> marker
           // Parse according to element types.
           final span = switch (localName) {
-            'img' when node.imageUrl() != null => WidgetSpan(
-                child: NetworkIndicatorImage(node.imageUrl()!),
-              ),
-            'br' => state.headingBrNodePassed
-                ? const TextSpan(text: '\n')
-                : emptySpan,
+            'img' => _buildImg(node),
+            'br' =>
+              state.headingBrNodePassed ? const TextSpan(text: '\n') : null,
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
@@ -287,7 +289,18 @@ class Muncher {
     return null;
   }
 
-  InlineSpan _buildFont(uh.Element element) {
+  InlineSpan? _buildImg(uh.Element element) {
+    final url = element.imageUrl();
+    if (url == null) {
+      return null;
+    }
+    state.headingBrNodePassed = true;
+    return WidgetSpan(
+      child: NetworkIndicatorImage(url),
+    );
+  }
+
+  InlineSpan? _buildFont(uh.Element element) {
     // Setup color
     final hasColor = _tryPushColor(element);
     // Setup font size.
@@ -307,28 +320,28 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan _buildStrong(uh.Element element) {
+  InlineSpan? _buildStrong(uh.Element element) {
     state.bold = true;
     final ret = _munch(element);
     state.bold = false;
     return ret;
   }
 
-  InlineSpan _buildUnderline(uh.Element element) {
+  InlineSpan? _buildUnderline(uh.Element element) {
     state.underline = true;
     final ret = _munch(element);
     state.underline = false;
     return ret;
   }
 
-  InlineSpan _buildLineThrough(uh.Element element) {
+  InlineSpan? _buildLineThrough(uh.Element element) {
     state.lineThrough = true;
     final ret = _munch(element);
     state.lineThrough = false;
     return ret;
   }
 
-  InlineSpan _buildP(uh.Element element) {
+  InlineSpan? _buildP(uh.Element element) {
     // Alignment requires the whole rendered page to a fixed max width that
     // equals to website page, otherwise if is different if we have a "center"
     // or "right" alignment.
@@ -351,6 +364,10 @@ class Muncher {
     }
 
     final ret = _munch(element);
+
+    if (ret == null) {
+      return null;
+    }
 
     late final InlineSpan ret2;
 
@@ -377,7 +394,7 @@ class Muncher {
     return ret2;
   }
 
-  InlineSpan _buildSpan(uh.Element element) {
+  InlineSpan? _buildSpan(uh.Element element) {
     final styleEntries = element.attributes['style']
         ?.split(';')
         .map((e) {
@@ -389,6 +406,9 @@ class Muncher {
         .toList();
     if (styleEntries == null) {
       final ret = _munch(element);
+      if (ret == null) {
+        return null;
+      }
       return TextSpan(children: [ret, const TextSpan(text: '\n')]);
     }
 
@@ -405,6 +425,9 @@ class Muncher {
     }
     if (hasFontSize) {
       state.fontSizeStack.removeLast();
+    }
+    if (ret == null) {
+      return null;
     }
 
     return TextSpan(children: [ret, const TextSpan(text: '\n')]);
@@ -434,7 +457,7 @@ class Muncher {
     );
   }
 
-  InlineSpan _munchDiv(uh.Element element) {
+  InlineSpan? _munchDiv(uh.Element element) {
     _divMap ??= {
       'blockcode': _buildBlockCode,
       'locked': _buildLockedArea,
@@ -454,18 +477,20 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan _buildBlockCode(uh.Element element) {
+  InlineSpan? _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
+    state.headingBrNodePassed = true;
     return WidgetSpan(child: CodeCard(code: text));
   }
 
-  InlineSpan _buildLockedArea(uh.Element element) {
+  InlineSpan? _buildLockedArea(uh.Element element) {
     final lockedArea =
         Locked.fromLockDivNode(element, allowWithPurchase: false);
     if (lockedArea.isNotValid()) {
-      return emptySpan;
+      return null;
     }
 
+    state.headingBrNodePassed = true;
     return TextSpan(
       children: [
         WidgetSpan(child: LockedCard(lockedArea)),
@@ -474,9 +499,9 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildReview(uh.Element element) {
+  InlineSpan? _buildReview(uh.Element element) {
     if (element.children.length <= 1) {
-      return emptySpan;
+      return null;
     }
     final avatarUrl = element.querySelector('div.psta > a > img')?.imageUrl();
     final name = element.querySelector('div.psti > a')?.firstEndDeepText();
@@ -502,16 +527,20 @@ class Muncher {
 
   /// Spoiler is a button with an area of contents.
   /// Button is used to control the visibility of contents.
-  InlineSpan _buildSpoiler(uh.Element element) {
+  InlineSpan? _buildSpoiler(uh.Element element) {
     final title = element
         .querySelector('div.spoiler_control > input.spoiler_btn')
         ?.attributes['value'];
     final contentNode = element.querySelector('div.spoiler_content');
     if (title == null || contentNode == null) {
       // Impossible.
-      return emptySpan;
+      return null;
     }
     final content = _munch(contentNode);
+    if (content == null) {
+      return null;
+    }
+    state.headingBrNodePassed = true;
     return TextSpan(
       children: [
         WidgetSpan(
@@ -533,7 +562,7 @@ class Muncher {
   /// <div class="rusld z">
   ///   <cite>${price}<cite>
   /// </div>
-  InlineSpan _buildUnresolvedBounty(uh.Element element) {
+  InlineSpan? _buildUnresolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
     return TextSpan(
       children: [
@@ -553,7 +582,7 @@ class Muncher {
   ///   <cite>${price}<cite>
   /// </div>
   /// ```
-  InlineSpan _buildResolvedBounty(uh.Element element) {
+  InlineSpan? _buildResolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
     return TextSpan(
       children: [
@@ -591,7 +620,7 @@ class Muncher {
   ///    </div>
   ///  </div>
   /// ```
-  InlineSpan _buildBountyBestAnswer(uh.Element element) {
+  InlineSpan? _buildBountyBestAnswer(uh.Element element) {
     final userAvatarUrl =
         element.querySelector('div.pstl > div.psta > img')?.imageUrl();
     final userInfoNode =
@@ -609,7 +638,7 @@ class Muncher {
       debug('failed to parse bounty answer: '
           'avatar=$userAvatarUrl, username=$username, '
           'userSpaceUrl=$userSpaceUrl, answer=$answer');
-      return emptySpan;
+      return null;
     }
 
     return WidgetSpan(
@@ -622,7 +651,7 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildA(uh.Element element) {
+  InlineSpan? _buildA(uh.Element element) {
     if (element.attributes.containsKey('href')) {
       state.tapUrl = element.attributes['href'];
       final ret = _munch(element);
@@ -632,24 +661,33 @@ class Muncher {
     return _munch(element);
   }
 
-  InlineSpan _buildTr(uh.Element element) {
+  InlineSpan? _buildTr(uh.Element element) {
     state.trimAll = true;
     final ret = _munch(element);
     state.trimAll = false;
-    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+    if (ret == null) {
+      return null;
+    }
+    return ret;
   }
 
-  InlineSpan _buildTd(uh.Element element) {
+  InlineSpan? _buildTd(uh.Element element) {
     state.trimAll = true;
     final ret = _munch(element);
     state.trimAll = false;
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(children: [ret, const TextSpan(text: ' ')]);
   }
 
-  InlineSpan _buildH1(uh.Element element) {
+  InlineSpan? _buildH1(uh.Element element) {
     state.fontSizeStack.add(FontSize.size6.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(
       children: [
         const TextSpan(text: '\n'),
@@ -659,10 +697,13 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildH2(uh.Element element) {
+  InlineSpan? _buildH2(uh.Element element) {
     state.fontSizeStack.add(FontSize.size5.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(
       children: [
         const TextSpan(text: '\n'),
@@ -672,10 +713,13 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildH3(uh.Element element) {
+  InlineSpan? _buildH3(uh.Element element) {
     state.fontSizeStack.add(FontSize.size4.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(
       children: [
         const TextSpan(text: '\n'),
@@ -685,10 +729,13 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildH4(uh.Element element) {
+  InlineSpan? _buildH4(uh.Element element) {
     state.fontSizeStack.add(FontSize.size3.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(
       children: [
         const TextSpan(text: '\n'),
@@ -698,8 +745,11 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildLi(uh.Element element) {
+  InlineSpan? _buildLi(uh.Element element) {
     final ret = _munch(element);
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(
       children: [
         WidgetSpan(
@@ -716,10 +766,14 @@ class Muncher {
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
-  InlineSpan _buildCode(uh.Element element) {
+  InlineSpan? _buildCode(uh.Element element) {
     state.fontSizeStack.add(FontSize.size2.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
+    if (ret == null) {
+      return null;
+    }
+    state.headingBrNodePassed = true;
     return WidgetSpan(
       child: Card(
         color: Theme.of(context).colorScheme.onSecondary,
@@ -732,16 +786,19 @@ class Muncher {
     );
   }
 
-  InlineSpan _buildDl(uh.Element element) {
+  InlineSpan? _buildDl(uh.Element element) {
     // Skip rate log area.
     if (element.id.startsWith('ratelog_')) {
-      return emptySpan;
+      return null;
     }
     return _munch(element);
   }
 
-  InlineSpan _buildB(uh.Element element) {
+  InlineSpan? _buildB(uh.Element element) {
     final ret = _munch(element);
+    if (ret == null) {
+      return null;
+    }
     return TextSpan(children: [ret]);
   }
 
@@ -749,7 +806,7 @@ class Muncher {
     return const WidgetSpan(child: Divider());
   }
 
-  InlineSpan _buildPre(uh.Element element) {
+  InlineSpan? _buildPre(uh.Element element) {
     // Avoid reset parent's inPre state.
     final alreadyInPre = state.inPre;
     if (!alreadyInPre) {

@@ -8,8 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Fixed
 
-- app: 修复解析html时\<li\>列表元素后缺少换行的问题。
-- app: 修复解析html时\<b\>粗体字后多余换行的问题。
+- 帖子: 依旧是修复了很多多余或缺少的空行。
 
 ### Changed
 
