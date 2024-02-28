@@ -309,13 +309,16 @@ class _PostEditPageState extends State<PostEditPage> {
           IconButton(
             icon: Icon(
               Icons.format_bold_outlined,
-              color:
-                  // FIXME: Update state.
-                  bbcodeController.isBold
-                      ? Theme.of(context).primaryColor
-                      : null,
+              color: bbcodeController.isBold
+                  ? Theme.of(context).primaryColor
+                  : null,
             ),
-            onPressed: () async => bbcodeController.triggerBold(),
+            onPressed: () {
+              // ignore:unnecessary_lambdas
+              setState(() {
+                bbcodeController.triggerBold();
+              });
+            },
           ),
         const Spacer(),
         ElevatedButton.icon(
