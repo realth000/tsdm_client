@@ -17,6 +17,9 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:universal_html/html.dart' as uh;
 
+/// Use an empty span.
+final emptySpan = WidgetSpan(child: Container());
+
 /// Munch the html node [rootElement] and its children nodes into a flutter
 /// widget.
 ///
@@ -149,7 +152,7 @@ class Muncher {
     }
     if (spanList.isEmpty) {
       // Not intend to happen.
-      return const TextSpan();
+      return emptySpan;
     }
     // Do not wrap in another layout when there is only one span.
     if (spanList.length == 1) {
@@ -189,11 +192,7 @@ class Muncher {
               return null;
             }
             state.inRepeatWrapLine = true;
-            // FIXME: ??? Large space in tid 1192348 pid 71962342 when returned
-            // TextSpan is TextSpan() or TextSpan(text: '').
-            //
-            // Temporarily return a space to avoid large space.
-            return const TextSpan(text: ' ');
+            return null;
           }
 
           // Base text style.
@@ -251,7 +250,7 @@ class Muncher {
               ),
             'br' => state.headingBrNodePassed
                 ? const TextSpan(text: '\n')
-                : const TextSpan(),
+                : emptySpan,
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
@@ -464,7 +463,7 @@ class Muncher {
     final lockedArea =
         Locked.fromLockDivNode(element, allowWithPurchase: false);
     if (lockedArea.isNotValid()) {
-      return const TextSpan();
+      return emptySpan;
     }
 
     return TextSpan(
@@ -477,7 +476,7 @@ class Muncher {
 
   InlineSpan _buildReview(uh.Element element) {
     if (element.children.length <= 1) {
-      return const TextSpan();
+      return emptySpan;
     }
     final avatarUrl = element.querySelector('div.psta > a > img')?.imageUrl();
     final name = element.querySelector('div.psti > a')?.firstEndDeepText();
@@ -510,7 +509,7 @@ class Muncher {
     final contentNode = element.querySelector('div.spoiler_content');
     if (title == null || contentNode == null) {
       // Impossible.
-      return const TextSpan();
+      return emptySpan;
     }
     final content = _munch(contentNode);
     return TextSpan(
@@ -610,7 +609,7 @@ class Muncher {
       debug('failed to parse bounty answer: '
           'avatar=$userAvatarUrl, username=$username, '
           'userSpaceUrl=$userSpaceUrl, answer=$answer');
-      return const TextSpan();
+      return emptySpan;
     }
 
     return WidgetSpan(
@@ -736,7 +735,7 @@ class Muncher {
   InlineSpan _buildDl(uh.Element element) {
     // Skip rate log area.
     if (element.id.startsWith('ratelog_')) {
-      return const TextSpan();
+      return emptySpan;
     }
     return _munch(element);
   }
