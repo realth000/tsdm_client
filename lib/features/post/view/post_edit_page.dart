@@ -288,6 +288,264 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(children: ret.insertBetween(sizedBoxW10H10));
   }
 
+  Widget _buildBBCodeEditorControlRow(
+    BuildContext context,
+    PostEditState state,
+  ) {
+    final textItems = [
+      IconButton(
+        icon: Icon(
+          Icons.format_size_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_color_text_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_color_fill_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_bold_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_italic_outlined,
+          color:
+              bbcodeController.isItalic ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerItalic();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_underline_outlined,
+          color: bbcodeController.isUnderline
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerUnderline();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_strikethrough_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+    ];
+
+    final otherItems = [
+      IconButton(
+        icon: Icon(
+          Icons.text_format_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.emoji_emotions_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.link_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.image_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.expand_circle_down_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.lock_outline,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.alternate_email_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_list_bulleted_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_list_numbered_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.table_rows_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+    ];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: textItems),
+        ),
+        SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(children: otherItems),
+        ),
+      ],
+    );
+  }
+
   /// Build the row to control a
   Widget _buildControlRow(BuildContext context, PostEditState state) {
     return Row(
@@ -310,21 +568,6 @@ class _PostEditPageState extends State<PostEditPage> {
               ? () async => _showAdditionalOptionBottomSheet(context, state)
               : null,
         ),
-        if (useExperimentalEditor)
-          IconButton(
-            icon: Icon(
-              Icons.format_bold_outlined,
-              color: bbcodeController.isBold
-                  ? Theme.of(context).primaryColor
-                  : null,
-            ),
-            onPressed: () {
-              // ignore:unnecessary_lambdas
-              setState(() {
-                bbcodeController.triggerBold();
-              });
-            },
-          ),
         const Spacer(),
         ElevatedButton.icon(
           icon: state.status == PostEditStatus.uploading
@@ -460,6 +703,7 @@ class _PostEditPageState extends State<PostEditPage> {
             }
 
             return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
                 // Post data editor.
@@ -493,10 +737,13 @@ class _PostEditPageState extends State<PostEditPage> {
                           },
                         ),
                 ),
+                sizedBoxW5H5,
                 if (useExperimentalEditor)
                   _buildUsingExperimentalEditorHintRow(context),
+                if (useExperimentalEditor)
+                  _buildBBCodeEditorControlRow(context, state),
                 _buildControlRow(context, state),
-              ].insertBetween(sizedBoxW15H15),
+              ],
             );
           },
         ),
