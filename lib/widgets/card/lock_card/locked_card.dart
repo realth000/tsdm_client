@@ -14,10 +14,13 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 /// Widget shows a locked area in `post`.
 class LockedCard extends StatefulWidget {
   /// Constructor.
-  const LockedCard(this.locked, {super.key});
+  const LockedCard(this.locked, {this.elevation, super.key});
 
   /// Locked area model.
   final Locked locked;
+
+  /// Elevation of this card.
+  final double? elevation;
 
   @override
   State<LockedCard> createState() => _LockedCardState();
@@ -183,6 +186,7 @@ class _LockedCardState extends State<LockedCard> {
     }
 
     return Card(
+      elevation: widget.elevation,
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(

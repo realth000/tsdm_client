@@ -12,6 +12,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - WIP: 显示文本样式包括粗体、斜体、下划线、删除线、颜色、背景色。
   - WIP: 支持使用markdown语法书写bbcode（默认关闭）。
   - WIP: 支持引用、表情、图片、网页链接、多级标题、有序/无序列表、代码块、折叠/展开、表格、分隔符。
+- 帖子：解析更多的折叠/展开样式。
+  - 现在支持\<details\> tag。
 
 ### Fixed
 
@@ -19,7 +21,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- app: 从Equatable迁移到dart_mappable。
+- 帖子：嵌套的卡片现在内层比外层高，以作区分。
+- 帖子：更改展开/折叠区域的按钮样式，更明显。
+- internal: 从Equatable迁移到dart_mappable。
 
 ## [0.7.1] - 2024-02-23
 

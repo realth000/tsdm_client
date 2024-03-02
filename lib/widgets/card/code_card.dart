@@ -6,10 +6,15 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 /// Card to display code block, from html node type <div class="blockcode">.
 class CodeCard extends StatelessWidget {
   /// Constructor.
-  const CodeCard({required this.code, super.key});
+  const CodeCard({required this.code, this.elevation, super.key});
 
   /// Code text to show.
   final String code;
+
+  /// Elevation of this card.
+  ///
+  /// Default is 1, equal to default card elevation.
+  final double? elevation;
 
   Future<void> _copyToClipboard(BuildContext context) async {
     await Clipboard.setData(
@@ -30,6 +35,7 @@ class CodeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: elevation,
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(

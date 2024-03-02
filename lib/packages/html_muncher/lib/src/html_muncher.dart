@@ -56,7 +56,7 @@ class MunchState {
   /// User underline.
   bool underline = false;
 
-  /// Add line strikte.
+  /// Add line strike.
   bool lineThrough = false;
 
   /// Align span in center.
@@ -80,6 +80,13 @@ class MunchState {
 
   /// Text alignment.
   TextAlign? textAlign;
+
+  /// Record the elevation.
+  ///
+  /// In some nested cards, elevation can be more than 1.
+  ///
+  /// Default is 0, increase when building in cards.
+  double elevation = 1;
 
   /// All colors currently used.
   ///
@@ -119,6 +126,7 @@ class MunchState {
       ..clear()
       ..addAll(_reservedState!.fontSizeStack);
     tapUrl = _reservedState!.tapUrl;
+    elevation = _reservedState!.elevation;
 
     _reservedState = null;
   }
@@ -274,6 +282,7 @@ class Muncher {
             'b' => _buildB(node),
             'hr' => _buildHr(node),
             'pre' => _buildPre(node),
+            'details' => _buildDetails(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -479,8 +488,17 @@ class Muncher {
 
   InlineSpan? _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
-    state.headingBrNodePassed = true;
-    return WidgetSpan(child: CodeCard(code: text));
+    state
+      ..headingBrNodePassed = true
+      ..elevation += 1;
+    final ret = WidgetSpan(
+      child: CodeCard(
+        code: text,
+        elevation: state.elevation,
+      ),
+    );
+    state.elevation -= 1;
+    return ret;
   }
 
   InlineSpan? _buildLockedArea(uh.Element element) {
@@ -490,13 +508,22 @@ class Muncher {
       return null;
     }
 
-    state.headingBrNodePassed = true;
-    return TextSpan(
+    state
+      ..headingBrNodePassed = true
+      ..elevation += 1;
+    final ret = TextSpan(
       children: [
-        WidgetSpan(child: LockedCard(lockedArea)),
+        WidgetSpan(
+          child: LockedCard(
+            lockedArea,
+            elevation: state.elevation,
+          ),
+        ),
         const TextSpan(text: '\n'),
       ],
     );
+    state.elevation -= 1;
+    return ret;
   }
 
   InlineSpan? _buildReview(uh.Element element) {
@@ -536,7 +563,10 @@ class Muncher {
       // Impossible.
       return null;
     }
+    state.elevation += 1;
+    final elevation = state.elevation;
     final content = _munch(contentNode);
+    state.elevation -= 1;
     if (content == null) {
       return null;
     }
@@ -545,8 +575,9 @@ class Muncher {
       children: [
         WidgetSpan(
           child: SpoilerCard(
-            title: title,
+            title: TextSpan(text: title),
             content: content,
+            elevation: elevation,
           ),
         ),
         const TextSpan(text: '\n'),
@@ -773,9 +804,12 @@ class Muncher {
     if (ret == null) {
       return null;
     }
-    state.headingBrNodePassed = true;
-    return WidgetSpan(
+    state
+      ..headingBrNodePassed = true
+      ..elevation += 1;
+    final ret2 = WidgetSpan(
       child: Card(
+        elevation: state.elevation,
         color: Theme.of(context).colorScheme.onSecondary,
         shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(5)),
@@ -784,6 +818,8 @@ class Muncher {
         child: RichText(text: ret),
       ),
     );
+    state.elevation -= 1;
+    return ret2;
   }
 
   InlineSpan? _buildDl(uh.Element element) {
@@ -817,6 +853,36 @@ class Muncher {
       state.inPre = false;
     }
     return ret;
+  }
+
+  /// Build a detail card here.
+  InlineSpan? _buildDetails(uh.Element element) {
+    final summary = element.children.elementAtOrNull(0);
+    state.elevation += 1;
+    final dataSpanList =
+        element.children.skip(1).map(_munch).whereType<InlineSpan>().toList();
+    state.elevation -= 1;
+    if (summary == null || dataSpanList.isEmpty) {
+      return null;
+    }
+
+    final summarySpan = _munch(summary);
+    if (summarySpan == null) {
+      return null;
+    }
+
+    return TextSpan(
+      children: [
+        WidgetSpan(
+          child: SpoilerCard(
+            title: summarySpan,
+            content: TextSpan(children: dataSpanList.toList()),
+            elevation: state.elevation,
+          ),
+        ),
+        const TextSpan(text: '\n'),
+      ],
+    );
   }
 
   /*                Setup Functions                      */

@@ -10,13 +10,21 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 /// expand less.
 class SpoilerCard extends StatefulWidget {
   /// Constructor.
-  const SpoilerCard({required this.title, required this.content, super.key});
+  const SpoilerCard({
+    required this.title,
+    required this.content,
+    this.elevation,
+    super.key,
+  });
 
   /// Title of this expand more/less area.
-  final String title;
+  final InlineSpan title;
 
   /// Content to show when expanded.
   final InlineSpan content;
+
+  /// Elevation of this card.
+  final double? elevation;
 
   @override
   State<SpoilerCard> createState() => _SpoilerCardState();
@@ -28,16 +36,20 @@ class _SpoilerCardState extends State<SpoilerCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: widget.elevation,
       child: Padding(
         padding: edgeInsetsL15T15R15B15,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(widget.title),
+            RichText(text: widget.title),
             SizedBox(
               width: sizeButtonInCardMinWidth,
-              child: ElevatedButton(
-                child: Text(
+              child: FilledButton.icon(
+                icon: _visible
+                    ? const Icon(Icons.expand_less_outlined)
+                    : const Icon(Icons.expand_more_outlined),
+                label: Text(
                   _visible
                       ? context.t.spoilerCard.expandLess
                       : context.t.spoilerCard.expandMore,
