@@ -104,6 +104,10 @@
     "failedToDownloadDialog": {
       "title": "下载失败",
       "description": "没有找到适合当前系统的安装包"
+    },
+    "fullChangelogDialog": {
+      "title": "更新历史",
+      "loading": "加载中"
     }
   },
   "loginPage": {

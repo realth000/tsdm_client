@@ -104,6 +104,10 @@
     "failedToDownloadDialog": {
       "title": "下載失敗",
       "description": "沒有找到適合目前系統的安裝套件"
+    },
+    "fullChangelogDialog": {
+      "title": "更新歷史",
+      "loading": "載入中"
     }
   },
   "loginPage": {

@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - WIP: 支持引用、表情、图片、网页链接、多级标题、有序/无序列表、代码块、折叠/展开、表格、分隔符。
 - 帖子：解析更多的折叠/展开样式。
   - 现在支持\<details\> tag。
+- 更新：更新页面可查看完整更新历史。
+  - 右上角按钮。
 
 ### Fixed
 

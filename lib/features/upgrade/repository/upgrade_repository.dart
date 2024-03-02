@@ -1,11 +1,16 @@
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
+
+const _rawChangelogUrl =
+    'https://raw.githubusercontent.com/realth000/tsdm_client/master/CHANGELOG.md';
 
 /// Repository of upgrading the app.
 class UpgradeRepository {
@@ -71,6 +76,19 @@ class UpgradeRepository {
         // downloadProgress = ((recv / total) * 100).toStringAsFixed(0);
       },
     );
+  }
+
+  /// Fetch the full changelog of the app.
+  Future<String?> fetchChangelog() async {
+    final netClient = NetClientProvider(disableCookie: true);
+    try {
+      final resp = await netClient.get(_rawChangelogUrl);
+      final data = resp.data as String;
+      return data;
+    } on DioException catch (e) {
+      debug('failed to load raw changelog: $e');
+    }
+    return null;
   }
 
   /// Dispose the stream.

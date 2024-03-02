@@ -36,6 +36,7 @@ dependencies:
   flutter_bloc: ^8.1.4
   flutter_localizations:
     sdk: flutter
+  flutter_markdown: ^0.6.20+1
   font_awesome_flutter: ^10.7.0
   get_it: ^7.6.7
   gitsumu: ^0.3.0

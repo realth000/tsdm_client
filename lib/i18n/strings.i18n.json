@@ -104,6 +104,10 @@
     "failedToDownloadDialog": {
       "title": "Download Failed",
       "description": "No package suitable for the current system found"
+    },
+    "fullChangelogDialog": {
+      "title": "Changelog",
+      "loading": "Loading"
     }
   },
   "loginPage": {

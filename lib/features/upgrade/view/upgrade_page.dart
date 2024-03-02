@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/list.dart';
@@ -22,6 +23,9 @@ class UpgradePage extends StatefulWidget {
 }
 
 class _UpgradePageState extends State<UpgradePage> {
+  /// Flag indicating loading full changelog or not.
+  bool loadingChangelog = false;
+
   Widget buildReleaseNotesCard(BuildContext context, UpgradeState state) {
     return Card(
       child: Padding(
@@ -155,6 +159,72 @@ class _UpgradePageState extends State<UpgradePage> {
               appBar: AppBar(
                 title: Text(context.t.upgradePage.title),
                 actions: [
+                  // Changelog
+                  IconButton(
+                    icon: loadingChangelog
+                        ? sizedCircularProgressIndicator
+                        : const Icon(Icons.update_outlined),
+                    onPressed: () async {
+                      // FIXME: Do NOT use repository directly.
+                      // Here use UpgradeRepository directly to avoid updating
+                      // state as user may trigger show dialog when upgrade
+                      // is processing.
+                      final repo =
+                          RepositoryProvider.of<UpgradeRepository>(context);
+                      setState(() {
+                        loadingChangelog = true;
+                      });
+                      final changelogData = await repo.fetchChangelog();
+                      if (!context.mounted) {
+                        return;
+                      }
+                      if (changelogData == null) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(context.t.general.failedToLoad),
+                          ),
+                        );
+                        setState(() {
+                          loadingChangelog = false;
+                        });
+                        return;
+                      }
+                      await showDialog<void>(
+                        context: context,
+                        builder: (context) {
+                          final size = MediaQuery.of(context).size;
+                          return AlertDialog(
+                            scrollable: true,
+                            title: Text(
+                              context.t.upgradePage.fullChangelogDialog.title,
+                            ),
+                            content: SizedBox(
+                              width: size.width * 0.8,
+                              height: size.height * 0.8,
+                              child: ScrollConfiguration(
+                                behavior: ScrollConfiguration.of(context)
+                                    .copyWith(scrollbars: false),
+                                child: Markdown(
+                                  data: changelogData,
+                                ),
+                              ),
+                            ),
+                            actions: [
+                              TextButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: Text(context.t.general.ok),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      setState(() {
+                        loadingChangelog = false;
+                      });
+                    },
+                  ),
                   IconButton(
                     icon: const Icon(Icons.launch_outlined),
                     onPressed: () async {
