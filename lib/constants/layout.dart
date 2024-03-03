@@ -1,5 +1,14 @@
 import 'package:flutter/material.dart';
 
+/// Duration 100 milliseconds.
+const animateDuration100 = Duration(milliseconds: 100);
+
+/// Duration 200 milliseconds.
+const animateDuration200 = Duration(milliseconds: 200);
+
+/// Duration 500 milliseconds.
+const animateDuration500 = Duration(milliseconds: 500);
+
 /// Min button width of button in a card in post.
 ///
 /// Including LockedCard.

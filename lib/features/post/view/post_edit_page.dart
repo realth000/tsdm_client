@@ -15,6 +15,8 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
+import 'package:tsdm_client/widgets/scroll_behavior.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -100,6 +102,11 @@ class _PostEditPageState extends State<PostEditPage> {
   ///
   /// This flag is for testing only and SHOULD remove before next release.
   bool useExperimentalEditor = false;
+
+  /// Show text attribute control button or not.
+  bool showTextAttributeButtons = false;
+
+  final focusNode = FocusNode();
 
   /// Key of the form.
   final formKey = GlobalKey<FormState>();
@@ -288,118 +295,21 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(children: ret.insertBetween(sizedBoxW10H10));
   }
 
-  Widget _buildBBCodeEditorControlRow(
+  Widget _buildEditorControlRow(
     BuildContext context,
     PostEditState state,
   ) {
-    final textItems = [
-      IconButton(
-        icon: Icon(
-          Icons.format_size_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_color_text_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_color_fill_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_bold_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_italic_outlined,
-          color:
-              bbcodeController.isItalic ? Theme.of(context).primaryColor : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerItalic();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_underline_outlined,
-          color: bbcodeController.isUnderline
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerUnderline();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_strikethrough_outlined,
-          color: bbcodeController.isStrikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-    ];
-
     final otherItems = [
       IconButton(
         icon: Icon(
           Icons.text_format_outlined,
-          color: bbcodeController.isStrikethrough
-              ? Theme.of(context).primaryColor
-              : null,
+          color:
+              showTextAttributeButtons ? Theme.of(context).primaryColor : null,
         ),
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
-            bbcodeController.triggerStrikethrough();
+            showTextAttributeButtons = !showTextAttributeButtons;
           });
         },
       ),
@@ -530,19 +440,123 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
     ];
+    return ScrollConfiguration(
+      behavior: AllDraggableScrollBehavior(),
+      child: SingleChildScrollView(
+        primary: false,
+        scrollDirection: Axis.horizontal,
+        child: Row(children: otherItems),
+      ),
+    );
+  }
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(children: textItems),
+  Widget _buildEditorTextControlRow(
+    BuildContext context,
+    PostEditState state,
+  ) {
+    final textItems = [
+      IconButton(
+        icon: Icon(
+          Icons.format_size_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
         ),
-        SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(children: otherItems),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_color_text_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
         ),
-      ],
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_color_fill_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_bold_outlined,
+          color:
+              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerBold();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_italic_outlined,
+          color:
+              bbcodeController.isItalic ? Theme.of(context).primaryColor : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerItalic();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_underline_outlined,
+          color: bbcodeController.isUnderline
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerUnderline();
+          });
+        },
+      ),
+      IconButton(
+        icon: Icon(
+          Icons.format_strikethrough_outlined,
+          color: bbcodeController.isStrikethrough
+              ? Theme.of(context).primaryColor
+              : null,
+        ),
+        onPressed: () {
+          // ignore:unnecessary_lambdas
+          setState(() {
+            bbcodeController.triggerStrikethrough();
+          });
+        },
+      ),
+    ];
+
+    return ScrollConfiguration(
+      behavior: AllDraggableScrollBehavior(),
+      child: SingleChildScrollView(
+        primary: false,
+        scrollDirection: Axis.horizontal,
+        child: Row(children: textItems),
+      ),
     );
   }
 
@@ -562,6 +576,22 @@ class _PostEditPageState extends State<PostEditPage> {
             });
           },
         ),
+        AnimatedVisibility(
+          visible: useExperimentalEditor,
+          child: IconButton(
+            icon: Icon(
+              Icons.info_outline,
+              color: Theme.of(context).primaryColor,
+            ),
+            onPressed: () async {
+              await showMessageSingleButtonDialog(
+                context: context,
+                title: context.t.bbcodeEditor.experimentalInfoTitle,
+                message: context.t.bbcodeEditor.experimentalInfoDetail,
+              );
+            },
+          ),
+        ),
         IconButton(
           icon: const Icon(Icons.settings_outlined),
           onPressed: additionalOptionsMap != null
@@ -569,11 +599,8 @@ class _PostEditPageState extends State<PostEditPage> {
               : null,
         ),
         const Spacer(),
-        ElevatedButton.icon(
-          icon: state.status == PostEditStatus.uploading
-              ? sizedCircularProgressIndicator
-              : const Icon(Icons.send_outlined),
-          label: Text(context.t.postEditPage.saveAndBack),
+        ElevatedButton(
+          // label: Text(context.t.postEditPage.saveAndBack),
           onPressed: state.status == PostEditStatus.uploading
               ? null
               : () {
@@ -598,27 +625,10 @@ class _PostEditPageState extends State<PostEditPage> {
                   // TODO: Handle creating a post.
                   // TODO: Handle creating a thread.
                 },
+          child: state.status == PostEditStatus.uploading
+              ? sizedCircularProgressIndicator
+              : const Icon(Icons.send_outlined),
         ),
-      ],
-    );
-  }
-
-  Widget _buildUsingExperimentalEditorHintRow(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextButton.icon(
-          icon: const Icon(Icons.info_outline),
-          label: Text(context.t.bbcodeEditor.experimentalInfo),
-          onPressed: () async {
-            await showMessageSingleButtonDialog(
-              context: context,
-              title: context.t.bbcodeEditor.experimentalInfoTitle,
-              message: context.t.bbcodeEditor.experimentalInfoDetail,
-            );
-          },
-        ),
-        const Spacer(),
       ],
     );
   }
@@ -710,12 +720,14 @@ class _PostEditPageState extends State<PostEditPage> {
                 Expanded(
                   child: useExperimentalEditor
                       ? InputDecorator(
+                          isFocused: focusNode.hasFocus,
                           decoration: InputDecoration(
                             labelText: context.t.postEditPage.body,
                             alignLabelWithHint: true,
                           ),
                           child: BBCodeEditor(
                             controller: bbcodeController,
+                            focusNode: focusNode,
                           ),
                         )
                       : TextFormField(
@@ -738,10 +750,14 @@ class _PostEditPageState extends State<PostEditPage> {
                         ),
                 ),
                 sizedBoxW5H5,
-                if (useExperimentalEditor)
-                  _buildUsingExperimentalEditorHintRow(context),
-                if (useExperimentalEditor)
-                  _buildBBCodeEditorControlRow(context, state),
+                AnimatedVisibility(
+                  visible: useExperimentalEditor && showTextAttributeButtons,
+                  child: _buildEditorTextControlRow(context, state),
+                ),
+                AnimatedVisibility(
+                  visible: useExperimentalEditor,
+                  child: _buildEditorControlRow(context, state),
+                ),
                 _buildControlRow(context, state),
               ],
             );
