@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -454,45 +456,71 @@ class _PostEditPageState extends State<PostEditPage> {
     BuildContext context,
     PostEditState state,
   ) {
+    final foregroundColor = bbcodeController.getForegroundColor;
+    final backgroundColor = bbcodeController.getBackgroundColor;
+    final fontSize = bbcodeController.getFontSize;
+
     final textItems = [
-      IconButton(
-        icon: Icon(
-          Icons.format_size_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+      // Font size.
+      Badge(
+        isLabelVisible: fontSize != null,
+        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
+        label: Text(
+          '$fontSize',
+          style: TextStyle(color: Theme.of(context).primaryColor),
         ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
+        child: IconButton(
+          icon: Icon(
+            Icons.format_size_outlined,
+            color: fontSize != null ? Theme.of(context).primaryColor : null,
+          ),
+          onPressed: () {
+            // ignore:unnecessary_lambdas
+            setState(() {
+              bbcodeController.setFontSize(Random().nextInt(6) + 1);
+            });
+          },
+        ),
       ),
-      IconButton(
-        icon: Icon(
-          Icons.format_color_text_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+      // Foreground color.
+      Badge(
+        isLabelVisible: foregroundColor != null,
+        backgroundColor: foregroundColor,
+        child: IconButton(
+          icon: Icon(
+            Icons.format_color_text_outlined,
+            color:
+                foregroundColor != null ? Theme.of(context).primaryColor : null,
+          ),
+          onPressed: () {
+            setState(() {
+              // TODO: Pick foreground color.
+              bbcodeController.setForegroundColor(
+                Colors.primaries[Random().nextInt(Colors.primaries.length - 1)],
+              );
+            });
+          },
         ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
       ),
-      IconButton(
-        icon: Icon(
-          Icons.format_color_fill_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+      Badge(
+        isLabelVisible: backgroundColor != null,
+        backgroundColor: backgroundColor,
+        child: IconButton(
+          icon: Icon(
+            Icons.format_color_fill_outlined,
+            color:
+                backgroundColor != null ? Theme.of(context).primaryColor : null,
+          ),
+          onPressed: () {
+            // ignore:unnecessary_lambdas
+            setState(() {
+              // TODO: Pick background color.
+              bbcodeController.setBackgroundColor(
+                Colors.primaries[Random().nextInt(Colors.primaries.length - 1)],
+              );
+            });
+          },
         ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
       ),
       IconButton(
         icon: Icon(
