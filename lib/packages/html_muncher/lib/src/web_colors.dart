@@ -1,7 +1,6 @@
 import 'dart:ui';
 
-import 'package:slang/builder/model/enums.dart';
-import 'package:slang/builder/utils/string_extensions.dart';
+import 'package:change_case/change_case.dart';
 
 // ignore_for_file: public_member_api_docs
 
@@ -159,7 +158,7 @@ enum WebColors {
   const WebColors(this.color);
 
   factory WebColors.fromString(String? c) {
-    return switch (c?.toCase(CaseStyle.camel)) {
+    return switch (c?.toCamelCase()) {
       'aliceBlue' => WebColors.aliceBlue,
       'antiqueWhite' => WebColors.antiqueWhite,
       'aqua' => WebColors.aqua,

@@ -145,6 +145,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "3.0.1"
+  change_case:
+    dependency: "direct main"
+    description:
+      name: change_case
+      sha256: "47c48c36f95f20c6d0ba03efabceff261d05026cca322cc2c4c01c343371b5bb"
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "2.0.1"
   characters:
     dependency: transitive
     description:
@@ -366,10 +374,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: "4e42aacde3b993c5947467ab640882c56947d9d27342a5b6f2895b23956954a6"
+      sha256: caa6bc229eab3e32eb2f37b53a5f9d22a6981474afd210c512a7546c1e1a04f6
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "6.1.1"
+    version: "6.2.0"
   fixnum:
     dependency: transitive
     description:
@@ -1054,26 +1062,26 @@ packages:
     dependency: "direct main"
     description:
       name: slang
-      sha256: "95dee03eb3fd1b36c99f365d4eace270a0d83c6148f8e7d1057806ef60cfaf12"
+      sha256: "5e08ac915ac27a3508863f37734280d30c3713d56746cd2e4a5da77413da4b95"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.29.0"
+    version: "3.30.1"
   slang_build_runner:
     dependency: "direct dev"
     description:
       name: slang_build_runner
-      sha256: "929ea4bf24f11e09afd2b01abd658f550da7eb4039ae83d91bc220f942e18cb3"
+      sha256: "2daff2deb2ab8d557a2e7de5405c0ee1376afba5d0231570c2d2c3c56da8a692"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.29.0"
+    version: "3.30.0"
   slang_flutter:
     dependency: "direct main"
     description:
       name: slang_flutter
-      sha256: "34c7cf297c608e24d3957a29e75c6790f4dbbfb1a4783d261a6c1e33ede7ad0f"
+      sha256: "9ee040b0d364d3a4d692e4af536acff6ef513870689403494ebc6d59b0dccea6"
       url: "https://pub.flutter-io.cn"
     source: hosted
-    version: "3.29.0"
+    version: "3.30.0"
   source_gen:
     dependency: transitive
     description:
