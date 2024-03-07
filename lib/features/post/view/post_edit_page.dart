@@ -318,7 +318,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.emoji_emotions_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -332,7 +332,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.link_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -346,7 +346,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.image_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -360,7 +360,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.expand_circle_down_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -374,7 +374,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.lock_outline,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -388,7 +388,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.alternate_email_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -402,7 +402,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.format_list_bulleted_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -416,7 +416,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.format_list_numbered_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -430,7 +430,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.table_rows_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -456,9 +456,9 @@ class _PostEditPageState extends State<PostEditPage> {
     BuildContext context,
     PostEditState state,
   ) {
-    final foregroundColor = bbcodeController.getForegroundColor;
-    final backgroundColor = bbcodeController.getBackgroundColor;
-    final fontSize = bbcodeController.getFontSize;
+    final foregroundColor = bbcodeController.foregroundColor;
+    final backgroundColor = bbcodeController.backgroundColor;
+    final fontSize = bbcodeController.fontSize;
 
     final textItems = [
       // Font size.
@@ -474,12 +474,14 @@ class _PostEditPageState extends State<PostEditPage> {
             Icons.format_size_outlined,
             color: fontSize != null ? Theme.of(context).primaryColor : null,
           ),
-          onPressed: () {
-            // ignore:unnecessary_lambdas
-            setState(() {
-              bbcodeController.setFontSize(Random().nextInt(6) + 1);
-            });
-          },
+          onPressed: bbcodeController.collapsed
+              ? () {
+                  // ignore:unnecessary_lambdas
+                  setState(() {
+                    bbcodeController.setFontSizeLevel(Random().nextInt(6) + 1);
+                  });
+                }
+              : null,
         ),
       ),
       // Foreground color.
@@ -525,8 +527,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.format_bold_outlined,
-          color:
-              bbcodeController.isBold ? Theme.of(context).primaryColor : null,
+          color: bbcodeController.bold ? Theme.of(context).primaryColor : null,
         ),
         onPressed: () {
           // ignore:unnecessary_lambdas
@@ -539,7 +540,7 @@ class _PostEditPageState extends State<PostEditPage> {
         icon: Icon(
           Icons.format_italic_outlined,
           color:
-              bbcodeController.isItalic ? Theme.of(context).primaryColor : null,
+              bbcodeController.italic ? Theme.of(context).primaryColor : null,
         ),
         onPressed: () {
           // ignore:unnecessary_lambdas
@@ -551,7 +552,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.format_underline_outlined,
-          color: bbcodeController.isUnderline
+          color: bbcodeController.underline
               ? Theme.of(context).primaryColor
               : null,
         ),
@@ -565,7 +566,7 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.format_strikethrough_outlined,
-          color: bbcodeController.isStrikethrough
+          color: bbcodeController.strikethrough
               ? Theme.of(context).primaryColor
               : null,
         ),

@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -11,6 +12,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   // Bloc.observer = const Observer();
   await initProviders();
+  await BBCodeEditor.initialize();
 
   final settingsLocale = getIt.get<SettingsProvider>().getLocale();
   final locale =
