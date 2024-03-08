@@ -155,7 +155,7 @@ class _PostEditPageState extends State<PostEditPage> {
   // BBCode text attribute status.
   Color? foregroundColor;
   Color? backgroundColor;
-  int? fontSize;
+  double? fontSize;
 
   /// Show a modal bottom sheet to let user select a thread type.
   ///
@@ -476,13 +476,13 @@ class _PostEditPageState extends State<PostEditPage> {
             color: fontSize != null ? Theme.of(context).primaryColor : null,
           ),
           onPressed: bbcodeController.collapsed
-              ? () {
+              ? null
+              : () {
                   // ignore:unnecessary_lambdas
                   setState(() {
                     bbcodeController.setFontSizeLevel(Random().nextInt(6) + 1);
                   });
-                }
-              : null,
+                },
         ),
       ),
       // Foreground color.
