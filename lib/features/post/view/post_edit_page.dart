@@ -152,6 +152,11 @@ class _PostEditPageState extends State<PostEditPage> {
 
   final bbcodeController = BBCodeEditorController();
 
+  // BBCode text attribute status.
+  Color? foregroundColor;
+  Color? backgroundColor;
+  int? fontSize;
+
   /// Show a modal bottom sheet to let user select a thread type.
   ///
   /// Note that the content data [state.content.threadTypeList] MUST be
@@ -456,10 +461,6 @@ class _PostEditPageState extends State<PostEditPage> {
     BuildContext context,
     PostEditState state,
   ) {
-    final foregroundColor = bbcodeController.foregroundColor;
-    final backgroundColor = bbcodeController.backgroundColor;
-    final fontSize = bbcodeController.fontSize;
-
     final textItems = [
       // Font size.
       Badge(
@@ -794,6 +795,31 @@ class _PostEditPageState extends State<PostEditPage> {
         ),
       ),
     );
+  }
+
+  void updateBBCodeStatus() {
+    // Only update text style attributes here.
+    if (!showTextAttributeButtons) {
+      return;
+    }
+
+    setState(() {
+      foregroundColor = bbcodeController.foregroundColor;
+      backgroundColor = bbcodeController.backgroundColor;
+      fontSize = bbcodeController.fontSize;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    bbcodeController.addListener(updateBBCodeStatus);
+  }
+
+  @override
+  void dispose() {
+    bbcodeController.removeListener(updateBBCodeStatus);
+    super.dispose();
   }
 
   @override
