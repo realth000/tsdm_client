@@ -149,7 +149,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       emit(s);
     } on HttpHandshakeFailedException catch (e) {
       debug('failed to fetch dom: $e');
-      rethrow;
+      emit(state.copyWith(status: HomepageStatus.failed));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to fetch dom: $e');
+      emit(state.copyWith(status: HomepageStatus.failed));
     }
   }
 
