@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
@@ -46,6 +47,9 @@ class App extends StatelessWidget {
         ),
         RepositoryProvider<ForumRepository>(
           create: (_) => ForumRepository(),
+        ),
+        RepositoryProvider<EditorRepository>(
+          create: (_) => EditorRepository()..loadEmojiFromServer(),
         ),
       ],
       child: BlocProvider(
