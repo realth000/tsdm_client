@@ -203,12 +203,13 @@ class ImageCacheProvider {
   }
 
   /// Get the cached file of emoji with specified [groupId] and [id].
-  Future<Uint8List> getEmojiCache(String groupId, String id) async {
+  Uint8List? getEmojiCacheSync(String groupId, String id) {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     if (!cacheFile.existsSync()) {
-      return Future.error('$cacheFile cache file not exists');
+      debug('$cacheFile cache file not exists');
+      return null;
     }
-    return cacheFile.readAsBytes();
+    return cacheFile.readAsBytesSync();
   }
 
   /// Clear all emoji cache files.

@@ -404,6 +404,7 @@
     "experimentalInfoTitle": "Experimental BBCode Editor",
     "experimentalInfoDetail": "This bbcode editor supports WYSIWYG and provides convenient ways to add text styles and other rich text components.\nIt is still in experimental state which means: Already tested but may not behave as expected.",
     "emoji": {
+      "title": "Emoji",
       "downloading": "Downloading emoji (10MB), this may take a while..."
     }
   }

@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
@@ -25,14 +27,43 @@ class _EmojiBottomSheet extends StatefulWidget {
 }
 
 class _EmojiBottomSheetState extends State<_EmojiBottomSheet> {
+  /// When calling this function, assume all emoji is available.
+  Widget _buildEmojiBody(BuildContext context, EmojiState state) {
+    final emojiGroupList = state.emojiGroupList!;
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 4,
+        mainAxisExtent: 40,
+      ),
+      itemBuilder: (context, index) {
+        final data = getIt.get<ImageCacheProvider>().getEmojiCacheSync(
+              emojiGroupList.first.id,
+              emojiGroupList.first.emojiList[index].id,
+            );
+        if (data == null) {
+          // TODO: Handle cache missing.
+          // getIt.get<EditorRepository>().loadSingleEmoji()
+        }
+        return Image.memory(data!);
+      },
+      itemCount: emojiGroupList.first.emojiList.length,
+    );
+  }
+
   Widget _buildBody(BuildContext context, EmojiState state) {
-    return const Column(
+    return Column(
       children: [
-        SizedBox(height: 50, child: Center(child: Text('emoji'))),
-        sizedBoxW10H10,
-        Expanded(
-          child: Text('all emoji'),
+        SizedBox(
+          height: 50,
+          child: Center(
+            child: Text(
+              context.t.bbcodeEditor.emoji.title,
+            ),
+          ),
         ),
+        sizedBoxW10H10,
+        _buildEmojiBody(context, state),
       ],
     );
   }

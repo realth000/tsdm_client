@@ -215,6 +215,15 @@ final class EditorRepository {
     return true;
   }
 
+  /// Load single emoji data from server.
+  ///
+  /// Only use this when single emoji cache is missing.
+  ///
+  /// For large mount of emojis, use [loadEmojiFromServer] instead.
+  Future<void> loadSingleEmoji(String groupId, String id) async {
+    // TODO:
+  }
+
   /// Load all emoji data from
   /// * cache: if have.
   /// * server: when cache is invalid.
