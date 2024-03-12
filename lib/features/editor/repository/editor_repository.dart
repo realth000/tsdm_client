@@ -1,8 +1,10 @@
 import 'dart:io';
 
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/features/editor/models/models.dart';
+import 'package:tsdm_client/features/editor/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
@@ -141,15 +143,89 @@ final class EditorRepository {
     return emojiGroupMap.values.toList();
   }
 
-  /// Load all emoji from server through [_emojiInfoUrl].
+  Future<bool> _generateDownloadEmojiTask(
+    NetClientProvider netClient,
+    ImageCacheProvider cacheProvider,
+    EmojiGroup emojiGroup,
+    Emoji emoji,
+  ) async {
+    var retryMaxTimes = 3;
+    // Retry until success.
+    while (true) {
+      if (retryMaxTimes <= 0) {
+        debug('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
+            'exceed max retry times');
+        return false;
+      }
+      final resp = await netClient.getImage(emoji.url);
+      if (resp.statusCode != HttpStatus.ok) {
+        await Future.delayed(const Duration(milliseconds: 200), () {});
+        retryMaxTimes -= 1;
+        continue;
+      }
+      await cacheProvider.updateEmojiCache(
+        emojiGroup.id,
+        emoji.id,
+        resp.data as List<int>,
+      );
+      break;
+    }
+    return true;
+  }
+
+  /// Force load all emoji from server through [_emojiInfoUrl].
   ///
   /// No cookie needed in this process.
-  Future<void> loadEmojiFromServer() async {
-    final resp = await getIt.get<NetClientProvider>().get(_emojiInfoUrl);
+  ///
+  /// Return false when single emoji file exceed max retry times.
+  Future<bool> loadEmojiFromServer() async {
+    debug('load emoji from server');
+    // TODO: Use injected net client.
+    final netClient = NetClientProvider(disableCookie: true);
+    final resp = await netClient.get(_emojiInfoUrl);
     if (resp.statusCode != HttpStatus.ok) {
       debug('failed to load emoji info: StatusCode=${resp.statusCode}');
-      return;
+      return false;
     }
     emojiGroupList = _parseEmojiInfo(resp.data as String);
+    final cacheProvider = getIt.get<ImageCacheProvider>();
+    // Save emoji info.
+    await cacheProvider.saveEmojiInfo(emojiGroupList!);
+    // TODO: Download emoji in parallel.
+    // Download emoji data.
+    for (final emojiGroup in emojiGroupList!) {
+      final downloadList = emojiGroup.emojiList.map(
+        (e) =>
+            _generateDownloadEmojiTask(netClient, cacheProvider, emojiGroup, e),
+      );
+      debug('download for emoji group: ${emojiGroup.id}');
+      await Future.wait(downloadList);
+    }
+    return true;
+  }
+
+  /// Load all emoji data from
+  /// * cache: if have.
+  /// * server: when cache is invalid.
+  ///
+  /// Only load the emoji info, do not load the emoji image data.
+  ///
+  /// Currently there there is no validation on emoji and emoji groups.
+  ///
+  /// # Sealed Exceptions
+  ///
+  /// * **[EmojiRelatedException]** when failed to load emoji.
+  Future<void> loadEmojiFromCacheOrServer() async {
+    final cacheProvider = getIt.get<ImageCacheProvider>();
+    if (await cacheProvider.validateEmojiCache()) {
+      // Have valid emoji cache.
+      emojiGroupList = await cacheProvider.loadEmojiInfo();
+    } else {
+      // Do not have valid emoji cache, reload from server.
+      final ret = await loadEmojiFromServer();
+      if (!ret) {
+        throw EmojiLoadFailedException();
+      }
+    }
   }
 }

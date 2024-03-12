@@ -10,6 +10,7 @@ import 'package:universal_html/html.dart' as uh;
 
 part '../../generated/shared/models/models.mapper.dart';
 part 'css_types.dart';
+part 'emoji.dart';
 part 'forum.dart';
 part 'forum_group.dart';
 part 'locked.dart';

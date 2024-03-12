@@ -4,8 +4,11 @@ import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/image_cache.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/utils/debug.dart';
 
 /// Directory to save common image cache.
 late final Directory _imageCacheDirectory;
@@ -35,12 +38,16 @@ late final Directory _imageCacheDirectory;
 /// https://tsdm39.com/data/cache/common_smilies_var.js?y1Z
 late final Directory _emojiCacheDirectory;
 
+/// Info json file contains all emoji group info.
+late final File _emojiCacheInfoFile;
+
 /// Init settings, must call before start.
 Future<void> initCache() async {
   _imageCacheDirectory =
       Directory('${(await getApplicationCacheDirectory()).path}/images');
   _emojiCacheDirectory =
       Directory('${(await getApplicationCacheDirectory()).path}/emoji');
+  _emojiCacheInfoFile = File('${_emojiCacheDirectory.path}/emoji.json');
 
   if (!_imageCacheDirectory.existsSync()) {
     await _imageCacheDirectory.create(recursive: true);
@@ -129,6 +136,61 @@ class ImageCacheProvider {
   }
 
   ///////////////////////// Emoji Cache /////////////////////////
+
+  /// Validate emoji cache.
+  ///
+  /// * Check the existence of cache folder and cache info file.
+  /// * Check the all emojis described in emoji info file.
+  ///
+  /// # Return Value
+  ///
+  /// Return true when passed validation.
+  /// Return false when failed the validation.
+  Future<bool> validateEmojiCache() async {
+    // Check cache directory and emoji info file exists or not.
+    if (!_emojiCacheDirectory.existsSync() ||
+        !_emojiCacheInfoFile.existsSync()) {
+      return false;
+    }
+    try {
+      final info = EmojiGroupListMapper.fromJson(
+        await _emojiCacheInfoFile.readAsString(),
+      );
+      // Validate all cached emoji files exists.
+      final validateResult = info.validateCache(_emojiCacheDirectory.path);
+      return validateResult;
+    } catch (e) {
+      debug('validate emoji cache failed: invalid emoji info: $e');
+      return false;
+    }
+  }
+
+  /// Save the emoji info.
+  ///
+  /// This is useful when reloading the emoji from cache.
+  Future<void> saveEmojiInfo(List<EmojiGroup> emojiGroupList) async {
+    final jsonData = EmojiGroupList(emojiGroupList).toJson();
+    await _emojiCacheInfoFile.create(recursive: true);
+    await _emojiCacheInfoFile.writeAsString(jsonData);
+  }
+
+  /// Load all emoji data from cache.
+  ///
+  ///
+  /// Return null if no such cached emoji info or info is invalid.
+  Future<List<EmojiGroup>?> loadEmojiInfo() async {
+    if (!_emojiCacheInfoFile.existsSync()) {
+      return null;
+    }
+    try {
+      final info =
+          EmojiGroupListMapper.fromJson(_emojiCacheInfoFile.readAsStringSync());
+      return info.emojiGroupList;
+    } catch (e) {
+      debug('failed to load emoji info when decoding json: $e');
+      return null;
+    }
+  }
 
   /// Emoji cache is save as jpg file no matter the real content.
   String _formatEmojiCachePath(String groupId, String id) =>
