@@ -136,7 +136,7 @@ final class EditorRepository {
           );
         }
         emojiGroupMap[groupId] = emojiGroupMap[groupId]!.copyWith(
-          emojiList: emojiList,
+          emojiList: [...emojiGroupMap[groupId]!.emojiList, ...emojiList],
         );
       }
     }
