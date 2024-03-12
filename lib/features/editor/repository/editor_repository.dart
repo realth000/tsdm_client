@@ -157,18 +157,24 @@ final class EditorRepository {
             'exceed max retry times');
         return false;
       }
-      final resp = await netClient.getImage(emoji.url);
-      if (resp.statusCode != HttpStatus.ok) {
+      try {
+        final resp = await netClient.getImage(emoji.url);
+        if (resp.statusCode != HttpStatus.ok) {
+          await Future.delayed(const Duration(milliseconds: 200), () {});
+          retryMaxTimes -= 1;
+          continue;
+        }
+        await cacheProvider.updateEmojiCache(
+          emojiGroup.id,
+          emoji.id,
+          resp.data as List<int>,
+        );
+        break;
+      } catch (e) {
         await Future.delayed(const Duration(milliseconds: 200), () {});
         retryMaxTimes -= 1;
         continue;
       }
-      await cacheProvider.updateEmojiCache(
-        emojiGroup.id,
-        emoji.id,
-        resp.data as List<int>,
-      );
-      break;
     }
     return true;
   }
