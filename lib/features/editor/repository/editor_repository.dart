@@ -147,8 +147,13 @@ final class EditorRepository {
     NetClientProvider netClient,
     ImageCacheProvider cacheProvider,
     EmojiGroup emojiGroup,
-    Emoji emoji,
-  ) async {
+    Emoji emoji, {
+    bool force = false,
+  }) async {
+    // Skip if have cache.
+    if (!force && cacheProvider.hasEmojiCacheFile(emojiGroup.id, emoji.id)) {
+      return true;
+    }
     var retryMaxTimes = 3;
     // Retry until success.
     while (true) {

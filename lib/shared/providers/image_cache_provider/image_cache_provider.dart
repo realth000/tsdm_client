@@ -196,6 +196,12 @@ class ImageCacheProvider {
   String _formatEmojiCachePath(String groupId, String id) =>
       '${_emojiCacheDirectory.path}/${groupId}_$id.jpg';
 
+  /// Check have the cache file for emoji with [groupId] and [id].
+  bool hasEmojiCacheFile(String groupId, String id) {
+    final cacheFile = File(_formatEmojiCachePath(groupId, id));
+    return cacheFile.existsSync();
+  }
+
   /// Get the cached file of emoji with specified [groupId] and [id].
   Future<Uint8List> getEmojiCache(String groupId, String id) async {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
