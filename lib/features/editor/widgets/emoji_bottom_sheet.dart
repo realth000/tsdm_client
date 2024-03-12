@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
@@ -45,9 +46,23 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> {
       child: BlocBuilder<EmojiBloc, EmojiState>(
         builder: (context, state) {
           final body = switch (state.status) {
-            EmojiStatus.initial ||
-            EmojiStatus.loading =>
-              sizedCircularProgressIndicator,
+            EmojiStatus.initial || EmojiStatus.loading => Center(
+                child: Padding(
+                  padding: edgeInsetsL20R20,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const CircularProgressIndicator(),
+                      sizedBoxW10H10,
+                      Expanded(
+                        child: Text(
+                          context.t.bbcodeEditor.emoji.downloading,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             EmojiStatus.failed => buildRetryButton(context, () {
                 context.read<EmojiBloc>().add(EmojiFetchFromServerEvent());
               }),
