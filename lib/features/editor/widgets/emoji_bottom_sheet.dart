@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
@@ -8,19 +9,24 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/utils/retry_button.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
-Future<void> showEmojiBottomSheet(BuildContext context) async {
+Future<void> showEmojiBottomSheet(
+  BuildContext context,
+  BBCodeEditorController controller,
+) async {
   await showModalBottomSheet<void>(
     context: context,
-    builder: _EmojiBottomSheet.new,
+    builder: (context) => _EmojiBottomSheet(context, controller),
   );
 }
 
 /// Widget to show all available emojis can use in editor.
 class _EmojiBottomSheet extends StatefulWidget {
   /// Constructor.
-  const _EmojiBottomSheet(this.context);
+  const _EmojiBottomSheet(this.context, this.controller);
 
   final BuildContext context;
+
+  final BBCodeEditorController controller;
 
   @override
   State<_EmojiBottomSheet> createState() => _EmojiBottomSheetState();
@@ -49,10 +55,10 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
       (e) => GridView.builder(
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 60,
+          maxCrossAxisExtent: 50,
           mainAxisSpacing: 10,
           crossAxisSpacing: 10,
-          mainAxisExtent: 60,
+          mainAxisExtent: 50,
         ),
         itemBuilder: (context, index) {
           final data = getIt.get<ImageCacheProvider>().getEmojiCacheSync(
@@ -64,10 +70,16 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
               '${e.id}_${e.emojiList[index].id}',
             );
           }
-          return ClipOval(
-            child: Image.memory(
-              data,
-              fit: BoxFit.cover,
+          return GestureDetector(
+            onTap: () async {
+              Navigator.of(context).pop();
+              await widget.controller.insertEmoji(e.emojiList[index].code);
+            },
+            child: ClipOval(
+              child: Image.memory(
+                data,
+                fit: BoxFit.cover,
+              ),
             ),
           );
         },

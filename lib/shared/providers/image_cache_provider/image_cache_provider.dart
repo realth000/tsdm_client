@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/instance.dart';
@@ -59,6 +60,11 @@ Future<void> initCache() async {
 
 /// Provider of cached images.
 class ImageCacheProvider {
+  /// Regexp that matches emoji bbcode.
+  ///
+  /// {:10_200:} format.
+  static final _emojiCodeRe = RegExp(r'{:(?<groupId>\d+)_(?<id>\d+):}');
+
   /// Get the cache info related to [imageUrl].
   DatabaseImageCache? getCacheInfo(String imageUrl) {
     return getIt.get<StorageProvider>().getImageCache(imageUrl);
@@ -200,6 +206,29 @@ class ImageCacheProvider {
   bool hasEmojiCacheFile(String groupId, String id) {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     return cacheFile.existsSync();
+  }
+
+  /// Try get the emoji cache from raw bbcode.
+  ///
+  /// Only valid when code in {:${GROUP_ID}_${EMOJI_ID}:} format.
+  Future<Uint8List?> getEmojiCacheFromRawCode(String code) async {
+    if (!_emojiCodeRe.hasMatch(code)) {
+      return null;
+    }
+    final m = _emojiCodeRe.firstMatch(code)!;
+    final groupId = m.namedGroup('groupId')!;
+    final id = m.namedGroup('id')!;
+    return getEmojiCache(groupId, id);
+  }
+
+  /// Get the cached file of emoji with specified [groupId] and [id].
+  Future<Uint8List?> getEmojiCache(String groupId, String id) async {
+    final cacheFile = File(_formatEmojiCachePath(groupId, id));
+    if (!cacheFile.existsSync()) {
+      debug('$cacheFile cache file not exists');
+      return null;
+    }
+    return cacheFile.readAsBytes();
   }
 
   /// Get the cached file of emoji with specified [groupId] and [id].
