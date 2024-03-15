@@ -22,7 +22,10 @@ Future<void> showEmojiBottomSheet(
 /// Widget to show all available emojis can use in editor.
 class _EmojiBottomSheet extends StatefulWidget {
   /// Constructor.
-  const _EmojiBottomSheet(this.context, this.controller);
+  const _EmojiBottomSheet(
+    this.context,
+    this.controller,
+  );
 
   final BuildContext context;
 
