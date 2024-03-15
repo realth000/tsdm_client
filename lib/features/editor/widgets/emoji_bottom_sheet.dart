@@ -76,7 +76,9 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           return GestureDetector(
             onTap: () async {
               Navigator.of(context).pop();
-              await widget.controller.insertEmoji(e.emojiList[index].code);
+              // TODO: Emoji with WYSIWYG support.
+              // await widget.controller.insertEmoji(e.emojiList[index].code);
+              await widget.controller.insertRawEmoji(e.emojiList[index].code);
             },
             child: ClipOval(
               child: Image.memory(
