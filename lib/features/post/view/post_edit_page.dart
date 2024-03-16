@@ -311,11 +311,8 @@ class _PostEditPageState extends State<PostEditPage> {
   ) {
     final otherItems = [
       IconButton(
-        icon: Icon(
-          Icons.text_format_outlined,
-          color:
-              showTextAttributeButtons ? Theme.of(context).primaryColor : null,
-        ),
+        icon: const Icon(Icons.text_format_outlined),
+        isSelected: showTextAttributeButtons,
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
@@ -324,12 +321,7 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
       IconButton(
-        icon: Icon(
-          Icons.emoji_emotions_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
+        icon: const Icon(Icons.emoji_emotions_outlined),
         onPressed: () async {
           await showEmojiBottomSheet(context, bbcodeController);
         },
@@ -471,10 +463,8 @@ class _PostEditPageState extends State<PostEditPage> {
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         child: IconButton(
-          icon: Icon(
-            Icons.format_size_outlined,
-            color: fontSize != null ? Theme.of(context).primaryColor : null,
-          ),
+          icon: const Icon(Icons.format_size_outlined),
+          isSelected: fontSize != null,
           onPressed: bbcodeController.collapsed
               ? null
               : () {
@@ -490,11 +480,8 @@ class _PostEditPageState extends State<PostEditPage> {
         isLabelVisible: foregroundColor != null,
         backgroundColor: foregroundColor,
         child: IconButton(
-          icon: Icon(
-            Icons.format_color_text_outlined,
-            color:
-                foregroundColor != null ? Theme.of(context).primaryColor : null,
-          ),
+          icon: const Icon(Icons.format_color_text_outlined),
+          isSelected: foregroundColor != null,
           onPressed: () {
             setState(() {
               // TODO: Pick foreground color.
@@ -509,11 +496,8 @@ class _PostEditPageState extends State<PostEditPage> {
         isLabelVisible: backgroundColor != null,
         backgroundColor: backgroundColor,
         child: IconButton(
-          icon: Icon(
-            Icons.format_color_fill_outlined,
-            color:
-                backgroundColor != null ? Theme.of(context).primaryColor : null,
-          ),
+          icon: const Icon(Icons.format_color_fill_outlined),
+          isSelected: backgroundColor != null,
           onPressed: () {
             // ignore:unnecessary_lambdas
             setState(() {
@@ -526,10 +510,8 @@ class _PostEditPageState extends State<PostEditPage> {
         ),
       ),
       IconButton(
-        icon: Icon(
-          Icons.format_bold_outlined,
-          color: bbcodeController.bold ? Theme.of(context).primaryColor : null,
-        ),
+        icon: const Icon(Icons.format_bold_outlined),
+        isSelected: bbcodeController.bold,
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
@@ -538,11 +520,8 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
       IconButton(
-        icon: Icon(
-          Icons.format_italic_outlined,
-          color:
-              bbcodeController.italic ? Theme.of(context).primaryColor : null,
-        ),
+        icon: const Icon(Icons.format_italic_outlined),
+        isSelected: bbcodeController.italic,
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
@@ -551,12 +530,8 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
       IconButton(
-        icon: Icon(
-          Icons.format_underline_outlined,
-          color: bbcodeController.underline
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
+        icon: const Icon(Icons.format_underline_outlined),
+        isSelected: bbcodeController.underline,
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
@@ -565,12 +540,8 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
       IconButton(
-        icon: Icon(
-          Icons.format_strikethrough_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
+        icon: const Icon(Icons.format_strikethrough_outlined),
+        isSelected: bbcodeController.strikethrough,
         onPressed: () {
           // ignore:unnecessary_lambdas
           setState(() {
@@ -595,11 +566,8 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(
       children: [
         IconButton(
-          icon: Icon(
-            Icons.science_outlined,
-            color:
-                useExperimentalEditor ? Theme.of(context).primaryColor : null,
-          ),
+          icon: const Icon(Icons.science_outlined),
+          isSelected: useExperimentalEditor,
           onPressed: () {
             setState(() {
               useExperimentalEditor = !useExperimentalEditor;
