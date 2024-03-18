@@ -9,6 +9,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
@@ -329,16 +330,8 @@ class _PostEditPageState extends State<PostEditPage> {
       IconButton(
         icon: Icon(
           Icons.link_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
         ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
+        onPressed: () async => showUrlDialog(context, bbcodeController),
       ),
       IconButton(
         icon: Icon(

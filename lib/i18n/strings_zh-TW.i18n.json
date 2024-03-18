@@ -406,6 +406,12 @@
     "emoji": {
       "title": "表情",
       "downloading": "正在下載表情（大約10MB內容），這可能需要一些時間。。"
+    },
+    "url": {
+      "title": "插入連結",
+      "description": "描述",
+      "link": "連結",
+      "errorEmpty": "不能為空"
     }
   }
 }

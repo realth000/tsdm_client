@@ -406,6 +406,12 @@
     "emoji": {
       "title": "Emoji",
       "downloading": "Downloading emoji (10MB), this may take a while..."
+    },
+    "url": {
+      "title": "Insert Url",
+      "description": "Url description",
+      "link": "Url link",
+      "errorEmpty": "Should not be empty"
     }
   }
 }
