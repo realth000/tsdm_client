@@ -328,9 +328,7 @@ class _PostEditPageState extends State<PostEditPage> {
         },
       ),
       IconButton(
-        icon: Icon(
-          Icons.link_outlined,
-        ),
+        icon: const Icon(Icons.link_outlined),
         onPressed: () async => showUrlDialog(context, bbcodeController),
       ),
       IconButton(

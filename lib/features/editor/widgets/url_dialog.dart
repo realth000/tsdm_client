@@ -9,19 +9,16 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 Future<void> showUrlDialog(
   BuildContext context,
   BBCodeEditorController controller,
-) async {
-  final data = await showDialog<(String, String)?>(
-    context: context,
-    builder: (context) => UrlDialog(controller),
-  );
-
-  print(data);
-}
+) async =>
+    showDialog(
+      context: context,
+      builder: (context) => UrlDialog(controller),
+    );
 
 /// Show a dialog to insert url and description.
 class UrlDialog extends StatefulWidget {
   /// Constructor.
-  UrlDialog(this.bbCodeController);
+  const UrlDialog(this.bbCodeController, {super.key});
 
   /// The bbcode editor controller used after dialog closed.
   final BBCodeEditorController bbCodeController;
@@ -88,7 +85,7 @@ class _UrlDialogState extends State<UrlDialog> {
                   },
                 ),
               ],
-            )
+            ),
           ].insertBetween(sizedBoxW10H10),
         ),
       ),
