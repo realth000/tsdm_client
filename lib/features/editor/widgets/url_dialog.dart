@@ -74,7 +74,7 @@ class _UrlDialogState extends State<UrlDialog> {
                       return;
                     }
 
-                    await widget.bbCodeController.insertRawUrl(
+                    await widget.bbCodeController.insertUrl(
                       descController.text,
                       urlController.text,
                     );

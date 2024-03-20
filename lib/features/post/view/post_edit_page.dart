@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
@@ -725,6 +726,8 @@ class _PostEditPageState extends State<PostEditPage> {
                                   .getEmojiCacheFromRawCode(code);
                               return emojiCache;
                             },
+                            urlLauncher: (url) async =>
+                                context.dispatchAsUrl(url),
                           ),
                         )
                       : TextFormField(
