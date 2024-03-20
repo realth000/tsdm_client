@@ -77,7 +77,6 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
             onTap: () async {
               Navigator.of(context).pop();
               await widget.controller.insertEmoji(e.emojiList[index].code);
-              // await widget.controller.insertRawEmoji(e.emojiList[index].code);
             },
             child: ClipOval(
               child: Image.memory(
