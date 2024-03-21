@@ -412,6 +412,9 @@
       "description": "描述",
       "link": "連結",
       "errorEmpty": "不能為空"
+    },
+    "foregroundColor": {
+      "title": "字體顏色"
     }
   }
 }

@@ -412,6 +412,9 @@
       "description": "Url description",
       "link": "Url link",
       "errorEmpty": "Should not be empty"
+    },
+    "foregroundColor": {
+      "title": "Font Color"
     }
   }
 }
