@@ -160,7 +160,7 @@ class _PostEditPageState extends State<PostEditPage> {
   // BBCode text attribute status.
   Color? foregroundColor;
   Color? backgroundColor;
-  double? fontSize;
+  int? fontSizeLevel;
 
   /// Show a modal bottom sheet to let user select a thread type.
   ///
@@ -448,15 +448,15 @@ class _PostEditPageState extends State<PostEditPage> {
     final textItems = [
       // Font size.
       Badge(
-        isLabelVisible: fontSize != null,
+        isLabelVisible: fontSizeLevel != null,
         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
         label: Text(
-          '$fontSize',
+          '$fontSizeLevel',
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
         child: IconButton(
           icon: const Icon(Icons.format_size_outlined),
-          isSelected: fontSize != null,
+          isSelected: fontSizeLevel != null,
           onPressed: bbcodeController.collapsed
               ? null
               : () {
@@ -776,7 +776,7 @@ class _PostEditPageState extends State<PostEditPage> {
     setState(() {
       foregroundColor = bbcodeController.foregroundColor;
       backgroundColor = bbcodeController.backgroundColor;
-      fontSize = bbcodeController.fontSize;
+      fontSizeLevel = bbcodeController.fontSizeLevel;
     });
   }
 
