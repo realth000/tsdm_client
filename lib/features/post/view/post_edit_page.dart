@@ -10,6 +10,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/foreground_color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
@@ -479,14 +480,10 @@ class _PostEditPageState extends State<PostEditPage> {
         child: IconButton(
           icon: const Icon(Icons.format_color_text_outlined),
           isSelected: foregroundColor != null,
-          onPressed: () {
-            setState(() {
-              // TODO: Pick foreground color.
-              bbcodeController.setForegroundColor(
-                Colors.primaries[Random().nextInt(Colors.primaries.length - 1)],
-              );
-            });
-          },
+          onPressed: () async => showForegroundColorBottomSheet(
+            context,
+            bbcodeController,
+          ),
         ),
       ),
       Badge(
