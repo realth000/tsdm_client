@@ -454,17 +454,22 @@ class _PostEditPageState extends State<PostEditPage> {
           '$fontSizeLevel',
           style: TextStyle(color: Theme.of(context).primaryColor),
         ),
-        child: IconButton(
-          icon: const Icon(Icons.format_size_outlined),
-          isSelected: fontSizeLevel != null,
-          onPressed: bbcodeController.collapsed
-              ? null
-              : () {
-                  // ignore:unnecessary_lambdas
-                  setState(() {
-                    bbcodeController.setFontSizeLevel(Random().nextInt(6) + 1);
-                  });
-                },
+        child: GestureDetector(
+          onDoubleTap: () async {
+            // Double click to clear font size style.
+            await bbcodeController.clearFontSize();
+            setState(() {});
+          },
+          child: IconButton(
+            icon: const Icon(Icons.format_size_outlined),
+            isSelected: fontSizeLevel != null,
+            onPressed: bbcodeController.collapsed
+                ? null
+                : () async {
+                    await bbcodeController.setNextFontSizeLevel();
+                    setState(() {});
+                  },
+          ),
         ),
       ),
       // Foreground color.
