@@ -415,6 +415,9 @@
     },
     "foregroundColor": {
       "title": "字體顏色"
+    },
+    "backgroundColor": {
+      "title": "背景顏色"
     }
   }
 }

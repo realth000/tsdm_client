@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,8 +7,8 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
-import 'package:tsdm_client/features/editor/widgets/foreground_color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
@@ -492,15 +490,10 @@ class _PostEditPageState extends State<PostEditPage> {
         child: IconButton(
           icon: const Icon(Icons.format_color_fill_outlined),
           isSelected: backgroundColor != null,
-          onPressed: () {
-            // ignore:unnecessary_lambdas
-            setState(() {
-              // TODO: Pick background color.
-              bbcodeController.setBackgroundColor(
-                Colors.primaries[Random().nextInt(Colors.primaries.length - 1)],
-              );
-            });
-          },
+          onPressed: () async => showBackgroundColorBottomSheet(
+            context,
+            bbcodeController,
+          ),
         ),
       ),
       IconButton(

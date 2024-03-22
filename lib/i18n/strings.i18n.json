@@ -415,6 +415,9 @@
     },
     "foregroundColor": {
       "title": "Font Color"
+    },
+    "backgroundColor": {
+      "title": "Background Color"
     }
   }
 }
