@@ -45,6 +45,7 @@ class _UrlDialogState extends State<UrlDialog> {
           children: <Widget>[
             TextFormField(
               controller: descController,
+              autofocus: true,
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.description_outlined),
                 labelText: tr.description,
@@ -73,10 +74,17 @@ class _UrlDialogState extends State<UrlDialog> {
                         !(formKey.currentState!).validate()) {
                       return;
                     }
+                    final String url;
+                    if (urlController.text.startsWith('http://') ||
+                        urlController.text.startsWith('https://')) {
+                      url = urlController.text;
+                    } else {
+                      url = 'https://${urlController.text}';
+                    }
 
                     await widget.bbCodeController.insertUrl(
                       descController.text,
-                      urlController.text,
+                      url,
                     );
                     if (!context.mounted) {
                       return;
