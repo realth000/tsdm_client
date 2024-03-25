@@ -418,6 +418,12 @@
     },
     "backgroundColor": {
       "title": "Background Color"
+    },
+    "image": {
+      "title": "Insert Image",
+      "description": "Image description",
+      "link": "Picture link",
+      "errorEmpty": "Should not be empty"
     }
   }
 }

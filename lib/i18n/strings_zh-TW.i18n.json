@@ -418,6 +418,12 @@
     },
     "backgroundColor": {
       "title": "背景顏色"
+    },
+    "image": {
+      "title": "插入圖片",
+      "description": "圖片描述",
+      "link": "圖片連結",
+      "errorEmpty": "不能為空"
     }
   }
 }

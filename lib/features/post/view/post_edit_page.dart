@@ -9,6 +9,7 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
@@ -22,6 +23,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/scroll_behavior.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
@@ -338,12 +340,7 @@ class _PostEditPageState extends State<PostEditPage> {
               ? Theme.of(context).primaryColor
               : null,
         ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
+        onPressed: () async => showImageDialog(context, bbcodeController),
       ),
       IconButton(
         icon: Icon(
@@ -721,6 +718,8 @@ class _PostEditPageState extends State<PostEditPage> {
                                   .getEmojiCacheFromRawCode(code);
                               return emojiCache;
                             },
+                            imageBuilder: (String url) =>
+                                CachedImageProvider(url, context),
                             urlLauncher: (url) async =>
                                 context.dispatchAsUrl(url),
                           ),

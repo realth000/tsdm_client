@@ -418,6 +418,12 @@
     },
     "backgroundColor": {
       "title": "背景颜色"
+    },
+    "image": {
+      "title": "插入图片",
+      "description": "图片描述",
+      "link": "图片链接",
+      "errorEmpty": "不能为空"
     }
   }
 }
