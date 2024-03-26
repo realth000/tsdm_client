@@ -183,90 +183,90 @@ class _EditorToolbarState extends State<EditorToolbar> {
         onPressed: () async =>
             showImageDialog(context, widget.bbcodeController),
       ),
-      IconButton(
-        icon: Icon(
-          Icons.expand_circle_down_outlined,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.lock_outline,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.alternate_email_outlined,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_list_bulleted_outlined,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_list_numbered_outlined,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.table_rows_outlined,
-          color: widget.bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            widget.bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.expand_circle_down_outlined,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.lock_outline,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.alternate_email_outlined,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.format_list_bulleted_outlined,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.format_list_numbered_outlined,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
+      // IconButton(
+      //   icon: Icon(
+      //     Icons.table_rows_outlined,
+      //     color: widget.bbcodeController.strikethrough
+      //         ? Theme.of(context).primaryColor
+      //         : null,
+      //   ),
+      //   onPressed: () {
+      //     // ignore:unnecessary_lambdas
+      //     setState(() {
+      //       widget.bbcodeController.triggerStrikethrough();
+      //     });
+      //   },
+      // ),
     ];
     return ScrollConfiguration(
       behavior: AllDraggableScrollBehavior(),
