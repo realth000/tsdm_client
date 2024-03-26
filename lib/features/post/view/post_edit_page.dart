@@ -7,10 +7,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
-import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
-import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
-import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
+import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
@@ -24,7 +21,6 @@ import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
-import 'package:tsdm_client/widgets/scroll_behavior.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -156,7 +152,7 @@ class _PostEditPageState extends State<PostEditPage> {
   /// Value is the option itself.
   Map<String, PostEditContentOption>? additionalOptionsMap;
 
-  final bbcodeController = BBCodeEditorController();
+  final bbcodeController = BBCodeEditorController()..editorVisible = false;
 
   // BBCode text attribute status.
   Color? foregroundColor;
@@ -308,243 +304,6 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(children: ret.insertBetween(sizedBoxW10H10));
   }
 
-  Widget _buildEditorControlRow(
-    BuildContext context,
-    PostEditState state,
-  ) {
-    final otherItems = [
-      IconButton(
-        icon: const Icon(Icons.text_format_outlined),
-        isSelected: showTextAttributeButtons,
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            showTextAttributeButtons = !showTextAttributeButtons;
-          });
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.emoji_emotions_outlined),
-        onPressed: () async {
-          await showEmojiBottomSheet(context, bbcodeController);
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.link_outlined),
-        onPressed: () async => showUrlDialog(context, bbcodeController),
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.image_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () async => showImageDialog(context, bbcodeController),
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.expand_circle_down_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.lock_outline,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.alternate_email_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_list_bulleted_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.format_list_numbered_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-      IconButton(
-        icon: Icon(
-          Icons.table_rows_outlined,
-          color: bbcodeController.strikethrough
-              ? Theme.of(context).primaryColor
-              : null,
-        ),
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-    ];
-    return ScrollConfiguration(
-      behavior: AllDraggableScrollBehavior(),
-      child: SingleChildScrollView(
-        primary: false,
-        scrollDirection: Axis.horizontal,
-        child: Row(children: otherItems),
-      ),
-    );
-  }
-
-  Widget _buildEditorTextControlRow(
-    BuildContext context,
-    PostEditState state,
-  ) {
-    final textItems = [
-      // Font size.
-      Badge(
-        isLabelVisible: fontSizeLevel != null,
-        backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-        label: Text(
-          '$fontSizeLevel',
-          style: TextStyle(color: Theme.of(context).primaryColor),
-        ),
-        child: GestureDetector(
-          onDoubleTap: () async {
-            // Double click to clear font size style.
-            await bbcodeController.clearFontSize();
-            setState(() {});
-          },
-          child: IconButton(
-            icon: const Icon(Icons.format_size_outlined),
-            isSelected: fontSizeLevel != null,
-            onPressed: bbcodeController.collapsed
-                ? null
-                : () async {
-                    await bbcodeController.setNextFontSizeLevel();
-                    setState(() {});
-                  },
-          ),
-        ),
-      ),
-      // Foreground color.
-      Badge(
-        isLabelVisible: foregroundColor != null,
-        backgroundColor: foregroundColor,
-        child: IconButton(
-          icon: const Icon(Icons.format_color_text_outlined),
-          isSelected: foregroundColor != null,
-          onPressed: () async => showForegroundColorBottomSheet(
-            context,
-            bbcodeController,
-          ),
-        ),
-      ),
-      Badge(
-        isLabelVisible: backgroundColor != null,
-        backgroundColor: backgroundColor,
-        child: IconButton(
-          icon: const Icon(Icons.format_color_fill_outlined),
-          isSelected: backgroundColor != null,
-          onPressed: () async => showBackgroundColorBottomSheet(
-            context,
-            bbcodeController,
-          ),
-        ),
-      ),
-      IconButton(
-        icon: const Icon(Icons.format_bold_outlined),
-        isSelected: bbcodeController.bold,
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerBold();
-          });
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.format_italic_outlined),
-        isSelected: bbcodeController.italic,
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerItalic();
-          });
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.format_underline_outlined),
-        isSelected: bbcodeController.underline,
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerUnderline();
-          });
-        },
-      ),
-      IconButton(
-        icon: const Icon(Icons.format_strikethrough_outlined),
-        isSelected: bbcodeController.strikethrough,
-        onPressed: () {
-          // ignore:unnecessary_lambdas
-          setState(() {
-            bbcodeController.triggerStrikethrough();
-          });
-        },
-      ),
-    ];
-
-    return ScrollConfiguration(
-      behavior: AllDraggableScrollBehavior(),
-      child: SingleChildScrollView(
-        primary: false,
-        scrollDirection: Axis.horizontal,
-        child: Row(children: textItems),
-      ),
-    );
-  }
-
   /// Build the row to control a
   Widget _buildControlRow(BuildContext context, PostEditState state) {
     return Row(
@@ -555,6 +314,7 @@ class _PostEditPageState extends State<PostEditPage> {
           onPressed: () {
             setState(() {
               useExperimentalEditor = !useExperimentalEditor;
+              bbcodeController.editorVisible = useExperimentalEditor;
             });
           },
         ),
@@ -744,14 +504,7 @@ class _PostEditPageState extends State<PostEditPage> {
                         ),
                 ),
                 sizedBoxW5H5,
-                AnimatedVisibility(
-                  visible: useExperimentalEditor && showTextAttributeButtons,
-                  child: _buildEditorTextControlRow(context, state),
-                ),
-                AnimatedVisibility(
-                  visible: useExperimentalEditor,
-                  child: _buildEditorControlRow(context, state),
-                ),
+                EditorToolbar(bbcodeController: bbcodeController),
                 _buildControlRow(context, state),
               ],
             );
