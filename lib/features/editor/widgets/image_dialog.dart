@@ -9,6 +9,8 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 const _maxAllowedWidth = 160.0;
 const _maxAllowedHeight = 90.0;
 const _ratio = _maxAllowedWidth / _maxAllowedHeight;
+const _defaultWidth = _maxAllowedWidth;
+const _defaultHeight = _maxAllowedHeight;
 
 /// Show a picture dialog to add picture into editor.
 Future<void> showImageDialog(
@@ -33,8 +35,8 @@ class _ImageDialog extends StatefulWidget {
 class _ImageDialogState extends State<_ImageDialog> {
   final formKey = GlobalKey<FormState>();
   final imageUrlController = TextEditingController();
-  final widthController = TextEditingController();
-  final heightController = TextEditingController();
+  final widthController = TextEditingController(text: '$_defaultWidth');
+  final heightController = TextEditingController(text: '$_defaultHeight');
 
   @override
   Widget build(BuildContext context) {
@@ -132,12 +134,12 @@ class _ImageDialogState extends State<_ImageDialog> {
                     final double displayHeight;
                     if (actualRatio <= _ratio) {
                       // Image size is more in height.
-                      displayWidth = _maxAllowedWidth;
-                      displayHeight = height * width / _maxAllowedWidth;
-                    } else {
-                      // Image size is more in width.
                       displayWidth = width * height / _maxAllowedHeight;
                       displayHeight = _maxAllowedHeight;
+                    } else {
+                      // Image size is more in width.
+                      displayWidth = _maxAllowedWidth;
+                      displayHeight = height * width / _maxAllowedWidth;
                     }
                     await widget.bbCodeEditorController.insertImage(
                       url: url,
