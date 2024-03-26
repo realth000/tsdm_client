@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+
+const _maxAllowedWidth = 160.0;
+const _maxAllowedHeight = 90.0;
+const _ratio = _maxAllowedWidth / _maxAllowedHeight;
 
 /// Show a picture dialog to add picture into editor.
 Future<void> showImageDialog(
@@ -26,6 +33,8 @@ class _ImageDialog extends StatefulWidget {
 class _ImageDialogState extends State<_ImageDialog> {
   final formKey = GlobalKey<FormState>();
   final imageUrlController = TextEditingController();
+  final widthController = TextEditingController();
+  final heightController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +55,52 @@ class _ImageDialogState extends State<_ImageDialog> {
                 labelText: tr.link,
               ),
               validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
+            ),
+            TextFormField(
+              controller: widthController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'([0-9]+\.[0-9]?)|([0-9]+)'),
+                ),
+              ],
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.horizontal_distribute_outlined),
+                labelText: tr.width,
+              ),
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) {
+                  return tr.errorEmpty;
+                }
+                final vv = double.tryParse(v);
+                if (vv == null || vv <= 0) {
+                  return tr.errorInvalidNumber;
+                }
+                return null;
+              },
+            ),
+            TextFormField(
+              controller: heightController,
+              keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.allow(
+                  RegExp(r'([0-9]+\.[0-9]?)|([0-9]+)'),
+                ),
+              ],
+              decoration: InputDecoration(
+                prefixIcon: const Icon(Icons.vertical_distribute_outlined),
+                labelText: tr.height,
+              ),
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) {
+                  return tr.errorEmpty;
+                }
+                final vv = double.tryParse(v);
+                if (vv == null || vv <= 0) {
+                  return tr.errorInvalidNumber;
+                }
+                return null;
+              },
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
@@ -68,8 +123,29 @@ class _ImageDialogState extends State<_ImageDialog> {
                     } else {
                       url = 'https://${imageUrlController.text}';
                     }
-                    await widget.bbCodeEditorController
-                        .insertImage(url, 100, 100);
+                    final width = double.parse(widthController.text);
+                    final height = double.parse(heightController.text);
+                    assert(height != 0, 'image height should not be zero');
+                    final actualRatio = width / height;
+
+                    final double displayWidth;
+                    final double displayHeight;
+                    if (actualRatio <= _ratio) {
+                      // Image size is more in height.
+                      displayWidth = _maxAllowedWidth;
+                      displayHeight = height * width / _maxAllowedWidth;
+                    } else {
+                      // Image size is more in width.
+                      displayWidth = width * height / _maxAllowedHeight;
+                      displayHeight = _maxAllowedHeight;
+                    }
+                    await widget.bbCodeEditorController.insertImage(
+                      url: url,
+                      width: width,
+                      height: height,
+                      displayWith: displayWidth,
+                      displayHeight: displayHeight,
+                    );
                     if (!context.mounted) {
                       return;
                     }
@@ -78,7 +154,7 @@ class _ImageDialogState extends State<_ImageDialog> {
                 ),
               ],
             ),
-          ],
+          ].insertBetween(sizedBoxW10H10),
         ),
       ),
     );

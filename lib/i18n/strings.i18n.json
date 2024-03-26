@@ -423,7 +423,10 @@
       "title": "Insert Image",
       "description": "Image description",
       "link": "Picture link",
-      "errorEmpty": "Should not be empty"
+      "errorEmpty": "Should not be empty",
+      "width": "Width",
+      "height": "Height",
+      "errorInvalidNumber": "Invalid number"
     }
   }
 }

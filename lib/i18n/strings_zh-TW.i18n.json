@@ -423,7 +423,10 @@
       "title": "插入圖片",
       "description": "圖片描述",
       "link": "圖片連結",
-      "errorEmpty": "不能為空"
+      "errorEmpty": "不能為空",
+      "width": "寬度",
+      "height": "高度",
+      "errorInvalidNumber": "無效的數字"
     }
   }
 }
