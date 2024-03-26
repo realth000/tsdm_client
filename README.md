@@ -12,9 +12,8 @@
 
 <p align="center">
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test"/></a>
-  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/release_build.yml?label=release"/></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=version"></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_iOS_Linux_MacOS_Windows-19A6E6"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_MacOS_%7C_Windows-19A6E6"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.19-19A6E6?logo=flutter"></a>
   <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
@@ -79,25 +78,24 @@
   * [ ] 签名档
 * [ ] 回帖
   * [x] 回复文字
-  * [ ] 回复表情
-  * [ ] 设置字体、字号、链接等
   * [x] 回复其他楼层
   * [x] 编辑回复
-  * [ ] 编辑帖子（一楼）
+  * [x] 编辑帖子（一楼）
+  * [x] [富文本模式](#富文本支持)
 * [ ] 编辑帖子
   * [x] 修改纯文本内容
   * [x] 设置分类和标题
   * [x] 设置附加选项
   * [ ] 设置阅读权限
   * [ ] 设置售价
-  * [ ] 富文本模式
+  * [x] [富文本模式](#富文本支持)
 * [ ] 发帖
   * [ ] 纯文本内容
   * [ ] 设置分类和标题
   * [ ] 设置附加选项
   * [ ] 设置阅读权限
   * [ ] 设置售价
-  * [ ] 富文本模式
+  * [ ] [富文本模式](#富文本支持)
 * [ ] 登录
   * [x] 用户名登录
   * [ ] UID或邮箱登录
@@ -149,6 +147,56 @@
 * [ ] 省流模式
 * [ ] ...
 
+## 富文本支持
+
+### 概述
+
+目前正在添加bbcode的富文本支持，最终会在发表帖子/回复/消息等场景内支持所见即所得的bbcode书写体验。
+
+然而这部分内容很多，无法在短期内实现 ~~（实际上已经导致发版延期很久了）~~。
+
+故采用逐步添加功能的方式逐渐改进。
+
+在富文本功能稳定之前，同时保留现有的普通编辑器和（实验性的）富文本编辑器。
+
+BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https://github.com/realth000/flutter_bbcode_editor)中。
+
+### 进度
+
+**[BBCode编辑器](https://github.com/realth000/flutter_bbcode_editor)仍处于试验阶段**
+
+* [x] 文本样式
+  * [ ] 字号（固定大小1-7）
+    * [x] 选择文字后设置
+    * [ ] 设置后对光标处生效
+  * [x] 字体颜色
+  * [x] 背景颜色
+  * [x] 粗体
+  * [x] 斜体
+  * [x] 下划线
+  * [x] 删除线
+  * ~~字体~~（不实现）
+* [ ] 表情
+  * [x] 添加
+  * [ ] 设置表情分组顺序
+* [ ] 网页链接
+  * [x] 添加
+  * [ ] 修改
+* [ ] 外链图片
+  * [x] 添加
+  * [x] 设置大小
+  * [ ] 修改
+* [ ] 折叠卡片
+* [ ] 隐藏内容
+* [ ] 代码块
+* [ ] 引用文字
+* [ ] 对齐
+* [ ] 分隔线
+* [ ] 提醒用户（@）
+* [ ] 无序列表
+* [ ] 有序列表
+* [ ] 表格
+
 ## 已知问题
 
 ~~在修了在修了~~
@@ -169,9 +217,9 @@
 * [x] Windows
 * [ ] ~~Web（为什么不试试神奇的浏览器呢？）~~
 
-> [!WARNING]
+> [!IMPORTANT]
 >
-> * iOS和MacOS平台的产物由于条件限制未经过测试。如果有问题请提issue，但是不保证解决。欢迎提相应的PR。
+> * iOS和MacOS平台的产物未经过测试。如有问题请提issue，不保证一定解决，欢迎提PR。
 > * iOS和MacOS平台产物并未签名，ipa签名请自行寻找方法。
 
 ## 下载
@@ -181,24 +229,24 @@
 ## 编译
 
 ``` shell
-# All
+# 1. All
+git clone --recursive https://github.com/realth000/tsdm_client
 dart run build_runner build
 
-# Android
+# 2. Android
 flutter build apk --release
 
-# iOS
+# 2. iOS
 flutter build ios --release --no-codesign
 
-# Linux
+# 2. Linux
 flutter build linux --release
 
-# MacOS
+# 2. MacOS
 flutter build macos --release
 
-# Windows
+# 2. Windows
 flutter build windows --release
-
 ```
 
 ## 隐私政策
