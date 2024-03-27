@@ -103,8 +103,6 @@ class PostEditPage extends StatefulWidget {
 
 class _PostEditPageState extends State<PostEditPage> {
   /// Enable using testing bbcode editor.
-  ///
-  /// This flag is for testing only and SHOULD remove before next release.
   bool useExperimentalEditor = false;
 
   /// Show text attribute control button or not.
@@ -315,6 +313,8 @@ class _PostEditPageState extends State<PostEditPage> {
             setState(() {
               useExperimentalEditor = !useExperimentalEditor;
               bbcodeController.editorVisible = useExperimentalEditor;
+              final data = dataController.text;
+              bbcodeController.data = data;
             });
           },
         ),

@@ -12,6 +12,7 @@ environment:
   sdk: '>=3.3.0 <4.0.0'
 
 dependencies:
+  bbob_dart: ^0.2.1
   bloc: ^8.1.3
   card_swiper: ^3.0.1
   change_case: ^2.0.1

@@ -57,6 +57,14 @@ packages:
       url: "https://pub.flutter-io.cn"
     source: hosted
     version: "2.11.0"
+  bbob_dart:
+    dependency: "direct main"
+    description:
+      name: bbob_dart
+      sha256: d754e0dfd800582a6f0a43ae4f12db8eb763e89f584674c334a36e0faaddb1f9
+      url: "https://pub.flutter-io.cn"
+    source: hosted
+    version: "0.2.1"
   bloc:
     dependency: "direct main"
     description:
