@@ -347,6 +347,15 @@ class _PostEditPageState extends State<PostEditPage> {
               ? null
               : () {
                   if (widget.editType.isEditingPost) {
+                    final String data;
+                    if (useExperimentalEditor) {
+                      data = bbcodeController.data ?? '<null>';
+                    } else {
+                      data = dataController.text;
+                    }
+                    // debug: Inspect rich text data content.
+                    // print('>>>> Data: $data');
+                    // return;
                     final event = PostEditCompleteEditRequested(
                       formHash: state.content!.formHash,
                       postTime: state.content!.postTime,
@@ -358,7 +367,7 @@ class _PostEditPageState extends State<PostEditPage> {
                       pid: widget.pid,
                       threadType: threadType,
                       threadTitle: threadTitleController.text,
-                      data: dataController.text,
+                      data: data,
                       options: additionalOptionsMap?.values.toList() ?? [],
                     );
                     context.read<PostEditBloc>().add(event);
