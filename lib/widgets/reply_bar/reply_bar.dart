@@ -1,12 +1,20 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 
 /// Widget provides the reply feature.
@@ -50,6 +58,20 @@ class _ReplyBarState extends State<ReplyBar> {
 
   /// Url to get the reply page, not the target to post a reply.
   String? _replyAction;
+
+  /////////// Editor Feature ///////////
+
+  /// Enable using testing bbcode editor.
+  bool useExperimentalEditor = false;
+
+  /// Rich editor focus node.
+  final focusNode = FocusNode();
+
+  /// Show text attribute control button or not.
+  bool showTextAttributeButtons = false;
+
+  /// Rich editor controller.
+  final bbcodeController = BBCodeEditorController()..editorVisible = false;
 
   /// Method to update [_hintText].
   /// Use this method to update text and ui by calling [setState].
@@ -169,24 +191,59 @@ class _ReplyBarState extends State<ReplyBar> {
                   Expanded(
                     child: Padding(
                       padding: edgeInsetsL10T5R5B5,
-                      child: TextField(
-                        controller: _replyController,
-                        onChanged: (value) {
-                          setState(() {
-                            canSendReply = value.isNotEmpty;
-                          });
-                        },
-                        enabled: !_closed && _hasLogin,
-                        maxLines: isExpanded ? null : 10,
-                        minLines: isExpanded ? null : 1,
-                        decoration: InputDecoration(
-                          hintText: _closed
-                              ? context.t.threadPage.closed
-                              : _hasLogin
-                                  ? context.t.threadPage.sendReplyHint
-                                  : context.t.threadPage.needLogin,
-                        ),
-                      ),
+                      child: useExperimentalEditor
+                          ? InputDecorator(
+                              isFocused: focusNode.hasFocus,
+                              decoration: InputDecoration(
+                                labelText: context.t.postEditPage.body,
+                                alignLabelWithHint: true,
+                              ),
+                              child: ConstrainedBox(
+                                constraints: const BoxConstraints(
+                                  maxHeight: 200,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Expanded(
+                                      child: BBCodeEditor(
+                                        controller: bbcodeController,
+                                        focusNode: focusNode,
+                                        emojiBuilder: (code) async {
+                                          // code is supposed in {:${group_id}_${emoji_id}:}
+                                          // format.
+                                          final emojiCache = await getIt
+                                              .get<ImageCacheProvider>()
+                                              .getEmojiCacheFromRawCode(code);
+                                          return emojiCache;
+                                        },
+                                        imageBuilder: (String url) =>
+                                            CachedImageProvider(url, context),
+                                        urlLauncher: (url) async =>
+                                            context.dispatchAsUrl(url),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            )
+                          : TextField(
+                              controller: _replyController,
+                              onChanged: (value) {
+                                setState(() {
+                                  canSendReply = value.isNotEmpty;
+                                });
+                              },
+                              enabled: !_closed && _hasLogin,
+                              maxLines: isExpanded ? null : 10,
+                              minLines: isExpanded ? null : 1,
+                              decoration: InputDecoration(
+                                hintText: _closed
+                                    ? context.t.threadPage.closed
+                                    : _hasLogin
+                                        ? context.t.threadPage.sendReplyHint
+                                        : context.t.threadPage.needLogin,
+                              ),
+                            ),
                     ),
                   ),
                   // if (false)
@@ -211,12 +268,56 @@ class _ReplyBarState extends State<ReplyBar> {
               ),
             ),
           ),
-          // Send Button
+
+          /// Rich editor toolbar
           Padding(
             padding: edgeInsetsL10R10B10,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Expanded(
+                  child: EditorToolbar(bbcodeController: bbcodeController),
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: edgeInsetsL10R10B10,
+            child: Row(
+              children: [
+                IconButton(
+                  icon: const Icon(Icons.science_outlined),
+                  isSelected: useExperimentalEditor,
+                  onPressed: () {
+                    setState(() {
+                      useExperimentalEditor = !useExperimentalEditor;
+                      bbcodeController.editorVisible = useExperimentalEditor;
+                      if (useExperimentalEditor) {
+                        // Sync normal editor data to rich editor.
+                        bbcodeController.data = _replyController.text;
+                      } else if (bbcodeController.data != null) {
+                        _replyController.text = bbcodeController.data!;
+                      }
+                    });
+                  },
+                ),
+                AnimatedVisibility(
+                  visible: useExperimentalEditor,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.info_outline,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    onPressed: () async {
+                      await showMessageSingleButtonDialog(
+                        context: context,
+                        title: context.t.bbcodeEditor.experimentalInfoTitle,
+                        message: context.t.bbcodeEditor.experimentalInfoDetail,
+                      );
+                    },
+                  ),
+                ),
+                const Spacer(),
+                // Send Button
                 ElevatedButton(
                   onPressed:
                       (canSendReply && !isSendingReply && !_closed && _hasLogin)
