@@ -81,6 +81,12 @@ class _ReplyBarState extends State<ReplyBar> {
     });
   }
 
+  void _onRichEditorSelectionChanged() {
+    setState(() {
+      canSendReply = bbcodeController.isNotEmpty;
+    });
+  }
+
   // /// Check reply request result in response [resp].
   // /// Return true if success.
   // Future<bool> _checkReplyResult(Response<dynamic> resp) async {
@@ -119,14 +125,32 @@ class _ReplyBarState extends State<ReplyBar> {
   /// Post reply to thread tid/fid.
   /// This will add a post in thread, as reply to that thread.
   Future<void> _sendReplyThreadMessage() async {
-    if (_replyParameters == null || _replyController.text.isEmpty) {
+    if (_replyParameters == null) {
       return;
+    }
+    if (useExperimentalEditor) {
+      if (bbcodeController.isEmpty) {
+        debug('refuse to send post to thread: empty rich text message');
+        return;
+      }
+    } else {
+      if (_replyController.text.isEmpty) {
+        debug('refuse to send post to thread: empty text');
+        return;
+      }
+    }
+
+    final String data;
+    if (useExperimentalEditor) {
+      data = bbcodeController.data ?? '<null>';
+    } else {
+      data = _replyController.text;
     }
 
     context.read<ReplyBloc>().add(
           ReplyToThreadRequested(
             replyParameters: _replyParameters!,
-            replyMessage: _replyController.text,
+            replyMessage: data,
           ),
         );
   }
@@ -139,16 +163,26 @@ class _ReplyBarState extends State<ReplyBar> {
       return;
     }
 
-    if (_replyController.text.isEmpty) {
-      debug('failed to reply to post: reply message is empty');
-      return;
+    final String data;
+    if (useExperimentalEditor) {
+      if (bbcodeController.isEmpty) {
+        debug('failed to reply to post: reply message is empty');
+        return;
+      }
+      data = bbcodeController.data ?? '<null>';
+    } else {
+      if (_replyController.text.isEmpty) {
+        debug('failed to reply to post: reply message is empty');
+        return;
+      }
+      data = _replyController.text;
     }
 
     context.read<ReplyBloc>().add(
           ReplyToPostRequested(
             replyParameters: _replyParameters!,
             replyAction: _replyAction!,
-            replyMessage: _replyController.text,
+            replyMessage: data,
           ),
         );
   }
@@ -200,7 +234,7 @@ class _ReplyBarState extends State<ReplyBar> {
                               ),
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
-                                  maxHeight: 200,
+                                  maxHeight: 100,
                                 ),
                                 child: Column(
                                   children: [
@@ -209,7 +243,8 @@ class _ReplyBarState extends State<ReplyBar> {
                                         controller: bbcodeController,
                                         focusNode: focusNode,
                                         emojiBuilder: (code) async {
-                                          // code is supposed in {:${group_id}_${emoji_id}:}
+                                          // code is supposed in
+                                          // {:${group_id}_${emoji_id}:}
                                           // format.
                                           final emojiCache = await getIt
                                               .get<ImageCacheProvider>()
@@ -294,8 +329,10 @@ class _ReplyBarState extends State<ReplyBar> {
                       if (useExperimentalEditor) {
                         // Sync normal editor data to rich editor.
                         bbcodeController.data = _replyController.text;
+                        canSendReply = bbcodeController.isNotEmpty;
                       } else if (bbcodeController.data != null) {
                         _replyController.text = bbcodeController.data!;
+                        canSendReply = _replyController.text.isNotEmpty;
                       }
                     });
                   },
@@ -366,6 +403,8 @@ class _ReplyBarState extends State<ReplyBar> {
         });
       },
     );
+    // Set callback to update text empty or not state.
+    bbcodeController.onSelectionChanged = _onRichEditorSelectionChanged;
   }
 
   @override
@@ -383,6 +422,7 @@ class _ReplyBarState extends State<ReplyBar> {
         // Clear text one time when user send request succeed.
         if (state.status == ReplyStatus.success && state.needClearText) {
           _replyController.clear();
+          bbcodeController.clear();
           // Reset flag because we only want to clear the sent text.
           context.read<ReplyBloc>().add(ReplyResetClearTextStateTriggered());
         }
