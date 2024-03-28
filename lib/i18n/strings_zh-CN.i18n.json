@@ -201,6 +201,7 @@
     "sendReplyHint": "回复",
     "sendReply": "发送",
     "closed": "帖子已关闭",
+    "needLogin": "需要登录",
     "replySuccess": "回复成功",
     "replyFailed": "回复失败：$err"
   },

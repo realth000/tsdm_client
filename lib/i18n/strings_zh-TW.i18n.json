@@ -201,6 +201,7 @@
     "sendReplyHint": "回覆",
     "sendReply": "傳送",
     "closed": "貼文已關閉",
+    "needLogin": "需要登入",
     "replySuccess": "回覆成功",
     "replyFailed": "回覆失敗：$err"
   },

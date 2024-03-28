@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -23,6 +24,13 @@ class ReplyBar extends StatefulWidget {
 class _ReplyBarState extends State<ReplyBar> {
   /// Indicate current thread is closed.
   bool _closed = false;
+
+  late final StreamSubscription<AuthenticationStatus> _authStatusSub;
+
+  /// Indicate whether have current login user.
+  ///
+  /// Should disable when no user login.
+  bool _hasLogin = false;
 
   bool isExpanded = false;
   bool canSendReply = false;
@@ -129,7 +137,7 @@ class _ReplyBarState extends State<ReplyBar> {
       child: Column(
         mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
         children: [
-          if (_hintText != null && !_closed)
+          if (_hintText != null && !_closed && _hasLogin)
             Padding(
               padding: edgeInsetsL20R20,
               child: Row(
@@ -168,13 +176,15 @@ class _ReplyBarState extends State<ReplyBar> {
                             canSendReply = value.isNotEmpty;
                           });
                         },
-                        enabled: !_closed,
+                        enabled: !_closed && _hasLogin,
                         maxLines: isExpanded ? null : 10,
                         minLines: isExpanded ? null : 1,
                         decoration: InputDecoration(
                           hintText: _closed
                               ? context.t.threadPage.closed
-                              : context.t.threadPage.sendReplyHint,
+                              : _hasLogin
+                                  ? context.t.threadPage.sendReplyHint
+                                  : context.t.threadPage.needLogin,
                         ),
                       ),
                     ),
@@ -208,25 +218,26 @@ class _ReplyBarState extends State<ReplyBar> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
                 ElevatedButton(
-                  onPressed: (canSendReply && !isSendingReply && !_closed)
-                      ? () async {
-                          if (_replyAction == null &&
-                              _replyParameters == null) {
-                            debug(
-                              'failed to send reply: null action and '
-                              'parameters',
-                            );
-                            return;
-                          }
-                          debug(
-                            'ReplyBar: send reply $_replyAction, '
-                            '$_replyParameters',
-                          );
-                          _replyAction == null
-                              ? await _sendReplyThreadMessage()
-                              : await _sendReplyPostMessage();
-                        }
-                      : null,
+                  onPressed:
+                      (canSendReply && !isSendingReply && !_closed && _hasLogin)
+                          ? () async {
+                              if (_replyAction == null &&
+                                  _replyParameters == null) {
+                                debug(
+                                  'failed to send reply: null action and '
+                                  'parameters',
+                                );
+                                return;
+                              }
+                              debug(
+                                'ReplyBar: send reply $_replyAction, '
+                                '$_replyParameters',
+                              );
+                              _replyAction == null
+                                  ? await _sendReplyThreadMessage()
+                                  : await _sendReplyPostMessage();
+                            }
+                          : null,
                   child: isSendingReply
                       ? sizedCircularProgressIndicator
                       : const Icon(Icons.send_outlined),
@@ -243,12 +254,24 @@ class _ReplyBarState extends State<ReplyBar> {
   void initState() {
     super.initState();
     widget.controller._bind = this;
+    final authRepo = context.read<AuthenticationRepository>();
+    _hasLogin = authRepo.currentUser != null;
+    _authStatusSub = authRepo.status.listen(
+      (status) {
+        setState(() {
+          status == AuthenticationStatus.authenticated
+              ? _hasLogin = true
+              : _hasLogin = false;
+        });
+      },
+    );
   }
 
   @override
   void dispose() {
     _replyFocusNode.dispose();
     _replyController.dispose();
+    _authStatusSub.cancel();
     super.dispose();
   }
 

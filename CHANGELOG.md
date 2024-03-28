@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - 帖子: 依旧是修复了很多多余或缺少的空行。
+- 帖子：未登录时禁用回复框并提示需要登录。
 - 首页：修复一些加载首页时无限转圈的问题。
 
 ### Changed

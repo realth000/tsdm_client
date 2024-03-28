@@ -201,6 +201,7 @@
     "sendReplyHint": "Reply...",
     "sendReply": "Reply",
     "closed": "Thread is closed",
+    "needLogin": "Need login",
     "replySuccess": "Reply success",
     "replyFailed": "Failed to reply: $err"
   },
