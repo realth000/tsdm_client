@@ -279,6 +279,18 @@ class _EditorToolbarState extends State<EditorToolbar> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    widget.bbcodeController.addListener(updateBBCodeStatus);
+  }
+
+  @override
+  void dispose() {
+    widget.bbcodeController.removeListener(updateBBCodeStatus);
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,

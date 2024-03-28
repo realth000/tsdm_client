@@ -527,31 +527,6 @@ class _PostEditPageState extends State<PostEditPage> {
     );
   }
 
-  void updateBBCodeStatus() {
-    // Only update text style attributes here.
-    if (!showTextAttributeButtons) {
-      return;
-    }
-
-    setState(() {
-      foregroundColor = bbcodeController.foregroundColor;
-      backgroundColor = bbcodeController.backgroundColor;
-      fontSizeLevel = bbcodeController.fontSizeLevel;
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    bbcodeController.addListener(updateBBCodeStatus);
-  }
-
-  @override
-  void dispose() {
-    bbcodeController.removeListener(updateBBCodeStatus);
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final title = switch (widget.editType) {
