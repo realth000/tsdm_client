@@ -313,8 +313,12 @@ class _PostEditPageState extends State<PostEditPage> {
             setState(() {
               useExperimentalEditor = !useExperimentalEditor;
               bbcodeController.editorVisible = useExperimentalEditor;
-              final data = dataController.text;
-              bbcodeController.data = data;
+              if (useExperimentalEditor) {
+                // Sync normal editor data to rich editor.
+                bbcodeController.data = dataController.text;
+              } else if (bbcodeController.data != null) {
+                dataController.text = bbcodeController.data!;
+              }
             });
           },
         ),
