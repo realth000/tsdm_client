@@ -47,7 +47,7 @@ Future<void> initCache() async {
   _imageCacheDirectory =
       Directory('${(await getApplicationCacheDirectory()).path}/images');
   _emojiCacheDirectory =
-      Directory('${(await getApplicationCacheDirectory()).path}/emoji');
+      Directory('${(await getApplicationSupportDirectory()).path}/emoji');
   _emojiCacheInfoFile = File('${_emojiCacheDirectory.path}/emoji.json');
 
   if (!_imageCacheDirectory.existsSync()) {
