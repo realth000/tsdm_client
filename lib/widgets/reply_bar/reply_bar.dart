@@ -228,10 +228,7 @@ class _ReplyBarState extends State<ReplyBar> {
                       child: useExperimentalEditor
                           ? InputDecorator(
                               isFocused: focusNode.hasFocus,
-                              decoration: InputDecoration(
-                                labelText: context.t.postEditPage.body,
-                                alignLabelWithHint: true,
-                              ),
+                              decoration: const InputDecoration(),
                               child: ConstrainedBox(
                                 constraints: const BoxConstraints(
                                   maxHeight: 100,
