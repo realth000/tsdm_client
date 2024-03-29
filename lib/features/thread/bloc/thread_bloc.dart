@@ -166,6 +166,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         status: ThreadStatus.loading,
         postList: [],
         reverseOrder: !state.reverseOrder,
+        currentPage: 1,
       ),
     );
     try {
