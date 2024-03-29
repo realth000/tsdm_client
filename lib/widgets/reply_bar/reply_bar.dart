@@ -252,6 +252,7 @@ class _ReplyBarState extends State<ReplyBar> {
                                             CachedImageProvider(url, context),
                                         urlLauncher: (url) async =>
                                             context.dispatchAsUrl(url),
+                                        autoFocus: true,
                                       ),
                                     ),
                                   ],
