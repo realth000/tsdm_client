@@ -6,8 +6,8 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
-const _maxAllowedWidth = 160.0;
-const _maxAllowedHeight = 90.0;
+const _maxAllowedWidth = 160;
+const _maxAllowedHeight = 90;
 const _ratio = _maxAllowedWidth / _maxAllowedHeight;
 const _defaultWidth = _maxAllowedWidth;
 const _defaultHeight = _maxAllowedHeight;
@@ -63,7 +63,7 @@ class _ImageDialogState extends State<_ImageDialog> {
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
-                  RegExp(r'([0-9]+\.[0-9]?)|([0-9]+)'),
+                  RegExp('[0-9]+'),
                 ),
               ],
               decoration: InputDecoration(
@@ -86,7 +86,7 @@ class _ImageDialogState extends State<_ImageDialog> {
               keyboardType: TextInputType.number,
               inputFormatters: [
                 FilteringTextInputFormatter.allow(
-                  RegExp(r'([0-9]+\.[0-9]?)|([0-9]+)'),
+                  RegExp('[0-9]+'),
                 ),
               ],
               decoration: InputDecoration(
@@ -125,8 +125,8 @@ class _ImageDialogState extends State<_ImageDialog> {
                     } else {
                       url = 'https://${imageUrlController.text}';
                     }
-                    final width = double.parse(widthController.text);
-                    final height = double.parse(heightController.text);
+                    final width = int.parse(widthController.text);
+                    final height = int.parse(heightController.text);
                     assert(height != 0, 'image height should not be zero');
                     final actualRatio = width / height;
 
@@ -135,10 +135,10 @@ class _ImageDialogState extends State<_ImageDialog> {
                     if (actualRatio <= _ratio) {
                       // Image size is more in height.
                       displayWidth = width * height / _maxAllowedHeight;
-                      displayHeight = _maxAllowedHeight;
+                      displayHeight = _maxAllowedHeight.toDouble();
                     } else {
                       // Image size is more in width.
-                      displayWidth = _maxAllowedWidth;
+                      displayWidth = _maxAllowedWidth.toDouble();
                       displayHeight = height * width / _maxAllowedWidth;
                     }
                     await widget.bbCodeEditorController.insertImage(
