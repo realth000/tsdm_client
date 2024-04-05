@@ -62,7 +62,7 @@ dependencies:
   uuid: ^4.3.3
 
 dev_dependencies:
-  build_runner: ^2.4.9
+  build_runner: ^2.4.8
   dart_mappable_builder:
     git:
       url: https://github.com/realth000/dart_mappable
