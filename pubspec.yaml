@@ -64,10 +64,10 @@ dependencies:
 dev_dependencies:
   build_runner: ^2.4.8
   dart_mappable_builder: ^4.2.2
-    # git:
-    #   url: https://github.com/realth000/dart_mappable
-    #   path: "packages/dart_mappable_builder"
-    #   branch: main
+    #git:
+    #  url: https://github.com/realth000/dart_mappable
+    #  path: "packages/dart_mappable_builder"
+    #  branch: main
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
