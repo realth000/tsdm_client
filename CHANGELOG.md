@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- 帖子：更新楼层中网页链接的样式，现在和bbcode编辑器相同。
+
 ## [0.8.0] - 2024.3.31
 
 ### Added
