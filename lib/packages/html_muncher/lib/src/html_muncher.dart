@@ -98,9 +98,6 @@ class MunchState {
   /// Use as a stack because only the latest size works on font.
   final fontSizeStack = <double>[];
 
-  /// Url to open when tap on the text.
-  String? tapUrl;
-
   /// An internal field to save field current values.
   MunchState? _reservedState;
 
@@ -125,7 +122,6 @@ class MunchState {
     fontSizeStack
       ..clear()
       ..addAll(_reservedState!.fontSizeStack);
-    tapUrl = _reservedState!.tapUrl;
     elevation = _reservedState!.elevation;
 
     _reservedState = null;
@@ -222,18 +218,6 @@ class Muncher {
 
           // Attach url to open when `onTap`.
           GestureRecognizer? recognizer;
-          if (state.tapUrl != null) {
-            final u = state.tapUrl!;
-            recognizer = TapGestureRecognizer()
-              ..onTap = () async {
-                await context.dispatchAsUrl(u);
-              };
-            style = style?.copyWith(
-              decoration: TextDecoration.underline,
-              decorationStyle: TextDecorationStyle.dashed,
-            );
-          }
-
           state
             ..headingBrNodePassed = true
             ..inRepeatWrapLine = false;
@@ -684,10 +668,51 @@ class Muncher {
 
   InlineSpan? _buildA(uh.Element element) {
     if (element.attributes.containsKey('href')) {
-      state.tapUrl = element.attributes['href'];
       final ret = _munch(element);
-      state.tapUrl = null;
-      return ret;
+      if (ret == null) {
+        return null;
+      }
+      final fontSize = ret.style?.fontSize;
+      final height = ret.style?.height;
+      final double finalHeight;
+      if (fontSize != null && height != null) {
+        finalHeight = fontSize * height;
+      } else {
+        // Default text size.
+        finalHeight = 23;
+      }
+      final url = element.attributes['href']!;
+      return WidgetSpan(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () async => context.dispatchAsUrl(url),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                RichText(
+                  text: TextSpan(
+                    style: TextStyle(
+                      color: Theme.of(context).colorScheme.primary,
+                      backgroundColor:
+                          Theme.of(context).colorScheme.primaryContainer,
+                    ),
+                    children: [
+                      WidgetSpan(child: Icon(Icons.link, size: finalHeight)),
+                      WidgetSpan(
+                        child: SizedBox(width: 5, height: finalHeight),
+                      ),
+                      // Wrap in [RichText], otherwise will be higher than
+                      // [finalHeight], maybe it's a flutter bug.
+                      WidgetSpan(child: RichText(text: ret)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
     }
     return _munch(element);
   }
