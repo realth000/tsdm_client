@@ -205,7 +205,7 @@ class Muncher {
           }
 
           // Base text style.
-          var style = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: state.colorStack.lastOrNull,
                 fontWeight: state.bold ? FontWeight.w600 : null,
                 fontSize: state.fontSizeStack.lastOrNull,
