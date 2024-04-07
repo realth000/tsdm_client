@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
@@ -252,6 +253,12 @@ class _ReplyBarState extends State<ReplyBar> {
                                             CachedImageProvider(url, context),
                                         urlLauncher: (url) async =>
                                             context.dispatchAsUrl(url),
+                                        // TODO: Check if need url encoding.
+                                        // Seems unnecessary.
+                                        mentionUserLauncher: (username) =>
+                                            context.dispatchAsUrl(
+                                          '$usernameProfilePage$username',
+                                        ),
                                         autoFocus: true,
                                       ),
                                     ),

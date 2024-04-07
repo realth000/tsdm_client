@@ -428,6 +428,11 @@
       "width": "宽度",
       "height": "高度",
       "errorInvalidNumber": "无效的数字"
+    },
+    "mentionUser": {
+      "title": "提醒用户",
+      "username": "用户名",
+      "errorEmpty": "不能为空"
     }
   }
 }

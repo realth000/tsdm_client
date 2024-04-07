@@ -428,6 +428,11 @@
       "width": "Width",
       "height": "Height",
       "errorInvalidNumber": "Invalid number"
+    },
+    "mentionUser": {
+      "title": "Mention User",
+      "username": "Username",
+      "errorEmpty": "Should not be empty"
     }
   }
 }

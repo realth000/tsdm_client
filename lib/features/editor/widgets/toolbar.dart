@@ -3,6 +3,7 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
+import 'package:tsdm_client/features/editor/widgets/mention_user_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 import 'package:tsdm_client/widgets/scroll_behavior.dart';
@@ -211,20 +212,13 @@ class _EditorToolbarState extends State<EditorToolbar> {
       //     });
       //   },
       // ),
-      // IconButton(
-      //   icon: Icon(
-      //     Icons.alternate_email_outlined,
-      //     color: widget.bbcodeController.strikethrough
-      //         ? Theme.of(context).primaryColor
-      //         : null,
-      //   ),
-      //   onPressed: () {
-      //     // ignore:unnecessary_lambdas
-      //     setState(() {
-      //       widget.bbcodeController.triggerStrikethrough();
-      //     });
-      //   },
-      // ),
+      IconButton(
+        icon: const Icon(Icons.alternate_email_outlined),
+        onPressed: () async => showMentionUserDialog(
+          context,
+          widget.bbcodeController,
+        ),
+      ),
       // IconButton(
       //   icon: Icon(
       //     Icons.format_list_bulleted_outlined,
