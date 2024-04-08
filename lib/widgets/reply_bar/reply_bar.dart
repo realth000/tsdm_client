@@ -253,6 +253,14 @@ class _ReplyBarState extends State<ReplyBar> {
                                             CachedImageProvider(url, context),
                                         urlLauncher: (url) async =>
                                             context.dispatchAsUrl(url),
+                                        urlTextStyle: TextStyle(
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .tertiary,
+                                          backgroundColor: Theme.of(context)
+                                              .colorScheme
+                                              .tertiaryContainer,
+                                        ),
                                         // TODO: Check if need url encoding.
                                         // Seems unnecessary.
                                         mentionUserLauncher: (username) =>
