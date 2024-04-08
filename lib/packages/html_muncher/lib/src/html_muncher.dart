@@ -88,6 +88,21 @@ class MunchState {
   /// Default is 0, increase when building in cards.
   double elevation = 1;
 
+  /// Flag indicating whether we should wrap line in word.
+  ///
+  /// Default, flutter only wrap line on word boundaries but when we using
+  /// in some special case (e.g. url) we want to wrap the line inside words.
+  ///
+  /// Turn on this flag in such situation.
+  bool wrapInWord = false;
+
+  /// Url link to tap.
+  ///
+  /// [TapGestureRecognizer] not works in nested [TextSpan].
+  ///
+  /// As a workaround.
+  String? tapUrl;
+
   /// All colors currently used.
   ///
   /// Use as a stack because only the latest font works on font.
@@ -217,13 +232,23 @@ class Muncher {
               );
 
           // Attach url to open when `onTap`.
-          GestureRecognizer? recognizer;
+          TapGestureRecognizer? recognizer;
+          if (state.tapUrl != null) {
+            // Copy to save the url.
+            final url = state.tapUrl;
+            recognizer = TapGestureRecognizer()
+              ..onTap = () => context.dispatchAsUrl(url!);
+          }
           state
             ..headingBrNodePassed = true
             ..inRepeatWrapLine = false;
+
+          final wrapText =
+              state.wrapInWord ? text?.split('').join('\u200B') : text;
+
           // TODO: Support text-shadow.
           return TextSpan(
-            text: text, //state.inPre ? '${text ?? ""}\n' : text,
+            text: wrapText,
             recognizer: recognizer,
             style: style,
           );
@@ -668,50 +693,34 @@ class Muncher {
 
   InlineSpan? _buildA(uh.Element element) {
     if (element.attributes.containsKey('href')) {
+      final url = element.attributes['href']!;
+      state
+        ..tapUrl = url
+        ..wrapInWord = true;
       final ret = _munch(element);
+      state
+        ..wrapInWord = false
+        ..tapUrl = null;
       if (ret == null) {
         return null;
       }
-      final fontSize = ret.style?.fontSize;
-      final height = ret.style?.height;
-      final double finalHeight;
-      if (fontSize != null && height != null) {
-        finalHeight = fontSize * height;
-      } else {
-        // Default text size.
-        finalHeight = 23;
-      }
-      final url = element.attributes['href']!;
-      return WidgetSpan(
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () async => context.dispatchAsUrl(url),
+      return TextSpan(
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.tertiary,
+          backgroundColor: Theme.of(context).colorScheme.tertiaryContainer,
+        ),
+        children: [
+          const WidgetSpan(
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                RichText(
-                  text: TextSpan(
-                    style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      backgroundColor:
-                          Theme.of(context).colorScheme.primaryContainer,
-                    ),
-                    children: [
-                      WidgetSpan(child: Icon(Icons.link, size: finalHeight)),
-                      WidgetSpan(
-                        child: SizedBox(width: 5, height: finalHeight),
-                      ),
-                      // Wrap in [RichText], otherwise will be higher than
-                      // [finalHeight], maybe it's a flutter bug.
-                      WidgetSpan(child: RichText(text: ret)),
-                    ],
-                  ),
-                ),
+                Icon(Icons.link),
+                SizedBox(width: 5),
               ],
             ),
           ),
-        ),
+          ret,
+        ],
       );
     }
     return _munch(element);

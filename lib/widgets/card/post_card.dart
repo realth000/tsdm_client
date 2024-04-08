@@ -132,28 +132,18 @@ class _PostCardState extends State<PostCard>
               ),
             // Post body
             sizedBoxW10H10,
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTap: () async {
-                await widget.replyCallback?.call(
-                  widget.post.author,
-                  widget.post.postFloor,
-                  widget.post.replyAction,
-                );
-              },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: edgeInsetsL15R15,
-                      child: munchElement(
-                        context,
-                        parseHtmlDocument(widget.post.data).body!,
-                      ),
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: edgeInsetsL15R15,
+                    child: munchElement(
+                      context,
+                      parseHtmlDocument(widget.post.data).body!,
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
             // 红包 if any.
             if (widget.post.locked.isNotEmpty)
