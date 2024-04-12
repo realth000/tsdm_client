@@ -205,7 +205,7 @@ class Muncher {
           } else if (state.trimAll) {
             text = node.text?.trim();
           } else {
-            node.text?.trimLeft();
+            text = node.text?.trimLeft();
           }
           // If text is trimmed to empty, maybe it is an '\n' before trimming.
           if (text?.isEmpty ?? true) {

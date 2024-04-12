@@ -10,6 +10,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 通知：通知为空时显示“通知为空”提示。
 
+### Fixed
+
+- 更新：修复更新页中获取最新一个版本的更新记录时内容为空的问题。
+
 ### Changed
 
 - 帖子：更新楼层中网页链接的样式，现在和bbcode编辑器相同。
