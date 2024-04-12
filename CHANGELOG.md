@@ -18,6 +18,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 帖子：更新楼层中网页链接的样式，现在和bbcode编辑器相同。
 - 编辑：编辑器插入网页链接时，不再自动加`https://`前缀。
+- 网页：更新解析网页时标签`<li>`的样式。
 
 ## [0.8.0] - 2024.3.31
 

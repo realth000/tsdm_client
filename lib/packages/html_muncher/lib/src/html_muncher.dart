@@ -817,13 +817,7 @@ class Muncher {
     }
     return TextSpan(
       children: [
-        WidgetSpan(
-          child: Icon(
-            Icons.radio_button_unchecked,
-            size: FontSize.size2.value(),
-          ),
-        ),
-        const TextSpan(text: ' '),
+        const TextSpan(text: '•  '),
         ret,
         const TextSpan(text: '\n'),
       ],
