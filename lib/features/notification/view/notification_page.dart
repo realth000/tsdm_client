@@ -23,6 +23,42 @@ class _NotificationPageState extends State<NotificationPage> {
   );
 
   Widget _buildBody(BuildContext context, NotificationState state) {
+    final Widget content;
+    if (state.noticeList.isEmpty) {
+      content = Row(
+        children: [
+          LayoutBuilder(
+            builder: (context, constraints) => SingleChildScrollView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              child: ConstrainedBox(
+                constraints: BoxConstraints(
+                  minWidth: MediaQuery.of(context).size.width,
+                  minHeight: constraints.maxHeight,
+                ),
+                child: Center(
+                  child: Text(
+                    context.t.general.noData,
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                          color: Theme.of(context).colorScheme.outline,
+                        ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ],
+      );
+    } else {
+      content = ListView.separated(
+        padding: edgeInsetsL10T5R10B20,
+        itemCount: state.noticeList.length,
+        itemBuilder: (context, index) {
+          return NoticeCard(notice: state.noticeList[index]);
+        },
+        separatorBuilder: (context, index) => sizedBoxW5H5,
+      );
+    }
+
     return EasyRefresh(
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of
@@ -40,14 +76,7 @@ class _NotificationPageState extends State<NotificationPage> {
             .read<NotificationBloc>()
             .add(NotificationRefreshNoticeRequired());
       },
-      child: ListView.separated(
-        padding: edgeInsetsL10T5R10B20,
-        itemCount: state.noticeList.length,
-        itemBuilder: (context, index) {
-          return NoticeCard(notice: state.noticeList[index]);
-        },
-        separatorBuilder: (context, index) => sizedBoxW5H5,
-      ),
+      child: content,
     );
   }
 

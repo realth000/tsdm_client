@@ -10,6 +10,7 @@
     "needLoginToSeeThisPage": "登入後才能存取此頁面",
     "pleaseWait": "請稍候",
     "loadFailedAndRetry": "載入失敗，正在重試",
+    "noData": "沒有資料",
     "noMoreData": "已經到頭了",
     "reset": "重置为默认值",
     "more": "更多",
