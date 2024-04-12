@@ -74,17 +74,9 @@ class _UrlDialogState extends State<UrlDialog> {
                         !(formKey.currentState!).validate()) {
                       return;
                     }
-                    final String url;
-                    if (urlController.text.startsWith('http://') ||
-                        urlController.text.startsWith('https://')) {
-                      url = urlController.text;
-                    } else {
-                      url = 'https://${urlController.text}';
-                    }
-
                     await widget.bbCodeController.insertUrl(
                       descController.text,
-                      url,
+                      urlController.text,
                     );
                     if (!context.mounted) {
                       return;
