@@ -16,6 +16,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 更新：修复更新页中获取最新一个版本的更新记录时内容为空的问题。
 - 编辑：修复编辑器中插入图片时图片尺寸格式错误。
   - 图片的长和宽只允许使用整数。
+- 编辑：修复粗体、斜体、下划线和删除线蔓延到之后的文本的问题。
 
 ### Changed
 
