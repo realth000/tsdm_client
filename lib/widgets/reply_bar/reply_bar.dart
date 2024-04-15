@@ -189,6 +189,24 @@ class _ReplyBarState extends State<ReplyBar> {
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
+    void Function()? switchEditorCallback;
+    if (!state.closed) {
+      switchEditorCallback = () {
+        setState(() {
+          useExperimentalEditor = !useExperimentalEditor;
+          bbcodeController.editorVisible = useExperimentalEditor;
+          if (useExperimentalEditor) {
+            // Sync normal editor data to rich editor.
+            bbcodeController.data = _replyController.text;
+            canSendReply = bbcodeController.isNotEmpty;
+          } else if (bbcodeController.data != null) {
+            _replyController.text = bbcodeController.data!;
+            canSendReply = _replyController.text.isNotEmpty;
+          }
+        });
+      };
+    }
+
     return SafeArea(
       top: isExpanded,
       child: Column(
@@ -335,20 +353,7 @@ class _ReplyBarState extends State<ReplyBar> {
                 IconButton(
                   icon: const Icon(Icons.science_outlined),
                   isSelected: useExperimentalEditor,
-                  onPressed: () {
-                    setState(() {
-                      useExperimentalEditor = !useExperimentalEditor;
-                      bbcodeController.editorVisible = useExperimentalEditor;
-                      if (useExperimentalEditor) {
-                        // Sync normal editor data to rich editor.
-                        bbcodeController.data = _replyController.text;
-                        canSendReply = bbcodeController.isNotEmpty;
-                      } else if (bbcodeController.data != null) {
-                        _replyController.text = bbcodeController.data!;
-                        canSendReply = _replyController.text.isNotEmpty;
-                      }
-                    });
-                  },
+                  onPressed: switchEditorCallback,
                 ),
                 AnimatedVisibility(
                   visible: useExperimentalEditor,
