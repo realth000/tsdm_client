@@ -18,7 +18,7 @@ packages:
     source: hosted
     version: "6.4.1"
   ansicolor:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: ansicolor
       sha256: "8bf17a8ff6ea17499e40a2d2542c2f481cd7615760c6d34065cb22bfd22e6880"
@@ -278,8 +278,8 @@ packages:
     description:
       path: "packages/dart_mappable_builder"
       ref: HEAD
-      resolved-ref: "01cbd4d9023650e072947ba7817a53fd90e7d116"
-      url: "https://github.com/realth000/dart_mappable"
+      resolved-ref: "4777e79cdc99e15730d18990e1d774edc0064b0a"
+      url: "https://github.com/schultek/dart_mappable.git"
     source: git
     version: "4.2.3"
   dart_style:
