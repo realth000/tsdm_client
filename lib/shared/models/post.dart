@@ -30,6 +30,7 @@ class Post with PostMappable {
     this.rate,
     this.packetUrl,
     this.editUrl,
+    this.userBriefProfile,
   });
 
   /// Post ID.
@@ -87,6 +88,11 @@ class Post with PostMappable {
 
   /// Time of last edited.
   final String? lastEditTime;
+
+  /// Brief user profile of current post.
+  ///
+  /// May be null, maybe...
+  final UserBriefProfile? userBriefProfile;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element) {
@@ -241,6 +247,17 @@ class Post with PostMappable {
           '${lastEditText.elementAtOrNull(4)}';
     }
 
+    // User profile
+    final userProfileNode =
+        element.querySelector('table > tbody > tr:nth-child(1) > td.pls');
+    UserBriefProfile? userBriefProfile;
+    if (userProfileNode != null) {
+      userBriefProfile =
+          UserBriefProfile.buildFromUserProfileNode(userProfileNode);
+    } else {
+      debug('post $postID: user profile node not found');
+    }
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -255,6 +272,7 @@ class Post with PostMappable {
       editUrl: editUrl,
       lastEditUsername: lastEditUsername,
       lastEditTime: lastEditTime,
+      userBriefProfile: userBriefProfile,
     );
   }
 

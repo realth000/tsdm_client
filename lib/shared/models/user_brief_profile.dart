@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/thread/models/user_brief_profile.mapper.dart';
+part '../../generated/shared/models/user_brief_profile.mapper.dart';
 
 /// A brief user profile shows along with user's post in thread page.
 @MappableClass()

@@ -2,7 +2,6 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/features/thread/models/user_brief_profile.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -62,7 +61,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        userProfileList: [],
       ),
     );
     try {
@@ -87,7 +85,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        userProfileList: [],
       ),
     );
 
@@ -121,7 +118,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        userProfileList: [],
       ),
     );
 
@@ -155,7 +151,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        userProfileList: [],
       ),
     );
 
@@ -190,7 +185,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        userProfileList: [],
         reverseOrder: !state.reverseOrder,
         currentPage: 1,
       ),
@@ -308,10 +302,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
     }
 
-    // Only update this when page number changed or refreshed.
-    // Here is enough.
-    final userBriefProfileList = _parseUserInfoFromDocument(document);
-
     return ThreadState(
       tid: threadID,
       pid: state.pid,
@@ -330,17 +320,6 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       onlyVisibleUid:
           (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
       reverseOrder: state.reverseOrder,
-      userProfileList: [...state.userProfileList, ...userBriefProfileList],
     );
-  }
-
-  List<UserBriefProfile> _parseUserInfoFromDocument(uh.Document document) {
-    return document
-        .querySelectorAll(
-          'table.tsdm_post_t > tbody > tr:nth-child(1) > td.pls',
-        )
-        .map(UserBriefProfile.buildFromUserProfileNode)
-        .whereType<UserBriefProfile>()
-        .toList();
   }
 }

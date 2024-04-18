@@ -36,7 +36,6 @@ class ThreadState with ThreadStateMappable {
     this.threadType,
     this.onlyVisibleUid,
     this.reverseOrder = false,
-    this.userProfileList = const [],
   });
 
   /// Status.
@@ -98,9 +97,4 @@ class ThreadState with ThreadStateMappable {
 
   /// View posts in current thread in forward order or reverse order.
   final bool reverseOrder;
-
-  /// All user profile data on the current page.
-  ///
-  /// Each user profile is built from post along side user info node.
-  final List<UserBriefProfile> userProfileList;
 }
