@@ -384,7 +384,29 @@
     "rateFetchInfoFailed": "获取评分信息失败",
     "rateFailed": "评分失败",
     "edit": "编辑",
-    "lastEditInfo": "本帖最后由 $username 于 $time 编辑"
+    "lastEditInfo": "本帖最后由 $username 于 $time 编辑",
+    "profileDialog": {
+      "title": "头衔",
+      "recommended": "精华",
+      "thread": "主题",
+      "post": "帖子",
+      "famous": "威望",
+      "coins": "天使币",
+      "publicity": "宣传",
+      "natural": "天然",
+      "scheming": "腹黑",
+      "spirit": "精灵",
+      "seal": "龙之印章",
+      "cp": "CP",
+      "privilege": "阅读权限",
+      "registration": "注册时间",
+      "from": "来自",
+      "status": {
+        "title": "状态",
+        "online": "在线",
+        "offline": "离线"
+      }
+    }
   },
   "packetCard": {
     "title": "你找到了一个红包！",

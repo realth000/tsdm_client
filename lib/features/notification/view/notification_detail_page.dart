@@ -8,7 +8,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/widgets/card/post_card.dart';
+import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';

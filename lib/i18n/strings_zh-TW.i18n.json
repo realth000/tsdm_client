@@ -384,7 +384,29 @@
     "rateFetchInfoFailed": "获取评分信息失败",
     "rateFailed": "评分失败",
     "edit": "編輯",
-    "lastEditInfo": "本帖最後由 $username 於 $time 編輯"
+    "lastEditInfo": "本帖最後由 $username 於 $time 編輯",
+    "profileDialog": {
+      "title": "頭銜",
+      "recommended": "精華",
+      "thread": "主題",
+      "post": "帖子",
+      "famous": "威望",
+      "coins": "天使幣",
+      "publicity": "宣傳度",
+      "natural": "天然",
+      "scheming": "腹黑",
+      "spirit": "精靈",
+      "seal": "龍之印章",
+      "cp": "CP",
+      "privilege": "閱讀權限",
+      "registration": "注冊時間",
+      "from": " 來自:",
+      "status": {
+        "title": "狀態",
+        "online": "線上",
+        "offline": "離線"
+      }
+    }
   },
   "packetCard": {
     "title": "你找到一個紅包了！",

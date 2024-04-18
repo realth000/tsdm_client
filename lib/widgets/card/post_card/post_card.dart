@@ -15,6 +15,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image//cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/packet_card.dart';
+import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialog.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -90,8 +91,16 @@ class _PostCardState extends State<PostCard>
             // User info.
             ListTile(
               leading: GestureDetector(
-                onTap: () async =>
-                    context.dispatchAsUrl(widget.post.author.url),
+                onTap: () async {
+                  if (widget.post.userBriefProfile != null) {
+                    await showUserBriefProfileDialog(
+                      context,
+                      widget.post.userBriefProfile!,
+                      widget.post.author.url,
+                    );
+                  }
+                  // context.dispatchAsUrl(widget.post.author.url),
+                },
                 child: CircleAvatar(
                   backgroundImage: CachedImageProvider(
                     widget.post.author.avatarUrl!,
@@ -103,8 +112,16 @@ class _PostCardState extends State<PostCard>
               title: Row(
                 children: [
                   GestureDetector(
-                    onTap: () async =>
-                        context.dispatchAsUrl(widget.post.author.url),
+                    onTap: () async {
+                      if (widget.post.userBriefProfile != null) {
+                        await showUserBriefProfileDialog(
+                          context,
+                          widget.post.userBriefProfile!,
+                          widget.post.author.url,
+                        );
+                      }
+                      // context.dispatchAsUrl(widget.post.author.url),
+                    },
                     child: Text(widget.post.author.name),
                   ),
                   Expanded(child: Container()),

@@ -384,7 +384,29 @@
     "rateFetchInfoFailed": "Fetch info failed",
     "rateFailed": "Rate failed",
     "edit": "Edit",
-    "lastEditInfo": "Last edited by $username at $time"
+    "lastEditInfo": "Last edited by $username at $time",
+    "profileDialog": {
+      "title": "Title",
+      "recommended": "Recommended",
+      "thread": "Thread",
+      "post": "Post",
+      "famous": "Famous",
+      "coins": "Coins",
+      "publicity": "Publicity",
+      "natural": "Natural",
+      "scheming": "Scheming",
+      "spirit": "Spirit",
+      "seal": "Seal",
+      "cp": "CP",
+      "privilege": "Privilege",
+      "registration": "Registration",
+      "from": "From",
+      "status": {
+        "title": "Status",
+        "online": "Online",
+        "offline": "Offline"
+      }
+    }
   },
   "packetCard": {
     "title": "You found a packet!",

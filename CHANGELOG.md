@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 帖子：帖子内通过楼层作者的头衔和名称可以查看作者的简要信息。
+
 ### Fixed
 
 - 编辑：修复帖子关闭时可以切换编辑器的问题。

@@ -1,0 +1,209 @@
+import 'package:flutter/material.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/shared/models/user_brief_profile.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+
+/// Show a dialog to display user brief profile.
+///
+/// Data only available in thread page on all replied users.
+Future<void> showUserBriefProfileDialog(
+  BuildContext context,
+  UserBriefProfile userBriefProfile,
+  String userSpaceUrl,
+) async {
+  await showDialog<void>(
+    context: context,
+    builder: (_) => _UserBriefProfileDialog(userBriefProfile, userSpaceUrl),
+  );
+}
+
+class _UserBriefProfileDialog extends StatelessWidget {
+  const _UserBriefProfileDialog(this.profile, this.userSpaceUrl);
+
+  final UserBriefProfile profile;
+
+  final String userSpaceUrl;
+
+  @override
+  Widget build(BuildContext context) {
+    final tr = context.t.postCard.profileDialog;
+
+    return AlertDialog(
+      clipBehavior: Clip.antiAlias,
+      title: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              CircleAvatar(
+                radius: 30,
+                backgroundImage: CachedImageProvider(
+                  profile.avatarUrl ?? noAvatarUrl,
+                  context,
+                ),
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.info_outline),
+                onPressed: () async => context.dispatchAsUrl(userSpaceUrl),
+              ),
+            ],
+          ),
+          sizedBoxW15H15,
+          Text(
+            profile.username,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
+          sizedBoxW5H5,
+          Text(
+            'UID ${profile.uid}',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.outline,
+                ),
+          ),
+        ],
+      ),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(
+          maxHeight: MediaQuery.of(context).size.height * 0.4,
+        ),
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              if (profile.title != null)
+                _UserProfilePair(
+                  Icons.badge_outlined,
+                  tr.title,
+                  profile.title,
+                  style: _UserProfileAttrStyle.primary,
+                ),
+              _UserProfilePair(
+                Icons.thumb_up_outlined,
+                tr.recommended,
+                profile.recommended,
+                style: _UserProfileAttrStyle.primary,
+              ),
+              _UserProfilePair(
+                Icons.book_outlined,
+                tr.thread,
+                profile.threadCount,
+                style: _UserProfileAttrStyle.primary,
+              ),
+              _UserProfilePair(
+                MdiIcons.commentEditOutline,
+                tr.post,
+                profile.postCount,
+                style: _UserProfileAttrStyle.primary,
+              ),
+              _UserProfilePair(
+                Icons.emoji_people_outlined,
+                tr.famous,
+                profile.famous,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
+                Icons.water_drop_outlined,
+                tr.natural,
+                profile.natural,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
+                MdiIcons.dominoMask,
+                tr.scheming,
+                profile.natural,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
+                Icons.stream_outlined,
+                tr.spirit,
+                profile.spirit,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
+                MdiIcons.circleExpand,
+                tr.seal,
+                profile.seal,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              if (profile.couple != null && profile.couple!.isNotEmpty)
+                _UserProfilePair(
+                  Icons.diversity_1_outlined,
+                  tr.cp,
+                  profile.couple,
+                  style: _UserProfileAttrStyle.tertiary,
+                ),
+              _UserProfilePair(
+                Icons.feedback_outlined,
+                tr.privilege,
+                profile.privilege,
+                style: _UserProfileAttrStyle.tertiary,
+              ),
+              if (profile.comeFrom != null)
+                _UserProfilePair(
+                  Icons.pin_drop_outlined,
+                  tr.from,
+                  profile.comeFrom,
+                  style: _UserProfileAttrStyle.tertiary,
+                ),
+              _UserProfilePair(
+                Icons.online_prediction_outlined,
+                tr.status.title,
+                profile.online ? tr.status.online : tr.status.offline,
+                style: _UserProfileAttrStyle.tertiary,
+              ),
+            ].insertBetween(sizedBoxW5H5),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+enum _UserProfileAttrStyle {
+  primary,
+  secondary,
+  tertiary,
+  normal,
+}
+
+class _UserProfilePair extends StatelessWidget {
+  const _UserProfilePair(
+    this.iconData,
+    this.name,
+    this.value, {
+    this.style = _UserProfileAttrStyle.normal,
+  });
+
+  final IconData iconData;
+  final String name;
+  final String? value;
+  final _UserProfileAttrStyle style;
+
+  @override
+  Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
+    final color = switch (style) {
+      _UserProfileAttrStyle.primary => colorScheme.primary,
+      _UserProfileAttrStyle.secondary => colorScheme.secondary,
+      _UserProfileAttrStyle.tertiary => colorScheme.tertiary,
+      _UserProfileAttrStyle.normal => null,
+    };
+
+    return Row(
+      children: [
+        Icon(iconData, size: 18, color: color),
+        sizedBoxW5H5,
+        Text(name, style: TextStyle(color: color)),
+        sizedBoxW10H10,
+        Expanded(child: Text(value ?? '', style: TextStyle(color: color))),
+      ],
+    );
+  }
+}

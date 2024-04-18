@@ -14,7 +14,7 @@ import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/widgets/card/post_card.dart';
+import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';

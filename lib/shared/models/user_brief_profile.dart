@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -11,6 +12,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
   /// Constructor.
   const UserBriefProfile({
     required this.username,
+    required this.avatarUrl,
     required this.uid,
     required this.nickname,
     required this.userGroup,
@@ -36,6 +38,11 @@ final class UserBriefProfile with UserBriefProfileMappable {
   ///
   /// 用户名
   final String username;
+
+  /// User avatar url.
+  ///
+  /// Actually should not be empty but we notice it.
+  final String? avatarUrl;
 
   /// User id.
   ///
@@ -154,9 +161,12 @@ final class UserBriefProfile with UserBriefProfileMappable {
     final username = avatarNode.querySelector('div:nth-child(1)')?.innerText;
     // Allow empty value.
     final nickname = avatarNode.querySelector('div:nth-child(2)')?.innerText;
-    if (username == null || nickname == null) {
+    final avatarUrl =
+        avatarNode.querySelector('div.avatar > a > img')?.imageUrl();
+    if (username == null || nickname == null || avatarUrl == null) {
       debug(
-        'warning when build UserBriefProfile: username or nickname not found',
+        'warning when build UserBriefProfile: username or nickname or'
+        ' avatarUrl not found',
       );
     }
 
@@ -214,6 +224,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
 
     return UserBriefProfile(
       username: username ?? '',
+      avatarUrl: avatarUrl,
       uid: uid,
       nickname: nickname,
       userGroup: userGroup ?? '',
