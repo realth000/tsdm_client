@@ -145,6 +145,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 profile.privilege,
                 style: _UserProfileAttrStyle.tertiary,
               ),
+              _UserProfilePair(
+                Icons.event_note_outlined,
+                tr.registration,
+                profile.registrationDate,
+                style: _UserProfileAttrStyle.tertiary,
+              ),
               if (profile.comeFrom != null)
                 _UserProfilePair(
                   Icons.pin_drop_outlined,
