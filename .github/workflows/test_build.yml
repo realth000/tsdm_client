@@ -166,7 +166,7 @@ jobs:
       - name: Packing MacOS dmg
         if: ${{ github.event_name == 'push' || inputs.build_macos }}
         run: |
-          python3 -m pip install setuptools
+          brew install python-setuptools
           npm install -g appdmg
           appdmg appdmg.json build/tsdm_client-universal.dmg
       - name: Upload MacOS artifacts
