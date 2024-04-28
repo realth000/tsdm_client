@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: appflowy_editor
-      sha256: a4c9e4a05a96f26fedea6895ea7b2c2f43e1ba9baa52618d5d70272d964c8f2f
+      sha256: caf8b03ece70683c1739e328aabe1478795b90f97c738994a4c9b7fb0e5d0eab
       url: "https://pub.dev"
     source: hosted
-    version: "2.3.3"
+    version: "2.3.4"
   archive:
     dependency: transitive
     description:
@@ -258,13 +258,13 @@ packages:
     source: hosted
     version: "6.0.0"
   cupertino_icons:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: cupertino_icons
-      sha256: d57953e10f9f8327ce64a508a355f0b1ec902193f66288e8cb5070e7c47eeb2d
+      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.6"
+    version: "1.0.8"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -334,10 +334,10 @@ packages:
     dependency: "direct main"
     description:
       name: easy_refresh
-      sha256: f36324c7f50291f85085bd64b39abe6b63909481bfa527f9c654d17ef172de30
+      sha256: "878b7da3d3f7f318a0c9cd2c0bd07c7594ae558e5df52ce49e6f6bce5b2ad48a"
       url: "https://pub.dev"
     source: hosted
-    version: "3.3.4"
+    version: "3.3.5+1"
   equatable:
     dependency: "direct main"
     description:
