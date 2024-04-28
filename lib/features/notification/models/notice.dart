@@ -193,7 +193,7 @@ class Notice with NoticeMappable {
       username = usernameEndOffset == null
           ? ''
           : n?.substring(usernameBeginOffset, usernameEndOffset);
-      redirectUrl = a1Node?.firstHref();
+      redirectUrl = a1Node?.firstHref()?.prependHost();
       quotedMessage = mentionNode!.firstEndDeepText()?.trim();
     } else if (noticeType == NoticeType.newFriend) {
       username = a1Node?.firstEndDeepText();
