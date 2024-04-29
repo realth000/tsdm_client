@@ -148,12 +148,12 @@ final class UserBriefProfile with UserBriefProfileMappable {
   /// <td id="userinfo_${UID}", ...> ... </td>
   /// ```
   static UserBriefProfile? buildFromUserProfileNode(uh.Element element) {
-    final uid = element.id.split('_').lastOrNull;
-    if (uid == null) {
+    final postId = element.id.split('_').lastOrNull;
+    if (postId == null) {
       debug('failed to build UserBriefProfile: uid not found');
       return null;
     }
-    final avatarNode = element.querySelector('div#ts_avatar_$uid');
+    final avatarNode = element.querySelector('div#ts_avatar_$postId');
     if (avatarNode == null) {
       debug('failed to build UserBriefProfile: avatar node not found');
       return null;
@@ -177,6 +177,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
     }
     final userGroup = statBarNode.children.firstOrNull?.innerText;
 
+    String? uid;
     String? title;
     String? recommended;
     String? threadCount;
@@ -201,6 +202,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
       }
       final data = pair[1].innerText;
       final _ = switch (pair[0].innerText) {
+        'UID:' => uid = data,
         '头衔:' => title = data,
         '精华:' => recommended = data,
         '主题:' => threadCount = data,
@@ -225,7 +227,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
     return UserBriefProfile(
       username: username ?? '',
       avatarUrl: avatarUrl,
-      uid: uid,
+      uid: uid ?? '',
       nickname: nickname,
       userGroup: userGroup ?? '',
       title: title,

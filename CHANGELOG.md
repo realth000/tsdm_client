@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - 通知：修复无法跳转到提醒（@）类型的通知所在帖子的问题。
+- 帖子：修复楼层用户的简要信息中UID不正确的问题。
 
 ## [0.10.0] - 2024.4.27
 
