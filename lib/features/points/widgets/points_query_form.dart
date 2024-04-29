@@ -45,7 +45,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
   PointsChangeType pointsChangeType = PointsChangeType.unlimited;
 
   /// Flag to control the visibility of query filter.
-  bool showQueryFilter = true;
+  bool showQueryFilter = false;
 
   /// Show a modal bottom sheet of all points ext type choices.
   Future<void> pickExtType(BuildContext context) async {
