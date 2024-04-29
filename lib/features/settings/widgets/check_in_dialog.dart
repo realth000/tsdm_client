@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 
@@ -63,6 +64,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
   @override
   void initState() {
     super.initState();
+    textRestLength = _maxTextLength - widget.defaultMessage.parseUtf8Length;
     textController.text = widget.defaultMessage;
   }
 
@@ -85,21 +87,18 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
               key: formKey,
               child: TextFormField(
                 autofocus: true,
-                validator: (v) {
-                  if (v == null) {
-                    return null;
-                  }
-                  if (v.length <= 3) {
+                validator: (_) {
+                  if (textRestLength >= 47) {
                     return context.t.checkinForm.shouldMoreThan3;
                   }
-                  if (v.length > 50) {
+                  if (textRestLength < 0) {
                     return context.t.checkinForm.shouldNoMoreThan50;
                   }
                   return null;
                 },
                 onChanged: (value) {
                   setState(() {
-                    textRestLength = _maxTextLength - value.length;
+                    textRestLength = _maxTextLength - value.parseUtf8Length;
                   });
                 },
                 controller: textController,
