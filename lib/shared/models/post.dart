@@ -242,9 +242,15 @@ class Post with PostMappable {
     // 本帖最后由 $username 于 xxxx-xx-xx xx:xx:xx 编辑
     // 0         1         2 3          4        5
     if (lastEditText != null) {
-      lastEditUsername = lastEditText.elementAtOrNull(1);
-      lastEditTime = '${lastEditText.elementAtOrNull(3)} '
-          '${lastEditText.elementAtOrNull(4)}';
+      lastEditText.removeLast(); // 编辑
+      final time = lastEditText.removeLast();
+      final date = lastEditText.removeLast();
+      lastEditText
+        ..removeLast() // 于
+        ..removeAt(0); // 本帖最后由
+      final name = lastEditText.join(' ');
+      lastEditUsername = name;
+      lastEditTime = '$date $time';
     }
 
     // User profile
