@@ -23,7 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 积分：现在默认收起已登录用户的积分统计信息页面中的查询框。
 
-## [0.10.0] - 2024.4.27
+## [0.10.0] - 2024-04-27
 
 ### Added
 
@@ -34,7 +34,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 编辑：修复帖子关闭后可以切换编辑器的问题。
 - 编辑：修复帖子内发布回复后编辑器不可用的问题。
 
-## [0.9.0] - 2024.4.12
+## [0.9.0] - 2024-04-12
 
 ### Added
 
@@ -57,7 +57,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 编辑：编辑器插入网页链接时，不再自动加`https://`前缀。
 - 网页：更新解析网页时标签`<li>`的样式。
 
-## [0.8.0] - 2024.3.31
+## [0.8.0] - 2024-03-31
 
 ### Added
 
