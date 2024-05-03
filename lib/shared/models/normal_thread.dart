@@ -102,6 +102,7 @@ class NormalThread with NormalThreadMappable {
     required this.replyCount,
     required this.viewCount,
     required this.price,
+    required this.privilege,
     required this.css,
     required this.stateSet,
   });
@@ -158,6 +159,13 @@ class NormalThread with NormalThreadMappable {
   /// May be null, >= 0.
   final int? price;
 
+  /// Required read privilege.
+  ///
+  /// User has privilege less than this value is not allowed to the this thread.
+  ///
+  /// May be null, >= 0.
+  final int? privilege;
+
   /// Css decoration on thread entry.
   final CssTypes? css;
 
@@ -199,10 +207,19 @@ class NormalThread with NormalThreadMappable {
       return null;
     }
 
-    final threadPrice = threadElement
-        .querySelector('tr > th > span.xw1')
-        ?.firstEndDeepText()
-        ?.parseToInt();
+    int? threadPrice;
+    int? privilege;
+    for (final node in threadElement.querySelectorAll('tr > th > span.xw1')) {
+      final prevText = node.previousNode?.text;
+      if (prevText == null) {
+        continue;
+      }
+      if (prevText.contains('售价')) {
+        threadPrice = node.firstEndDeepText()?.trim().parseToInt();
+      } else if (prevText.contains('阅读权限')) {
+        privilege = node.firstEndDeepText()?.trim().parseToInt();
+      }
+    }
 
     final threadAuthorNode = threadElement.querySelector('tr > td.by');
     final threadAuthorUrl =
@@ -299,6 +316,7 @@ class NormalThread with NormalThreadMappable {
       replyCount: threadReplyCount ?? 0,
       viewCount: threadViewCount ?? 0,
       price: threadPrice,
+      privilege: privilege,
       css: css,
       stateSet: stateSet,
     );

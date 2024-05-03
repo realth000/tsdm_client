@@ -17,6 +17,7 @@ class StickThread extends NormalThread with StickThreadMappable {
     required super.replyCount,
     required super.viewCount,
     required super.price,
+    required super.privilege,
     required super.css,
     required super.stateSet,
   });
@@ -42,6 +43,7 @@ class StickThread extends NormalThread with StickThreadMappable {
       replyCount: t.replyCount,
       viewCount: t.viewCount,
       price: t.price,
+      privilege: t.privilege,
       css: t.css,
       stateSet: t.stateSet,
     );

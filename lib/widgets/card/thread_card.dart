@@ -25,6 +25,7 @@ class _CardLayout extends StatelessWidget {
     this.viewCount,
     this.latestReplyTime,
     this.price,
+    this.privilege,
     this.quotedMessage,
     this.css,
     this.stateSet,
@@ -40,6 +41,7 @@ class _CardLayout extends StatelessWidget {
   final int? viewCount;
   final DateTime? latestReplyTime;
   final int? price;
+  final int? privilege;
   final String? quotedMessage;
   final CssTypes? css;
   final Set<ThreadStateModel>? stateSet;
@@ -56,6 +58,7 @@ class _CardLayout extends StatelessWidget {
           latestReplyTime!.elapsedTillNow(),
         ),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
+      if ((privilege ?? 0) > 0) (Icons.feedback_outlined, '$privilege'),
     ];
 
     final infoWidgetList = <Widget>[];
@@ -186,6 +189,7 @@ class NormalThreadCard extends StatelessWidget {
       viewCount: thread.viewCount,
       latestReplyTime: thread.latestReplyTime,
       price: thread.price,
+      privilege: thread.privilege,
       css: thread.css,
       stateSet: thread.stateSet,
     );
