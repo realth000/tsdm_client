@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -106,6 +107,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 Icons.emoji_people_outlined,
                 tr.famous,
                 profile.famous,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
+                FontAwesomeIcons.coins,
+                tr.coins,
+                profile.coins,
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
