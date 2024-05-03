@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.10.1] - 2024-05-03
+
 ### Fixed
 
 - 通知：修复无法跳转到提醒（@）类型的通知所在帖子的问题。
