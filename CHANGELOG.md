@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- 编辑：修复网页链接和提醒用户的样式。
+- 编辑：修复艾特不存在的用户时，跳转到用户资料页后页面异常的问题。
+
 ## [0.10.1] - 2024-05-03
 
 ### Fixed

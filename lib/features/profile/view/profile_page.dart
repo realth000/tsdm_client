@@ -86,14 +86,19 @@ class _ProfilePageState extends State<ProfilePage> {
                     },
                   ),
                 ),
-              ProfileStatus.failed => buildRetryButton(context, () {
-                  context.read<ProfileBloc>().add(
-                        ProfileLoadRequested(
-                          username: widget.username,
-                          uid: widget.uid,
-                        ),
-                      );
-                }),
+              ProfileStatus.failed => Scaffold(
+                  appBar: AppBar(
+                    title: Text(context.t.profilePage.title),
+                  ),
+                  body: buildRetryButton(context, () {
+                    context.read<ProfileBloc>().add(
+                          ProfileLoadRequested(
+                            username: widget.username,
+                            uid: widget.uid,
+                          ),
+                        );
+                  }),
+                ),
               ProfileStatus.success || ProfileStatus.logout => _buildBody(
                   context,
                   state.userProfile!,
