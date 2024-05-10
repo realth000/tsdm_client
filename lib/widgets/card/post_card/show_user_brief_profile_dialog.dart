@@ -78,6 +78,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              _UserProfilePair(
+                Icons.group_outlined,
+                tr.group,
+                profile.userGroup,
+                style: _UserProfileAttrStyle.primary,
+              ),
               if (profile.title != null)
                 _UserProfilePair(
                   Icons.badge_outlined,
@@ -85,6 +91,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
                   profile.title,
                   style: _UserProfileAttrStyle.primary,
                 ),
+              _UserProfilePair(
+                MdiIcons.idCard,
+                tr.nickname,
+                profile.nickname,
+                style: _UserProfileAttrStyle.primary,
+              ),
               _UserProfilePair(
                 Icons.thumb_up_outlined,
                 tr.recommended,

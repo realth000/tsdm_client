@@ -175,7 +175,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
       debug('failed to build UserBriefProfile: statBarNode not found');
       return null;
     }
-    final userGroup = statBarNode.children.firstOrNull?.innerText;
+    final userGroup = statBarNode.children.firstOrNull?.innerText.trim();
 
     String? uid;
     String? title;

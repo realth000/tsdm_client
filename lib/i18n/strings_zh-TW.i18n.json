@@ -386,8 +386,10 @@
     "edit": "編輯",
     "lastEditInfo": "本帖最後由 $username 於 $time 編輯",
     "profileDialog": {
+      "group": "使用者群組",
       "title": "頭銜",
       "recommended": "精華",
+      "nickname": "暱稱",
       "thread": "主題",
       "post": "帖子",
       "famous": "威望",

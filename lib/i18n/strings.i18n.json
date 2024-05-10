@@ -386,7 +386,9 @@
     "edit": "Edit",
     "lastEditInfo": "Last edited by $username at $time",
     "profileDialog": {
+      "group": "Group",
       "title": "Title",
+      "nickname": "Nickname",
       "recommended": "Recommended",
       "thread": "Thread",
       "post": "Post",

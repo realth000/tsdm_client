@@ -386,7 +386,9 @@
     "edit": "编辑",
     "lastEditInfo": "本帖最后由 $username 于 $time 编辑",
     "profileDialog": {
+      "group": "用户组",
       "title": "头衔",
+      "nickname": "昵称",
       "recommended": "精华",
       "thread": "主题",
       "post": "帖子",
