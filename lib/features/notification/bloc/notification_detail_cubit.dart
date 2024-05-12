@@ -29,8 +29,7 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
   Future<void> fetchDetail(String url) async {
     emit(state.copyWith(status: NotificationDetailStatus.loading));
     try {
-      final (document, page) =
-          await _notificationRepository.fetchNoticeDetail(url);
+      final (document, page) = await _notificationRepository.fetchDocument(url);
 
       final threadClosed = document.querySelector('form#fastpostform') == null;
 

@@ -19,6 +19,9 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       : _notificationRepository = notificationRepository,
         super(const NotificationState()) {
     on<NotificationRefreshNoticeRequired>(_onNotificationRefreshNoticeRequired);
+    on<NotificationRefreshPersonalMessageRequired>(
+      _onNotificationRefreshPersonalMessageRequired,
+    );
   }
 
   final NotificationRepository _notificationRepository;
@@ -38,6 +41,26 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
       );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notice: $e');
+      emit(state.copyWith(status: NotificationStatus.failed));
+    }
+  }
+
+  Future<void> _onNotificationRefreshPersonalMessageRequired(
+    NotificationRefreshPersonalMessageRequired event,
+    NotificationEmitter emit,
+  ) async {
+    emit(state.copyWith(status: NotificationStatus.loading));
+    try {
+      final privateMessageList =
+          await _notificationRepository.fetchPersonalMessage();
+      emit(
+        state.copyWith(
+          status: NotificationStatus.success,
+          privateMessageList: privateMessageList,
+        ),
+      );
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to fetch private messages: $e');
       emit(state.copyWith(status: NotificationStatus.failed));
     }
   }

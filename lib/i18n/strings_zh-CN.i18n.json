@@ -218,8 +218,12 @@
       "ignoredSameNotice": "还有 $count 个相同通知被忽略",
       "taskID": "任务ID：$taskId"
     },
-    "messageTab": {
-      "title": "消息"
+    "privateMessageTab": {
+      "title": "私人消息",
+      "messageCount": "共 $count 条"
+    },
+    "broadcastMessageTab": {
+      "title": "公共消息"
     },
     "noticeDetailPage": {
       "titleReply": "回复",

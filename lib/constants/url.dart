@@ -24,6 +24,13 @@ const noticeUrl = '$baseUrl/home.php?mod=space&do=notice';
 /// All read notice page of current logged user.
 const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
 
+/// Private personal messages.
+const personalMessageUrl = '$baseUrl/home.php?mod=space&do=pm&filter=privatepm';
+
+/// Broadcast messages.
+const broadcastMessageUrl =
+    '$baseUrl/home.php?mod=space&do=pm&filter=announcepm';
+
 /// Page contains all thread published by current logged user.
 const myThreadThreadUrl =
     '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';

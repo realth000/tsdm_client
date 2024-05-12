@@ -10,3 +10,8 @@ sealed class NotificationEvent with NotificationEventMappable {
 @MappableClass()
 final class NotificationRefreshNoticeRequired extends NotificationEvent
     with NotificationRefreshNoticeRequiredMappable {}
+
+/// User required to refresh the private personal message tab.
+@MappableClass()
+final class NotificationRefreshPersonalMessageRequired extends NotificationEvent
+    with NotificationRefreshPersonalMessageRequiredMappable {}

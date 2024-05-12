@@ -1,0 +1,76 @@
+import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/features/notification/models/models.dart';
+import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
+
+/// Widget to show a single [PrivateMessage].
+final class PrivateMessageCard extends StatelessWidget {
+  /// Constructor.
+  const PrivateMessageCard({required this.message, super.key});
+
+  /// Message.
+  final PrivateMessage message;
+
+  @override
+  Widget build(BuildContext context) {
+    final tr = context.t.noticePage.privateMessageTab;
+    late final CircleAvatar userAvatar;
+    if (message.user.avatarUrl != null) {
+      userAvatar = CircleAvatar(
+        backgroundImage: CachedImageProvider(
+          message.user.avatarUrl!,
+          context,
+          fallbackImageUrl: noAvatarUrl,
+        ),
+      );
+    } else {
+      userAvatar = CircleAvatar(child: Text(message.user.name[0]));
+    }
+
+    final userUrl = message.user.url;
+
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: () async => context.dispatchAsUrl(message.chatUrl),
+        child: Column(
+          children: [
+            ListTile(
+              leading: GestureDetector(
+                onTap: () async => context.dispatchAsUrl(userUrl),
+                child: userAvatar,
+              ),
+              title: GestureDetector(
+                onTap: () async => context.dispatchAsUrl(userUrl),
+                child: Row(
+                  children: [SingleLineText(message.user.name)],
+                ),
+              ),
+              trailing: message.count != null
+                  ? Text(tr.messageCount(count: message.count!))
+                  : null,
+              subtitle: Text(message.lastMessageTime.yyyyMMDD()),
+            ),
+            sizedBoxW5H5,
+            Padding(
+              padding: edgeInsetsL15R15B10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(children: [Expanded(child: Text(message.message))]),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

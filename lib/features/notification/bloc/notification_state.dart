@@ -22,6 +22,8 @@ class NotificationState with NotificationStateMappable {
   const NotificationState({
     this.status = NotificationStatus.initial,
     this.noticeList = const [],
+    this.privateMessageList = const [],
+    this.broadcastMessageList = const [],
   });
 
   /// Status.
@@ -29,4 +31,10 @@ class NotificationState with NotificationStateMappable {
 
   /// All fetched [Notice].
   final List<Notice> noticeList;
+
+  /// All fetched [PrivateMessage].
+  final List<PrivateMessage> privateMessageList;
+
+  /// All fetched [BroadcastMessage].
+  final List<BroadcastMessage> broadcastMessageList;
 }

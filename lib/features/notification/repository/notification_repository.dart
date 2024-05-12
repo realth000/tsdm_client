@@ -85,7 +85,7 @@ class NotificationRepository {
   /// # Exception
   ///
   /// * **HttpRequestFailedException** when http request failed.
-  Future<(uh.Document, String? page)> fetchNoticeDetail(String url) async {
+  Future<(uh.Document, String? page)> fetchDocument(String url) async {
     final resp = await getIt.get<NetClientProvider>().get(url);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
@@ -94,5 +94,22 @@ class NotificationRepository {
     final document = parseHtmlDocument(resp.data as String);
     getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
     return (document, resp.realUri.queryParameters['page']);
+  }
+
+  /// Fetch
+  Future<List<PrivateMessage>> fetchPersonalMessage() async {
+    final resp = await getIt.get<NetClientProvider>().get(personalMessageUrl);
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(resp.statusCode!);
+    }
+
+    final document = parseHtmlDocument(resp.data as String);
+    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
+
+    return document
+        .querySelectorAll('form#deletepmform > div > dl')
+        .map(PrivateMessage.fromDl)
+        .whereType<PrivateMessage>()
+        .toList();
   }
 }

@@ -218,8 +218,12 @@
       "ignoredSameNotice": "$count more same notice ignored",
       "taskID": "Task ID: $taskId"
     },
-    "messageTab": {
-      "title": "Messages"
+    "privateMessageTab": {
+      "title": "Personal",
+      "messageCount": "$count msg"
+    },
+    "broadcastMessageTab": {
+      "title": "Broadcast"
     },
     "noticeDetailPage": {
       "titleReply": "Reply",
