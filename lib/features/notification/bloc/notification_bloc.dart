@@ -10,7 +10,7 @@ part 'notification_event.dart';
 part 'notification_state.dart';
 
 /// Emitter
-typedef NotificationEmitter = Emitter<NotificationState>;
+typedef _Emit = Emitter<NotificationState>;
 
 /// Bloc of notification.
 class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
@@ -22,46 +22,70 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
     on<NotificationRefreshPersonalMessageRequired>(
       _onNotificationRefreshPersonalMessageRequired,
     );
+    on<NotificationRefreshBroadcastMessageRequired>(
+      _onNotificationRefreshBroadcastMessageRequired,
+    );
   }
 
   final NotificationRepository _notificationRepository;
 
   Future<void> _onNotificationRefreshNoticeRequired(
     NotificationRefreshNoticeRequired event,
-    NotificationEmitter emit,
+    _Emit emit,
   ) async {
-    emit(state.copyWith(status: NotificationStatus.loading));
+    emit(state.copyWith(noticeStatus: NotificationStatus.loading));
     try {
       final noticeList = await _notificationRepository.fetchNotice();
       emit(
         state.copyWith(
-          status: NotificationStatus.success,
+          noticeStatus: NotificationStatus.success,
           noticeList: noticeList,
         ),
       );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch notice: $e');
-      emit(state.copyWith(status: NotificationStatus.failed));
+      emit(state.copyWith(noticeStatus: NotificationStatus.failed));
     }
   }
 
   Future<void> _onNotificationRefreshPersonalMessageRequired(
     NotificationRefreshPersonalMessageRequired event,
-    NotificationEmitter emit,
+    _Emit emit,
   ) async {
-    emit(state.copyWith(status: NotificationStatus.loading));
+    emit(state.copyWith(personalMessageStatus: NotificationStatus.loading));
     try {
       final privateMessageList =
           await _notificationRepository.fetchPersonalMessage();
       emit(
         state.copyWith(
-          status: NotificationStatus.success,
-          privateMessageList: privateMessageList,
+          personalMessageStatus: NotificationStatus.success,
+          personalMessageList: privateMessageList,
         ),
       );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch private messages: $e');
-      emit(state.copyWith(status: NotificationStatus.failed));
+
+      emit(state.copyWith(personalMessageStatus: NotificationStatus.failed));
+    }
+  }
+
+  Future<void> _onNotificationRefreshBroadcastMessageRequired(
+    NotificationRefreshBroadcastMessageRequired event,
+    _Emit emit,
+  ) async {
+    emit(state.copyWith(broadcastMessageStatus: NotificationStatus.loading));
+    try {
+      final broadcastMessageList =
+          await _notificationRepository.fetchBroadMessage();
+      emit(
+        state.copyWith(
+          broadcastMessageStatus: NotificationStatus.success,
+          broadcastMessageList: broadcastMessageList,
+        ),
+      );
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to fetch broad messages: $e');
+      emit(state.copyWith(broadcastMessageStatus: NotificationStatus.failed));
     }
   }
 }

@@ -96,8 +96,12 @@ class NotificationRepository {
     return (document, resp.realUri.queryParameters['page']);
   }
 
-  /// Fetch
-  Future<List<PrivateMessage>> fetchPersonalMessage() async {
+  /// Fetch all personal messages from server page.
+  ///
+  /// # Exception
+  ///
+  /// * **HttpRequestFailedException** when http request failed.
+  Future<List<PersonalMessage>> fetchPersonalMessage() async {
     final resp = await getIt.get<NetClientProvider>().get(personalMessageUrl);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
@@ -108,8 +112,29 @@ class NotificationRepository {
 
     return document
         .querySelectorAll('form#deletepmform > div > dl')
-        .map(PrivateMessage.fromDl)
-        .whereType<PrivateMessage>()
+        .map(PersonalMessage.fromDl)
+        .whereType<PersonalMessage>()
+        .toList();
+  }
+
+  /// Fetch all broadcast messages from server page.
+  ///
+  /// # Exception
+  ///
+  /// * **HttpRequestFailedException** when http request failed.
+  Future<List<BroadcastMessage>> fetchBroadMessage() async {
+    final resp = await getIt.get<NetClientProvider>().get(broadcastMessageUrl);
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(resp.statusCode!);
+    }
+
+    final document = parseHtmlDocument(resp.data as String);
+    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
+
+    return document
+        .querySelectorAll('form#deletepmform > div > dl')
+        .map(BroadcastMessage.fromDl)
+        .whereType<BroadcastMessage>()
         .toList();
   }
 }

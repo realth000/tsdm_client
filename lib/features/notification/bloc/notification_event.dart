@@ -15,3 +15,9 @@ final class NotificationRefreshNoticeRequired extends NotificationEvent
 @MappableClass()
 final class NotificationRefreshPersonalMessageRequired extends NotificationEvent
     with NotificationRefreshPersonalMessageRequiredMappable {}
+
+/// User required to refresh the broadcast message tab.
+@MappableClass()
+final class NotificationRefreshBroadcastMessageRequired
+    extends NotificationEvent
+    with NotificationRefreshBroadcastMessageRequiredMappable {}

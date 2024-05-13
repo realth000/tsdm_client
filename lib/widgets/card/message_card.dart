@@ -8,13 +8,13 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
-/// Widget to show a single [PrivateMessage].
+/// Widget to show a single [PersonalMessage].
 final class PrivateMessageCard extends StatelessWidget {
   /// Constructor.
   const PrivateMessageCard({required this.message, super.key});
 
   /// Message.
-  final PrivateMessage message;
+  final PersonalMessage message;
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +48,55 @@ final class PrivateMessageCard extends StatelessWidget {
               ),
               title: GestureDetector(
                 onTap: () async => context.dispatchAsUrl(userUrl),
-                child: Row(
-                  children: [SingleLineText(message.user.name)],
-                ),
+                child: SingleLineText(message.user.name),
               ),
               trailing: message.count != null
                   ? Text(tr.messageCount(count: message.count!))
                   : null,
               subtitle: Text(message.lastMessageTime.yyyyMMDD()),
+            ),
+            sizedBoxW5H5,
+            Padding(
+              padding: edgeInsetsL15R15B10,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Row(children: [Expanded(child: Text(message.message))]),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+/// Widget to show a single [BroadcastMessage].
+final class BroadcastMessageCard extends StatelessWidget {
+  /// Constructor.
+  const BroadcastMessageCard({required this.message, super.key});
+
+  /// Message.
+  final BroadcastMessage message;
+
+  @override
+  Widget build(BuildContext context) {
+    final tr = context.t.noticePage.broadcastMessageTab;
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: message.redirectUrl != null
+            ? () async => context.dispatchAsUrl(message.redirectUrl!)
+            : null,
+        child: Column(
+          children: [
+            ListTile(
+              leading: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
+              title: SingleLineText(tr.system),
+              subtitle: Text(message.messageTime.yyyyMMDD()),
             ),
             sizedBoxW5H5,
             Padding(

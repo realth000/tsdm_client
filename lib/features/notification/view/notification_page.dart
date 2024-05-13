@@ -20,10 +20,9 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage>
     with SingleTickerProviderStateMixin {
-  final _refreshController = EasyRefreshController(
-    controlFinishRefresh: true,
-  );
-
+  late final EasyRefreshController _noticeRefreshController;
+  late final EasyRefreshController _personalMessageRefreshController;
+  late final EasyRefreshController _broadcastMessageRefreshController;
   late final TabController _tabController;
 
   Widget _buildEmptyBody(BuildContext context) {
@@ -53,7 +52,7 @@ class _NotificationPageState extends State<NotificationPage>
   }
 
   Widget _buildNoticeTab(BuildContext context, NotificationState state) {
-    return switch (state.status) {
+    return switch (state.noticeStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
@@ -81,7 +80,7 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            controller: _refreshController,
+            controller: _noticeRefreshController,
             onRefresh: () async {
               if (!mounted) {
                 return;
@@ -106,21 +105,21 @@ class _NotificationPageState extends State<NotificationPage>
     BuildContext context,
     NotificationState state,
   ) {
-    return switch (state.status) {
+    return switch (state.personalMessageStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
       NotificationStatus.success =>
         (BuildContext context, NotificationState state) {
           final Widget content;
-          if (state.privateMessageList.isEmpty) {
+          if (state.personalMessageList.isEmpty) {
             content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
               padding: edgeInsetsL10T5R10B20,
-              itemCount: state.privateMessageList.length,
+              itemCount: state.personalMessageList.length,
               itemBuilder: (context, index) =>
-                  PrivateMessageCard(message: state.privateMessageList[index]),
+                  PrivateMessageCard(message: state.personalMessageList[index]),
               separatorBuilder: (context, index) => sizedBoxW5H5,
             );
           }
@@ -133,14 +132,14 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            controller: _refreshController,
+            controller: _personalMessageRefreshController,
             onRefresh: () async {
               if (!mounted) {
                 return;
               }
               context
                   .read<NotificationBloc>()
-                  .add(NotificationRefreshNoticeRequired());
+                  .add(NotificationRefreshPersonalMessageRequired());
             },
             child: content,
           );
@@ -149,7 +148,7 @@ class _NotificationPageState extends State<NotificationPage>
           context,
           () => context
               .read<NotificationBloc>()
-              .add(NotificationRefreshNoticeRequired()),
+              .add(NotificationRefreshPersonalMessageRequired()),
         ),
     };
   }
@@ -158,21 +157,23 @@ class _NotificationPageState extends State<NotificationPage>
     BuildContext context,
     NotificationState state,
   ) {
-    return switch (state.status) {
+    return switch (state.broadcastMessageStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
       NotificationStatus.success =>
         (BuildContext context, NotificationState state) {
           final Widget content;
-          if (state.noticeList.isEmpty) {
+          if (state.broadcastMessageList.isEmpty) {
             content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
               padding: edgeInsetsL10T5R10B20,
-              itemCount: state.noticeList.length,
+              itemCount: state.broadcastMessageList.length,
               itemBuilder: (context, index) {
-                return NoticeCard(notice: state.noticeList[index]);
+                return BroadcastMessageCard(
+                  message: state.broadcastMessageList[index],
+                );
               },
               separatorBuilder: (context, index) => sizedBoxW5H5,
             );
@@ -186,14 +187,14 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            controller: _refreshController,
+            controller: _broadcastMessageRefreshController,
             onRefresh: () async {
               if (!mounted) {
                 return;
               }
               context
                   .read<NotificationBloc>()
-                  .add(NotificationRefreshNoticeRequired());
+                  .add(NotificationRefreshBroadcastMessageRequired());
             },
             child: content,
           );
@@ -202,7 +203,7 @@ class _NotificationPageState extends State<NotificationPage>
           context,
           () => context
               .read<NotificationBloc>()
-              .add(NotificationRefreshNoticeRequired()),
+              .add(NotificationRefreshBroadcastMessageRequired()),
         ),
     };
   }
@@ -210,12 +211,26 @@ class _NotificationPageState extends State<NotificationPage>
   @override
   void initState() {
     super.initState();
+    _noticeRefreshController = EasyRefreshController(
+      controlFinishLoad: true,
+      controlFinishRefresh: true,
+    );
+    _personalMessageRefreshController = EasyRefreshController(
+      controlFinishLoad: true,
+      controlFinishRefresh: true,
+    );
+    _broadcastMessageRefreshController = EasyRefreshController(
+      controlFinishLoad: true,
+      controlFinishRefresh: true,
+    );
     _tabController = TabController(vsync: this, length: 3);
   }
 
   @override
   void dispose() {
-    _refreshController.dispose();
+    _noticeRefreshController.dispose();
+    _personalMessageRefreshController.dispose();
+    _broadcastMessageRefreshController.dispose();
     super.dispose();
   }
 
@@ -232,12 +247,13 @@ class _NotificationPageState extends State<NotificationPage>
             notificationRepository: RepositoryProvider.of(context),
           )
             ..add(NotificationRefreshNoticeRequired())
-            ..add(NotificationRefreshPersonalMessageRequired()),
+            ..add(NotificationRefreshPersonalMessageRequired())
+            ..add(NotificationRefreshBroadcastMessageRequired()),
         ),
       ],
       child: BlocListener<NotificationBloc, NotificationState>(
         listener: (context, state) {
-          if (state.status == NotificationStatus.failed) {
+          if (state.noticeStatus == NotificationStatus.failed) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(context.t.general.failedToLoad)),
             );

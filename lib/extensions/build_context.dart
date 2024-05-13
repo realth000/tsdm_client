@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/utils/debug.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Extension on [BuildContext] that provides ability to dispatch a [String]
@@ -14,9 +15,11 @@ extension DispatchUrl<T> on BuildContext {
   /// If current string is not an valid url:
   /// * Do nothing.
   Future<T?> dispatchAsUrl(String url, {bool external = false}) async {
+    debug('dispatch url: $url');
     final u = Uri.tryParse(url);
     if (u == null) {
       // Do nothing if is invalid url.
+      debug('failed to dispatch invalid url: $url ');
       return null;
     }
     if (external) {

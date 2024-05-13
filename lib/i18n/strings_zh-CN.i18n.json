@@ -223,7 +223,8 @@
       "messageCount": "共 $count 条"
     },
     "broadcastMessageTab": {
-      "title": "公共消息"
+      "title": "公共消息",
+      "system": "系统"
     },
     "noticeDetailPage": {
       "titleReply": "回复",

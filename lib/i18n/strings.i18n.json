@@ -223,7 +223,8 @@
       "messageCount": "$count msg"
     },
     "broadcastMessageTab": {
-      "title": "Broadcast"
+      "title": "Broadcast",
+      "system": "System"
     },
     "noticeDetailPage": {
       "titleReply": "Reply",

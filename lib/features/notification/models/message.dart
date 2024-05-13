@@ -10,9 +10,9 @@ part of 'models.dart';
 /// We do not distinguish latest message direction (send to or receive from),
 /// act like other chat apps.
 @MappableClass()
-final class PrivateMessage with PrivateMessageMappable {
+final class PersonalMessage with PersonalMessageMappable {
   /// Constructor.
-  const PrivateMessage({
+  const PersonalMessage({
     required this.user,
     required this.message,
     required this.lastMessageTime,
@@ -36,7 +36,7 @@ final class PrivateMessage with PrivateMessageMappable {
   final String chatUrl;
 
   /// Build from dl with id "pmlist_XXXX".
-  static PrivateMessage? fromDl(uh.Element element) {
+  static PersonalMessage? fromDl(uh.Element element) {
     if (!element.id.startsWith('pmlist')) {
       return null;
     }
@@ -74,8 +74,11 @@ final class PrivateMessage with PrivateMessageMappable {
         .querySelector('dd:nth-child(3) > span.xg1')
         ?.innerText
         .parseToDateTimeUtc8();
-    final chatUrl =
-        element.querySelector('a#pmlist_${messageId}_a')?.attributes['href'];
+    final chatUrl = element
+        .querySelector('a#pmlist_${messageId}_a')
+        ?.attributes['href']
+        ?.unescapeHtml()
+        ?.prependHost();
     final message = element
         .querySelector('dd:nth-child(3) > span.xg1')
         ?.previousNode
@@ -93,7 +96,7 @@ final class PrivateMessage with PrivateMessageMappable {
       return null;
     }
 
-    return PrivateMessage(
+    return PersonalMessage(
       user: User(
         avatarUrl: avatarUrl,
         name: username,
@@ -112,5 +115,60 @@ final class PrivateMessage with PrivateMessageMappable {
 /// All broadcast messages have id "gpmlist_${MESSAGE_ID}".
 @MappableClass()
 final class BroadcastMessage with BroadcastMessageMappable {
-  //
+  /// Constructor.
+  const BroadcastMessage({
+    required this.message,
+    required this.messageTime,
+    required this.redirectUrl,
+  });
+
+  /// Message content text.
+  final String message;
+
+  /// Datetime of message.
+  final DateTime messageTime;
+
+  /// Url to redirect, usually is a thread page.
+  ///
+  /// Maybe some broadcast messages have no corresponding url
+  /// so make it nullable.
+  final String? redirectUrl;
+
+  /// Build a [BroadcastMessage] instance from dl node [element].
+  ///
+  /// Node MUST have id in format "gpmlist_${ID}".
+  static BroadcastMessage? fromDl(uh.Element element) {
+    if (!element.id.startsWith('gpmlist_')) {
+      debug('failed to build broadcast message: id not found');
+      return null;
+    }
+
+    final infoNode = element.querySelector('dd:nth-child(3)');
+    if (infoNode == null) {
+      debug('failed to build broadcast message: info node not found');
+      return null;
+    }
+    final message = infoNode.querySelector('span')?.innerText.trim();
+    final messageTime = infoNode
+        .querySelector('span.xg1')
+        ?.innerText
+        .trim()
+        .parseToDateTimeUtc8();
+    final redirectUrl = infoNode
+        .querySelector('a')
+        ?.attributes['href']
+        ?.unescapeHtml()
+        ?.prependHost();
+    if (message == null || messageTime == null) {
+      debug('failed to build broadcast message: '
+          'redirectUrl=$redirectUrl, messageTime=$messageTime');
+      return null;
+    }
+
+    return BroadcastMessage(
+      message: message,
+      messageTime: messageTime,
+      redirectUrl: redirectUrl,
+    );
+  }
 }

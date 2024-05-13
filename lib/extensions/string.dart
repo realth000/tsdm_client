@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:html/parser.dart' as h;
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -149,6 +150,11 @@ extension EnhanceModification on String {
   /// Trim the trailing web page title.
   String trimTitle() {
     return replaceFirst(' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!', '');
+  }
+
+  /// Parse html escaped text into normal text.
+  String? unescapeHtml() {
+    return h.parseFragment(this).text;
   }
 }
 
