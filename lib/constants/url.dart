@@ -31,6 +31,10 @@ const personalMessageUrl = '$baseUrl/home.php?mod=space&do=pm&filter=privatepm';
 const broadcastMessageUrl =
     '$baseUrl/home.php?mod=space&do=pm&filter=announcepm';
 
+/// Broadcast message detail page.
+const broadcastMessageDetailUrl =
+    '$baseUrl/home.php?mod=space&do=pm&subop=viewg&pmid=';
+
 /// Page contains all thread published by current logged user.
 const myThreadThreadUrl =
     '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';

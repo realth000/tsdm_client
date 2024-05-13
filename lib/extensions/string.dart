@@ -117,6 +117,19 @@ extension ParseUrl on String {
       );
     }
 
+    // Broadcast message detail page.
+    if (mod == 'space' &&
+        queryParameters['do'] == 'pm' &&
+        queryParameters['subop'] == 'viewg' &&
+        queryParameters.containsKey('pmid')) {
+      return RecognizedRoute(
+        ScreenPaths.broadcastMessageDetail,
+        pathParameters: {
+          'pmid': queryParameters['pmid']!,
+        },
+      );
+    }
+
     return null;
   }
 

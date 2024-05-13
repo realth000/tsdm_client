@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 通知：支持查看用户消息和公共消息。
+  - 支持跳转到公共通知详情页面。
+  - 主页 -> 通知按钮。
+
 ### Fixed
 
 - 编辑：修复网页链接和提醒用户的样式。

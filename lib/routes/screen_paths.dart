@@ -86,6 +86,11 @@ class ScreenPaths {
   /// Currently only reply to a post with given pid in thread.
   static const String reply = '/reply/:target';
 
+  /// Detail page of broadcast message.
+  ///
+  /// Show full content of broadcast message in this page.
+  static const String broadcastMessageDetail = '/notice/broadcast/:pmid';
+
   /// Search page.
   static const String search = '/search';
 

@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
 import 'package:tsdm_client/features/latest_thread/view/latest_thread_page.dart';
 import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
+import 'package:tsdm_client/features/notification/view/broadcast_message_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
@@ -227,6 +228,16 @@ final router = GoRouter(
           fid: fid,
           tid: tid,
           pid: pid,
+        );
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.broadcastMessageDetail,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final pmid = state.pathParameters['pmid']!;
+        return BroadcastMessageDetailPage(
+          pmid: pmid,
         );
       },
     ),
