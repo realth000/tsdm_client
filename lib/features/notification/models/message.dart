@@ -70,10 +70,17 @@ final class PersonalMessage with PersonalMessageMappable {
     }
 
     final username = element.querySelector('dd:nth-child(3) > a')?.innerText;
-    final lastMessageTime = element
-        .querySelector('dd:nth-child(3) > span.xg1')
-        ?.innerText
-        .parseToDateTimeUtc8();
+    final lastMessageTime =
+        // Old messages.
+        element
+                .querySelector('dd:nth-child(3) > span.xg1')
+                ?.innerText
+                .parseToDateTimeUtc8() ??
+            // Recent messages.
+            element
+                .querySelector('dd:nth-child(3) > span.xg1 > span')
+                ?.title
+                ?.parseToDateTimeUtc8();
     final chatUrl = element
         .querySelector('a#pmlist_${messageId}_a')
         ?.attributes['href']
