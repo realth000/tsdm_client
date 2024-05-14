@@ -14,7 +14,7 @@
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test"/></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=version"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
-  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.19-19A6E6?logo=flutter"></a>
+  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.22-19A6E6?logo=flutter"></a>
   <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
   <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg"></a>
   <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-19A6E6"></a>
