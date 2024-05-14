@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 编辑：修复艾特不存在的用户时，跳转到用户资料页后页面异常的问题。
 - 帖子：修复楼层用户的简要信息中缺少用户组和昵称的问题。
 
+### Changed
+
+- internal: flutter版本提高至3.22
+
 ## [0.10.1] - 2024-05-03
 
 ### Fixed
