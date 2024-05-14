@@ -88,3 +88,47 @@ String formatPurchaseDialogUrl(String tid, String pid) {
   return '$homePage?mod=misc&action=pay&tid=$tid&pid=$pid&infloat=yes&'
       'handlekey=pay&inajax=1&ajaxtarget=fwin_content_pay';
 }
+
+/// Target url to get the chat dialog with user [uid].
+///
+/// [dateRange] is a query parameter controlling history chat message to
+/// display.
+/// However we do not know the detail effect so keep it with it's default value
+/// 2.
+///
+/// There are two kinds of dialog:
+///
+/// * Pure dialog, query parameter contains "infloat=1" from user profile page.
+/// * Dialog embedded in page, does not have "infloat=1" query parameter, from
+///   hover dialog on user brief profile in thread floor.
+///
+/// The former kind is wrapped in xml data, pure and have anything we want.
+/// So we convert the later kind of url into the former format, which means:
+///
+/// For all url contains "handlekey=showmesg_$uid", "touid=$uid" and the uid are
+/// the same, convert into the format returned by this function.
+String formatChatUrl(String uid, {int dateRange = 2}) {
+  return '$homePage?mod=spacecp&ac=pm&op=showmsg&'
+      'handlekey=showmsg_$uid&touid=$uid&pmid=0&daterange=$dateRange&'
+      'infloat=yes&inajax=1&ajaxtarget=fwin_content_showMsgBox';
+}
+
+/// Target url to get the chat full history page with user [uid].
+///
+/// Each page contains 10 messages.
+String formatChatFullHistoryUrl(String uid, {int page = 1}) {
+  return '$homePage?mod=space&do=pm&subop=view&touid=$uid&page=$page#last';
+}
+
+/// Target url to get xml data wrapping recent chat history data with user
+/// [uid].
+///
+/// Use [dateRange] if we need longer ago chat history but as said above, we do
+/// NOT know the real effect so keep it the default value in most situations.
+///
+/// The date in this page only contains recent history, without required values
+/// to send a new message.
+String formatChatRecentHistoryUrl(String uid, {int dateRange = 2}) {
+  return '$homePage?mod=spacecp&ac=pm&op=showmsg&'
+      'msgonly=1&touid=$uid&pmid=0&inajax=1&daterange=$dateRange';
+}

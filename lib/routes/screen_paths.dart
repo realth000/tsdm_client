@@ -91,6 +91,36 @@ class ScreenPaths {
   /// Show full content of broadcast message in this page.
   static const String broadcastMessageDetail = '/notice/broadcast/:pmid';
 
+  /// Chat page describes the chat dialog on server side.
+  ///
+  /// Inside node `<div class="pm">`.
+  ///
+  /// May contains part of the chat history including recent messages.
+  ///
+  /// Can enter this page from:
+  ///
+  /// * Link in user dialog when mouse hover on thread floor brief profile.
+  /// * Link in user profile page.
+  ///
+  /// Two method above both have the following format url:
+  ///
+  /// ```
+  /// ${HOST}/home.php?mod=spacecp&ac=pm&op=showmsg&
+  /// handlekey=showmsg_${UID}&touid=${UID}&pmid=0&daterange=2
+  /// ```
+  static const String chat = '/chat/:uid';
+
+  /// Chat history page mainly describes the chat history with another user.
+  ///
+  /// Only can enter this page from notification page.
+  ///
+  /// Have the following format url:
+  ///
+  /// ```
+  /// ${HOST}/home.php?mod=space&do=pm&subop=view&touid=${UID}
+  /// ```
+  static const String chatHistory = '/chat/history/:uid';
+
   /// Search page.
   static const String search = '/search';
 

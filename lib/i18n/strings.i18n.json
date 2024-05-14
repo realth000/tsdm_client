@@ -309,6 +309,10 @@
     "threadBodyTooShort": "Thread body too short",
     "editSuccess": "Edit success"
   },
+  "chatHistoryPage": {
+    "title": "Chat History",
+    "info": "With $user ($count messages)"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

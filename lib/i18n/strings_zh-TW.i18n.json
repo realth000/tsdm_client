@@ -309,6 +309,10 @@
     "threadBodyTooShort": "正文太短",
     "editSuccess": "編輯成功"
   },
+  "chatHistoryPage": {
+    "title": "交談記錄",
+    "info": "和 $user ($count 條)"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

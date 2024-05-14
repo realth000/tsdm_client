@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/view/login_page.dart';
+import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
+import 'package:tsdm_client/features/chat/view/chat_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
@@ -239,6 +241,22 @@ final router = GoRouter(
         return BroadcastMessageDetailPage(
           pmid: pmid,
         );
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.chat,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final uid = state.pathParameters['uid']!;
+        return ChatPage(uid: uid);
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.chatHistory,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final uid = state.pathParameters['uid']!;
+        return ChatHistoryPage(uid: uid);
       },
     ),
   ],

@@ -130,6 +130,43 @@ extension ParseUrl on String {
       );
     }
 
+    // Chat page.
+    //
+    // Two formats:
+    //
+    // 1. $HOST/home.php?mod=spacecp&ac=pm&op=showmsg&
+    //    handlekey=showmsg_${UID}&touid=${UID}&pmid=0&daterange=2
+    // 2. $HOST/home.php?mod=spacecp&ac=pm&op=showmsg&
+    //    handlekey=showmsg_${UID}&handlekey=showMsgBox&touid=${UID}&pmid=0&
+    //    daterange=2&infloat=yes&inajax=1&ajaxtarget=fwin_content_showMsgBox
+    if (mod == 'spacecp' &&
+        queryParameters['ac'] == 'pm' &&
+        queryParameters['op'] == 'showmsg' &&
+        queryParameters.containsKey('handlekey') &&
+        queryParameters.containsKey('touid') &&
+        queryParameters.containsKey('pmid') &&
+        queryParameters.containsKey('datarange')) {
+      return RecognizedRoute(
+        ScreenPaths.chat,
+        pathParameters: {
+          'uid': queryParameters['touid']!,
+        },
+      );
+    }
+
+    /// Chat history.
+    if (mod == 'space' &&
+        queryParameters['do'] == 'pm' &&
+        queryParameters['subop'] == 'view' &&
+        queryParameters['touid'] != null) {
+      return RecognizedRoute(
+        ScreenPaths.chatHistory,
+        pathParameters: {
+          'uid': queryParameters['touid']!,
+        },
+      );
+    }
+
     return null;
   }
 
