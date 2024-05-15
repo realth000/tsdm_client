@@ -18,6 +18,13 @@ class User with UserMappable {
     this.email,
   });
 
+  /// Construct invalid empty instance.
+  const User.empty()
+      : username = null,
+        uid = null,
+        password = null,
+        email = null;
+
   /// Username.
   final String? username;
 

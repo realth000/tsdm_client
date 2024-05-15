@@ -108,7 +108,7 @@ String formatPurchaseDialogUrl(String tid, String pid) {
 /// For all url contains "handlekey=showmesg_$uid", "touid=$uid" and the uid are
 /// the same, convert into the format returned by this function.
 String formatChatUrl(String uid, {int dateRange = 2}) {
-  return '$homePage?mod=spacecp&ac=pm&op=showmsg&'
+  return '$baseUrl/home.php?mod=spacecp&ac=pm&op=showmsg&'
       'handlekey=showmsg_$uid&touid=$uid&pmid=0&daterange=$dateRange&'
       'infloat=yes&inajax=1&ajaxtarget=fwin_content_showMsgBox';
 }
@@ -116,8 +116,9 @@ String formatChatUrl(String uid, {int dateRange = 2}) {
 /// Target url to get the chat full history page with user [uid].
 ///
 /// Each page contains 10 messages.
-String formatChatFullHistoryUrl(String uid, {int page = 1}) {
-  return '$homePage?mod=space&do=pm&subop=view&touid=$uid&page=$page#last';
+String formatChatFullHistoryUrl(String uid, {int? page}) {
+  return '$baseUrl/home.php?mod=space&do=pm&subop=view&touid=$uid'
+      '${page != null ? '&page=$page' : ''}#last';
 }
 
 /// Target url to get xml data wrapping recent chat history data with user
@@ -129,6 +130,6 @@ String formatChatFullHistoryUrl(String uid, {int page = 1}) {
 /// The date in this page only contains recent history, without required values
 /// to send a new message.
 String formatChatRecentHistoryUrl(String uid, {int dateRange = 2}) {
-  return '$homePage?mod=spacecp&ac=pm&op=showmsg&'
+  return '$baseUrl/home.php?mod=spacecp&ac=pm&op=showmsg&'
       'msgonly=1&touid=$uid&pmid=0&inajax=1&daterange=$dateRange';
 }

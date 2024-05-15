@@ -248,4 +248,21 @@ extension GrepExtension on Element {
     }
     return (title, data);
   }
+
+  /// Parse the datetime on current node or first child.
+  ///
+  /// From current node `<span>`'s title attribute or first child (usually
+  /// a span, too)  's title attribute.
+  DateTime? dateTime() {
+    if (tagName != 'span') {
+      return null;
+    }
+    if (classes.contains('xg1')) {
+      final text1 = innerText.parseToDateTimeUtc8();
+      if (text1 != null) {
+        return text1;
+      }
+    }
+    return children.firstOrNull?.attributes['title']?.parseToDateTimeUtc8();
+  }
 }
