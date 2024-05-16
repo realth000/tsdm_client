@@ -107,7 +107,8 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         .querySelectorAll('div#pm_ul > dl')
         .map(ChatMessage.fromDl)
         .whereType<ChatMessage>()
-        .toList();
+        .toList()
+        .reversed;
 
     emit(
       state.copyWith(
@@ -117,7 +118,10 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         pageNumber: page,
         previousPage: previousPage,
         nextPage: nextPage,
-        messages: [...messages, ...state.messages],
+        messages: [
+          ...state.messages,
+          ...messages,
+        ],
       ),
     );
   }

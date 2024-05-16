@@ -38,14 +38,14 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           .copyWith(physics: physics, scrollbars: false),
       controller: _refreshController,
       scrollController: _scrollController,
-      header: const MaterialHeader(),
-      onRefresh: () async {
+      footer: const MaterialFooter(),
+      onLoad: () async {
         if (!mounted) {
           return;
         }
         // Try load
         if (state.previousPage == null) {
-          _refreshController.finishRefresh(IndicatorResult.noMore);
+          _refreshController.finishLoad(IndicatorResult.noMore);
           await showNoMoreSnackBar(context);
           return;
         }
@@ -57,6 +57,10 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             );
       },
       child: ListView.separated(
+        // Reverse the list view and data received from server to let scroll
+        // position keep the same after new pages of data.
+        // See `messages` in `ChatHistoryState` for details.
+        reverse: true,
         controller: _scrollController,
         separatorBuilder: (context, index) => const Divider(thickness: 0.5),
         itemCount: messages.length,
@@ -69,7 +73,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
   void initState() {
     super.initState();
     _refreshController = EasyRefreshController(
-      controlFinishRefresh: true,
+      controlFinishLoad: true,
     );
   }
 
@@ -96,7 +100,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
       child: BlocListener<ChatHistoryBloc, ChatHistoryState>(
         listener: (context, state) {
           if (state.status == ChatHistoryStatus.success) {
-            _refreshController.finishRefresh();
+            _refreshController.finishLoad();
           }
         },
         child: BlocBuilder<ChatHistoryBloc, ChatHistoryState>(
