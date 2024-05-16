@@ -82,211 +82,207 @@ class _PostCardState extends State<PostCard>
     final threadBloc = context.readOrNull<ThreadBloc>();
     final onlyVisibleUid = threadBloc?.state.onlyVisibleUid;
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: edgeInsetsL10R10B10,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // User info.
-            ListTile(
-              leading: GestureDetector(
-                onTap: () async {
-                  if (widget.post.userBriefProfile != null) {
-                    await showUserBriefProfileDialog(
-                      context,
-                      widget.post.userBriefProfile!,
-                      widget.post.author.url,
-                    );
-                  }
-                  // context.dispatchAsUrl(widget.post.author.url),
-                },
-                child: CircleAvatar(
-                  backgroundImage: CachedImageProvider(
-                    widget.post.author.avatarUrl!,
-                    context,
-                    fallbackImageUrl: noAvatarUrl,
-                  ),
-                ),
-              ),
-              title: Row(
-                children: [
-                  GestureDetector(
-                    onTap: () async {
-                      if (widget.post.userBriefProfile != null) {
-                        await showUserBriefProfileDialog(
-                          context,
-                          widget.post.userBriefProfile!,
-                          widget.post.author.url,
-                        );
-                      }
-                      // context.dispatchAsUrl(widget.post.author.url),
-                    },
-                    child: Text(widget.post.author.name),
-                  ),
-                  Expanded(child: Container()),
-                ],
-              ),
-              subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
-              trailing: widget.post.postFloor == null
-                  ? null
-                  : Text('#${widget.post.postFloor}'),
-            ),
-            // Last edit status.
-            if (widget.post.lastEditUsername != null &&
-                widget.post.lastEditTime != null)
-              Padding(
-                padding: edgeInsetsL10T5R10,
-                child: Text(
-                  context.t.postCard.lastEditInfo(
-                    username: widget.post.lastEditUsername!,
-                    time: widget.post.lastEditTime!,
-                  ),
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                ),
-              ),
-            // Post body
-            sizedBoxW10H10,
-            GestureDetector(
-              behavior: HitTestBehavior.opaque,
+    return Padding(
+      padding: edgeInsetsL10R10B10,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // User info.
+          ListTile(
+            leading: GestureDetector(
               onTap: () async {
-                await widget.replyCallback?.call(
-                  widget.post.author,
-                  widget.post.postFloor,
-                  widget.post.replyAction,
-                );
+                if (widget.post.userBriefProfile != null) {
+                  await showUserBriefProfileDialog(
+                    context,
+                    widget.post.userBriefProfile!,
+                    widget.post.author.url,
+                  );
+                }
+                // context.dispatchAsUrl(widget.post.author.url),
               },
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: edgeInsetsL15R15,
-                      child: munchElement(
-                        context,
-                        parseHtmlDocument(widget.post.data).body!,
-                      ),
-                    ),
-                  ),
-                ],
+              child: CircleAvatar(
+                backgroundImage: CachedImageProvider(
+                  widget.post.author.avatarUrl!,
+                  context,
+                  fallbackImageUrl: noAvatarUrl,
+                ),
               ),
             ),
-            // 红包 if any.
-            if (widget.post.locked.isNotEmpty)
-              ...widget.post.locked
-                  .where((e) => e.isValid())
-                  .map(LockedCard.new),
-            if (widget.post.packetUrl != null) ...[
-              sizedBoxW10H10,
-              PacketCard(widget.post.packetUrl!),
-            ],
-            // Rate status if any.
-            if (widget.post.rate != null) ...[
-              sizedBoxW10H10,
-              ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 712),
-                child: RateCard(widget.post.rate!),
-              ),
-            ],
-            // Context menu.
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+            title: Row(
               children: [
-                PopupMenuButton(
-                  itemBuilder: (context) => [
-                    PopupMenuItem(
-                      value: _PostCardActions.reply,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.reply_outlined),
-                          Text(context.t.postCard.reply),
-                        ],
-                      ),
-                    ),
-                    if (widget.post.rateAction != null)
-                      PopupMenuItem(
-                        value: _PostCardActions.rate,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.rate_review_outlined),
-                            Text(context.t.postCard.rate),
-                          ],
-                        ),
-                      ),
-
-                    /// Viewing all authors, can switch to only view current
-                    /// author mode.
-                    if (threadBloc != null &&
-                        onlyVisibleUid == null &&
-                        widget.post.author.uid != null)
-                      PopupMenuItem(
-                        value: _PostCardActions.viewTheAuthor,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.person_outlined),
-                            Text(context.t.postCard.onlyViewAuthor),
-                          ],
-                        ),
-                      ),
-
-                    /// Viewing specified author now, can switch to view all
-                    /// authors mode.
-                    if (threadBloc != null && onlyVisibleUid != null)
-                      PopupMenuItem(
-                        value: _PostCardActions.viewAllAuthors,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.group_outlined),
-                            Text(context.t.postCard.viewAllAuthors),
-                          ],
-                        ),
-                      ),
-                    if (widget.post.editUrl != null)
-                      PopupMenuItem(
-                        value: _PostCardActions.edit,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.edit_outlined),
-                            Text(context.t.postCard.edit),
-                          ],
-                        ),
-                      ),
-                  ],
-                  onSelected: (value) async {
-                    switch (value) {
-                      case _PostCardActions.reply:
-                        await widget.replyCallback?.call(
-                          widget.post.author,
-                          widget.post.postFloor,
-                          widget.post.replyAction,
-                        );
-                      case _PostCardActions.rate:
-                        if (widget.post.rateAction != null) {
-                          await _rateCallback.call();
-                        }
-                      case _PostCardActions.viewTheAuthor:
-                        // Here is guaranteed a not-null `ThreadBloc`.
-                        context.read<ThreadBloc>().add(
-                              ThreadOnlyViewAuthorRequested(
-                                widget.post.author.uid!,
-                              ),
-                            );
-                      case _PostCardActions.viewAllAuthors:
-                        // Here is guaranteed a not-null `ThreadBloc` and a
-                        // not-null author uid.
-                        context
-                            .read<ThreadBloc>()
-                            .add(ThreadViewAllAuthorsRequested());
-                      case _PostCardActions.edit:
-                        await context.dispatchAsUrl(widget.post.editUrl!);
+                GestureDetector(
+                  onTap: () async {
+                    if (widget.post.userBriefProfile != null) {
+                      await showUserBriefProfileDialog(
+                        context,
+                        widget.post.userBriefProfile!,
+                        widget.post.author.url,
+                      );
                     }
+                    // context.dispatchAsUrl(widget.post.author.url),
                   },
+                  child: Text(widget.post.author.name),
+                ),
+                Expanded(child: Container()),
+              ],
+            ),
+            subtitle: Text('${widget.post.publishTime?.elapsedTillNow()}'),
+            trailing: widget.post.postFloor == null
+                ? null
+                : Text('#${widget.post.postFloor}'),
+          ),
+          // Last edit status.
+          if (widget.post.lastEditUsername != null &&
+              widget.post.lastEditTime != null)
+            Padding(
+              padding: edgeInsetsL10T5R10,
+              child: Text(
+                context.t.postCard.lastEditInfo(
+                  username: widget.post.lastEditUsername!,
+                  time: widget.post.lastEditTime!,
+                ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
+              ),
+            ),
+          // Post body
+          sizedBoxW10H10,
+          GestureDetector(
+            behavior: HitTestBehavior.opaque,
+            onTap: () async {
+              await widget.replyCallback?.call(
+                widget.post.author,
+                widget.post.postFloor,
+                widget.post.replyAction,
+              );
+            },
+            child: Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: edgeInsetsL15R15,
+                    child: munchElement(
+                      context,
+                      parseHtmlDocument(widget.post.data).body!,
+                    ),
+                  ),
                 ),
               ],
             ),
+          ),
+          // 红包 if any.
+          if (widget.post.locked.isNotEmpty)
+            ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
+          if (widget.post.packetUrl != null) ...[
+            sizedBoxW10H10,
+            PacketCard(widget.post.packetUrl!),
           ],
-        ),
+          // Rate status if any.
+          if (widget.post.rate != null) ...[
+            sizedBoxW10H10,
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 712),
+              child: RateCard(widget.post.rate!),
+            ),
+          ],
+          // Context menu.
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              PopupMenuButton(
+                itemBuilder: (context) => [
+                  PopupMenuItem(
+                    value: _PostCardActions.reply,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.reply_outlined),
+                        Text(context.t.postCard.reply),
+                      ],
+                    ),
+                  ),
+                  if (widget.post.rateAction != null)
+                    PopupMenuItem(
+                      value: _PostCardActions.rate,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.rate_review_outlined),
+                          Text(context.t.postCard.rate),
+                        ],
+                      ),
+                    ),
+
+                  /// Viewing all authors, can switch to only view current
+                  /// author mode.
+                  if (threadBloc != null &&
+                      onlyVisibleUid == null &&
+                      widget.post.author.uid != null)
+                    PopupMenuItem(
+                      value: _PostCardActions.viewTheAuthor,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.person_outlined),
+                          Text(context.t.postCard.onlyViewAuthor),
+                        ],
+                      ),
+                    ),
+
+                  /// Viewing specified author now, can switch to view all
+                  /// authors mode.
+                  if (threadBloc != null && onlyVisibleUid != null)
+                    PopupMenuItem(
+                      value: _PostCardActions.viewAllAuthors,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.group_outlined),
+                          Text(context.t.postCard.viewAllAuthors),
+                        ],
+                      ),
+                    ),
+                  if (widget.post.editUrl != null)
+                    PopupMenuItem(
+                      value: _PostCardActions.edit,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.edit_outlined),
+                          Text(context.t.postCard.edit),
+                        ],
+                      ),
+                    ),
+                ],
+                onSelected: (value) async {
+                  switch (value) {
+                    case _PostCardActions.reply:
+                      await widget.replyCallback?.call(
+                        widget.post.author,
+                        widget.post.postFloor,
+                        widget.post.replyAction,
+                      );
+                    case _PostCardActions.rate:
+                      if (widget.post.rateAction != null) {
+                        await _rateCallback.call();
+                      }
+                    case _PostCardActions.viewTheAuthor:
+                      // Here is guaranteed a not-null `ThreadBloc`.
+                      context.read<ThreadBloc>().add(
+                            ThreadOnlyViewAuthorRequested(
+                              widget.post.author.uid!,
+                            ),
+                          );
+                    case _PostCardActions.viewAllAuthors:
+                      // Here is guaranteed a not-null `ThreadBloc` and a
+                      // not-null author uid.
+                      context
+                          .read<ThreadBloc>()
+                          .add(ThreadViewAllAuthorsRequested());
+                    case _PostCardActions.edit:
+                      await context.dispatchAsUrl(widget.post.editUrl!);
+                  }
+                },
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
