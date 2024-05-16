@@ -46,9 +46,14 @@ final class PrivateMessageCard extends StatelessWidget {
                 onTap: () async => context.dispatchAsUrl(userUrl),
                 child: userAvatar,
               ),
-              title: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(userUrl),
-                child: SingleLineText(message.user.name),
+              title: Row(
+                children: [
+                  GestureDetector(
+                    onTap: () async => context.dispatchAsUrl(userUrl),
+                    child: SingleLineText(message.user.name),
+                  ),
+                  Expanded(child: Container()),
+                ],
               ),
               trailing: message.count != null
                   ? Text(tr.messageCount(count: message.count!))

@@ -13,6 +13,11 @@ enum ChatHistoryStatus {
 
   /// Failed to load data.
   failure,
+
+  /// Loading more data.
+  ///
+  /// Loading the second or more pages of data.
+  loadingMore,
 }
 
 /// State of chat history, maintains data.

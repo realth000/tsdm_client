@@ -254,7 +254,7 @@ extension GrepExtension on Element {
   /// From current node `<span>`'s title attribute or first child (usually
   /// a span, too)  's title attribute.
   DateTime? dateTime() {
-    if (tagName != 'span') {
+    if (tagName != 'SPAN') {
       return null;
     }
     if (classes.contains('xg1')) {

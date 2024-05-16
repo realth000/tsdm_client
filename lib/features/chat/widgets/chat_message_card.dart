@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
@@ -32,17 +33,28 @@ final class ChatMessageCard extends StatelessWidget {
       leading = CircleAvatar(child: Text(chatMessage.author?[0] ?? ''));
     }
 
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
+    return Padding(
+      padding: edgeInsetsL10R10,
       child: Column(
         children: [
           ListTile(
             leading: leading,
             title: Text(chatMessage.author ?? ''),
-            subtitle: Text('${chatMessage.dateTime?.elapsedTillNow()}'),
+            subtitle: Text('${chatMessage.dateTime?.yyyyMMDDHHMMSS()}'),
           ),
-          munchElement(context, parseHtmlDocument(chatMessage.message).body!),
+          Row(
+            children: [
+              Expanded(
+                child: Padding(
+                  padding: edgeInsetsL15R15,
+                  child: munchElement(
+                    context,
+                    parseHtmlDocument(chatMessage.message).body!,
+                  ),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );

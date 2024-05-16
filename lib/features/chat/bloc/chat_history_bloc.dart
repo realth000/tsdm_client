@@ -31,7 +31,11 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     ChatHistoryLoadHistoryRequested event,
     _Emit emit,
   ) async {
-    emit(state.copyWith(status: ChatHistoryStatus.loading));
+    if (event.page == null) {
+      emit(state.copyWith(status: ChatHistoryStatus.loading));
+    } else {
+      emit(state.copyWith(status: ChatHistoryStatus.loadingMore));
+    }
     try {
       final document = await _chatRepository.fetchChatHistory(
         event.uid,
@@ -113,7 +117,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         pageNumber: page,
         previousPage: previousPage,
         nextPage: nextPage,
-        messages: messages,
+        messages: [...messages, ...state.messages],
       ),
     );
   }
