@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Widget to show a chat message.
@@ -8,11 +11,40 @@ final class ChatMessageCard extends StatelessWidget {
   /// Constructor.
   const ChatMessageCard(this.chatMessage, {super.key});
 
+  /// Avatar url for current message's author.
+  // final String? authorAvatarUrl;
+
   /// Message to display.
   final ChatMessage chatMessage;
 
   @override
   Widget build(BuildContext context) {
-    return munchElement(context, parseHtmlDocument(chatMessage.message).body!);
+    final CircleAvatar leading;
+    if (chatMessage.authorAvatarUrl != null) {
+      leading = CircleAvatar(
+        backgroundImage: CachedImageProvider(
+          chatMessage.authorAvatarUrl!,
+          context,
+          fallbackImageUrl: noAvatarUrl,
+        ),
+      );
+    } else {
+      leading = CircleAvatar(child: Text(chatMessage.author?[0] ?? ''));
+    }
+
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          ListTile(
+            leading: leading,
+            title: Text(chatMessage.author ?? ''),
+            subtitle: Text('${chatMessage.dateTime?.elapsedTillNow()}'),
+          ),
+          munchElement(context, parseHtmlDocument(chatMessage.message).body!),
+        ],
+      ),
+    );
   }
 }
