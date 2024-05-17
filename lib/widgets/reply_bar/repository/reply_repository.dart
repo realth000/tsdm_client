@@ -11,6 +11,19 @@ import 'package:universal_html/parsing.dart';
 
 /// Repository of reply.
 class ReplyRepository {
+  /// Constructor.
+  const ReplyRepository();
+
+  /// Regexp to grep pmid wrapped in chat message send response.
+  ///
+  /// {'pmid':'${PMID}'}.
+  static final _messagePmidRe = RegExp(r"'pmid':'(?<pmid>\d+)'");
+
+  /// Regexp to grep error message in chat message send response.
+  ///
+  /// errorhandle_pmsend('${ERR}', {});
+  static final _messageErrorRe = RegExp(r"pmsend\('(?<err>.+)', \{\}");
+
   /// Reply to a post.
   ///
   /// # Exception
@@ -134,5 +147,49 @@ class ReplyRepository {
     if (!(resp.data as String).contains('回复发布成功')) {
       throw ReplyToThreadResultFailedException();
     }
+  }
+
+  /// Reply personalMessage.
+  ///
+  /// # Exception
+  ///
+  /// * **HttpRequestFailedException** when http request failed.
+  /// * **ReplyPersonalMessageFailedException** when reply failed.
+  ///
+  /// # Return
+  ///
+  /// Return the pmid if send message succeed which is used to show the new
+  /// generated message.
+  Future<String?> replyPersonalMessage({
+    required String targetUrl,
+    required String formHash,
+    required String message,
+  }) async {
+    final formData = <String, String>{
+      'message': message,
+      'formhash': formHash,
+    };
+
+    final resp = await getIt.get<NetClientProvider>().postForm(
+          targetUrl,
+          data: formData,
+        );
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(resp.statusCode!);
+    }
+
+    final data = resp.data as String;
+
+    if (data.contains('succeedhandle_pmsend')) {
+      // Success.
+      return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
+    }
+    if (data.contains('errorhandle_pmsend')) {
+      final errorMessage = _messageErrorRe.firstMatch(data)?.namedGroup('err');
+      throw ReplyPersonalMessageFailedException(
+        errorMessage ?? 'unknown error',
+      );
+    }
+    return null;
   }
 }

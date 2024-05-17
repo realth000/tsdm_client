@@ -19,3 +19,15 @@ class ReplyToPostResultFailedException
 class ReplyToThreadResultFailedException
     with ReplyToThreadResultFailedExceptionMappable
     implements Exception {}
+
+/// Reply personal message, but failed in response.
+@MappableClass()
+class ReplyPersonalMessageFailedException
+    with ReplyPersonalMessageFailedExceptionMappable
+    implements Exception {
+  /// Constructor.
+  const ReplyPersonalMessageFailedException(this.message);
+
+  /// Error message.
+  final String message;
+}

@@ -4,4 +4,5 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/chat/models/models.mapper.dart';
+part 'chat_history_send_target.dart';
 part 'chat_message.dart';

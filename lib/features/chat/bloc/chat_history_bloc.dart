@@ -110,6 +110,25 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         .toList()
         .reversed;
 
+    // Parse send target.
+    ChatHistorySendTarget? target;
+    final formNode = document.querySelector('form#pmform');
+    if (formNode != null) {
+      final targetUrl = formNode.attributes['action']?.unescapeHtml();
+      final formHash =
+          formNode.querySelector('input[name="formhash"]')?.attributes['value'];
+      if (targetUrl != null && formHash != null) {
+        target =
+            ChatHistorySendTarget(targetUrl: targetUrl, formHash: formHash);
+      } else {
+        debug('failed to build send target in chat history page: '
+            'targetUrl=$targetUrl, formHash=$formHash');
+      }
+    } else {
+      debug('failed to build send target in chat history page: '
+          'form node not found');
+    }
+
     emit(
       state.copyWith(
         status: ChatHistoryStatus.success,
@@ -118,6 +137,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
         pageNumber: page,
         previousPage: previousPage,
         nextPage: nextPage,
+        sendTarget: target,
         messages: [
           ...state.messages,
           ...messages,

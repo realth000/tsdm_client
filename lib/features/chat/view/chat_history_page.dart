@@ -7,6 +7,9 @@ import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
+import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
+import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
 /// Chat history page shows full chat history with another user [uid] and an
 /// area to send new messages.
@@ -30,10 +33,11 @@ final class ChatHistoryPage extends StatefulWidget {
 final class _ChatHistoryPageState extends State<ChatHistoryPage> {
   late final EasyRefreshController _refreshController;
   final _scrollController = ScrollController();
+  final _replyBarController = ReplyBarController();
 
   Widget _buildContent(BuildContext context, ChatHistoryState state) {
     final messages = state.messages;
-    return EasyRefresh(
+    final messageList = EasyRefresh(
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
           .copyWith(physics: physics, scrollbars: false),
       controller: _refreshController,
@@ -67,6 +71,17 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         itemBuilder: (context, index) => ChatMessageCard(messages[index]),
       ),
     );
+
+    return Column(
+      children: [
+        Expanded(
+          child: messageList,
+        ),
+        ReplyBar(
+          controller: _replyBarController,
+        ),
+      ],
+    );
   }
 
   @override
@@ -91,6 +106,13 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
       providers: [
         RepositoryProvider(
           create: (context) => const ChatRepository(),
+        ),
+        RepositoryProvider(
+          create: (context) => const ReplyRepository(),
+        ),
+        BlocProvider(
+          create: (context) =>
+              ReplyBloc(replyRepository: RepositoryProvider.of(context)),
         ),
         BlocProvider(
           create: (context) => ChatHistoryBloc(RepositoryProvider.of(context))

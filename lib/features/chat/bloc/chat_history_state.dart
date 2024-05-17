@@ -32,6 +32,7 @@ final class ChatHistoryState with ChatHistoryStateMappable {
     this.nextPage,
     this.previousPage,
     this.messages = const [],
+    this.sendTarget,
   });
 
   /// Status.
@@ -84,4 +85,7 @@ final class ChatHistoryState with ChatHistoryStateMappable {
   /// So when user try to pull down from the top of the screen, is doing action
   /// on the bottom of list view, all direction and sort is expected.
   final List<ChatMessage> messages;
+
+  /// Target and parameters to send a new message.
+  final ChatHistorySendTarget? sendTarget;
 }
