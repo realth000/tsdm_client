@@ -91,3 +91,24 @@ final class ReplyToThreadRequested extends ReplyEvent
 @MappableClass()
 final class ReplyResetClearTextStateTriggered extends ReplyEvent
     with ReplyResetClearTextStateTriggeredMappable {}
+
+/// Reply in chat history page.
+@MappableClass()
+final class ReplyChatHistoryRequested extends ReplyEvent
+    with ReplyChatHistoryRequestedMappable {
+  /// Constructor.
+  const ReplyChatHistoryRequested({
+    required this.targetUrl,
+    required this.formHash,
+    required this.message,
+  });
+
+  /// Url to post form data.
+  final String targetUrl;
+
+  /// Form hash.
+  final String formHash;
+
+  /// Message content.
+  final String message;
+}

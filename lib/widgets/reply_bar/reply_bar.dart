@@ -7,6 +7,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -17,14 +18,28 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
+import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 
 /// Widget provides the reply feature.
 class ReplyBar extends StatefulWidget {
   /// Constructor.
-  const ReplyBar({required this.controller, super.key});
+  const ReplyBar({
+    required this.controller,
+    required this.replyType,
+    this.chatHistorySendTarget,
+    super.key,
+  });
 
   /// Controller passed from outside.
   final ReplyBarController controller;
+
+  /// Usage type of [ReplyBar].
+  ///
+  /// Different usages have different state and logic.
+  final ReplyTypes replyType;
+
+  /// Send target url and parameters when in chat history.
+  final ChatHistorySendTarget? chatHistorySendTarget;
 
   @override
   State<ReplyBar> createState() => _ReplyBarState();
@@ -54,10 +69,14 @@ class _ReplyBarState extends State<ReplyBar> {
   final _replyFocusNode = FocusNode();
   final _replyController = TextEditingController();
 
-  /// Parameters to reply to thread.
+  /// Parameters to reply to thread or post.
   ReplyParameters? _replyParameters;
 
-  /// Url to get the reply page, not the target to post a reply.
+  /// Url in "action" attribute when post reply.
+  ///
+  /// * In [ReplyTypes.thread], is the url to get the reply page, not the
+  ///   target to post a reply.
+  /// * In [ReplyTypes.chatHistory], is the url to post a reply.
   String? _replyAction;
 
   /////////// Editor Feature ///////////
@@ -97,41 +116,6 @@ class _ReplyBarState extends State<ReplyBar> {
     });
     _updateCursorPos();
   }
-
-  // /// Check reply request result in response [resp].
-  // /// Return true if success.
-  // Future<bool> _checkReplyResult(Response<dynamic> resp) async {
-  //   if (resp.statusCode != HttpStatus.ok) {
-  //     if (!context.mounted) {
-  //       return false;
-  //     }
-  //     await showMessageSingleButtonDialog(
-  //       context: context,
-  //       title: context.t.threadPage.sendReply,
-  //       message: context.t.threadPage.replyFailed(err: '${resp.statusCode}'),
-  //     );
-  //   }
-  //   if (!context.mounted) {
-  //     _hintText = null;
-  //     return true;
-  //   }
-  //   final result = (resp.data as String).contains('回复发布成功');
-  //   if (!result) {
-  //     await showMessageSingleButtonDialog(
-  //       context: context,
-  //       title: context.t.threadPage.sendReply,
-  //       message: context.t.threadPage.replyFailed(err: resp.data as String),
-  //     );
-  //     return false;
-  //   }
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //     content: Text(context.t.threadPage.replySuccess),
-  //   ),);
-  //   setState(() {
-  //     _hintText = null;
-  //   });
-  //   return true;
-  // }
 
   /// Post reply to thread tid/fid.
   /// This will add a post in thread, as reply to that thread.
@@ -196,6 +180,60 @@ class _ReplyBarState extends State<ReplyBar> {
             replyMessage: data,
           ),
         );
+  }
+
+  /// Send message in chat history reply type.
+  Future<void> _sendChatHistoryMessage() async {
+    if (widget.chatHistorySendTarget == null) {
+      debug('failed to reply in chat history type: send target is null');
+      return;
+    }
+
+    final String data;
+    if (useExperimentalEditor) {
+      if (_replyRichController.isEmpty) {
+        debug('failed to reply chat history: reply message is empty');
+        return;
+      }
+      data = _replyRichController.data ?? '<null>';
+    } else {
+      if (_replyController.text.isEmpty) {
+        debug('failed to reply chat history: reply message is empty');
+        return;
+      }
+      data = _replyController.text;
+    }
+
+    context.read<ReplyBloc>().add(
+          ReplyChatHistoryRequested(
+            targetUrl: widget.chatHistorySendTarget!.targetUrl,
+            formHash: widget.chatHistorySendTarget!.formHash,
+            message: data,
+          ),
+        );
+  }
+
+  /// Send message, according to [ReplyTypes].
+  Future<void> _sendMessage() async {
+    switch (widget.replyType) {
+      case ReplyTypes.thread:
+        {
+          if (_replyAction == null && _replyParameters == null) {
+            debug(
+              'failed to send reply: null action and '
+              'parameters',
+            );
+            return;
+          }
+          _replyAction == null
+              ? await _sendReplyThreadMessage()
+              : await _sendReplyPostMessage();
+        }
+      case ReplyTypes.chatHistory:
+        {
+          await _sendChatHistoryMessage();
+        }
+    }
   }
 
   /// Update [hasCursorAtEnd] when editor content changes.
@@ -279,7 +317,7 @@ class _ReplyBarState extends State<ReplyBar> {
 
   Widget _buildContent(BuildContext context, ReplyState state) {
     void Function()? switchEditorCallback;
-    if (!state.closed) {
+    if (!_closed) {
       switchEditorCallback = () {
         setState(() {
           useExperimentalEditor = !useExperimentalEditor;
@@ -418,23 +456,7 @@ class _ReplyBarState extends State<ReplyBar> {
                 ElevatedButton(
                   onPressed:
                       (canSendReply && !isSendingReply && !_closed && _hasLogin)
-                          ? () async {
-                              if (_replyAction == null &&
-                                  _replyParameters == null) {
-                                debug(
-                                  'failed to send reply: null action and '
-                                  'parameters',
-                                );
-                                return;
-                              }
-                              debug(
-                                'ReplyBar: send reply $_replyAction, '
-                                '$_replyParameters',
-                              );
-                              _replyAction == null
-                                  ? await _sendReplyThreadMessage()
-                                  : await _sendReplyPostMessage();
-                            }
+                          ? () async => _sendMessage()
                           : null,
                   child: isSendingReply
                       ? sizedCircularProgressIndicator
@@ -503,7 +525,10 @@ class _ReplyBarState extends State<ReplyBar> {
 
           // Should update close state of the current reply bar because we may
           // not send reply to closed threads.
-          _closed = state.closed;
+          _closed = switch (widget.replyType) {
+            ReplyTypes.thread => state.closed,
+            ReplyTypes.chatHistory => false,
+          };
           _replyParameters = state.replyParameters;
 
           return _buildContent(context, state);

@@ -10,6 +10,7 @@ import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
+import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
@@ -66,7 +67,10 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
       children: [
         Expanded(child: SingleChildScrollView(child: PostCard(post))),
         if (state.replyParameters != null)
-          ReplyBar(controller: _replyBarController),
+          ReplyBar(
+            controller: _replyBarController,
+            replyType: ReplyTypes.thread,
+          ),
       ],
     );
   }
@@ -88,7 +92,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
           create: (_) => NotificationRepository(),
         ),
         RepositoryProvider(
-          create: (_) => ReplyRepository(),
+          create: (_) => const ReplyRepository(),
         ),
         BlocProvider(
           create: (context) =>

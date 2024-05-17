@@ -8,6 +8,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
+import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
@@ -79,6 +80,8 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         ),
         ReplyBar(
           controller: _replyBarController,
+          replyType: ReplyTypes.chatHistory,
+          chatHistorySendTarget: state.sendTarget,
         ),
       ],
     );

@@ -24,7 +24,11 @@ class ReplyState with ReplyStateMappable {
     this.replyParameters,
     this.closed = true,
     this.needClearText = false,
+    this.replyTypes = ReplyTypes.thread,
   });
+
+  /// Current usage of reply.
+  final ReplyTypes replyTypes;
 
   /// Status.
   final ReplyStatus status;

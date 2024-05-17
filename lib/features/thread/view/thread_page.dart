@@ -17,6 +17,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
+import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
@@ -121,6 +122,7 @@ class _ThreadPageState extends State<ThreadPage>
         if (state.postList.isNotEmpty)
           ReplyBar(
             controller: _replyBarController,
+            replyType: ReplyTypes.thread,
           ),
       ],
     );
@@ -172,7 +174,7 @@ class _ThreadPageState extends State<ThreadPage>
           create: (_) => ThreadRepository(),
         ),
         RepositoryProvider<ReplyRepository>(
-          create: (_) => ReplyRepository(),
+          create: (_) => const ReplyRepository(),
         ),
         BlocProvider(
           create: (context) => ThreadBloc(
