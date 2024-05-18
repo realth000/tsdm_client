@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_bloc.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
@@ -159,6 +160,18 @@ final class _ChatPageState extends State<ChatPage> {
             return Scaffold(
               appBar: AppBar(
                 title: Text(tr.title),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.contact_page_outlined),
+                    onPressed: () async =>
+                        context.dispatchAsUrl(state.spaceUrl),
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.history_outlined),
+                    onPressed: () async =>
+                        context.dispatchAsUrl(state.chatHistoryUrl),
+                  ),
+                ],
                 bottom: PreferredSize(
                   preferredSize:
                       const Size(kToolbarHeight / 2, kToolbarHeight / 2),
