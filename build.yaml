@@ -23,4 +23,5 @@ targets:
           build_extensions:
             'lib/{{}}.dart':
               - 'lib/generated/{{}}.mapper.dart'
+          generatedMethods: [ decode, encode, copy, stringify, equals ]
 

@@ -6,5 +6,8 @@ enum ReplyTypes {
   thread,
 
   /// Reply in chat history pages.
-  chatHistory
+  chatHistory,
+
+  /// Reply in chat page.
+  chat,
 }

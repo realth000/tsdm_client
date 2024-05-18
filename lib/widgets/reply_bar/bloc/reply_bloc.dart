@@ -26,6 +26,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
     on<ReplyToThreadRequested>(_onReplyToThreadRequested);
     on<ReplyResetClearTextStateTriggered>(_onReplyResetClearTextStateTriggered);
     on<ReplyChatHistoryRequested>(_onReplyChatHistoryRequested);
+    on<ReplyChatRequested>(_onReplyChatRequested);
   }
 
   final ReplyRepository _replyRepository;
@@ -106,10 +107,31 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
     emit(state.copyWith(status: ReplyStatus.loading));
     try {
       // TODO: Update chat history with returned pmid.
-      final _ = await _replyRepository.replyPersonalMessage(
+      final _ = await _replyRepository.replyHistoryPersonalMessage(
         targetUrl: event.targetUrl,
         formHash: event.formHash,
         message: event.message,
+      );
+      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
+    } on HttpRequestFailedException catch (e) {
+      debug('failed to reply chat history: $e');
+      emit(state.copyWith(status: ReplyStatus.failed));
+    } on ReplyPersonalMessageFailedException catch (e) {
+      debug('failed to reply chat history: $e');
+      emit(state.copyWith(status: ReplyStatus.failed));
+    }
+  }
+
+  Future<void> _onReplyChatRequested(
+    ReplyChatRequested event,
+    _Emit emit,
+  ) async {
+    emit(state.copyWith(status: ReplyStatus.loading));
+    try {
+      // TODO: Update chat history with returned pmid.
+      final _ = await _replyRepository.replyPersonalMessage(
+        event.touid,
+        event.formData,
       );
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {

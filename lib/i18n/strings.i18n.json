@@ -313,6 +313,10 @@
     "title": "Chat History",
     "info": "With $user ($count messages)"
   },
+  "chatPage": {
+    "title": "Chat",
+    "hint": "Chat with $user"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"

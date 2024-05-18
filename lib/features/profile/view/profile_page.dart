@@ -174,7 +174,20 @@ class _ProfilePageState extends State<ProfilePage> {
       ];
     } else {
       // Other user's profile page.
-      actions = const [];
+      actions = [
+        IconButton(
+          icon: const Icon(Icons.email_outlined),
+          onPressed: () async => context.pushNamed(
+            ScreenPaths.chat,
+            pathParameters: {
+              'uid': widget.uid!,
+            },
+            extra: <String, dynamic>{
+              'username': userProfile.username,
+            },
+          ),
+        ),
+      ];
     }
 
     _refreshController.finishRefresh();

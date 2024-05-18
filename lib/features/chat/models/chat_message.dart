@@ -65,4 +65,22 @@ final class ChatMessage with ChatMessageMappable {
       dateTime: dateTime,
     );
   }
+
+  /// Build from node `<li class="cl pmm">`.
+  static ChatMessage? fromLi(uh.Element element) {
+    final username = element.querySelector('div.pmt')?.innerText;
+    final message = element.querySelector('div.pmd')?.innerHtml;
+    if (username == null || message == null) {
+      debug('failed to build chat message: '
+          'username=$username, message=$message');
+      return null;
+    }
+
+    return ChatMessage(
+      author: username,
+      authorAvatarUrl: null,
+      message: message,
+      dateTime: null,
+    );
+  }
 }

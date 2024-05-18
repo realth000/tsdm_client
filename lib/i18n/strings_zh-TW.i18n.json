@@ -313,6 +313,10 @@
     "title": "交談記錄",
     "info": "和 $user ($count 條)"
   },
+  "chatPage": {
+    "title": "聊天",
+    "hint": "與 $user 聊天"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"

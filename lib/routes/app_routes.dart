@@ -248,7 +248,12 @@ final router = GoRouter(
       parentNavigatorKey: _rootRouteKey,
       builder: (state) {
         final uid = state.pathParameters['uid']!;
-        return ChatPage(uid: uid);
+        String? username;
+        if (state.extra is Map<String, dynamic>) {
+          final map = state.extra! as Map<String, dynamic>;
+          username = map['username'] as String?;
+        }
+        return ChatPage(username: username, uid: uid);
       },
     ),
     AppRoute(

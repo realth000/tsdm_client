@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/user_brief_profile.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
@@ -50,6 +52,18 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 ),
               ),
               const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.email_outlined),
+                onPressed: () => context.pushNamed(
+                  ScreenPaths.chat,
+                  pathParameters: {
+                    'uid': profile.uid,
+                  },
+                  extra: <String, dynamic>{
+                    'username': profile.username,
+                  },
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.info_outline),
                 onPressed: () async => context.dispatchAsUrl(userSpaceUrl),

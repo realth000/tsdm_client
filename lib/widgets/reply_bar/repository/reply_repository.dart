@@ -149,7 +149,7 @@ class ReplyRepository {
     }
   }
 
-  /// Reply personalMessage.
+  /// Reply personalMessage in history page.
   ///
   /// # Exception
   ///
@@ -160,7 +160,7 @@ class ReplyRepository {
   ///
   /// Return the pmid if send message succeed which is used to show the new
   /// generated message.
-  Future<String?> replyPersonalMessage({
+  Future<String?> replyHistoryPersonalMessage({
     required String targetUrl,
     required String formHash,
     required String message,
@@ -190,6 +190,46 @@ class ReplyRepository {
         errorMessage ?? 'unknown error',
       );
     }
+    return null;
+  }
+
+  /// Reply a personal message, use as we are chatting though the chat dialog
+  /// when we in browser, this means in chat page, not chat history page.
+  ///
+  /// # Exception
+  ///
+  /// * **HttpRequestFailedException** when http request failed.
+  /// * **ReplyPersonalMessageFailedException** when reply failed.
+  ///
+  /// # Return
+  ///
+  /// Return the pmid if send message succeed which is used to show the new
+  /// generated message.
+  Future<String?> replyPersonalMessage(
+    String touid,
+    Map<String, dynamic> formData,
+  ) async {
+    final resp = await getIt.get<NetClientProvider>().postForm(
+          formatSendMessageUrl(touid),
+          data: formData,
+        );
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(resp.statusCode!);
+    }
+
+    final data = resp.data as String;
+
+    if (data.contains('succeedhandle_pmsend')) {
+      // Success.
+      return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
+    }
+    if (data.contains('errorhandle_pmsend')) {
+      final errorMessage = _messageErrorRe.firstMatch(data)?.namedGroup('err');
+      throw ReplyPersonalMessageFailedException(
+        errorMessage ?? 'unknown error',
+      );
+    }
+
     return null;
   }
 }

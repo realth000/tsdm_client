@@ -112,3 +112,17 @@ final class ReplyChatHistoryRequested extends ReplyEvent
   /// Message content.
   final String message;
 }
+
+/// Requested to send message in chat page.
+@MappableClass()
+final class ReplyChatRequested extends ReplyEvent
+    with ReplyChatRequestedMappable {
+  /// Constructor.
+  const ReplyChatRequested(this.touid, this.formData);
+
+  /// Query parameter used in url to post message to server.
+  final String touid;
+
+  /// Form data used in post request to send message to server.
+  final Map<String, dynamic> formData;
+}

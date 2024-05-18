@@ -27,6 +27,7 @@ class ReplyBar extends StatefulWidget {
     required this.controller,
     required this.replyType,
     this.chatHistorySendTarget,
+    this.chatSendTarget,
     this.disableEditorFeatures = const [],
     super.key,
   });
@@ -41,6 +42,9 @@ class ReplyBar extends StatefulWidget {
 
   /// Send target url and parameters when in chat history.
   final ChatHistorySendTarget? chatHistorySendTarget;
+
+  /// Send url parameters when in chat page.
+  final ChatSendTarget? chatSendTarget;
 
   /// Disable all bbcode editor features exists in this list.
   ///
@@ -219,6 +223,39 @@ class _ReplyBarState extends State<ReplyBar> {
         );
   }
 
+  Future<void> _sendChatMessage() async {
+    if (widget.chatSendTarget == null) {
+      debug('failed to reply in chat: send target is null');
+      return;
+    }
+
+    final String data;
+    if (useExperimentalEditor) {
+      if (_replyRichController.isEmpty) {
+        debug('failed to reply chat: reply message is empty');
+        return;
+      }
+      data = _replyRichController.data ?? '<null>';
+    } else {
+      if (_replyController.text.isEmpty) {
+        debug('failed to reply chat: reply message is empty');
+        return;
+      }
+      data = _replyController.text;
+    }
+
+    context.read<ReplyBloc>().add(
+          ReplyChatRequested(widget.chatSendTarget!.touid, {
+            'pmsubmit': widget.chatSendTarget!.pmsubmit,
+            'touid': widget.chatSendTarget!.touid,
+            'formhash': widget.chatSendTarget!.formHash,
+            'handlekey': widget.chatSendTarget!.handleKey,
+            'message': data,
+            'messageappand': widget.chatSendTarget!.messageAppend,
+          }),
+        );
+  }
+
   /// Send message, according to [ReplyTypes].
   Future<void> _sendMessage() async {
     switch (widget.replyType) {
@@ -238,6 +275,10 @@ class _ReplyBarState extends State<ReplyBar> {
       case ReplyTypes.chatHistory:
         {
           await _sendChatHistoryMessage();
+        }
+      case ReplyTypes.chat:
+        {
+          await _sendChatMessage();
         }
     }
   }
@@ -536,7 +577,7 @@ class _ReplyBarState extends State<ReplyBar> {
           // not send reply to closed threads.
           _closed = switch (widget.replyType) {
             ReplyTypes.thread => state.closed,
-            ReplyTypes.chatHistory => false,
+            ReplyTypes.chatHistory || ReplyTypes.chat => false,
           };
           _replyParameters = state.replyParameters;
 

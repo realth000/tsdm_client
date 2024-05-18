@@ -133,3 +133,11 @@ String formatChatRecentHistoryUrl(String uid, {int dateRange = 2}) {
   return '$baseUrl/home.php?mod=spacecp&ac=pm&op=showmsg&'
       'msgonly=1&touid=$uid&pmid=0&inajax=1&daterange=$dateRange';
 }
+
+/// Target url to send a message to another user.
+///
+/// This is mainly used in chat dialog in server, so use this in the same
+/// situation.
+String formatSendMessageUrl(String touid) {
+  return '$baseUrl/home.php?mod=spacecp&ac=pm&op=send&touid=$touid&inajax=1';
+}
