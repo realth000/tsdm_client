@@ -25,6 +25,7 @@ class ReplyState with ReplyStateMappable {
     this.closed = true,
     this.needClearText = false,
     this.replyTypes = ReplyTypes.thread,
+    this.failedReason,
   });
 
   /// Current usage of reply.
@@ -47,12 +48,16 @@ class ReplyState with ReplyStateMappable {
   /// This should be set to true once sending request success, only one time.
   final bool needClearText;
 
+  /// Why failed.
+  final String? failedReason;
+
   /// Copy with, but make the `replyParameters` to null.
   ReplyState copyWithNullReplyParameters() {
     return ReplyState(
       status: status,
       closed: closed,
       needClearText: needClearText,
+      failedReason: failedReason,
     );
   }
 }

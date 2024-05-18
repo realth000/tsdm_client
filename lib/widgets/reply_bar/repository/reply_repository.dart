@@ -22,7 +22,7 @@ class ReplyRepository {
   /// Regexp to grep error message in chat message send response.
   ///
   /// errorhandle_pmsend('${ERR}', {});
-  static final _messageErrorRe = RegExp(r"pmsend\('(?<err>.+)', \{\}");
+  static final _messageErrorRe = RegExp(r"\('(?<err>.+)', \{\}\);\}");
 
   /// Reply to a post.
   ///
@@ -223,7 +223,7 @@ class ReplyRepository {
       // Success.
       return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
     }
-    if (data.contains('errorhandle_pmsend')) {
+    if (data.contains('errorhandle_showmsg_$touid')) {
       final errorMessage = _messageErrorRe.firstMatch(data)?.namedGroup('err');
       throw ReplyPersonalMessageFailedException(
         errorMessage ?? 'unknown error',

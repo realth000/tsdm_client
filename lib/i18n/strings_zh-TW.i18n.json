@@ -311,11 +311,15 @@
   },
   "chatHistoryPage": {
     "title": "交談記錄",
-    "info": "和 $user ($count 條)"
+    "info": "和 $user ($count 條)",
+    "success": "發送成功",
+    "failed": "發送失敗：$message"
   },
   "chatPage": {
     "title": "聊天",
-    "hint": "與 $user 聊天"
+    "hint": "與 $user 聊天",
+    "success": "發送成功",
+    "failed": "發送失敗：$message"
   },
   "forumCard": {
     "links": "連結",

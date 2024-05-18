@@ -118,7 +118,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyPersonalMessageFailedException catch (e) {
       debug('failed to reply chat history: $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
     }
   }
 
@@ -139,7 +139,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyPersonalMessageFailedException catch (e) {
       debug('failed to reply chat history: $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
     }
   }
 }

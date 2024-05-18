@@ -136,12 +136,36 @@ final class _ChatPageState extends State<ChatPage> {
             ..add(ChatFetchHistoryRequested(widget.uid)),
         ),
       ],
-      child: BlocListener<ChatBloc, ChatState>(
-        listener: (context, state) {
-          if (state.status == ChatStatus.success) {
-            _refreshController.finishLoad();
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<ChatBloc, ChatState>(
+            listener: (context, state) {
+              if (state.status == ChatStatus.success) {
+                _refreshController.finishLoad();
+              }
+            },
+          ),
+          BlocListener<ReplyBloc, ReplyState>(
+            listenWhen: (prev, curr) => prev.status != curr.status,
+            listener: (context, state) {
+              if (state.status == ReplyStatus.success) {
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(tr.success)));
+              } else if (state.status == ReplyStatus.failed &&
+                  state.failedReason != null) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text(
+                      tr.failed(
+                        message: state.failedReason!,
+                      ),
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
             final body = switch (state.status) {

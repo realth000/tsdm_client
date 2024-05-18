@@ -188,6 +188,11 @@ extension EnhanceModification on String {
     return '$baseUrl/$this';
   }
 
+  /// Prepend [suffix].
+  String? append(String suffix) {
+    return '$this$suffix';
+  }
+
   /// Truncate string at position [size].
   ///
   /// If [length] is smaller than [size], return the whole string.

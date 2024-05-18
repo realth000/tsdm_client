@@ -311,11 +311,15 @@
   },
   "chatHistoryPage": {
     "title": "Chat History",
-    "info": "With $user ($count messages)"
+    "info": "With $user ($count messages)",
+    "success": "Sent successfully",
+    "failed": "Sent failed: $message"
   },
   "chatPage": {
     "title": "Chat",
-    "hint": "Chat with $user"
+    "hint": "Chat with $user",
+    "success": "Sent successfully",
+    "failed": "Sent failed: $message"
   },
   "forumCard": {
     "links": "Links",

@@ -114,8 +114,12 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     ChatHistorySendTarget? target;
     final formNode = document.querySelector('form#pmform');
     if (formNode != null) {
-      final targetUrl =
-          formNode.attributes['action']?.unescapeHtml()?.prependHost();
+      final targetUrl = formNode.attributes['action']
+          ?.unescapeHtml()
+          ?.prependHost()
+          // Append "inajax=1" parameter to let server only return the content
+          // xml.
+          .append('&inajax=1');
       final formHash =
           formNode.querySelector('input[name="formhash"]')?.attributes['value'];
       final pmid = Uri.tryParse(targetUrl ?? '')?.queryParameters['pmid'];
