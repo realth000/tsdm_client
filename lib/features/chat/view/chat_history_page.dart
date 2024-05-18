@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_history_bloc.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
@@ -12,6 +13,7 @@ import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Chat history page shows full chat history with another user [uid] and an
 /// area to send new messages.
@@ -156,9 +158,34 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
                       ),
                 ),
             };
+
+            PreferredSize? bottom;
+            if ((state.user.username != null || state.user.uid != null) &&
+                state.messageCount > 0) {
+              bottom = PreferredSize(
+                preferredSize:
+                    const Size(kToolbarHeight / 2, kToolbarHeight / 2),
+                child: Padding(
+                  padding: edgeInsetsL10R10B10,
+                  child: Row(
+                    children: [
+                      SingleLineText(
+                        tr.info(
+                          user: state.user.username ?? state.user.uid ?? '',
+                          count: state.messageCount,
+                        ),
+                        style: Theme.of(context).textTheme.labelMedium,
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
             return Scaffold(
               appBar: AppBar(
                 title: Text(tr.title),
+                bottom: bottom,
               ),
               body: body,
             );
