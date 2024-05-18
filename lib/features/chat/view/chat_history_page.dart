@@ -69,6 +69,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         // position keep the same after new pages of data.
         // See `messages` in `ChatHistoryState` for details.
         reverse: true,
+        shrinkWrap: true,
         controller: _scrollController,
         separatorBuilder: (context, index) => const Divider(thickness: 0.5),
         itemCount: messages.length,
