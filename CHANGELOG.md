@@ -8,9 +8,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
-- 通知：支持查看用户消息和公共消息。
-  - 支持跳转到公共通知详情页面。
+- 通知：支持查看私信和公共消息。
   - 主页 -> 通知按钮。
+- 通知：支持查看公共消息的完整详情。
+- 私信：支持查看私信历史。
+- 帖子：支持向楼层所属用户发送信息。
+  - 楼层用户头像或名称 -> 对话框内按钮。
+- 用户：支持从其他用户的用户资料页发送私信。
+  - 资料页 -> 右上角发送按钮。
 
 ### Fixed
 
@@ -20,6 +25,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- 帖子：移除了楼层中的多余widget，优化性能。
 - internal: flutter版本提高至3.22
 
 ## [0.10.1] - 2024-05-03
