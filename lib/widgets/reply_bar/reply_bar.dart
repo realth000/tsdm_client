@@ -27,6 +27,7 @@ class ReplyBar extends StatefulWidget {
     required this.controller,
     required this.replyType,
     this.chatHistorySendTarget,
+    this.disableEditorFeatures = const [],
     super.key,
   });
 
@@ -40,6 +41,11 @@ class ReplyBar extends StatefulWidget {
 
   /// Send target url and parameters when in chat history.
   final ChatHistorySendTarget? chatHistorySendTarget;
+
+  /// Disable all bbcode editor features exists in this list.
+  ///
+  /// Those disabled features' corresponding widget will be invisible.
+  final List<EditorFeatures> disableEditorFeatures;
 
   @override
   State<ReplyBar> createState() => _ReplyBarState();
@@ -421,7 +427,10 @@ class _ReplyBarState extends State<ReplyBar> {
             child: Row(
               children: [
                 Expanded(
-                  child: EditorToolbar(bbcodeController: _replyRichController),
+                  child: EditorToolbar(
+                    bbcodeController: _replyRichController,
+                    disabledFeatures: widget.disableEditorFeatures,
+                  ),
                 ),
               ],
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_history_bloc.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
+import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -82,6 +83,14 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           controller: _replyBarController,
           replyType: ReplyTypes.chatHistory,
           chatHistorySendTarget: state.sendTarget,
+          disableEditorFeatures: const [
+            EditorFeatures.fontSize,
+            EditorFeatures.backgroundColor,
+            EditorFeatures.italic,
+            EditorFeatures.underline,
+            EditorFeatures.strikethrough,
+            EditorFeatures.userMention,
+          ],
         ),
       ],
     );
