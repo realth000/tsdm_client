@@ -571,6 +571,9 @@ class _ReplyBarState extends State<ReplyBar> {
           } else if (state.status == ReplyStatus.failed) {
             // Last reply action is failed, only clear pending state.
             isSendingReply = false;
+            // When failed to reply, we did NOT clear any text so is ready for
+            // next try.
+            canSendReply = true;
           }
 
           // Should update close state of the current reply bar because we may
