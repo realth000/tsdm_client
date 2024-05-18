@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.11.0] - 2024-05-19
+
 ### Added
 
 - 通知：支持查看私信和公共消息。
