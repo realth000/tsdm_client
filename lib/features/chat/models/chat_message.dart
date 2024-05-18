@@ -68,7 +68,8 @@ final class ChatMessage with ChatMessageMappable {
 
   /// Build from node `<li class="cl pmm">`.
   static ChatMessage? fromLi(uh.Element element) {
-    final username = element.querySelector('div.pmt')?.innerText;
+    final username =
+        element.querySelector('div.pmt')?.innerText.split(':').first;
     final message = element.querySelector('div.pmd')?.innerHtml;
     if (username == null || message == null) {
       debug('failed to build chat message: '

@@ -40,7 +40,9 @@ final class ChatMessageCard extends StatelessWidget {
           ListTile(
             leading: leading,
             title: Text(chatMessage.author ?? ''),
-            subtitle: Text('${chatMessage.dateTime?.yyyyMMDDHHMMSS()}'),
+            subtitle: chatMessage.dateTime == null
+                ? null
+                : Text(chatMessage.dateTime!.yyyyMMDDHHMMSS()),
           ),
           Row(
             children: [
