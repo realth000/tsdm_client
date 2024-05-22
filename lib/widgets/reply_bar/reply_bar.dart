@@ -364,7 +364,7 @@ class _ReplyBarState extends State<ReplyBar> {
 
   Widget _buildContent(BuildContext context, ReplyState state) {
     void Function()? switchEditorCallback;
-    if (!_closed) {
+    if (!_closed && _hasLogin) {
       switchEditorCallback = () {
         setState(() {
           useExperimentalEditor = !useExperimentalEditor;

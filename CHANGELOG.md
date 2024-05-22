@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- 帖子：修复未登录时可以切换编辑器的问题。
+
 ## [0.11.0] - 2024-05-19
 
 ### Added
