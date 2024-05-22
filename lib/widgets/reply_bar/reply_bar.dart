@@ -311,9 +311,9 @@ class _ReplyBarState extends State<ReplyBar> {
             Expanded(
               child: BBCodeEditor(
                 controller: _replyRichController,
-                // This empty scroll controller prevents the text field as the "primary"
-                // scrollable widget in page, so that app bar color will not change when
-                // this text fields scrolls.
+                // This empty scroll controller prevents the text field as the
+                // "primary" scrollable widget in page, so that app bar color
+                // will not change when this text fields scrolls.
                 // Only a workaround but it works.
                 // TODO: Make this prevent elegant.
                 scrollController: ScrollController(),
