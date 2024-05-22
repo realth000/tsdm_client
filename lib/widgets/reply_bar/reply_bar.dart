@@ -311,6 +311,12 @@ class _ReplyBarState extends State<ReplyBar> {
             Expanded(
               child: BBCodeEditor(
                 controller: _replyRichController,
+                // This empty scroll controller prevents the text field as the "primary"
+                // scrollable widget in page, so that app bar color will not change when
+                // this text fields scrolls.
+                // Only a workaround but it works.
+                // TODO: Make this prevent elegant.
+                scrollController: ScrollController(),
                 focusNode: focusNode,
                 emojiBuilder: (code) async {
                   // code is supposed in
@@ -340,6 +346,12 @@ class _ReplyBarState extends State<ReplyBar> {
   /// Build a plain text editor.
   Widget _buildPlainEditor(BuildContext context) {
     return TextField(
+      // This empty scroll controller prevents the text field as the "primary"
+      // scrollable widget in page, so that app bar color will not change when
+      // this text fields scrolls.
+      // Only a workaround but it works.
+      // TODO: Make this prevent elegant.
+      scrollController: ScrollController(),
       focusNode: _replyFocusNode,
       controller: _replyController,
       onTap: _updateCursorPos,

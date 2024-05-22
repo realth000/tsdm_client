@@ -9,6 +9,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - 帖子：修复未登录时可以切换编辑器的问题。
+- 编辑：修复编辑器的滚动导致页面标题栏背景色改变的问题。
+  - 应该只在页面主体滚动时改变颜色。
 
 ## [0.11.0] - 2024-05-19
 
