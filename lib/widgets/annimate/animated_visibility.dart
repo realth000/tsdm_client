@@ -24,7 +24,7 @@ class AnimatedVisibility extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedSize(
       alignment: Alignment.centerLeft,
-      duration: duration ?? animateDuration100,
+      duration: duration ?? duration100,
       child: Container(
         child: visible ? child : null,
       ),

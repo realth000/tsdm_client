@@ -30,41 +30,51 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 
 final _rootRouteKey = GlobalKey<NavigatorState>();
-final _shellRouteKey = GlobalKey<NavigatorState>();
 
 /// App router instance.
 final router = GoRouter(
   navigatorKey: _rootRouteKey,
   initialLocation: ScreenPaths.homepage,
   routes: [
-    ShellRoute(
-      navigatorKey: _shellRouteKey,
+    StatefulShellRoute.indexedStack(
       builder: (context, router, navigator) => HomePage(
         forumHomeRepository:
             RepositoryProvider.of<ForumHomeRepository>(context),
         showNavigationBar: true,
         child: navigator,
       ),
-      routes: [
-        AppRoute(
-          path: ScreenPaths.homepage,
-          parentNavigatorKey: _shellRouteKey,
-          builder: (_) => const HomepagePage(),
+      branches: [
+        StatefulShellBranch(
+          routes: [
+            AppRoute(
+              path: ScreenPaths.homepage,
+              builder: (_) => const HomepagePage(),
+            ),
+          ],
         ),
-        AppRoute(
-          path: ScreenPaths.topic,
-          parentNavigatorKey: _shellRouteKey,
-          builder: (_) => const TopicsPage(),
+        StatefulShellBranch(
+          routes: [
+            AppRoute(
+              path: ScreenPaths.topic,
+              builder: (_) => const TopicsPage(),
+            ),
+          ],
         ),
-        AppRoute(
-          path: ScreenPaths.loggedUserProfile,
-          parentNavigatorKey: _shellRouteKey,
-          builder: (_) => const ProfilePage(),
+        StatefulShellBranch(
+          routes: [
+            AppRoute(
+              path: ScreenPaths.loggedUserProfile,
+              builder: (_) => const ProfilePage(),
+            ),
+          ],
         ),
-        AppRoute(
-          path: ScreenPaths.settings,
-          parentNavigatorKey: _shellRouteKey,
-          builder: (_) => const SettingsPage(),
+        StatefulShellBranch(
+          routes: [
+            AppRoute(
+              path: ScreenPaths.settings,
+              builder: (_) => const SettingsPage(),
+            ),
+          ],
         ),
       ],
     ),

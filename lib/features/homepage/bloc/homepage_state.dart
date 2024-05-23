@@ -17,7 +17,7 @@ enum HomepageStatus {
   success,
 
   /// Failed to load data.
-  failed;
+  failure;
 
   /// Is [initial]?
   bool get isInitial => this == HomepageStatus.initial;
@@ -31,8 +31,8 @@ enum HomepageStatus {
   /// Is [success]?
   bool get isSuccess => this == HomepageStatus.success;
 
-  /// Is [failed]?
-  bool get isFailed => this == HomepageStatus.failed;
+  /// Is [failure]?
+  bool get isFailed => this == HomepageStatus.failure;
 }
 
 /// State of homepage.

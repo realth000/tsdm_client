@@ -2,11 +2,11 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
-import 'package:tsdm_client/features/homepage/widgets/pin_section.dart';
-import 'package:tsdm_client/features/homepage/widgets/welcome_section.dart';
+import 'package:tsdm_client/features/homepage/widgets/widgets.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -48,9 +48,9 @@ class _HomepagePageState extends State<HomepagePage> {
             RepositoryProvider.of<ForumHomeRepository>(context),
         profileRepository: RepositoryProvider.of<ProfileRepository>(context),
       )..add(HomepageLoadRequested()),
-      child: BlocListener<HomepageBloc, HomepageState>(
+      child: BlocConsumer<HomepageBloc, HomepageState>(
         listener: (context, state) {
-          if (state.status == HomepageStatus.failed) {
+          if (state.status == HomepageStatus.failure) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
                 content: Text(
@@ -60,66 +60,78 @@ class _HomepagePageState extends State<HomepagePage> {
             );
           }
         },
-        child: BlocBuilder<HomepageBloc, HomepageState>(
-          builder: (context, state) {
-            final body = switch (state.status) {
-              HomepageStatus.initial ||
-              HomepageStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
-              HomepageStatus.needLogin => NeedLoginPage(
-                  backUri: GoRouterState.of(context).uri,
-                  needPop: true,
-                  popCallback: (context) {
-                    context
-                        .read<HomepageBloc>()
-                        .add(HomepageRefreshRequested());
-                  },
-                ),
-              HomepageStatus.failed => buildRetryButton(context, () {
+        builder: (context, state) {
+          final body = switch (state.status) {
+            HomepageStatus.initial || HomepageStatus.loading => EasyRefresh(
+                key: const ValueKey('initial'),
+                scrollController: _scrollController,
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                onRefresh: () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
-                }),
-              HomepageStatus.success => EasyRefresh(
-                  scrollController: _scrollController,
-                  controller: _refreshController,
-                  header: const MaterialHeader(),
-                  onRefresh: () {
-                    context
-                        .read<HomepageBloc>()
-                        .add(HomepageRefreshRequested());
-                  },
-                  child: ListView(
-                    padding: edgeInsetsL10T5R10B20,
-                    children: [
-                      WelcomeSection(
-                        forumStatus: state.forumStatus,
-                        loggedUserInfo: state.loggedUserInfo,
-                        swiperUrlList: state.swiperUrlList,
-                      ),
-                      sizedBoxW5H5,
-                      PinSection(state.pinnedThreadGroupList),
-                    ],
+                },
+                child: Shimmer.fromColors(
+                  baseColor:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  highlightColor:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.2),
+                  child: const SingleChildScrollView(
+                    physics: NeverScrollableScrollPhysics(),
+                    padding: edgeInsetsL10T5R10,
+                    child: HomepagePlaceholder(),
                   ),
                 ),
-            };
-
-            _refreshController.finishRefresh();
-
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(context.t.homepage.title),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.search_outlined),
-                    onPressed: () async {
-                      await context.pushNamed(ScreenPaths.search);
-                    },
-                  ),
-                ],
               ),
-              body: body,
-            );
-          },
-        ),
+            HomepageStatus.needLogin => NeedLoginPage(
+                backUri: GoRouterState.of(context).uri,
+                needPop: true,
+                popCallback: (context) {
+                  context.read<HomepageBloc>().add(HomepageRefreshRequested());
+                },
+              ),
+            HomepageStatus.failure => buildRetryButton(context, () {
+                context.read<HomepageBloc>().add(HomepageRefreshRequested());
+              }),
+            HomepageStatus.success => EasyRefresh(
+                key: const ValueKey('success'),
+                scrollController: _scrollController,
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                onRefresh: () {
+                  context.read<HomepageBloc>().add(HomepageRefreshRequested());
+                },
+                child: ListView(
+                  padding: edgeInsetsL10T5R10B20,
+                  children: [
+                    WelcomeSection(
+                      forumStatus: state.forumStatus,
+                      loggedUserInfo: state.loggedUserInfo,
+                      swiperUrlList: state.swiperUrlList,
+                    ),
+                    sizedBoxW5H5,
+                    PinSection(state.pinnedThreadGroupList),
+                  ],
+                ),
+              ),
+          };
+
+          _refreshController.finishRefresh();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.t.homepage.title),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.search_outlined),
+                  onPressed: () async {
+                    await context.pushNamed(ScreenPaths.search);
+                  },
+                ),
+              ],
+            ),
+            body: AnimatedSwitcher(duration: duration500, child: body),
+          );
+        },
       ),
     );
   }

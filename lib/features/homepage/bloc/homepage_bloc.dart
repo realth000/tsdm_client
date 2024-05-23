@@ -95,7 +95,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
           emit(state.copyWith(status: HomepageStatus.needLogin));
           return;
         } else {
-          emit(state.copyWith(status: HomepageStatus.failed));
+          emit(state.copyWith(status: HomepageStatus.failure));
           return;
         }
       }
@@ -113,11 +113,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       emit(s);
     } on HttpHandshakeFailedException catch (e) {
       debug('[HomepageBloc]: Failed to fetch home page: $e');
-      emit(state.copyWith(status: HomepageStatus.failed));
+      emit(state.copyWith(status: HomepageStatus.failure));
       return;
     } on HttpRequestFailedException catch (e) {
       debug('[HomepageBloc]: Failed to fetch home page: $e');
-      emit(state.copyWith(status: HomepageStatus.failed));
+      emit(state.copyWith(status: HomepageStatus.failure));
       return;
     }
   }
@@ -149,10 +149,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       emit(s);
     } on HttpHandshakeFailedException catch (e) {
       debug('failed to fetch dom: $e');
-      emit(state.copyWith(status: HomepageStatus.failed));
+      emit(state.copyWith(status: HomepageStatus.failure));
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch dom: $e');
-      emit(state.copyWith(status: HomepageStatus.failed));
+      emit(state.copyWith(status: HomepageStatus.failure));
     }
   }
 

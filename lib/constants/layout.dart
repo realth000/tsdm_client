@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 /// Duration 100 milliseconds.
-const animateDuration100 = Duration(milliseconds: 100);
+const duration100 = Duration(milliseconds: 100);
 
 /// Duration 200 milliseconds.
-const animateDuration200 = Duration(milliseconds: 200);
+const duration200 = Duration(milliseconds: 200);
 
 /// Duration 500 milliseconds.
-const animateDuration500 = Duration(milliseconds: 500);
+const duration500 = Duration(milliseconds: 500);
 
 /// Min button width of button in a card in post.
 ///
@@ -75,4 +75,54 @@ const sizedCircularProgressIndicator = SizedBox(
   width: 16,
   height: 16,
   child: CircularProgressIndicator(strokeWidth: 3),
+);
+
+/// Widget with 20 height and infinite width to use in shimmers.
+const sizedH20Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 20,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
+/// Widget with 40 height and infinite width to use in shimmers.
+const sizedH40Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 40,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
+/// Widget with 60 height infinite width to use in shimmers.
+///
+const sizedH60Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 60,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
+/// Widget with 100 height infinite width to use in shimmers.
+///
+const sizedH100Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 100,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
 );

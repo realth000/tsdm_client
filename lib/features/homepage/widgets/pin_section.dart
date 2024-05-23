@@ -1,11 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/extensions/map.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/features/homepage/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/widgets/single_line_text.dart';
+part of 'widgets.dart';
 
 /// All pinned thread in homepage.
 ///
