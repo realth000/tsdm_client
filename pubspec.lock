@@ -28,12 +28,11 @@ packages:
   appflowy_editor:
     dependency: transitive
     description:
-      path: "."
-      ref: "796d1249fe5a7f936cb9060208561c45db484098"
-      resolved-ref: "796d1249fe5a7f936cb9060208561c45db484098"
-      url: "https://github.com/AppFlowy-IO/appflowy-editor"
-    source: git
-    version: "2.4.0"
+      name: appflowy_editor
+      sha256: "7ddf4e61d79f3a6d51667d8c4590f581bf3d6736c2c86a572a900424d1c1feb9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.5.1"
   archive:
     dependency: transitive
     description:
