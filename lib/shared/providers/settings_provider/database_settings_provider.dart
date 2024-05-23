@@ -279,4 +279,16 @@ class DatabaseSettingsProvider
     final storage = _getStorage();
     await storage.saveBool(settingsShowUnreadInfoHint, value: enabled);
   }
+
+  @override
+  bool getDoublePressExit() {
+    final storage = _getStorage();
+    return storage.getBool(settingsDoublePressExit) ?? defaultDoublePressExit;
+  }
+
+  @override
+  Future<void> setDoublePressExit({required bool enabled}) async {
+    final storage = _getStorage();
+    await storage.saveBool(settingsDoublePressExit, value: enabled);
+  }
 }

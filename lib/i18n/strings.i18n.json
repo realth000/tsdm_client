@@ -22,6 +22,9 @@
     "profile": "Profile",
     "settings": "Settings"
   },
+  "home": {
+    "confirmExit": "Press again to exit"
+  },
   "homepage": {
     "title": "Home",
     "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2"
@@ -58,6 +61,13 @@
       "showUnreadInfoHint": {
         "title": "Unread Info Hint",
         "detail": "Show badge or count for user unread info on notice button"
+      }
+    },
+    "behaviorSection": {
+      "title": "Behavior",
+      "doublePressExit": {
+        "title": "Double Press Back To Exit",
+        "detail ": "Avoid accidentally exiting the app"
       }
     },
     "checkinSection": {

@@ -63,6 +63,7 @@ class SettingsRepository {
       showShortcutInForumCard: _settingsProvider.getShowShortcutInForumCard(),
       accentColor: _settingsProvider.getAccentColorValue(),
       showUnreadInfoHint: _settingsProvider.getShowUnreadInfoHint(),
+      doublePressExit: _settingsProvider.getDoublePressExit(),
     );
   }
 
@@ -219,6 +220,16 @@ class SettingsRepository {
   Future<void> setShowUnreadInfoHint({required bool enabled}) async {
     await _settingsProvider.setShowUnreadInfoHint(enabled: enabled);
     _state = _state.copyWith(showUnreadInfoHint: enabled);
+    _controller.add(_state);
+  }
+
+  /// Get the state of double press exit feature.
+  bool getDoublePressExit() => _settingsProvider.getDoublePressExit();
+
+  /// Set the state of double press exit feature.
+  Future<void> setDoublePressExit({required bool enabled}) async {
+    await _settingsProvider.setDoublePressExit(enabled: enabled);
+    _state = _state.copyWith(doublePressExit: enabled);
     _controller.add(_state);
   }
 }

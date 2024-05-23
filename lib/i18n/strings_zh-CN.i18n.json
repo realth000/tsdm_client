@@ -22,6 +22,9 @@
     "profile": "我的",
     "settings": "设置"
   },
+  "home": {
+    "confirmExit": "再按一次以退出"
+  },
   "homepage": {
     "title": "主页",
     "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2"
@@ -58,6 +61,13 @@
       "showUnreadInfoHint": {
         "title": "未读信息提示",
         "detail": "有未读消息时消息按钮上显示红点或数量"
+      }
+    },
+    "behaviorSection": {
+      "title": "行为",
+      "doublePressExit": {
+        "title": "按两下返回才退出应用",
+        "detail": "避免意外退出app"
       }
     },
     "checkinSection": {

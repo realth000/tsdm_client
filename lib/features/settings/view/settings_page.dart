@@ -228,6 +228,30 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
+  List<Widget> _buildBehaviorSection(
+    BuildContext context,
+    SettingsState state,
+  ) {
+    final tr = context.t.settingsPage.behaviorSection;
+    final doublePressExit = state.settingsMap.doublePressExit;
+
+    return [
+      SectionTitleText(tr.title),
+      SwitchListTile(
+        secondary: const Icon(Icons.block_outlined),
+        title: Text(tr.doublePressExit.title),
+        subtitle: Text(tr.doublePressExit.detail),
+        contentPadding: edgeInsetsL18R18,
+        value: doublePressExit,
+        onChanged: (v) async {
+          context
+              .read<SettingsBloc>()
+              .add(SettingsChangeDoublePressExitRequested(enabled: v));
+        },
+      ),
+    ];
+  }
+
   Future<String?> _showSetCheckinFeelingDialog(
     BuildContext context,
     String defaultFeeling,
@@ -358,6 +382,7 @@ class _SettingsPageState extends State<SettingsPage> {
               controller: scrollController,
               children: [
                 ..._buildAppearanceSection(context, state),
+                ..._buildBehaviorSection(context, state),
                 ..._buildCheckinSection(context, state),
                 ..._buildStorageSection(context, state),
                 ..._buildOtherSection(context),

@@ -22,6 +22,9 @@
     "profile": "我的",
     "settings": "設定"
   },
+  "home": {
+    "confirmExit": "再按一次以退出"
+  },
   "homepage": {
     "title": "首頁",
     "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2"
@@ -58,6 +61,13 @@
       "showUnreadInfoHint": {
         "title": "未讀取訊息提示",
         "detail": "有未讀訊息時訊息按鈕上顯示紅點或數量"
+      }
+    },
+    "behaviorSection": {
+      "title": "行為",
+      "doublePressExit": {
+        "title": "按兩下返回才退出應用",
+        "detail": "避免意外退出app"
       }
     },
     "checkinSection": {

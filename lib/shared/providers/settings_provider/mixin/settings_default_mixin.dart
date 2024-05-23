@@ -76,4 +76,11 @@ mixin SettingsDefaultMapMixin {
   ///
   /// Default is enabled.
   bool get defaultShowUnreadInfoHint => true;
+
+  /// Only exit the app when user press back button twice or more.
+  ///
+  /// Avoid accidentally exit the app.
+  ///
+  /// Default is enabled.
+  bool get defaultDoublePressExit => true;
 }

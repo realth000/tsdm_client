@@ -111,4 +111,10 @@ abstract interface class SettingsProvider {
 
   /// Set the visibility of badge or notice count of user unread messages.
   Future<void> setShowUnreadInfoHint({required bool enabled});
+
+  /// Get the state of double press back exit feature.
+  bool getDoublePressExit();
+
+  /// Set the state of double press exit feature.
+  Future<void> setDoublePressExit({required bool enabled});
 }

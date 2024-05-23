@@ -6,6 +6,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 应用：支持防误触退出，按两次返回才会退出应用。
+  - 默认开启，可在设置 -> 行为中关闭。
+
 ### Fixed
 
 - 帖子：修复未登录时可以切换编辑器的问题。

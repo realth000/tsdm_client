@@ -64,6 +64,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsChangeUnreadInfoHintRequested>(
       _onSettingsChangeUnreadInfoHintRequested,
     );
+    on<SettingsChangeDoublePressExitRequested>(
+      _onSettingsChangeDoublePressExitRequested,
+    );
   }
 
   final SettingsRepository _settingsRepository;
@@ -142,6 +145,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEmitter emit,
   ) async {
     await _settingsRepository.setShowUnreadInfoHint(enabled: event.enabled);
+  }
+
+  Future<void> _onSettingsChangeDoublePressExitRequested(
+    SettingsChangeDoublePressExitRequested event,
+    SettingsEmitter emit,
+  ) async {
+    await _settingsRepository.setDoublePressExit(enabled: event.enabled);
   }
 
   @override

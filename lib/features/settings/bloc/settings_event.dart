@@ -118,3 +118,15 @@ final class SettingsChangeUnreadInfoHintRequested extends SettingsEvent
   /// Enable shortcuts or not.
   final bool enabled;
 }
+
+/// User requested to change the confirm exit action feature.
+@MappableClass()
+final class SettingsChangeDoublePressExitRequested extends SettingsEvent
+    with SettingsChangeDoublePressExitRequestedMappable {
+  /// Constructor.
+  const SettingsChangeDoublePressExitRequested({required this.enabled})
+      : super();
+
+  /// Enable the second exit check or not.
+  final bool enabled;
+}

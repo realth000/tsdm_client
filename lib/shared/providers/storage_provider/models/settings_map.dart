@@ -27,6 +27,7 @@ class SettingsMap with SettingsMapMappable {
     required this.showShortcutInForumCard,
     required this.accentColor,
     required this.showUnreadInfoHint,
+    required this.doublePressExit,
   });
 
   final String netClientAccept;
@@ -47,6 +48,7 @@ class SettingsMap with SettingsMapMappable {
   final bool showShortcutInForumCard;
   final int accentColor;
   final bool showUnreadInfoHint;
+  final bool doublePressExit;
 }
 
 const settingsNetClientAccept = 'dioAccept';
@@ -67,6 +69,7 @@ const settingsCheckinMessage = 'checkInMessage';
 const settingsShowShortcutInForumCard = 'showShortcutInForumCard';
 const settingsAccentColor = 'accentColor';
 const settingsShowUnreadInfoHint = 'showUnreadInfoHint';
+const settingsDoublePressExit = 'doublePressExit';
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsTypeMap = <String, Type>{
@@ -88,4 +91,5 @@ const settingsTypeMap = <String, Type>{
   settingsShowShortcutInForumCard: bool,
   settingsAccentColor: int,
   settingsShowUnreadInfoHint: bool,
+  settingsDoublePressExit: bool,
 };
