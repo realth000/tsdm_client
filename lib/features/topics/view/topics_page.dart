@@ -4,12 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/topics/bloc/topics_bloc.dart';
+import 'package:tsdm_client/features/topics/widgets/topics_placeholder.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
+import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
 /// App topic page.
 ///
@@ -38,6 +40,52 @@ class _TopicsPageState extends State<TopicsPage>
 
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
 
+  Widget _buildContent(BuildContext context, TopicsState state) {
+    final forumGroupList = state.forumGroupList;
+
+    // Capture `context` and wrap in a void callback.
+    _updateIndexListener ??= () {
+      if (tabController == null) {
+        return;
+      }
+      RepositoryProvider.of<FragmentsRepository>(context).topicsPageTabIndex =
+          tabController!.index;
+    };
+
+    tabController ??= TabController(
+      initialIndex: RepositoryProvider.of<FragmentsRepository>(context)
+          .topicsPageTabIndex,
+      length: forumGroupList.length,
+      vsync: this,
+    )..addListener(_updateIndexListener!);
+
+    final groupTabBodyList = forumGroupList
+        .map(
+          (e) => ListView.separated(
+            padding: edgeInsetsL10T5R10B20,
+            itemCount: e.forumList.length,
+            itemBuilder: (context, index) => ForumCard(e.forumList[index]),
+            separatorBuilder: (context, index) => sizedBoxW5H5,
+          ),
+        )
+        .toList();
+
+    _refreshController.finishRefresh();
+
+    return EasyRefresh(
+      key: const ValueKey('success'),
+      controller: _refreshController,
+      header: const MaterialHeader(),
+      onRefresh: () {
+        context.read<TopicsBloc>().add(TopicsRefreshRequested());
+      },
+      child: TabBarView(
+        controller: tabController,
+        children: groupTabBodyList,
+      ),
+    );
+  }
+
   @override
   void dispose() {
     if (tabController != null) {
@@ -65,55 +113,33 @@ class _TopicsPageState extends State<TopicsPage>
           }
         },
         builder: (context, state) {
-          if (state.status == TopicsStatus.failed) {
-            return buildRetryButton(context, () {
-              context.read<TopicsBloc>().add(TopicsRefreshRequested());
-            });
-          }
-
-          if (state.status == TopicsStatus.loading ||
-              state.status == TopicsStatus.initial) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(context.t.topicPage.title),
+          final body = switch (state.status) {
+            TopicsStatus.loading || TopicsStatus.initial => EasyRefresh(
+                key: const ValueKey('loading'),
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                child: const LoadingShimmer(child: TopicsPlaceholder()),
               ),
-              body: const Center(child: CircularProgressIndicator()),
-            );
-          }
-
-          final forumGroupList = state.forumGroupList;
-
-          // Capture `context` and wrap in a void callback.
-          _updateIndexListener ??= () {
-            if (tabController == null) {
-              return;
-            }
-            RepositoryProvider.of<FragmentsRepository>(context)
-                .topicsPageTabIndex = tabController!.index;
+            TopicsStatus.failed => buildRetryButton(context, () {
+                context.read<TopicsBloc>().add(TopicsRefreshRequested());
+              }),
+            TopicsStatus.success => _buildContent(context, state),
           };
 
-          tabController ??= TabController(
-            initialIndex: RepositoryProvider.of<FragmentsRepository>(context)
-                .topicsPageTabIndex,
-            length: forumGroupList.length,
-            vsync: this,
-          )..addListener(_updateIndexListener!);
-
-          final groupTabList =
-              forumGroupList.map((e) => Tab(text: e.name)).toList();
-          final groupTabBodyList = forumGroupList
-              .map(
-                (e) => ListView.separated(
-                  padding: edgeInsetsL10T5R10B20,
-                  itemCount: e.forumList.length,
-                  itemBuilder: (context, index) =>
-                      ForumCard(e.forumList[index]),
-                  separatorBuilder: (context, index) => sizedBoxW5H5,
-                ),
-              )
-              .toList();
-
-          _refreshController.finishRefresh();
+          final PreferredSizeWidget tabBar;
+          if (state.status == TopicsStatus.success) {
+            tabBar = TabBar(
+              controller: tabController,
+              tabs: state.forumGroupList.map((e) => Tab(text: e.name)).toList(),
+              isScrollable: true,
+              tabAlignment: TabAlignment.start,
+            );
+          } else {
+            tabBar = const PreferredSize(
+              preferredSize: Size(40, 40),
+              child: SizedBox.shrink(),
+            );
+          }
 
           return Scaffold(
             appBar: AppBar(
@@ -126,24 +152,9 @@ class _TopicsPageState extends State<TopicsPage>
                   },
                 ),
               ],
-              bottom: TabBar(
-                controller: tabController,
-                tabs: groupTabList,
-                isScrollable: true,
-                tabAlignment: TabAlignment.start,
-              ),
+              bottom: tabBar,
             ),
-            body: EasyRefresh(
-              controller: _refreshController,
-              header: const MaterialHeader(),
-              onRefresh: () {
-                context.read<TopicsBloc>().add(TopicsRefreshRequested());
-              },
-              child: TabBarView(
-                controller: tabController,
-                children: groupTabBodyList,
-              ),
-            ),
+            body: AnimatedSwitcher(duration: duration200, child: body),
           );
         },
       ),

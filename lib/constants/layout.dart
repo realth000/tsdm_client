@@ -89,6 +89,42 @@ const sizedH20Shimmer = ClipRRect(
   ),
 );
 
+/// Widget with 40 width and height to use in shimmers.
+const sizedW40H40Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: 40,
+    height: 40,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
+/// Widget with 40 width and height to use in shimmers.
+const sizedW80H40Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: 80,
+    height: 40,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
+/// Widget with 80 width and height to use in shimmers.
+const sizedW120H40Shimmer = ClipRRect(
+  borderRadius: BorderRadius.all(Radius.circular(10)),
+  child: SizedBox(
+    width: 120,
+    height: 40,
+    child: ColoredBox(
+      color: Colors.white,
+    ),
+  ),
+);
+
 /// Widget with 40 height and infinite width to use in shimmers.
 const sizedH40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),

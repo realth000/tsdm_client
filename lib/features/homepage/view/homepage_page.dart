@@ -2,7 +2,6 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
@@ -13,6 +12,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
 /// Homepage page.
 ///
@@ -63,24 +63,14 @@ class _HomepagePageState extends State<HomepagePage> {
         builder: (context, state) {
           final body = switch (state.status) {
             HomepageStatus.initial || HomepageStatus.loading => EasyRefresh(
-                key: const ValueKey('initial'),
+                key: const ValueKey('loading'),
                 scrollController: _scrollController,
                 controller: _refreshController,
                 header: const MaterialHeader(),
                 onRefresh: () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 },
-                child: Shimmer.fromColors(
-                  baseColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
-                  highlightColor:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.2),
-                  child: const SingleChildScrollView(
-                    physics: NeverScrollableScrollPhysics(),
-                    padding: edgeInsetsL10T5R10,
-                    child: HomepagePlaceholder(),
-                  ),
-                ),
+                child: const LoadingShimmer(child: HomepagePlaceholder()),
               ),
             HomepageStatus.needLogin => NeedLoginPage(
                 backUri: GoRouterState.of(context).uri,
@@ -129,7 +119,7 @@ class _HomepagePageState extends State<HomepagePage> {
                 ),
               ],
             ),
-            body: AnimatedSwitcher(duration: duration500, child: body),
+            body: AnimatedSwitcher(duration: duration200, child: body),
           );
         },
       ),

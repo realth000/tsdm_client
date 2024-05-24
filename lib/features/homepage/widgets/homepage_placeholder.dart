@@ -7,8 +7,9 @@ class HomepagePlaceholder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return ListView(
+      physics: const NeverScrollableScrollPhysics(),
+      padding: edgeInsetsL10T5R10,
       children: <Widget>[
         Row(
           children: [

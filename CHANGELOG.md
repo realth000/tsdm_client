@@ -21,7 +21,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
-- 主页：更新页面加载样式，减少使用圆形进度条。
+- app：更新页面加载样式，减少使用圆形进度条。
 
 ## [0.11.0] - 2024-05-19
 
