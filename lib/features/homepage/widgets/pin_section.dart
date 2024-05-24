@@ -12,15 +12,36 @@ class PinSection extends StatelessWidget {
 
   Widget _sectionThreadBuilder(
     BuildContext context,
-    PinnedThread pinnedThread,
-  ) {
+    PinnedThread pinnedThread, {
+    bool isRank = false,
+  }) {
+    final String title;
+    final String subtitle;
+    if (isRank) {
+      title = pinnedThread.threadTitle;
+      subtitle = pinnedThread.authorName;
+    } else {
+      title = pinnedThread.authorName;
+      subtitle = pinnedThread.threadTitle;
+    }
+
     return ListTile(
-      title: SingleLineText(
-        pinnedThread.threadTitle,
+      leading: GestureDetector(
+        child: CircleAvatar(child: Text(title[0])),
+        onTap: () async => context.pushNamed(
+          ScreenPaths.profile,
+          queryParameters: {'username': title},
+        ),
       ),
-      trailing: SingleLineText(
-        pinnedThread.authorName,
+      title: GestureDetector(
+        child: Row(children: [SingleLineText(title)]),
+        onTap: () async => context.pushNamed(
+          ScreenPaths.profile,
+          queryParameters: {'username': title},
+        ),
       ),
+      subtitle: isRank ? null : SingleLineText(subtitle),
+      trailing: isRank ? SingleLineText(subtitle) : null,
       onTap: () {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
         if (target == null) {
@@ -42,11 +63,18 @@ class PinSection extends StatelessWidget {
   /// All [PinnedThread] inside [threads] should guarantee not null.
   Widget _buildSectionThreads(
     BuildContext context,
-    List<PinnedThread?> threads,
-  ) {
+    List<PinnedThread?> threads, {
+    bool reverseTitle = false,
+  }) {
     final listTileList = threads
         .whereType<PinnedThread>()
-        .map((e) => _sectionThreadBuilder(context, e))
+        .map(
+          (e) => _sectionThreadBuilder(
+            context,
+            e,
+            isRank: reverseTitle,
+          ),
+        )
         .toList();
 
     return Column(children: listTileList);
@@ -59,41 +87,32 @@ class PinSection extends StatelessWidget {
 
     for (var i = 0; i < count; i++) {
       final sectionName = pinnedThreadGroup[i].title;
-      final threadWidgetList =
-          _buildSectionThreads(context, pinnedThreadGroup[i].threadList);
+      final threadWidgetList = _buildSectionThreads(
+        context,
+        pinnedThreadGroup[i].threadList,
+        reverseTitle: i == 6,
+      );
       ret.add(
-        Card(
-          clipBehavior: Clip.hardEdge,
-          margin: EdgeInsets.zero,
-          child: Padding(
-            padding: edgeInsetsT10,
-            child: Column(
-              children: [
-                Text(
-                  sectionName,
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
-                sizedBoxW10H10,
-                threadWidgetList,
-              ],
-            ),
+        Padding(
+          padding: edgeInsetsT10,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                sectionName,
+                style: Theme.of(context).textTheme.titleLarge,
+              ),
+              sizedBoxW10H10,
+              threadWidgetList,
+            ],
           ),
         ),
       );
     }
 
-    return GridView(
+    return ListView(
       physics: const NeverScrollableScrollPhysics(),
       shrinkWrap: true,
-      // TODO: Not hardcode these Extent sizes.
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 800,
-        // Set to at least 552 to ensure not overflow when scaling window
-        // size down.
-        mainAxisSpacing: 5,
-        mainAxisExtent: 552,
-        crossAxisSpacing: 5,
-      ),
       children: ret,
     );
   }

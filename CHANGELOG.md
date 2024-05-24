@@ -10,6 +10,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 应用：支持防误触退出，按两次返回才会退出应用。
   - 默认开启，可在设置 -> 行为中关闭。
+- 主页：调整主页布局，可主页置顶帖子访问帖子作者的资料页。
 
 ### Fixed
 
