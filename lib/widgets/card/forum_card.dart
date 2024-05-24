@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
@@ -27,6 +27,59 @@ class ForumCard extends StatefulWidget {
 class _ForumCardState extends State<ForumCard> {
   bool showingSubThread = false;
   bool showingSubForum = false;
+
+  Widget _buildShortcut(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (widget.forum.isExpanded)
+          ListTile(
+            title: Row(
+              children: [
+                Text(
+                  widget.forum.latestThreadTitle ?? '',
+                  style: Theme.of(context).textTheme.labelMedium,
+                ),
+                Expanded(child: Container()),
+                Text(
+                  widget.forum.latestThreadUserName ?? '',
+                  style: Theme.of(context).textTheme.labelSmall,
+                ),
+              ],
+            ),
+            onTap: () async {
+              final target = widget.forum.latestThreadUrl?.parseUrlToRoute();
+              if (target == null) {
+                debug(
+                  'invalid latest thread url: '
+                  '${widget.forum.latestThreadUrl}',
+                );
+                return;
+              }
+              await context.pushNamed(
+                target.screenPath,
+                pathParameters: target.pathParameters,
+                queryParameters: target.queryParameters,
+              );
+            },
+          ),
+        if (widget.forum.subThreadList?.isNotEmpty ?? false)
+          ..._buildWrapSection(context, context.t.forumCard.links,
+              widget.forum.subThreadList!, showingSubThread, () {
+            setState(() {
+              showingSubThread = !showingSubThread;
+            });
+          }),
+        if (widget.forum.subForumList?.isNotEmpty ?? false)
+          ..._buildWrapSection(context, context.t.forumCard.subForums,
+              widget.forum.subForumList!, showingSubForum, () {
+            setState(() {
+              showingSubForum = !showingSubForum;
+            });
+          }),
+      ],
+    );
+  }
 
   List<Widget> _buildWrapSection(
     BuildContext context,
@@ -84,8 +137,8 @@ class _ForumCardState extends State<ForumCard> {
 
   @override
   Widget build(BuildContext context) {
-    final showShortCut =
-        getIt.get<SettingsProvider>().getShowShortcutInForumCard();
+    final settingsStream =
+        RepositoryProvider.of<SettingsRepository>(context).settings;
     final forumInfoList = [
       (
         Icons.forum_outlined,
@@ -154,58 +207,18 @@ class _ForumCardState extends State<ForumCard> {
                   ? Text(widget.forum.latestThreadTime!.elapsedTillNow())
                   : null,
             ),
-            if (showShortCut)
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  if (widget.forum.isExpanded)
-                    ListTile(
-                      title: Row(
-                        children: [
-                          Text(
-                            widget.forum.latestThreadTitle ?? '',
-                            style: Theme.of(context).textTheme.labelMedium,
-                          ),
-                          Expanded(child: Container()),
-                          Text(
-                            widget.forum.latestThreadUserName ?? '',
-                            style: Theme.of(context).textTheme.labelSmall,
-                          ),
-                        ],
-                      ),
-                      onTap: () async {
-                        final target =
-                            widget.forum.latestThreadUrl?.parseUrlToRoute();
-                        if (target == null) {
-                          debug(
-                            'invalid latest thread url: '
-                            '${widget.forum.latestThreadUrl}',
-                          );
-                          return;
-                        }
-                        await context.pushNamed(
-                          target.screenPath,
-                          pathParameters: target.pathParameters,
-                          queryParameters: target.queryParameters,
-                        );
-                      },
-                    ),
-                  if (widget.forum.subThreadList?.isNotEmpty ?? false)
-                    ..._buildWrapSection(context, context.t.forumCard.links,
-                        widget.forum.subThreadList!, showingSubThread, () {
-                      setState(() {
-                        showingSubThread = !showingSubThread;
-                      });
-                    }),
-                  if (widget.forum.subForumList?.isNotEmpty ?? false)
-                    ..._buildWrapSection(context, context.t.forumCard.subForums,
-                        widget.forum.subForumList!, showingSubForum, () {
-                      setState(() {
-                        showingSubForum = !showingSubForum;
-                      });
-                    }),
-                ],
-              ),
+            StreamBuilder(
+              stream: settingsStream,
+              builder: (context, settings) {
+                if (!settings.hasData) {
+                  return const SizedBox.shrink();
+                }
+                if (settings.data!.showShortcutInForumCard) {
+                  return _buildShortcut(context);
+                }
+                return const SizedBox.shrink();
+              },
+            ),
             Padding(
               padding: edgeInsetsL15R15B10,
               child: Column(
