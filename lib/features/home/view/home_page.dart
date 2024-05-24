@@ -66,7 +66,7 @@ class _HomePageState extends State<HomePage> {
             final tr = context.t.home;
             final currentTime = DateTime.now();
             if (lastPopTime == null ||
-                lastPopTime!.difference(currentTime).inMilliseconds >
+                currentTime.difference(lastPopTime!).inMilliseconds >
                     exitConfirmDuration.inMilliseconds) {
               lastPopTime = currentTime;
               ScaffoldMessenger.of(context).hideCurrentSnackBar();
