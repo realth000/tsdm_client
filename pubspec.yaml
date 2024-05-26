@@ -43,7 +43,7 @@ dependencies:
   font_awesome_flutter: ^10.7.0
   get_it: ^7.7.0
   gitsumu: ^0.3.0
-  go_router: ^14.1.2
+  go_router: ^14.1.3
   html: ^0.15.4
   isar: ^4.0.0-dev.14
   isar_flutter_libs: ^4.0.0-dev.14
@@ -55,8 +55,8 @@ dependencies:
   responsive_framework: ^1.4.0
   rxdart: ^0.27.7
   shimmer: ^3.0.0
-  slang: ^3.30.2
-  slang_flutter: ^3.30.0
+  slang: ^3.31.0
+  slang_flutter: ^3.31.0
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.0.2
   universal_html: ^2.2.4

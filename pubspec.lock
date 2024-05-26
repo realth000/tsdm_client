@@ -537,10 +537,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: aa073287b8f43553678e6fa9e8bb9c83212ff76e09542129a8099bbc8db4df65
+      sha256: "6ad5662b014c06c20fa46ab78715c96b2222a7fe4f87bf77e0289592c2539e86"
       url: "https://pub.dev"
     source: hosted
-    version: "14.1.2"
+    version: "14.1.3"
   graphs:
     dependency: transitive
     description:
@@ -1014,26 +1014,26 @@ packages:
     dependency: "direct main"
     description:
       name: slang
-      sha256: ad2a3974fa705017d40e59f9fce5ba738ce78a40c13247bf655d1760d3af018f
+      sha256: "0d8a8cbfd7858ed2bd9164a79bfb664ea83f1e124740b28acd0618757fc87ecc"
       url: "https://pub.dev"
     source: hosted
-    version: "3.30.2"
+    version: "3.31.0"
   slang_build_runner:
     dependency: "direct dev"
     description:
       name: slang_build_runner
-      sha256: "2daff2deb2ab8d557a2e7de5405c0ee1376afba5d0231570c2d2c3c56da8a692"
+      sha256: "6e60160e8000b91824c47221b20d9642e7408287a5a21837ecefc75270197586"
       url: "https://pub.dev"
     source: hosted
-    version: "3.30.0"
+    version: "3.31.0"
   slang_flutter:
     dependency: "direct main"
     description:
       name: slang_flutter
-      sha256: "9ee040b0d364d3a4d692e4af536acff6ef513870689403494ebc6d59b0dccea6"
+      sha256: f8400292be49c11697d94af58d7f7d054c91af759f41ffe71e4e5413871ffc62
       url: "https://pub.dev"
     source: hosted
-    version: "3.30.0"
+    version: "3.31.0"
   source_gen:
     dependency: transitive
     description:
