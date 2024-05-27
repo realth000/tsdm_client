@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -31,15 +31,7 @@ class AboutPage extends StatelessWidget {
 * Flutter: $flutterVersion $flutterChannel ($flutterFrameworkRevision)
 * Dart: $dartVersion
 ''';
-              await Clipboard.setData(const ClipboardData(text: data));
-              if (!context.mounted) {
-                return;
-              }
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(context.t.aboutPage.copiedToClipboard),
-                ),
-              );
+              await copyToClipboard(context, data);
             },
           ),
         ],

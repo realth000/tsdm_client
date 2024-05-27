@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 
 /// Card to display code block, from html node type <div class="blockcode">.
 class CodeCard extends StatelessWidget {
@@ -15,22 +15,6 @@ class CodeCard extends StatelessWidget {
   ///
   /// Default is 1, equal to default card elevation.
   final double? elevation;
-
-  Future<void> _copyToClipboard(BuildContext context) async {
-    await Clipboard.setData(
-      ClipboardData(text: code),
-    );
-    if (!context.mounted) {
-      return;
-    }
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          context.t.aboutPage.copiedToClipboard,
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +34,7 @@ class CodeCard extends StatelessWidget {
                 sizedBoxW5H5,
                 IconButton(
                   icon: const Icon(Icons.copy_outlined),
-                  onPressed: () async => _copyToClipboard(context),
+                  onPressed: () async => copyToClipboard(context, code),
                 ),
               ],
             ),

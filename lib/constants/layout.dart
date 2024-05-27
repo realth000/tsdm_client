@@ -70,6 +70,9 @@ const edgeInsetsL10T5R10 = EdgeInsets.only(left: 10, top: 5, right: 10);
 const edgeInsetsL10T5R10B20 =
     EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 20);
 
+/// An [EdgeInsets] with 60 at left and 10 at bottom.
+const edgeInsetsL60B10 = EdgeInsets.only(left: 60, bottom: 10);
+
 /// A minimum sized [CircularProgressIndicator] that should use in buttons.
 const sizedCircularProgressIndicator = SizedBox(
   width: 16,

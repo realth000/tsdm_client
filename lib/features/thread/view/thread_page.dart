@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -13,6 +12,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
@@ -284,19 +284,7 @@ class _ThreadPageState extends State<ThreadPage>
                     case MenuActions.refresh:
                       context.read<ThreadBloc>().add(ThreadRefreshRequested());
                     case MenuActions.copyUrl:
-                      await Clipboard.setData(
-                        ClipboardData(text: threadUrl!),
-                      );
-                      if (!context.mounted) {
-                        return;
-                      }
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                            context.t.aboutPage.copiedToClipboard,
-                          ),
-                        ),
-                      );
+                      await copyToClipboard(context, threadUrl!);
                     case MenuActions.openInBrowser:
                       await context.dispatchAsUrl(threadUrl!, external: true);
                     case MenuActions.backToTop:

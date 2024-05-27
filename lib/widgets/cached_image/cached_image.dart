@@ -15,7 +15,13 @@ import 'package:tsdm_client/widgets/fallback_picture.dart';
 /// * If no cache available, fetch image from [imageUrl].
 class CachedImage extends StatelessWidget {
   /// Constructor.
-  const CachedImage(this.imageUrl, {this.maxWidth, this.maxHeight, super.key});
+  const CachedImage(
+    this.imageUrl, {
+    this.maxWidth,
+    this.maxHeight,
+    this.fit,
+    super.key,
+  });
 
   /// Image to fetch url.
   ///
@@ -28,6 +34,9 @@ class CachedImage extends StatelessWidget {
   /// Max image height.
   final double? maxHeight;
 
+  /// Fit type.
+  final BoxFit? fit;
+
   @override
   Widget build(BuildContext context) {
     if (imageUrl.isEmpty) {
@@ -36,7 +45,7 @@ class CachedImage extends StatelessWidget {
           maxWidth: maxWidth ?? double.infinity,
           maxHeight: maxHeight ?? double.infinity,
         ),
-        child: const FallbackPicture(),
+        child: FallbackPicture(fit: fit),
       );
     }
     final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
@@ -48,6 +57,7 @@ class CachedImage extends StatelessWidget {
           fileCache,
           width: maxWidth,
           height: maxHeight,
+          fit: fit,
         );
       }
     }
@@ -71,7 +81,7 @@ class CachedImage extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           debug('failed to get cached image: ${snapshot.error}');
-          return const FallbackPicture();
+          return FallbackPicture(fit: fit);
         }
         if (snapshot.hasData) {
           return ConstrainedBox(
@@ -81,10 +91,10 @@ class CachedImage extends StatelessWidget {
             ),
             child: Image.memory(
               snapshot.data!,
-              fit: BoxFit.contain,
+              fit: fit,
               errorBuilder: (context, e, st) {
                 debug('failed to load image from $imageUrl: $e');
-                return const FallbackPicture();
+                return FallbackPicture(fit: fit);
               },
             ),
           );
@@ -99,7 +109,7 @@ class CachedImage extends StatelessWidget {
                 Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
             highlightColor:
                 Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
-            child: const FallbackPicture(),
+            child: FallbackPicture(fit: fit),
           ),
         );
       },

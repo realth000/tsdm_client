@@ -1,6 +1,5 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -16,6 +15,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -155,19 +155,7 @@ class _ForumPageState extends State<ForumPage>
                 context.read<ForumBloc>().add(ForumRefreshRequested());
             }
           case MenuActions.copyUrl:
-            await Clipboard.setData(
-              ClipboardData(text: widget.forumUrl),
-            );
-            if (!context.mounted) {
-              return;
-            }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(
-                  context.t.aboutPage.copiedToClipboard,
-                ),
-              ),
-            );
+            await copyToClipboard(context, widget.forumUrl);
           case MenuActions.openInBrowser:
             await context.dispatchAsUrl(
               widget.forumUrl,

@@ -14,7 +14,8 @@
     "noMoreData": "已經到頭了",
     "reset": "重置为默认值",
     "more": "更多",
-    "pageIndex": "第 $index 頁"
+    "pageIndex": "第 $index 頁",
+    "copiedToClipboard": "已複製到剪切板"
   },
   "navigation": {
     "homepage": "首頁",
@@ -98,8 +99,7 @@
     "version": "軟體版本",
     "flutterVersion": "Flutter版本",
     "dartVersion": "Dart版本",
-    "license": "版權",
-    "copiedToClipboard": "已複製到剪切板"
+    "license": "版權"
   },
   "upgradePage": {
     "title": "更新",

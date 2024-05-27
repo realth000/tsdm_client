@@ -14,7 +14,8 @@
     "noMoreData": "No more data",
     "reset": "Reset to default",
     "more": "More",
-    "pageIndex": "Page $index"
+    "pageIndex": "Page $index",
+    "copiedToClipboard": "Copied to clipboard"
   },
   "navigation": {
     "homepage": "Home",
@@ -98,8 +99,7 @@
     "version": "App Version",
     "flutterVersion": "Flutter Version",
     "dartVersion": "Dart Version",
-    "license": "License",
-    "copiedToClipboard": "Copied to clipboard"
+    "license": "License"
   },
   "upgradePage": {
     "title": "Upgrade",
