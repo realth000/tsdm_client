@@ -176,10 +176,8 @@ class WelcomeSection extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: GestureDetector(
-                      onTap: () async {
-                        context.read<HomeCubit>().setTab(HomeTab.profile);
-                        context.goNamed(ScreenPaths.loggedUserProfile);
-                      },
+                      onTap: () async =>
+                          context.pushNamed(ScreenPaths.loggedUserProfile),
                       child: CircleAvatar(
                         backgroundImage: avatarUrl == null
                             ? null
@@ -197,10 +195,8 @@ class WelcomeSection extends StatelessWidget {
                     title: Row(
                       children: [
                         GestureDetector(
-                          onTap: () async {
-                            context.read<HomeCubit>().setTab(HomeTab.profile);
-                            context.goNamed(ScreenPaths.loggedUserProfile);
-                          },
+                          onTap: () async =>
+                              context.pushNamed(ScreenPaths.loggedUserProfile),
                           child: Text(
                             username,
                             style: Theme.of(context).textTheme.titleLarge,

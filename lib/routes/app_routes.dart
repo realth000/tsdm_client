@@ -63,20 +63,16 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             AppRoute(
-              path: ScreenPaths.loggedUserProfile,
-              builder: (_) => const ProfilePage(),
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            AppRoute(
               path: ScreenPaths.settings,
               builder: (_) => const SettingsPage(),
             ),
           ],
         ),
       ],
+    ),
+    AppRoute(
+      path: ScreenPaths.loggedUserProfile,
+      builder: (_) => const ProfilePage(),
     ),
     AppRoute(
       path: ScreenPaths.about,

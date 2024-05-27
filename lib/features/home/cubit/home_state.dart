@@ -12,13 +12,6 @@ enum HomeTab {
   /// All top-level forums showed in homepage with forum group.
   topic,
 
-  /// Current logged user's profile.
-  ///
-  /// Only the current logged user and any entries comes from user's contents
-  /// including post and thread will not redirect to this tab.
-  /// Because we do not know if the author of content is the logged user or not.
-  profile,
-
   /// Settings page of the app.
   settings,
 }
@@ -79,13 +72,6 @@ final barItems = [
     label: t.navigation.topics,
     targetPath: ScreenPaths.topic,
     tab: HomeTab.topic,
-  ),
-  NavigationBarItem(
-    icon: const Icon(Icons.person_outline),
-    selectedIcon: const Icon(Icons.person),
-    label: t.navigation.profile,
-    targetPath: ScreenPaths.loggedUserProfile,
-    tab: HomeTab.profile,
   ),
   NavigationBarItem(
     icon: const Icon(Icons.settings_outlined),
