@@ -13,13 +13,12 @@
 <p align="center">
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test"/></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=version"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_MacOS_%7C_Windows-19A6E6"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.22-19A6E6?logo=flutter"></a>
+  <a href="https://dart.dev/"><img src="https://img.shields.io/github/languages/top/realth000/tsdm_client?logo=dart"/></a>
   <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
   <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg"></a>
-  <a href="https://github.com/realth000/tsdm_client/blob/master/LICENSE"><img src="https://img.shields.io/badge/license-MIT-19A6E6"></a>
-  <br/>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_MacOS_%7C_Windows-19A6E6"></a>
 </p>
 
 > [!TIP]
@@ -48,6 +47,10 @@
     </tr>
   </table>
 </div>
+
+## 下载
+
+* [GitHub Release](https://github.com/realth000/tsdm_client/releases)
 
 ## 功能
 
@@ -204,12 +207,9 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 
 ~~在修了在修了~~
 
-* 由于访问论坛主站页面，类似浏览器，受网络情况限制，可能会比官方app加载更慢。
 * 暂不支持论坛的`璀璨星河`主题，请不要在设置中使用该主题。
 * 受限于解析和排布html节点的方式，少部分包含复杂回复楼层的帖子打开会**严重卡顿**。
-* 查看通知时，如果有多页通知，只能看到第一页的。
 * 长时间使用至cookie过期时一些功能可能无法使用，例如签到，此时请重新登录。
-* 有时应用启动后首页内容为空，需要稍等或切换一次底部导航栏的页面。
 
 ## 支持平台
 
@@ -224,10 +224,6 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 >
 > * iOS和MacOS平台的产物未经过测试。如有问题请提issue，不保证一定解决，欢迎提PR。
 > * iOS和MacOS平台产物并未签名，ipa签名请自行寻找方法。
-
-## 下载
-
-* [GitHub Release](https://github.com/realth000/tsdm_client/releases/latest)
 
 ## 编译
 
