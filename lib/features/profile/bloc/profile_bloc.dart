@@ -10,7 +10,7 @@ import 'package:tsdm_client/shared/repositories/profile_repository/profile_repos
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/profile/bloc/profile_bloc.mapper.dart';
+part '../../../../generated/features/profile/bloc/profile_bloc.mapper.dart';
 part 'profile_event.dart';
 part 'profile_state.dart';
 
@@ -38,6 +38,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
   final ProfileRepository _profileRepository;
   final AuthenticationRepository _authenticationRepository;
+
+  final RegExp _birthdayRe =
+      RegExp(r'((?<y>\d+) 年)? ?((?<m>\d+) 月)? ?((?<d>\d+) 日)?');
 
   Future<void> _onProfileLoadRequested(
     ProfileLoadRequested event,
@@ -177,11 +180,72 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         .lastOrNull
         ?.split(')')
         .firstOrNull;
+
+    ///////////  Basic status ///////////
+
+    bool? emailVerified;
+    bool? videoVerified;
+    String? customTitle;
+    String? signature;
+    String? friendsCount;
+
+    ///////////  Some other basic status ///////////
+
+    String? birthdayYear;
+    String? birthdayMonth;
+    String? birthdayDay;
+    String? zodiac;
+    String? msn;
+    String? introduction;
+    String? nickname;
+    String? gender;
+    String? from;
+    String? qq;
+
     final basicInfoList = profileRootNode
         .querySelectorAll('div.pbm:nth-child(1) li')
         .map((e) => e.parseLiEmNode())
-        .whereType<(String, String)>()
-        .toList();
+        .whereType<(String, String)>();
+
+    for (final attr in basicInfoList) {
+      switch (attr.$1) {
+        case '邮箱状态':
+          emailVerified = attr.$2 == '已验证';
+        case '视频认证':
+          videoVerified = attr.$2 == '已验证';
+        case '自定义头衔':
+          customTitle = attr.$2;
+        case '个人签名':
+          signature = attr.$2;
+        case '统计信息':
+          // Expect to have html fragment.
+          friendsCount = attr.$2;
+        case '生日':
+          {
+            final match = _birthdayRe.firstMatch(attr.$2);
+            if (match != null) {
+              birthdayYear = match.namedGroup('y');
+              birthdayMonth = match.namedGroup('m');
+              birthdayDay = match.namedGroup('d');
+            }
+          }
+
+        case '星座':
+          zodiac = attr.$2;
+        case 'MSN':
+          msn = attr.$2;
+        case '自我介绍':
+          introduction = attr.$2;
+        case '昵称':
+          nickname = attr.$2;
+        case '性别':
+          gender = attr.$2;
+        case '来自':
+          from = attr.$2;
+        case 'QQ':
+          qq = attr.$2;
+      }
+    }
 
     // Check in status
     final checkinNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
@@ -209,6 +273,39 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     final checkinTodayStatus =
         checkinNode?.querySelector('p:nth-child(7)')?.firstEndDeepText();
 
+    ///////////  User group status ///////////
+
+    String? moderatorGroup;
+    String? userGroup;
+
+    final userGroupInfoList = profileRootNode
+        .querySelector('ul#pbbs')
+        ?.previousElementSibling
+        ?.querySelectorAll('li')
+        .map((e) => e.parseLiEmNode())
+        .whereType<(String, String)>();
+    if (userGroupInfoList != null) {
+      for (final info in userGroupInfoList) {
+        switch (info.$1) {
+          case '用户组':
+            userGroup = info.$2;
+          case '管理组':
+            moderatorGroup = info.$2;
+        }
+      }
+    }
+
+    ///////////  Activity status ///////////
+
+    String? onlineTime;
+    DateTime? registerTime;
+    DateTime? lastVisitTime;
+    DateTime? lastActiveTime;
+    String? registerIP;
+    String? lastVisitIP;
+    DateTime? lastPostTime;
+    String? timezone;
+
     // Activity overview
     // TODO: Parse manager groups and user groups belonged to, here.
     final activityNode = profileRootNode.querySelector('ul#pbbs');
@@ -219,11 +316,85 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
             .toList() ??
         [];
 
+    for (final info in activityInfoList) {
+      switch (info.$1) {
+        case '在线时间':
+          onlineTime = info.$2;
+        case '注册时间':
+          registerTime = info.$2.parseToDateTimeUtc8();
+        case '最后访问':
+          lastVisitTime = info.$2.parseToDateTimeUtc8();
+        case '上次活动时间':
+          lastActiveTime = info.$2.parseToDateTimeUtc8();
+        case '上次发表时间':
+          lastPostTime = info.$2.parseToDateTimeUtc8();
+        case '所在时区':
+          timezone = info.$2;
+        case '注册 IP': // Privacy info
+          registerIP = info.$2;
+        case '上次访问 IP': // Privacy info
+          lastVisitIP = info.$2;
+      }
+    }
+
+    ///////////  Statistics status ///////////
+    String? credits;
+    String? famous;
+    String? coins;
+    String? publicity;
+    String? natural;
+    String? scheming;
+    String? spirit;
+    String? seal;
+
+    final statisticsInfoList = profileRootNode
+        .querySelectorAll('div#psts > ul > li')
+        .map((e) => e.parseLiEmNode())
+        .whereType<(String, String)>();
+    for (final stat in statisticsInfoList) {
+      switch (stat.$1) {
+        case '积分':
+          credits = stat.$2;
+        case '威望':
+          famous = stat.$2;
+        case '天使币':
+          coins = stat.$2;
+        case '宣传':
+          publicity = stat.$2;
+        case '天然':
+          natural = stat.$2;
+        case '腹黑':
+          scheming = stat.$2;
+        case '精灵':
+          spirit = stat.$2;
+        case '龙之印章':
+          seal = stat.$2;
+      }
+    }
+
     return UserProfile(
       avatarUrl: avatarUrl,
       username: username,
       uid: uid,
-      basicInfoList: basicInfoList,
+
+      ///////////  Basic status ///////////
+      emailVerified: emailVerified,
+      videoVerified: videoVerified,
+      customTitle: customTitle,
+      signature: signature,
+      friendsCount: friendsCount,
+      birthdayYear: birthdayYear,
+      birthdayMonth: birthdayMonth,
+      birthdayDay: birthdayDay,
+      zodiac: zodiac,
+      msn: msn,
+      introduction: introduction,
+      nickname: nickname,
+      gender: gender,
+      from: from,
+      qq: qq,
+
+      ///////////  Checkin status ///////////
       checkinDaysCount: checkinDaysCount,
       checkinThisMonthCount: checkinThisMonthCount,
       checkinRecentTime: checkinRecentTime,
@@ -233,7 +404,30 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       checkinNextLevel: checkinNextLevel,
       checkinNextLevelDays: checkinNextLevelDays,
       checkinTodayStatus: checkinTodayStatus,
-      activityInfoList: activityInfoList,
+
+      ///////////  User group status ///////////
+      moderatorGroup: moderatorGroup,
+      userGroup: userGroup,
+
+      ///////////  Activity status ///////////
+      onlineTime: onlineTime,
+      registerTime: registerTime,
+      lastVisitTime: lastVisitTime,
+      lastActiveTime: lastActiveTime,
+      registerIP: registerIP,
+      lastVisitIP: lastVisitIP,
+      lastPostTime: lastPostTime,
+      timezone: timezone,
+
+      ///////////  Statistics status ///////////
+      credits: credits,
+      famous: famous,
+      coins: coins,
+      publicity: publicity,
+      natural: natural,
+      scheming: scheming,
+      spirit: spirit,
+      seal: seal,
     );
   }
 

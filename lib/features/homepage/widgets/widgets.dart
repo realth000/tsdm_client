@@ -9,7 +9,6 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';

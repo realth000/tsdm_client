@@ -4,13 +4,17 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
@@ -19,11 +23,13 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/icon_chip.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
+import 'package:universal_html/parsing.dart';
 
-// const _avatarWidth = 180.0;
-// const _avatarHeight = 220.0;
-const _appBarExpandHeight = 160.0;
+const _appBarBackgroundImageHeight = 120.0;
+const _appBarAvatarHeight = 80.0;
+const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight;
 
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
@@ -44,18 +50,11 @@ class _ProfilePageState extends State<ProfilePage> {
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
   final _scrollController = ScrollController();
 
-  Widget _buildContent(
+  Widget _buildSliverAppBar(
     BuildContext context,
     ProfileState state, {
-    required Exception? failedToLogoutReason,
     required bool logout,
   }) {
-    // Check whether have failed logout attempt.
-    if (failedToLogoutReason != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('$failedToLogoutReason')));
-    }
-
     final userProfile = state.userProfile!;
     final unreadNoticeCount = state.unreadNoticeCount;
     final hasUnreadMessage = state.hasUnreadMessage;
@@ -109,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
           onPressed: () async => context.pushNamed(
             ScreenPaths.chat,
             pathParameters: {
-              'uid': widget.uid!,
+              'uid': widget.uid ?? userProfile.uid!,
             },
             extra: <String, dynamic>{
               'username': userProfile.username,
@@ -119,233 +118,239 @@ class _ProfilePageState extends State<ProfilePage> {
       ];
     }
 
-    _refreshController.finishRefresh();
+    // Widget used in flexible space of app bar.
+    // Contains a blurred background image, bottom background color and
+    // user avatar.
+    Widget? flexSpace;
 
-    Widget? backgroundImage;
+    // Title in app bar.
+    final title = LayoutBuilder(
+      builder: (context, cons) => Row(
+        children: [
+          CircleAvatar(
+            radius: _appBarAvatarHeight / 2 + 3,
+            backgroundColor: Theme.of(context).colorScheme.surface,
+            child: ClipOval(
+              child: CachedImage(
+                userProfile.avatarUrl ?? noAvatarUrl,
+                maxWidth: _appBarAvatarHeight,
+                maxHeight: _appBarAvatarHeight,
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     if (userProfile.avatarUrl != null) {
-      backgroundImage = ImageFiltered(
-        imageFilter: ImageFilter.blur(sigmaX: 32, sigmaY: 32),
-        child: CachedImage(userProfile.avatarUrl!, fit: BoxFit.cover),
+      flexSpace = Stack(
+        // Disable clip, let profile avatar show outside the stack.
+        clipBehavior: Clip.none,
+        children: [
+          // Background blurred image.
+          Align(
+            alignment: Alignment.topCenter,
+            child: LayoutBuilder(
+              builder: (context, cons) => ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                child: CachedImage(
+                  userProfile.avatarUrl!,
+                  // Set to max width, ensure fill all width.
+                  maxWidth: cons.maxWidth,
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          ),
+          // Background color under avatar, height is half of avatar height.
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Row(
+              children: [
+                Expanded(
+                  child: ColoredBox(
+                    color: Theme.of(context).colorScheme.surface,
+                    child: const SizedBox(height: _appBarAvatarHeight / 2),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Avatar and user info.
+          Positioned(bottom: 0, left: 15, child: title),
+        ],
       );
     }
 
-    final title = LayoutBuilder(
-      builder: (context, cons) {
-        return ListTile(
-          contentPadding: EdgeInsets.zero,
-          leading: ClipOval(
-            child: CachedImage(
-              userProfile.avatarUrl ?? noAvatarUrl,
-              // [56, 160]  -> [20, 60]
-              maxWidth: cons.maxHeight * 5 / 26 + 380 / 13,
-              maxHeight: cons.maxHeight * 5 / 26 + 380 / 13,
-              fit: BoxFit.cover,
-            ),
-          ),
-          title: GestureDetector(
+    return SliverAppBar(
+      pinned: true,
+      floating: true,
+      actions: actions,
+      expandedHeight: _appBarExpandHeight,
+      flexibleSpace: FlexibleSpaceBar(background: flexSpace),
+    );
+  }
+
+  List<Widget> _buildSliverContent(BuildContext context, ProfileState state) {
+    final tr = context.t.profilePage;
+    final userProfile = state.userProfile!;
+
+    // Friends count info.
+    final friendsInfoNode =
+        parseHtmlDocument(userProfile.friendsCount ?? '0').body;
+    final friendsCount =
+        friendsInfoNode?.innerText.split(' ').lastOrNull ?? '-';
+    final friendsPage =
+        friendsInfoNode?.querySelector('a')?.attributes['href']?.prependHost();
+
+    // Birthday.
+    final birthDayText = [
+      userProfile.birthdayYear,
+      userProfile.birthdayMonth,
+      userProfile.birthdayDay,
+    ].whereType<String>().join('.');
+
+    // Signature.
+    final signatureContent =
+        parseHtmlDocument(userProfile.signature ?? '').body;
+
+    // All content widgets in profile main sliver list.
+    return [
+      // Username
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          sizedBoxW10H10,
+          GestureDetector(
             child: SingleLineText(
               userProfile.username ?? context.t.profilePage.title,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(),
+              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
             ),
             onTap: () async =>
                 copyToClipboard(context, userProfile.username ?? ''),
           ),
-          // subtitle: subtitle,
-        );
-      },
-    );
+          sizedBoxW10H10,
+          if (userProfile.uid != null)
+            SingleLineText(
+              userProfile.uid!,
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                    color: Theme.of(context).colorScheme.outline,
+                  ),
+            ),
+        ],
+      ),
+      sizedBoxW5H5,
+      Row(
+        children: <Widget>[
+          if (userProfile.uid != null)
+            // Email verify state.
+            IconButton(
+              icon: const Icon(Icons.email_outlined),
+              onPressed: () async {
+                final content = userProfile.emailVerified ?? false
+                    ? tr.emailVerified
+                    : tr.emailNotVerified;
+                ScaffoldMessenger.of(context)
+                    .showSnackBar(SnackBar(content: Text(content)));
+              },
+              isSelected: userProfile.emailVerified ?? false,
+            ),
+          IconButton(
+            icon: const Icon(Icons.photo_camera_outlined),
+            onPressed: () async {
+              final content = userProfile.videoVerified ?? false
+                  ? tr.videoVerified
+                  : tr.videoNotVerified;
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(SnackBar(content: Text(content)));
+            },
+            isSelected: userProfile.videoVerified ?? false,
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.group_outlined),
+            label: Text(friendsCount),
+            onPressed: friendsPage != null
+                ? () async {
+                    await context.dispatchAsUrl(friendsPage);
+                  }
+                : null,
+          ),
+        ].insertBetween(sizedBoxW10H10),
+      ),
+      Row(
+        children: [
+          if (birthDayText.isNotEmpty)
+            IconChip(
+              icon: const Icon(Icons.cake_outlined),
+              text: Text(birthDayText),
+            ),
+          if (userProfile.from != null)
+            IconChip(
+              icon: const Icon(Icons.location_on_outlined),
+              text: Text(userProfile.from!),
+            ),
+        ],
+      ),
+      Row(
+        children: [
+          if (userProfile.zodiac != null)
+            IconChip(
+              icon: Icon(MdiIcons.starCrescent),
+              text: Text(userProfile.zodiac!),
+            ),
+        ],
+      ),
+      ListTile(
+        title: Text(tr.customTitle),
+        subtitle: Text(state.userProfile?.customTitle ?? ''),
+      ),
+      ListTile(
+        title: Text(tr.signature),
+        subtitle: signatureContent != null
+            ? munchElement(context, signatureContent)
+            : const SizedBox.shrink(),
+      ),
+    ];
+  }
 
-    // TODO: Migrate this logic part into bloc.
-    final basicInfoList = userProfile.basicInfoList.map((e) {
-      if (e.$1 == '邮箱状态') {
-        if (e.$2 == '已认证') {
-          return Chip(
-            avatar: Icon(Icons.email_outlined),
-            label: Text('true'),
-            side: BorderSide.none,
-          );
-        } else {
-          return Chip(
-            avatar: Icon(Icons.email_outlined),
-            label: Text('false'),
-            side: BorderSide.none,
-          );
-        }
-      }
-      if (e.$1 == '视频认证') {
-        if (e.$2 == '已认证') {
-          return Chip(
-            avatar: Icon(Icons.photo_camera_front_outlined),
-            label: Text('true'),
-            side: BorderSide.none,
-          );
-        } else {
-          return Chip(
-            avatar: Icon(Icons.photo_camera_front_outlined),
-            label: Text('false'),
-            side: BorderSide.none,
-          );
-        }
-      }
-    }).whereType<Widget>();
+  Widget _buildContent(
+    BuildContext context,
+    ProfileState state, {
+    required Exception? failedToLogoutReason,
+    required bool logout,
+  }) {
+    // Check whether have failed logout attempt.
+    if (failedToLogoutReason != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('$failedToLogoutReason')));
+    }
 
-    return Scaffold(
-      body: EasyRefresh(
-        controller: _refreshController,
-        scrollController: _scrollController,
-        header: const MaterialHeader(),
-        onRefresh: () {
-          context.read<ProfileBloc>().add(ProfileRefreshRequested());
-        },
-        child: CustomScrollView(
-          // padding: edgeInsetsL15R15,
-          slivers: [
-            // Real app bar when data loaded.
-            SliverAppBar(
-              pinned: true,
-              floating: true,
-              actions: actions,
-              expandedHeight: _appBarExpandHeight,
-              flexibleSpace: FlexibleSpaceBar(
-                background: backgroundImage,
-                titlePadding: edgeInsetsL60B10,
-                centerTitle: true,
-                title: title,
+    _refreshController.finishRefresh();
+
+    return EasyRefresh(
+      controller: _refreshController,
+      scrollController: _scrollController,
+      header: const MaterialHeader(),
+      onRefresh: () =>
+          context.read<ProfileBloc>().add(ProfileRefreshRequested()),
+      child: CustomScrollView(
+        slivers: [
+          // Real app bar when data loaded.
+          _buildSliverAppBar(context, state, logout: logout),
+          SliverPadding(
+            padding: edgeInsetsL10T5R10,
+            sliver: SliverList(
+              delegate: SliverChildListDelegate(
+                _buildSliverContent(context, state),
               ),
             ),
-            SliverPadding(
-              padding: edgeInsetsL10T5R10,
-              sliver: SliverList(
-                delegate: SliverChildListDelegate(
-                  [
-                    Row(
-                      children: [
-                        if (userProfile.uid != null)
-                          InputChip(
-                            avatar: const Icon(Icons.badge_outlined),
-                            label: Text(userProfile.uid!),
-                            onPressed: () async =>
-                                copyToClipboard(context, userProfile.uid!),
-                            side: BorderSide.none,
-                          ),
-                        ...basicInfoList,
-                      ].insertBetween(sizedBoxW10H10),
-                    ),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                    ListTile(title: Text('1')),
-                  ],
-                ),
-              ),
-            ),
-            // CachedImage(
-            //   userProfile.avatarUrl ?? noAvatarUrl,
-            //   maxWidth: _avatarWidth,
-            //   maxHeight: _avatarHeight,
-            // ),
-            // if (userProfile.username != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.username),
-            //     subtitle: Text(userProfile.username!),
-            //   ),
-            // if (userProfile.uid != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.uid),
-            //     subtitle: Text(userProfile.uid!),
-            //   ),
-            // ...userProfile.basicInfoList.map(
-            //   (e) => ListTile(
-            //     title: Text(e.$1),
-            //     subtitle: Text(e.$2),
-            //   ),
-            // ),
-            // if (userProfile.checkinDaysCount != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinDaysCount),
-            //     subtitle: Text(userProfile.checkinDaysCount!),
-            //   ),
-            // if (userProfile.checkinThisMonthCount != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinDaysInThisMonth),
-            //     subtitle: Text(userProfile.checkinThisMonthCount!),
-            //   ),
-            // if (userProfile.checkinRecentTime != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinRecentTime),
-            //     subtitle: Text(userProfile.checkinRecentTime!),
-            //   ),
-            // if (userProfile.checkinAllCoins != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinAllCoins),
-            //     subtitle: Text(userProfile.checkinAllCoins!),
-            //   ),
-            // if (userProfile.checkinLastTimeCoin != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinLastTimeCoins),
-            //     subtitle: Text(userProfile.checkinLastTimeCoin!),
-            //   ),
-            // if (userProfile.checkinLevel != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinLevel),
-            //     subtitle: Text(userProfile.checkinLevel!),
-            //   ),
-            // if (userProfile.checkinNextLevel != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinNextLevel),
-            //     subtitle: Text(userProfile.checkinNextLevel!),
-            //   ),
-            // if (userProfile.checkinNextLevelDays != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinNextLevelDays),
-            //     subtitle: Text(userProfile.checkinNextLevelDays!),
-            //   ),
-            // if (userProfile.checkinTodayStatus != null)
-            //   ListTile(
-            //     title: Text(context.t.profilePage.checkinTodayStatus),
-            //     subtitle: Text(userProfile.checkinTodayStatus!),
-            //   ),
-            // ...userProfile.activityInfoList.map(
-            //   (e) {
-            //     // Privacy contents should use ObscureListTile.
-            //     if (e.$1.contains('IP')) {
-            //       return ObscureListTile(
-            //         title: Text(e.$1),
-            //         subtitle: Text(e.$2),
-            //       );
-            //     } else {
-            //       return ListTile(
-            //         title: Text(e.$1),
-            //         subtitle: Text(e.$2),
-            //       );
-            //     }
-            //   },
-            // ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
@@ -417,7 +422,11 @@ class _ProfilePageState extends State<ProfilePage> {
 
           return Scaffold(
             appBar: appBar,
-            body: body,
+            body: ColoredBox(
+              // FIXME: Remove workaround for page background issue.
+              color: Theme.of(context).colorScheme.surface,
+              child: body,
+            ),
           );
         },
       ),

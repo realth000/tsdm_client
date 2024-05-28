@@ -82,7 +82,8 @@ extension ParseUrl on String {
       );
     }
 
-    if (mod == 'space') {
+    // FIXME: Do NOT glob access user profile page by uid.
+    if (mod == 'space' && queryParameters['do'] != 'friend') {
       // Access by uid.
       if (queryParameters['uid'] != null) {
         return RecognizedRoute(

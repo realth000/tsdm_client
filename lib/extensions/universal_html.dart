@@ -166,19 +166,23 @@ extension GrepExtension on Element {
   /// Note: Both key and value will be trimmed, which means removed white spaces
   /// around themselves.
   ///
+  /// Note: Returns the html code if value is an Element not text node.
+  ///
   /// If any of key or value is null, return null.
   (String key, String value)? parseLiEmNode() {
-    if (childAtOrNull(0)?.localName != 'em') {
+    if (children.elementAtOrNull(0)?.localName != 'em') {
       return null;
     }
 
-    final key = childAtOrNull(0)?.text?.trim();
+    final key = children.elementAtOrNull(0)?.text?.trim();
     late final String? value;
-    if (children.length > 1) {
-      // The value here is not a plain text, it's a normal node.
-      // TODO: If we have a normal node value, parse it's link, img even styles.
-      value = nodes.elementAtOrNull(1)?.text;
+    if (children.length >= 2) {
+      // Expected value is an element.
+      // Use the html at that node.
+      value = children.elementAtOrNull(1)?.outerHtml;
     } else {
+      // Expected value is a text node.
+      // Use the trimmed text
       value = nodes.lastOrNull?.text?.trim();
     }
     if (key == null || value == null) {

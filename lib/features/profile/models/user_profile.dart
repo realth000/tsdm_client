@@ -8,7 +8,21 @@ class UserProfile with UserProfileMappable {
     required this.avatarUrl,
     required this.username,
     required this.uid,
-    required this.basicInfoList,
+    required this.emailVerified,
+    required this.videoVerified,
+    required this.customTitle,
+    required this.signature,
+    required this.friendsCount,
+    required this.birthdayYear,
+    required this.birthdayMonth,
+    required this.birthdayDay,
+    required this.zodiac,
+    required this.msn,
+    required this.introduction,
+    required this.nickname,
+    required this.gender,
+    required this.from,
+    required this.qq,
     required this.checkinDaysCount,
     required this.checkinThisMonthCount,
     required this.checkinRecentTime,
@@ -18,7 +32,24 @@ class UserProfile with UserProfileMappable {
     required this.checkinNextLevel,
     required this.checkinNextLevelDays,
     required this.checkinTodayStatus,
-    required this.activityInfoList,
+    required this.moderatorGroup,
+    required this.userGroup,
+    required this.onlineTime,
+    required this.registerTime,
+    required this.lastVisitTime,
+    required this.lastActiveTime,
+    required this.registerIP,
+    required this.lastVisitIP,
+    required this.lastPostTime,
+    required this.timezone,
+    required this.credits,
+    required this.famous,
+    required this.coins,
+    required this.publicity,
+    required this.natural,
+    required this.scheming,
+    required this.spirit,
+    required this.seal,
   });
 
   /// Url of user avatar.
@@ -30,10 +61,64 @@ class UserProfile with UserProfileMappable {
   /// User id.
   final String? uid;
 
+  ///////////  Basic status ///////////
+
   /// Group of basic info.
   ///
   /// Each group contains a string of title and a string of subtitle.
-  final List<(String title, String subtitle)> basicInfoList;
+
+  /// User email is verified or not
+  final bool? emailVerified;
+
+  /// User verified through video.
+  final bool? videoVerified;
+
+  /// User custom title.
+  final String? customTitle;
+
+  /// User signature.
+  ///
+  /// Html code.
+  final String? signature;
+
+  /// Friends count.
+  ///
+  /// Should be a widget redirect to user friends page.
+  final String? friendsCount;
+
+  ///////////  Some other basic status ///////////
+
+  /// Year of birthday.
+  final String? birthdayYear;
+
+  /// Month of birthday.
+  final String? birthdayMonth;
+
+  /// Day of birthday.
+  final String? birthdayDay;
+
+  /// User zodiac.
+  final String? zodiac;
+
+  /// MSN number.
+  final String? msn;
+
+  /// Self introduction.
+  final String? introduction;
+
+  /// User nickname.
+  final String? nickname;
+
+  /// User gender.
+  final String? gender;
+
+  /// From location.
+  final String? from;
+
+  /// QQ number.
+  final String? qq;
+
+  ///////////  Checkin status ///////////
 
   /// Total checkin days count.
   final String? checkinDaysCount;
@@ -56,14 +141,81 @@ class UserProfile with UserProfileMappable {
   /// Next level of checkin.
   final String? checkinNextLevel;
 
-  /// Days till next level of chekcin.
+  /// Days till next level of checkin.
   final String? checkinNextLevelDays;
 
   /// Today checked or not.
   final String? checkinTodayStatus;
 
+  ///////////  User group status ///////////
+
+  /// Group of moderator.
+  ///
+  /// May be null if user is not any kind of moderator.
+  final String? moderatorGroup;
+
+  /// Normal user group.
+  ///
+  /// Generally not null.
+  final String? userGroup;
+
+  ///////////  Activity status ///////////
+
   /// Group of user activity information.
   ///
   /// Each group contains a string of title and a string of subtitle.
-  final List<(String title, String subtitle)> activityInfoList;
+
+  /// Total online time.
+  final String? onlineTime;
+
+  /// Datetime of account registration.
+  final DateTime? registerTime;
+
+  /// Datetime of last visit.
+  final DateTime? lastVisitTime;
+
+  /// Account last active time.
+  final DateTime? lastActiveTime;
+
+  /// IP address when account registered.
+  ///
+  /// Personal privacy info.
+  final String? registerIP;
+
+  /// IP address when last visit.
+  ///
+  /// Personal privacy info.
+  final String? lastVisitIP;
+
+  /// Datetime of last post content.
+  final DateTime? lastPostTime;
+
+  /// User timezone.
+  final String? timezone;
+
+  ///////////  Statistics status ///////////
+
+  /// 积分
+  final String? credits;
+
+  /// 威望
+  final String? famous;
+
+  /// 天使币
+  final String? coins;
+
+  /// 宣传
+  final String? publicity;
+
+  /// 天然
+  final String? natural;
+
+  /// 腹黑
+  final String? scheming;
+
+  /// 精灵
+  final String? spirit;
+
+  /// 龙之印章
+  final String? seal;
 }
