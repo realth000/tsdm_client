@@ -249,8 +249,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
 
     // Check in status
     final checkinNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
-    final checkinDaysCount =
-        checkinNode?.querySelector('p:nth-child(2)')?.firstEndDeepText();
+    final checkinDaysCount = checkinNode
+        ?.querySelector('p:nth-child(2)')
+        ?.firstEndDeepText()
+        ?.parseToInt();
     final checkinThisMonthCount =
         checkinNode?.querySelector('p:nth-child(3)')?.firstEndDeepText();
     final checkinRecentTime =
@@ -265,11 +267,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ?.querySelector('p:nth-child(6) font:nth-child(1)')
         ?.firstEndDeepText();
     final checkinNextLevel = checkinNode
-        ?.querySelector('p:nth-child(6) font:nth-child(3)')
+        ?.querySelector('p:nth-child(6) font:nth-child(2)')
         ?.firstEndDeepText();
     final checkinNextLevelDays = checkinNode
-        ?.querySelector('p:nth-child(6) font:nth-child(5)')
-        ?.firstEndDeepText();
+        ?.querySelector('p:nth-child(6) font:nth-child(3)')
+        ?.firstEndDeepText()
+        ?.parseToInt();
     final checkinTodayStatus =
         checkinNode?.querySelector('p:nth-child(7)')?.firstEndDeepText();
 
@@ -395,14 +398,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       qq: qq,
 
       ///////////  Checkin status ///////////
-      checkinDaysCount: checkinDaysCount,
+      checkinDaysCount: checkinDaysCount == 0 ? null : checkinDaysCount,
       checkinThisMonthCount: checkinThisMonthCount,
       checkinRecentTime: checkinRecentTime,
       checkinAllCoins: checkinAllCoins,
       checkinLastTimeCoin: checkinLastTimeCoin,
       checkinLevel: checkinLevel,
       checkinNextLevel: checkinNextLevel,
-      checkinNextLevelDays: checkinNextLevelDays,
+      checkinNextLevelDays:
+          checkinNextLevelDays == 0 ? null : checkinNextLevelDays,
       checkinTodayStatus: checkinTodayStatus,
 
       ///////////  User group status ///////////

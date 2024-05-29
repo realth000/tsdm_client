@@ -179,6 +179,20 @@
     "videoVerified": "已錄影認證",
     "videoNotVerified": "未視訊認證",
     "signature": "個人簽名",
+    "introduction": "自我介紹",
+    "checkinLevelList": {
+      "level1": "初來乍到",
+      "level2": "偶爾看看I",
+      "level3": "偶爾看看II",
+      "level4": "偶爾看看III",
+      "level5": "常住居民I",
+      "level6": "常住居民II",
+      "level7": "常住居民III",
+      "level8": "以壇為家I",
+      "level9": "以壇為家II",
+      "level10": "以壇為家III",
+      "level11": "伴壇終老"
+    },
     "checkinDaysCount": "累計簽到總天數",
     "checkinDaysInThisMonth": "本月簽到天數",
     "checkinRecentTime": "最近簽到時間",
@@ -187,7 +201,18 @@
     "checkinLevel": "簽到等級",
     "checkinNextLevel": "下個簽到等級",
     "checkinNextLevelDays": "距離下個簽到等級天數",
-    "checkinTodayStatus": "今日簽到狀態"
+    "checkinTodayStatus": "今日簽到狀態",
+    "statistics": {
+      "title": "統計資料",
+      "credits": "積分",
+      "famous": "威望",
+      "coins": "天使幣",
+      "publicity": "宣傳度",
+      "natural": "天然",
+      "scheming": "腹黑",
+      "spirit": "精靈",
+      "seal": "龍之印章"
+    }
   },
   "forumPage": {
     "rulesTab": {

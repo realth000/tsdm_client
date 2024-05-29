@@ -121,7 +121,9 @@ class UserProfile with UserProfileMappable {
   ///////////  Checkin status ///////////
 
   /// Total checkin days count.
-  final String? checkinDaysCount;
+  ///
+  /// Always not zero.
+  final int? checkinDaysCount;
 
   /// Checkin days in current month.
   final String? checkinThisMonthCount;
@@ -142,7 +144,9 @@ class UserProfile with UserProfileMappable {
   final String? checkinNextLevel;
 
   /// Days till next level of checkin.
-  final String? checkinNextLevelDays;
+  ///
+  /// Always not zero.
+  final int? checkinNextLevelDays;
 
   /// Today checked or not.
   final String? checkinTodayStatus;

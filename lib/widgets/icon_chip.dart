@@ -4,13 +4,17 @@ import 'package:flutter/material.dart';
 final class IconChip extends StatelessWidget {
   /// Constructor.
   const IconChip({
-    required this.icon,
+    required this.iconData,
     required this.text,
+    this.iconSize,
     super.key,
   });
 
   /// Icon widget.
-  final Widget icon;
+  final IconData iconData;
+
+  /// Size of [iconData].
+  final double? iconSize;
 
   /// Text widget.
   final Widget text;
@@ -19,7 +23,11 @@ final class IconChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Chip(
       labelPadding: EdgeInsets.zero,
-      avatar: icon,
+      avatar: Icon(
+        iconData,
+        color: Theme.of(context).textTheme.labelMedium?.color,
+        size: iconSize,
+      ),
       label: text,
       side: BorderSide.none,
       // FIXME: Fix background color in bright and dark mode.

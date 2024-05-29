@@ -179,6 +179,20 @@
     "videoVerified": "Video verified",
     "videoNotVerified": "Not video verified",
     "signature": "Signature",
+    "introduction": "Self Introduction",
+    "checkinLevelList": {
+      "level1": "Lv.1",
+      "level2": "Lv.2",
+      "level3": "Lv.3",
+      "level4": "Lv.4",
+      "level5": "Lv.5",
+      "level6": "Lv.6",
+      "level7": "Lv.7",
+      "level8": "Lv.8",
+      "level9": "Lv.9",
+      "level10": "Lv.10",
+      "level11": "Lv.Master"
+    },
     "checkinDaysCount": "Check-in Days Count",
     "checkinDaysInThisMonth": "Check-in Days This Month",
     "checkinRecentTime": "Recent Check-in Time",
@@ -187,7 +201,18 @@
     "checkinLevel": "Check-in Level",
     "checkinNextLevel": "Check-in Next Level",
     "checkinNextLevelDays": "Days To Next Check-in Level",
-    "checkinTodayStatus": "Check-in Today Status"
+    "checkinTodayStatus": "Check-in Today Status",
+    "statistics": {
+      "title": "Statistics Information",
+      "credits": "Credits",
+      "famous": "Famous",
+      "coins": "Coins",
+      "publicity": "Publicity",
+      "natural": "Natural",
+      "scheming": "Scheming",
+      "spirit": "Spirit",
+      "seal": "Seal"
+    }
   },
   "forumPage": {
     "rulesTab": {

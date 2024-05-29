@@ -179,6 +179,20 @@
     "videoVerified": "已视频认证",
     "videoNotVerified": "未视频认证",
     "signature": "个人签名",
+    "introduction": "自我介绍",
+    "checkinLevelList": {
+      "level1": "初来乍到",
+      "level2": "偶尔看看I",
+      "level3": "偶尔看看II",
+      "level4": "偶尔看看III",
+      "level5": "常住居民I",
+      "level6": "常住居民II",
+      "level7": "常住居民III",
+      "level8": "以坛为家I",
+      "level9": "以坛为家II",
+      "level10": "以坛为家III",
+      "level11": "伴坛终老"
+    },
     "checkinDaysCount": "累计签到总天数",
     "checkinDaysInThisMonth": "本月签到天数",
     "checkinRecentTime": "最近签到时间",
@@ -187,7 +201,18 @@
     "checkinLevel": "签到等级",
     "checkinNextLevel": "下个签到等级",
     "checkinNextLevelDays": "距离下个签到等级天数",
-    "checkinTodayStatus": "今日签到状态"
+    "checkinTodayStatus": "今日签到状态",
+    "statistics": {
+      "title": "统计信息",
+      "credits": "积分",
+      "famous": "威望",
+      "coins": "天使币",
+      "publicity": "宣传",
+      "natural": "天然",
+      "scheming": "腹黑",
+      "spirit": "精灵",
+      "seal": "龙之印章"
+    }
   },
   "forumPage": {
     "rulesTab": {

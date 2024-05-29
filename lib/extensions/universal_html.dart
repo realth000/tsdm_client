@@ -166,7 +166,7 @@ extension GrepExtension on Element {
   /// Note: Both key and value will be trimmed, which means removed white spaces
   /// around themselves.
   ///
-  /// Note: Returns the html code if value is an Element not text node.
+  /// Note: Returns the html code if value is an or more Element not text node.
   ///
   /// If any of key or value is null, return null.
   (String key, String value)? parseLiEmNode() {
@@ -177,9 +177,9 @@ extension GrepExtension on Element {
     final key = children.elementAtOrNull(0)?.text?.trim();
     late final String? value;
     if (children.length >= 2) {
-      // Expected value is an element.
-      // Use the html at that node.
-      value = children.elementAtOrNull(1)?.outerHtml;
+      // More than one element.
+      // Try remove the first <em> element and return all html code left.
+      value = nodes.skip(1).map((e) => e.toString()).join();
     } else {
       // Expected value is a text node.
       // Use the trimmed text
