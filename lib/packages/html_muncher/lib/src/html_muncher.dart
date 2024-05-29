@@ -1,7 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
@@ -712,12 +711,12 @@ class Muncher {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(Icons.link),
-                SizedBox(width: 5),
+                SizedBox(width: 2),
               ],
             ),
           ),
           ret,
-          const WidgetSpan(child: sizedBoxW5H5),
+          const WidgetSpan(child: SizedBox(width: 2, height: 5)),
         ],
       );
     }
