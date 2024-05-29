@@ -22,6 +22,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - app：更新页面加载样式，减少使用圆形进度条。
+- 帖子/编辑：更新帖子和编辑器中网页链接和艾特用户的样式，去掉背景色。
+  - 背景色bug较多，暂时去除。
 
 ## [0.11.0] - 2024-05-19
 
