@@ -297,6 +297,7 @@ class Muncher {
             'tbody' ||
             'ul' ||
             'dd' ||
+            'marquee' ||
             'pre' =>
               _munch(node),
             String() => null,
