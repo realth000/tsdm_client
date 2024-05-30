@@ -28,6 +28,7 @@ import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
+import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 const _appBarBackgroundImageHeight = 100.0;
@@ -333,14 +334,19 @@ class _ProfilePageState extends State<ProfilePage> {
     // Introduction.
     //
     // Introduction is captured as raw html code when have multiple lines.
-    final introductionContent =
-        parseHtmlDocument(userProfile.introduction ?? '').body;
+    uh.BodyElement? introductionContent;
+    if (userProfile.introduction != null) {
+      introductionContent =
+          parseHtmlDocument(userProfile.introduction ?? '').body;
+    }
     // Signature.
     //
     // Signature is captured as raw html code because server side provides some
     // rich text formats.
-    final signatureContent =
-        parseHtmlDocument(userProfile.signature ?? '').body;
+    uh.BodyElement? signatureContent;
+    if (userProfile.signature != null) {
+      signatureContent = parseHtmlDocument(userProfile.signature ?? '').body;
+    }
 
     // All content widgets in profile main sliver list.
     return [
