@@ -22,6 +22,7 @@ final class IconChip extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Chip(
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       labelPadding: EdgeInsets.zero,
       avatar: Icon(
         iconData,
