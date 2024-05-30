@@ -14,6 +14,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 用户：重构用户页面，显示更多用户信息。
   - 显示基本资料，用户组、积分信息。
   - 以html格式解析个人签名，显示更多信息。
+- 帖子：解析滚动区域marquee内的元素。
+  - 虽然这些元素不会按原网页那样滚动。
 
 ### Fixed
 
