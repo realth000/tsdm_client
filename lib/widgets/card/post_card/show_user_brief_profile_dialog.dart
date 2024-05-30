@@ -142,6 +142,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
+                Icons.campaign_outlined,
+                tr.publicity,
+                profile.publicity,
+                style: _UserProfileAttrStyle.secondary,
+              ),
+              _UserProfilePair(
                 Icons.water_drop_outlined,
                 tr.natural,
                 profile.natural,
