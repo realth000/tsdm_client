@@ -179,7 +179,7 @@ extension GrepExtension on Element {
     if (children.length >= 2) {
       // More than one element.
       // Try remove the first <em> element and return all html code left.
-      value = nodes.skip(1).map((e) => e.toString()).join();
+      value = children.skip(1).map((e) => e.outerHtml).join();
     } else {
       // Expected value is a text node.
       // Use the trimmed text
