@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 
 import 'package:easy_refresh/easy_refresh.dart';
@@ -37,6 +38,37 @@ const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight;
 
 const _groupAvatarHeight = 100.0;
 
+/// All checking days required from current level to next level.
+///
+/// Data:
+///
+/// ```
+/// lvMaster 伴坛终老 300天
+/// lv10 以坛为家III  250天
+/// lv9  以坛为家II   200天   3505
+/// lv8  以坛为家III  150天   4288
+/// lv7  常住居民III  100天   5392
+/// lv6  常住居民II   60天    7072
+/// lv5  长居居民I    30天    10007
+/// lv4  偶尔看看III  15天    13925
+/// lv3  偶尔看看II    7天    19191
+/// lv2  偶尔看看I     3天
+/// lv1  初来乍到      1天
+/// ```
+const _checkinNextLevelExp = [
+  1 - 0,
+  3 - 1,
+  7 - 3,
+  15 - 7,
+  30 - 15,
+  60 - 30,
+  100 - 60,
+  150 - 100,
+  200 - 150,
+  250 - 200,
+  300 - 250,
+];
+
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
   /// Constructor.
@@ -55,6 +87,8 @@ class ProfilePage extends StatefulWidget {
 class _ProfilePageState extends State<ProfilePage> {
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
   final _scrollController = ScrollController();
+
+  static final _checkinLevelNumberRe = RegExp(r'LV\.(?<level>\d+)');
 
   Widget _buildSliverAppBar(
     BuildContext context,
@@ -214,10 +248,42 @@ class _ProfilePageState extends State<ProfilePage> {
     int? totalDays;
     final double percent;
     final String description;
+
+    // Parse checkin level number.
+    int? checkinLevelNumber;
+    if (userProfile.checkinLevel == null) {
+      // Not found.
+    } else if (userProfile.checkinLevel!.contains('Master')) {
+      // Max level
+      checkinLevelNumber = 11;
+    } else {
+      checkinLevelNumber = _checkinLevelNumberRe
+          .firstMatch(userProfile.checkinLevel!)
+          ?.namedGroup('level')
+          ?.parseToInt();
+    }
     if (userProfile.checkinNextLevelDays != null) {
       totalDays =
           userProfile.checkinDaysCount! + userProfile.checkinNextLevelDays!;
-      percent = userProfile.checkinDaysCount! / totalDays;
+      if (checkinLevelNumber != null &&
+          checkinLevelNumber >= 0 &&
+          checkinLevelNumber < _checkinNextLevelExp.length) {
+        // If checkin level is recognized, set the checkin progress percentage
+        // to (checkin count in current level  /  all days count required to
+        // next level).
+        //
+        // e.g. From level 5 to level 6 requires (60-30) days and user is 10
+        //      days before step into level 6, so the percent is:
+        //      1 - 10 / (60 - 30)
+        percent = max(
+          1 -
+              userProfile.checkinNextLevelDays! /
+                  _checkinNextLevelExp[checkinLevelNumber],
+          0,
+        );
+      } else {
+        percent = userProfile.checkinDaysCount! / totalDays;
+      }
       description = '${userProfile.checkinDaysCount}/$totalDays';
     } else {
       percent = 1;
