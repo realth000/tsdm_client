@@ -53,7 +53,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
     // success state.
     final post = state.post!;
     if (widget.noticeType == NoticeType.rate) {
-      return PostCard(post);
+      return SingleChildScrollView(child: PostCard(post));
     }
 
     if (state.replyParameters != null) {

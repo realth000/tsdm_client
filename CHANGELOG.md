@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 编辑：修复编辑器的滚动导致页面标题栏背景色改变的问题。
   - 应该只在页面主体滚动时改变颜色。
 - 首页：避免首页四个选项卡多次来回切换时重复加载的问题。
+- 通知：修复包含长楼层的评分详情页面无法滚动的问题。
 
 ### Changed
 
