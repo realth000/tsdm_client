@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.12.0] - 2024-06-01
+
 ### Added
 
 - 应用：支持防误触退出，按两次返回才会退出应用。
