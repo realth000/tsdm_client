@@ -156,4 +156,7 @@ class ScreenPaths {
   ///
   /// Index of `PostEditType` is needed to specify the reason.
   static const String editPost = '/editPost/:editType/:fid/:tid/:pid';
+
+  /// Page to show image in full page.
+  static const String imageDetail = '/imageDetail/:imageUrl';
 }

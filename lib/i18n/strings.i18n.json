@@ -362,6 +362,9 @@
     "success": "Sent successfully",
     "failed": "Sent failed: $message"
   },
+  "imageDetailPage": {
+    "title": "Image Detail"
+  },
   "forumCard": {
     "links": "Links",
     "subForums": "Subreddit"
@@ -517,5 +520,12 @@
       "username": "Username",
       "errorEmpty": "Should not be empty"
     }
+  },
+  "imageBottomSheet": {
+    "title": "Image Actions",
+    "checkDetail": "Check details",
+    "copyImageUrl": "Copy image url",
+    "reloadImage": "ReloadImage",
+    "openLink": "Open link"
   }
 }

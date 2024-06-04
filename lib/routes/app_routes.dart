@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/chat/view/chat_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
+import 'package:tsdm_client/features/image/view/image_detail_page.dart';
 import 'package:tsdm_client/features/latest_thread/view/latest_thread_page.dart';
 import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
@@ -268,6 +269,14 @@ final router = GoRouter(
       builder: (state) {
         final uid = state.pathParameters['uid']!;
         return ChatHistoryPage(uid: uid);
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.imageDetail,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final imageUrl = state.pathParameters['imageUrl']!;
+        return ImageDetailPage(imageUrl);
       },
     ),
   ],

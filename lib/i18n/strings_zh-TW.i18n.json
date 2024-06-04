@@ -362,6 +362,9 @@
     "success": "發送成功",
     "failed": "發送失敗：$message"
   },
+  "imageDetailPage": {
+    "title": "圖片詳情"
+  },
   "forumCard": {
     "links": "連結",
     "subForums": "子版塊"
@@ -517,5 +520,12 @@
       "username": "使用者名稱",
       "errorEmpty": "不能為空"
     }
+  },
+  "imageBottomSheet": {
+    "title": "操作圖片",
+    "checkDetail": "看詳情",
+    "copyImageUrl": "複製圖片連結",
+    "reloadImage": "重新載入圖片",
+    "openLink": "開啟連結"
   }
 }

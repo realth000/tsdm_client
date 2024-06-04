@@ -7,6 +7,7 @@ import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
 import 'package:tsdm_client/widgets/card/bounty_card.dart';
 import 'package:tsdm_client/widgets/card/code_card.dart';
@@ -102,6 +103,11 @@ class MunchState {
   ///
   /// As a workaround.
   String? tapUrl;
+
+  /// Url link in "href" attribute can navigate to.
+  ///
+  /// This url is not null when munching a tag inside <a href="xxx"></a> node.
+  String? hrefUrl;
 
   /// All colors currently used.
   ///
@@ -314,9 +320,21 @@ class Muncher {
       return null;
     }
     state.headingBrNodePassed = true;
-    return WidgetSpan(
-      child: NetworkIndicatorImage(url),
-    );
+    final hrefUrl = state.hrefUrl;
+    if (hrefUrl != null) {
+      return WidgetSpan(
+        child: GestureDetector(
+          onTap: () async => showImageActionBottomSheet(
+            context: context,
+            imageUrl: url,
+            hrefUrl: hrefUrl,
+          ),
+          child: NetworkIndicatorImage(url),
+        ),
+      );
+    }
+
+    return WidgetSpan(child: NetworkIndicatorImage(url));
   }
 
   InlineSpan? _buildFont(uh.Element element) {
@@ -693,35 +711,49 @@ class Muncher {
   }
 
   InlineSpan? _buildA(uh.Element element) {
-    if (element.attributes.containsKey('href')) {
-      final url = element.attributes['href']!;
-      state
-        ..tapUrl = url
-        ..wrapInWord = true;
-      final ret = _munch(element);
-      state
-        ..wrapInWord = false
-        ..tapUrl = null;
-      if (ret == null) {
-        return null;
-      }
-      return TextSpan(
-        children: [
-          const WidgetSpan(
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.link),
-                SizedBox(width: 2),
-              ],
-            ),
-          ),
-          ret,
-          const WidgetSpan(child: SizedBox(width: 2, height: 5)),
-        ],
-      );
+    if (!element.attributes.containsKey('href')) {
+      return _munch(element);
     }
-    return _munch(element);
+
+    final url = element.attributes['href']!;
+    // Flag indicating only has <img> inside the <a> node.
+    // <a href="xxx"><img src="xxx"></a>
+    //
+    // If true, do not show outside.
+    final hasOnlyImg = element.childNodes.length == 1 &&
+        element.childNodes[0].nodeType == uh.Node.ELEMENT_NODE;
+    if (hasOnlyImg) {
+      state.hrefUrl = url;
+    }
+
+    state.wrapInWord = true;
+    final ret = _munch(element);
+    state.wrapInWord = false;
+    if (ret == null) {
+      return null;
+    }
+    if (hasOnlyImg) {
+      // Only a <img> node inside the current <a> node.
+      // Do NOT show url prefix.
+      state.hrefUrl = null;
+      return ret;
+    }
+
+    return TextSpan(
+      children: [
+        const WidgetSpan(
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(Icons.link),
+              SizedBox(width: 2),
+            ],
+          ),
+        ),
+        ret,
+        const WidgetSpan(child: SizedBox(width: 2, height: 5)),
+      ],
+    );
   }
 
   InlineSpan? _buildTr(uh.Element element) {

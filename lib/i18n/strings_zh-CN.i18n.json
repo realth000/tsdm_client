@@ -362,6 +362,9 @@
     "success": "发送成功",
     "failed": "发送失败：$message"
   },
+  "imageDetailPage": {
+    "title": "图片详情"
+  },
   "forumCard": {
     "links": "链接",
     "subForums": "子版块"
@@ -517,5 +520,12 @@
       "username": "用户名",
       "errorEmpty": "不能为空"
     }
+  },
+  "imageBottomSheet": {
+    "title": "操作图片",
+    "checkDetail": "查看详情",
+    "copyImageUrl": "复制图片链接",
+    "reloadImage": "重新加载图片",
+    "openLink": "打开链接"
   }
 }

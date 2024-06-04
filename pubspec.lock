@@ -1338,6 +1338,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  widget_zoom:
+    dependency: "direct main"
+    description:
+      name: widget_zoom
+      sha256: f74cb1b9969a74668db0048d3db9ddc7ec5b334d32a1f54475db56f873114550
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.4"
   win32:
     dependency: transitive
     description:
