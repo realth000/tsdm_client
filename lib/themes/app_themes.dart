@@ -1,28 +1,29 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/utils/platform.dart';
 
 /// App themes.
 class AppTheme {
-  static const _cardTheme = CardTheme(
-    elevation: 1,
-  );
+  static TextTheme _buildTextTheme(BuildContext context) => const TextTheme();
 
-  static const _chipTheme = ChipThemeData(
-    padding: EdgeInsets.all(2),
-  );
+  static CardTheme _buildCardTheme(BuildContext context) => const CardTheme(
+        elevation: 1,
+      );
 
-  static final String? _fontFamily = isWindows ? 'Microsoft YaHei' : null;
+  static ChipThemeData _buildChipTheme(BuildContext context) =>
+      const ChipThemeData(
+        padding: EdgeInsets.all(2),
+      );
 
   /// Global theme for [ListTile].
-  static const _listTileTheme = ListTileThemeData(
-    visualDensity: VisualDensity.standard,
-    contentPadding: EdgeInsets.symmetric(horizontal: 10),
-    horizontalTitleGap: 10,
-  );
+  static ListTileThemeData _buildListTileTheme(BuildContext context) =>
+      const ListTileThemeData(
+        visualDensity: VisualDensity.standard,
+        contentPadding: EdgeInsets.symmetric(horizontal: 10),
+        horizontalTitleGap: 10,
+      );
 
   /// App light theme.
-  static ThemeData makeLight([Color? seedColor]) {
+  static ThemeData makeLight(BuildContext context, [Color? seedColor]) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
       seedScheme = ColorScheme.fromSeed(seedColor: seedColor);
@@ -47,7 +48,6 @@ class AppTheme {
       background: seedScheme?.surface,
       onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
-      fontFamily: _fontFamily,
       scheme: seedColor == null
           ? FlexScheme.bahamaBlue
           : FlexScheme.materialBaseline,
@@ -73,14 +73,15 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      cardTheme: _cardTheme,
-      chipTheme: _chipTheme,
-      listTileTheme: _listTileTheme,
+      textTheme: _buildTextTheme(context),
+      cardTheme: _buildCardTheme(context),
+      chipTheme: _buildChipTheme(context),
+      listTileTheme: _buildListTileTheme(context),
     );
   }
 
   /// App dark themes.
-  static ThemeData makeDark([Color? seedColor]) {
+  static ThemeData makeDark(BuildContext context, [Color? seedColor]) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
       seedScheme = ColorScheme.fromSeed(
@@ -108,7 +109,6 @@ class AppTheme {
       background: seedScheme?.surface,
       onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
-      fontFamily: _fontFamily,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : FlexScheme.material,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
@@ -131,9 +131,10 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      cardTheme: _cardTheme,
-      chipTheme: _chipTheme,
-      listTileTheme: _listTileTheme,
+      textTheme: _buildTextTheme(context),
+      cardTheme: _buildCardTheme(context),
+      chipTheme: _buildChipTheme(context),
+      listTileTheme: _buildListTileTheme(context),
     );
   }
 }

@@ -68,8 +68,8 @@ class App extends StatelessWidget {
             final themeState = context.watch<ThemeCubit>().state;
             final accentColor = themeState.accentColor;
             final themeModeIndex = themeState.themeModeIndex;
-            final lightTheme = AppTheme.makeLight(accentColor);
-            final darkTheme = AppTheme.makeDark(accentColor);
+            final lightTheme = AppTheme.makeLight(context, accentColor);
+            final darkTheme = AppTheme.makeDark(context, accentColor);
 
             return MaterialApp.router(
               title: context.t.appName,
