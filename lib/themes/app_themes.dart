@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 
 /// App themes.
 class AppTheme {
-  static TextTheme _buildTextTheme(BuildContext context) => const TextTheme();
-
   static CardTheme _buildCardTheme(BuildContext context) => const CardTheme(
         elevation: 1,
       );
@@ -73,7 +71,6 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      textTheme: _buildTextTheme(context),
       cardTheme: _buildCardTheme(context),
       chipTheme: _buildChipTheme(context),
       listTileTheme: _buildListTileTheme(context),
@@ -131,7 +128,6 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      textTheme: _buildTextTheme(context),
       cardTheme: _buildCardTheme(context),
       chipTheme: _buildChipTheme(context),
       listTileTheme: _buildListTileTheme(context),
