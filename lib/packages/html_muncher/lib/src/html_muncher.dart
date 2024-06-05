@@ -321,20 +321,16 @@ class Muncher {
     }
     state.headingBrNodePassed = true;
     final hrefUrl = state.hrefUrl;
-    if (hrefUrl != null) {
-      return WidgetSpan(
-        child: GestureDetector(
-          onTap: () async => showImageActionBottomSheet(
-            context: context,
-            imageUrl: url,
-            hrefUrl: hrefUrl,
-          ),
-          child: NetworkIndicatorImage(url),
+    return WidgetSpan(
+      child: GestureDetector(
+        onTap: () async => showImageActionBottomSheet(
+          context: context,
+          imageUrl: url,
+          hrefUrl: hrefUrl,
         ),
-      );
-    }
-
-    return WidgetSpan(child: NetworkIndicatorImage(url));
+        child: NetworkIndicatorImage(url),
+      ),
+    );
   }
 
   InlineSpan? _buildFont(uh.Element element) {
