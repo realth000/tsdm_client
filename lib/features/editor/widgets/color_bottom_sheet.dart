@@ -92,9 +92,12 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
                         await widget.controller.setBackgroundColor(color);
                     }
                   },
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: color,
+                  child: Hero(
+                    tag: color.toString(),
+                    child: CircleAvatar(
+                      radius: 15,
+                      backgroundColor: color,
+                    ),
                   ),
                 );
               },

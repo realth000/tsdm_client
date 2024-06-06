@@ -186,7 +186,13 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(context.t.settingsPage.appearanceSection.colorScheme.title),
         trailing: accentColor < 0
             ? null
-            : CircleAvatar(radius: 15, backgroundColor: Color(accentColor)),
+            : Hero(
+                tag: Color(accentColor).toString(),
+                child: CircleAvatar(
+                  radius: 15,
+                  backgroundColor: Color(accentColor),
+                ),
+              ),
         onTap: () async {
           final color = await _showAccentColorPickerDialog(context);
           if (color == null) {

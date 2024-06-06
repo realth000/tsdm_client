@@ -72,13 +72,16 @@ const _checkinNextLevelExp = [
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
   /// Constructor.
-  const ProfilePage({this.uid, this.username, super.key});
+  const ProfilePage({this.uid, this.username, this.heroTag, super.key});
 
   /// Other user uid.
   final String? uid;
 
   /// Other user username.
   final String? username;
+
+  /// Optional hero tag.
+  final String? heroTag;
 
   @override
   State<ProfilePage> createState() => _ProfilePageState();

@@ -46,6 +46,7 @@ class RateCard extends StatelessWidget {
                     child: Center(
                       child: GestureDetector(
                         onTap: () async => context.dispatchAsUrl(e.user.url),
+                        // TODO: Add hero here.
                         child: CircleAvatar(
                           backgroundImage: CachedImageProvider(
                             e.user.avatarUrl ?? noAvatarUrl,

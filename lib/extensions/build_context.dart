@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -14,7 +15,12 @@ extension DispatchUrl<T> on BuildContext {
   ///
   /// If current string is not an valid url:
   /// * Do nothing.
-  Future<T?> dispatchAsUrl(String url, {bool external = false}) async {
+  Future<T?> dispatchAsUrl(
+    String url, {
+    bool external = false,
+    Map<String, String>? extraPathParameters,
+    Map<String, String>? extraQueryParameters,
+  }) async {
     debug('dispatch url: $url');
     final u = Uri.tryParse(url);
     if (u == null) {
@@ -31,8 +37,12 @@ extension DispatchUrl<T> on BuildContext {
       // Push route to the page if is recognized route.
       return pushNamed<T>(
         route.screenPath,
-        pathParameters: route.pathParameters,
-        queryParameters: route.queryParameters,
+        pathParameters: route.pathParameters.copyWith(
+          extraPathParameters ?? {},
+        ),
+        queryParameters: route.queryParameters.copyWith(
+          extraPathParameters ?? {},
+        ),
       );
     }
     // Launch in external browser if is unsupported url.

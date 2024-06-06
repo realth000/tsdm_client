@@ -17,20 +17,52 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 Future<void> showUserBriefProfileDialog(
   BuildContext context,
   UserBriefProfile userBriefProfile,
-  String userSpaceUrl,
-) async {
-  await showDialog<void>(
-    context: context,
-    builder: (_) => _UserBriefProfileDialog(userBriefProfile, userSpaceUrl),
+  String userSpaceUrl, {
+  // Hero tag for user avatar.
+  required String avatarHeroTag,
+  // Hero tag for user name.
+  required String nameHeroTag,
+}) async {
+  await Navigator.push<void>(
+    context,
+    PageRouteBuilder(
+      opaque: false,
+      // Fix barrier color.
+      // ref: flutter/lib/src/material/dialog.dart: showDialog()
+      barrierColor:
+          Theme.of(context).dialogTheme.barrierColor ?? Colors.black54,
+      barrierDismissible: true,
+      pageBuilder: (context, _, __) => _UserBriefProfileDialog(
+        userBriefProfile,
+        userSpaceUrl,
+        avatarHeroTag,
+        nameHeroTag,
+      ),
+      // fullscreenDialog: true,
+      transitionsBuilder: (context, ani1, ani2, child) {
+        return FadeTransition(
+          opacity: CurveTween(curve: Curves.easeIn).animate(ani1),
+          child: child,
+        );
+      },
+    ),
   );
 }
 
 class _UserBriefProfileDialog extends StatelessWidget {
-  const _UserBriefProfileDialog(this.profile, this.userSpaceUrl);
+  const _UserBriefProfileDialog(
+    this.profile,
+    this.userSpaceUrl,
+    this.avatarHeroTag,
+    this.nameHeroTag,
+  );
 
   final UserBriefProfile profile;
 
   final String userSpaceUrl;
+
+  final String avatarHeroTag;
+  final String nameHeroTag;
 
   @override
   Widget build(BuildContext context) {
@@ -44,11 +76,14 @@ class _UserBriefProfileDialog extends StatelessWidget {
         children: [
           Row(
             children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: CachedImageProvider(
-                  profile.avatarUrl ?? noAvatarUrl,
-                  context,
+              Hero(
+                tag: avatarHeroTag,
+                child: CircleAvatar(
+                  radius: 30,
+                  backgroundImage: CachedImageProvider(
+                    profile.avatarUrl ?? noAvatarUrl,
+                    context,
+                  ),
                 ),
               ),
               const Spacer(),
@@ -71,9 +106,19 @@ class _UserBriefProfileDialog extends StatelessWidget {
             ],
           ),
           sizedBoxW15H15,
-          Text(
-            profile.username,
-            style: Theme.of(context).textTheme.titleLarge,
+          // Fix text style lost.
+          // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
+          Hero(
+            tag: nameHeroTag,
+            flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+                DefaultTextStyle(
+              style: DefaultTextStyle.of(toHeroContext).style,
+              child: toHeroContext.widget,
+            ),
+            child: Text(
+              profile.username,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
           sizedBoxW5H5,
           Text(

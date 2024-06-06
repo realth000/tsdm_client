@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Widget to show a single [PersonalMessage].
@@ -19,20 +18,8 @@ final class PrivateMessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.privateMessageTab;
-    late final CircleAvatar userAvatar;
-    if (message.user.avatarUrl != null) {
-      userAvatar = CircleAvatar(
-        backgroundImage: CachedImageProvider(
-          message.user.avatarUrl!,
-          context,
-          fallbackImageUrl: noAvatarUrl,
-        ),
-      );
-    } else {
-      userAvatar = CircleAvatar(child: Text(message.user.name[0]));
-    }
-
     final userUrl = message.user.url;
+    final heroTag = '${message.user.uid}-${message.lastMessageTime}';
 
     return Card(
       margin: EdgeInsets.zero,
@@ -43,13 +30,23 @@ final class PrivateMessageCard extends StatelessWidget {
           children: [
             ListTile(
               leading: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(userUrl),
-                child: userAvatar,
+                onTap: () async => context.dispatchAsUrl(
+                  userUrl,
+                  extraQueryParameters: {'hero': heroTag},
+                ),
+                child: HeroUserAvatar(
+                  username: message.user.name,
+                  avatarUrl: message.user.avatarUrl,
+                  heroTag: heroTag,
+                ),
               ),
               title: Row(
                 children: [
                   GestureDetector(
-                    onTap: () async => context.dispatchAsUrl(userUrl),
+                    onTap: () async => context.dispatchAsUrl(
+                      userUrl,
+                      extraQueryParameters: {'hero': heroTag},
+                    ),
                     child: SingleLineText(message.user.name),
                   ),
                   Expanded(child: Container()),

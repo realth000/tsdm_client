@@ -22,7 +22,10 @@ class _ColorPickerDialogState extends State<ColorPickerDialog> {
         child: Column(
           children: Colors.primaries.map((e) {
             return RadioListTile(
-              title: CircleAvatar(radius: 15, backgroundColor: e),
+              title: Hero(
+                tag: e.toString(),
+                child: CircleAvatar(radius: 15, backgroundColor: e),
+              ),
               groupValue: RepositoryProvider.of<SettingsRepository>(context)
                   .getAccentColorValue(),
               value: e.value,

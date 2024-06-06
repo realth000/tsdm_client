@@ -20,6 +20,7 @@ class CachedImage extends StatelessWidget {
     this.maxWidth,
     this.maxHeight,
     this.fit,
+    this.tag,
     super.key,
   });
 
@@ -37,6 +38,9 @@ class CachedImage extends StatelessWidget {
   /// Fit type.
   final BoxFit? fit;
 
+  /// Tag for hero animation.
+  final String? tag;
+
   @override
   Widget build(BuildContext context) {
     if (imageUrl.isEmpty) {
@@ -53,12 +57,17 @@ class CachedImage extends StatelessWidget {
       final fileCache =
           getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
       if (fileCache.existsSync()) {
-        return Image.file(
+        final image = Image.file(
           fileCache,
           width: maxWidth,
           height: maxHeight,
           fit: fit,
         );
+        if (tag != null) {
+          return Hero(tag: tag!, child: image);
+        } else {
+          return image;
+        }
       }
     }
 

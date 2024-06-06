@@ -189,10 +189,15 @@ final router = GoRouter(
       builder: (state) {
         final uid = state.uri.queryParameters['uid'];
         final username = state.uri.queryParameters['username'];
+        final heroTag = state.uri.queryParameters['hero'];
         // Fill uid and username to access user profile page.
         // Actually each one of them is enough to locate the user space url.
         // When both are provided, use uid in advance.
-        return ProfilePage(uid: uid, username: username);
+        return ProfilePage(
+          uid: uid,
+          username: username,
+          heroTag: heroTag,
+        );
       },
     ),
     AppRoute(

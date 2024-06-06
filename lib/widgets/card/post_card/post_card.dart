@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
@@ -12,11 +11,11 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/widgets/cached_image//cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialog.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Actions in post context menu.
@@ -81,13 +80,17 @@ class _PostCardState extends State<PostCard>
 
     final threadBloc = context.readOrNull<ThreadBloc>();
     final onlyVisibleUid = threadBloc?.state.onlyVisibleUid;
+    final avatarHeroTag =
+        'Avatar-${widget.post.author.uid}-${widget.post.postFloor}';
+    final nameHeroTag =
+        'Name-${widget.post.author.name}-${widget.post.postFloor}';
 
     return Padding(
       padding: edgeInsetsL10R10B10,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // User info.
+          // Post author user info.
           ListTile(
             leading: GestureDetector(
               onTap: () async {
@@ -96,16 +99,15 @@ class _PostCardState extends State<PostCard>
                     context,
                     widget.post.userBriefProfile!,
                     widget.post.author.url,
+                    avatarHeroTag: avatarHeroTag,
+                    nameHeroTag: nameHeroTag,
                   );
                 }
-                // context.dispatchAsUrl(widget.post.author.url),
               },
-              child: CircleAvatar(
-                backgroundImage: CachedImageProvider(
-                  widget.post.author.avatarUrl!,
-                  context,
-                  fallbackImageUrl: noAvatarUrl,
-                ),
+              child: HeroUserAvatar(
+                avatarUrl: widget.post.author.avatarUrl,
+                username: widget.post.author.name,
+                heroTag: avatarHeroTag,
               ),
             ),
             title: Row(
@@ -117,11 +119,15 @@ class _PostCardState extends State<PostCard>
                         context,
                         widget.post.userBriefProfile!,
                         widget.post.author.url,
+                        avatarHeroTag: avatarHeroTag,
+                        nameHeroTag: nameHeroTag,
                       );
                     }
-                    // context.dispatchAsUrl(widget.post.author.url),
                   },
-                  child: Text(widget.post.author.name),
+                  child: Hero(
+                    tag: nameHeroTag,
+                    child: Text(widget.post.author.name),
+                  ),
                 ),
                 Expanded(child: Container()),
               ],

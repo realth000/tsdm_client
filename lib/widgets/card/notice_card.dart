@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -34,19 +33,7 @@ class NoticeCard extends StatelessWidget {
         .textTheme
         .labelMedium
         ?.copyWith(color: Theme.of(context).colorScheme.outline);
-
-    late final CircleAvatar userAvatar;
-    if (notice.userAvatarUrl != null) {
-      userAvatar = CircleAvatar(
-        backgroundImage: CachedImageProvider(
-          notice.userAvatarUrl!,
-          context,
-          fallbackImageUrl: noAvatarUrl,
-        ),
-      );
-    } else {
-      userAvatar = CircleAvatar(child: Text(notice.username?[0] ?? ''));
-    }
+    final heroTag = '${notice.username}-${notice.noticeTime}';
 
     final noticeBody = switch (notice.noticeType) {
       NoticeType.reply => Text.rich(
@@ -132,13 +119,23 @@ class NoticeCard extends StatelessWidget {
               leading: GestureDetector(
                 onTap: notice.userSpaceUrl == null
                     ? null
-                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
-                child: userAvatar,
+                    : () async => context.dispatchAsUrl(
+                          notice.userSpaceUrl!,
+                          extraQueryParameters: {'hero': heroTag},
+                        ),
+                child: HeroUserAvatar(
+                  username: notice.username ?? '',
+                  avatarUrl: notice.userAvatarUrl,
+                  heroTag: heroTag,
+                ),
               ),
               title: GestureDetector(
                 onTap: notice.userSpaceUrl == null
                     ? null
-                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!),
+                    : () async => context.dispatchAsUrl(
+                          notice.userSpaceUrl!,
+                          extraQueryParameters: {'hero': heroTag},
+                        ),
                 child: Row(children: [SingleLineText(notice.username ?? '')]),
               ),
               trailing: Text(notice.noticeTimeString),

@@ -178,18 +178,9 @@ class WelcomeSection extends StatelessWidget {
                     leading: GestureDetector(
                       onTap: () async =>
                           context.pushNamed(ScreenPaths.loggedUserProfile),
-                      child: CircleAvatar(
-                        backgroundImage: avatarUrl == null
-                            ? null
-                            : CachedImageProvider(
-                                avatarUrl,
-                                context,
-                                fallbackImageUrl: noAvatarUrl,
-                              ),
-                        backgroundColor: Colors.transparent,
-                        child: avatarUrl == null && username.isNotEmpty
-                            ? Text(username[0])
-                            : null,
+                      child: HeroUserAvatar(
+                        username: username,
+                        avatarUrl: avatarUrl,
                       ),
                     ),
                     title: Row(
