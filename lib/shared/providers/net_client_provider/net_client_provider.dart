@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
@@ -45,6 +46,19 @@ class NetClientProvider {
       final cookieJar = PersistCookieJar(
         ignoreExpires: true,
         storage: cookie,
+      );
+      // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
+      // certificate" error.
+      // ref: https://stackoverflow.com/a/77005574
+      _dio.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          // Don't trust any certificate just because their root cert is
+          // trusted.
+          final client = HttpClient(context: SecurityContext())
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+          return client;
+        },
       );
       _dio.interceptors
         ..add(CookieManager(cookieJar))
@@ -216,21 +230,16 @@ class _ErrorHandler extends Interceptor {
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
-    debug('${err.type}: ${err.message}');
+    debug('${err.type}: ${err.error},${err.message}');
 
     if (err.type == DioExceptionType.badResponse) {
       // Till now we can do nothing if encounter a bad response.
     }
 
-    // TODO: Retry if we need this error kind.
     if (err.type == DioExceptionType.unknown &&
         err.error.runtimeType == HandshakeException) {
       // Likely we have an error in SSL handshake.
-      // debug(err);
-      // TODO: Avoid this status code.
-      handler.resolve(
-        Response(requestOptions: RequestOptions(), statusCode: 999),
-      );
+      handler.resolve(Response(requestOptions: RequestOptions()));
       return;
     }
 
