@@ -176,18 +176,23 @@ class WelcomeSection extends StatelessWidget {
                 children: [
                   ListTile(
                     leading: GestureDetector(
-                      onTap: () async =>
-                          context.pushNamed(ScreenPaths.loggedUserProfile),
+                      onTap: () async => context.pushNamed(
+                        ScreenPaths.loggedUserProfile,
+                        queryParameters: {'hero': username},
+                      ),
                       child: HeroUserAvatar(
                         username: username,
                         avatarUrl: avatarUrl,
+                        heroTag: username,
                       ),
                     ),
                     title: Row(
                       children: [
                         GestureDetector(
-                          onTap: () async =>
-                              context.pushNamed(ScreenPaths.loggedUserProfile),
+                          onTap: () async => context.pushNamed(
+                            ScreenPaths.loggedUserProfile,
+                            queryParameters: {'hero': username},
+                          ),
                           child: Text(
                             username,
                             style: Theme.of(context).textTheme.titleLarge,

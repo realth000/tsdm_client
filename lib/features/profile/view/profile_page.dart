@@ -166,25 +166,28 @@ class _ProfilePageState extends State<ProfilePage> {
     // user avatar.
     Widget? flexSpace;
 
-    // Title in app bar.
-    final title = LayoutBuilder(
-      builder: (context, cons) => Row(
-        children: [
-          CircleAvatar(
-            radius: _appBarAvatarHeight / 2 + 3,
-            backgroundColor: Theme.of(context).colorScheme.surface,
-            child: ClipOval(
-              child: CachedImage(
-                userProfile.avatarUrl ?? noAvatarUrl,
-                maxWidth: _appBarAvatarHeight,
-                maxHeight: _appBarAvatarHeight,
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-        ],
+    final Widget avatar = CircleAvatar(
+      radius: _appBarAvatarHeight / 2 + 3,
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      child: ClipOval(
+        child: CachedImage(
+          userProfile.avatarUrl ?? noAvatarUrl,
+          maxWidth: _appBarAvatarHeight,
+          maxHeight: _appBarAvatarHeight,
+          fit: BoxFit.cover,
+        ),
       ),
     );
+    final Widget heroAvatar;
+    if (widget.heroTag != null) {
+      heroAvatar = Hero(tag: widget.heroTag!, child: avatar);
+    } else {
+      heroAvatar = avatar;
+    }
+
+    // Title in app bar.
+    final title =
+        LayoutBuilder(builder: (context, cons) => Row(children: [heroAvatar]));
 
     if (userProfile.avatarUrl != null) {
       flexSpace = Stack(

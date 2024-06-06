@@ -73,7 +73,10 @@ final router = GoRouter(
     ),
     AppRoute(
       path: ScreenPaths.loggedUserProfile,
-      builder: (_) => const ProfilePage(),
+      builder: (state) {
+        final heroTag = state.uri.queryParameters['hero'];
+        return ProfilePage(heroTag: heroTag);
+      },
     ),
     AppRoute(
       path: ScreenPaths.about,
