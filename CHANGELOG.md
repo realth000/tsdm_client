@@ -6,6 +6,16 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 帖子：支持对加载的图片进行操作：
+  - 支持全屏查看、复制图片链接、打开链接。
+- app：添加一些Hero动画
+
+### Fixed
+
+- app：修复加载图片时由于网站证书而无限加载的问题。
+
 ## [0.12.0] - 2024-06-01
 
 ### Added
