@@ -222,7 +222,8 @@ final class UserBriefProfile with UserBriefProfileMappable {
       };
     }
 
-    online = statBarNode.querySelector('> a')?.title?.contains('在线') ?? false;
+    online =
+        statBarNode.querySelector('div > a')?.title?.contains('在线') ?? false;
 
     return UserBriefProfile(
       username: username ?? '',

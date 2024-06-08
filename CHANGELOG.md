@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - app：修复加载图片时由于网站证书而无限加载的问题。
+- 帖子：修复楼层用户的简要信息中在线状态始终为离线的问题。
 
 ## [0.12.0] - 2024-06-01
 
