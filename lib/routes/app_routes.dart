@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/authentication/view/login_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
+import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
 import 'package:tsdm_client/features/homepage/view/homepage_page.dart';
 import 'package:tsdm_client/features/image/view/image_detail_page.dart';
@@ -38,12 +39,27 @@ final router = GoRouter(
   initialLocation: ScreenPaths.homepage,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, router, navigator) => HomePage(
-        forumHomeRepository:
-            RepositoryProvider.of<ForumHomeRepository>(context),
-        showNavigationBar: true,
-        child: navigator,
-      ),
+      builder: (context, router, navigator) {
+        final notInHome = _rootRouteKey.currentState?.canPop();
+        bool? inHome;
+        if (notInHome ?? false) {
+          inHome = false;
+        } else if (notInHome == false) {
+          if (navigator.currentIndex == HomeTab.home.index) {
+            inHome = true;
+          } else {
+            inHome = false;
+          }
+        }
+
+        return HomePage(
+          forumHomeRepository:
+              RepositoryProvider.of<ForumHomeRepository>(context),
+          showNavigationBar: true,
+          inHome: inHome,
+          child: navigator,
+        );
+      },
       branches: [
         StatefulShellBranch(
           routes: [

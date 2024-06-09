@@ -47,6 +47,7 @@ final class HomepageState with HomepageStateMappable {
     this.swiperUrlList = const [],
     this.unreadNoticeCount = 0,
     this.hasUnreadMessage = false,
+    this.scrollSwiper = true,
   });
 
   /// Loading status.
@@ -71,4 +72,9 @@ final class HomepageState with HomepageStateMappable {
 
   /// Flag indicating has unread messages or not.
   final bool hasUnreadMessage;
+
+  /// Flag indicating should let swiper scrolls or not.
+  ///
+  /// Should only scroll when current screen is home tab.
+  final bool scrollSwiper;
 }

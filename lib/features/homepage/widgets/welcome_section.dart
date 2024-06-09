@@ -4,7 +4,7 @@ const double _kahrpbaPicWidth = 300;
 const double _kahrpbaPicHeight = 218;
 
 /// A section of homepage, contains swiper and user info.
-class WelcomeSection extends StatelessWidget {
+class WelcomeSection extends StatefulWidget {
   /// Constructor.
   const WelcomeSection({
     required this.forumStatus,
@@ -24,6 +24,14 @@ class WelcomeSection extends StatelessWidget {
   /// All urls used in swiper.
   final List<SwiperUrl> swiperUrlList;
 
+  @override
+  State<WelcomeSection> createState() => _WelcomeSectionState();
+}
+
+class _WelcomeSectionState extends State<WelcomeSection> {
+  final _swiperController = InfiniteScrollController();
+  Timer? _swiperTimer;
+
   Widget _buildKahrpbaSwiper(
     BuildContext context,
     List<SwiperUrl> swiperUrlList,
@@ -32,28 +40,36 @@ class WelcomeSection extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
-        child: Swiper(
-          itemBuilder: (context, index) {
-            return CachedImage(swiperUrlList[index].coverUrl);
-          },
+        constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight + 20),
+        child: InfiniteCarousel.builder(
           itemCount: swiperUrlList.length,
-          itemWidth: _kahrpbaPicWidth,
-          itemHeight: _kahrpbaPicHeight,
-          pagination: const SwiperPagination(
-            margin: EdgeInsets.only(bottom: 2),
+          itemExtent: _kahrpbaPicWidth,
+          onIndexChanged: (index) {},
+          controller: _swiperController,
+          scrollBehavior: ScrollConfiguration.of(context).copyWith(
+            dragDevices: {
+              PointerDeviceKind.touch,
+              PointerDeviceKind.mouse,
+            },
           ),
-          layout: SwiperLayout.STACK,
-          autoplay: true,
-          onTap: (index) async {
-            final parseResult = swiperUrlList[index].linkUrl.parseUrlToRoute();
-            if (parseResult == null) {
-              return;
-            }
-            await context.pushNamed(
-              parseResult.screenPath,
-              pathParameters: parseResult.pathParameters,
-              queryParameters: parseResult.queryParameters,
+          itemBuilder: (context, itemIndex, realIndex) {
+            return Padding(
+              padding: edgeInsetsL10T10R10B10,
+              child: GestureDetector(
+                child: CachedImage(swiperUrlList[itemIndex].coverUrl),
+                onTap: () async {
+                  final parseResult =
+                      swiperUrlList[itemIndex].linkUrl.parseUrlToRoute();
+                  if (parseResult == null) {
+                    return;
+                  }
+                  await context.pushNamed(
+                    parseResult.screenPath,
+                    pathParameters: parseResult.pathParameters,
+                    queryParameters: parseResult.queryParameters,
+                  );
+                },
+              ),
             );
           },
         ),
@@ -109,31 +125,26 @@ class WelcomeSection extends StatelessWidget {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return _buildSection(context);
-  }
-
   Widget _buildSection(BuildContext context) {
     final linkTileList = <Widget>[];
 
     // username is plain text inside welcomeNode div.
     // Only using [nodes] method can capture it.
-    final username = loggedUserInfo?.username ?? '';
+    final username = widget.loggedUserInfo?.username ?? '';
     // First use avatar url in homepage, null means current webpage layout does
     // not provide one.
     // Then use avatar url in profile page.
     // In fact we can use the one in  profile page directly.
-    final avatarUrl = loggedUserInfo?.avatarUrl;
+    final avatarUrl = widget.loggedUserInfo?.avatarUrl;
 
     linkTileList
       ..addAll(
         _buildKahrpbaLinkTileList(
           context,
-          loggedUserInfo?.relatedLinkPairList,
+          widget.loggedUserInfo?.relatedLinkPairList,
         ),
       )
-      ..add(_buildForumStatusRow(context, forumStatus));
+      ..add(_buildForumStatusRow(context, widget.forumStatus));
 
     final needExpand = ResponsiveBreakpoints.of(context)
         .largerOrEqualTo('homepage_welcome_expand');
@@ -166,7 +177,7 @@ class WelcomeSection extends StatelessWidget {
       child: Flex(
         direction: needExpand ? Axis.horizontal : Axis.vertical,
         children: [
-          Expanded(child: _buildKahrpbaSwiper(context, swiperUrlList)),
+          Expanded(child: _buildKahrpbaSwiper(context, widget.swiperUrlList)),
           sizedBoxW5H5,
           Expanded(
             child: Card(
@@ -220,6 +231,44 @@ class WelcomeSection extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void setupSwiperTimer() {
+    _swiperTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
+      _swiperController.nextItem();
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setupSwiperTimer();
+  }
+
+  @override
+  void dispose() {
+    _swiperTimer?.cancel();
+    _swiperController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<HomepageBloc, HomepageState>(
+      listenWhen: (prev, curr) => prev.scrollSwiper != curr.scrollSwiper,
+      listener: (context, state) {
+        // Resume or pause the scroll of welcome swiper according to whether we
+        // are in the home tab.
+        //
+        // The info about in home tab or not is passed from shell route builder.
+        if (state.scrollSwiper) {
+          setupSwiperTimer();
+        } else {
+          _swiperTimer?.cancel();
+        }
+      },
+      child: _buildSection(context),
     );
   }
 }

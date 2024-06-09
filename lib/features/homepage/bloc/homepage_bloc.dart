@@ -49,6 +49,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
     on<HomepageRefreshRequested>(_onHomepageRefreshRequested);
     on<HomepageAuthChanged>(_onHomepageAuthChanged);
+    on<HomepagePauseSwiper>(_onHomepagePauseSwiper);
+    on<HomepageResumeSwiper>(_onHomepageResumeSwiper);
 
     _authStatusSub = _authenticationRepository.status.listen(
       (status) => add(
@@ -165,6 +167,20 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
       return;
     }
     emit(state.copyWith(status: HomepageStatus.needLogin));
+  }
+
+  Future<void> _onHomepagePauseSwiper(
+    HomepagePauseSwiper event,
+    Emitter<HomepageState> emit,
+  ) async {
+    emit(state.copyWith(scrollSwiper: false));
+  }
+
+  Future<void> _onHomepageResumeSwiper(
+    HomepageResumeSwiper event,
+    Emitter<HomepageState> emit,
+  ) async {
+    emit(state.copyWith(scrollSwiper: true));
   }
 
   static HomepageState _parseStateFromDocument(

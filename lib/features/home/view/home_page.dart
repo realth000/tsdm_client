@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
     required ForumHomeRepository forumHomeRepository,
     required this.showNavigationBar,
     required this.child,
+    required this.inHome,
     super.key,
   }) : _forumHomeRepository = forumHomeRepository;
 
@@ -24,6 +25,11 @@ class HomePage extends StatefulWidget {
 
   /// Child widget, or call it the body widget.
   final Widget child;
+
+  /// Flag indicating whether in home tab or not.
+  ///
+  /// This flag is consumed by homepage widget.
+  final bool? inHome;
 
   final ForumHomeRepository _forumHomeRepository;
 
@@ -49,42 +55,47 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     Translations.of(context);
     return BlocProvider(
-      create: (_) => HomeCubit(),
-      child: RepositoryProvider.value(
-        value: widget._forumHomeRepository,
-        child: BackButtonListener(
-          onBackButtonPressed: () async {
-            if (!RepositoryProvider.of<SettingsRepository>(context)
-                .getDoublePressExit()) {
-              // Do NOT handle pop events on double press check is disabled.
-              return false;
-            }
-            if (context.canPop()) {
-              // Do NOT handle pop events on other pages.
-              return false;
-            }
-            final tr = context.t.home;
-            final currentTime = DateTime.now();
-            if (lastPopTime == null ||
-                currentTime.difference(lastPopTime!).inMilliseconds >
-                    exitConfirmDuration.inMilliseconds) {
-              lastPopTime = currentTime;
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(tr.confirmExit),
-                ),
-              );
-              return true;
-            }
-            return false;
-          },
-          child: Scaffold(
-            body: widget.child,
-            bottomNavigationBar:
-                widget.showNavigationBar ? const HomeNavigationBar() : null,
-          ),
-        ),
+      create: (_) => HomeCubit()..setHomeState(inHome: widget.inHome),
+      child: Builder(
+        builder: (context) {
+          context.read<HomeCubit>().setHomeState(inHome: widget.inHome);
+          return RepositoryProvider.value(
+            value: widget._forumHomeRepository,
+            child: BackButtonListener(
+              onBackButtonPressed: () async {
+                if (!RepositoryProvider.of<SettingsRepository>(context)
+                    .getDoublePressExit()) {
+                  // Do NOT handle pop events on double press check is disabled.
+                  return false;
+                }
+                if (context.canPop()) {
+                  // Do NOT handle pop events on other pages.
+                  return false;
+                }
+                final tr = context.t.home;
+                final currentTime = DateTime.now();
+                if (lastPopTime == null ||
+                    currentTime.difference(lastPopTime!).inMilliseconds >
+                        exitConfirmDuration.inMilliseconds) {
+                  lastPopTime = currentTime;
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(tr.confirmExit),
+                    ),
+                  );
+                  return true;
+                }
+                return false;
+              },
+              child: Scaffold(
+                body: widget.child,
+                bottomNavigationBar:
+                    widget.showNavigationBar ? const HomeNavigationBar() : null,
+              ),
+            ),
+          );
+        },
       ),
     );
   }

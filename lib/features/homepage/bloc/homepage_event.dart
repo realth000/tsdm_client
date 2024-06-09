@@ -37,3 +37,19 @@ final class HomepageAuthChanged extends HomepageEvent
   /// Flag indicating logged in or not.
   final bool isLogged;
 }
+
+/// Pause the swiper scrolling.
+@MappableClass()
+final class HomepagePauseSwiper extends HomepageEvent
+    with HomepagePauseSwiperMappable {
+  /// Constructor.
+  const HomepagePauseSwiper();
+}
+
+/// Resume the swiper scrolling.
+@MappableClass()
+final class HomepageResumeSwiper extends HomepageEvent
+    with HomepageResumeSwiperMappable {
+  /// Constructor.
+  const HomepageResumeSwiper();
+}

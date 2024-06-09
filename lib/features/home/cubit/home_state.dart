@@ -20,10 +20,16 @@ enum HomeTab {
 @MappableClass()
 final class HomeState with HomeStateMappable {
   /// Constructor.
-  const HomeState({this.tab = HomeTab.home});
+  const HomeState({this.tab = HomeTab.home, this.inHome});
 
   /// Current tab.
   final HomeTab tab;
+
+  /// Flag indicating whether current in home tab.
+  ///
+  /// Some behavior changes due to this flag, for example whether scroll the
+  /// welcome swiper in home tab.
+  final bool? inHome;
 }
 
 /// Bar item in app navigator.

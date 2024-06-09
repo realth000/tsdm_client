@@ -15,5 +15,10 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(const HomeState());
 
   /// Change the current home page state.
-  void setTab(HomeTab tab) => emit(HomeState(tab: tab));
+  void setTab(HomeTab tab) => emit(state.copyWith(tab: tab));
+
+  /// Update in home flag.
+  void setHomeState({required bool? inHome}) {
+    emit(state.copyWith(inHome: inHome));
+  }
 }
