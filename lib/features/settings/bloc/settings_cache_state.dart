@@ -1,7 +1,7 @@
-part of 'cache_bloc.dart';
+part of 'settings_cache_bloc.dart';
 
 /// Status of caching
-enum CacheStatus {
+enum SettingsCacheStatus {
   /// Initial.
   initial,
 
@@ -17,15 +17,15 @@ enum CacheStatus {
 
 /// State of cache.
 @MappableClass()
-class CacheState with CacheStateMappable {
+class SettingsCacheState with SettingsCacheStateMappable {
   /// Constructor.
-  const CacheState({
-    this.status = CacheStatus.initial,
+  const SettingsCacheState({
+    this.status = SettingsCacheStatus.initial,
     this.cacheSize = 0,
   });
 
   /// Status.
-  final CacheStatus status;
+  final SettingsCacheStatus status;
 
   /// Calculated cache file size.
   final int cacheSize;

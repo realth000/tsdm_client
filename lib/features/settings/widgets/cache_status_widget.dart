@@ -3,9 +3,9 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/features/settings/bloc/cache_bloc.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/repositories/cache_repository/cache_repository.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 
@@ -23,7 +23,7 @@ class CacheStatusWidget extends StatelessWidget {
     if (result != true || !context.mounted) {
       return;
     }
-    context.read<CacheBloc>().add(CacheClearCacheRequested());
+    context.read<SettingsCacheBloc>().add(SettingsCacheClearCacheRequested());
   }
 
   Widget _buildCacheHint(BuildContext context, int v) {
@@ -38,24 +38,26 @@ class CacheStatusWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => CacheBloc(
-          cacheRepository: RepositoryProvider.of<CacheRepository>(context),)
-        ..add(CacheCalculateRequested()),
-      child: BlocBuilder<CacheBloc, CacheState>(
+      create: (context) => SettingsCacheBloc(
+        cacheRepository:
+            RepositoryProvider.of<SettingsCacheRepository>(context),
+      )..add(SettingsCacheCalculateRequested()),
+      child: BlocBuilder<SettingsCacheBloc, SettingsCacheState>(
         builder: (context, state) {
           final subtitle = switch (state.status) {
-            CacheStatus.initial ||
-            CacheStatus.calculating ||
-            CacheStatus.clearing =>
+            SettingsCacheStatus.initial ||
+            SettingsCacheStatus.calculating ||
+            SettingsCacheStatus.clearing =>
               const Row(children: [sizedCircularProgressIndicator]),
-            CacheStatus.success => _buildCacheHint(context, state.cacheSize),
+            SettingsCacheStatus.success =>
+              _buildCacheHint(context, state.cacheSize),
           };
 
           return SectionListTile(
             leading: const Icon(Icons.cleaning_services_outlined),
             title: Text(context.t.settingsPage.storageSection.clearCache),
             subtitle: subtitle,
-            onTap: state.status == CacheStatus.success
+            onTap: state.status == SettingsCacheStatus.success
                 ? () async {
                     await _showClearCacheDialog(context);
                   }

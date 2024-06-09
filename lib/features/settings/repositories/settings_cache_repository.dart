@@ -2,9 +2,9 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 
 /// Repository to manage cached files.
-class CacheRepository {
+class SettingsCacheRepository {
   /// Constructor.
-  CacheRepository();
+  SettingsCacheRepository();
 
   /// Clear all cache.
   Future<void> clearCache() async {

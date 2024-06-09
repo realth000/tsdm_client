@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
@@ -106,6 +108,9 @@ Future<void> showImageActionBottomSheet({
                     ListTile(
                       leading: const Icon(Icons.refresh_outlined),
                       title: Text(tr.reloadImage),
+                      onTap: () => context
+                          .read<ImageCacheTriggerCubit>()
+                          .updateImageCache(imageUrl, force: true),
                     ),
                     if (hrefUrl != null)
                       ListTile(

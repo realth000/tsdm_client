@@ -2,10 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
@@ -64,10 +63,11 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           mainAxisExtent: 50,
         ),
         itemBuilder: (context, index) {
-          final data = getIt.get<ImageCacheProvider>().getEmojiCacheSync(
-                e.id,
-                e.emojiList[index].id,
-              );
+          final data = RepositoryProvider.of<ImageCacheRepository>(context)
+              .getEmojiCacheSync(
+            e.id,
+            e.emojiList[index].id,
+          );
           if (data == null) {
             return Text(
               '${e.id}_${e.emojiList[index].id}',
