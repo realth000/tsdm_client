@@ -117,18 +117,18 @@ packages:
     dependency: "direct dev"
     description:
       name: build_runner
-      sha256: "1414d6d733a85d8ad2f1dfcb3ea7945759e35a123cb99ccfac75d0758f75edfa"
+      sha256: "644dc98a0f179b872f612d3eb627924b578897c629788e858157fa5e704ca0c7"
       url: "https://pub.dev"
     source: hosted
-    version: "2.4.10"
+    version: "2.4.11"
   build_runner_core:
     dependency: transitive
     description:
       name: build_runner_core
-      sha256: "4ae8ffe5ac758da294ecf1802f2aff01558d8b1b00616aa7538ea9a8a5d50799"
+      sha256: e3c79f69a64bdfcd8a776a3c28db4eb6e3fb5356d013ae5eb2e52007706d5dbe
       url: "https://pub.dev"
     source: hosted
-    version: "7.3.0"
+    version: "7.3.1"
   built_collection:
     dependency: transitive
     description:
@@ -149,10 +149,10 @@ packages:
     dependency: "direct main"
     description:
       name: change_case
-      sha256: "47c48c36f95f20c6d0ba03efabceff261d05026cca322cc2c4c01c343371b5bb"
+      sha256: "99cfdf2018c627c8a3af5a23ea4c414eb69c75c31322d23b9660ebc3cf30b514"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.1"
+    version: "2.1.0"
   characters:
     dependency: transitive
     description:
@@ -382,10 +382,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: "29c90806ac5f5fb896547720b73b17ee9aed9bba540dc5d91fe29f8c5745b10a"
+      sha256: a7eed9716c82453da5c09d3a82d4644e7070dd2da81bfe5b6c6873ae4f07cf4f
       url: "https://pub.dev"
     source: hosted
-    version: "8.0.3"
+    version: "8.0.4"
   fixnum:
     dependency: transitive
     description:
@@ -882,10 +882,10 @@ packages:
     dependency: transitive
     description:
       name: permission_handler_apple
-      sha256: e9ad66020b89ff1b63908f247c2c6f931c6e62699b756ef8b3c4569350cd8662
+      sha256: e6f6d73b12438ef13e648c4ae56bd106ec60d17e90a59c4545db6781229082a0
       url: "https://pub.dev"
     source: hosted
-    version: "9.4.4"
+    version: "9.4.5"
   permission_handler_html:
     dependency: transitive
     description:
@@ -922,10 +922,10 @@ packages:
     dependency: transitive
     description:
       name: platform
-      sha256: "12220bb4b65720483f8fa9450b4332347737cf8213dd2840d8b2c823e47243ec"
+      sha256: "9b71283fc13df574056616011fb138fd3b793ea47cc509c189a6c3fa5f8a1a65"
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.4"
+    version: "3.1.5"
   plugin_platform_interface:
     dependency: transitive
     description:
@@ -1111,10 +1111,10 @@ packages:
     dependency: "direct main"
     description:
       name: surf_lint_rules
-      sha256: "3a4783dbb4891d8dfce50e8c2fcc4d27125b33aa3075dc9251d6c17c0a96fa19"
+      sha256: cd74d9cd7acf8ae1855d08c27b0340cfa1b66bc7ded0fc76d73f3ae44575c6a2
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.2"
+    version: "3.1.0"
   term_glyph:
     dependency: transitive
     description:
@@ -1183,10 +1183,10 @@ packages:
     dependency: "direct main"
     description:
       name: url_launcher
-      sha256: "6ce1e04375be4eed30548f10a315826fd933c1e493206eab82eed01f438c8d2e"
+      sha256: "21b704ce5fa560ea9f3b525b43601c678728ba46725bab9b01187b4831377ed3"
       url: "https://pub.dev"
     source: hosted
-    version: "6.2.6"
+    version: "6.3.0"
   url_launcher_android:
     dependency: transitive
     description:
