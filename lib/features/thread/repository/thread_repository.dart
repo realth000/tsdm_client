@@ -40,7 +40,16 @@ class ThreadRepository {
     /// Only visible uid.
     final visibleUid =
         onlyVisibleUid == null ? '' : '&authorid=$onlyVisibleUid';
-    final orderType = reverseOrder ? '&ordertype=1' : '';
+    // ordertype: Control sort of post floors.
+    // 1: desc (latest post first)
+    // 2: asc (oldest post first)
+    //
+    // Some threads defined reverse order (latest post first) as default post
+    // order, it's hard to detect the default order of a thread.
+    //
+    // Instead, always set `ordertype` query parameter to ensure all threads
+    // are in the same default order.
+    final orderType = reverseOrder ? '&ordertype=1' : '&ordertype=2';
     _pageNumber = pageNumber;
     if (tid != null) {
       _threadUrl = '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1'
