@@ -15,6 +15,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - app：修复加载图片时由于网站证书而无限加载的问题。
+- app：修复各种时间存在-xx秒以前负数的问题。
 - 帖子：修复楼层用户的简要信息中在线状态始终为离线的问题。
 - 帖子：修复部分默认倒序浏览的帖子中无法更改排序的问题。
 - 主页：修复轮播图在后台依然滚动的问题。

@@ -5,7 +5,6 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -26,7 +25,6 @@ class NotificationRepository {
       return (null, resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
 
     // Check if empty
     final emptyNode =
@@ -92,7 +90,6 @@ class NotificationRepository {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
     return (document, resp.realUri.queryParameters['page']);
   }
 
@@ -108,7 +105,6 @@ class NotificationRepository {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
 
     return document
         .querySelectorAll('form#deletepmform > div > dl')
@@ -129,7 +125,6 @@ class NotificationRepository {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
 
     return document
         .querySelectorAll('form#deletepmform > div > dl')

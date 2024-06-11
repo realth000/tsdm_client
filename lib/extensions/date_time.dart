@@ -1,5 +1,4 @@
-import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
+
 
 /// Extension of [DateTime] that provides some transformation and calculation.
 extension DateTimeExtension on DateTime {
@@ -21,7 +20,7 @@ extension DateTimeExtension on DateTime {
   ///
   /// May be less than zero if current time is older than the given `this` time.
   String elapsedTillNow() {
-    final duration = getIt.get<ServerTimeProvider>().time.difference(this);
+    final duration = DateTime.now().difference(this);
     return duration.inDays > 0
         ? '${duration.inDays}天'
         : duration.inHours > 0

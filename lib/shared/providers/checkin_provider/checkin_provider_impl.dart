@@ -7,7 +7,6 @@ import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.d
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -34,7 +33,6 @@ class CheckInProviderImpl implements CheckinProvider {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
     final re = RegExp(r'formhash" value="(?<FormHash>\w+)"');
     final formHashMatch = re.firstMatch(document.body?.innerHtml ?? '');
     final formHash = formHashMatch?.namedGroup('FormHash');

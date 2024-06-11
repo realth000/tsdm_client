@@ -5,7 +5,6 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/server_time_provider/server_time_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -30,7 +29,6 @@ final class PointsRepository {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
     return document;
   }
 
@@ -49,7 +47,6 @@ final class PointsRepository {
     }
 
     final document = parseHtmlDocument(resp.data as String);
-    getIt.get<ServerTimeProvider>().updateServerTimeWithDocument(document);
     return document;
   }
 }
