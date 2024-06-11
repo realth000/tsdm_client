@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -38,7 +40,7 @@ class AboutPage extends StatelessWidget {
       ),
       body: ListView(
         children: [
-          Image.asset(assetsLogoPath, width: 192, height: 192),
+          SvgPicture.asset(assetsLogoPath, width: 192, height: 192),
           sizedBoxW10H10,
           SectionListTile(
             leading: const Icon(Icons.contact_support_outlined),
@@ -78,7 +80,7 @@ class AboutPage extends StatelessWidget {
             },
           ),
           SectionListTile(
-            leading: const Icon(Icons.flutter_dash_outlined),
+            leading: const FlutterLogo(),
             title: Text(context.t.aboutPage.flutterVersion),
             subtitle: const Text(
               '$flutterVersion ($flutterChannel) - $flutterFrameworkRevision',
@@ -91,7 +93,7 @@ class AboutPage extends StatelessWidget {
             },
           ),
           SectionListTile(
-            leading: const Icon(Icons.foundation_outlined),
+            leading: SvgPicture.asset(assetDartLogoPath, width: 22, height: 22),
             title: Text(context.t.aboutPage.dartVersion),
             subtitle: const Text(dartVersion),
             onTap: () async {

@@ -24,6 +24,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 主页：修复轮播图在后台依然滚动的问题。
 - 主页：修复轮播图在窗口大小改变后布局不正确的问题。
 
+### Changed
+
+- 关于：更新页面信息。
+
 ## [0.12.0] - 2024-06-01
 
 ### Added
