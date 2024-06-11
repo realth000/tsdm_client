@@ -12,6 +12,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
@@ -181,6 +182,8 @@ class _ThreadPageState extends State<ThreadPage>
             tid: widget.threadID,
             pid: widget.findPostID,
             threadRepository: RepositoryProvider.of(context),
+            reverseOrder: RepositoryProvider.of<SettingsRepository>(context)
+                .getThreadReverseOrder(),
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(

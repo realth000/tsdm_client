@@ -69,6 +69,10 @@
       "doublePressExit": {
         "title": "按两下返回才退出应用",
         "detail": "避免意外退出app"
+      },
+      "threadReverseOrder": {
+        "title": "倒序浏览帖子",
+        "detail": "帖子里优先查看最新发布的楼层"
       }
     },
     "checkinSection": {

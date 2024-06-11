@@ -240,6 +240,7 @@ class _SettingsPageState extends State<SettingsPage> {
   ) {
     final tr = context.t.settingsPage.behaviorSection;
     final doublePressExit = state.settingsMap.doublePressExit;
+    final threadReverseOrder = state.settingsMap.threadReverseOrder;
 
     return [
       SectionTitleText(tr.title),
@@ -254,6 +255,16 @@ class _SettingsPageState extends State<SettingsPage> {
               .read<SettingsBloc>()
               .add(SettingsChangeDoublePressExitRequested(enabled: v));
         },
+      ),
+      SwitchListTile(
+        secondary: const Icon(Icons.align_vertical_top_outlined),
+        title: Text(tr.threadReverseOrder.title),
+        subtitle: Text(tr.threadReverseOrder.detail),
+        contentPadding: edgeInsetsL18R18,
+        value: threadReverseOrder,
+        onChanged: (v) async => context
+            .read<SettingsBloc>()
+            .add(SettingsChangeThreadReverseOrderRequested(enabled: v)),
       ),
     ];
   }

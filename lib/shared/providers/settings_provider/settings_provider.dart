@@ -117,4 +117,10 @@ abstract interface class SettingsProvider {
 
   /// Set the state of double press exit feature.
   Future<void> setDoublePressExit({required bool enabled});
+
+  /// Get the state of reverse posts in thread feature.
+  bool getThreadReverseOrder();
+
+  /// Set the state of revers posts in thread feature.
+  Future<void> setThreadReverseOrder({required bool enabled});
 }

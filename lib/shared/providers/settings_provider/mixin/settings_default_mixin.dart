@@ -83,4 +83,10 @@ mixin SettingsDefaultMapMixin {
   ///
   /// Default is enabled.
   bool get defaultDoublePressExit => true;
+
+  /// View latest posts in thread first, in other words, posts are sorted in
+  /// desc order.
+  ///
+  /// Default is disabled.
+  bool get defaultThreadReverseOrder => false;
 }

@@ -10,6 +10,9 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 帖子：支持对加载的图片进行操作：
   - 支持全屏查看、复制图片链接、打开链接。
+- 帖子：支持默认倒序浏览。
+  - 同网页端的倒序浏览，开启后帖子里优先看到最新发布的楼层。
+  - 默认关闭，可在设置 -> 行为中打开。
 - app：添加一些Hero动画
 
 ### Fixed

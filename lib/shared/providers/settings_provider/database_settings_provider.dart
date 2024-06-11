@@ -291,4 +291,17 @@ class DatabaseSettingsProvider
     final storage = _getStorage();
     await storage.saveBool(settingsDoublePressExit, value: enabled);
   }
+
+  @override
+  bool getThreadReverseOrder() {
+    final storage = _getStorage();
+    return storage.getBool(settingsThreadReverseOrder) ??
+        defaultThreadReverseOrder;
+  }
+
+  @override
+  Future<void> setThreadReverseOrder({required bool enabled}) async {
+    final storage = _getStorage();
+    await storage.saveBool(settingsThreadReverseOrder, value: enabled);
+  }
 }

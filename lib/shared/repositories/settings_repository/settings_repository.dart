@@ -64,6 +64,7 @@ class SettingsRepository {
       accentColor: _settingsProvider.getAccentColorValue(),
       showUnreadInfoHint: _settingsProvider.getShowUnreadInfoHint(),
       doublePressExit: _settingsProvider.getDoublePressExit(),
+      threadReverseOrder: _settingsProvider.getThreadReverseOrder(),
     );
   }
 
@@ -230,6 +231,16 @@ class SettingsRepository {
   Future<void> setDoublePressExit({required bool enabled}) async {
     await _settingsProvider.setDoublePressExit(enabled: enabled);
     _state = _state.copyWith(doublePressExit: enabled);
+    _controller.add(_state);
+  }
+
+  /// Get the state of reverse posts in thread feature.
+  bool getThreadReverseOrder() => _settingsProvider.getThreadReverseOrder();
+
+  /// Set the state of revers posts in thread feature.
+  Future<void> setThreadReverseOrder({required bool enabled}) async {
+    await _settingsProvider.setThreadReverseOrder(enabled: enabled);
+    _state = _state.copyWith(threadReverseOrder: enabled);
     _controller.add(_state);
   }
 }

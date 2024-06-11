@@ -69,6 +69,10 @@
       "doublePressExit": {
         "title": "Double Press Back To Exit",
         "detail ": "Avoid accidentally exiting the app"
+      },
+      "threadReverseOrder": {
+        "title": "View posts in reverse order",
+        "detail": "In thread, view latest posts first"
       }
     },
     "checkinSection": {

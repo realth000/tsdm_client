@@ -28,6 +28,7 @@ class SettingsMap with SettingsMapMappable {
     required this.accentColor,
     required this.showUnreadInfoHint,
     required this.doublePressExit,
+    required this.threadReverseOrder,
   });
 
   final String netClientAccept;
@@ -49,6 +50,7 @@ class SettingsMap with SettingsMapMappable {
   final int accentColor;
   final bool showUnreadInfoHint;
   final bool doublePressExit;
+  final bool threadReverseOrder;
 }
 
 const settingsNetClientAccept = 'dioAccept';
@@ -70,6 +72,7 @@ const settingsShowShortcutInForumCard = 'showShortcutInForumCard';
 const settingsAccentColor = 'accentColor';
 const settingsShowUnreadInfoHint = 'showUnreadInfoHint';
 const settingsDoublePressExit = 'doublePressExit';
+const settingsThreadReverseOrder = 'threadReverseOrder';
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsTypeMap = <String, Type>{
@@ -92,4 +95,5 @@ const settingsTypeMap = <String, Type>{
   settingsAccentColor: int,
   settingsShowUnreadInfoHint: bool,
   settingsDoublePressExit: bool,
+  settingsThreadReverseOrder: bool,
 };

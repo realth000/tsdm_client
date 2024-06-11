@@ -130,3 +130,15 @@ final class SettingsChangeDoublePressExitRequested extends SettingsEvent
   /// Enable the second exit check or not.
   final bool enabled;
 }
+
+/// User requested to change thread reverse order.
+@MappableClass()
+final class SettingsChangeThreadReverseOrderRequested extends SettingsEvent
+    with SettingsChangeThreadReverseOrderRequestedMappable {
+  /// Constructor.
+  const SettingsChangeThreadReverseOrderRequested({required this.enabled})
+      : super();
+
+  /// Enable the second exit check or not.
+  final bool enabled;
+}

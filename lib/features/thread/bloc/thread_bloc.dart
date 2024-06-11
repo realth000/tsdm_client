@@ -20,9 +20,16 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
   ThreadBloc({
     required String? tid,
     required String? pid,
+    required bool? reverseOrder,
     required ThreadRepository threadRepository,
   })  : _threadRepository = threadRepository,
-        super(ThreadState(tid: tid, pid: pid)) {
+        super(
+          ThreadState(
+            tid: tid,
+            pid: pid,
+            reverseOrder: reverseOrder ?? false,
+          ),
+        ) {
     on<ThreadLoadMoreRequested>(_onThreadLoadMoreRequested);
     on<ThreadRefreshRequested>(_onThreadRefreshRequested);
     on<ThreadJumpPageRequested>(_onThreadJumpPageRequested);

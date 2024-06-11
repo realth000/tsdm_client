@@ -67,6 +67,9 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<SettingsChangeDoublePressExitRequested>(
       _onSettingsChangeDoublePressExitRequested,
     );
+    on<SettingsChangeThreadReverseOrderRequested>(
+      _onSettingsChangeThreadReverseOrderRequested,
+    );
   }
 
   final SettingsRepository _settingsRepository;
@@ -152,6 +155,13 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEmitter emit,
   ) async {
     await _settingsRepository.setDoublePressExit(enabled: event.enabled);
+  }
+
+  Future<void> _onSettingsChangeThreadReverseOrderRequested(
+    SettingsChangeThreadReverseOrderRequested event,
+    SettingsEmitter emit,
+  ) async {
+    await _settingsRepository.setThreadReverseOrder(enabled: event.enabled);
   }
 
   @override
