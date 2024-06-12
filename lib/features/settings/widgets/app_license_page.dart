@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
@@ -24,7 +25,7 @@ class AppLicensePage extends StatelessWidget {
             applicationName: context.t.appName,
             applicationVersion: appFullVersion,
             applicationIcon:
-                Image.asset(assetsLogoSvgPath, width: 192, height: 192),
+                SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
             applicationLegalese: snapshot.data,
           );
         }

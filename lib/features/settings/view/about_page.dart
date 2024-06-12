@@ -39,6 +39,7 @@ class AboutPage extends StatelessWidget {
         ],
       ),
       body: ListView(
+        padding: edgeInsetsT10,
         children: [
           SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
           sizedBoxW10H10,
