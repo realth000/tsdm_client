@@ -42,7 +42,7 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     constraints: const BoxConstraints(
       maxWidth: 712,
     ),
-    child: RichText(text: ret),
+    child: RichText(text: TextSpan(children: ret)),
   );
 }
 
@@ -104,11 +104,6 @@ class MunchState {
   /// As a workaround.
   String? tapUrl;
 
-  /// Url link in "href" attribute can navigate to.
-  ///
-  /// This url is not null when munching a tag inside <a href="xxx"></a> node.
-  String? hrefUrl;
-
   /// All colors currently used.
   ///
   /// Use as a stack because only the latest font works on font.
@@ -169,30 +164,26 @@ class Muncher {
   static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
 
   /// Map to store div classes and corresponding munch functions.
-  Map<String, InlineSpan? Function(uh.Element)>? _divMap;
+  Map<String, List<InlineSpan>? Function(uh.Element)>? _divMap;
 
-  InlineSpan? _munch(uh.Element rootElement) {
+  List<InlineSpan>? _munch(uh.Element rootElement) {
     final spanList = <InlineSpan>[];
 
     for (final node in rootElement.nodes) {
-      final span = munchNode(node);
-      if (span != null) {
-        spanList.add(span);
+      final subSpanList = munchNode(node);
+      if (subSpanList != null) {
+        spanList.addAll(subSpanList);
       }
     }
     if (spanList.isEmpty) {
       // Not intend to happen.
       return null;
     }
-    // Do not wrap in another layout when there is only one span.
-    if (spanList.length == 1) {
-      return spanList.first;
-    }
-    return TextSpan(children: spanList);
+    return spanList;
   }
 
   /// Munch a [node] and its children.
-  InlineSpan? munchNode(uh.Node? node) {
+  List<InlineSpan>? munchNode(uh.Node? node) {
     if (node == null) {
       // Reach end.
       return null;
@@ -253,11 +244,9 @@ class Muncher {
               state.wrapInWord ? text?.split('').join('\u200B') : text;
 
           // TODO: Support text-shadow.
-          return TextSpan(
-            text: wrapText,
-            recognizer: recognizer,
-            style: style,
-          );
+          return [
+            TextSpan(text: wrapText, recognizer: recognizer, style: style),
+          ];
         }
 
       case uh.Node.ELEMENT_NODE:
@@ -275,7 +264,7 @@ class Muncher {
           final span = switch (localName) {
             'img' => _buildImg(node),
             'br' =>
-              state.headingBrNodePassed ? const TextSpan(text: '\n') : null,
+              state.headingBrNodePassed ? [const TextSpan(text: '\n')] : null,
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
@@ -314,26 +303,28 @@ class Muncher {
     return null;
   }
 
-  InlineSpan? _buildImg(uh.Element element) {
+  List<InlineSpan>? _buildImg(uh.Element element) {
     final url = element.imageUrl();
     if (url == null) {
       return null;
     }
     state.headingBrNodePassed = true;
-    final hrefUrl = state.hrefUrl;
-    return WidgetSpan(
-      child: GestureDetector(
-        onTap: () async => showImageActionBottomSheet(
-          context: context,
-          imageUrl: url,
-          hrefUrl: hrefUrl,
+    final hrefUrl = state.tapUrl;
+    return [
+      WidgetSpan(
+        child: GestureDetector(
+          onTap: () async => showImageActionBottomSheet(
+            context: context,
+            imageUrl: url,
+            hrefUrl: hrefUrl,
+          ),
+          child: NetworkIndicatorImage(url),
         ),
-        child: NetworkIndicatorImage(url),
       ),
-    );
+    ];
   }
 
-  InlineSpan? _buildFont(uh.Element element) {
+  List<InlineSpan>? _buildFont(uh.Element element) {
     // Setup color
     final hasColor = _tryPushColor(element);
     // Setup font size.
@@ -353,28 +344,28 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan? _buildStrong(uh.Element element) {
+  List<InlineSpan>? _buildStrong(uh.Element element) {
     state.bold = true;
     final ret = _munch(element);
     state.bold = false;
     return ret;
   }
 
-  InlineSpan? _buildUnderline(uh.Element element) {
+  List<InlineSpan>? _buildUnderline(uh.Element element) {
     state.underline = true;
     final ret = _munch(element);
     state.underline = false;
     return ret;
   }
 
-  InlineSpan? _buildLineThrough(uh.Element element) {
+  List<InlineSpan>? _buildLineThrough(uh.Element element) {
     state.lineThrough = true;
     final ret = _munch(element);
     state.lineThrough = false;
     return ret;
   }
 
-  InlineSpan? _buildP(uh.Element element) {
+  List<InlineSpan>? _buildP(uh.Element element) {
     // Alignment requires the whole rendered page to a fixed max width that
     // equals to website page, otherwise if is different if we have a "center"
     // or "right" alignment.
@@ -402,21 +393,23 @@ class Muncher {
       return null;
     }
 
-    late final InlineSpan ret2;
+    late final List<InlineSpan> ret2;
 
     if (align != null) {
-      ret2 = WidgetSpan(
-        child: Row(
-          children: [
-            Expanded(
-              child: RichText(
-                text: ret,
-                textAlign: align,
+      ret2 = [
+        WidgetSpan(
+          child: Row(
+            children: [
+              Expanded(
+                child: RichText(
+                  text: TextSpan(children: ret),
+                  textAlign: align,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
-      );
+      ];
 
       // Restore text align.
       state.textAlign = null;
@@ -427,7 +420,7 @@ class Muncher {
     return ret2;
   }
 
-  InlineSpan? _buildSpan(uh.Element element) {
+  List<InlineSpan>? _buildSpan(uh.Element element) {
     final styleEntries = element.attributes['style']
         ?.split(';')
         .map((e) {
@@ -442,7 +435,7 @@ class Muncher {
       if (ret == null) {
         return null;
       }
-      return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+      return [...ret, const TextSpan(text: '\n')];
     }
 
     final styleMap = Map.fromEntries(styleEntries);
@@ -463,10 +456,10 @@ class Muncher {
       return null;
     }
 
-    return TextSpan(children: [ret, const TextSpan(text: '\n')]);
+    return [...ret, const TextSpan(text: '\n')];
   }
 
-  InlineSpan _buildBlockQuote(uh.Element element) {
+  List<InlineSpan> _buildBlockQuote(uh.Element element) {
     // Try isolate the munch state inside quoted message.
     // Bug is that when the original quoted message "truncated" at unclosed
     // tags like "foo[s]bar...", the unclosed tag will affect all
@@ -480,17 +473,15 @@ class Muncher {
     state.save();
     final ret = _munch(element);
     state.restore();
-    return TextSpan(
-      children: [
-        WidgetSpan(
-          child: QuotedText.rich(ret),
-        ),
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      WidgetSpan(
+        child: QuotedText.rich(TextSpan(children: ret)),
+      ),
+      const TextSpan(text: '\n'),
+    ];
   }
 
-  InlineSpan? _munchDiv(uh.Element element) {
+  List<InlineSpan>? _munchDiv(uh.Element element) {
     _divMap ??= {
       'blockcode': _buildBlockCode,
       'locked': _buildLockedArea,
@@ -510,7 +501,7 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan? _buildBlockCode(uh.Element element) {
+  List<InlineSpan>? _buildBlockCode(uh.Element element) {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
     state
       ..headingBrNodePassed = true
@@ -522,10 +513,10 @@ class Muncher {
       ),
     );
     state.elevation -= 1;
-    return ret;
+    return [ret];
   }
 
-  InlineSpan? _buildLockedArea(uh.Element element) {
+  List<InlineSpan>? _buildLockedArea(uh.Element element) {
     final lockedArea =
         Locked.fromLockDivNode(element, allowWithPurchase: false);
     if (lockedArea.isNotValid()) {
@@ -535,22 +526,20 @@ class Muncher {
     state
       ..headingBrNodePassed = true
       ..elevation += 1;
-    final ret = TextSpan(
-      children: [
-        WidgetSpan(
-          child: LockedCard(
-            lockedArea,
-            elevation: state.elevation,
-          ),
+    final ret = [
+      WidgetSpan(
+        child: LockedCard(
+          lockedArea,
+          elevation: state.elevation,
         ),
-        const TextSpan(text: '\n'),
-      ],
-    );
+      ),
+      const TextSpan(text: '\n'),
+    ];
     state.elevation -= 1;
     return ret;
   }
 
-  InlineSpan? _buildReview(uh.Element element) {
+  List<InlineSpan>? _buildReview(uh.Element element) {
     if (element.children.length <= 1) {
       return null;
     }
@@ -567,18 +556,20 @@ class Muncher {
     //     ?.attributes['title']
     //     ?.parseToDateTimeUtc8();
 
-    return WidgetSpan(
-      child: ReviewCard(
-        name: name ?? '',
-        content: content ?? '',
-        avatarUrl: avatarUrl,
+    return [
+      WidgetSpan(
+        child: ReviewCard(
+          name: name ?? '',
+          content: content ?? '',
+          avatarUrl: avatarUrl,
+        ),
       ),
-    );
+    ];
   }
 
   /// Spoiler is a button with an area of contents.
   /// Button is used to control the visibility of contents.
-  InlineSpan? _buildSpoiler(uh.Element element) {
+  List<InlineSpan>? _buildSpoiler(uh.Element element) {
     final title = element
         .querySelector('div.spoiler_control > input.spoiler_btn')
         ?.attributes['value'];
@@ -595,18 +586,16 @@ class Muncher {
       return null;
     }
     state.headingBrNodePassed = true;
-    return TextSpan(
-      children: [
-        WidgetSpan(
-          child: SpoilerCard(
-            title: TextSpan(text: title),
-            content: content,
-            elevation: elevation,
-          ),
+    return [
+      WidgetSpan(
+        child: SpoilerCard(
+          title: TextSpan(text: title),
+          content: TextSpan(children: content),
+          elevation: elevation,
         ),
-        const TextSpan(text: '\n'),
-      ],
-    );
+      ),
+      const TextSpan(text: '\n'),
+    ];
   }
 
   /// Build for the thread bounty info area.
@@ -617,15 +606,13 @@ class Muncher {
   /// <div class="rusld z">
   ///   <cite>${price}<cite>
   /// </div>
-  InlineSpan? _buildUnresolvedBounty(uh.Element element) {
+  List<InlineSpan>? _buildUnresolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
-    return TextSpan(
-      children: [
-        WidgetSpan(child: BountyCard(price: price, resolved: false)),
-        // Ensure an empty line space between post content.
-        const TextSpan(text: '\n\n'),
-      ],
-    );
+    return [
+      WidgetSpan(child: BountyCard(price: price, resolved: false)),
+      // Ensure an empty line space between post content.
+      const TextSpan(text: '\n\n'),
+    ];
   }
 
   /// Build for the thread bounty info area.
@@ -637,15 +624,13 @@ class Muncher {
   ///   <cite>${price}<cite>
   /// </div>
   /// ```
-  InlineSpan? _buildResolvedBounty(uh.Element element) {
+  List<InlineSpan>? _buildResolvedBounty(uh.Element element) {
     final price = element.querySelector('cite')?.innerText ?? '';
-    return TextSpan(
-      children: [
-        WidgetSpan(child: BountyCard(price: price, resolved: true)),
-        // Ensure an empty line space between post content.
-        const TextSpan(text: '\n\n'),
-      ],
-    );
+    return [
+      WidgetSpan(child: BountyCard(price: price, resolved: true)),
+      // Ensure an empty line space between post content.
+      const TextSpan(text: '\n\n'),
+    ];
   }
 
   /// Build for the best answer of bounty area.
@@ -675,7 +660,7 @@ class Muncher {
   ///    </div>
   ///  </div>
   /// ```
-  InlineSpan? _buildBountyBestAnswer(uh.Element element) {
+  List<InlineSpan>? _buildBountyBestAnswer(uh.Element element) {
     final userAvatarUrl =
         element.querySelector('div.pstl > div.psta > img')?.imageUrl();
     final userInfoNode =
@@ -696,17 +681,19 @@ class Muncher {
       return null;
     }
 
-    return WidgetSpan(
-      child: BountyAnswerCard(
-        userAvatarUrl: userAvatarUrl,
-        username: username,
-        userSpaceUrl: userSpaceUrl,
-        answer: answer,
+    return [
+      WidgetSpan(
+        child: BountyAnswerCard(
+          userAvatarUrl: userAvatarUrl,
+          username: username,
+          userSpaceUrl: userSpaceUrl,
+          answer: answer,
+        ),
       ),
-    );
+    ];
   }
 
-  InlineSpan? _buildA(uh.Element element) {
+  List<InlineSpan>? _buildA(uh.Element element) {
     if (!element.attributes.containsKey('href')) {
       return _munch(element);
     }
@@ -717,42 +704,45 @@ class Muncher {
     //
     // If true, do not show outside.
     final hasOnlyImg = element.childNodes.length == 1 &&
-        element.childNodes[0].nodeType == uh.Node.ELEMENT_NODE;
-    if (hasOnlyImg) {
-      state.hrefUrl = url;
-    }
-
-    state.wrapInWord = true;
+        element.childNodes[0].nodeType == uh.Node.ELEMENT_NODE &&
+        (element.childNodes[0] as uh.Element).tagName == 'IMG';
+    state
+      ..tapUrl = url
+      ..wrapInWord = true;
     final ret = _munch(element);
     state.wrapInWord = false;
     if (ret == null) {
       return null;
     }
+    state.tapUrl = null;
     if (hasOnlyImg) {
       // Only a <img> node inside the current <a> node.
       // Do NOT show url prefix.
-      state.hrefUrl = null;
       return ret;
     }
 
-    return TextSpan(
-      children: [
-        const WidgetSpan(
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Icon(Icons.link),
-              SizedBox(width: 2),
-            ],
+    return [
+      WidgetSpan(
+        child: MouseRegion(
+          cursor: SystemMouseCursors.click,
+          child: GestureDetector(
+            onTap: () async => context.dispatchAsUrl(url),
+            child: const Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.link),
+                SizedBox(width: 2),
+              ],
+            ),
           ),
         ),
-        ret,
-        const WidgetSpan(child: SizedBox(width: 2, height: 5)),
-      ],
-    );
+      ),
+      ...ret,
+      const WidgetSpan(child: SizedBox(width: 2, height: 5)),
+    ];
   }
 
-  InlineSpan? _buildTr(uh.Element element) {
+  List<InlineSpan>? _buildTr(uh.Element element) {
     state.trimAll = true;
     final ret = _munch(element);
     state.trimAll = false;
@@ -762,96 +752,86 @@ class Muncher {
     return ret;
   }
 
-  InlineSpan? _buildTd(uh.Element element) {
+  List<InlineSpan>? _buildTd(uh.Element element) {
     state.trimAll = true;
     final ret = _munch(element);
     state.trimAll = false;
     if (ret == null) {
       return null;
     }
-    return TextSpan(children: [ret, const TextSpan(text: ' ')]);
+    return [...ret, const TextSpan(text: ' ')];
   }
 
-  InlineSpan? _buildH1(uh.Element element) {
+  List<InlineSpan>? _buildH1(uh.Element element) {
     state.fontSizeStack.add(FontSize.size6.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
     if (ret == null) {
       return null;
     }
-    return TextSpan(
-      children: [
-        const TextSpan(text: '\n'),
-        ret,
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      const TextSpan(text: '\n'),
+      ...ret,
+      const TextSpan(text: '\n'),
+    ];
   }
 
-  InlineSpan? _buildH2(uh.Element element) {
+  List<InlineSpan>? _buildH2(uh.Element element) {
     state.fontSizeStack.add(FontSize.size5.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
     if (ret == null) {
       return null;
     }
-    return TextSpan(
-      children: [
-        const TextSpan(text: '\n'),
-        ret,
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      const TextSpan(text: '\n'),
+      ...ret,
+      const TextSpan(text: '\n'),
+    ];
   }
 
-  InlineSpan? _buildH3(uh.Element element) {
+  List<InlineSpan>? _buildH3(uh.Element element) {
     state.fontSizeStack.add(FontSize.size4.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
     if (ret == null) {
       return null;
     }
-    return TextSpan(
-      children: [
-        const TextSpan(text: '\n'),
-        ret,
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      const TextSpan(text: '\n'),
+      ...ret,
+      const TextSpan(text: '\n'),
+    ];
   }
 
-  InlineSpan? _buildH4(uh.Element element) {
+  List<InlineSpan>? _buildH4(uh.Element element) {
     state.fontSizeStack.add(FontSize.size3.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
     if (ret == null) {
       return null;
     }
-    return TextSpan(
-      children: [
-        const TextSpan(text: '\n'),
-        ret,
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      const TextSpan(text: '\n'),
+      ...ret,
+      const TextSpan(text: '\n'),
+    ];
   }
 
-  InlineSpan? _buildLi(uh.Element element) {
+  List<InlineSpan>? _buildLi(uh.Element element) {
     final ret = _munch(element);
     if (ret == null) {
       return null;
     }
-    return TextSpan(
-      children: [
-        const TextSpan(text: '•  '),
-        ret,
-        const TextSpan(text: '\n'),
-      ],
-    );
+    return [
+      const TextSpan(text: '•  '),
+      ...ret,
+      const TextSpan(text: '\n'),
+    ];
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
-  InlineSpan? _buildCode(uh.Element element) {
+  List<InlineSpan>? _buildCode(uh.Element element) {
     state.fontSizeStack.add(FontSize.size2.value());
     final ret = _munch(element);
     state.fontSizeStack.removeLast();
@@ -869,14 +849,14 @@ class Muncher {
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         margin: EdgeInsets.zero,
-        child: RichText(text: ret),
+        child: RichText(text: TextSpan(children: ret)),
       ),
     );
     state.elevation -= 1;
-    return ret2;
+    return [ret2];
   }
 
-  InlineSpan? _buildDl(uh.Element element) {
+  List<InlineSpan>? _buildDl(uh.Element element) {
     // Skip rate log area.
     if (element.id.startsWith('ratelog_')) {
       return null;
@@ -884,19 +864,19 @@ class Muncher {
     return _munch(element);
   }
 
-  InlineSpan? _buildB(uh.Element element) {
+  List<InlineSpan>? _buildB(uh.Element element) {
     final ret = _munch(element);
     if (ret == null) {
       return null;
     }
-    return TextSpan(children: [ret]);
+    return ret;
   }
 
-  InlineSpan _buildHr(uh.Element element) {
-    return const WidgetSpan(child: Divider());
+  List<InlineSpan> _buildHr(uh.Element element) {
+    return [const WidgetSpan(child: Divider())];
   }
 
-  InlineSpan? _buildPre(uh.Element element) {
+  List<InlineSpan>? _buildPre(uh.Element element) {
     // Avoid reset parent's inPre state.
     final alreadyInPre = state.inPre;
     if (!alreadyInPre) {
@@ -910,7 +890,7 @@ class Muncher {
   }
 
   /// Build a detail card here.
-  InlineSpan? _buildDetails(uh.Element element) {
+  List<InlineSpan>? _buildDetails(uh.Element element) {
     final summary = element.children.elementAtOrNull(0);
     state.elevation += 1;
     final dataSpanList =
@@ -925,18 +905,16 @@ class Muncher {
       return null;
     }
 
-    return TextSpan(
-      children: [
-        WidgetSpan(
-          child: SpoilerCard(
-            title: summarySpan,
-            content: TextSpan(children: dataSpanList.toList()),
-            elevation: state.elevation,
-          ),
+    return [
+      WidgetSpan(
+        child: SpoilerCard(
+          title: TextSpan(children: summarySpan),
+          content: TextSpan(children: dataSpanList.toList()),
+          elevation: state.elevation,
         ),
-        const TextSpan(text: '\n'),
-      ],
-    );
+      ),
+      const TextSpan(text: '\n'),
+    ];
   }
 
   /*                Setup Functions                      */
