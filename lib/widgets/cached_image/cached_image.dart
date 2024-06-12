@@ -2,9 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_bloc.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
+import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/widgets/fallback_picture.dart';
 
@@ -40,6 +43,19 @@ class CachedImage extends StatelessWidget {
   /// Tag for hero animation.
   final String? tag;
 
+  Widget _buildPlaceholder(BuildContext context) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: maxWidth ?? double.infinity,
+          maxHeight: maxHeight ?? double.infinity,
+        ),
+        child: Shimmer.fromColors(
+          baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
+          highlightColor:
+              Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
+          child: FallbackPicture(fit: fit),
+        ),
+      );
+
   Widget _buildImage(BuildContext context, Uint8List imageData) {
     return ConstrainedBox(
       constraints: BoxConstraints(
@@ -52,6 +68,17 @@ class CachedImage extends StatelessWidget {
         errorBuilder: (context, e, st) {
           debug('failed to load image from $imageUrl: $e');
           return FallbackPicture(fit: fit);
+        },
+        // User frameBuilder to reduce the widget splash when loading image.
+        // ref: https://stackoverflow.com/a/71430971
+        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+          if (wasSynchronouslyLoaded) return child;
+          return AnimatedSwitcher(
+            duration: duration200,
+            // Return the same placeholder until built finished to avoid size
+            // change.
+            child: frame != null ? child : _buildPlaceholder(context),
+          );
         },
       ),
     );
@@ -69,45 +96,42 @@ class CachedImage extends StatelessWidget {
       );
     }
 
-    // final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
-    // if (cache != null) {
-    //   final fileCache =
-    //       getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
-    //   if (fileCache.existsSync()) {
-    //     final image = Image.file(
-    //       fileCache,
-    //       width: maxWidth,
-    //       height: maxHeight,
-    //       fit: fit,
-    //     );
-    //     if (tag != null) {
-    //       return Hero(tag: tag!, child: image);
-    //     } else {
-    //       return image;
-    //     }
-    //   }
-    // }
+    Uint8List? initialImageData;
+    final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
+    if (cache != null) {
+      final fileCache =
+          getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
+      if (fileCache.existsSync()) {
+        initialImageData = fileCache.readAsBytesSync();
+        // if (tag != null) {
+        //   return Hero(tag: tag!, child: image);
+        // } else {
+        //   return image;
+        // }
+      }
+    }
+    ImageCacheSuccessResponse? initialData;
+    if (initialImageData != null) {
+      initialData = ImageCacheSuccessResponse(
+        imageUrl,
+        initialImageData,
+      );
+    }
 
-    final loadingPlaceholder = ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: maxWidth ?? double.infinity,
-        maxHeight: maxHeight ?? double.infinity,
-      ),
-      child: Shimmer.fromColors(
-        baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
-        highlightColor:
-            Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
-        child: FallbackPicture(fit: fit),
-      ),
-    );
+    final loadingPlaceholder = _buildPlaceholder(context);
 
     return BlocProvider(
-      create: (context) =>
-          ImageCacheBloc(imageUrl, RepositoryProvider.of(context))
-            ..add(const ImageCacheLoadRequested()),
+      create: (context) {
+        final bloc = ImageCacheBloc(imageUrl, RepositoryProvider.of(context));
+        if (initialData == null) {
+          bloc.add(const ImageCacheLoadRequested());
+        }
+        return bloc;
+      },
       child: BlocBuilder<ImageCacheBloc, ImageCacheState>(
         builder: (context, state) {
           return StreamBuilder(
+            initialData: initialData,
             stream: RepositoryProvider.of<ImageCacheRepository>(context)
                 .response
                 .where((e) => e.imageId == imageUrl),

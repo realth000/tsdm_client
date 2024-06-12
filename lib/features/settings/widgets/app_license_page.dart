@@ -24,7 +24,7 @@ class AppLicensePage extends StatelessWidget {
             applicationName: context.t.appName,
             applicationVersion: appFullVersion,
             applicationIcon:
-                Image.asset(assetsLogoPath, width: 192, height: 192),
+                Image.asset(assetsLogoSvgPath, width: 192, height: 192),
             applicationLegalese: snapshot.data,
           );
         }
