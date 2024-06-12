@@ -154,6 +154,10 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
                           'tid': _tid!,
                           'pageNumber': _page!,
                           'pid': _pid!,
+                          // Set this value to false to reserve the original
+                          // post order in thread so that we are heading to the
+                          // correct page contains target post.
+                          'overrideReverseOrder': 'false',
                         },
                       );
                     },

@@ -73,6 +73,9 @@ class ScreenPaths {
   /// # Parameters
   ///
   /// `tid` or `pid` MUST be provided through query parameter.
+  ///
+  /// `overrideReverseOrder`: set to "false" keep the original post order in
+  /// thread, for some use case user heading to a page contains a certain post.
   static const String thread = '/thread';
 
   /// Notice page.

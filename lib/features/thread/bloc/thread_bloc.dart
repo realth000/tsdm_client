@@ -27,7 +27,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
           ThreadState(
             tid: tid,
             pid: pid,
-            reverseOrder: reverseOrder ?? false,
+            reverseOrder: reverseOrder,
           ),
         ) {
     on<ThreadLoadMoreRequested>(_onThreadLoadMoreRequested);
@@ -192,7 +192,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        reverseOrder: !state.reverseOrder,
+        reverseOrder: state.reverseOrder != null ? !state.reverseOrder! : null,
         currentPage: 1,
       ),
     );

@@ -128,6 +128,13 @@ final router = GoRouter(
         final threadType = state.uri.queryParameters['threadType'];
         final tid = state.uri.queryParameters['tid'];
         final pid = state.uri.queryParameters['pid'];
+        final bool overrideReverseOrder;
+        if (state.uri.queryParameters['overrideReverseOrder'] == 'false') {
+          overrideReverseOrder = false;
+        } else {
+          overrideReverseOrder = true;
+        }
+
         assert(
           tid != null || pid != null,
           'MUST provide tid or pid through query parameters',
@@ -139,6 +146,7 @@ final router = GoRouter(
           threadID: tid,
           findPostID: pid,
           pageNumber: pageNumber ?? '1',
+          overrideReverseOrder: overrideReverseOrder,
         );
       },
     ),

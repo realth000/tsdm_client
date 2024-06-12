@@ -35,7 +35,7 @@ class ThreadState with ThreadStateMappable {
     this.replyParameters,
     this.threadType,
     this.onlyVisibleUid,
-    this.reverseOrder = false,
+    this.reverseOrder,
   });
 
   /// Status.
@@ -96,5 +96,9 @@ class ThreadState with ThreadStateMappable {
   final String? onlyVisibleUid;
 
   /// View posts in current thread in forward order or reverse order.
-  final bool reverseOrder;
+  ///
+  /// * Force set to desc order if `true`.
+  /// * Force set to asc order if `false`.
+  /// * Not force order if `null`.
+  final bool? reverseOrder;
 }

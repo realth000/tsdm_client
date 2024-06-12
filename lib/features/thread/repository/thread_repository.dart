@@ -29,7 +29,7 @@ class ThreadRepository {
     String? pid,
     int pageNumber = 1,
     String? onlyVisibleUid,
-    bool reverseOrder = false,
+    bool? reverseOrder,
   }) async {
     assert(
       tid != null || pid != null,
@@ -48,7 +48,17 @@ class ThreadRepository {
     //
     // Instead, always set `ordertype` query parameter to ensure all threads
     // are in the same default order.
-    final orderType = reverseOrder ? '&ordertype=1' : '&ordertype=2';
+    //
+    // And in some situation, do NOT force reverse order, like user is going to
+    // find a post in a certain page number, in this use case a manually order
+    // override may going into different page that does NOT contain the target
+    // post.
+    final orderType = switch (reverseOrder) {
+      true => '&ordertype=1',
+      false => '&ordertype=1',
+      null => '',
+    };
+
     _pageNumber = pageNumber;
     if (tid != null) {
       _threadUrl = '$baseUrl/forum.php?mod=viewthread&tid=$tid&extra=page%3D1'

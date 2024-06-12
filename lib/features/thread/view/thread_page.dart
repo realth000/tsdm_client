@@ -29,6 +29,7 @@ class ThreadPage extends StatefulWidget {
     required this.threadID,
     required this.findPostID,
     required this.pageNumber,
+    required this.overrideReverseOrder,
     this.title,
     this.threadType,
     super.key,
@@ -60,6 +61,16 @@ class ThreadPage extends StatefulWidget {
 
   /// Thread current page number.
   final String pageNumber;
+
+  /// Override the original post order in thread.
+  ///
+  /// * If `true`, force add a `ordertype` query parameter when fetching page.
+  /// * If `false`, do NOT add such param so that use the original post order.
+  ///
+  /// This flag is used in situation that user is heading to a certain page
+  /// contains a target post. If set to `true`, override order may cause going
+  /// to a wrong page.
+  final bool overrideReverseOrder;
 
   /// Thread type.
   ///
@@ -182,8 +193,10 @@ class _ThreadPageState extends State<ThreadPage>
             tid: widget.threadID,
             pid: widget.findPostID,
             threadRepository: RepositoryProvider.of(context),
-            reverseOrder: RepositoryProvider.of<SettingsRepository>(context)
-                .getThreadReverseOrder(),
+            reverseOrder: widget.overrideReverseOrder
+                ? RepositoryProvider.of<SettingsRepository>(context)
+                    .getThreadReverseOrder()
+                : null,
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(
