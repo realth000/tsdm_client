@@ -1,7 +1,9 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/widgets/cache_status_widget.dart';
@@ -353,12 +355,13 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> _buildOtherSection(BuildContext context) {
+    final tr = context.t.settingsPage.othersSection;
     return [
-      SectionTitleText(context.t.settingsPage.othersSection.title),
+      SectionTitleText(tr.title),
       // About
       SectionListTile(
         leading: const Icon(Icons.info_outline),
-        title: Text(context.t.settingsPage.othersSection.about),
+        title: Text(tr.about),
         onTap: () async {
           await context.pushNamed(ScreenPaths.about);
         },
@@ -367,9 +370,42 @@ class _SettingsPageState extends State<SettingsPage> {
       /// Update
       SectionListTile(
         leading: const Icon(Icons.new_releases_outlined),
-        title: Text(context.t.settingsPage.othersSection.upgrade),
+        title: Text(tr.upgrade),
         onTap: () async {
           await context.pushNamed(ScreenPaths.upgrade);
+        },
+      ),
+
+      /// Changelog till publish.
+      SectionListTile(
+        leading: const Icon(Icons.history_outlined),
+        title: Text(tr.changelog),
+        onTap: () async {
+          await showDialog<void>(
+            context: context,
+            builder: (context) {
+              final size = MediaQuery.of(context).size;
+              return AlertDialog(
+                scrollable: true,
+                title: Text(tr.changelog),
+                content: SizedBox(
+                  width: size.width * 0.7,
+                  height: size.height * 0.7,
+                  child: ScrollConfiguration(
+                    behavior: ScrollConfiguration.of(context)
+                        .copyWith(scrollbars: false),
+                    child: Markdown(data: changelogContent),
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () => Navigator.pop(context),
+                    child: Text(context.t.general.ok),
+                  ),
+                ],
+              );
+            },
+          );
         },
       ),
     ];

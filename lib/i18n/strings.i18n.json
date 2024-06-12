@@ -89,7 +89,8 @@
     "othersSection": {
       "title": "Others",
       "about": "About",
-      "upgrade": "Update"
+      "upgrade": "Update",
+      "changelog": "Changelog"
     }
   },
   "aboutPage": {

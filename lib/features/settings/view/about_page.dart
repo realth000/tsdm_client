@@ -19,6 +19,7 @@ class AboutPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.aboutPage;
     return Scaffold(
       appBar: AppBar(
         title: Text(context.t.settingsPage.othersSection.about),
@@ -45,17 +46,17 @@ class AboutPage extends StatelessWidget {
           sizedBoxW10H10,
           SectionListTile(
             leading: const Icon(Icons.contact_support_outlined),
-            title: Text(context.t.aboutPage.whatIsThis),
-            subtitle: Text(context.t.aboutPage.description),
+            title: Text(tr.whatIsThis),
+            subtitle: Text(tr.description),
           ),
           SectionListTile(
             leading: const Icon(Icons.app_shortcut_outlined),
-            title: Text(context.t.aboutPage.packageName),
+            title: Text(tr.packageName),
             subtitle: const Text('kzs.th000.tsdm_client'),
           ),
           SectionListTile(
             leading: const Icon(Icons.terminal_outlined),
-            title: Text(context.t.aboutPage.version),
+            title: Text(tr.version),
             subtitle: const Text(appFullVersion),
           ),
           SectionListTile(

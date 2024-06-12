@@ -13,6 +13,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：支持默认倒序浏览。
   - 同网页端的倒序浏览，开启后帖子里优先看到最新发布的楼层。
   - 默认关闭，可在设置 -> 行为中打开。
+- 设置：内置离线可看的截止发布版本时的更新日志。
+  - 设置 -> 其他-> 更新日志。
 - app：添加一些Hero动画。
 
 ### Fixed

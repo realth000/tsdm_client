@@ -89,7 +89,8 @@
     "othersSection": {
       "title": "其他",
       "about": "关于",
-      "upgrade": "更新"
+      "upgrade": "更新",
+      "changelog": "更新日志"
     }
   },
   "aboutPage": {

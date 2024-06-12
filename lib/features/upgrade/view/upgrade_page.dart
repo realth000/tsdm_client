@@ -199,8 +199,8 @@ class _UpgradePageState extends State<UpgradePage> {
                               context.t.upgradePage.fullChangelogDialog.title,
                             ),
                             content: SizedBox(
-                              width: size.width * 0.8,
-                              height: size.height * 0.8,
+                              width: size.width * 0.7,
+                              height: size.height * 0.7,
                               child: ScrollConfiguration(
                                 behavior: ScrollConfiguration.of(context)
                                     .copyWith(scrollbars: false),

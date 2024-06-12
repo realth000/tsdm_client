@@ -15,3 +15,15 @@ const assetsLicensePath = './assets/text/LICENSE';
 
 /// Dart logo
 const assetDartLogoPath = './assets/images/dart.svg';
+
+/// Changelog till publish.
+final changelogContent = () {
+  final lines = changelog.split('\n');
+  var beforeContent = true;
+  return lines.skipWhile((e) {
+    if (beforeContent && (e.startsWith('## [0.') || e.startsWith('## [1.'))) {
+      beforeContent = false;
+    }
+    return beforeContent;
+  }).join('\n');
+}();
