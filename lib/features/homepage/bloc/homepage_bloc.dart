@@ -162,11 +162,9 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     HomepageAuthChanged event,
     Emitter<HomepageState> emit,
   ) async {
-    if (event.isLogged) {
-      emit(state.copyWith(status: HomepageStatus.success));
-      return;
+    if (!event.isLogged) {
+      emit(state.copyWith(status: HomepageStatus.needLogin));
     }
-    emit(state.copyWith(status: HomepageStatus.needLogin));
   }
 
   Future<void> _onHomepagePauseSwiper(

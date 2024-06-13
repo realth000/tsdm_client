@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：修复部分默认倒序浏览的帖子中无法更改排序的问题。
 - 主页：修复轮播图在后台依然滚动的问题。
 - 主页：修复轮播图在窗口大小改变后布局不正确的问题。
+- 主页：修复某些情况下主页未完全加载时脱离加载状态的问题。
 
 ### Changed
 
