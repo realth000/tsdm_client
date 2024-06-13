@@ -23,6 +23,7 @@ import 'package:tsdm_client/shared/repositories/profile_repository/profile_repos
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
@@ -139,8 +140,20 @@ class _ProfilePageState extends State<ProfilePage> {
         DebounceIconButton(
           icon: const Icon(Icons.logout_outlined),
           shouldDebounce: logout,
-          onPressed: () async =>
-              context.read<ProfileBloc>().add(ProfileLogoutRequested()),
+          onPressed: () async {
+            final logout = await showQuestionDialog(
+              context: context,
+              title: context.t.profilePage.logout,
+              message: context.t.profilePage.areYouSureToLogout,
+            );
+            if (!context.mounted) {
+              return;
+            }
+            if (logout == null || !logout) {
+              return;
+            }
+            context.read<ProfileBloc>().add(ProfileLogoutRequested());
+          },
         ),
       ];
     } else {
