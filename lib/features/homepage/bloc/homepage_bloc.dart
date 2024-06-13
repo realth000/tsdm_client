@@ -164,6 +164,11 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   ) async {
     if (!event.isLogged) {
       emit(state.copyWith(status: HomepageStatus.needLogin));
+      return;
+    }
+    if (state.status == HomepageStatus.needLogin ||
+        state.status == HomepageStatus.failure) {
+      add(HomepageRefreshRequested());
     }
   }
 

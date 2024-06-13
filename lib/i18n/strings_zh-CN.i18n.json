@@ -179,7 +179,7 @@
       "failedOtherError": "其他错误：$err"
     },
     "logout": "注销",
-    "areYouSureToLogout": "确定注销？",
+    "areYouSureToLogout": "确定要退出账户？",
     "username": "用户名",
     "uid": "用户ID",
     "customTitle": "自定义头衔",
