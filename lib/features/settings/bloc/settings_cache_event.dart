@@ -14,4 +14,21 @@ final class SettingsCacheCalculateRequested extends SettingsCacheEvent
 /// User requested to clear cache.
 @MappableClass()
 final class SettingsCacheClearCacheRequested extends SettingsCacheEvent
-    with SettingsCacheClearCacheRequestedMappable {}
+    with SettingsCacheClearCacheRequestedMappable {
+  /// Constructor.
+  const SettingsCacheClearCacheRequested(this.clearInfo);
+
+  /// Kinds of cache to clear.
+  final CacheClearInfo clearInfo;
+}
+
+/// Record new cache state.
+@MappableClass()
+final class SettingsCacheUpdateClearInfoRequested extends SettingsCacheEvent
+    with SettingsCacheUpdateClearInfoRequestedMappable {
+  /// Constructor.
+  const SettingsCacheUpdateClearInfoRequested(this.clearInfo);
+
+  /// Latest clear info.
+  final CacheClearInfo clearInfo;
+}

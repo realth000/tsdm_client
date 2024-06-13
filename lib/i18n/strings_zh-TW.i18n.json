@@ -84,7 +84,11 @@
       "title": "儲存",
       "clearCache": "清除快取",
       "sureToClear": "確定清除快取？",
-      "downloadAgainInfo": "必要的快取檔案將會再次從伺服器下載"
+      "downloadAgainInfo": "必要的快取檔案將會再次從伺服器下載",
+      "images": "圖片",
+      "emoji": "表情",
+      "selectOneCache": "需要至少選擇一項快取",
+      "clearSuccess": "清除成功"
     },
     "othersSection": {
       "title": "其他",

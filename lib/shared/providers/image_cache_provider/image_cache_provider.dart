@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
@@ -119,25 +120,32 @@ class ImageCacheProvider {
     await getIt.get<StorageProvider>().updateImageCacheUsedTime(imageUrl);
   }
 
-  /// Calculate cache size in bytes.
-  Future<int> calculateCache() async {
-    final fileList = _imageCacheDirectory.listSync(recursive: true);
+  int _calculateDirectorySize(Directory dir) {
+    final fileList = dir.listSync(recursive: true);
     return fileList.fold<int>(0, (acc, x) {
       return acc + x.statSync().size;
     });
   }
 
+  /// Calculate cache size in bytes.
+  Future<CacheStorageInfo> calculateCache() async {
+    final imageSize = _calculateDirectorySize(_imageCacheDirectory);
+    final emojiSize = _calculateDirectorySize(_emojiCacheDirectory);
+    return CacheStorageInfo(imageSize: imageSize, emojiSize: emojiSize);
+  }
+
   /// Clear cache in [_imageCacheDirectory].
-  Future<void> clearCache() async {
-    await getIt.get<StorageProvider>().clearImageCache();
-    // FIXME: It is not clear why use this ref first can avoid use after
-    //  dispose exception.
-    // Clear cache in database first, otherwise will get exception when cache
-    // size is large enough (50mb):
-    //  "Bad state: Tried to use a notifier in an uninitialized state."
-    // Currently all cached images are in _imageCacheDirectory, not sub dirs.
-    for (final f in _imageCacheDirectory.listSync()) {
-      await f.delete(recursive: true);
+  Future<void> clearCache(CacheClearInfo clearInfo) async {
+    if (clearInfo.clearImage) {
+      await getIt.get<StorageProvider>().clearImageCache();
+      for (final f in _imageCacheDirectory.listSync()) {
+        await f.delete(recursive: true);
+      }
+    }
+    if (clearInfo.clearEmoji) {
+      for (final f in _emojiCacheDirectory.listSync()) {
+        await f.delete(recursive: true);
+      }
     }
   }
 

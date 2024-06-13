@@ -6,8 +6,8 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
-import 'package:tsdm_client/features/settings/widgets/cache_status_widget.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
@@ -350,7 +350,13 @@ class _SettingsPageState extends State<SettingsPage> {
     return [
       // Cache.
       SectionTitleText(context.t.settingsPage.storageSection.title),
-      const CacheStatusWidget(),
+      SectionListTile(
+        leading: const Icon(Icons.cleaning_services_outlined),
+        title: Text(context.t.settingsPage.storageSection.clearCache),
+        onTap: () async {
+          await showClearCacheBottomSheet(context: context);
+        },
+      ),
     ];
   }
 

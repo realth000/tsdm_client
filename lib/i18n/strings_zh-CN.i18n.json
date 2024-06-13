@@ -84,7 +84,11 @@
       "title": "存储",
       "clearCache": "清除缓存",
       "sureToClear": "确定清除缓存？",
-      "downloadAgainInfo": "必要的缓存文件将会再次从服务器上下载"
+      "downloadAgainInfo": "必要的缓存文件将会再次从服务器上下载",
+      "images": "图片",
+      "emoji": "表情",
+      "selectOneCache": "需要至少选择一项缓存",
+      "clearSuccess": "清除成功"
     },
     "othersSection": {
       "title": "其他",

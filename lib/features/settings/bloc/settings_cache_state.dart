@@ -11,8 +11,11 @@ enum SettingsCacheStatus {
   /// Clearing cache files.
   clearing,
 
-  /// Operation succeed.
-  success,
+  /// Info succeed.
+  loaded,
+
+  /// Clear action finished.
+  cleared,
 }
 
 /// State of cache.
@@ -21,12 +24,16 @@ class SettingsCacheState with SettingsCacheStateMappable {
   /// Constructor.
   const SettingsCacheState({
     this.status = SettingsCacheStatus.initial,
-    this.cacheSize = 0,
+    this.storageInfo,
+    this.clearInfo = CacheClearInfo.defaultCacheClearInfo,
   });
 
   /// Status.
   final SettingsCacheStatus status;
 
-  /// Calculated cache file size.
-  final int cacheSize;
+  /// Calculated cache info.
+  final CacheStorageInfo? storageInfo;
+
+  /// What kind of cache to clear.
+  final CacheClearInfo clearInfo;
 }

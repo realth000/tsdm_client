@@ -1,5 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 
 part '../../../generated/features/settings/bloc/settings_cache_bloc.mapper.dart';
@@ -15,6 +16,9 @@ class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
         super(const SettingsCacheState()) {
     on<SettingsCacheCalculateRequested>(_onCacheCalculateRequested);
     on<SettingsCacheClearCacheRequested>(_onCacheClearCacheRequested);
+    on<SettingsCacheUpdateClearInfoRequested>(
+      _onSettingsCacheUpdateClearInfoRequested,
+    );
   }
 
   final SettingsCacheRepository _cacheRepository;
@@ -24,11 +28,11 @@ class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
     Emitter<SettingsCacheState> emit,
   ) async {
     emit(state.copyWith(status: SettingsCacheStatus.calculating));
-    final cacheSize = await _cacheRepository.calculateCache();
+    final storageInfo = await _cacheRepository.calculateCache();
     emit(
       state.copyWith(
-        status: SettingsCacheStatus.success,
-        cacheSize: cacheSize,
+        status: SettingsCacheStatus.loaded,
+        storageInfo: storageInfo,
       ),
     );
   }
@@ -38,14 +42,21 @@ class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
     Emitter<SettingsCacheState> emit,
   ) async {
     emit(state.copyWith(status: SettingsCacheStatus.clearing));
-    await _cacheRepository.clearCache();
+    await _cacheRepository.clearCache(event.clearInfo);
     emit(state.copyWith(status: SettingsCacheStatus.calculating));
-    final cacheSize = await _cacheRepository.calculateCache();
+    final storageInfo = await _cacheRepository.calculateCache();
     emit(
       state.copyWith(
-        status: SettingsCacheStatus.success,
-        cacheSize: cacheSize,
+        status: SettingsCacheStatus.cleared,
+        storageInfo: storageInfo,
       ),
     );
+  }
+
+  Future<void> _onSettingsCacheUpdateClearInfoRequested(
+    SettingsCacheUpdateClearInfoRequested event,
+    Emitter<SettingsCacheState> emit,
+  ) async {
+    emit(state.copyWith(clearInfo: event.clearInfo));
   }
 }

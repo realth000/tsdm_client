@@ -1,3 +1,4 @@
+import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 
@@ -7,13 +8,13 @@ class SettingsCacheRepository {
   SettingsCacheRepository();
 
   /// Clear all cache.
-  Future<void> clearCache() async {
+  Future<void> clearCache(CacheClearInfo clearInfo) async {
     final imageCacheProvider = getIt.get<ImageCacheProvider>();
-    await imageCacheProvider.clearCache();
+    await imageCacheProvider.clearCache(clearInfo);
   }
 
   /// Calculate cache size.
-  Future<int> calculateCache() async {
+  Future<CacheStorageInfo> calculateCache() async {
     final imageCacheProvider = getIt.get<ImageCacheProvider>();
     return imageCacheProvider.calculateCache();
   }
