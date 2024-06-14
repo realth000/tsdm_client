@@ -23,6 +23,7 @@ class CachedImage extends StatelessWidget {
     this.maxHeight,
     this.fit,
     this.tag,
+    this.enableAnimation = true,
     super.key,
   });
 
@@ -43,6 +44,11 @@ class CachedImage extends StatelessWidget {
   /// Tag for hero animation.
   final String? tag;
 
+  /// Enable animation between image loading states.
+  ///
+  /// Default is true.
+  final bool enableAnimation;
+
   Widget _buildPlaceholder(BuildContext context) => ConstrainedBox(
         constraints: BoxConstraints(
           maxWidth: maxWidth ?? double.infinity,
@@ -57,30 +63,55 @@ class CachedImage extends StatelessWidget {
       );
 
   Widget _buildImage(BuildContext context, Uint8List imageData) {
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxWidth: maxWidth ?? double.infinity,
-        maxHeight: maxHeight ?? double.infinity,
-      ),
-      child: Image.memory(
-        imageData,
-        fit: fit,
-        errorBuilder: (context, e, st) {
-          debug('failed to load image from $imageUrl: $e');
-          return FallbackPicture(fit: fit);
-        },
-        // User frameBuilder to reduce the widget splash when loading image.
-        // ref: https://stackoverflow.com/a/71430971
-        frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
-          if (wasSynchronouslyLoaded) return child;
-          return AnimatedSwitcher(
-            duration: duration200,
-            // Return the same placeholder until built finished to avoid size
-            // change.
-            child: frame != null ? child : _buildPlaceholder(context),
-          );
-        },
-      ),
+    return Image.memory(
+      imageData,
+      fit: fit,
+      errorBuilder: (context, e, st) {
+        debug('failed to load image from $imageUrl: $e');
+        return FallbackPicture(fit: fit);
+      },
+      // Use frameBuilder to reduce the widget splash when loading image.
+      // ref: https://stackoverflow.com/a/71430971
+      frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+        if (wasSynchronouslyLoaded) {
+          return child;
+        }
+        if (!enableAnimation) {
+          return frame != null ? child : _buildPlaceholder(context);
+        }
+        return AnimatedSwitcher(
+          duration: duration200,
+          // Use layoutBuilder to let child image "maximized".
+          layoutBuilder: (currentChild, previousChildren) {
+            return Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                ...previousChildren,
+                if (currentChild != null)
+                  // TODO: Use convenient widget instead of layout builder.
+                  LayoutBuilder(
+                    builder: (context, cons) {
+                      // Sometimes max height is infinity and the comparison
+                      // may be costly.
+                      // FIXME: Remove compare.
+                      if (cons.maxHeight == double.infinity) {
+                        return currentChild;
+                      }
+                      return SizedBox(
+                        width: cons.maxWidth,
+                        height: cons.maxHeight,
+                        child: currentChild,
+                      );
+                    },
+                  ),
+              ],
+            );
+          },
+          // Return the same placeholder until built finished to avoid size
+          // change.
+          child: frame != null ? child : _buildPlaceholder(context),
+        );
+      },
     );
   }
 

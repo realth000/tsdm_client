@@ -15,6 +15,8 @@ final class HeroUserAvatar extends StatelessWidget {
     required this.username,
     required this.avatarUrl,
     this.heroTag,
+    this.maxRadius,
+    this.minRadius,
     super.key,
   });
 
@@ -27,11 +29,19 @@ final class HeroUserAvatar extends StatelessWidget {
   /// User avatar
   final String? avatarUrl;
 
+  /// Max avatar border radius.
+  final double? minRadius;
+
+  /// Min avatar border radius.
+  final double? maxRadius;
+
   @override
   Widget build(BuildContext context) {
     final Widget avatar;
     if (avatarUrl == null) {
       avatar = CircleAvatar(
+        maxRadius: maxRadius,
+        minRadius: minRadius,
         child: Text(username.isEmpty ? '' : username[0]),
       );
     } else {
@@ -41,6 +51,8 @@ final class HeroUserAvatar extends StatelessWidget {
           context,
           fallbackImageUrl: noAvatarUrl,
         ),
+        maxRadius: maxRadius,
+        minRadius: minRadius,
       );
     }
     return Hero(tag: heroTag ?? 'UserAvatar_$username', child: avatar);

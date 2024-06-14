@@ -28,6 +28,7 @@ import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -182,25 +183,18 @@ class _ProfilePageState extends State<ProfilePage> {
     final Widget avatar = CircleAvatar(
       radius: _appBarAvatarHeight / 2 + 3,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      child: ClipOval(
-        child: CachedImage(
-          userProfile.avatarUrl ?? noAvatarUrl,
-          maxWidth: _appBarAvatarHeight,
-          maxHeight: _appBarAvatarHeight,
-          fit: BoxFit.cover,
-        ),
+      child: HeroUserAvatar(
+        username: userProfile.username ?? '',
+        avatarUrl: userProfile.avatarUrl ?? noAvatarUrl,
+        heroTag: widget.heroTag,
+        maxRadius: _appBarAvatarHeight / 2,
+        minRadius: _appBarAvatarHeight / 2,
       ),
     );
-    final Widget heroAvatar;
-    if (widget.heroTag != null) {
-      heroAvatar = Hero(tag: widget.heroTag!, child: avatar);
-    } else {
-      heroAvatar = avatar;
-    }
 
     // Title in app bar.
     final title =
-        LayoutBuilder(builder: (context, cons) => Row(children: [heroAvatar]));
+        LayoutBuilder(builder: (context, cons) => Row(children: [avatar]));
 
     if (userProfile.avatarUrl != null) {
       flexSpace = Stack(
@@ -208,17 +202,13 @@ class _ProfilePageState extends State<ProfilePage> {
         clipBehavior: Clip.none,
         children: [
           // Background blurred image.
-          Align(
-            alignment: Alignment.topCenter,
-            child: LayoutBuilder(
-              builder: (context, cons) => ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                child: CachedImage(
-                  userProfile.avatarUrl!,
-                  // Set to max width, ensure fill all width.
-                  maxWidth: cons.maxWidth,
-                  fit: BoxFit.cover,
-                ),
+          Positioned.fill(
+            child: ImageFiltered(
+              imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+              child: CachedImage(
+                userProfile.avatarUrl!,
+                fit: BoxFit.cover,
+                enableAnimation: false,
               ),
             ),
           ),
