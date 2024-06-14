@@ -5,7 +5,7 @@ homepage: https://github.com/realth000/tsdm_client
 issue_tracker: https://github.com/realth000/tsdm_client/issues
 publish_to: 'none'
 
-version: 0.12.0+16
+version: 0.13.0+17
 
 environment:
   flutter: ">=3.22.0 <4.0.0"
