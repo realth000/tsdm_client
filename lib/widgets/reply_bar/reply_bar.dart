@@ -10,6 +10,7 @@ import 'package:tsdm_client/features/authentication/repository/authentication_re
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
@@ -321,9 +322,9 @@ class _ReplyBarState extends State<ReplyBar> {
                   // code is supposed in
                   // {:${group_id}_${emoji_id}:}
                   // format.
-                  final emojiCache =
-                      await RepositoryProvider.of<ImageCacheProvider>(context)
-                          .getEmojiCacheFromRawCode(code);
+                  final emojiCache = await getIt
+                      .get<ImageCacheProvider>()
+                      .getEmojiCacheFromRawCode(code);
                   return emojiCache;
                 },
                 imageBuilder: (String url) => CachedImageProvider(url, context),

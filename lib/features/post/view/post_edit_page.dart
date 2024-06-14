@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
@@ -485,8 +486,8 @@ class _PostEditPageState extends State<PostEditPage> {
                             emojiBuilder: (code) async {
                               // code is supposed in {:${group_id}_${emoji_id}:}
                               // format.
-                              final emojiCache = await RepositoryProvider.of<
-                                      ImageCacheProvider>(context)
+                              final emojiCache = await getIt
+                                  .get<ImageCacheProvider>()
                                   .getEmojiCacheFromRawCode(code);
                               return emojiCache;
                             },
