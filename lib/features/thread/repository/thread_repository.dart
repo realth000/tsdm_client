@@ -55,7 +55,7 @@ class ThreadRepository {
     // post.
     final orderType = switch (reverseOrder) {
       true => '&ordertype=1',
-      false => '&ordertype=1',
+      false => '&ordertype=2',
       null => '',
     };
 

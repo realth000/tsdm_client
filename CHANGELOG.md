@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [0.13.1] - 2024-06-16
+
+### Fixed
+
+- 帖子：修复帖子只能倒序浏览的问题。
+
 ### Changed
 
 - app: 更新样式和布局，更符合Material Design 3。
