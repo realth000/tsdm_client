@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Detail page of a `BroadcastMessage`.
@@ -61,9 +62,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
           BroadcastMessageDetailState>(
         listener: (context, state) {
           if (state.status == BroadcastMessageDetailStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         child: BlocBuilder<BroadcastMessageDetailCubit,

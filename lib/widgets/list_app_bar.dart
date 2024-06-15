@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
@@ -125,6 +126,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   const Icon(Icons.refresh_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionRefresh),
                 ],
               ),
@@ -134,6 +136,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   const Icon(Icons.copy_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionCopyUrl),
                 ],
               ),
@@ -143,6 +146,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   const Icon(Icons.launch_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionOpenInBrowser),
                 ],
               ),
@@ -152,6 +156,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               child: Row(
                 children: [
                   const Icon(Icons.vertical_align_top_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionBackToTop),
                 ],
               ),
@@ -166,6 +171,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                           ? Icons.align_vertical_bottom_outlined
                           : Icons.align_vertical_top_outlined,
                     ),
+                    sizedBoxPopupMenuItemIconSpacing,
                     Text(
                       reverseOrder
                           ? context.t.networkList.actionForwardOrder

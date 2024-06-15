@@ -13,6 +13,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
 /// Homepage page.
@@ -60,13 +61,7 @@ class _HomepagePageState extends State<HomepagePage> {
         child: BlocConsumer<HomepageBloc, HomepageState>(
           listener: (context, state) {
             if (state.status == HomepageStatus.failure) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
-                    context.t.general.failedToLoad,
-                  ),
-                ),
-              );
+              showFailedToLoadSnackBar(context);
             }
           },
           builder: (context, state) {

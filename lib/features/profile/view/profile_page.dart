@@ -24,6 +24,7 @@ import 'package:tsdm_client/shared/repositories/settings_repository/settings_rep
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
@@ -495,8 +496,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   final content = userProfile.emailVerified ?? false
                       ? tr.emailVerified
                       : tr.emailNotVerified;
-                  ScaffoldMessenger.of(context)
-                      .showSnackBar(SnackBar(content: Text(content)));
+                  showSnackBar(context: context, message: content);
                 },
                 isSelected: userProfile.emailVerified ?? false,
               ),
@@ -506,8 +506,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 final content = userProfile.videoVerified ?? false
                     ? tr.videoVerified
                     : tr.videoNotVerified;
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(content)));
+                showSnackBar(context: context, message: content);
               },
               isSelected: userProfile.videoVerified ?? false,
             ),
@@ -704,8 +703,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }) {
     // Check whether have failed logout attempt.
     if (failedToLogoutReason != null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('$failedToLogoutReason')));
+      showSnackBar(context: context, message: '$failedToLogoutReason');
     }
 
     _refreshController.finishRefresh();
@@ -753,9 +751,7 @@ class _ProfilePageState extends State<ProfilePage> {
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.status == ProfileStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         builder: (context, state) {

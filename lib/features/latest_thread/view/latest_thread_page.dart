@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/latest_thread/bloc/latest_thread_bloc.dart'
 import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/thread_card.dart';
 
 /// Page to show info about latest thread page.
@@ -88,11 +89,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
       child: BlocListener<LatestThreadBloc, LatestThreadState>(
         listener: (context, state) {
           if (state.status == LatestThreadStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content: Text(context.t.general.failedToLoad),
-              ),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         child: BlocBuilder<LatestThreadBloc, LatestThreadState>(

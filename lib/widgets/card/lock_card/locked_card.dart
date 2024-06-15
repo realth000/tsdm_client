@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 
 // TODO: Separate purchase widget.
 /// Widget shows a locked area in `post`.
@@ -37,6 +38,7 @@ class _LockedCardState extends State<LockedCard> {
   }
 
   Widget _buildPurchaseBody(BuildContext context) {
+    final tr = context.t.lockedCard.purchase;
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(
@@ -55,8 +57,8 @@ class _LockedCardState extends State<LockedCard> {
 
             final purchase = await showQuestionDialog(
               context: context,
-              title: context.t.lockedCard.purchase.confirmPurchase,
-              message: context.t.lockedCard.purchase.confirmInfo(
+              title: tr.confirmPurchase,
+              message: tr.confirmInfo(
                 author: info.author ?? '',
                 price: info.price ?? '',
                 authorProfit: info.authorProfit ?? '',
@@ -75,20 +77,18 @@ class _LockedCardState extends State<LockedCard> {
             }
             return;
           } else if (state.status == PurchaseStatus.success) {
-            await showMessageSingleButtonDialog(
+            showSnackBar(
               context: context,
-              title: context.t.lockedCard.purchase.successPurchase,
-              message: context.t.lockedCard.purchase.successPurchaseInfo,
+              message: tr.successPurchaseInfo,
             );
             if (!context.mounted) {
               return;
             }
             context.read<ThreadBloc>().add(ThreadRefreshRequested());
           } else if (state.status == PurchaseStatus.failed) {
-            await showMessageSingleButtonDialog(
+            showSnackBar(
               context: context,
-              title: context.t.lockedCard.purchase.failedPurchase,
-              message: context.t.lockedCard.purchase.failedPurchase,
+              message: tr.failedPurchase,
             );
             if (!context.mounted) {
               return;
@@ -130,15 +130,16 @@ class _LockedCardState extends State<LockedCard> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.lockedCard;
     final widgets = <Widget>[];
     if (widget.locked.lockedWithPoints) {
       widgets.addAll([
         Text(
-          context.t.lockedCard.points.title,
+          tr.points.title,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Text(
-          context.t.lockedCard.points.detail(
+          tr.points.detail(
             requiredPoints: widget.locked.requiredPoints!,
             points: widget.locked.points!,
           ),
@@ -148,12 +149,11 @@ class _LockedCardState extends State<LockedCard> {
     } else if (widget.locked.lockedWithPurchase) {
       widgets.addAll([
         Text(
-          context.t.lockedCard.purchase.title,
+          tr.purchase.title,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Text(
-          context.t.lockedCard.purchase
-              .purchasedInfo(num: widget.locked.purchasedCount!),
+          tr.purchase.purchasedInfo(num: widget.locked.purchasedCount!),
           style: Theme.of(context).textTheme.labelMedium,
         ),
         _buildPurchaseBody(context),
@@ -161,11 +161,11 @@ class _LockedCardState extends State<LockedCard> {
     } else if (widget.locked.lockedWithReply) {
       widgets.addAll([
         Text(
-          context.t.lockedCard.reply.title,
+          tr.reply.title,
           style: Theme.of(context).textTheme.titleMedium,
         ),
         Text(
-          context.t.lockedCard.reply.detail,
+          tr.reply.detail,
           style: Theme.of(context).textTheme.labelMedium,
         ),
       ]);
@@ -177,7 +177,7 @@ class _LockedCardState extends State<LockedCard> {
             const Icon(Icons.lock_outline),
             sizedBoxW5H5,
             Text(
-              context.t.lockedCard.author.title,
+              tr.author.title,
               style: Theme.of(context).textTheme.titleMedium,
             ),
           ],

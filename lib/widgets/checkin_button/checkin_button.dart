@@ -7,7 +7,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/checkin_button/bloc/checkin_button_bloc.dart';
 
 /// Widget provides ability to checkin.
@@ -15,62 +15,54 @@ class CheckInButton extends StatelessWidget {
   /// Constructor.
   const CheckInButton({super.key});
 
-  Future<void> _showCheckinFailedDialog(
+  Future<void> _showCheckinFailedSnackBar(
     BuildContext context,
     CheckinResult result,
   ) async {
     if (!context.mounted) {
       return;
     }
+    final tr = context.t.profilePage.checkin;
     switch (result) {
       case CheckinSuccess():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.success(msg: result.message),
+          message: tr.success(msg: result.message),
         );
       case CheckinNotAuthorized():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedNotAuthorized,
+          message: tr.failedNotAuthorized,
         );
       case CheckinWebRequestFailed():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedNotAuthorized,
+          message: tr.failedNotAuthorized,
         );
       case CheckinFormHashNotFound():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedFormHashNotFound,
+          message: tr.failedFormHashNotFound,
         );
       case CheckinAlreadyChecked():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedAlreadyCheckedIn,
+          message: tr.failedAlreadyCheckedIn,
         );
       case CheckinEarlyInTime():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedEarlyInTime,
+          message: tr.failedEarlyInTime,
         );
       case CheckinLateInTime():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin.failedLateInTime,
+          message: tr.failedLateInTime,
         );
       case CheckinOtherError():
-        return showMessageSingleButtonDialog(
+        return showSnackBar(
           context: context,
-          title: context.t.profilePage.checkin.title,
-          message: context.t.profilePage.checkin
-              .failedOtherError(err: result.message),
+          message: tr.failedOtherError(err: result.message),
         );
     }
   }
@@ -87,15 +79,14 @@ class CheckInButton extends StatelessWidget {
       child: BlocListener<CheckinButtonBloc, CheckinButtonState>(
         listener: (context, state) async {
           if (state is CheckinButtonSuccess) {
-            return showMessageSingleButtonDialog(
+            return showSnackBar(
               context: context,
-              title: context.t.profilePage.checkin.title,
               message:
                   context.t.profilePage.checkin.success(msg: state.message),
             );
           }
           if (state is CheckinButtonFailed) {
-            return _showCheckinFailedDialog(context, state.result);
+            return _showCheckinFailedSnackBar(context, state.result);
           }
         },
         child: BlocBuilder<CheckinButtonBloc, CheckinButtonState>(

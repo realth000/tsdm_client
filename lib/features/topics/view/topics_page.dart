@@ -10,6 +10,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
@@ -107,9 +108,7 @@ class _TopicsPageState extends State<TopicsPage>
       child: BlocConsumer<TopicsBloc, TopicsState>(
         listener: (context, state) {
           if (state.status == TopicsStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         builder: (context, state) {

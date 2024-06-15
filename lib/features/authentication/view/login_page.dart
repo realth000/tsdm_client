@@ -5,6 +5,7 @@ import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dar
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/widgets/login_form.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 
 /// Page of user to login.
 class LoginPage extends StatefulWidget {
@@ -53,9 +54,7 @@ class _LoginPageState extends State<LoginPage> {
                   context.t.loginPage.loginResultOtherErrors,
                 null => context.t.general.failedToLoad,
               };
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(errorText)));
-
+              showSnackBar(context: context, message: errorText);
               context
                   .read<AuthenticationBloc>()
                   .add(AuthenticationFetchLoginHashRequested());

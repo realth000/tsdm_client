@@ -19,6 +19,7 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
@@ -299,7 +300,7 @@ class _PostEditPageState extends State<PostEditPage> {
     if (ret.isEmpty) {
       return Container();
     }
-    return Row(children: ret.insertBetween(sizedBoxW10H10));
+    return Row(children: ret.insertBetween(sizedBoxW20H20));
   }
 
   /// Build the row to control a
@@ -345,7 +346,7 @@ class _PostEditPageState extends State<PostEditPage> {
               : null,
         ),
         const Spacer(),
-        ElevatedButton(
+        FilledButton(
           // label: Text(context.t.postEditPage.saveAndBack),
           onPressed: state.status == PostEditStatus.uploading
               ? null
@@ -411,18 +412,18 @@ class _PostEditPageState extends State<PostEditPage> {
       child: BlocListener<PostEditBloc, PostEditState>(
         listener: (context, state) {
           if (state.status == PostEditStatus.failedToLoad) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.postEditPage.failedToLoadData)),
+            showSnackBar(
+              context: context,
+              message: context.t.postEditPage.failedToLoadData,
             );
           } else if (state.status == PostEditStatus.failedToUpload &&
               state.errorText != null) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.errorText!)),
-            );
+            showSnackBar(context: context, message: state.errorText!);
           } else if (state.status == PostEditStatus.success &&
               widget.editType.isEditingPost) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.postEditPage.editSuccess)),
+            showSnackBar(
+              context: context,
+              message: context.t.postEditPage.editSuccess,
             );
             context.pop();
           }
@@ -471,6 +472,7 @@ class _PostEditPageState extends State<PostEditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
+                sizedBoxW20H20,
                 // Post data editor.
                 Expanded(
                   child: useExperimentalEditor

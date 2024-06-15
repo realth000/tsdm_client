@@ -58,9 +58,9 @@ class DebounceTextButton extends StatelessWidget {
 }
 
 /// Debounce button in [ElevatedButton] style.
-class DebounceElevatedButton extends StatelessWidget {
+class DebounceFilledButton extends StatelessWidget {
   /// Constructor.
-  const DebounceElevatedButton({
+  const DebounceFilledButton({
     required this.child,
     required this.shouldDebounce,
     required this.onPressed,
@@ -78,7 +78,7 @@ class DebounceElevatedButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ElevatedButton(
+    return FilledButton(
       onPressed: shouldDebounce ? null : () async => onPressed(),
       child: shouldDebounce ? sizedCircularProgressIndicator : child,
     );

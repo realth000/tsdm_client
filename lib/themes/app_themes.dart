@@ -3,21 +3,37 @@ import 'package:flutter/material.dart';
 
 /// App themes.
 class AppTheme {
-  static CardTheme _buildCardTheme(BuildContext context) => const CardTheme(
+  static CardTheme _buildCardTheme() => const CardTheme(
         elevation: 1,
       );
 
-  static ChipThemeData _buildChipTheme(BuildContext context) =>
-      const ChipThemeData(
+  static ChipThemeData _buildChipTheme() => const ChipThemeData(
         padding: EdgeInsets.all(2),
       );
 
   /// Global theme for [ListTile].
-  static ListTileThemeData _buildListTileTheme(BuildContext context) =>
-      const ListTileThemeData(
+  static ListTileThemeData _buildListTileTheme() => const ListTileThemeData(
         visualDensity: VisualDensity.standard,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         horizontalTitleGap: 10,
+      );
+
+  static NavigationDrawerThemeData _buildNavigationDrawerTheme(
+    ColorScheme? colorScheme,
+  ) =>
+      NavigationDrawerThemeData(
+        labelTextStyle: WidgetStateProperty.resolveWith((state) {
+          if (state.contains(WidgetState.selected)) {
+            return TextStyle(color: colorScheme?.primary);
+          }
+          return null;
+        }),
+        iconTheme: WidgetStateProperty.resolveWith((state) {
+          if (state.contains(WidgetState.selected)) {
+            return IconThemeData(color: colorScheme?.primary);
+          }
+          return null;
+        }),
       );
 
   /// App light theme.
@@ -59,8 +75,8 @@ class AppTheme {
         fabUseShape: true,
         bottomNavigationBarShowUnselectedLabels: false,
         navigationBarLabelBehavior:
-            NavigationDestinationLabelBehavior.onlyShowSelected,
-        navigationRailLabelType: NavigationRailLabelType.selected,
+            NavigationDestinationLabelBehavior.alwaysShow,
+        navigationRailLabelType: NavigationRailLabelType.all,
       ),
       keyColors: const FlexKeyColors(
         useKeyColors: false,
@@ -71,9 +87,10 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      cardTheme: _buildCardTheme(context),
-      chipTheme: _buildChipTheme(context),
-      listTileTheme: _buildListTileTheme(context),
+      cardTheme: _buildCardTheme(),
+      chipTheme: _buildChipTheme(),
+      listTileTheme: _buildListTileTheme(),
+      navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
     );
   }
 
@@ -117,8 +134,8 @@ class AppTheme {
         fabUseShape: true,
         bottomNavigationBarShowUnselectedLabels: false,
         navigationBarLabelBehavior:
-            NavigationDestinationLabelBehavior.onlyShowSelected,
-        navigationRailLabelType: NavigationRailLabelType.selected,
+            NavigationDestinationLabelBehavior.alwaysShow,
+        navigationRailLabelType: NavigationRailLabelType.all,
       ),
       keyColors: const FlexKeyColors(
         useSecondary: true,
@@ -128,9 +145,10 @@ class AppTheme {
       useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
-      cardTheme: _buildCardTheme(context),
-      chipTheme: _buildChipTheme(context),
-      listTileTheme: _buildListTileTheme(context),
+      cardTheme: _buildCardTheme(),
+      chipTheme: _buildChipTheme(),
+      listTileTheme: _buildListTileTheme(),
+      navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
     );
   }
 }

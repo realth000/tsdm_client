@@ -1,23 +1,24 @@
 part of 'widgets.dart';
 
-/// [NavigationBar] used in home page.
+/// [NavigationRail] used in home page.
 ///
-/// Use in compact window.
-class HomeNavigationBar extends StatelessWidget {
+/// Use in medium window size.
+class HomeNavigationRail extends StatelessWidget {
   /// Constructor.
-  const HomeNavigationBar({super.key});
+  const HomeNavigationRail({super.key});
 
   @override
   Widget build(BuildContext context) {
     final barItems = _buildNavigationItems(context);
 
-    return NavigationBar(
+    return NavigationRail(
+      groupAlignment: 0,
       destinations: barItems
           .map(
-            (e) => NavigationDestination(
+            (e) => NavigationRailDestination(
               icon: e.icon,
               selectedIcon: e.selectedIcon,
-              label: e.label,
+              label: Text(e.label),
             ),
           )
           .toList(),

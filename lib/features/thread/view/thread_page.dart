@@ -15,6 +15,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
@@ -228,9 +229,7 @@ class _ThreadPageState extends State<ThreadPage>
                     .add(const ReplyThreadClosed(closed: false));
               }
               if (state.status == ThreadStatus.failed) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.t.general.failedToLoad)),
-                );
+                showFailedToLoadSnackBar(context);
               }
             },
           ),
@@ -238,8 +237,9 @@ class _ThreadPageState extends State<ThreadPage>
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text(context.t.threadPage.replySuccess)),
+                showSnackBar(
+                  context: context,
+                  message: context.t.threadPage.replySuccess,
                 );
               }
             },

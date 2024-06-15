@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
 /// Page to rate a post in thread.
@@ -157,7 +158,7 @@ class _RatePostPageState extends State<RatePostPage> {
               });
             },
           ),
-          DebounceElevatedButton(
+          DebounceFilledButton(
             shouldDebounce: state.status.isLoading(),
             onPressed: () async => _rate(context, state.info!),
             child: Text(context.t.ratePostPage.title),
@@ -206,18 +207,17 @@ class _RatePostPageState extends State<RatePostPage> {
           if (state.status == RateStatus.failed) {
             if (state.shouldRetry == false) {
               // Show reason and pop back if we should not retry.
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(
-                  content: Text(
+              showSnackBar(
+                context: context,
+                message:
                     state.failedReason ?? context.t.ratePostPage.failedToRate,
-                  ),
-                ),
               );
               Navigator.of(context).pop();
               return;
             }
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.ratePostPage.failedToRate)),
+            showSnackBar(
+              context: context,
+              message: context.t.ratePostPage.failedToRate,
             );
             context.read<RateBloc>().add(
                   RateFetchInfoRequested(
@@ -226,8 +226,9 @@ class _RatePostPageState extends State<RatePostPage> {
                   ),
                 );
           } else if (state.status == RateStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.ratePostPage.success)),
+            showSnackBar(
+              context: context,
+              message: context.t.ratePostPage.success,
             );
             Navigator.of(context).pop();
           }

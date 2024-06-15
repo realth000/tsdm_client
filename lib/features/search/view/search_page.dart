@@ -224,7 +224,7 @@ class _SearchPageState extends State<SearchPage> {
         Expanded(
           child: SizedBox(
             height: 50,
-            child: DebounceElevatedButton(
+            child: DebounceFilledButton(
               shouldDebounce: state.status.isSearching(),
               onPressed: () async => _search(context),
               child: Text(context.t.searchPage.form.search),

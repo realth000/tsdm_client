@@ -8,6 +8,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
@@ -107,9 +108,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
       child: BlocListener<NotificationDetailCubit, NotificationDetailState>(
         listener: (context, state) {
           if (state.status == NotificationDetailStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(

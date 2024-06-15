@@ -54,7 +54,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         // Try load
         if (state.previousPage == null) {
           _refreshController.finishLoad(IndicatorResult.noMore);
-          await showNoMoreSnackBar(context);
+          showNoMoreSnackBar(context);
           return;
         }
         context.read<ChatHistoryBloc>().add(
@@ -147,18 +147,12 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(tr.success)));
+                showSnackBar(context: context, message: tr.success);
               } else if (state.status == ReplyStatus.failed &&
                   state.failedReason != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      tr.failed(
-                        message: state.failedReason!,
-                      ),
-                    ),
-                  ),
+                showSnackBar(
+                  context: context,
+                  message: tr.failed(message: state.failedReason!),
                 );
               }
             },

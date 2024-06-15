@@ -9,7 +9,7 @@ import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart'
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
 import 'package:tsdm_client/utils/git_info.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -132,6 +132,7 @@ class _UpgradePageState extends State<UpgradePage> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.upgradePage;
     return BlocProvider(
       create: (context) => UpgradeCubit(
         upgradeRepository: RepositoryProvider.of<UpgradeRepository>(context),
@@ -139,17 +140,14 @@ class _UpgradePageState extends State<UpgradePage> {
       child: BlocListener<UpgradeCubit, UpgradeState>(
         listener: (context, state) async {
           if (state.status == UpgradeStatus.noPermission) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(
-                content:
-                    Text(context.t.upgradePage.storagePermissionNotGranted),
-              ),
+            showSnackBar(
+              context: context,
+              message: tr.storagePermissionNotGranted,
             );
           } else if (state.status == UpgradeStatus.noVersionFound) {
-            await showMessageSingleButtonDialog(
+            showSnackBar(
               context: context,
-              title: context.t.upgradePage.failedToDownloadDialog.title,
-              message: context.t.upgradePage.failedToDownloadDialog.description,
+              message: tr.failedToDownloadDialog.description,
             );
           }
         },
@@ -157,7 +155,7 @@ class _UpgradePageState extends State<UpgradePage> {
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
-                title: Text(context.t.upgradePage.title),
+                title: Text(tr.title),
                 actions: [
                   // Changelog
                   IconButton(
@@ -179,11 +177,7 @@ class _UpgradePageState extends State<UpgradePage> {
                         return;
                       }
                       if (changelogData == null) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text(context.t.general.failedToLoad),
-                          ),
-                        );
+                        showFailedToLoadSnackBar(context);
                         setState(() {
                           loadingChangelog = false;
                         });
@@ -196,7 +190,7 @@ class _UpgradePageState extends State<UpgradePage> {
                           return AlertDialog(
                             scrollable: true,
                             title: Text(
-                              context.t.upgradePage.fullChangelogDialog.title,
+                              tr.fullChangelogDialog.title,
                             ),
                             content: SizedBox(
                               width: size.width * 0.7,

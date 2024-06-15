@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Changed
+
+- app: 更新样式和布局，更符合Material Design 3。
+
 ## [0.13.0] - 2024-06-14
 
 ### Added

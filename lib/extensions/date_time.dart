@@ -1,5 +1,3 @@
-
-
 /// Extension of [DateTime] that provides some transformation and calculation.
 extension DateTimeExtension on DateTime {
   /// Format [DateTime] to format yyyy-MM-DD.

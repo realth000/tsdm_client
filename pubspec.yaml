@@ -12,7 +12,6 @@ environment:
   sdk: '>=3.4.0 <4.0.0'
 
 dependencies:
-  analyzer: ^6.4.1
   # Workaround for dart_mappable build issue
   ansicolor: any
   bbob_dart: ^0.2.1

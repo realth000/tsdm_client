@@ -214,7 +214,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
       Row(
         children: [
           Expanded(
-            child: ElevatedButton(
+            child: FilledButton(
               onPressed: queryCallback,
               child: Text(context.t.pointsPage.changelogTab.query),
             ),

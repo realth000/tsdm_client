@@ -26,6 +26,11 @@ const sizedBoxW15H15 = SizedBox(width: 15, height: 15);
 /// A [SizedBox] with 20 width and 20 height.
 const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
 
+/// A [SizedBox] with 12 width and 48 height.
+///
+/// Size following [material design 3 spec](https://m3.material.io/components/menus/specs#6928c7b9-2c6e-4ff6-98a6-55883fb299bd).
+const sizedBoxPopupMenuItemIconSpacing = SizedBox(width: 12, height: 48);
+
 /// An [EdgeInsets] with 10 at top.
 const edgeInsetsT10 = EdgeInsets.only(top: 10);
 
@@ -168,3 +173,52 @@ const sizedH100Shimmer = ClipRRect(
     ),
   ),
 );
+
+/// Define window size boundaries.
+///
+/// All values are following [Material Design 3](https://m3.material.io/foundations/layout/applying-layout/window-size-classes).
+enum WindowSize {
+  /// Compact size.
+  ///
+  /// [0, 599]
+  compact('COMPACT', 0, 599),
+
+  /// Medium size.
+  ///
+  /// [600, 839]
+  medium('MEDIUM', 600, 839),
+
+  /// Expanded size.
+  ///
+  /// [840, 1199]
+  expanded('EXPANDED', 840, 1199),
+
+  /// Large size.
+  ///
+  /// [1200, 1599]
+  large('LARGE', 1200, 1599),
+
+  /// Extra large size.
+  ///
+  /// [1600, +infinity)
+  extraLarge('EXTRA_LARGE', 1600, double.infinity);
+
+  const WindowSize(this.name, this.start, this.end)
+      : assert(
+          start < end,
+          'start MUST less than end',
+        );
+
+  /// Name of window size.
+  final String name;
+
+  /// Start of width range of window size.
+  ///
+  /// DP on Android and default LP in flutter, both are the same.
+  final double start;
+
+  /// End of width range of window size.
+  ///
+  /// DP on Android and default LP in flutter, both are the same.
+  final double end;
+}

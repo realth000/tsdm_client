@@ -116,7 +116,7 @@ class _PointsPageState extends State<PointsPage>
         onLoad: () async {
           if (state.currentPage >= state.totalPages) {
             _changelogRefreshController.finishLoad(IndicatorResult.noMore);
-            await showNoMoreSnackBar(context);
+            showNoMoreSnackBar(context);
             return;
           }
           context

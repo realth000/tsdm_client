@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/message_card.dart';
 import 'package:tsdm_client/widgets/card/notice_card.dart';
 
@@ -254,9 +255,7 @@ class _NotificationPageState extends State<NotificationPage>
       child: BlocListener<NotificationBloc, NotificationState>(
         listener: (context, state) {
           if (state.noticeStatus == NotificationStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         child: BlocBuilder<NotificationBloc, NotificationState>(

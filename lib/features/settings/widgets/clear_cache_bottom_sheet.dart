@@ -7,6 +7,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 
 /// Show a bottom sheet provides clear cache functionality with clear cache
 /// options.
@@ -54,8 +55,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
       child: BlocConsumer<SettingsCacheBloc, SettingsCacheState>(
         listenWhen: (_, curr) => curr.status == SettingsCacheStatus.cleared,
         listener: (context, state) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text(tr.clearSuccess)));
+          showSnackBar(context: context, message: tr.clearSuccess);
           context.pop();
         },
         builder: (context, state) {
@@ -124,8 +124,9 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                                       ),
                                     );
                               } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text(tr.selectOneCache)),
+                                showSnackBar(
+                                  context: context,
+                                  message: tr.selectOneCache,
                                 );
                               }
                             }

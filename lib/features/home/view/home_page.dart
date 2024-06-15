@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
-import 'package:tsdm_client/features/home/widgets/home_navigation_bar.dart';
+import 'package:tsdm_client/features/home/widgets/widgets.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
+
+const _drawerWidth = 250.0;
 
 /// Page of the homepage of the app.
 class HomePage extends StatefulWidget {
@@ -51,14 +56,70 @@ class _HomePageState extends State<HomePage> {
   /// Record last time user try to exit the app.
   DateTime? lastPopTime;
 
+  Widget _buildDrawerBody(BuildContext context) => Scaffold(
+        body: Row(
+          children: [
+            if (widget.showNavigationBar)
+              Column(
+                children: [
+                  Container(
+                    color: Theme.of(context).colorScheme.surface,
+                    height: 100,
+                    width: _drawerWidth,
+                    child: Center(
+                      child: Text(
+                        context.t.appName,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(
+                        maxWidth: _drawerWidth,
+                      ),
+                      child: const HomeNavigationDrawer(),
+                    ),
+                  ),
+                ],
+              ),
+            Expanded(child: widget.child),
+          ],
+        ),
+      );
+
   @override
   Widget build(BuildContext context) {
     Translations.of(context);
     return BlocProvider(
-      create: (_) => HomeCubit()..setHomeState(inHome: widget.inHome),
+      create: (_) => HomeCubit(),
       child: Builder(
         builder: (context) {
-          context.read<HomeCubit>().setHomeState(inHome: widget.inHome);
+          final Widget child;
+          if (ResponsiveBreakpoints.of(context)
+              .largerThan(WindowSize.expanded.name)) {
+            child = _buildDrawerBody(context);
+          } else if (ResponsiveBreakpoints.of(context)
+              .largerThan(WindowSize.compact.name)) {
+            child = Scaffold(
+              body: Row(
+                children: [
+                  if (widget.showNavigationBar) const HomeNavigationRail(),
+                  Expanded(child: widget.child),
+                ],
+              ),
+            );
+          } else {
+            child = Scaffold(
+              body: widget.child,
+              bottomNavigationBar:
+                  widget.showNavigationBar ? const HomeNavigationBar() : null,
+            );
+          }
+
           return RepositoryProvider.value(
             value: widget._forumHomeRepository,
             child: BackButtonListener(
@@ -79,20 +140,12 @@ class _HomePageState extends State<HomePage> {
                         exitConfirmDuration.inMilliseconds) {
                   lastPopTime = currentTime;
                   ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(tr.confirmExit),
-                    ),
-                  );
+                  showSnackBar(context: context, message: tr.confirmExit);
                   return true;
                 }
                 return false;
               },
-              child: Scaffold(
-                body: widget.child,
-                bottomNavigationBar:
-                    widget.showNavigationBar ? const HomeNavigationBar() : null,
-              ),
+              child: child,
             ),
           );
         },

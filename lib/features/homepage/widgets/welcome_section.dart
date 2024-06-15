@@ -147,7 +147,7 @@ class _WelcomeSectionState extends State<WelcomeSection> {
       ..add(_buildForumStatusRow(context, widget.forumStatus));
 
     final needExpand = ResponsiveBreakpoints.of(context)
-        .largerOrEqualTo('homepage_welcome_expand');
+        .largerOrEqualTo(WindowSize.expanded.name);
 
     final homePageState = context.read<HomepageBloc>().state;
     final unreadNoticeCount = homePageState.unreadNoticeCount;

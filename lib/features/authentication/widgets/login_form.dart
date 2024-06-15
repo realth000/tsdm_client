@@ -196,7 +196,7 @@ class _LoginFormState extends State<LoginForm> {
           Row(
             children: [
               Expanded(
-                child: DebounceElevatedButton(
+                child: DebounceFilledButton(
                   shouldDebounce: pending,
                   onPressed: () async => _login(context, state),
                   child: Text(context.t.loginPage.login),

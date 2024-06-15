@@ -1,8 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:flutter/material.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/routes/screen_paths.dart';
 
 part '../../../generated/features/home/cubit/home_cubit.mapper.dart';
 part 'home_state.dart';

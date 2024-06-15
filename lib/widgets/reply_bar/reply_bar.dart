@@ -515,7 +515,7 @@ class _ReplyBarState extends State<ReplyBar> {
                 ),
                 const Spacer(),
                 // Send Button
-                ElevatedButton(
+                FilledButton(
                   onPressed:
                       (canSendReply && !isSendingReply && !_closed && _hasLogin)
                           ? () async => _sendMessage()

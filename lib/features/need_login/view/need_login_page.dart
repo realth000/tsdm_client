@@ -48,7 +48,7 @@ class NeedLoginPage extends StatelessWidget {
           children: [
             Text(context.t.general.needLoginToSeeThisPage),
             sizedBoxW10H10,
-            ElevatedButton(
+            FilledButton(
               child: Text(t.loginPage.login),
               onPressed: () async {
                 await context.pushNamed(ScreenPaths.login);

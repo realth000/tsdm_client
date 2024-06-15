@@ -298,7 +298,7 @@ class _ForumPageState extends State<ForumPage>
         if (state.currentPage >= state.totalPages) {
           debug('already in last page');
           _threadRefreshController.finishLoad(IndicatorResult.noMore);
-          await showNoMoreSnackBar(context);
+          showNoMoreSnackBar(context);
           return;
         }
         // Load the next page.
@@ -441,9 +441,7 @@ class _ForumPageState extends State<ForumPage>
       child: BlocListener<ForumBloc, ForumState>(
         listener: (context, state) {
           if (state.status == ForumStatus.failed) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.general.failedToLoad)),
-            );
+            showFailedToLoadSnackBar(context);
           }
         },
         child: BlocBuilder<ForumBloc, ForumState>(

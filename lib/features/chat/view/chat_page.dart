@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
@@ -149,17 +150,13 @@ final class _ChatPageState extends State<ChatPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                ScaffoldMessenger.of(context)
-                    .showSnackBar(SnackBar(content: Text(tr.success)));
+                showSnackBar(context: context, message: tr.success);
               } else if (state.status == ReplyStatus.failed &&
                   state.failedReason != null) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text(
-                      tr.failed(
-                        message: state.failedReason!,
-                      ),
-                    ),
+                showSnackBar(
+                  context: context,
+                  message: tr.failed(
+                    message: state.failedReason!,
                   ),
                 );
               }
