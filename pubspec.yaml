@@ -16,7 +16,7 @@ dependencies:
   ansicolor: any
   bbob_dart: ^0.2.1
   bloc: ^8.1.4
-  change_case: ^2.0.1
+  change_case: ^2.1.0
   # Blocked by flutter
   collection: any
   cookie_jar: ^4.0.8
@@ -35,15 +35,15 @@ dependencies:
     # git:
     #   url: https://github.com/realth000/flutter_bbcode_editor.git
     #   ref: fc03d1595adfa7d2e3b672e2407460c61699b82c
-  flutter_bloc: ^8.1.5
+  flutter_bloc: ^8.1.6
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.1
+  flutter_markdown: ^0.7.2+1
   flutter_svg: ^2.0.10+1
   font_awesome_flutter: ^10.7.0
   get_it: ^7.7.0
   gitsumu: ^0.4.1
-  go_router: ^14.1.4
+  go_router: ^14.2.0
   html: ^0.15.4
   infinite_carousel:
     git:
@@ -57,9 +57,9 @@ dependencies:
   path_provider: ^2.1.3
   permission_handler: ^11.3.1
   responsive_framework: ^1.4.0
-  rxdart: ^0.27.7
+  rxdart: ^0.28.0
   shimmer: ^3.0.0
-  slang: ^3.31.0
+  slang: ^3.31.1
   slang_flutter: ^3.31.0
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.1.0
@@ -79,7 +79,7 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   json_serializable: ^6.8.0
-  slang_build_runner: ^3.30.0
+  slang_build_runner: ^3.31.0
   very_good_analysis: ^5.1.0
 
 #  dependency_overrides:
