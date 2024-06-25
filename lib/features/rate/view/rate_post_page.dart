@@ -134,6 +134,36 @@ class _RatePostPageState extends State<RatePostPage> {
         .map((e) => _buildScoreWidget(context, e))
         .toList();
 
+    Widget? defaultReasonButton;
+    if (state.info?.defaultReasonList.isNotEmpty ?? false) {
+      defaultReasonButton = Focus(
+        canRequestFocus: false,
+        descendantsAreFocusable: false,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String?>(
+            padding: edgeInsetsR10,
+            onChanged: (v) {
+              if (v == null) {
+                return;
+              }
+              setState(() {
+                reasonController.text = v;
+              });
+            },
+            items: state.info?.defaultReasonList
+                .map(
+                  (e) => DropdownMenuItem<String>(
+                    value: e,
+                    child: Text(e),
+                  ),
+                )
+                .toList(),
+          ),
+          // icon: const Icon(Icons.expand_more_outlined),
+        ),
+      );
+    }
+
     return Form(
       key: formKey,
       child: ListView(
@@ -152,6 +182,7 @@ class _RatePostPageState extends State<RatePostPage> {
             controller: reasonController,
             decoration: InputDecoration(
               labelText: context.t.ratePostPage.reason,
+              suffixIcon: defaultReasonButton,
             ),
           ),
           SwitchListTile(

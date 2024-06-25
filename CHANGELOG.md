@@ -8,6 +8,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 
+- 帖子：评分时提供默认评分理由。
 - 帖子：评分时显示今日剩余可评分分数。
 
 ### Fixed
