@@ -45,7 +45,7 @@ const _groupAvatarHeight = 100.0;
 ///
 /// Data:
 ///
-/// ```
+/// ``` text
 /// lvMaster 伴坛终老 300天
 /// lv10 以坛为家III  250天
 /// lv9  以坛为家II   200天   3505

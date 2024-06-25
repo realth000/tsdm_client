@@ -107,7 +107,7 @@ class ScreenPaths {
   ///
   /// Two method above both have the following format url:
   ///
-  /// ```
+  /// ``` bash
   /// ${HOST}/home.php?mod=spacecp&ac=pm&op=showmsg&
   /// handlekey=showmsg_${UID}&touid=${UID}&pmid=0&daterange=2
   /// ```
@@ -119,7 +119,7 @@ class ScreenPaths {
   ///
   /// Have the following format url:
   ///
-  /// ```
+  /// ``` bash
   /// ${HOST}/home.php?mod=space&do=pm&subop=view&touid=${UID}
   /// ```
   static const String chatHistory = '/chat/history/:uid';
