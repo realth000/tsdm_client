@@ -206,18 +206,14 @@ class _RatePostPageState extends State<RatePostPage> {
         listener: (context, state) {
           if (state.status == RateStatus.failed) {
             if (state.shouldRetry == false) {
-              // Show reason and pop back if we should not retry.
-              showSnackBar(
-                context: context,
-                message:
-                    state.failedReason ?? context.t.ratePostPage.failedToRate,
-              );
               Navigator.of(context).pop();
               return;
             }
+            // Show reason and pop back if we should not retry.
             showSnackBar(
               context: context,
-              message: context.t.ratePostPage.failedToRate,
+              message:
+                  state.failedReason ?? context.t.ratePostPage.failedToRate,
             );
             context.read<RateBloc>().add(
                   RateFetchInfoRequested(

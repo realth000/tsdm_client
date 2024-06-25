@@ -72,6 +72,7 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
       debug('failed to rate: $e');
       emit(state.copyWith(status: RateStatus.failed));
     } on RateFailedException catch (e) {
+      debug('failed to rate: $e');
       emit(state.copyWith(status: RateStatus.failed, failedReason: e.reason));
     }
   }

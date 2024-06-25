@@ -27,6 +27,12 @@ final class RateRepository {
   /// Regexp to grep the error text from response html body.
   static final _errorTextRe = RegExp('alert_error">(?<error>[^<]+)<');
 
+  /// Rate limit handler function text.
+  ///
+  /// User will trigger this error when too many points rated in 24 hour.
+  static final _errorHandleRateRe =
+      RegExp(r"{errorhandle_rate\('(?<error>[^']+)',");
+
   /// Fetch rate info for given [pid].
   ///
   /// # Exception
@@ -86,6 +92,11 @@ final class RateRepository {
     final errorText = _errorTextRe.firstMatch(data)?.namedGroup('error');
     if (errorText != null) {
       throw RateFailedException(errorText);
+    }
+    final errorHandleRateText =
+        _errorHandleRateRe.firstMatch(data)?.namedGroup('error');
+    if (errorHandleRateText != null) {
+      throw RateFailedException(errorHandleRateText);
     }
   }
 }

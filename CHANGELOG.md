@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- 帖子：修复评分数超出限制时依然提示评分成功的问题。
+
 ## [0.13.1] - 2024-06-16
 
 ### Fixed
