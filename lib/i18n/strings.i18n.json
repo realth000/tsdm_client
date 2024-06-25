@@ -326,7 +326,8 @@
     "notInAllowedRange": "Should in range $range",
     "unknownAllowedRange": "Unknown allowed range $range",
     "onlyAllowIntegers": "Only integers are allowed",
-    "failedToRate": "Rate failed"
+    "failedToRate": "Rate failed",
+    "scoreTodayRemaining": "Today Remaining $score"
   },
   "pointsPage": {
     "title": "Points Statistics",

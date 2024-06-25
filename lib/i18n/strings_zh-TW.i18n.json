@@ -326,7 +326,8 @@
     "notInAllowedRange": "應該在 $range 範圍內",
     "unknownAllowedRange": "無效的評分區間 $range",
     "onlyAllowIntegers": "只允許整數",
-    "failedToRate": "评分失败"
+    "failedToRate": "评分失败",
+    "scoreTodayRemaining": "今日剩餘 $score"
   },
   "pointsPage": {
     "title": "積分統計",

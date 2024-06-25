@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 帖子：评分时显示今日剩余可评分分数。
+
 ### Fixed
 
 - 帖子：修复评分数超出限制时依然提示评分成功的问题。

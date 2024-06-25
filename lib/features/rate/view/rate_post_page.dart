@@ -51,32 +51,32 @@ class _RatePostPageState extends State<RatePostPage> {
   bool noticeAuthor = true;
 
   Widget _buildScoreWidget(BuildContext context, RateWindowScore score) {
+    final tr = context.t.ratePostPage;
     return TextFormField(
       controller: scoreMap![score.id],
       keyboardType:
           const TextInputType.numberWithOptions(signed: true, decimal: true),
       decoration: InputDecoration(
         labelText: score.name,
-        suffixText: score.allowedRangeDescription,
+        helperText: tr.scoreTodayRemaining(score: score.remaining),
+        suffixText: '${score.allowedRangeDescription} ',
       ),
       validator: (v) {
         if (v?.contains('.') ?? true) {
-          return context.t.ratePostPage.onlyAllowIntegers;
+          return tr.onlyAllowIntegers;
         }
         final vv = v!.trim().parseToInt();
         if (vv == null) {
-          return context.t.ratePostPage.invalidNumber;
+          return tr.invalidNumber;
         }
         final allowedList = score.allowedRangeDescription.split('~');
         final allowedMinValue = allowedList.firstOrNull?.trim().parseToInt();
         final allowedMaxValue = allowedList.lastOrNull?.trim().parseToInt();
         if (allowedMinValue == null || allowedMaxValue == null) {
-          return context.t.ratePostPage
-              .unknownAllowedRange(range: score.allowedRangeDescription);
+          return tr.unknownAllowedRange(range: score.allowedRangeDescription);
         }
         if (vv < allowedMinValue || vv > allowedMaxValue) {
-          return context.t.ratePostPage
-              .notInAllowedRange(range: score.allowedRangeDescription);
+          return tr.notInAllowedRange(range: score.allowedRangeDescription);
         }
         return null;
       },
@@ -130,6 +130,10 @@ class _RatePostPageState extends State<RatePostPage> {
       return const Center(child: CircularProgressIndicator());
     }
 
+    final scoreWidgetList = state.info!.scoreList
+        .map((e) => _buildScoreWidget(context, e))
+        .toList();
+
     return Form(
       key: formKey,
       child: ListView(
@@ -142,7 +146,8 @@ class _RatePostPageState extends State<RatePostPage> {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           sizedBoxW5H5,
-          ...state.info!.scoreList.map((e) => _buildScoreWidget(context, e)),
+          ...scoreWidgetList.insertBetween(sizedBoxW5H5),
+          if (scoreWidgetList.isNotEmpty) sizedBoxW5H5,
           TextFormField(
             controller: reasonController,
             decoration: InputDecoration(
