@@ -241,16 +241,16 @@ class _RatePostPageState extends State<RatePostPage> {
       child: BlocListener<RateBloc, RateState>(
         listener: (context, state) {
           if (state.status == RateStatus.failed) {
-            if (state.shouldRetry == false) {
-              Navigator.of(context).pop();
-              return;
-            }
             // Show reason and pop back if we should not retry.
             showSnackBar(
               context: context,
               message:
                   state.failedReason ?? context.t.ratePostPage.failedToRate,
             );
+            if (state.shouldRetry == false) {
+              Navigator.of(context).pop();
+              return;
+            }
             context.read<RateBloc>().add(
                   RateFetchInfoRequested(
                     pid: widget.pid,
