@@ -14,6 +14,9 @@ const duration500 = Duration(milliseconds: 500);
 /// Including LockedCard.
 const sizeButtonInCardMinWidth = 200.0;
 
+/// Zero size [SizedBox] represents no widget.
+const sizedBoxEmpty = SizedBox.shrink();
+
 /// A [SizedBox] with 5 width and 5 height.
 const sizedBoxW5H5 = SizedBox(width: 5, height: 5);
 

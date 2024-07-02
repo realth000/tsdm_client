@@ -14,6 +14,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - 帖子：修复评分数超出限制时依然提示评分成功的问题。
+- 分区：修复可用的筛选帖子的选项为空时依然显示筛选按钮的问题。
 
 ## [0.13.1] - 2024-06-16
 

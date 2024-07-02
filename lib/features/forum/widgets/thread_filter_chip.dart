@@ -86,6 +86,11 @@ class ThreadTypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ForumBloc, ForumState>(
       builder: (context, state) {
+        // Show nothing if no filter available.
+        if (state.filterTypeList.isEmpty) {
+          return sizedBoxEmpty;
+        }
+
         return ThreadChip(
           chipLabel: state.filterState.filterType?.name ??
               state.filterTypeList
@@ -127,6 +132,11 @@ class ThreadSpecialTypeChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ForumBloc, ForumState>(
       builder: (context, state) {
+        // Show nothing if no special filter available.
+        if (state.filterSpecialTypeList.isEmpty) {
+          return sizedBoxEmpty;
+        }
+
         return ThreadChip(
           chipLabel: state.filterState.filterSpecialType?.name ??
               state.filterSpecialTypeList
@@ -169,6 +179,11 @@ class ThreadDatelineChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ForumBloc, ForumState>(
       builder: (context, state) {
+        // Show nothing if no dateline filter available.
+        if (state.filterDatelineList.isEmpty) {
+          return sizedBoxEmpty;
+        }
+
         return ThreadChip(
           chipLabel: state.filterState.filterDateline?.name ??
               state.filterDatelineList
@@ -210,6 +225,11 @@ class ThreadOrderChip extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<ForumBloc, ForumState>(
       builder: (context, state) {
+        // Show nothing if no order filter available.
+        if (state.filterOrderList.isEmpty) {
+          return sizedBoxEmpty;
+        }
+
         return ThreadChip(
           chipLabel: state.filterState.filterOrder?.name ??
               state.filterOrderList
