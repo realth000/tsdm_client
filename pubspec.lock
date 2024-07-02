@@ -29,10 +29,10 @@ packages:
     dependency: transitive
     description:
       name: appflowy_editor
-      sha256: "7ddf4e61d79f3a6d51667d8c4590f581bf3d6736c2c86a572a900424d1c1feb9"
+      sha256: "1d4fd41a9ccab41301078dc6088ab8f78d4703a3a4dfb49a3ab57524674481ba"
       url: "https://pub.dev"
     source: hosted
-    version: "2.5.1"
+    version: "3.0.0"
   archive:
     dependency: transitive
     description:
@@ -257,14 +257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
-  cupertino_icons:
-    dependency: transitive
-    description:
-      name: cupertino_icons
-      sha256: ba631d1c7f7bef6b729a622b7b752645a2d076dba9976925b8f25725a30e1ee6
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.8"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -418,9 +410,11 @@ packages:
   flutter_bbcode_editor:
     dependency: "direct main"
     description:
-      path: "packages/flutter_bbcode_editor"
-      relative: true
-    source: path
+      path: "."
+      ref: "7b77e0601eba354ec2b8696b0ccef9713d55aeba"
+      resolved-ref: "7b77e0601eba354ec2b8696b0ccef9713d55aeba"
+      url: "https://github.com/realth000/flutter_bbcode_editor.git"
+    source: git
     version: "0.1.0+1"
   flutter_bloc:
     dependency: "direct main"
