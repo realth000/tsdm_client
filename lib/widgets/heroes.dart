@@ -17,6 +17,7 @@ final class HeroUserAvatar extends StatelessWidget {
     this.heroTag,
     this.maxRadius,
     this.minRadius,
+    this.disableHero = false,
     super.key,
   });
 
@@ -34,6 +35,11 @@ final class HeroUserAvatar extends StatelessWidget {
 
   /// Min avatar border radius.
   final double? maxRadius;
+
+  /// Disable hero animation.
+  ///
+  /// Use in absolutely multi-hero-tag pages.
+  final bool disableHero;
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +60,9 @@ final class HeroUserAvatar extends StatelessWidget {
         maxRadius: maxRadius,
         minRadius: minRadius,
       );
+    }
+    if (disableHero) {
+      return avatar;
     }
     return Hero(tag: heroTag ?? 'UserAvatar_$username', child: avatar);
   }

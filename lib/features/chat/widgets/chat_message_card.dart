@@ -27,6 +27,7 @@ final class ChatMessageCard extends StatelessWidget {
             leading: HeroUserAvatar(
               username: chatMessage.author ?? '',
               avatarUrl: chatMessage.authorAvatarUrl,
+              disableHero: true,
             ),
             title: Text(chatMessage.author ?? ''),
             subtitle: chatMessage.dateTime == null
