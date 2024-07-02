@@ -16,6 +16,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：修复评分数超出限制时依然提示评分成功的问题。
 - 分区：修复可用的筛选帖子的选项为空时依然显示筛选按钮的问题。
 
+### Changed
+
+- 私信：私信的聊天记录和回复框之间加了一点距离。
+
 ## [0.13.1] - 2024-06-16
 
 ### Fixed

@@ -82,6 +82,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         Expanded(
           child: messageList,
         ),
+        sizedBoxW10H10,
         ReplyBar(
           controller: _replyBarController,
           replyType: ReplyTypes.chatHistory,

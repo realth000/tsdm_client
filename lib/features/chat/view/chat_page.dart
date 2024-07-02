@@ -85,6 +85,7 @@ final class _ChatPageState extends State<ChatPage> {
         Expanded(
           child: messageList,
         ),
+        sizedBoxW10H10,
         ReplyBar(
           controller: _replyBarController,
           replyType: ReplyTypes.chat,
