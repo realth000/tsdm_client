@@ -51,6 +51,12 @@
 ## 下载
 
 * [GitHub Release](https://github.com/realth000/tsdm_client/releases)
+  * [Android apk (armv8)](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk)
+  * [Android apk (armv7)](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk)
+  * [iOS ipa](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa)
+  * [Linux tar.gz](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz)
+  * [MacOS dmg](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg)
+  * [Windows](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip)
 
 ## 功能
 
@@ -206,6 +212,8 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 * [ ] 无序列表
 * [ ] 有序列表
 * [ ] 表格
+* [ ] 上标
+* [x] 对齐（居左/居中/居右）
 
 ## 已知问题
 
@@ -234,6 +242,7 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 ``` shell
 # 1. All
 git clone --recursive https://github.com/realth000/tsdm_client
+cd tsdm_client
 dart run build_runner build
 
 # 2. Android
