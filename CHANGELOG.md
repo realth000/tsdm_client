@@ -22,6 +22,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Changed
 
 - 私信：私信的聊天记录和回复框之间加了一点距离。
+- 通知：即使回复提醒所在的帖子已被关闭，也显示回复框以提示已关闭状态。
 
 ## [0.13.1] - 2024-06-16
 

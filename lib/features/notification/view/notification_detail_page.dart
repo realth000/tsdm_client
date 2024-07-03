@@ -67,11 +67,12 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
     return Column(
       children: [
         Expanded(child: SingleChildScrollView(child: PostCard(post))),
-        if (state.replyParameters != null)
-          ReplyBar(
-            controller: _replyBarController,
-            replyType: ReplyTypes.thread,
-          ),
+        // Always show reply bar even thread is locked to keep the same UI as
+        // visiting locked thread.
+        ReplyBar(
+          controller: _replyBarController,
+          replyType: ReplyTypes.thread,
+        ),
       ],
     );
   }
