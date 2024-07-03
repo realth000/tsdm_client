@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -32,6 +33,26 @@ class HomepagePage extends StatefulWidget {
 class _HomepagePageState extends State<HomepagePage> {
   final _scrollController = ScrollController();
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
+
+  /// Flag the visibility of floating action button.
+  bool _fabVisible = true;
+
+  Widget? _buildFloatingActionButton(
+    BuildContext context,
+    HomepageState state,
+  ) {
+    if (state.status != HomepageStatus.success || !_fabVisible) {
+      return null;
+    }
+    return FloatingActionButton(
+      onPressed: () async => _scrollController.animateTo(
+        0,
+        duration: duration200,
+        curve: Curves.easeInOut,
+      ),
+      child: const Icon(Icons.arrow_upward_outlined),
+    );
+  }
 
   @override
   void dispose() {
@@ -101,6 +122,7 @@ class _HomepagePageState extends State<HomepagePage> {
                         .add(HomepageRefreshRequested());
                   },
                   child: ListView(
+                    controller: _scrollController,
                     padding: edgeInsetsL10T5R10B20,
                     children: [
                       WelcomeSection(
@@ -129,7 +151,25 @@ class _HomepagePageState extends State<HomepagePage> {
                   ),
                 ],
               ),
-              body: AnimatedSwitcher(duration: duration200, child: body),
+              body: NotificationListener<UserScrollNotification>(
+                onNotification: (notification) {
+                  if (notification.direction == ScrollDirection.forward &&
+                      !_fabVisible) {
+                    setState(() {
+                      _fabVisible = true;
+                    });
+                  } else if (notification.direction ==
+                          ScrollDirection.reverse &&
+                      _fabVisible) {
+                    setState(() {
+                      _fabVisible = false;
+                    });
+                  }
+                  return true;
+                },
+                child: AnimatedSwitcher(duration: duration200, child: body),
+              ),
+              floatingActionButton: _buildFloatingActionButton(context, state),
             );
           },
         ),
