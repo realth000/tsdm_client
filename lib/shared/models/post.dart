@@ -195,7 +195,7 @@ class Post with PostMappable {
     final replyAction = element
         .querySelector(
           'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > '
-          'div > em > a',
+          'div > em > a[href*="action=reply"]',
         )
         ?.firstHref();
 
