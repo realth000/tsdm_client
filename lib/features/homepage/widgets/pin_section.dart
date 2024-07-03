@@ -40,7 +40,12 @@ class PinSection extends StatelessWidget {
           queryParameters: {'username': title},
         ),
       ),
-      subtitle: isRank ? null : SingleLineText(subtitle),
+      subtitle: isRank
+          ? null
+          : SingleLineText(
+              subtitle,
+              overflow: TextOverflow.ellipsis,
+            ),
       trailing: isRank ? SingleLineText(subtitle) : null,
       onTap: () {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
@@ -110,8 +115,12 @@ class PinSection extends StatelessWidget {
       );
     }
 
-    return ListView(
+    return GridView(
       physics: const NeverScrollableScrollPhysics(),
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 600,
+        mainAxisExtent: 700,
+      ),
       shrinkWrap: true,
       children: ret,
     );
