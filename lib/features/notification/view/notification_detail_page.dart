@@ -106,12 +106,26 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
           )..fetchDetail(widget.url),
         ),
       ],
-      child: BlocListener<NotificationDetailCubit, NotificationDetailState>(
-        listener: (context, state) {
-          if (state.status == NotificationDetailStatus.failed) {
-            showFailedToLoadSnackBar(context);
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<NotificationDetailCubit, NotificationDetailState>(
+            listener: (context, state) {
+              if (state.status == NotificationDetailStatus.failed) {
+                showFailedToLoadSnackBar(context);
+              }
+            },
+          ),
+          BlocListener<ReplyBloc, ReplyState>(
+            listener: (context, state) {
+              if (state.status == ReplyStatus.success) {
+                showSnackBar(
+                  context: context,
+                  message: context.t.threadPage.replySuccess,
+                );
+              }
+            },
+          ),
+        ],
         child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
           builder: (context, state) {
             final body = switch (state.status) {
