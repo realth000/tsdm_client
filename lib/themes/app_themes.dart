@@ -77,6 +77,7 @@ class AppTheme {
         navigationBarLabelBehavior:
             NavigationDestinationLabelBehavior.alwaysShow,
         navigationRailLabelType: NavigationRailLabelType.all,
+        drawerRadius: 0,
       ),
       keyColors: const FlexKeyColors(
         useKeyColors: false,
@@ -136,6 +137,7 @@ class AppTheme {
         navigationBarLabelBehavior:
             NavigationDestinationLabelBehavior.alwaysShow,
         navigationRailLabelType: NavigationRailLabelType.all,
+        drawerRadius: 0,
       ),
       keyColors: const FlexKeyColors(
         useSecondary: true,

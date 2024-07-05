@@ -20,6 +20,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 分区：修复可用的筛选帖子的选项为空时依然显示筛选按钮的问题。
 - 私信：聊天记录页面禁用无法使用的hero动画以避免异常。
 - 关于：修复提交次数记录一直为1的问题。
+- 主页：修复宽屏设备中侧边栏边框弧度问题。
 
 ### Changed
 
