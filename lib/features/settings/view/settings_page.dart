@@ -16,6 +16,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
@@ -246,18 +247,19 @@ class _SettingsPageState extends State<SettingsPage> {
 
     return [
       SectionTitleText(tr.title),
-      SwitchListTile(
-        secondary: const Icon(Icons.block_outlined),
-        title: Text(tr.doublePressExit.title),
-        subtitle: Text(tr.doublePressExit.detail),
-        contentPadding: edgeInsetsL18R18,
-        value: doublePressExit,
-        onChanged: (v) async {
-          context
-              .read<SettingsBloc>()
-              .add(SettingsChangeDoublePressExitRequested(enabled: v));
-        },
-      ),
+      if (isMobile)
+        SwitchListTile(
+          secondary: const Icon(Icons.block_outlined),
+          title: Text(tr.doublePressExit.title),
+          subtitle: Text(tr.doublePressExit.detail),
+          contentPadding: edgeInsetsL18R18,
+          value: doublePressExit,
+          onChanged: (v) async {
+            context
+                .read<SettingsBloc>()
+                .add(SettingsChangeDoublePressExitRequested(enabled: v));
+          },
+        ),
       SwitchListTile(
         secondary: const Icon(Icons.align_vertical_top_outlined),
         title: Text(tr.threadReverseOrder.title),
