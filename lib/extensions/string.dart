@@ -186,6 +186,9 @@ extension EnhanceModification on String {
 
   /// Prepend host url.
   String prependHost() {
+    if (startsWith('https://') || startsWith('http://')) {
+      return this;
+    }
     return '$baseUrl/$this';
   }
 
