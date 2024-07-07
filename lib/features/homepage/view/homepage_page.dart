@@ -17,6 +17,9 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
+/// Show [FloatingActionButton] when offset is larger than this value.
+const _showFabOffset = 100;
+
 /// Homepage page.
 ///
 /// Be stateful because scrollable.
@@ -35,7 +38,43 @@ class _HomepagePageState extends State<HomepagePage> {
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
 
   /// Flag the visibility of floating action button.
-  bool _fabVisible = true;
+  ///
+  /// Only set to true when scrolling up and offset is larger than
+  /// [_showFabOffset].
+  ///
+  /// Set to false when offset is smaller than [_showFabOffset] or scrolling
+  /// down.
+  bool _fabVisible = false;
+
+  bool _handleScrollNotification(UserScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) {
+      return false;
+    }
+
+    // Update fab visibility according to scroll offset.
+    if (notification.metrics.pixels <= _showFabOffset) {
+      // Offset smaller than boundary.
+      if (_fabVisible) {
+        setState(() {
+          _fabVisible = false;
+        });
+      }
+      return true;
+    }
+
+    // Update fab visibility according to scroll direction.
+    if (notification.direction == ScrollDirection.forward && !_fabVisible) {
+      setState(() {
+        _fabVisible = true;
+      });
+    } else if (notification.direction == ScrollDirection.reverse &&
+        _fabVisible) {
+      setState(() {
+        _fabVisible = false;
+      });
+    }
+    return true;
+  }
 
   Widget? _buildFloatingActionButton(
     BuildContext context,
@@ -44,6 +83,7 @@ class _HomepagePageState extends State<HomepagePage> {
     if (state.status != HomepageStatus.success || !_fabVisible) {
       return null;
     }
+
     return FloatingActionButton(
       onPressed: () async => _scrollController.animateTo(
         0,
@@ -152,21 +192,7 @@ class _HomepagePageState extends State<HomepagePage> {
                 ],
               ),
               body: NotificationListener<UserScrollNotification>(
-                onNotification: (notification) {
-                  if (notification.direction == ScrollDirection.forward &&
-                      !_fabVisible) {
-                    setState(() {
-                      _fabVisible = true;
-                    });
-                  } else if (notification.direction ==
-                          ScrollDirection.reverse &&
-                      _fabVisible) {
-                    setState(() {
-                      _fabVisible = false;
-                    });
-                  }
-                  return true;
-                },
+                onNotification: _handleScrollNotification,
                 child: AnimatedSwitcher(duration: duration200, child: body),
               ),
               floatingActionButton: _buildFloatingActionButton(context, state),
