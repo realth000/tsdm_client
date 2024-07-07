@@ -515,10 +515,10 @@ packages:
     dependency: "direct main"
     description:
       name: gitsumu
-      sha256: "60c654eb7a82fe75769d4bda6c22291113613c921233f2a4ec3bbb378b84120b"
+      sha256: ce8728fd32ed4ba81a090823f914a933a9ddefe80fa9bb151a33f208fd8ef533
       url: "https://pub.dev"
     source: hosted
-    version: "0.4.1"
+    version: "0.5.0"
   glob:
     dependency: transitive
     description:
