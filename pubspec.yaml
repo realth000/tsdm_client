@@ -20,9 +20,9 @@ dependencies:
   # Blocked by flutter
   collection: any
   cookie_jar: ^4.0.8
-  dart_mappable: ^4.2.2
+  dart_mappable: 4.2.2
   device_info_plus: ^10.1.0
-  dio: ^5.4.3+1
+  dio: ^5.5.0+1
   dio_cookie_manager: ^3.1.1
   easy_refresh: ^3.4.0
   equatable: ^2.0.5
@@ -73,7 +73,7 @@ dev_dependencies:
     git:
       url: https://github.com/schultek/dart_mappable.git
       path: "packages/dart_mappable_builder"
-      branch: main
+      ref: 4777e79cdc99e15730d18990e1d774edc0064b0a
   flutter_launcher_icons: ^0.13.1
   flutter_test:
     sdk: flutter
