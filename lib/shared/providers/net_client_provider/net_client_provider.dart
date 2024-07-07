@@ -94,12 +94,14 @@ class NetClientProvider {
     Map<String, dynamic>? queryParameters,
   }) async {
     final resp =
+        // FIXME: Handle DioException.
         await _dio.get<dynamic>(path, queryParameters: queryParameters);
     return resp;
   }
 
   /// Make a GET request to the given [uri].
   Future<Response<dynamic>> getUri(Uri uri) async {
+    // FIXME: Handle DioException.
     final resp = await _dio.getUri<dynamic>(uri);
     return resp;
   }
@@ -109,6 +111,7 @@ class NetClientProvider {
     String path, {
     Map<String, dynamic>? queryParameters,
   }) async {
+    // FIXME: Handle DioException.
     final resp = await _dio.get<dynamic>(
       path,
       queryParameters: queryParameters,
