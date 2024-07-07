@@ -15,7 +15,7 @@ class SectionTitleText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: edgeInsetsL18R18,
+      padding: edgeInsetsL18T10R18B10,
       child: Text(
         data,
         style: Theme.of(context).textTheme.titleSmall?.copyWith(

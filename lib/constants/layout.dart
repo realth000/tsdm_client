@@ -52,6 +52,14 @@ const edgeInsetsL15T15R15B15 = EdgeInsets.all(15);
 /// An [EdgeInsets] with 18 at left and 18 at right.
 const edgeInsetsL18R18 = EdgeInsets.symmetric(horizontal: 18);
 
+/// An [EdgeInsets] with 18 at left and 18 at right, 10 at top and 10 at bottom.
+const edgeInsetsL18T10R18B10 = EdgeInsets.only(
+  left: 18,
+  top: 10,
+  right: 18,
+  bottom: 10,
+);
+
 /// An [EdgeInsets] with 10 at left, top and right.
 const edgeInsetsL10T10R10 = EdgeInsets.only(left: 10, top: 10, right: 10);
 
