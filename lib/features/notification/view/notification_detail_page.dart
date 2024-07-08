@@ -116,6 +116,8 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
             },
           ),
           BlocListener<ReplyBloc, ReplyState>(
+            // Drop only needClearText changed changes.
+            listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
                 showSnackBar(
@@ -141,14 +143,10 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
             };
 
             // Update thread closed state to reply bar.
-            if (state.threadClosed) {
+            if (state.threadClosed != context.read<ReplyBloc>().state.closed) {
               context
                   .read<ReplyBloc>()
-                  .add(const ReplyThreadClosed(closed: true));
-            } else {
-              context
-                  .read<ReplyBloc>()
-                  .add(const ReplyThreadClosed(closed: false));
+                  .add(ReplyThreadClosed(closed: state.threadClosed));
             }
 
             return Scaffold(
