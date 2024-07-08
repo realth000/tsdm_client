@@ -126,6 +126,11 @@ class _PostCardState extends State<PostCard>
                   },
                   child: Hero(
                     tag: nameHeroTag,
+                    flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+                        DefaultTextStyle(
+                      style: DefaultTextStyle.of(toHeroContext).style,
+                      child: toHeroContext.widget,
+                    ),
                     child: Text(widget.post.author.name),
                   ),
                 ),

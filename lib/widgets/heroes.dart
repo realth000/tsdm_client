@@ -64,6 +64,14 @@ final class HeroUserAvatar extends StatelessWidget {
     if (disableHero) {
       return avatar;
     }
-    return Hero(tag: heroTag ?? 'UserAvatar_$username', child: avatar);
+    return Hero(
+      tag: heroTag ?? 'UserAvatar_$username',
+      flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+          DefaultTextStyle(
+        style: DefaultTextStyle.of(toHeroContext).style,
+        child: toHeroContext.widget,
+      ),
+      child: avatar,
+    );
   }
 }

@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 关于：修复提交次数记录一直为1的问题。
 - 主页：修复宽屏设备中侧边栏边框弧度问题。
 - 设置：修复某些情况下Windows上本地更新日志乱码的问题。
+- 通知：修复从通知进入对应帖子后，再返回通知界面时用户名称动画错误的问题。
 
 ### Changed
 
