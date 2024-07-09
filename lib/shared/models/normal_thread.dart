@@ -221,6 +221,10 @@ class NormalThread with NormalThreadMappable {
       }
     }
 
+    // Two <td class="by"> nodes:
+    //
+    // 1. Thread author node. <- need this one.
+    // 2. Last reply author node.
     final threadAuthorNode = threadElement.querySelector('tr > td.by');
     final threadAuthorUrl =
         threadAuthorNode?.querySelector('cite > a')?.attributes['href'];
@@ -252,8 +256,12 @@ class NormalThread with NormalThreadMappable {
         ?.firstEndDeepText()
         ?.parseToInt();
 
+    // Two <td class="by"> nodes:
+    //
+    // 1. Thread author node.
+    // 2. Last reply author node. <- need this one.
     final threadLastReplyNode =
-        threadElement.querySelector('tr > td.by:nth-child(5)');
+        threadElement.querySelectorAll('tr > td.by').lastOrNull;
     final threadLastReplyAuthorUrl =
         threadLastReplyNode?.querySelector('cite > a')?.attributes['href'];
     // We only have username here.
