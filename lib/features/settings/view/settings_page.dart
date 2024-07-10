@@ -55,9 +55,14 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<(Color?, bool)?> _showAccentColorPickerDialog(
     BuildContext context,
   ) async {
-    return showDialog<(Color?, bool)>(
+    return showModalBottomSheet<(Color?, bool)>(
       context: context,
-      builder: (context) => const ColorPickerDialog(),
+      builder: (context) => ColorPickerDialog(
+        currentColorValue: RepositoryProvider.of<SettingsRepository>(context)
+            .getAccentColorValue(),
+        blocContext: context,
+      ),
+      showDragHandle: true,
     );
   }
 
