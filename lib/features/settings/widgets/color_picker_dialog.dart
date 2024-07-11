@@ -28,6 +28,7 @@ final class ColorPickerDialog extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
+        forceMaterialTransparency: true,
         title: Text(tr.title),
         automaticallyImplyLeading: false,
         centerTitle: true,
@@ -40,11 +41,10 @@ final class ColorPickerDialog extends StatelessWidget {
             Expanded(
               child: GridView.builder(
                 shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: _colorBoxSize,
-                  mainAxisSpacing: 30,
-                  crossAxisSpacing: 30,
+                  mainAxisSpacing: 20,
+                  crossAxisSpacing: 10,
                   mainAxisExtent: _colorBoxSize,
                 ),
                 itemBuilder: (context, index) => GestureDetector(
@@ -64,6 +64,7 @@ final class ColorPickerDialog extends StatelessWidget {
                 itemCount: items.length,
               ),
             ),
+            sizedBoxW20H20,
             TextButton(
               child: Text(context.t.general.reset),
               onPressed: () async {
@@ -71,7 +72,7 @@ final class ColorPickerDialog extends StatelessWidget {
                 context.pop((null, true));
               },
             ),
-            sizedBoxW20H20,
+            sizedBoxW10H10,
           ],
         ),
       ),

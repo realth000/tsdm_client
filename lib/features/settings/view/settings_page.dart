@@ -62,7 +62,6 @@ class _SettingsPageState extends State<SettingsPage> {
             .getAccentColorValue(),
         blocContext: context,
       ),
-      showDragHandle: true,
     );
   }
 
