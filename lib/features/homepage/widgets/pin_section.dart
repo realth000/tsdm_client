@@ -26,6 +26,9 @@ class PinSection extends StatelessWidget {
     }
 
     return ListTile(
+      // 72 is the height when subtitle is not null.
+      // Set this value to make every group of section has the same height.
+      minTileHeight: 72,
       leading: GestureDetector(
         child: CircleAvatar(child: Text(title[0])),
         onTap: () async => context.pushNamed(
