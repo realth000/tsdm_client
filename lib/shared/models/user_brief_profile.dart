@@ -26,7 +26,8 @@ final class UserBriefProfile with UserBriefProfileMappable {
     required this.natural,
     required this.scheming,
     required this.spirit,
-    required this.seal,
+    required this.specialAttr,
+    required this.specialAttrName,
     required this.couple,
     required this.privilege,
     required this.registrationDate,
@@ -109,10 +110,13 @@ final class UserBriefProfile with UserBriefProfileMappable {
   /// 精灵
   final String spirit;
 
-  /// User attr
+  /// Special attr that changes over time.
   ///
-  /// 龙之印章
-  final String seal;
+  /// 龙之印章/西瓜
+  final String specialAttr;
+
+  /// Name of [specialAttr].
+  final String specialAttrName;
 
   // TODO: Reserve as link.
   /// Couple username.
@@ -188,7 +192,9 @@ final class UserBriefProfile with UserBriefProfileMappable {
     String? natural;
     String? scheming;
     String? spirit;
-    String? seal;
+    String? specialAttr;
+    // Name of special attr.
+    String? specialAttrName;
     String? couple;
     String? privilege;
     String? registrationDate;
@@ -213,11 +219,19 @@ final class UserBriefProfile with UserBriefProfileMappable {
         '天然°:' => natural = data,
         '腹黑°:' => scheming = data,
         '精灵:' => spirit = data,
-        '龙之印章:' => seal = data,
         'CP:' => couple = data,
         '阅读权限:' => privilege = data,
         '注册时间:' => registrationDate = data,
         '来自:' => comeFrom = data,
+        // Special attr that changes over time.
+        '龙之印章:' => () {
+            specialAttr = data;
+            specialAttrName = '龙之印章';
+          }(),
+        '西瓜:' => () {
+            specialAttr = data;
+            specialAttrName = '西瓜';
+          }(),
         _ => '',
       };
     }
@@ -241,7 +255,8 @@ final class UserBriefProfile with UserBriefProfileMappable {
       natural: natural ?? '',
       scheming: scheming ?? '',
       spirit: spirit ?? '',
-      seal: seal ?? '',
+      specialAttr: specialAttr ?? '',
+      specialAttrName: specialAttrName ?? '',
       couple: couple ?? '',
       privilege: privilege ?? '',
       registrationDate: registrationDate ?? '',

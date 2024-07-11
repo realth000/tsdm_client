@@ -348,7 +348,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     String? natural;
     String? scheming;
     String? spirit;
-    String? seal;
+    // Special attr that changes over time.
+    String? specialAttr;
+    // Name of special attr.
+    String? specialAttrName;
 
     final statisticsInfoList = profileRootNode
         .querySelectorAll('div#psts > ul > li')
@@ -371,7 +374,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         case '精灵':
           spirit = stat.$2;
         case '龙之印章':
-          seal = stat.$2;
+          specialAttr = stat.$2;
+          specialAttrName = '龙之印章';
+        case '西瓜':
+          specialAttr = stat.$2;
+          specialAttrName = '西瓜';
       }
     }
 
@@ -431,7 +438,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       natural: natural,
       scheming: scheming,
       spirit: spirit,
-      seal: seal,
+      specialAttr: specialAttr,
+      specialAttrName: specialAttrName,
     );
   }
 

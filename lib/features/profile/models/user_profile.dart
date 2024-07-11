@@ -49,7 +49,8 @@ class UserProfile with UserProfileMappable {
     required this.natural,
     required this.scheming,
     required this.spirit,
-    required this.seal,
+    required this.specialAttr,
+    required this.specialAttrName,
   });
 
   /// Url of user avatar.
@@ -220,6 +221,11 @@ class UserProfile with UserProfileMappable {
   /// 精灵
   final String? spirit;
 
-  /// 龙之印章
-  final String? seal;
+  /// Special attr changes over time.
+  ///
+  /// 龙之印章/西瓜
+  final String? specialAttr;
+
+  /// Special attr name.
+  final String? specialAttrName;
 }

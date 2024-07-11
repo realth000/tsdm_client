@@ -219,8 +219,7 @@
       "publicity": "宣傳度",
       "natural": "天然",
       "scheming": "腹黑",
-      "spirit": "精靈",
-      "seal": "龍之印章"
+      "spirit": "精靈"
     }
   },
   "forumPage": {
@@ -469,7 +468,6 @@
       "natural": "天然",
       "scheming": "腹黑",
       "spirit": "精靈",
-      "seal": "龍之印章",
       "cp": "CP",
       "privilege": "閱讀權限",
       "registration": "注冊時間",

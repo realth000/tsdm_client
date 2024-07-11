@@ -210,10 +210,11 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 profile.spirit,
                 style: _UserProfileAttrStyle.secondary,
               ),
+              // Special attr, dynamic and not translated.
               _UserProfilePair(
-                MdiIcons.circleExpand,
-                tr.seal,
-                profile.seal,
+                MdiIcons.heartOutline,
+                profile.specialAttrName,
+                profile.specialAttr,
                 style: _UserProfileAttrStyle.secondary,
               ),
               if (profile.couple != null && profile.couple!.isNotEmpty)

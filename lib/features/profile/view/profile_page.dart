@@ -685,10 +685,13 @@ class _ProfilePageState extends State<ProfilePage> {
               name: tr.statistics.spirit,
               value: userProfile.spirit!,
             ),
-          if (userProfile.seal != null)
+          // Special attr changes over time.
+          // Here is dynamic and not translated.
+          if (userProfile.specialAttr != null &&
+              userProfile.specialAttrName != null)
             AttrBlock(
-              name: tr.statistics.seal,
-              value: userProfile.seal!,
+              name: userProfile.specialAttrName!,
+              value: userProfile.specialAttr!,
             ),
         ],
       ),

@@ -219,8 +219,7 @@
       "publicity": "Publicity",
       "natural": "Natural",
       "scheming": "Scheming",
-      "spirit": "Spirit",
-      "seal": "Seal"
+      "spirit": "Spirit"
     }
   },
   "forumPage": {
@@ -469,7 +468,6 @@
       "natural": "Natural",
       "scheming": "Scheming",
       "spirit": "Spirit",
-      "seal": "Seal",
       "cp": "CP",
       "privilege": "Privilege",
       "registration": "Registration",
