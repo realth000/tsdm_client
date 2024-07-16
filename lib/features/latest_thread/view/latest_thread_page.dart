@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repo
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/card/thread_card.dart';
+import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 
 /// Page to show info about latest thread page.
 class LatestThreadPage extends StatefulWidget {

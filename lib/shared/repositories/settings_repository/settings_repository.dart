@@ -65,6 +65,10 @@ class SettingsRepository {
       showUnreadInfoHint: _settingsProvider.getShowUnreadInfoHint(),
       doublePressExit: _settingsProvider.getDoublePressExit(),
       threadReverseOrder: _settingsProvider.getThreadReverseOrder(),
+      threadCardInfoRowAlignCenter:
+          _settingsProvider.getThreadCardInfoRowAlignCenter(),
+      threadCardShowLastReplyAuthor:
+          _settingsProvider.getThreadCardShowLastReplyAuthor(),
     );
   }
 
@@ -241,6 +245,29 @@ class SettingsRepository {
   Future<void> setThreadReverseOrder({required bool enabled}) async {
     await _settingsProvider.setThreadReverseOrder(enabled: enabled);
     _state = _state.copyWith(threadReverseOrder: enabled);
+    _controller.add(_state);
+  }
+
+  /// Get the state of thread card info row alignment.
+  bool getThreadCardInfoRowAlignCenter() =>
+      _settingsProvider.getThreadCardInfoRowAlignCenter();
+
+  /// Set the state of thread card info row alignment.
+  Future<void> setThreadCardInfoRowAlignCenter({required bool enabled}) async {
+    await _settingsProvider.setThreadCardInfoRowAlignCenter(enabled: enabled);
+    _state = _state.copyWith(threadCardInfoRowAlignCenter: enabled);
+    _controller.add(_state);
+  }
+
+  /// Get the state of visibility of last replied author's username in info row
+  /// in thread card.
+  bool get2() => _settingsProvider.getThreadCardShowLastReplyAuthor();
+
+  /// Set the visibility of last replied author's username in info row in thread
+  /// card.
+  Future<void> setThreadCardShowLastReplyAuthor({required bool enabled}) async {
+    await _settingsProvider.setThreadCardShowLastReplyAuthor(enabled: enabled);
+    _state = _state.copyWith(threadCardShowLastReplyAuthor: enabled);
     _controller.add(_state);
   }
 }

@@ -41,6 +41,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     _settingsMapSub = _settingsRepository.settings
         .listen((settings) => add(SettingsMapChanged(settings)));
 
+    // TODO: Refactor, use exhaustive switch.
     on<SettingsMapChanged>(_onSettingsMapChanged);
     on<SettingsScrollOffsetChanged>(
       _onSettingsScrollOffsetChanged,
@@ -69,6 +70,12 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     );
     on<SettingsChangeThreadReverseOrderRequested>(
       _onSettingsChangeThreadReverseOrderRequested,
+    );
+    on<SettingsChangeThreadCardInfoRowAlignCenterRequested>(
+      _onSettingsChangeThreadCardInfoRowAlignCenterRequested,
+    );
+    on<SettingsChangeThreadCardShowLastReplyAuthorRequested>(
+      _onSettingsChangeThreadCardShowLastReplyAuthorRequested,
     );
   }
 
@@ -162,6 +169,24 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsEmitter emit,
   ) async {
     await _settingsRepository.setThreadReverseOrder(enabled: event.enabled);
+  }
+
+  Future<void> _onSettingsChangeThreadCardInfoRowAlignCenterRequested(
+    SettingsChangeThreadCardInfoRowAlignCenterRequested event,
+    SettingsEmitter emit,
+  ) async {
+    await _settingsRepository.setThreadCardInfoRowAlignCenter(
+      enabled: event.enabled,
+    );
+  }
+
+  Future<void> _onSettingsChangeThreadCardShowLastReplyAuthorRequested(
+    SettingsChangeThreadCardShowLastReplyAuthorRequested event,
+    SettingsEmitter emit,
+  ) async {
+    await _settingsRepository.setThreadCardShowLastReplyAuthor(
+      enabled: event.enabled,
+    );
   }
 
   @override

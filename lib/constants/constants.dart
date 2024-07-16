@@ -16,6 +16,9 @@ const assetsLicensePath = './assets/text/LICENSE';
 /// Dart logo
 const assetDartLogoPath = './assets/images/dart.svg';
 
+/// Example avatar.
+const assetExampleIndexAvatar = './assets/images/index_avatar.png';
+
 /// Changelog till publish.
 final changelogContent = () {
   final lines = changelog.split('\n');

@@ -14,25 +14,42 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 Future<void> showCustomBottomSheet({
   required BuildContext context,
   required String title,
-  required List<Widget> Function(BuildContext context) childrenBuilder,
+  List<Widget> Function(BuildContext context)? childrenBuilder,
+  Widget Function(BuildContext context)? builder,
+  BoxConstraints? constraints,
 }) async {
+  assert(
+    builder != null || childrenBuilder != null,
+    'must provide builder or childrenBuilder',
+  );
+  final Widget content;
+  if (builder != null) {
+    content = builder.call(context);
+  } else {
+    content = Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            child: Column(children: childrenBuilder!(context)),
+          ),
+        ),
+      ],
+    );
+  }
   await showModalBottomSheet<void>(
     context: context,
-    builder: (context) {
+    constraints: constraints,
+    builder: (_) {
       return Scaffold(
+        appBar: AppBar(
+          forceMaterialTransparency: true,
+          title: Text(title),
+          automaticallyImplyLeading: false,
+          centerTitle: true,
+        ),
         body: Padding(
           padding: edgeInsetsL15T15R15B15,
-          child: Column(
-            children: [
-              SizedBox(height: 50, child: Center(child: Text(title))),
-              sizedBoxW10H10,
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(children: childrenBuilder(context)),
-                ),
-              ),
-            ],
-          ),
+          child: content,
         ),
       );
     },

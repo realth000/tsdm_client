@@ -1,4 +1,6 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -8,11 +10,15 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
 import 'package:tsdm_client/features/my_thread/models/models.dart';
 import 'package:tsdm_client/features/search/models/models.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
+
+typedef _ThreadInfo = (IconData, String);
 
 class _CardLayout extends StatelessWidget {
   const _CardLayout({
@@ -23,12 +29,14 @@ class _CardLayout extends StatelessWidget {
     this.threadType,
     this.replyCount,
     this.viewCount,
+    this.lastReplyAuthor,
     this.latestReplyTime,
     this.price,
     this.privilege,
     this.quotedMessage,
     this.css,
     this.stateSet,
+    this.disableTap = false,
   });
 
   final String threadID;
@@ -39,6 +47,7 @@ class _CardLayout extends StatelessWidget {
 
   final int? replyCount;
   final int? viewCount;
+  final User? lastReplyAuthor;
   final DateTime? latestReplyTime;
   final int? price;
   final int? privilege;
@@ -46,12 +55,39 @@ class _CardLayout extends StatelessWidget {
   final CssTypes? css;
   final Set<ThreadStateModel>? stateSet;
 
-  @override
-  Widget build(BuildContext context) {
-    final infoList = [
+  Widget _buildAvatar(BuildContext context) {
+    final avatar = author.avatarUrl;
+    if (avatar != null) {
+      if (avatar.isEmpty) {
+        return CircleAvatar(child: Text(author.name[0]));
+      }
+
+      if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
+        return HeroUserAvatar(
+          username: author.name,
+          avatarUrl: author.avatarUrl,
+          disableHero: true,
+        );
+      }
+      return CircleAvatar(backgroundImage: AssetImage(avatar));
+    }
+
+    return CircleAvatar(child: Text(author.name[0]));
+  }
+
+  /// Mainly for test.
+  final bool disableTap;
+
+  Widget _buildInfoWidgetRow(
+    BuildContext context, {
+    required bool infoRowAlignCenter,
+    required bool showLastReplyAuthor,
+  }) {
+    final infoList = <_ThreadInfo>[
       if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
       if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
-      // (Icons.person_outline, thread.latestReplyAuthor.name),
+      if (showLastReplyAuthor && lastReplyAuthor != null)
+        (Icons.person_outline, lastReplyAuthor!.name),
       if (latestReplyTime != null)
         (
           Icons.timelapse_outlined,
@@ -61,56 +97,107 @@ class _CardLayout extends StatelessWidget {
       if ((privilege ?? 0) > 0) (Icons.feedback_outlined, '$privilege'),
     ];
 
-    final infoWidgetList = <Widget>[];
-    for (final e in infoList) {
-      infoWidgetList.add(
-        Expanded(
-          child: Row(
-            children: [
-              Icon(e.$1, size: smallIconSize),
-              sizedBoxW5H5,
-              Flexible(
-                child: Text(
-                  e.$2,
-                  style: const TextStyle(fontSize: smallTextSize),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                ),
+    if (infoList.isEmpty) {
+      return sizedBoxEmpty;
+    }
+
+    if (infoRowAlignCenter) {
+      // In center.
+      return Padding(
+        padding: edgeInsetsL15R15B10,
+        child: Row(
+          children: [
+            Expanded(
+              child: Row(
+                children: infoList
+                    .map(
+                      (e) => Expanded(
+                        child: Row(
+                          children: [
+                            Icon(e.$1, size: smallIconSize),
+                            sizedBoxW5H5,
+                            Expanded(
+                              child: Text(
+                                e.$2,
+                                style: const TextStyle(fontSize: smallTextSize),
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    )
+                    .toList(),
               ),
-            ],
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Not in center.
+      return Padding(
+        padding: edgeInsetsL15R15B10,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: infoList
+                .map(
+                  (e) => [
+                    Icon(e.$1, size: smallIconSize),
+                    sizedBoxW5H5,
+                    Text(
+                      e.$2,
+                      style: const TextStyle(fontSize: smallTextSize),
+                      maxLines: 1,
+                    ),
+                    sizedBoxW20H20,
+                  ],
+                )
+                .flattened
+                .toList(),
           ),
         ),
       );
     }
+  }
 
+  Widget _buildContent(BuildContext context, SettingsState state) {
+    final infoRowAlignCenter = state.settingsMap.threadCardInfoRowAlignCenter;
+    final showLastReplyAuthor = state.settingsMap.threadCardShowLastReplyAuthor;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: () async {
-          await context.pushNamed(
-            ScreenPaths.thread,
-            queryParameters: {
-              'tid': threadID,
-              'appBarTitle': title,
-              'threadType': threadType?.name,
-            },
-          );
-        },
+        onTap: disableTap
+            ? null
+            : () async {
+                await context.pushNamed(
+                  ScreenPaths.thread,
+                  queryParameters: {
+                    'tid': threadID,
+                    'appBarTitle': title,
+                    'threadType': threadType?.name,
+                  },
+                );
+              },
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO: Tap to navigate to user space.
             ListTile(
               leading: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(author.url),
-                child: CircleAvatar(
-                  child: Text(author.name[0]),
-                ),
+                onTap: disableTap
+                    ? null
+                    : () async => context.dispatchAsUrl(author.url),
+                child: _buildAvatar(context),
               ),
               title: Row(
                 children: [
                   GestureDetector(
-                    onTap: () async => context.dispatchAsUrl(author.url),
+                    onTap: disableTap
+                        ? null
+                        : () async => context.dispatchAsUrl(author.url),
                     child: SingleLineText(author.name),
                   ),
                   Expanded(child: Container()),
@@ -154,17 +241,30 @@ class _CardLayout extends StatelessWidget {
                   children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
                 ),
               ),
-            if (infoWidgetList.isNotEmpty)
-              Padding(
-                padding: edgeInsetsL15R15B10,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: infoWidgetList,
-                ),
-              ),
+            _buildInfoWidgetRow(
+              context,
+              infoRowAlignCenter: infoRowAlignCenter,
+              showLastReplyAuthor: showLastReplyAuthor,
+            ),
           ].insertBetween(sizedBoxW10H10),
         ),
       ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      buildWhen: (prev, curr) {
+        final pm = prev.settingsMap;
+        final cm = curr.settingsMap;
+
+        return pm.threadCardInfoRowAlignCenter !=
+                cm.threadCardInfoRowAlignCenter ||
+            pm.threadCardShowLastReplyAuthor !=
+                cm.threadCardShowLastReplyAuthor;
+      },
+      builder: _buildContent,
     );
   }
 }
@@ -172,10 +272,13 @@ class _CardLayout extends StatelessWidget {
 /// Card to show thread info.
 class NormalThreadCard extends StatelessWidget {
   /// Constructor.
-  const NormalThreadCard(this.thread, {super.key});
+  const NormalThreadCard(this.thread, {this.disableTap = false, super.key});
 
   /// Thread data.
   final NormalThread thread;
+
+  /// Creat a card that disable tap gestures.
+  final bool disableTap;
 
   @override
   Widget build(BuildContext context) {
@@ -187,11 +290,13 @@ class NormalThreadCard extends StatelessWidget {
       threadType: thread.threadType,
       replyCount: thread.replyCount,
       viewCount: thread.viewCount,
+      lastReplyAuthor: thread.latestReplyAuthor,
       latestReplyTime: thread.latestReplyTime,
       price: thread.price,
       privilege: thread.privilege,
       css: thread.css,
       stateSet: thread.stateSet,
+      disableTap: disableTap,
     );
   }
 }

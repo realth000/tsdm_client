@@ -89,4 +89,14 @@ mixin SettingsDefaultMapMixin {
   ///
   /// Default is disabled.
   bool get defaultThreadReverseOrder => false;
+
+  /// Center align the info row in thread card.
+  ///
+  /// Default is enabled.
+  bool get defaultThreadCardInfoRowAlignCenter => true;
+
+  /// Show last replied author's username in info row in `ThreadCard`.
+  ///
+  /// Default is disabled.
+  bool get defaultThreadCardShowLastReplyAuthor => false;
 }

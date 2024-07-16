@@ -10,13 +10,14 @@ import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/thread_card_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
-import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/utils/platform.dart';
+import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
@@ -69,13 +70,13 @@ class _SettingsPageState extends State<SettingsPage> {
     BuildContext context,
     SettingsState state,
   ) {
+    final tr = context.t.settingsPage.appearanceSection;
     // Locale.
     final settingsLocale = state.settingsMap.locale;
     final locale = AppLocale.values
         .firstWhereOrNull((v) => v.languageTag == settingsLocale);
-    final localeName = locale == null
-        ? context.t.settingsPage.appearanceSection.languages.followSystem
-        : context.t.locale;
+    final localeName =
+        locale == null ? tr.languages.followSystem : context.t.locale;
 
     // Theme mode.
     final themeModeIndex = state.settingsMap.themeMode;
@@ -90,16 +91,16 @@ class _SettingsPageState extends State<SettingsPage> {
     final showUnreadInfoHint = state.settingsMap.showUnreadInfoHint;
 
     return [
-      SectionTitleText(context.t.settingsPage.appearanceSection.title),
+      SectionTitleText(tr.title),
       // Theme mode
       SectionListTile(
         leading: const Icon(Icons.contrast_outlined),
-        title: Text(context.t.settingsPage.appearanceSection.themeMode.title),
+        title: Text(tr.themeMode.title),
         subtitle: Text(
           <String>[
-            context.t.settingsPage.appearanceSection.themeMode.system,
-            context.t.settingsPage.appearanceSection.themeMode.light,
-            context.t.settingsPage.appearanceSection.themeMode.dark,
+            tr.themeMode.system,
+            tr.themeMode.light,
+            tr.themeMode.dark,
           ][themeModeIndex],
         ),
         trailing: ToggleButtons(
@@ -139,7 +140,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // Language
       SectionListTile(
         leading: const Icon(Icons.translate_outlined),
-        title: Text(context.t.settingsPage.appearanceSection.languages.title),
+        title: Text(tr.languages.title),
         subtitle: Text(localeName),
         onTap: () async {
           final localeGroup =
@@ -171,14 +172,8 @@ class _SettingsPageState extends State<SettingsPage> {
       /// Shortcut in forum card.
       SwitchListTile(
         secondary: const Icon(Icons.shortcut_outlined),
-        title: Text(
-          context
-              .t.settingsPage.appearanceSection.showShortcutInForumCard.title,
-        ),
-        subtitle: Text(
-          context
-              .t.settingsPage.appearanceSection.showShortcutInForumCard.detail,
-        ),
+        title: Text(tr.showShortcutInForumCard.title),
+        subtitle: Text(tr.showShortcutInForumCard.detail),
         contentPadding: edgeInsetsL18R18,
         value: showForumCardShortcut,
         onChanged: (v) async {
@@ -190,7 +185,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // Accent color
       SectionListTile(
         leading: const Icon(Icons.color_lens_outlined),
-        title: Text(context.t.settingsPage.appearanceSection.colorScheme.title),
+        title: Text(tr.colorScheme.title),
         trailing: accentColor < 0
             ? null
             : Hero(
@@ -224,12 +219,8 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       SwitchListTile(
         secondary: const Icon(Icons.notifications_outlined),
-        title: Text(
-          context.t.settingsPage.appearanceSection.showUnreadInfoHint.title,
-        ),
-        subtitle: Text(
-          context.t.settingsPage.appearanceSection.showUnreadInfoHint.detail,
-        ),
+        title: Text(tr.showUnreadInfoHint.title),
+        subtitle: Text(tr.showUnreadInfoHint.detail),
         contentPadding: edgeInsetsL18R18,
         value: showUnreadInfoHint,
         onChanged: (v) async {
@@ -237,6 +228,17 @@ class _SettingsPageState extends State<SettingsPage> {
               .read<SettingsBloc>()
               .add(SettingsChangeUnreadInfoHintRequested(enabled: v));
         },
+      ),
+      SectionListTile(
+        leading: const Icon(Icons.article_outlined),
+        title: Text(tr.threadCard.title),
+        subtitle: Text(tr.threadCard.detail),
+        onTap: () async => showCustomBottomSheet(
+          context: context,
+          title: tr.title,
+          builder: (context) => const ThreadCardDialog(),
+          constraints: const BoxConstraints(maxHeight: 400),
+        ),
       ),
     ];
   }
@@ -431,31 +433,24 @@ class _SettingsPageState extends State<SettingsPage> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => SettingsBloc(
-        fragmentsRepository:
-            RepositoryProvider.of<FragmentsRepository>(context),
-        settingsRepository: RepositoryProvider.of<SettingsRepository>(context),
-      ),
-      child: BlocBuilder<SettingsBloc, SettingsState>(
-        builder: (context, state) {
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(context.t.navigation.settings),
-            ),
-            body: ListView(
-              controller: scrollController,
-              children: [
-                ..._buildAppearanceSection(context, state),
-                ..._buildBehaviorSection(context, state),
-                ..._buildCheckinSection(context, state),
-                ..._buildStorageSection(context, state),
-                ..._buildOtherSection(context),
-              ],
-            ),
-          );
-        },
-      ),
+    return BlocBuilder<SettingsBloc, SettingsState>(
+      builder: (context, state) {
+        return Scaffold(
+          appBar: AppBar(
+            title: Text(context.t.navigation.settings),
+          ),
+          body: ListView(
+            controller: scrollController,
+            children: [
+              ..._buildAppearanceSection(context, state),
+              ..._buildBehaviorSection(context, state),
+              ..._buildCheckinSection(context, state),
+              ..._buildStorageSection(context, state),
+              ..._buildOtherSection(context),
+            ],
+          ),
+        );
+      },
     );
   }
 }

@@ -62,6 +62,22 @@
       "showUnreadInfoHint": {
         "title": "Unread Info Hint",
         "detail": "Show badge or count for user unread info on notice button"
+      },
+      "threadCard": {
+        "title": "Thread card",
+        "detail": "Configure the appearance of thread card",
+        "infoRowAlignCenter": "Info row align center",
+        "showLastReplyAuthor": "Show last reply author",
+        "example": {
+          "title": "TV Anime \"A Certain Magical Index\" 4th Season Coming Out",
+          "author": "茵蒂克丝",
+          "time": "33284880000000",
+          "message": "Forth season finally here. Hope no Nishikiori Hiroshi.",
+          "reply": "7000",
+          "view": "103000",
+          "lastReplyAuthor": "桐ヶ谷和人",
+          "threadType": "Daydream"
+        }
       }
     },
     "behaviorSection": {

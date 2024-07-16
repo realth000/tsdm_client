@@ -304,4 +304,36 @@ class DatabaseSettingsProvider
     final storage = _getStorage();
     await storage.saveBool(settingsThreadReverseOrder, value: enabled);
   }
+
+  @override
+  bool getThreadCardInfoRowAlignCenter() {
+    final storage = _getStorage();
+    return storage.getBool(settingsThreadCardInfoRowAlignCenter) ??
+        defaultThreadCardInfoRowAlignCenter;
+  }
+
+  @override
+  Future<void> setThreadCardInfoRowAlignCenter({required bool enabled}) async {
+    final storage = _getStorage();
+    await storage.saveBool(
+      settingsThreadCardInfoRowAlignCenter,
+      value: enabled,
+    );
+  }
+
+  @override
+  bool getThreadCardShowLastReplyAuthor() {
+    final storage = _getStorage();
+    return storage.getBool(settingsThreadCardShowLastReplyAuthor) ??
+        defaultThreadCardShowLastReplyAuthor;
+  }
+
+  @override
+  Future<void> setThreadCardShowLastReplyAuthor({required bool enabled}) async {
+    final storage = _getStorage();
+    await storage.saveBool(
+      settingsThreadCardShowLastReplyAuthor,
+      value: enabled,
+    );
+  }
 }

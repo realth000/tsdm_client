@@ -62,6 +62,22 @@
       "showUnreadInfoHint": {
         "title": "未读信息提示",
         "detail": "有未读消息时消息按钮上显示红点或数量"
+      },
+      "threadCard": {
+        "title": "帖子卡片",
+        "detail": "设置帖子卡片的外观",
+        "infoRowAlignCenter": "信息居中排列",
+        "showLastReplyAuthor": "显示最后回复的用户的名字",
+        "example": {
+          "title": "TV动画《魔法禁书目录》第四季制作决定！",
+          "author": "茵蒂克丝",
+          "time": "33284880000000",
+          "message": "第四季终于来了，希望没有锦织博",
+          "reply": "7000",
+          "view": "103000",
+          "lastReplyAuthor": "桐ヶ谷和人",
+          "threadType": "白日梦"
+        }
       }
     },
     "behaviorSection": {

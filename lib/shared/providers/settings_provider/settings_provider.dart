@@ -123,4 +123,18 @@ abstract interface class SettingsProvider {
 
   /// Set the state of revers posts in thread feature.
   Future<void> setThreadReverseOrder({required bool enabled});
+
+  /// Get the state of thread card info row alignment.
+  bool getThreadCardInfoRowAlignCenter();
+
+  /// Set the state of thread card info row alignment.
+  Future<void> setThreadCardInfoRowAlignCenter({required bool enabled});
+
+  /// Get the state of visibility of last replied author's username in info row
+  /// in thread card.
+  bool getThreadCardShowLastReplyAuthor();
+
+  /// Set the visibility of last replied author's username in info row in thread
+  /// card.
+  Future<void> setThreadCardShowLastReplyAuthor({required bool enabled});
 }

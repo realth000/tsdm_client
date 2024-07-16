@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/search/bloc/search_bloc.dart';
 import 'package:tsdm_client/features/search/repository/search_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/debug.dart';
-import 'package:tsdm_client/widgets/card/thread_card.dart';
+import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
 /// Page of search, including a form to fill search parameters and search

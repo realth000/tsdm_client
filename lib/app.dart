@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -56,6 +57,14 @@ class App extends StatelessWidget {
         RepositoryProvider<ImageCacheTriggerCubit>(
           create: (context) =>
               ImageCacheTriggerCubit(RepositoryProvider.of(context)),
+        ),
+        BlocProvider(
+          create: (context) => SettingsBloc(
+            fragmentsRepository:
+                RepositoryProvider.of<FragmentsRepository>(context),
+            settingsRepository:
+                RepositoryProvider.of<SettingsRepository>(context),
+          ),
         ),
       ],
       child: BlocProvider(

@@ -142,3 +142,31 @@ final class SettingsChangeThreadReverseOrderRequested extends SettingsEvent
   /// Enable the second exit check or not.
   final bool enabled;
 }
+
+/// Change the layout info row in thread card.
+@MappableClass()
+final class SettingsChangeThreadCardInfoRowAlignCenterRequested
+    extends SettingsEvent
+    with SettingsChangeThreadCardInfoRowAlignCenterRequestedMappable {
+  /// Constructor.
+  const SettingsChangeThreadCardInfoRowAlignCenterRequested({
+    required this.enabled,
+  }) : super();
+
+  /// Enable or not.
+  final bool enabled;
+}
+
+/// Change the visibility of last reply author in thread card.
+@MappableClass()
+final class SettingsChangeThreadCardShowLastReplyAuthorRequested
+    extends SettingsEvent
+    with SettingsChangeThreadCardShowLastReplyAuthorRequestedMappable {
+  /// Constructor.
+  const SettingsChangeThreadCardShowLastReplyAuthorRequested({
+    required this.enabled,
+  }) : super();
+
+  /// Enable or not.
+  final bool enabled;
+}

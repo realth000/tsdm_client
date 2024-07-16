@@ -62,6 +62,22 @@
       "showUnreadInfoHint": {
         "title": "未讀取訊息提示",
         "detail": "有未讀訊息時訊息按鈕上顯示紅點或數量"
+      },
+      "threadCard": {
+        "title": "貼文卡",
+        "detail": "設定貼文卡的外觀",
+        "infoRowAlignCenter": "訊息居中排列",
+        "showLastReplyAuthor": "顯示最後回覆的使用者的名字",
+        "example": {
+          "title": "TV動畫《魔法禁書目錄》第四季製作決定！",
+          "author": "茵蒂克絲",
+          "time": "33284880000000",
+          "message": "第四季終於來了，希望沒有錦織博",
+          "reply": "7000",
+          "view": "103000",
+          "lastReplyAuthor": "桐ヶ谷和人",
+          "threadType": "白日夢"
+        }
       }
     },
     "behaviorSection": {
