@@ -11,7 +11,7 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Show a bottom sheet with given [title] and build children
 /// with [childrenBuilder].
-Future<void> showCustomBottomSheet({
+Future<T?> showCustomBottomSheet<T>({
   required BuildContext context,
   required String title,
   List<Widget> Function(BuildContext context)? childrenBuilder,
@@ -36,7 +36,7 @@ Future<void> showCustomBottomSheet({
       ],
     );
   }
-  await showModalBottomSheet<void>(
+  final ret = await showModalBottomSheet<T>(
     context: context,
     constraints: constraints,
     builder: (_) {
@@ -54,6 +54,8 @@ Future<void> showCustomBottomSheet({
       );
     },
   );
+
+  return ret;
 }
 
 /// Show a bottom sheet offers available actions of the image.

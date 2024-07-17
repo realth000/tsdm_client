@@ -6,13 +6,15 @@ import 'package:tsdm_client/features/cache/repository/image_cache_repository.dar
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
 Future<void> showEmojiBottomSheet(
   BuildContext context,
   BBCodeEditorController controller,
 ) async {
-  await showModalBottomSheet<void>(
+  await showCustomBottomSheet<void>(
+    title: context.t.bbcodeEditor.emoji.title,
     context: context,
     builder: (context) => _EmojiBottomSheet(context, controller),
   );
@@ -109,23 +111,6 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
     );
   }
 
-  Widget _buildBody(BuildContext context, EmojiState state) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50,
-          child: Center(
-            child: Text(
-              context.t.bbcodeEditor.emoji.title,
-            ),
-          ),
-        ),
-        sizedBoxW10H10,
-        Expanded(child: _buildEmojiTab(context, state)),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
@@ -155,15 +140,11 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
             EmojiStatus.failed => buildRetryButton(context, () {
                 context.read<EmojiBloc>().add(EmojiFetchFromServerEvent());
               }),
-            EmojiStatus.success => _buildBody(context, state),
+            EmojiStatus.success =>
+              Expanded(child: _buildEmojiTab(context, state)),
           };
 
-          return Scaffold(
-            body: Padding(
-              padding: edgeInsetsL15T15R15B15,
-              child: body,
-            ),
-          );
+          return body;
         },
       ),
     );

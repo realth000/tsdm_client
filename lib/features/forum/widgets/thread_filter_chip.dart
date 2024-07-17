@@ -6,6 +6,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Construct a chip that controlling and mutating thread filter state.
 class ThreadChip extends StatelessWidget {
@@ -32,20 +33,9 @@ class ThreadChip extends StatelessWidget {
       sheetItemBuilder;
 
   Widget _buildContent(BuildContext context, ForumState state) {
-    return Scaffold(
-      body: Padding(
-        padding: edgeInsetsL15T15R15B15,
-        child: Column(
-          children: [
-            SizedBox(height: 50, child: Center(child: Text(sheetTitle))),
-            sizedBoxW10H10,
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(children: sheetItemBuilder(context, state)),
-              ),
-            ),
-          ],
-        ),
+    return Expanded(
+      child: SingleChildScrollView(
+        child: Column(children: sheetItemBuilder(context, state)),
       ),
     );
   }
@@ -61,7 +51,8 @@ class ThreadChip extends StatelessWidget {
               ? null
               : (v) async {
                   // bottom sheet.
-                  await showModalBottomSheet<void>(
+                  await showCustomBottomSheet<void>(
+                    title: sheetTitle,
                     context: context,
                     builder: (_) => BlocProvider.value(
                       value: context.read<ForumBloc>(),

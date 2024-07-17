@@ -23,59 +23,47 @@ final class ColorPickerDialog extends StatelessWidget {
   final BuildContext blocContext;
 
   Widget _buildBottomSheetContent(BuildContext context) {
-    final tr = context.t.colorPickerDialog;
     const items = Colors.primaries;
 
-    return Scaffold(
-      appBar: AppBar(
-        forceMaterialTransparency: true,
-        title: Text(tr.title),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
-      body: Padding(
-        padding: edgeInsetsL15T15R15B15,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.end,
-          children: [
-            Expanded(
-              child: GridView.builder(
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-                  maxCrossAxisExtent: _colorBoxSize,
-                  mainAxisSpacing: 20,
-                  crossAxisSpacing: 10,
-                  mainAxisExtent: _colorBoxSize,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        Expanded(
+          child: GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: _colorBoxSize,
+              mainAxisSpacing: 20,
+              crossAxisSpacing: 10,
+              mainAxisExtent: _colorBoxSize,
+            ),
+            itemBuilder: (context, index) => GestureDetector(
+              onTap: () async =>
+                  context.pop((Color(items[index].value), false)),
+              child: Badge(
+                isLabelVisible: items[index].value == currentColorValue,
+                label: const Icon(Icons.check, size: 10),
+                offset: Offset.zero,
+                child: SizedBox(
+                  width: _colorBoxSize,
+                  height: _colorBoxSize,
+                  child: CircleAvatar(backgroundColor: items[index]),
                 ),
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () async =>
-                      context.pop((Color(items[index].value), false)),
-                  child: Badge(
-                    isLabelVisible: items[index].value == currentColorValue,
-                    label: const Icon(Icons.check, size: 10),
-                    offset: Offset.zero,
-                    child: SizedBox(
-                      width: _colorBoxSize,
-                      height: _colorBoxSize,
-                      child: CircleAvatar(backgroundColor: items[index]),
-                    ),
-                  ),
-                ),
-                itemCount: items.length,
               ),
             ),
-            sizedBoxW20H20,
-            TextButton(
-              child: Text(context.t.general.reset),
-              onPressed: () async {
-                blocContext.read<ThemeCubit>().clearAccentColor();
-                context.pop((null, true));
-              },
-            ),
-            sizedBoxW10H10,
-          ],
+            itemCount: items.length,
+          ),
         ),
-      ),
+        sizedBoxW20H20,
+        TextButton(
+          child: Text(context.t.general.reset),
+          onPressed: () async {
+            blocContext.read<ThemeCubit>().clearAccentColor();
+            context.pop((null, true));
+          },
+        ),
+        sizedBoxW10H10,
+      ],
     );
   }
 

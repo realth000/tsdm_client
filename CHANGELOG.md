@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Changed
 
+- app：更新底部弹窗样式。
 - 关于：更新版本号格式，更符合semver。
 - 分区：某些情况下分区为空时显示登录按钮。
 

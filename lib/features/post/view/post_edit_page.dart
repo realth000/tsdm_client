@@ -166,7 +166,7 @@ class _PostEditPageState extends State<PostEditPage> {
     BuildContext context,
     PostEditState state,
   ) async {
-    await showCustomBottomSheet(
+    await showCustomBottomSheet<void>(
       context: context,
       title: context.t.postEditPage.editPostTitle,
       childrenBuilder: (context) => state.content!.threadTypeList!
@@ -197,7 +197,7 @@ class _PostEditPageState extends State<PostEditPage> {
     BuildContext context,
     PostEditState state,
   ) async {
-    await showCustomBottomSheet(
+    await showCustomBottomSheet<void>(
       context: context,
       title: context.t.postEditPage.additionalOptions,
       childrenBuilder: (context) => additionalOptionsMap!.values

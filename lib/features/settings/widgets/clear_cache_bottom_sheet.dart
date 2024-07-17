@@ -7,6 +7,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 /// Show a bottom sheet provides clear cache functionality with clear cache
@@ -14,7 +15,8 @@ import 'package:tsdm_client/utils/show_toast.dart';
 Future<void> showClearCacheBottomSheet({
   required BuildContext context,
 }) async {
-  await showModalBottomSheet<void>(
+  await showCustomBottomSheet<void>(
+    title: context.t.settingsPage.storageSection.clearCache,
     context: context,
     constraints: const BoxConstraints(maxHeight: 300),
     builder: (context) => const _ClearCacheBottomSheet(),
@@ -99,44 +101,38 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
             _ => const Center(child: CircularProgressIndicator()),
           };
 
-          return Scaffold(
-            appBar: AppBar(
-              title: Text(
-                tr.clearCache,
-                style: Theme.of(context).textTheme.titleSmall,
-              ),
-              automaticallyImplyLeading: false,
-              centerTitle: true,
-            ),
-            body: body,
-            bottomNavigationBar: Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: edgeInsetsL10T10R10B10,
-                    child: FilledButton(
-                      onPressed: state.status == SettingsCacheStatus.loaded
-                          ? () {
-                              if (state.clearInfo.hasSelected) {
-                                context.read<SettingsCacheBloc>().add(
-                                      SettingsCacheClearCacheRequested(
-                                        state.clearInfo,
-                                      ),
-                                    );
-                              } else {
-                                showSnackBar(
-                                  context: context,
-                                  message: tr.selectOneCache,
-                                );
+          return Column(
+            children: [
+              Expanded(child: body),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: edgeInsetsL10T10R10B10,
+                      child: FilledButton(
+                        onPressed: state.status == SettingsCacheStatus.loaded
+                            ? () {
+                                if (state.clearInfo.hasSelected) {
+                                  context.read<SettingsCacheBloc>().add(
+                                        SettingsCacheClearCacheRequested(
+                                          state.clearInfo,
+                                        ),
+                                      );
+                                } else {
+                                  showSnackBar(
+                                    context: context,
+                                    message: tr.selectOneCache,
+                                  );
+                                }
                               }
-                            }
-                          : null,
-                      child: Text(context.t.general.ok),
+                            : null,
+                        child: Text(context.t.general.ok),
+                      ),
                     ),
                   ),
-                ),
-              ],
-            ),
+                ],
+              ),
+            ],
           );
         },
       ),

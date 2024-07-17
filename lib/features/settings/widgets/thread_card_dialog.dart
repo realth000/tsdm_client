@@ -79,7 +79,6 @@ class _ThreadCardDialogState extends State<ThreadCardDialog> {
                       ),
                     ),
               ),
-              sizedBoxW20H20,
               SwitchListTile(
                 title: Text(tr.showLastReplyAuthor),
                 value: settings.threadCardShowLastReplyAuthor,
