@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/topics/bloc/topics_bloc.dart';
 import 'package:tsdm_client/features/topics/widgets/topics_placeholder.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -122,7 +123,16 @@ class _TopicsPageState extends State<TopicsPage>
             TopicsStatus.failed => buildRetryButton(context, () {
                 context.read<TopicsBloc>().add(TopicsRefreshRequested());
               }),
-            TopicsStatus.success => _buildContent(context, state),
+            TopicsStatus.success when state.forumGroupList.isNotEmpty =>
+              _buildContent(context, state),
+            // Some server enforced situation.
+            TopicsStatus.success => NeedLoginPage(
+                backUri: GoRouterState.of(context).uri,
+                needPop: true,
+                popCallback: (context) {
+                  context.read<TopicsBloc>().add(TopicsRefreshRequested());
+                },
+              ),
           };
 
           final PreferredSizeWidget tabBar;
@@ -151,7 +161,8 @@ class _TopicsPageState extends State<TopicsPage>
                   },
                 ),
               ],
-              bottom: tabBar,
+              // Some server enforced situation.
+              bottom: state.forumGroupList.isNotEmpty ? tabBar : null,
             ),
             body: AnimatedSwitcher(duration: duration200, child: body),
           );
