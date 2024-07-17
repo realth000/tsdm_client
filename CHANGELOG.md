@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Fixed
+
+- 翻译：修复部分错误翻译。
+
 ### Changed
 
 - 关于：更新版本号格式，更符合semver。
