@@ -140,8 +140,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
             EmojiStatus.failed => buildRetryButton(context, () {
                 context.read<EmojiBloc>().add(EmojiFetchFromServerEvent());
               }),
-            EmojiStatus.success =>
-              Expanded(child: _buildEmojiTab(context, state)),
+            EmojiStatus.success => _buildEmojiTab(context, state),
           };
 
           return body;
