@@ -31,9 +31,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_bbcode_editor:
-    git:
-      url: https://github.com/realth000/flutter_bbcode_editor.git
-      ref: 7b77e0601eba354ec2b8696b0ccef9713d55aeba
+    path: ./packages/flutter_bbcode_editor
   flutter_bloc: ^8.1.6
   flutter_localizations:
     sdk: flutter

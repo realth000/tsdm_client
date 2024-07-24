@@ -4,24 +4,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/models/post_edit_type.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
-import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -103,9 +99,6 @@ class PostEditPage extends StatefulWidget {
 }
 
 class _PostEditPageState extends State<PostEditPage> {
-  /// Enable using testing bbcode editor.
-  bool useExperimentalEditor = false;
-
   /// Show text attribute control button or not.
   bool showTextAttributeButtons = false;
 
@@ -151,7 +144,7 @@ class _PostEditPageState extends State<PostEditPage> {
   /// Value is the option itself.
   Map<String, PostEditContentOption>? additionalOptionsMap;
 
-  final bbcodeController = BBCodeEditorController()..editorVisible = false;
+  final bbcodeController = BBCodeEditorController();
 
   // BBCode text attribute status.
   Color? foregroundColor;
@@ -308,36 +301,17 @@ class _PostEditPageState extends State<PostEditPage> {
     return Row(
       children: [
         IconButton(
-          icon: const Icon(Icons.science_outlined),
-          isSelected: useExperimentalEditor,
-          onPressed: () {
-            setState(() {
-              useExperimentalEditor = !useExperimentalEditor;
-              bbcodeController.editorVisible = useExperimentalEditor;
-              if (useExperimentalEditor) {
-                // Sync normal editor data to rich editor.
-                bbcodeController.data = dataController.text;
-              } else if (bbcodeController.data != null) {
-                dataController.text = bbcodeController.data!;
-              }
-            });
-          },
-        ),
-        AnimatedVisibility(
-          visible: useExperimentalEditor,
-          child: IconButton(
-            icon: Icon(
-              Icons.info_outline,
-              color: Theme.of(context).primaryColor,
-            ),
-            onPressed: () async {
-              await showMessageSingleButtonDialog(
-                context: context,
-                title: context.t.bbcodeEditor.experimentalInfoTitle,
-                message: context.t.bbcodeEditor.experimentalInfoDetail,
-              );
-            },
+          icon: Icon(
+            Icons.info_outline,
+            color: Theme.of(context).primaryColor,
           ),
+          onPressed: () async {
+            await showMessageSingleButtonDialog(
+              context: context,
+              title: context.t.bbcodeEditor.experimentalInfoTitle,
+              message: context.t.bbcodeEditor.experimentalInfoDetail,
+            );
+          },
         ),
         IconButton(
           icon: const Icon(Icons.settings_outlined),
@@ -352,15 +326,6 @@ class _PostEditPageState extends State<PostEditPage> {
               ? null
               : () {
                   if (widget.editType.isEditingPost) {
-                    final String data;
-                    if (useExperimentalEditor) {
-                      data = bbcodeController.data ?? '<null>';
-                    } else {
-                      data = dataController.text;
-                    }
-                    // debug: Inspect rich text data content.
-                    // print('>>>> Data: $data');
-                    // return;
                     final event = PostEditCompleteEditRequested(
                       formHash: state.content!.formHash,
                       postTime: state.content!.postTime,
@@ -372,7 +337,7 @@ class _PostEditPageState extends State<PostEditPage> {
                       pid: widget.pid,
                       threadType: threadType,
                       threadTitle: threadTitleController.text,
-                      data: data,
+                      data: bbcodeController.toBBCode(),
                       options: additionalOptionsMap?.values.toList() ?? [],
                     );
                     context.read<PostEditBloc>().add(event);
@@ -475,48 +440,7 @@ class _PostEditPageState extends State<PostEditPage> {
                 sizedBoxW20H20,
                 // Post data editor.
                 Expanded(
-                  child: useExperimentalEditor
-                      ? InputDecorator(
-                          isFocused: focusNode.hasFocus,
-                          decoration: InputDecoration(
-                            labelText: context.t.postEditPage.body,
-                            alignLabelWithHint: true,
-                          ),
-                          child: BBCodeEditor(
-                            controller: bbcodeController,
-                            focusNode: focusNode,
-                            emojiBuilder: (code) async {
-                              // code is supposed in {:${group_id}_${emoji_id}:}
-                              // format.
-                              final emojiCache = await getIt
-                                  .get<ImageCacheProvider>()
-                                  .getEmojiCacheFromRawCode(code);
-                              return emojiCache;
-                            },
-                            imageBuilder: (String url) =>
-                                CachedImageProvider(url, context),
-                            urlLauncher: (url) async =>
-                                context.dispatchAsUrl(url),
-                          ),
-                        )
-                      : TextFormField(
-                          decoration: InputDecoration(
-                            labelText: context.t.postEditPage.body,
-                            alignLabelWithHint: true,
-                          ),
-                          textAlignVertical: TextAlignVertical.top,
-                          controller: dataController,
-                          maxLines: null,
-                          expands: true,
-                          keyboardType: TextInputType.multiline,
-                          autofocus: widget.editType.isEditingPost,
-                          validator: (v) {
-                            if (v == null || v.parseUtf8Length < 8) {
-                              return context.t.postEditPage.threadBodyTooShort;
-                            }
-                            return null;
-                          },
-                        ),
+                  child: RichEditor(controller: bbcodeController),
                 ),
                 sizedBoxW5H5,
                 EditorToolbar(bbcodeController: bbcodeController),
@@ -554,7 +478,7 @@ class _PostEditPageState extends State<PostEditPage> {
         appBar: AppBar(title: Text(title)),
         body: Padding(
           padding: edgeInsetsL15T15R15B15,
-          child: _buildBody(context),
+          child: FlutterLogo(), // _buildBody(context),
         ),
       ),
     );

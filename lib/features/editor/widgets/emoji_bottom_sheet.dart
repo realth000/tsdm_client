@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
@@ -9,14 +8,13 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
-Future<void> showEmojiBottomSheet(
+Future<String?> showEmojiBottomSheet(
   BuildContext context,
-  BBCodeEditorController controller,
 ) async {
-  await showCustomBottomSheet<void>(
+  return showCustomBottomSheet<String>(
     title: context.t.bbcodeEditor.emoji.title,
     context: context,
-    builder: (context) => _EmojiBottomSheet(context, controller),
+    builder: _EmojiBottomSheet.new,
   );
 }
 
@@ -25,12 +23,9 @@ class _EmojiBottomSheet extends StatefulWidget {
   /// Constructor.
   const _EmojiBottomSheet(
     this.context,
-    this.controller,
   );
 
   final BuildContext context;
-
-  final BBCodeEditorController controller;
 
   @override
   State<_EmojiBottomSheet> createState() => _EmojiBottomSheetState();
@@ -77,8 +72,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           }
           return GestureDetector(
             onTap: () async {
-              Navigator.of(context).pop();
-              await widget.controller.insertEmoji(e.emojiList[index].code);
+              Navigator.of(context).pop(e.emojiList[index].code);
             },
             child: ClipOval(
               child: Image.memory(

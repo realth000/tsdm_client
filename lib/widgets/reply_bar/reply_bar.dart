@@ -4,19 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
+import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
-import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
-import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 
@@ -77,7 +72,6 @@ class _ReplyBarState extends State<ReplyBar> {
   /// Indicate whether sending reply.
   bool isSendingReply = false;
   final _replyFocusNode = FocusNode();
-  final _replyController = TextEditingController();
 
   /// Parameters to reply to thread or post.
   ReplyParameters? _replyParameters;
@@ -90,9 +84,6 @@ class _ReplyBarState extends State<ReplyBar> {
   String? _replyAction;
 
   /////////// Editor Feature ///////////
-
-  /// Enable using testing bbcode editor.
-  bool useExperimentalEditor = false;
 
   /// After switch editor mode, if we have the following condition before
   /// switching:
@@ -110,7 +101,7 @@ class _ReplyBarState extends State<ReplyBar> {
   bool showTextAttributeButtons = false;
 
   /// Rich editor controller.
-  final _replyRichController = BBCodeEditorController()..editorVisible = false;
+  final _replyRichController = BBCodeEditorController();
 
   /// Method to update [_hintText].
   /// Use this method to update text and ui by calling [setState].
@@ -120,11 +111,17 @@ class _ReplyBarState extends State<ReplyBar> {
     });
   }
 
-  void _onRichEditorSelectionChanged() {
-    setState(() {
-      canSendReply = _replyRichController.isNotEmpty;
-    });
-    _updateCursorPos();
+  void _checkEditorContent() {
+    final empty = _replyRichController.isEmpty;
+    if (empty && canSendReply) {
+      setState(() {
+        canSendReply = false;
+      });
+    } else if (!empty && !canSendReply) {
+      setState(() {
+        canSendReply = true;
+      });
+    }
   }
 
   /// Post reply to thread tid/fid.
@@ -133,29 +130,14 @@ class _ReplyBarState extends State<ReplyBar> {
     if (_replyParameters == null) {
       return;
     }
-    if (useExperimentalEditor) {
-      if (_replyRichController.isEmpty) {
-        debug('refuse to send post to thread: empty rich text message');
-        return;
-      }
-    } else {
-      if (_replyController.text.isEmpty) {
-        debug('refuse to send post to thread: empty text');
-        return;
-      }
+    if (_replyRichController.isEmpty) {
+      debug('refuse to send post to thread: empty rich text message');
+      return;
     }
-
-    final String data;
-    if (useExperimentalEditor) {
-      data = _replyRichController.data ?? '<null>';
-    } else {
-      data = _replyController.text;
-    }
-
     context.read<ReplyBloc>().add(
           ReplyToThreadRequested(
             replyParameters: _replyParameters!,
-            replyMessage: data,
+            replyMessage: _replyRichController.toBBCode(),
           ),
         );
   }
@@ -168,26 +150,16 @@ class _ReplyBarState extends State<ReplyBar> {
       return;
     }
 
-    final String data;
-    if (useExperimentalEditor) {
-      if (_replyRichController.isEmpty) {
-        debug('failed to reply to post: reply message is empty');
-        return;
-      }
-      data = _replyRichController.data ?? '<null>';
-    } else {
-      if (_replyController.text.isEmpty) {
-        debug('failed to reply to post: reply message is empty');
-        return;
-      }
-      data = _replyController.text;
+    if (_replyRichController.isEmpty) {
+      debug('failed to reply to post: reply message is empty');
+      return;
     }
 
     context.read<ReplyBloc>().add(
           ReplyToPostRequested(
             replyParameters: _replyParameters!,
             replyAction: _replyAction!,
-            replyMessage: data,
+            replyMessage: _replyRichController.toBBCode(), // data,
           ),
         );
   }
@@ -199,26 +171,16 @@ class _ReplyBarState extends State<ReplyBar> {
       return;
     }
 
-    final String data;
-    if (useExperimentalEditor) {
-      if (_replyRichController.isEmpty) {
-        debug('failed to reply chat history: reply message is empty');
-        return;
-      }
-      data = _replyRichController.data ?? '<null>';
-    } else {
-      if (_replyController.text.isEmpty) {
-        debug('failed to reply chat history: reply message is empty');
-        return;
-      }
-      data = _replyController.text;
+    if (_replyRichController.isEmpty) {
+      debug('failed to reply chat history: reply message is empty');
+      return;
     }
 
     context.read<ReplyBloc>().add(
           ReplyChatHistoryRequested(
             targetUrl: widget.chatHistorySendTarget!.targetUrl,
             formHash: widget.chatHistorySendTarget!.formHash,
-            message: data,
+            message: _replyRichController.toBBCode(),
           ),
         );
   }
@@ -229,19 +191,9 @@ class _ReplyBarState extends State<ReplyBar> {
       return;
     }
 
-    final String data;
-    if (useExperimentalEditor) {
-      if (_replyRichController.isEmpty) {
-        debug('failed to reply chat: reply message is empty');
-        return;
-      }
-      data = _replyRichController.data ?? '<null>';
-    } else {
-      if (_replyController.text.isEmpty) {
-        debug('failed to reply chat: reply message is empty');
-        return;
-      }
-      data = _replyController.text;
+    if (_replyRichController.isEmpty) {
+      debug('failed to reply chat: reply message is empty');
+      return;
     }
 
     context.read<ReplyBloc>().add(
@@ -250,7 +202,7 @@ class _ReplyBarState extends State<ReplyBar> {
             'touid': widget.chatSendTarget!.touid,
             'formhash': widget.chatSendTarget!.formHash,
             'handlekey': widget.chatSendTarget!.handleKey,
-            'message': data,
+            'message': _replyRichController.toBBCode(),
             'messageappand': widget.chatSendTarget!.messageAppend,
           }),
         );
@@ -283,20 +235,6 @@ class _ReplyBarState extends State<ReplyBar> {
     }
   }
 
-  /// Update [hasCursorAtEnd] when editor content changes.
-  ///
-  /// Now the plain text does not have a callback when cursor moved, only have
-  /// one when tapped or text changed.
-  void _updateCursorPos() {
-    if (useExperimentalEditor) {
-      hasCursorAtEnd = _replyRichController.selectionEndPosition?.offset ==
-          _replyRichController.documentEndPosition?.offset;
-    } else {
-      hasCursorAtEnd = _replyController.value.selection.baseOffset ==
-          _replyController.text.length;
-    }
-  }
-
   /// Build an editor with bbcode support.
   Widget _buildRichEditor(BuildContext context) {
     return InputDecorator(
@@ -308,125 +246,14 @@ class _ReplyBarState extends State<ReplyBar> {
         ),
         child: Column(
           children: [
-            Expanded(
-              child: BBCodeEditor(
-                controller: _replyRichController,
-                // This empty scroll controller prevents the text field as the
-                // "primary" scrollable widget in page, so that app bar color
-                // will not change when this text fields scrolls.
-                // Only a workaround but it works.
-                // TODO: Make this prevent elegant.
-                scrollController: ScrollController(),
-                focusNode: focusNode,
-                emojiBuilder: (code) async {
-                  // code is supposed in
-                  // {:${group_id}_${emoji_id}:}
-                  // format.
-                  final emojiCache = await getIt
-                      .get<ImageCacheProvider>()
-                      .getEmojiCacheFromRawCode(code);
-                  return emojiCache;
-                },
-                imageBuilder: (String url) => CachedImageProvider(url, context),
-                urlLauncher: (url) async => context.dispatchAsUrl(url),
-                // TODO: Check if need url encoding.
-                // Seems unnecessary.
-                mentionUserLauncher: (username) => context.dispatchAsUrl(
-                  '$usernameProfilePage$username',
-                ),
-                autoFocus: true,
-              ),
-            ),
+            Expanded(child: RichEditor(controller: _replyRichController)),
           ],
         ),
       ),
     );
   }
 
-  /// Build a plain text editor.
-  Widget _buildPlainEditor(BuildContext context) {
-    return TextField(
-      // This empty scroll controller prevents the text field as the "primary"
-      // scrollable widget in page, so that app bar color will not change when
-      // this text fields scrolls.
-      // Only a workaround but it works.
-      // TODO: Make this prevent elegant.
-      scrollController: ScrollController(),
-      focusNode: _replyFocusNode,
-      controller: _replyController,
-      onTap: _updateCursorPos,
-      onChanged: (value) {
-        setState(() {
-          canSendReply = value.isNotEmpty;
-        });
-        _updateCursorPos();
-      },
-      enabled: !_closed && _hasLogin,
-      maxLines: isExpanded ? null : 10,
-      minLines: isExpanded ? null : 1,
-      decoration: InputDecoration(
-        hintText: _closed
-            ? context.t.threadPage.closed
-            : _hasLogin
-                ? context.t.threadPage.sendReplyHint
-                : context.t.threadPage.needLogin,
-      ),
-    );
-  }
-
   Widget _buildContent(BuildContext context, ReplyState state) {
-    void Function()? switchEditorCallback;
-    if (!_closed && _hasLogin) {
-      switchEditorCallback = () {
-        setState(() {
-          useExperimentalEditor = !useExperimentalEditor;
-          _replyRichController.editorVisible = useExperimentalEditor;
-          if (useExperimentalEditor) {
-            // Reserve the current value because it may change when we check
-            // after the delayed future (see bellow).
-            final reservedHasCursorAtEnd = hasCursorAtEnd;
-            // Sync normal editor data to rich editor.
-            _replyRichController.data = _replyController.text;
-            canSendReply = _replyRichController.isNotEmpty;
-
-            // TODO: Use without delayed future.
-            //
-            // Keep if we have cursor at end.
-            //
-            // Note that here we want to move the cursor to the end of document,
-            // but when getting cursor position, an initialized renderer inside
-            // AppFlowy editor is required.
-            // addPostFrameCallback does not work here, maybe because in that
-            // moment the initial text content is not ready in editor, but what
-            // we want is move cursor to the end of initial text.
-            //
-            // As a workaround, add some delay before moving cursor position.
-            // Not a good solution but works.
-            Future.delayed(const Duration(milliseconds: 300), () {
-              // Use the reserved `hasCursorAtEnd` value.
-              if (reservedHasCursorAtEnd &&
-                  _replyRichController.documentEndPosition != null) {
-                _replyRichController.cursorPosition =
-                    _replyRichController.documentEndPosition!;
-                hasCursorAtEnd = true;
-              }
-            });
-          } else if (_replyRichController.data != null) {
-            _replyController.text = _replyRichController.data!;
-            canSendReply = _replyController.text.isNotEmpty;
-
-            // Keep if we have cursor at end
-            if (hasCursorAtEnd) {
-              _replyFocusNode.requestFocus();
-              _replyController.selection = TextSelection.fromPosition(
-                TextPosition(offset: _replyController.text.length),
-              );
-            }
-          }
-        });
-      };
-    }
-
     return SafeArea(
       top: isExpanded,
       child: Column(
@@ -464,9 +291,7 @@ class _ReplyBarState extends State<ReplyBar> {
                   Expanded(
                     child: Padding(
                       padding: edgeInsetsL10T5R5B5,
-                      child: useExperimentalEditor
-                          ? _buildRichEditor(context)
-                          : _buildPlainEditor(context),
+                      child: _buildRichEditor(context),
                     ),
                   ),
                 ],
@@ -493,25 +318,17 @@ class _ReplyBarState extends State<ReplyBar> {
             child: Row(
               children: [
                 IconButton(
-                  icon: const Icon(Icons.science_outlined),
-                  isSelected: useExperimentalEditor,
-                  onPressed: switchEditorCallback,
-                ),
-                AnimatedVisibility(
-                  visible: useExperimentalEditor,
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.info_outline,
-                      color: Theme.of(context).primaryColor,
-                    ),
-                    onPressed: () async {
-                      await showMessageSingleButtonDialog(
-                        context: context,
-                        title: context.t.bbcodeEditor.experimentalInfoTitle,
-                        message: context.t.bbcodeEditor.experimentalInfoDetail,
-                      );
-                    },
+                  icon: Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).primaryColor,
                   ),
+                  onPressed: () async {
+                    await showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.bbcodeEditor.experimentalInfoTitle,
+                      message: context.t.bbcodeEditor.experimentalInfoDetail,
+                    );
+                  },
                 ),
                 const Spacer(),
                 // Send Button
@@ -538,6 +355,7 @@ class _ReplyBarState extends State<ReplyBar> {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
+    _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen(
       (status) {
         setState(() {
@@ -547,15 +365,15 @@ class _ReplyBarState extends State<ReplyBar> {
         });
       },
     );
-    // Set callback to update text empty or not state.
-    _replyRichController.onSelectionChanged = _onRichEditorSelectionChanged;
   }
 
   @override
   void dispose() {
     _replyFocusNode.dispose();
-    _replyController.dispose();
     _authStatusSub.cancel();
+    _replyRichController
+      ..removeListener(_checkEditorContent)
+      ..dispose();
     super.dispose();
   }
 
@@ -565,7 +383,7 @@ class _ReplyBarState extends State<ReplyBar> {
       listener: (context, state) {
         // Clear text one time when user send request succeed.
         if (state.status == ReplyStatus.success && state.needClearText) {
-          _replyController.clear();
+          // TODO: Implement
           _replyRichController.clear();
           // Reset flag because we only want to clear the sent text.
           context.read<ReplyBloc>().add(ReplyResetClearTextStateTriggered());
