@@ -120,9 +120,6 @@ class _EditorToolbarState extends State<EditorToolbar> {
   /// Show text attribute control button or not.
   bool showTextAttributeButtons = false;
 
-  /// All disabled features, construct from widget.
-  late final Set<EditorFeatures> _d;
-
   // BBCode text attribute status.
   Color? foregroundColor;
   Color? backgroundColor;
@@ -319,12 +316,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //   );
   // }
 
-  @override
-  void initState() {
-    super.initState();
-    // widget.bbcodeController.addListener(updateBBCodeStatus);
-    _d = widget.disabledFeatures;
-  }
+  bool hasFeature(EditorFeatures feature) =>
+      !widget.disabledFeatures.contains(feature);
 
   @override
   void dispose() {
@@ -343,33 +336,32 @@ class _EditorToolbarState extends State<EditorToolbar> {
           config: const BBCodeEditorToolbarConfiguration(),
           emojiPicker: (context) async => showEmojiBottomSheet(context),
           // Features.
-          showUndo: !_d.contains(EditorFeatures.undo),
-          showRedo: !_d.contains(EditorFeatures.redo),
-          showFontFamily: !_d.contains(EditorFeatures.fontFamily),
-          showFontSize: !_d.contains(EditorFeatures.fontSize),
-          showBoldButton: !_d.contains(EditorFeatures.bold),
-          showItalicButton: !_d.contains(EditorFeatures.italic),
-          showUnderlineButton: !_d.contains(EditorFeatures.underline),
-          showStrikethroughButton: !_d.contains(EditorFeatures.strikethrough),
-          showSuperscriptButton: !_d.contains(EditorFeatures.superscript),
-          showColorButton: !_d.contains(EditorFeatures.color),
-          showBackgroundColorButton:
-              !_d.contains(EditorFeatures.backgroundColor),
-          showClearFormatButton: !_d.contains(EditorFeatures.clearFormat),
-          showImageButton: !_d.contains(EditorFeatures.image),
-          showEmojiButton: !_d.contains(EditorFeatures.emoji),
-          showLeftAlignButton: !_d.contains(EditorFeatures.alignLeft),
-          showCenterAlignButton: !_d.contains(EditorFeatures.alignCenter),
-          showRightAlignButton: !_d.contains(EditorFeatures.alignRight),
-          showOrderedListButton: !_d.contains(EditorFeatures.orderedList),
-          showBulletListButton: !_d.contains(EditorFeatures.bulletList),
-          showUrlButton: !_d.contains(EditorFeatures.url),
-          showCodeBlockButton: !_d.contains(EditorFeatures.codeBlock),
-          showQuoteBlockButton: !_d.contains(EditorFeatures.quoteBlock),
-          showClipboardCutButton: !_d.contains(EditorFeatures.cut),
-          showClipboardCopyButton: !_d.contains(EditorFeatures.copy),
-          showClipboardPasteButton: !_d.contains(EditorFeatures.paste),
-          showUserMentionButton: !_d.contains(EditorFeatures.userMention),
+          showUndo: hasFeature(EditorFeatures.undo),
+          showRedo: hasFeature(EditorFeatures.redo),
+          showFontFamily: hasFeature(EditorFeatures.fontFamily),
+          showFontSize: hasFeature(EditorFeatures.fontSize),
+          showBoldButton: hasFeature(EditorFeatures.bold),
+          showItalicButton: hasFeature(EditorFeatures.italic),
+          showUnderlineButton: hasFeature(EditorFeatures.underline),
+          showStrikethroughButton: hasFeature(EditorFeatures.strikethrough),
+          showSuperscriptButton: hasFeature(EditorFeatures.superscript),
+          showColorButton: hasFeature(EditorFeatures.color),
+          showBackgroundColorButton: hasFeature(EditorFeatures.backgroundColor),
+          showClearFormatButton: hasFeature(EditorFeatures.clearFormat),
+          showImageButton: hasFeature(EditorFeatures.image),
+          showEmojiButton: hasFeature(EditorFeatures.emoji),
+          showLeftAlignButton: hasFeature(EditorFeatures.alignLeft),
+          showCenterAlignButton: hasFeature(EditorFeatures.alignCenter),
+          showRightAlignButton: hasFeature(EditorFeatures.alignRight),
+          showOrderedListButton: hasFeature(EditorFeatures.orderedList),
+          showBulletListButton: hasFeature(EditorFeatures.bulletList),
+          showUrlButton: hasFeature(EditorFeatures.url),
+          showCodeBlockButton: hasFeature(EditorFeatures.codeBlock),
+          showQuoteBlockButton: hasFeature(EditorFeatures.quoteBlock),
+          showClipboardCutButton: hasFeature(EditorFeatures.cut),
+          showClipboardCopyButton: hasFeature(EditorFeatures.copy),
+          showClipboardPasteButton: hasFeature(EditorFeatures.paste),
+          showUserMentionButton: hasFeature(EditorFeatures.userMention),
         ),
         // FIXME: Restore all functionality.
         // AnimatedVisibility(

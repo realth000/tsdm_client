@@ -115,53 +115,19 @@ class _ThreadPageState extends State<ThreadPage>
             int.tryParse(widget.pageNumber) ??
             1;
 
-    return Column(
-      children: [
-        Expanded(
-          child: PostList(
-            threadID: widget.threadID,
-            title: widget.title ?? state.title,
-            threadType: widget.threadType,
-            pageNumber: pageNumber,
-            scrollController: _listScrollController,
-            widgetBuilder: (context, post) => PostCard(
-              post,
-              replyCallback: replyPostCallback,
-            ),
-            useDivider: true,
-            postList: state.postList,
-            canLoadMore: state.canLoadMore,
-          ),
-        ),
-        if (state.postList.isNotEmpty)
-          ReplyBar(
-            controller: _replyBarController,
-            replyType: ReplyTypes.thread,
-            disabledEditorFeatures: const {
-              EditorFeatures.fontFamily,
-              EditorFeatures.fontSize,
-              EditorFeatures.bold,
-              EditorFeatures.italic,
-              EditorFeatures.underline,
-              EditorFeatures.superscript,
-              EditorFeatures.backgroundColor,
-              EditorFeatures.clearFormat,
-              EditorFeatures.userMention,
-              EditorFeatures.undo,
-              EditorFeatures.redo,
-              EditorFeatures.alignLeft,
-              EditorFeatures.alignCenter,
-              EditorFeatures.alignRight,
-              EditorFeatures.orderedList,
-              EditorFeatures.bulletList,
-              EditorFeatures.cut,
-              EditorFeatures.copy,
-              EditorFeatures.paste,
-              EditorFeatures.codeBlock,
-              EditorFeatures.quoteBlock,
-            },
-          ),
-      ],
+    return PostList(
+      threadID: widget.threadID,
+      title: widget.title ?? state.title,
+      threadType: widget.threadType,
+      pageNumber: pageNumber,
+      scrollController: _listScrollController,
+      widgetBuilder: (context, post) => PostCard(
+        post,
+        replyCallback: replyPostCallback,
+      ),
+      useDivider: true,
+      postList: state.postList,
+      canLoadMore: state.canLoadMore,
     );
   }
 
@@ -341,6 +307,44 @@ class _ThreadPageState extends State<ThreadPage>
                 },
               ),
               body: _buildBody(context, state),
+              // TODO: Better solution for bottom text input.
+              persistentFooterButtons: [
+                if (state.postList.isNotEmpty)
+                  ReplyBar(
+                    controller: _replyBarController,
+                    replyType: ReplyTypes.thread,
+                    disabledEditorFeatures: const {
+                      EditorFeatures.fontFamily,
+                      EditorFeatures.fontSize,
+                      EditorFeatures.bold,
+                      EditorFeatures.italic,
+                      EditorFeatures.underline,
+                      EditorFeatures.superscript,
+                      EditorFeatures.backgroundColor,
+                      EditorFeatures.clearFormat,
+                      EditorFeatures.userMention,
+                      EditorFeatures.undo,
+                      EditorFeatures.redo,
+                      EditorFeatures.alignLeft,
+                      EditorFeatures.alignCenter,
+                      EditorFeatures.alignRight,
+                      EditorFeatures.orderedList,
+                      EditorFeatures.bulletList,
+                      EditorFeatures.cut,
+                      EditorFeatures.copy,
+                      EditorFeatures.paste,
+                      EditorFeatures.codeBlock,
+                      EditorFeatures.quoteBlock,
+                    },
+                    fullScreenDisabledEditorFeatures: const {
+                      EditorFeatures.cut,
+                      EditorFeatures.copy,
+                      EditorFeatures.paste,
+                    },
+                  )
+                else
+                  SizedBox.shrink(),
+              ],
             );
           },
         ),

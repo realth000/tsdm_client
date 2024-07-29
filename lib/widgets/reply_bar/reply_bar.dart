@@ -24,6 +24,8 @@ class ReplyBar extends StatefulWidget {
     this.chatHistorySendTarget,
     this.chatSendTarget,
     this.disabledEditorFeatures = const {},
+    this.fullScreenDisabledEditorFeatures = const {},
+    this.fullScreen = false,
     super.key,
   });
 
@@ -46,6 +48,16 @@ class ReplyBar extends StatefulWidget {
   /// Those disabled features' corresponding widget will be invisible.
   final Set<EditorFeatures> disabledEditorFeatures;
 
+  /// Disabled bbcode editor features when reply bar set to full screen.
+  ///
+  /// Usually is less than [disabledEditorFeatures].
+  ///
+  /// Those disabled features' corresponding widget will be invisible.
+  final Set<EditorFeatures> fullScreenDisabledEditorFeatures;
+
+  /// Constraints max height?
+  final bool fullScreen;
+
   @override
   State<ReplyBar> createState() => _ReplyBarState();
 }
@@ -54,6 +66,11 @@ class _ReplyBarState extends State<ReplyBar> {
   /// Indicate current thread is closed.
   bool _closed = false;
 
+  /// Allow reply bar full screen.
+  ///
+  /// Will not restrict reply bar height when set to true.
+  late bool fullScreen;
+
   late final StreamSubscription<AuthenticationStatus> _authStatusSub;
 
   /// Indicate whether have current login user.
@@ -61,7 +78,6 @@ class _ReplyBarState extends State<ReplyBar> {
   /// Should disable when no user login.
   bool _hasLogin = false;
 
-  bool isExpanded = false;
   bool canSendReply = false;
 
   /// Hint text in text field.
@@ -242,112 +258,109 @@ class _ReplyBarState extends State<ReplyBar> {
       decoration: const InputDecoration(),
       child: IntrinsicHeight(
         child: ConstrainedBox(
-          constraints: const BoxConstraints(
-            maxHeight: 100,
+          constraints: BoxConstraints(
+            maxHeight: fullScreen ? double.infinity : 100,
           ),
-          child: Column(
-            children: [
-              Expanded(child: RichEditor(controller: _replyRichController)),
-            ],
-          ),
+          child: RichEditor(controller: _replyRichController),
         ),
       ),
     );
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
-    return SafeArea(
-      top: isExpanded,
-      child: Column(
-        mainAxisSize: isExpanded ? MainAxisSize.max : MainAxisSize.min,
-        children: [
-          if (_hintText != null && !_closed && _hasLogin)
-            Padding(
-              padding: edgeInsetsL20R20,
-              child: Row(
-                children: [
-                  Text(
-                    _hintText!,
-                    style: Theme.of(context).textTheme.labelLarge,
-                  ),
-                  Expanded(child: Container()),
-                  IconButton(
-                    icon: const Icon(Icons.clear_outlined),
-                    onPressed: () {
-                      setState(() {
-                        _hintText = null;
-                        _replyAction = null;
-                      });
-                    },
-                  ),
-                ],
-              ),
-            ),
-          Flexible(
-            fit: isExpanded ? FlexFit.tight : FlexFit.loose,
-            child: Padding(
-              padding: edgeInsetsL10R10B10,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: edgeInsetsL10T5R5B5,
-                      child: _buildRichEditor(context),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-
-          /// Rich editor toolbar
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (_hintText != null && !_closed && _hasLogin)
           Padding(
-            padding: edgeInsetsL10R10B10,
+            padding: edgeInsetsL20R20,
             child: Row(
               children: [
-                Expanded(
-                  child: EditorToolbar(
-                    bbcodeController: _replyRichController,
-                    disabledFeatures: widget.disabledEditorFeatures,
-                  ),
+                Text(
+                  _hintText!,
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
-              ],
-            ),
-          ),
-          Padding(
-            padding: edgeInsetsL10R10B10,
-            child: Row(
-              children: [
+                Expanded(child: Container()),
                 IconButton(
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () async {
-                    await showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.bbcodeEditor.experimentalInfoTitle,
-                      message: context.t.bbcodeEditor.experimentalInfoDetail,
-                    );
+                  icon: const Icon(Icons.clear_outlined),
+                  onPressed: () {
+                    setState(() {
+                      _hintText = null;
+                      _replyAction = null;
+                    });
                   },
                 ),
-                const Spacer(),
-                // Send Button
-                FilledButton(
-                  onPressed:
-                      (canSendReply && !isSendingReply && !_closed && _hasLogin)
-                          ? () async => _sendMessage()
-                          : null,
-                  child: isSendingReply
-                      ? sizedCircularProgressIndicator
-                      : const Icon(Icons.send_outlined),
-                ),
               ],
             ),
           ),
-        ],
-      ),
+        Flexible(
+          child: Padding(
+            padding: edgeInsetsL10R10B10,
+            child: _buildRichEditor(context),
+          ),
+        ),
+
+        /// Rich editor toolbar
+        Padding(
+          padding: edgeInsetsL10R10B10,
+          child: Row(
+            children: [
+              Expanded(
+                child: EditorToolbar(
+                  bbcodeController: _replyRichController,
+                  disabledFeatures: fullScreen
+                      ? widget.fullScreenDisabledEditorFeatures
+                      : widget.disabledEditorFeatures,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Padding(
+          padding: edgeInsetsL10R10B10,
+          child: Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.info_outline,
+                  color: Theme.of(context).primaryColor,
+                ),
+                onPressed: () async {
+                  await showMessageSingleButtonDialog(
+                    context: context,
+                    title: context.t.bbcodeEditor.experimentalInfoTitle,
+                    message: context.t.bbcodeEditor.experimentalInfoDetail,
+                  );
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.expand),
+                selectedIcon: Icon(
+                  Icons.expand_outlined,
+                  color: Theme.of(context).primaryColor,
+                ),
+                isSelected: fullScreen,
+                onPressed: () {
+                  setState(() {
+                    fullScreen = !fullScreen;
+                  });
+                },
+              ),
+              const Spacer(),
+              // Send Button
+              FilledButton(
+                onPressed:
+                    (canSendReply && !isSendingReply && !_closed && _hasLogin)
+                        ? () async => _sendMessage()
+                        : null,
+                child: isSendingReply
+                    ? sizedCircularProgressIndicator
+                    : const Icon(Icons.send_outlined),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 
@@ -367,6 +380,7 @@ class _ReplyBarState extends State<ReplyBar> {
         });
       },
     );
+    fullScreen = widget.fullScreen;
   }
 
   @override
