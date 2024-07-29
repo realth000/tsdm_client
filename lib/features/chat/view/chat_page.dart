@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_bloc.dart';
+import 'package:tsdm_client/features/chat/models/editor_features.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
-import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -90,14 +90,7 @@ final class _ChatPageState extends State<ChatPage> {
           controller: _replyBarController,
           replyType: ReplyTypes.chat,
           chatSendTarget: state.chatSendTarget,
-          disableEditorFeatures: const [
-            EditorFeatures.fontSize,
-            EditorFeatures.backgroundColor,
-            EditorFeatures.italic,
-            EditorFeatures.underline,
-            EditorFeatures.strikethrough,
-            EditorFeatures.userMention,
-          ],
+          disabledEditorFeatures: chatPagesDisabledFeatures,
         ),
       ],
     );

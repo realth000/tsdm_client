@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
@@ -136,6 +137,29 @@ class _ThreadPageState extends State<ThreadPage>
           ReplyBar(
             controller: _replyBarController,
             replyType: ReplyTypes.thread,
+            disabledEditorFeatures: const {
+              EditorFeatures.fontFamily,
+              EditorFeatures.fontSize,
+              EditorFeatures.bold,
+              EditorFeatures.italic,
+              EditorFeatures.underline,
+              EditorFeatures.superscript,
+              EditorFeatures.backgroundColor,
+              EditorFeatures.clearFormat,
+              EditorFeatures.userMention,
+              EditorFeatures.undo,
+              EditorFeatures.redo,
+              EditorFeatures.alignLeft,
+              EditorFeatures.alignCenter,
+              EditorFeatures.alignRight,
+              EditorFeatures.orderedList,
+              EditorFeatures.bulletList,
+              EditorFeatures.cut,
+              EditorFeatures.copy,
+              EditorFeatures.paste,
+              EditorFeatures.codeBlock,
+              EditorFeatures.quoteBlock,
+            },
           ),
       ],
     );

@@ -4,18 +4,6 @@ import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 
 /// Representing all features types.
 enum EditorFeatures {
-  /// All text style.
-  textStyle,
-
-  /// Font size in text style.
-  fontSize,
-
-  /// Text color in text style.
-  foregroundColor,
-
-  /// Background color in text style.
-  backgroundColor,
-
   /// Bold in text style.
   bold,
 
@@ -28,17 +16,77 @@ enum EditorFeatures {
   /// Strikethrough in text style.
   strikethrough,
 
+  /// Font family in text style.
+  fontFamily,
+
+  /// Font size in text style.
+  fontSize,
+
+  /// Superscript in text style.
+  superscript,
+
+  /// Text color in text style.
+  color,
+
+  /// Background color in text style.
+  backgroundColor,
+
+  /// Clear text format button.
+  clearFormat,
+
   /// Emoji.
   emoji,
 
   /// Url link.
-  link,
+  url,
 
   /// Url for online pictures.
-  picture,
+  image,
 
   /// Mention user aka "@".
   userMention,
+
+  /// Undo button.
+  undo,
+
+  /// Redo button.
+  redo,
+
+  /// Align left
+  alignLeft,
+
+  /// Align center
+  alignCenter,
+
+  /// Align right
+  alignRight,
+
+  /// ```console
+  /// 1.
+  /// 2.
+  /// ```
+  orderedList,
+
+  /// ```console
+  /// *.
+  /// *.
+  /// ```
+  bulletList,
+
+  /// Multiline code.
+  codeBlock,
+
+  /// Quote code.
+  quoteBlock,
+
+  /// Cut clipboard.
+  cut,
+
+  /// Copy clipboard.
+  copy,
+
+  /// Paste clipboard.
+  paste,
 }
 
 /// Toolbar for the bbcode editor.
@@ -46,7 +94,7 @@ class EditorToolbar extends StatefulWidget {
   /// Constructor.
   const EditorToolbar({
     required this.bbcodeController,
-    this.disabledFeatures = const [],
+    this.disabledFeatures = const {},
     super.key,
   });
 
@@ -57,7 +105,7 @@ class EditorToolbar extends StatefulWidget {
   ///
   /// All [EditorFeatures] exist in this list will be disabled and the
   /// corresponding widget will NOT be invisible.
-  final List<EditorFeatures> disabledFeatures;
+  final Set<EditorFeatures> disabledFeatures;
 
   @override
   State<EditorToolbar> createState() => _EditorToolbarState();
@@ -73,7 +121,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   bool showTextAttributeButtons = false;
 
   /// All disabled features, construct from widget.
-  late final List<EditorFeatures> _disabledFeatures;
+  late final Set<EditorFeatures> _d;
 
   // BBCode text attribute status.
   Color? foregroundColor;
@@ -275,7 +323,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   void initState() {
     super.initState();
     // widget.bbcodeController.addListener(updateBBCodeStatus);
-    _disabledFeatures = widget.disabledFeatures;
+    _d = widget.disabledFeatures;
   }
 
   @override
@@ -294,6 +342,34 @@ class _EditorToolbarState extends State<EditorToolbar> {
           controller: widget.bbcodeController,
           config: const BBCodeEditorToolbarConfiguration(),
           emojiPicker: (context) async => showEmojiBottomSheet(context),
+          // Features.
+          showUndo: !_d.contains(EditorFeatures.undo),
+          showRedo: !_d.contains(EditorFeatures.redo),
+          showFontFamily: !_d.contains(EditorFeatures.fontFamily),
+          showFontSize: !_d.contains(EditorFeatures.fontSize),
+          showBoldButton: !_d.contains(EditorFeatures.bold),
+          showItalicButton: !_d.contains(EditorFeatures.italic),
+          showUnderlineButton: !_d.contains(EditorFeatures.underline),
+          showStrikethroughButton: !_d.contains(EditorFeatures.strikethrough),
+          showSuperscriptButton: !_d.contains(EditorFeatures.superscript),
+          showColorButton: !_d.contains(EditorFeatures.color),
+          showBackgroundColorButton:
+              !_d.contains(EditorFeatures.backgroundColor),
+          showClearFormatButton: !_d.contains(EditorFeatures.clearFormat),
+          showImageButton: !_d.contains(EditorFeatures.image),
+          showEmojiButton: !_d.contains(EditorFeatures.emoji),
+          showLeftAlignButton: !_d.contains(EditorFeatures.alignLeft),
+          showCenterAlignButton: !_d.contains(EditorFeatures.alignCenter),
+          showRightAlignButton: !_d.contains(EditorFeatures.alignRight),
+          showOrderedListButton: !_d.contains(EditorFeatures.orderedList),
+          showBulletListButton: !_d.contains(EditorFeatures.bulletList),
+          showUrlButton: !_d.contains(EditorFeatures.url),
+          showCodeBlockButton: !_d.contains(EditorFeatures.codeBlock),
+          showQuoteBlockButton: !_d.contains(EditorFeatures.quoteBlock),
+          showClipboardCutButton: !_d.contains(EditorFeatures.cut),
+          showClipboardCopyButton: !_d.contains(EditorFeatures.copy),
+          showClipboardPasteButton: !_d.contains(EditorFeatures.paste),
+          showUserMentionButton: !_d.contains(EditorFeatures.userMention),
         ),
         // FIXME: Restore all functionality.
         // AnimatedVisibility(

@@ -23,7 +23,7 @@ class ReplyBar extends StatefulWidget {
     required this.replyType,
     this.chatHistorySendTarget,
     this.chatSendTarget,
-    this.disableEditorFeatures = const [],
+    this.disabledEditorFeatures = const {},
     super.key,
   });
 
@@ -44,7 +44,7 @@ class ReplyBar extends StatefulWidget {
   /// Disable all bbcode editor features exists in this list.
   ///
   /// Those disabled features' corresponding widget will be invisible.
-  final List<EditorFeatures> disableEditorFeatures;
+  final Set<EditorFeatures> disabledEditorFeatures;
 
   @override
   State<ReplyBar> createState() => _ReplyBarState();
@@ -240,14 +240,16 @@ class _ReplyBarState extends State<ReplyBar> {
     return InputDecorator(
       isFocused: focusNode.hasFocus,
       decoration: const InputDecoration(),
-      child: ConstrainedBox(
-        constraints: const BoxConstraints(
-          maxHeight: 100,
-        ),
-        child: Column(
-          children: [
-            Expanded(child: RichEditor(controller: _replyRichController)),
-          ],
+      child: IntrinsicHeight(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxHeight: 100,
+          ),
+          child: Column(
+            children: [
+              Expanded(child: RichEditor(controller: _replyRichController)),
+            ],
+          ),
         ),
       ),
     );
@@ -307,7 +309,7 @@ class _ReplyBarState extends State<ReplyBar> {
                 Expanded(
                   child: EditorToolbar(
                     bbcodeController: _replyRichController,
-                    disabledFeatures: widget.disableEditorFeatures,
+                    disabledFeatures: widget.disabledEditorFeatures,
                   ),
                 ),
               ],
