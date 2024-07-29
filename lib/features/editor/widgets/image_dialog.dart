@@ -141,13 +141,14 @@ class _ImageDialogState extends State<_ImageDialog> {
                       displayWidth = _maxAllowedWidth.toDouble();
                       displayHeight = height * width / _maxAllowedWidth;
                     }
-                    await widget.bbCodeEditorController.insertImage(
-                      url: url,
-                      width: width,
-                      height: height,
-                      displayWith: displayWidth,
-                      displayHeight: displayHeight,
-                    );
+                    // TODO: Implement
+                    // await widget.bbCodeEditorController.insertImage(
+                    //   url: url,
+                    //   width: width,
+                    //   height: height,
+                    //   displayWith: displayWidth,
+                    //   displayHeight: displayHeight,
+                    // );
                     if (!context.mounted) {
                       return;
                     }

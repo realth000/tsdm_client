@@ -74,10 +74,11 @@ class _UrlDialogState extends State<UrlDialog> {
                         !(formKey.currentState!).validate()) {
                       return;
                     }
-                    await widget.bbCodeController.insertUrl(
-                      descController.text,
-                      urlController.text,
-                    );
+                    // TODO: Implement
+                    // await widget.bbCodeController.insertUrl(
+                    //   descController.text,
+                    //   urlController.text,
+                    // );
                     if (!context.mounted) {
                       return;
                     }

@@ -81,9 +81,9 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
                   Navigator.of(context).pop();
                   switch (widget.sheetType) {
                     case ColorBottomSheetType.foreground:
-                      await widget.controller.setForegroundColor(color);
+                    // await widget.controller.setForegroundColor(color);
                     case ColorBottomSheetType.background:
-                      await widget.controller.setBackgroundColor(color);
+                    // await widget.controller.setBackgroundColor(color);
                   }
                 },
                 child: Hero(
@@ -107,9 +107,11 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
                 Navigator.of(context).pop();
                 switch (widget.sheetType) {
                   case ColorBottomSheetType.foreground:
-                    await widget.controller.clearForegroundColor();
+                  // TODO: Implement
+                  // await widget.controller.clearForegroundColor();
                   case ColorBottomSheetType.background:
-                    await widget.controller.clearBackgroundColor();
+                  // TODO: Implement
+                  // await widget.controller.clearBackgroundColor();
                 }
               },
             ),

@@ -64,9 +64,10 @@ class _MentionUserDialogState extends State<MentionUserDialog> {
                       return;
                     }
 
-                    await widget.bbCodeController.insertMentionUSer(
-                      usernameController.text,
-                    );
+                    // TODO: Implement
+                    // await widget.bbCodeController.insertMentionUSer(
+                    //   usernameController.text,
+                    // );
                     if (!context.mounted) {
                       return;
                     }
