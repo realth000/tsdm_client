@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
@@ -163,6 +164,44 @@ class _ThreadPageState extends State<ThreadPage>
     };
   }
 
+  Widget? _buildReplyBar(BuildContext context, ThreadState state) {
+    if (state.postList.isEmpty) {
+      return null;
+    }
+    return ReplyBar(
+      controller: _replyBarController,
+      replyType: ReplyTypes.thread,
+      disabledEditorFeatures: const {
+        EditorFeatures.fontFamily,
+        EditorFeatures.fontSize,
+        EditorFeatures.bold,
+        EditorFeatures.italic,
+        EditorFeatures.underline,
+        EditorFeatures.superscript,
+        EditorFeatures.backgroundColor,
+        EditorFeatures.clearFormat,
+        EditorFeatures.userMention,
+        EditorFeatures.undo,
+        EditorFeatures.redo,
+        EditorFeatures.alignLeft,
+        EditorFeatures.alignCenter,
+        EditorFeatures.alignRight,
+        EditorFeatures.orderedList,
+        EditorFeatures.bulletList,
+        EditorFeatures.cut,
+        EditorFeatures.copy,
+        EditorFeatures.paste,
+        EditorFeatures.codeBlock,
+        EditorFeatures.quoteBlock,
+      },
+      fullScreenDisabledEditorFeatures: const {
+        EditorFeatures.cut,
+        EditorFeatures.copy,
+        EditorFeatures.paste,
+      },
+    );
+  }
+
   @override
   void dispose() {
     _listScrollController.dispose();
@@ -308,43 +347,10 @@ class _ThreadPageState extends State<ThreadPage>
               ),
               body: _buildBody(context, state),
               // TODO: Better solution for bottom text input.
-              persistentFooterButtons: [
-                if (state.postList.isNotEmpty)
-                  ReplyBar(
-                    controller: _replyBarController,
-                    replyType: ReplyTypes.thread,
-                    disabledEditorFeatures: const {
-                      EditorFeatures.fontFamily,
-                      EditorFeatures.fontSize,
-                      EditorFeatures.bold,
-                      EditorFeatures.italic,
-                      EditorFeatures.underline,
-                      EditorFeatures.superscript,
-                      EditorFeatures.backgroundColor,
-                      EditorFeatures.clearFormat,
-                      EditorFeatures.userMention,
-                      EditorFeatures.undo,
-                      EditorFeatures.redo,
-                      EditorFeatures.alignLeft,
-                      EditorFeatures.alignCenter,
-                      EditorFeatures.alignRight,
-                      EditorFeatures.orderedList,
-                      EditorFeatures.bulletList,
-                      EditorFeatures.cut,
-                      EditorFeatures.copy,
-                      EditorFeatures.paste,
-                      EditorFeatures.codeBlock,
-                      EditorFeatures.quoteBlock,
-                    },
-                    fullScreenDisabledEditorFeatures: const {
-                      EditorFeatures.cut,
-                      EditorFeatures.copy,
-                      EditorFeatures.paste,
-                    },
-                  )
-                else
-                  SizedBox.shrink(),
-              ],
+              bottomSheet: Padding(
+                padding: edgeInsetsL10T10R10,
+                child: _buildReplyBar(context, state),
+              ),
             );
           },
         ),
