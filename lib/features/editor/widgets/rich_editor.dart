@@ -14,6 +14,7 @@ class RichEditor extends StatelessWidget {
     this.scrollController,
     this.focusNode,
     this.autoFocus = false,
+    this.initialText,
     super.key,
   });
 
@@ -29,12 +30,16 @@ class RichEditor extends StatelessWidget {
   /// Automatically focus the editor.
   final bool autoFocus;
 
+  /// Optional initial text.
+  final String? initialText;
+
   @override
   Widget build(BuildContext context) {
     return BBCodeEditor(
       controller: controller,
       focusNode: focusNode,
       autoFocus: autoFocus,
+      initialText: initialText,
       scrollController: scrollController,
       emojiProvider: (context, code) {
         // code is supposed in

@@ -440,7 +440,10 @@ class _PostEditPageState extends State<PostEditPage> {
                 sizedBoxW20H20,
                 // Post data editor.
                 Expanded(
-                  child: RichEditor(controller: bbcodeController),
+                  child: RichEditor(
+                    controller: bbcodeController,
+                    initialText: state.content?.data,
+                  ),
                 ),
                 sizedBoxW5H5,
                 EditorToolbar(bbcodeController: bbcodeController),
@@ -478,7 +481,7 @@ class _PostEditPageState extends State<PostEditPage> {
         appBar: AppBar(title: Text(title)),
         body: Padding(
           padding: edgeInsetsL15T15R15B15,
-          child: FlutterLogo(), // _buildBody(context),
+          child: _buildBody(context),
         ),
       ),
     );
