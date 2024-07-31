@@ -15,7 +15,10 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 
-/// Widget provides the reply feature.
+/// Widget provide reply functionality.
+///
+/// Actually is a wrapper for the real reply bar.
+/// Wrapped so that a expandable reply bar can be set in page as bottom sheet.
 class ReplyBar extends StatefulWidget {
   /// Constructor.
   const ReplyBar({
@@ -32,7 +35,7 @@ class ReplyBar extends StatefulWidget {
   /// Controller passed from outside.
   final ReplyBarController controller;
 
-  /// Usage type of [ReplyBar].
+  /// Usage type of [_ReplyBar].
   ///
   /// Different usages have different state and logic.
   final ReplyTypes replyType;
@@ -59,10 +62,97 @@ class ReplyBar extends StatefulWidget {
   final bool fullScreen;
 
   @override
-  State<ReplyBar> createState() => _ReplyBarState();
+  State<ReplyBar> createState() => _ReplyBarWrapperState();
 }
 
-class _ReplyBarState extends State<ReplyBar> {
+class _ReplyBarWrapperState extends State<ReplyBar> {
+  /// Text controller to display head part of entered bbcode.
+  final controller = TextEditingController();
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: edgeInsetsL10T10R10B10,
+      child: TextField(
+        controller: controller,
+        readOnly: true,
+        onTap: () {
+          showBottomSheet(
+            context: context,
+            builder: (_) => _ReplyBar(
+              controller: widget.controller,
+              outerTextController: controller,
+              replyType: widget.replyType,
+              chatHistorySendTarget: widget.chatHistorySendTarget,
+              chatSendTarget: widget.chatSendTarget,
+              disabledEditorFeatures: widget.disabledEditorFeatures,
+              fullScreenDisabledEditorFeatures:
+                  widget.fullScreenDisabledEditorFeatures,
+              fullScreen: widget.fullScreen,
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// Widget provides the reply feature.
+class _ReplyBar extends StatefulWidget {
+  /// Constructor.
+  const _ReplyBar({
+    required this.controller,
+    required this.replyType,
+    required this.outerTextController,
+    this.chatHistorySendTarget,
+    this.chatSendTarget,
+    this.disabledEditorFeatures = const {},
+    this.fullScreenDisabledEditorFeatures = const {},
+    this.fullScreen = false,
+  });
+
+  /// Controller passed from outside.
+  final ReplyBarController controller;
+
+  /// Text controller in the wrapper widget to show current entered text.
+  final TextEditingController outerTextController;
+
+  /// Usage type of [_ReplyBar].
+  ///
+  /// Different usages have different state and logic.
+  final ReplyTypes replyType;
+
+  /// Send target url and parameters when in chat history.
+  final ChatHistorySendTarget? chatHistorySendTarget;
+
+  /// Send url parameters when in chat page.
+  final ChatSendTarget? chatSendTarget;
+
+  /// Disable all bbcode editor features exists in this list.
+  ///
+  /// Those disabled features' corresponding widget will be invisible.
+  final Set<EditorFeatures> disabledEditorFeatures;
+
+  /// Disabled bbcode editor features when reply bar set to full screen.
+  ///
+  /// Usually is less than [disabledEditorFeatures].
+  ///
+  /// Those disabled features' corresponding widget will be invisible.
+  final Set<EditorFeatures> fullScreenDisabledEditorFeatures;
+
+  /// Constraints max height?
+  final bool fullScreen;
+
+  @override
+  State<_ReplyBar> createState() => _ReplyBarState();
+}
+
+class _ReplyBarState extends State<_ReplyBar> {
   /// Indicate current thread is closed.
   bool _closed = false;
 
@@ -261,7 +351,12 @@ class _ReplyBarState extends State<ReplyBar> {
           constraints: BoxConstraints(
             maxHeight: fullScreen ? double.infinity : 100,
           ),
-          child: RichEditor(controller: _replyRichController),
+          child: RichEditor(
+            // Initial text is the text passed from outside.
+            initialText: widget.outerTextController.text,
+            controller: _replyRichController,
+            focusNode: focusNode,
+          ),
         ),
       ),
     );
@@ -271,6 +366,7 @@ class _ReplyBarState extends State<ReplyBar> {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
+        sizedBoxW20H20,
         if (_hintText != null && !_closed && _hasLogin)
           Padding(
             padding: edgeInsetsL20R20,
@@ -381,12 +477,17 @@ class _ReplyBarState extends State<ReplyBar> {
       },
     );
     fullScreen = widget.fullScreen;
+    focusNode.requestFocus();
   }
 
   @override
   void dispose() {
     _replyFocusNode.dispose();
     _authStatusSub.cancel();
+    final text = _replyRichController.toBBCode();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.outerTextController.text = text;
+    });
     _replyRichController
       ..removeListener(_checkEditorContent)
       ..dispose();

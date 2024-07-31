@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
@@ -116,19 +115,26 @@ class _ThreadPageState extends State<ThreadPage>
             int.tryParse(widget.pageNumber) ??
             1;
 
-    return PostList(
-      threadID: widget.threadID,
-      title: widget.title ?? state.title,
-      threadType: widget.threadType,
-      pageNumber: pageNumber,
-      scrollController: _listScrollController,
-      widgetBuilder: (context, post) => PostCard(
-        post,
-        replyCallback: replyPostCallback,
-      ),
-      useDivider: true,
-      postList: state.postList,
-      canLoadMore: state.canLoadMore,
+    return Column(
+      children: [
+        Expanded(
+          child: PostList(
+            threadID: widget.threadID,
+            title: widget.title ?? state.title,
+            threadType: widget.threadType,
+            pageNumber: pageNumber,
+            scrollController: _listScrollController,
+            widgetBuilder: (context, post) => PostCard(
+              post,
+              replyCallback: replyPostCallback,
+            ),
+            useDivider: true,
+            postList: state.postList,
+            canLoadMore: state.canLoadMore,
+          ),
+        ),
+        _buildReplyBar(context, state) ?? SizedBox.shrink(),
+      ],
     );
   }
 
@@ -346,11 +352,6 @@ class _ThreadPageState extends State<ThreadPage>
                 },
               ),
               body: _buildBody(context, state),
-              // TODO: Better solution for bottom text input.
-              bottomSheet: Padding(
-                padding: edgeInsetsL10T10R10,
-                child: _buildReplyBar(context, state),
-              ),
             );
           },
         ),
