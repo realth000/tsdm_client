@@ -363,16 +363,6 @@ class _EditorToolbarState extends State<EditorToolbar> {
           showClipboardPasteButton: hasFeature(EditorFeatures.paste),
           showUserMentionButton: hasFeature(EditorFeatures.userMention),
         ),
-        // FIXME: Restore all functionality.
-        // AnimatedVisibility(
-        //   visible:
-        //       widget.bbcodeController.editorVisible && showTextAttributeButtons,
-        //   child: _buildEditorTextControlRow(context),
-        // ),
-        // AnimatedVisibility(
-        //   visible: widget.bbcodeController.editorVisible,
-        //   child: _buildEditorControlRow(context),
-        // ),
       ],
     );
   }

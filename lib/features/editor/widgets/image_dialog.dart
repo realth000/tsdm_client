@@ -8,7 +8,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 const _maxAllowedWidth = 160;
 const _maxAllowedHeight = 90;
-const _ratio = _maxAllowedWidth / _maxAllowedHeight;
+// const _ratio = _maxAllowedWidth / _maxAllowedHeight;
 const _defaultWidth = _maxAllowedWidth;
 const _defaultHeight = _maxAllowedHeight;
 
@@ -114,45 +114,45 @@ class _ImageDialogState extends State<_ImageDialog> {
                 TextButton(
                   child: Text(context.t.general.ok),
                   onPressed: () async {
-                    if (formKey.currentState == null ||
-                        !(formKey.currentState!).validate()) {
-                      return;
-                    }
-                    final String url;
-                    if (imageUrlController.text.startsWith('http://') ||
-                        imageUrlController.text.startsWith('https://')) {
-                      url = imageUrlController.text;
-                    } else {
-                      url = 'https://${imageUrlController.text}';
-                    }
-                    final width = int.parse(widthController.text);
-                    final height = int.parse(heightController.text);
-                    assert(height != 0, 'image height should not be zero');
-                    final actualRatio = width / height;
+                    // if (formKey.currentState == null ||
+                    //     !(formKey.currentState!).validate()) {
+                    //   return;
+                    // }
+                    // final String url;
+                    // if (imageUrlController.text.startsWith('http://') ||
+                    //     imageUrlController.text.startsWith('https://')) {
+                    //   url = imageUrlController.text;
+                    // } else {
+                    //   url = 'https://${imageUrlController.text}';
+                    // }
+                    // final width = int.parse(widthController.text);
+                    // final height = int.parse(heightController.text);
+                    // assert(height != 0, 'image height should not be zero');
+                    // final actualRatio = width / height;
 
-                    final double displayWidth;
-                    final double displayHeight;
-                    if (actualRatio <= _ratio) {
-                      // Image size is more in height.
-                      displayWidth = width * height / _maxAllowedHeight;
-                      displayHeight = _maxAllowedHeight.toDouble();
-                    } else {
-                      // Image size is more in width.
-                      displayWidth = _maxAllowedWidth.toDouble();
-                      displayHeight = height * width / _maxAllowedWidth;
-                    }
-                    // TODO: Implement
-                    // await widget.bbCodeEditorController.insertImage(
-                    //   url: url,
-                    //   width: width,
-                    //   height: height,
-                    //   displayWith: displayWidth,
-                    //   displayHeight: displayHeight,
-                    // );
-                    if (!context.mounted) {
-                      return;
-                    }
-                    context.pop();
+                    // final double displayWidth;
+                    // final double displayHeight;
+                    // if (actualRatio <= _ratio) {
+                    //   // Image size is more in height.
+                    //   displayWidth = width * height / _maxAllowedHeight;
+                    //   displayHeight = _maxAllowedHeight.toDouble();
+                    // } else {
+                    //   // Image size is more in width.
+                    //   displayWidth = _maxAllowedWidth.toDouble();
+                    //   displayHeight = height * width / _maxAllowedWidth;
+                    // }
+                    // // TODO: Implement
+                    // // await widget.bbCodeEditorController.insertImage(
+                    // //   url: url,
+                    // //   width: width,
+                    // //   height: height,
+                    // //   displayWith: displayWidth,
+                    // //   displayHeight: displayHeight,
+                    // // );
+                    // if (!context.mounted) {
+                    //   return;
+                    // }
+                    // context.pop();
                   },
                 ),
               ],

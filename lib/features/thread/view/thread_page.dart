@@ -133,7 +133,7 @@ class _ThreadPageState extends State<ThreadPage>
             canLoadMore: state.canLoadMore,
           ),
         ),
-        _buildReplyBar(context, state) ?? SizedBox.shrink(),
+        _buildReplyBar(context, state),
       ],
     );
   }
@@ -170,9 +170,9 @@ class _ThreadPageState extends State<ThreadPage>
     };
   }
 
-  Widget? _buildReplyBar(BuildContext context, ThreadState state) {
+  Widget _buildReplyBar(BuildContext context, ThreadState state) {
     if (state.postList.isEmpty) {
-      return null;
+      return const SizedBox.shrink();
     }
     return ReplyBar(
       controller: _replyBarController,
