@@ -88,6 +88,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           replyType: ReplyTypes.chatHistory,
           chatHistorySendTarget: state.sendTarget,
           disabledEditorFeatures: chatPagesDisabledFeatures,
+          fullScreenDisabledEditorFeatures: chatPagesDisabledFeatures,
         ),
       ],
     );

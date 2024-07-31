@@ -91,6 +91,7 @@ final class _ChatPageState extends State<ChatPage> {
           replyType: ReplyTypes.chat,
           chatSendTarget: state.chatSendTarget,
           disabledEditorFeatures: chatPagesDisabledFeatures,
+          fullScreenDisabledEditorFeatures: chatPagesDisabledFeatures,
         ),
       ],
     );
