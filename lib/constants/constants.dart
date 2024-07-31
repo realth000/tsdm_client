@@ -1,3 +1,4 @@
+import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 
 /// App full version generated from the compile environment.
@@ -30,3 +31,40 @@ final changelogContent = () {
     return beforeContent;
   }).join('\n');
 }();
+
+/// All features disabled by default.
+///
+/// Used in normal usages, disable these features to make concise toolbar
+/// layout.
+const defaultEditorDisabledFeatures = {
+  EditorFeatures.fontFamily,
+  EditorFeatures.fontSize,
+  EditorFeatures.bold,
+  EditorFeatures.italic,
+  EditorFeatures.underline,
+  EditorFeatures.superscript,
+  EditorFeatures.backgroundColor,
+  EditorFeatures.clearFormat,
+  EditorFeatures.userMention,
+  EditorFeatures.undo,
+  EditorFeatures.redo,
+  EditorFeatures.alignLeft,
+  EditorFeatures.alignCenter,
+  EditorFeatures.alignRight,
+  EditorFeatures.orderedList,
+  EditorFeatures.bulletList,
+  EditorFeatures.cut,
+  EditorFeatures.copy,
+  EditorFeatures.paste,
+  EditorFeatures.codeBlock,
+  EditorFeatures.quoteBlock,
+};
+
+/// All features disabled by default.
+///
+/// Used in normal usages, disable these features to remove noisy styles.
+const defaultFullScreenDisabledEditorFeatures = {
+  EditorFeatures.cut,
+  EditorFeatures.copy,
+  EditorFeatures.paste,
+};

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_detail_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
@@ -72,6 +73,9 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
         ReplyBar(
           controller: _replyBarController,
           replyType: ReplyTypes.thread,
+          disabledEditorFeatures: defaultEditorDisabledFeatures,
+          fullScreenDisabledEditorFeatures:
+              defaultFullScreenDisabledEditorFeatures,
         ),
       ],
     );
