@@ -64,6 +64,7 @@ const defaultEditorDisabledFeatures = {
 ///
 /// Used in normal usages, disable these features to remove noisy styles.
 const defaultFullScreenDisabledEditorFeatures = {
+  EditorFeatures.fontFamily,
   EditorFeatures.cut,
   EditorFeatures.copy,
   EditorFeatures.paste,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/list.dart';
@@ -446,7 +447,10 @@ class _PostEditPageState extends State<PostEditPage> {
                   ),
                 ),
                 sizedBoxW5H5,
-                EditorToolbar(bbcodeController: bbcodeController),
+                EditorToolbar(
+                  bbcodeController: bbcodeController,
+                  disabledFeatures: defaultFullScreenDisabledEditorFeatures,
+                ),
                 _buildControlRow(context, state),
               ],
             );
