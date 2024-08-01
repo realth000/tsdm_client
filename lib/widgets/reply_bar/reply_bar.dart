@@ -68,6 +68,52 @@ class ReplyBar extends StatefulWidget {
 class _ReplyBarWrapperState extends State<ReplyBar> {
   /// Text controller to display head part of entered bbcode.
   final controller = TextEditingController();
+
+  /// Flag indicating currently popping up the editor or not.
+  ///
+  /// Use this flag to keep only one editor popup.
+  ///
+  /// So the text in editor is persistent.
+  bool _showingEditor = false;
+
+  Future<void> showEditor() async {
+    if (_showingEditor) {
+      // Now we already have an editor, not now override with another one.
+      return;
+    }
+
+    // Here we actually want to ensure the editor is shown when user set hint
+    // text: which means user want to reply to something.
+    //
+    // The debounce check above only filters duplicate editor, it's safe.
+
+    final c = showBottomSheet(
+      context: context,
+      shape: const UnderlineInputBorder(), // Remove border
+      builder: (_) => _ReplyBar(
+        controller: widget.controller,
+        outerTextController: controller,
+        replyType: widget.replyType,
+        chatHistorySendTarget: widget.chatHistorySendTarget,
+        chatSendTarget: widget.chatSendTarget,
+        disabledEditorFeatures: widget.disabledEditorFeatures,
+        fullScreenDisabledEditorFeatures:
+            widget.fullScreenDisabledEditorFeatures,
+        fullScreen: widget.fullScreen,
+      ),
+    );
+
+    _showingEditor = true;
+    await c.closed;
+    _showingEditor = false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.onSetHintText = showEditor;
+  }
+
   @override
   void dispose() {
     controller.dispose();
@@ -81,23 +127,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       child: TextField(
         controller: controller,
         readOnly: true,
-        onTap: () async {
-          showBottomSheet(
-            context: context,
-            shape: const UnderlineInputBorder(), // Remove border
-            builder: (_) => _ReplyBar(
-              controller: widget.controller,
-              outerTextController: controller,
-              replyType: widget.replyType,
-              chatHistorySendTarget: widget.chatHistorySendTarget,
-              chatSendTarget: widget.chatSendTarget,
-              disabledEditorFeatures: widget.disabledEditorFeatures,
-              fullScreenDisabledEditorFeatures:
-                  widget.fullScreenDisabledEditorFeatures,
-              fullScreen: widget.fullScreen,
-            ),
-          );
-        },
+        onTap: showEditor,
       ),
     );
   }
@@ -216,6 +246,9 @@ class _ReplyBarState extends State<_ReplyBar> {
     setState(() {
       _hintText = hintText;
     });
+    // User set hint text means want to reply to something, then the editor pop
+    // up, here should also request focus.
+    focusNode.requestFocus();
   }
 
   void _checkEditorContent() {
@@ -363,39 +396,48 @@ class _ReplyBarState extends State<_ReplyBar> {
     );
   }
 
-  Widget _buildContent(BuildContext context, ReplyState state) {
+  Widget _buildHintTextRow(BuildContext context) {
+    if (_hintText == null || _closed || !_hasLogin) {
+      return const SizedBox.shrink();
+    }
     final outlineColor = Theme.of(context).colorScheme.outline;
+    return Padding(
+      padding: edgeInsetsL10T10R10,
+      child: Row(
+        children: [
+          Text(
+            _hintText!,
+            style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                  color: outlineColor,
+                ),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: Icon(
+              Icons.clear_outlined,
+              color: outlineColor,
+              size: 16,
+            ),
+            onPressed: () {
+              setState(() {
+                _hintText = null;
+                _replyAction = null;
+              });
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildContent(BuildContext context, ReplyState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (_hintText != null && !_closed && _hasLogin)
-          Padding(
-            padding: edgeInsetsL10T10R10,
-            child: Row(
-              children: [
-                Text(
-                  _hintText!,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                        color: outlineColor,
-                      ),
-                ),
-                Expanded(child: Container()),
-                IconButton(
-                  icon: Icon(
-                    Icons.clear_outlined,
-                    color: outlineColor,
-                    size: 16,
-                  ),
-                  onPressed: () {
-                    setState(() {
-                      _hintText = null;
-                      _replyAction = null;
-                    });
-                  },
-                ),
-              ],
-            ),
-          ),
+        // Reply hint row.
+        _buildHintTextRow(context),
+
+        // Editor.
         Flexible(
           child: Padding(
             padding: edgeInsetsL10T10R10B10,
@@ -403,7 +445,7 @@ class _ReplyBarState extends State<_ReplyBar> {
           ),
         ),
 
-        /// Rich editor toolbar
+        // Rich editor toolbar
         Padding(
           padding: edgeInsetsL10R10B10,
           child: Row(
@@ -553,6 +595,8 @@ class _ReplyBarState extends State<_ReplyBar> {
 class ReplyBarController {
   _ReplyBarState? _state;
 
+  void Function()? _onSetHintTextCallback;
+
   /// All values temporarily saved here MUST be cleared when [_unbind] called.
   ///
   /// Temporary value that saves before [_state] bind.
@@ -622,11 +666,21 @@ class ReplyBarController {
 
   /// Set the hint text.
   void setHintText(String hintText) {
+    _onSetHintTextCallback?.call();
     if (_state == null) {
       _hintText = hintText;
       return;
     }
     _state!._setHintText(hintText);
+  }
+
+  /// Function to call when [setHintText] called.
+  ///
+  /// Use this to popup editor.
+  ///
+  // ignore: avoid_setters_without_getters
+  set onSetHintText(void Function() callback) {
+    _onSetHintTextCallback = callback;
   }
 
   /// Let the [ReplyBar] get the focus.
