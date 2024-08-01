@@ -81,9 +81,10 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       child: TextField(
         controller: controller,
         readOnly: true,
-        onTap: () {
+        onTap: () async {
           showBottomSheet(
             context: context,
+            shape: const UnderlineInputBorder(), // Remove border
             builder: (_) => _ReplyBar(
               controller: widget.controller,
               outerTextController: controller,
@@ -363,22 +364,28 @@ class _ReplyBarState extends State<_ReplyBar> {
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
+    final outlineColor = Theme.of(context).colorScheme.outline;
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        sizedBoxW20H20,
         if (_hintText != null && !_closed && _hasLogin)
           Padding(
-            padding: edgeInsetsL20R20,
+            padding: edgeInsetsL10T10R10,
             child: Row(
               children: [
                 Text(
                   _hintText!,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                        color: outlineColor,
+                      ),
                 ),
                 Expanded(child: Container()),
                 IconButton(
-                  icon: const Icon(Icons.clear_outlined),
+                  icon: Icon(
+                    Icons.clear_outlined,
+                    color: outlineColor,
+                    size: 16,
+                  ),
                   onPressed: () {
                     setState(() {
                       _hintText = null;
@@ -391,7 +398,7 @@ class _ReplyBarState extends State<_ReplyBar> {
           ),
         Flexible(
           child: Padding(
-            padding: edgeInsetsL10R10B10,
+            padding: edgeInsetsL10T10R10B10,
             child: _buildRichEditor(context),
           ),
         ),
@@ -491,6 +498,8 @@ class _ReplyBarState extends State<_ReplyBar> {
     _replyRichController
       ..removeListener(_checkEditorContent)
       ..dispose();
+    // Mark controller state is disposed.
+    widget.controller._unbind();
     super.dispose();
   }
 
@@ -544,15 +553,19 @@ class _ReplyBarState extends State<_ReplyBar> {
 class ReplyBarController {
   _ReplyBarState? _state;
 
+  /// All values temporarily saved here MUST be cleared when [_unbind] called.
+  ///
   /// Temporary value that saves before [_state] bind.
   /// Because sometimes we bind these values before bind a state.
   /// Defer sync values in [_state] till we have a state by called [_bind].
   String? _replyAction;
   bool? _closed;
+  String? _hintText;
 
   // ignore: avoid_setters_without_getters
   set _bind(_ReplyBarState state) {
     _state = state;
+    // All values temporarily saved here MUST be cleared when `_unbind` called.
     if (_replyAction != null) {
       _state!._replyAction = _replyAction;
       debug('update reply action');
@@ -560,6 +573,27 @@ class ReplyBarController {
     if (_closed != null) {
       _state!._closed = _closed!;
     }
+    if (_hintText != null) {
+      _state!._hintText = _hintText;
+    }
+  }
+
+  /// Unbind state.
+  ///
+  /// This function is called when state got disposed.
+  /// So that all actions triggered after state disposal and before next state
+  /// init is:
+  ///
+  /// 1. Saved temporarily in controller.
+  /// 2. Applied to new state when next state init.
+  void _unbind() {
+    // Clear state.
+    _state = null;
+
+    // Clear temporarily saved values.
+    _replyAction = null;
+    _closed = null;
+    _hintText = null;
   }
 
   /// Set reply action url to current state. Call this when user try to reply
@@ -588,7 +622,11 @@ class ReplyBarController {
 
   /// Set the hint text.
   void setHintText(String hintText) {
-    _state?._setHintText(hintText);
+    if (_state == null) {
+      _hintText = hintText;
+      return;
+    }
+    _state!._setHintText(hintText);
   }
 
   /// Let the [ReplyBar] get the focus.
