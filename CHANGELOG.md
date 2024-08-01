@@ -9,6 +9,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 ### Fixed
 
 - 翻译：修复部分错误翻译。
+- 帖子：修复部分签名有样式溢出的用户的楼层无法回复和评分的问题。
 
 ### Changed
 

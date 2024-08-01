@@ -192,10 +192,17 @@ class Post with PostMappable {
         ?.firstEndDeepText()
         ?.parseToInt();
 
+    // Some users have style overflow in signature so the following selector not
+    // works:
+    //
+    // 'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > '
+    //           'div > em > a[href*="action=reply"]',
+    //
+    // Should use a more permissive one.
     final replyAction = element
         .querySelector(
-          'table > tbody > tr:nth-child(2) > td.tsdm_replybar > div.po > '
-          'div > em > a[href*="action=reply"]',
+          'table > tbody > tr:nth-child(2) > td.tsdm_replybar div.pob em > '
+          'a[href*="action=reply"]',
         )
         ?.firstHref();
 
@@ -212,15 +219,12 @@ class Post with PostMappable {
     // Allow to be empty.
     String? rateAction;
     rateAction = element
-        .querySelector('table  div.pob.cl > p')
-        ?.querySelectorAll('a')
-        .firstWhereOrNull((e) => e.firstEndDeepText() == '评分')
+        .querySelector('table  div.pob.cl p > a[onclick*="action=rate"]')
         ?._parseRateAction()
         ?.prependHost();
 
     rateAction ??= element
-        .querySelectorAll('div#fj > a')
-        .firstWhereOrNull((e) => e.firstEndDeepText() == '评分')
+        .querySelector('div#fj > a[onclick*="action=rate"]')
         ?._parseRateAction()
         ?.prependHost();
 
