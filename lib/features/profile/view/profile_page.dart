@@ -92,9 +92,27 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   final _refreshController = EasyRefreshController(controlFinishRefresh: true);
-  final _scrollController = ScrollController();
+  late final ScrollController _scrollController;
 
   static final _checkinLevelNumberRe = RegExp(r'LV\.(?<level>\d+)');
+
+  /// Flag indicating show app bar title or not.
+  ///
+  /// Only show title (with true value) when app bar is fully expanded.
+  bool _showAppBarTitle = false;
+
+  void _updateAppBarState() {
+    if (_scrollController.offset > _appBarExpandHeight && !_showAppBarTitle) {
+      setState(() {
+        _showAppBarTitle = true;
+      });
+    } else if (_scrollController.offset < _appBarExpandHeight &&
+        _showAppBarTitle) {
+      setState(() {
+        _showAppBarTitle = false;
+      });
+    }
+  }
 
   Widget _buildSliverAppBar(
     BuildContext context,
@@ -234,8 +252,10 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       );
     }
+    //
 
     return SliverAppBar(
+      title: _showAppBarTitle ? Text(state.userProfile?.username ?? '') : null,
       pinned: true,
       floating: true,
       actions: actions,
@@ -737,9 +757,17 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController()..addListener(_updateAppBarState);
+  }
+
+  @override
   void dispose() {
     _refreshController.dispose();
-    _scrollController.dispose();
+    _scrollController
+      ..removeListener(_updateAppBarState)
+      ..dispose();
     super.dispose();
   }
 

@@ -6,6 +6,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 用户：用户页面向下滚动到用户名隐藏时，在顶部显示用户名。
+
 ### Fixed
 
 - 翻译：修复部分错误翻译。
