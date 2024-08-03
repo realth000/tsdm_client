@@ -7,7 +7,7 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/notification/bloc/broadcast_message_detail_cubit.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
+import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';

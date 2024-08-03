@@ -3,10 +3,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/packages/html_muncher/lib/src/types.dart';
-import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/html/types.dart';
+import 'package:tsdm_client/utils/html/web_colors.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
 import 'package:tsdm_client/widgets/card/bounty_card.dart';
@@ -26,7 +26,7 @@ import 'package:universal_html/html.dart' as uh;
 ///
 /// Main entry of this package.
 Widget munchElement(BuildContext context, uh.Element rootElement) {
-  final muncher = Muncher(
+  final muncher = _Muncher(
     context,
   );
 
@@ -46,10 +46,10 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
   );
 }
 
-/// State of [Muncher].
-class MunchState {
+/// State of [_Muncher].
+class _MunchState {
   /// State of munching html document.
-  MunchState();
+  _MunchState();
 
   /// Use bold font.
   bool bold = false;
@@ -120,7 +120,7 @@ class MunchState {
   final fontSizeStack = <double>[];
 
   /// An internal field to save field current values.
-  MunchState? _reservedState;
+  _MunchState? _reservedState;
 
   /// Save current state [_reservedState].
   void save() {
@@ -156,15 +156,15 @@ class MunchState {
 }
 
 /// Munch html nodes into flutter widgets.
-class Muncher {
+class _Muncher {
   /// Constructor.
-  Muncher(this.context);
+  _Muncher(this.context);
 
   /// Context to build widget when munching.
   final BuildContext context;
 
   /// Munch state to use when munching.
-  final MunchState state = MunchState();
+  final _MunchState state = _MunchState();
 
   static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
 

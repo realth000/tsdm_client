@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
-import 'package:tsdm_client/packages/html_muncher/lib/html_muncher.dart';
+import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 

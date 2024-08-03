@@ -1,7 +1,7 @@
 import 'dart:ui';
 
-import 'package:tsdm_client/packages/html_muncher/lib/src/web_colors.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/html/web_colors.dart';
 
 /// Parse a [String] of css to [CssTypes].
 ///
