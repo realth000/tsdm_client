@@ -49,10 +49,13 @@ class CachedImage extends StatelessWidget {
   /// Default is true.
   final bool enableAnimation;
 
+  static const _defaultMaxWidth = 80.0;
+  static const _defaultMaxHeight = 80.0;
+
   Widget _buildPlaceholder(BuildContext context) => ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: maxWidth ?? double.infinity,
-          maxHeight: maxHeight ?? double.infinity,
+          maxWidth: maxWidth ?? _defaultMaxWidth,
+          maxHeight: maxHeight ?? _defaultMaxHeight,
         ),
         child: Shimmer.fromColors(
           baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
@@ -120,8 +123,8 @@ class CachedImage extends StatelessWidget {
     if (imageUrl.isEmpty) {
       return ConstrainedBox(
         constraints: BoxConstraints(
-          maxWidth: maxWidth ?? double.infinity,
-          maxHeight: maxHeight ?? double.infinity,
+          maxWidth: maxWidth ?? _defaultMaxWidth,
+          maxHeight: maxHeight ?? _defaultMaxHeight,
         ),
         child: FallbackPicture(fit: fit),
       );
