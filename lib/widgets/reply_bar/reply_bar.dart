@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
@@ -492,6 +493,11 @@ class _ReplyBarState extends State<_ReplyBar> {
                 },
               ),
               const Spacer(),
+              FilledButton.tonal(
+                onPressed: () => context.pop(),
+                child: const Icon(Icons.close_outlined),
+              ),
+              sizedBoxW30H30,
               // Send Button
               FilledButton(
                 onPressed:

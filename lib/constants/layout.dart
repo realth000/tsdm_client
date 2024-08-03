@@ -29,6 +29,9 @@ const sizedBoxW15H15 = SizedBox(width: 15, height: 15);
 /// A [SizedBox] with 20 width and 20 height.
 const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
 
+/// A [SizedBox] with 30 width and 30 height.
+const sizedBoxW30H30 = SizedBox(width: 30, height: 30);
+
 /// A [SizedBox] with 12 width and 48 height.
 ///
 /// Size following [material design 3 spec](https://m3.material.io/components/menus/specs#6928c7b9-2c6e-4ff6-98a6-55883fb299bd).
