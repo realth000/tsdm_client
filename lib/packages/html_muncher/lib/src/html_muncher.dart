@@ -109,6 +109,11 @@ class MunchState {
   /// Use as a stack because only the latest font works on font.
   final colorStack = <Color>[];
 
+  /// All background colors currently used.
+  ///
+  /// Use as a stack because only the latest font works on font.
+  final backgroundColorStack = <Color>[];
+
   /// All font sizes currently used.
   ///
   /// Use as a stack because only the latest size works on font.
@@ -927,33 +932,21 @@ class Muncher {
     // Trim and add alpha value for "#ffafc7".
     // Set to an invalid color value if "color" attribute not found.
     final attr = colorString ?? element.attributes['color'];
-    int? colorValue;
-    if (attr != null && _colorRe.hasMatch(attr)) {
-      if (attr.startsWith('#')) {
-        colorValue = int.tryParse(
-          element.attributes['color']?.substring(1).padLeft(8, 'ff') ?? 'g',
-          radix: 16,
-        );
-      } else {
-        colorValue = int.tryParse(
-          element.attributes['color']?.padLeft(8, 'ff') ?? 'g',
-          radix: 16,
-        );
-      }
-    }
-    Color? color;
-    if (colorValue != null) {
-      color = Color(colorValue);
+    final color = _stringToColor(attr);
+    if (color != null) {
       state.colorStack.add(color);
-    } else {
-      // If color not in format #aabcc, try parse as color name.
-      final webColor = WebColors.fromString(attr);
-      if (webColor.isValid) {
-        color = webColor.color;
-        state.colorStack.add(color);
-      }
+      return true;
     }
-    return color != null;
+    return false;
+  }
+
+  bool _tryPushBackgroundColor(uh.Element element) {
+    // TODO: Implement.
+    final attr = element.attributes['background-color'];
+    if (attr == null) {
+      return false;
+    }
+    return true;
   }
 
   /// Try parse font size from [element].
@@ -967,5 +960,30 @@ class Muncher {
       state.fontSizeStack.add(fontSize.value());
     }
     return fontSize.isValid;
+  }
+
+  /// Parse nullable [String] [s] to [Color].
+  ///
+  /// Return the parsed color.
+  Color? _stringToColor(String? s) {
+    int? colorValue;
+    // Parse as color value.
+    if (s != null && _colorRe.hasMatch(s)) {
+      if (s.startsWith('#')) {
+        colorValue = int.tryParse(s.substring(1).padLeft(8, 'ff'), radix: 16);
+      } else {
+        colorValue = int.tryParse(s.padLeft(8, 'ff'), radix: 16);
+      }
+    }
+    if (colorValue != null) {
+      return Color(colorValue);
+    } else {
+      // If color not in format #aabcc, try parse as color name.
+      final webColor = WebColors.fromString(s);
+      if (webColor.isValid) {
+        return webColor.color;
+      }
+    }
+    return null;
   }
 }
