@@ -33,10 +33,8 @@ class ThreadChip extends StatelessWidget {
       sheetItemBuilder;
 
   Widget _buildContent(BuildContext context, ForumState state) {
-    return Expanded(
-      child: SingleChildScrollView(
-        child: Column(children: sheetItemBuilder(context, state)),
-      ),
+    return SingleChildScrollView(
+      child: Column(children: sheetItemBuilder(context, state)),
     );
   }
 

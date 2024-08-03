@@ -175,29 +175,22 @@ class _ForumPageState extends State<ForumPage>
   }
 
   Widget _buildNormalThreadFilterRow(BuildContext context, ForumState state) {
-    return SliverPadding(
+    return Padding(
       padding: edgeInsetsL10T5R10,
-      sliver: SliverToBoxAdapter(
-        // title: Text('123'),
-        // automaticallyImplyLeading: false,
-        // primary: false,
-        // floating: true,
-        // snap: true,
-        child: SizedBox(
-          height: 40,
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                const ThreadTypeChip(),
-                const ThreadSpecialTypeChip(),
-                const ThreadDatelineChip(),
-                const ThreadOrderChip(),
-                const ThreadDigestChip(),
-                const ThreadRecommendedChip(),
-              ].insertBetween(sizedBoxW10H10),
-            ),
+      child: SizedBox(
+        height: 40,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              const ThreadTypeChip(),
+              const ThreadSpecialTypeChip(),
+              const ThreadDatelineChip(),
+              const ThreadOrderChip(),
+              const ThreadDigestChip(),
+              const ThreadRecommendedChip(),
+            ].insertBetween(sizedBoxW10H10),
           ),
         ),
       ),
@@ -266,10 +259,11 @@ class _ForumPageState extends State<ForumPage>
         ),
       );
       if (state.filterState.isFiltering()) {
-        return CustomScrollView(
-          slivers: [
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             _buildNormalThreadFilterRow(context, state),
-            SliverFillRemaining(child: emptyContentHint),
+            Expanded(child: emptyContentHint),
           ],
         );
       }
@@ -307,20 +301,27 @@ class _ForumPageState extends State<ForumPage>
             .add(ForumLoadMoreRequested(state.currentPage + 1));
         // _refreshController.finishLoad();
       },
-      childBuilder: (context, physics) => CustomScrollView(
-        controller: _threadScrollController,
-        physics: physics,
-        slivers: [
-          const HeaderLocator.sliver(),
+      childBuilder: (context, physics) => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const HeaderLocator(),
           _buildNormalThreadFilterRow(context, state),
           if (normalThreadList.isNotEmpty)
-            SliverPadding(
-              padding: edgeInsetsL10T5R10B20,
-              sliver: SliverList.separated(
-                itemCount: normalThreadList.length,
-                itemBuilder: (context, index) =>
-                    NormalThreadCard(normalThreadList[index]),
-                separatorBuilder: (context, index) => sizedBoxW5H5,
+            Expanded(
+              child: Padding(
+                padding: edgeInsetsL10T5R10B20,
+                child: CustomScrollView(
+                  controller: _threadScrollController,
+                  physics: physics,
+                  slivers: [
+                    SliverList.separated(
+                      itemCount: normalThreadList.length,
+                      itemBuilder: (context, index) =>
+                          NormalThreadCard(normalThreadList[index]),
+                      separatorBuilder: (context, index) => sizedBoxW5H5,
+                    ),
+                  ],
+                ),
               ),
             ),
         ],
@@ -359,11 +360,12 @@ class _ForumPageState extends State<ForumPage>
 
   Widget _buildBody(BuildContext context, ForumState state) {
     return switch (state.status) {
-      ForumStatus.initial || ForumStatus.loading => CustomScrollView(
-          slivers: [
+      ForumStatus.initial || ForumStatus.loading => Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
             if (state.filterState.isFiltering())
               _buildNormalThreadFilterRow(context, state),
-            const SliverFillRemaining(
+            const Expanded(
               child: Center(child: CircularProgressIndicator()),
             ),
           ],
