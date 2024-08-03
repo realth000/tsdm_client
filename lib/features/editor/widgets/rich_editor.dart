@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/instance.dart';
@@ -33,6 +32,9 @@ class RichEditor extends StatelessWidget {
   /// Optional initial text.
   final String? initialText;
 
+  static const _defaultEmojiWidth = 50.0;
+  static const _defaultEmojiHeight = 50.0;
+
   @override
   Widget build(BuildContext context) {
     return BBCodeEditor(
@@ -45,15 +47,15 @@ class RichEditor extends StatelessWidget {
         // code is supposed in
         // {:${group_id}_${emoji_id}:}
         // format.
-        return FutureBuilder(
-          future:
-              getIt.get<ImageCacheProvider>().getEmojiCacheFromRawCode(code),
-          builder: (context, snapshot) {
-            if (!snapshot.hasData) {
-              return sizedCircularProgressIndicator;
-            }
-            return Image.memory(snapshot.data!);
-          },
+        final data =
+            getIt.get<ImageCacheProvider>().getEmojiCacheFromRawCodeSync(code);
+        if (data == null) {
+          return Text(code);
+        }
+        return Image.memory(
+          data,
+          width: _defaultEmojiWidth,
+          height: _defaultEmojiHeight,
         );
       },
       // TODO: Implement imageBuilder in editor package.

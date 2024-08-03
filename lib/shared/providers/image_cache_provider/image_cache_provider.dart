@@ -229,6 +229,19 @@ class ImageCacheProvider {
     return getEmojiCache(groupId, id);
   }
 
+  /// Try get the emoji cache from raw bbcode.
+  ///
+  /// Synchronously.
+  Uint8List? getEmojiCacheFromRawCodeSync(String code) {
+    if (!_emojiCodeRe.hasMatch(code)) {
+      return null;
+    }
+    final m = _emojiCodeRe.firstMatch(code)!;
+    final groupId = m.namedGroup('groupId')!;
+    final id = m.namedGroup('id')!;
+    return getEmojiCacheSync(groupId, id);
+  }
+
   /// Get the cached file of emoji with specified [groupId] and [id].
   Future<Uint8List?> getEmojiCache(String groupId, String id) async {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
