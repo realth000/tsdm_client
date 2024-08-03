@@ -93,10 +93,10 @@ mixin SettingsDefaultMapMixin {
   /// Center align the info row in thread card.
   ///
   /// Default is enabled.
-  bool get defaultThreadCardInfoRowAlignCenter => true;
+  bool get defaultThreadCardInfoRowAlignCenter => false;
 
   /// Show last replied author's username in info row in `ThreadCard`.
   ///
   /// Default is disabled.
-  bool get defaultThreadCardShowLastReplyAuthor => false;
+  bool get defaultThreadCardShowLastReplyAuthor => true;
 }
