@@ -6,11 +6,18 @@ part of 'models.dart';
 @MappableClass()
 class CssTypes with CssTypesMappable {
   /// Constructor.
-  const CssTypes({required this.fontWeight, required this.color});
+  const CssTypes({
+    required this.fontWeight,
+    required this.color,
+    required this.backgroundColor,
+  });
 
   /// Font size converted from css.
   final FontWeight? fontWeight;
 
   /// Font color converted from css.
   final Color? color;
+
+  /// Text background color.
+  final Color? backgroundColor;
 }

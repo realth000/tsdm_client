@@ -12,6 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 分区：支持显示在帖子中最后回复的用户。
 - 设置：支持设置帖子卡片的外观，包括对齐方式和是否显示最后回复的用户。
   - 默认不居中并显示最后回复的用户，可在外观 -> 帖子卡片中关闭。
+- 解析网页：解析网页中的字体背景颜色。
 
 ### Fixed
 

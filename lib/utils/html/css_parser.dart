@@ -3,10 +3,13 @@ import 'dart:ui';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/web_colors.dart';
 
+final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
+
 /// Parse a [String] of css to [CssTypes].
 ///
 /// Return null if is invalid css.
 CssTypes? parseCssString(String css) {
+  Color? backgroundColor;
   Color? color;
   FontWeight? fontWeight;
   final cssList = css.split(';');
@@ -21,13 +24,19 @@ CssTypes? parseCssString(String css) {
       case 'font-weight':
         fontWeight = _parseFontWeight(value);
       case 'color':
-        color = _parseColor(value);
+        color = value.toColor();
+      case 'background-color':
+        backgroundColor = value.toColor();
       default:
         continue;
     }
   }
 
-  final ret = CssTypes(color: color, fontWeight: fontWeight);
+  final ret = CssTypes(
+    color: color,
+    fontWeight: fontWeight,
+    backgroundColor: backgroundColor,
+  );
   return ret;
 }
 
@@ -59,19 +68,33 @@ FontWeight? _parseFontWeight(String data) {
   );
 }
 
-/// FIXME: Separate web color parsing.
-Color? _parseColor(String data) {
-  final webColor = WebColors.fromString(data);
-  if (webColor.isValid) {
-    return webColor.color;
-  }
-
-  if (data.startsWith('#')) {
-    final v = int.tryParse(data.substring(1).padLeft(8, 'ff'), radix: 16);
-    if (v == null) {
-      return null;
+/// Extension to convert nullable string to [Color].
+extension StringToColorExt on String? {
+  /// Parse nullable color string to [Color].
+  ///
+  /// * If `this` is null, return null.
+  /// * Parse `this` in style `#COLOR_VALUE` or `COLOR_NAME` where COLOR_NAME is
+  ///   hit in [WebColors].
+  Color? toColor() {
+    int? colorValue;
+    // Parse as color value.
+    if (this != null && _colorRe.hasMatch(this!)) {
+      if (this!.startsWith('#')) {
+        colorValue =
+            int.tryParse(this!.substring(1).padLeft(8, 'ff'), radix: 16);
+      } else {
+        colorValue = int.tryParse(this!.padLeft(8, 'ff'), radix: 16);
+      }
     }
-    return Color(v);
+    if (colorValue != null) {
+      return Color(colorValue);
+    } else {
+      // If color not in format #aabcc, try parse as color name.
+      final webColor = WebColors.fromString(this);
+      if (webColor.isValid) {
+        return webColor.color;
+      }
+    }
+    return null;
   }
-  return null;
 }

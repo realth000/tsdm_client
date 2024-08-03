@@ -5,8 +5,8 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/types.dart';
-import 'package:tsdm_client/utils/html/web_colors.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
 import 'package:tsdm_client/widgets/card/bounty_card.dart';
@@ -166,8 +166,6 @@ class _Muncher {
   /// Munch state to use when munching.
   final _MunchState state = _MunchState();
 
-  static final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
-
   /// Map to store div classes and corresponding munch functions.
   Map<String, List<InlineSpan>? Function(uh.Element)>? _divMap;
 
@@ -226,6 +224,7 @@ class _Muncher {
                 color: state.colorStack.lastOrNull,
                 fontWeight: state.bold ? FontWeight.w600 : null,
                 fontSize: state.fontSizeStack.lastOrNull,
+                backgroundColor: state.backgroundColorStack.lastOrNull,
                 decoration: TextDecoration.combine([
                   if (state.underline) TextDecoration.underline,
                   if (state.lineThrough) TextDecoration.lineThrough,
@@ -334,6 +333,8 @@ class _Muncher {
     final hasColor = _tryPushColor(element);
     // Setup font size.
     final hasFontSize = _tryPushFontSize(element);
+    // Setup background color.
+    final hasBackgroundColor = _tryPushBackgroundColor(element);
     // Munch!
     final ret = _munch(element);
 
@@ -343,6 +344,9 @@ class _Muncher {
     }
     if (hasFontSize) {
       state.fontSizeStack.removeLast();
+    }
+    if (hasBackgroundColor) {
+      state.backgroundColorStack.removeLast();
     }
 
     // Restore color.
@@ -932,7 +936,7 @@ class _Muncher {
     // Trim and add alpha value for "#ffafc7".
     // Set to an invalid color value if "color" attribute not found.
     final attr = colorString ?? element.attributes['color'];
-    final color = _stringToColor(attr);
+    final color = attr.toColor();
     if (color != null) {
       state.colorStack.add(color);
       return true;
@@ -941,12 +945,16 @@ class _Muncher {
   }
 
   bool _tryPushBackgroundColor(uh.Element element) {
-    // TODO: Implement.
-    final attr = element.attributes['background-color'];
+    final attr = element.attributes['style'];
     if (attr == null) {
       return false;
     }
-    return true;
+    final color = parseCssString(attr)?.backgroundColor;
+    if (color != null) {
+      state.backgroundColorStack.add(color);
+      return true;
+    }
+    return false;
   }
 
   /// Try parse font size from [element].
@@ -960,30 +968,5 @@ class _Muncher {
       state.fontSizeStack.add(fontSize.value());
     }
     return fontSize.isValid;
-  }
-
-  /// Parse nullable [String] [s] to [Color].
-  ///
-  /// Return the parsed color.
-  Color? _stringToColor(String? s) {
-    int? colorValue;
-    // Parse as color value.
-    if (s != null && _colorRe.hasMatch(s)) {
-      if (s.startsWith('#')) {
-        colorValue = int.tryParse(s.substring(1).padLeft(8, 'ff'), radix: 16);
-      } else {
-        colorValue = int.tryParse(s.padLeft(8, 'ff'), radix: 16);
-      }
-    }
-    if (colorValue != null) {
-      return Color(colorValue);
-    } else {
-      // If color not in format #aabcc, try parse as color name.
-      final webColor = WebColors.fromString(s);
-      if (webColor.isValid) {
-        return webColor.color;
-      }
-    }
-    return null;
   }
 }
