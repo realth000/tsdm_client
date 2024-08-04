@@ -66,6 +66,7 @@ class RichEditor extends StatelessWidget {
       userMentionHandler: (username) => context.dispatchAsUrl(
         '$usernameProfilePage$username',
       ),
+      imageConstraints: const BoxConstraints(maxWidth: 100, maxHeight: 100),
     );
   }
 }

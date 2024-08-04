@@ -90,23 +90,32 @@ class CachedImage extends StatelessWidget {
               alignment: Alignment.center,
               children: <Widget>[
                 ...previousChildren,
-                if (currentChild != null)
-                  // TODO: Use convenient widget instead of layout builder.
-                  LayoutBuilder(
-                    builder: (context, cons) {
-                      // Sometimes max height is infinity and the comparison
-                      // may be costly.
-                      // FIXME: Remove compare.
-                      if (cons.maxHeight == double.infinity) {
-                        return currentChild;
-                      }
-                      return SizedBox(
-                        width: cons.maxWidth,
-                        height: cons.maxHeight,
-                        child: currentChild,
-                      );
-                    },
-                  ),
+                if (currentChild != null) currentChild,
+                // FIXME: Forget why we have the following workaround that
+                // calculates constraints and wrap `child` in `SizedBox`.
+                //
+                // But using `LayoutBuilder` here may change the render object
+                // tree when computing layout which is forbidden in
+                // `IntrinsicHeight`, where we used to wrap the reply bar.
+                // This unsupported behavior forbid us to use `CachedImage` in
+                // reply bar. So temporarily remove this `LayoutBuilder`.
+                //
+                // TODO: Use convenient widget instead of layout builder.
+                // LayoutBuilder(
+                //   builder: (context, cons) {
+                //     // Sometimes max height is infinity and the comparison
+                //     // may be costly.
+                //     // FIXME: Remove compare.
+                //     if (cons.maxHeight == double.infinity) {
+                //       return currentChild;
+                //     }
+                //     return SizedBox(
+                //       width: cons.maxWidth,
+                //       height: cons.maxHeight,
+                //       child: currentChild,
+                //     );
+                //   },
+                // ),
               ],
             );
           },
