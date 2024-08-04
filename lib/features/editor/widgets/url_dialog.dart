@@ -6,22 +6,38 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 /// Show a url dialog.
-Future<void> showUrlDialog(
-  BuildContext context,
-  BBCodeEditorController controller,
-) async =>
-    showDialog(
+///
+/// * [url] is optional initial url.
+/// * [description] is optional description text.
+///
+/// Optional parameters above are used when editing an already inserted url.
+Future<PickUrlResult?> showUrlDialog(
+  BuildContext context, {
+  required String? url,
+  required String? description,
+}) async =>
+    showDialog<PickUrlResult>(
       context: context,
-      builder: (context) => UrlDialog(controller),
+      builder: (context) => UrlDialog(
+        initialUrl: url,
+        initialDescription: description,
+      ),
     );
 
 /// Show a dialog to insert url and description.
 class UrlDialog extends StatefulWidget {
   /// Constructor.
-  const UrlDialog(this.bbCodeController, {super.key});
+  const UrlDialog({
+    required this.initialUrl,
+    required this.initialDescription,
+    super.key,
+  });
 
-  /// The bbcode editor controller used after dialog closed.
-  final BBCodeEditorController bbCodeController;
+  /// Optional initial url to fill in dialog.
+  final String? initialUrl;
+
+  /// Optional initial description text to fill in dialog.
+  final String? initialDescription;
 
   @override
   State<UrlDialog> createState() => _UrlDialogState();
@@ -29,8 +45,22 @@ class UrlDialog extends StatefulWidget {
 
 class _UrlDialogState extends State<UrlDialog> {
   final formKey = GlobalKey<FormState>();
-  final descController = TextEditingController();
-  final urlController = TextEditingController();
+  late final TextEditingController descController;
+  late final TextEditingController urlController;
+
+  @override
+  void initState() {
+    super.initState();
+    descController = TextEditingController(text: widget.initialDescription);
+    urlController = TextEditingController(text: widget.initialUrl);
+  }
+
+  @override
+  void dispose() {
+    descController.dispose();
+    urlController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +80,6 @@ class _UrlDialogState extends State<UrlDialog> {
                 prefixIcon: const Icon(Icons.description_outlined),
                 labelText: tr.description,
               ),
-              validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
             ),
             TextFormField(
               controller: urlController,
@@ -74,15 +103,18 @@ class _UrlDialogState extends State<UrlDialog> {
                         !(formKey.currentState!).validate()) {
                       return;
                     }
-                    // TODO: Implement
-                    // await widget.bbCodeController.insertUrl(
-                    //   descController.text,
-                    //   urlController.text,
-                    // );
                     if (!context.mounted) {
                       return;
                     }
-                    context.pop();
+                    context.pop(
+                      PickUrlResult(
+                        url: urlController.text,
+                        description: switch (descController.text) {
+                          '' => urlController.text,
+                          final String v => v,
+                        },
+                      ),
+                    );
                   },
                 ),
               ],

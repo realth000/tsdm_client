@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 
 /// Representing all features types.
 enum EditorFeatures {
@@ -333,6 +334,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
       config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiBottomSheet(context),
       colorPicker: (context) async => showColorPickerBottomSheet(context),
+      urlPicker: (context, url, description) async =>
+          showUrlDialog(context, url: url, description: description),
       backgroundColorPicker: (context) async =>
           showColorPickerBottomSheet(context),
       // Features.
