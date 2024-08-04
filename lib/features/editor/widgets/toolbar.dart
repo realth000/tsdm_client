@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
+import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 
 /// Representing all features types.
@@ -331,6 +332,9 @@ class _EditorToolbarState extends State<EditorToolbar> {
       controller: widget.bbcodeController,
       config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiBottomSheet(context),
+      colorPicker: (context) async => showColorPickerBottomSheet(context),
+      backgroundColorPicker: (context) async =>
+          showColorPickerBottomSheet(context),
       // Features.
       showUndo: hasFeature(EditorFeatures.undo),
       showRedo: hasFeature(EditorFeatures.redo),
