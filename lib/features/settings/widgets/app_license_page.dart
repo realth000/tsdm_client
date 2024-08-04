@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 /// Page to show app license and license of dependencies.
@@ -24,8 +25,14 @@ class AppLicensePage extends StatelessWidget {
           return LicensePage(
             applicationName: context.t.appName,
             applicationVersion: appFullVersion,
-            applicationIcon:
+            applicationIcon: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                sizedBoxW10H10,
                 SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
+                sizedBoxW10H10,
+              ],
+            ),
             applicationLegalese: snapshot.data,
           );
         }
