@@ -7,7 +7,7 @@
 </h1>
 
 <p align="center">
-使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端
+天使动漫论坛第三方跨平台客户端
 </p>
 
 <p align="center">

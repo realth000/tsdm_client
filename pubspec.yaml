@@ -1,5 +1,5 @@
 name: tsdm_client
-description: 使用Flutter制作的天使动漫（tsdm39.com）论坛非官方客户端
+description: 天使动漫论坛第三方跨平台客户端
 repository: https://github.com/realth000/tsdm_client
 homepage: https://github.com/realth000/tsdm_client
 issue_tracker: https://github.com/realth000/tsdm_client/issues
