@@ -127,6 +127,14 @@ class CachedImage extends StatelessWidget {
     );
   }
 
+  Widget _buildErrorWidget(BuildContext context) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: maxWidth ?? _defaultMaxWidth,
+          maxHeight: maxHeight ?? _defaultMaxHeight,
+        ),
+        child: FallbackPicture(fit: fit),
+      );
+
   @override
   Widget build(BuildContext context) {
     if (imageUrl.isEmpty) {
@@ -161,8 +169,6 @@ class CachedImage extends StatelessWidget {
       );
     }
 
-    final loadingPlaceholder = _buildPlaceholder(context);
-
     return BlocProvider(
       create: (context) {
         final bloc = ImageCacheBloc(imageUrl, RepositoryProvider.of(context));
@@ -180,24 +186,24 @@ class CachedImage extends StatelessWidget {
                 .where((e) => e.imageId == imageUrl),
             builder: (context, snapshot) {
               if (!snapshot.hasData) {
-                return loadingPlaceholder;
+                return _buildPlaceholder(context);
               }
 
               final resp = snapshot.data!;
 
               final content = switch (resp) {
-                ImageCacheLoadingResponse() => loadingPlaceholder,
+                ImageCacheLoadingResponse() => _buildPlaceholder(context),
                 ImageCacheSuccessResponse(:final imageData) =>
                   _buildImage(context, imageData),
                 ImageCacheFailedResponse() => () {
                     debug('failed to load image from $imageUrl');
-                    return loadingPlaceholder;
+                    return _buildErrorWidget(context);
                   }(),
                 ImageCacheStatusResponse(:final status, :final imageData) =>
                   switch (status) {
                     ImageCacheStatus2.notCached ||
                     ImageCacheStatus2.loading =>
-                      loadingPlaceholder,
+                      _buildPlaceholder(context),
                     ImageCacheStatus2.cached =>
                       _buildImage(context, imageData!),
                   }
