@@ -8,7 +8,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
-Future<String?> showEmojiBottomSheet(
+Future<String?> showEmojiPicker(
   BuildContext context,
 ) async {
   return showCustomBottomSheet<String>(

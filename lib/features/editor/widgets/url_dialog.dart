@@ -11,7 +11,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 /// * [description] is optional description text.
 ///
 /// Optional parameters above are used when editing an already inserted url.
-Future<PickUrlResult?> showUrlDialog(
+Future<PickUrlResult?> showUrlPicker(
   BuildContext context, {
   required String? url,
   required String? description,

@@ -6,7 +6,7 @@ import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet provides all available foreground colors for user to
 /// choose.
-Future<PickColorResult?> showColorPickerBottomSheet(
+Future<PickColorResult?> showColorPicker(
   BuildContext context,
 ) async =>
     showCustomBottomSheet<PickColorResult>(

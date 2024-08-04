@@ -332,12 +332,11 @@ class _EditorToolbarState extends State<EditorToolbar> {
     return BBCodeEditorToolbar(
       controller: widget.bbcodeController,
       config: const BBCodeEditorToolbarConfiguration(),
-      emojiPicker: (context) async => showEmojiBottomSheet(context),
-      colorPicker: (context) async => showColorPickerBottomSheet(context),
+      emojiPicker: (context) async => showEmojiPicker(context),
+      colorPicker: (context) async => showColorPicker(context),
       urlPicker: (context, url, description) async =>
-          showUrlDialog(context, url: url, description: description),
-      backgroundColorPicker: (context) async =>
-          showColorPickerBottomSheet(context),
+          showUrlPicker(context, url: url, description: description),
+      backgroundColorPicker: (context) async => showColorPicker(context),
       // Features.
       showUndo: hasFeature(EditorFeatures.undo),
       showRedo: hasFeature(EditorFeatures.redo),
