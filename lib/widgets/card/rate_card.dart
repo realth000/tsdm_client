@@ -50,6 +50,7 @@ class RateCard extends StatelessWidget {
                         child: CircleAvatar(
                           backgroundImage: CachedImageProvider(
                             e.user.avatarUrl ?? noAvatarUrl,
+                            fallbackImageUrl: noAvatarUrl,
                             context,
                           ),
                         ),

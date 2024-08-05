@@ -28,6 +28,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app：修复图片加载失败时依然显示正在加载的问题。
 - 翻译：修复部分错误翻译。
 - 帖子：修复部分签名有样式溢出的用户的楼层无法回复和评分的问题。
+- 帖子：修复帖子评分中头像无法加载时不显示且不断重试的问题。
 
 ### Changed
 
