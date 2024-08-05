@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 
 /// Representing all features types.
@@ -337,6 +338,8 @@ class _EditorToolbarState extends State<EditorToolbar> {
       urlPicker: (context, url, description) async =>
           showUrlPicker(context, url: url, description: description),
       backgroundColorPicker: (context) async => showColorPicker(context),
+      imagePicker: (context, url, width, height) =>
+          showImagePicker(context, url: url, width: width, height: height),
       // Features.
       showUndo: hasFeature(EditorFeatures.undo),
       showRedo: hasFeature(EditorFeatures.redo),

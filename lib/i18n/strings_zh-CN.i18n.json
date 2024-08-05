@@ -537,7 +537,9 @@
       "errorEmpty": "不能为空",
       "width": "宽度",
       "height": "高度",
-      "errorInvalidNumber": "无效的数字"
+      "errorInvalidNumber": "无效的数字",
+      "autoFillSize": "自动填写大小",
+      "autoFillSizeDetail": "填写图片的实际大小"
     },
     "mentionUser": {
       "title": "提醒用户",

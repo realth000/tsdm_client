@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
@@ -67,6 +68,8 @@ class RichEditor extends StatelessWidget {
         '$usernameProfilePage$username',
       ),
       imageConstraints: const BoxConstraints(maxWidth: 100, maxHeight: 100),
+      imagePicker: (context, url, width, height) =>
+          showImagePicker(context, url: url, width: width, height: height),
     );
   }
 }

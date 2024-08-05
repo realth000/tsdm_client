@@ -537,7 +537,9 @@
       "errorEmpty": "Should not be empty",
       "width": "Width",
       "height": "Height",
-      "errorInvalidNumber": "Invalid number"
+      "errorInvalidNumber": "Invalid number",
+      "autoFillSize": "Auto fill size",
+      "autoFillSizeDetail": "Fill size with image real size"
     },
     "mentionUser": {
       "title": "Mention User",
