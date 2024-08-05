@@ -275,7 +275,7 @@ class _ForumPageState extends State<ForumPage>
     return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
           .copyWith(physics: physics, scrollbars: false),
-      header: const MaterialHeader(position: IndicatorPosition.locator),
+      header: const MaterialHeader(),
       footer: const MaterialFooter(),
       controller: _threadRefreshController,
       scrollController: _threadScrollController,
@@ -304,26 +304,24 @@ class _ForumPageState extends State<ForumPage>
       childBuilder: (context, physics) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const HeaderLocator(),
           _buildNormalThreadFilterRow(context, state),
-          if (normalThreadList.isNotEmpty)
-            Expanded(
-              child: Padding(
-                padding: edgeInsetsL10T5R10B20,
-                child: CustomScrollView(
-                  controller: _threadScrollController,
-                  physics: physics,
-                  slivers: [
-                    SliverList.separated(
-                      itemCount: normalThreadList.length,
-                      itemBuilder: (context, index) =>
-                          NormalThreadCard(normalThreadList[index]),
-                      separatorBuilder: (context, index) => sizedBoxW5H5,
-                    ),
-                  ],
-                ),
+          Expanded(
+            child: Padding(
+              padding: edgeInsetsL10T5R10B20,
+              child: CustomScrollView(
+                controller: _threadScrollController,
+                physics: physics,
+                slivers: [
+                  SliverList.separated(
+                    itemCount: normalThreadList.length,
+                    itemBuilder: (context, index) =>
+                        NormalThreadCard(normalThreadList[index]),
+                    separatorBuilder: (context, index) => sizedBoxW5H5,
+                  ),
+                ],
               ),
             ),
+          ),
         ],
       ),
     );
