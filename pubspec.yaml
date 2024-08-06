@@ -47,7 +47,11 @@ dependencies:
       url: https://github.com/realth000/infinite-carousel-flutter
       ref: 11742d44ddec450b324b49b22e2196438b4ebfe1
   isar: ^4.0.0-dev.14
-  isar_flutter_libs: ^4.0.0-dev.14
+  isar_flutter_libs:
+    git:
+      url: https://github.com/realth000/isar/
+      ref: 70b6036bd24cbad2117637ac11f0677028ff02f9
+      path: packages/isar_flutter_libs
   json_annotation: ^4.9.0
   material_design_icons_flutter: ^7.0.7296
   path: any

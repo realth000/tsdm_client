@@ -884,11 +884,12 @@ packages:
   isar_flutter_libs:
     dependency: "direct main"
     description:
-      name: isar_flutter_libs
-      sha256: "04a3f4035e213ddb6e78d0132a7c80296a085c2088c2a761b4a42ee5add36983"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0-dev.14"
+      path: "packages/isar_flutter_libs"
+      ref: "70b6036bd24cbad2117637ac11f0677028ff02f9"
+      resolved-ref: "70b6036bd24cbad2117637ac11f0677028ff02f9"
+      url: "https://github.com/realth000/isar/"
+    source: git
+    version: "0.0.0-placeholder"
   js:
     dependency: transitive
     description:
