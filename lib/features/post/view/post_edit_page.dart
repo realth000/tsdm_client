@@ -469,7 +469,7 @@ class _PostEditPageState extends State<PostEditPage> {
     };
     return PopScope(
       canPop: false,
-      onPopInvoked: (didPop) {
+      onPopInvokedWithResult: (didPop, _) {
         if (didPop) {
           return;
         }
