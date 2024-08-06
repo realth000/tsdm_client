@@ -6,7 +6,7 @@ on:
       - 'v*'
 
 env:
-  CI_FLUTTER_VERSION: '3.22.x'
+  CI_FLUTTER_VERSION: '3.24.x'
 
 jobs:
   release:
