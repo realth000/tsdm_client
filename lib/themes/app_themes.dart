@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 /// App themes.
 class AppTheme {
   static CardTheme _buildCardTheme() => const CardTheme(
-        elevation: 1,
+        elevation: 0,
       );
 
   static ChipThemeData _buildChipTheme() => const ChipThemeData(
