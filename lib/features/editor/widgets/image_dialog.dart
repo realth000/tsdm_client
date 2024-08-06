@@ -91,6 +91,9 @@ class _ImageDialogState extends State<_ImageDialog> {
       }
       final imageData = await getIt.get<ImageCacheProvider>().getCache(url);
       final uiImage = await decodeImageFromList(imageData);
+      if (!mounted) {
+        return;
+      }
       setState(() {
         widthController.text = '${uiImage.width}';
         heightController.text = '${uiImage.height}';
@@ -152,6 +155,9 @@ class _ImageDialogState extends State<_ImageDialog> {
                   fillingSize = true;
                 });
                 await _fillImageSize(context, v);
+                if (!mounted) {
+                  return;
+                }
                 setState(() {
                   fillingSize = false;
                 });
