@@ -885,8 +885,8 @@ packages:
     dependency: "direct main"
     description:
       path: "packages/isar_flutter_libs"
-      ref: "70b6036bd24cbad2117637ac11f0677028ff02f9"
-      resolved-ref: "70b6036bd24cbad2117637ac11f0677028ff02f9"
+      ref: "98a6cc1236498ce79a9096f772da754df838da0c"
+      resolved-ref: "98a6cc1236498ce79a9096f772da754df838da0c"
       url: "https://github.com/realth000/isar/"
     source: git
     version: "0.0.0-placeholder"
