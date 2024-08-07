@@ -1,22 +1,41 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:collection/collection.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/database_settings_provider.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/shared/repositories/settings_repository/mixin/settings_default_mixin.dart';
+import 'package:tsdm_client/utils/logger.dart';
+
+typedef _SK = SettingsKeys;
+
+extension _ExtractExt on List<SettingsEntity> {
+  T extract<T>(String name, T fallback) {
+    final v = firstWhereOrNull((e) => e.name == name);
+    if (v == null) {
+      return fallback;
+    }
+    return (switch (T) {
+          int => v.intValue,
+          double => v.doubleValue,
+          String => v.stringValue,
+          bool => v.boolValue,
+          _ => null,
+        } ??
+        fallback) as T;
+  }
+}
 
 /// Settings repository of this app.
 ///
 /// **Need to call dispose** before dispose.
-class SettingsRepository {
+final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
   /// Constructor.
-  SettingsRepository({SettingsProvider? settingsProvider})
-      : _settingsProvider = settingsProvider ?? DatabaseSettingsProvider() {
-    _state = _initMap();
-    _controller.add(_state);
-  }
+  SettingsRepository(this._storage);
+
+  final StorageProvider _storage;
 
   /// Controller of [SettingsMap] stream.
   final _controller = BehaviorSubject<SettingsMap>();
@@ -31,44 +50,64 @@ class SettingsRepository {
   /// Get current [SettingsMap].
   SettingsMap get currentSettings => _state;
 
-  /// Provider of settings, implementation of storage.
-  final SettingsProvider _settingsProvider;
-
   /// Current settings.
   late SettingsMap _state;
 
-  /// Load settings from [_settingsProvider].
+  /// Init initial settings.
+  Future<void> init() async {
+    _state = await _initMap();
+    _controller.add(_state);
+  }
+
+  /// Load settings from storage.
   ///
   /// Some settings use default value directly.
-  SettingsMap _initMap() {
-    final windowSize = _settingsProvider.getWindowSize();
-    final windowPosition = _settingsProvider.getWindowPosition();
-    final loggedUserInfo = _settingsProvider.getLoginInfo();
+  Future<SettingsMap> _initMap() async {
+    final s = await _storage.getAllSettings();
+
     return SettingsMap(
-      netClientAccept: _settingsProvider.getNetClientAccept(),
-      netClientAcceptEncoding: _settingsProvider.getNetClientAcceptEncoding(),
-      netClientAcceptLanguage: _settingsProvider.getNetClientAcceptLanguage(),
-      netClientUserAgent: _settingsProvider.getNetClientUserAgent(),
-      windowWidth: windowSize.width,
-      windowHeight: windowSize.height,
-      windowPositionDx: windowPosition.dx,
-      windowPositionDy: windowPosition.dy,
-      windowInCenter: _settingsProvider.getWindowInCenter(),
-      loginUsername: loggedUserInfo.$1,
-      loginUid: loggedUserInfo.$2,
-      themeMode: _settingsProvider.getThemeMode(),
-      locale: _settingsProvider.getLocale(),
-      checkinFeeling: _settingsProvider.getCheckinFeeling(),
-      checkinMessage: _settingsProvider.getCheckinMessage(),
-      showShortcutInForumCard: _settingsProvider.getShowShortcutInForumCard(),
-      accentColor: _settingsProvider.getAccentColorValue(),
-      showUnreadInfoHint: _settingsProvider.getShowUnreadInfoHint(),
-      doublePressExit: _settingsProvider.getDoublePressExit(),
-      threadReverseOrder: _settingsProvider.getThreadReverseOrder(),
-      threadCardInfoRowAlignCenter:
-          _settingsProvider.getThreadCardInfoRowAlignCenter(),
-      threadCardShowLastReplyAuthor:
-          _settingsProvider.getThreadCardShowLastReplyAuthor(),
+      netClientAccept: s.extract(_SK.netClientAccept, defaultNetClientAccept),
+      netClientAcceptEncoding: s.extract(
+        _SK.netClientAcceptEncoding,
+        defaultNetClientAcceptEncoding,
+      ),
+      netClientAcceptLanguage: s.extract(
+        _SK.netClientAcceptLanguage,
+        defaultNetClientAcceptLanguage,
+      ),
+      netClientUserAgent:
+          s.extract(_SK.netClientUserAgent, defaultNetClientUserAgent),
+      windowWidth: s.extract(_SK.windowWidth, defaultWindowWidth),
+      windowHeight: s.extract(_SK.windowHeight, defaultWindowHeight),
+      windowPositionDx:
+          s.extract(_SK.windowPositionDx, defaultWindowPositionDx),
+      windowPositionDy:
+          s.extract(_SK.windowPositionDy, defaultWindowPositionDy),
+      windowInCenter: s.extract(_SK.windowInCenter, defaultWindowInCenter),
+      loginUsername: s.extract(_SK.loginUsername, defaultLoginUsername),
+      loginUid: s.extract(_SK.loginUid, defaultLoginUid),
+      themeMode: s.extract(_SK.themeMode, defaultThemeMode),
+      locale: s.extract(_SK.locale, defaultLocale),
+      checkinFeeling: s.extract(_SK.checkinFeeling, defaultCheckInFeeling),
+      checkinMessage: s.extract(_SK.checkinMessage, defaultCheckInMessage),
+      showShortcutInForumCard: s.extract(
+        _SK.showShortcutInForumCard,
+        defaultShowRedirectInForumCard,
+      ),
+      accentColor: s.extract(_SK.accentColor, defaultAccentColor),
+      showUnreadInfoHint:
+          s.extract(_SK.showUnreadInfoHint, defaultShowUnreadInfoHint),
+      doublePressExit: s.extract(_SK.doublePressExit, defaultDoublePressExit),
+      threadReverseOrder:
+          s.extract(_SK.threadReverseOrder, defaultThreadReverseOrder),
+      threadCardInfoRowAlignCenter: s.extract(
+        _SK.threadCardInfoRowAlignCenter,
+        defaultThreadCardInfoRowAlignCenter,
+      ),
+      threadCardShowLastReplyAuthor: s.extract(
+        SettingsKeys.threadCardShowLastReplyAuthor,
+        defaultThreadCardShowLastReplyAuthor,
+      ),
     );
   }
 
@@ -77,197 +116,41 @@ class SettingsRepository {
     _controller.close();
   }
 
-  /// Get the current app window size.
-  Size getWindowSize() => _settingsProvider.getWindowSize();
+  Future<T?> getValue<T>(String key) async {
+    if (!settingsTypeMap.containsKey(key)) {
+      error('failed to getValue: unknown settings name "$key"');
+      return null;
+    }
+    if (settingsTypeMap[key] != T) {
+      error('failed to getValue: settings type mismatch: "$key" is not $T ');
+      return null;
+    }
 
-  /// Set the app window size.
-  Future<void> setWindowSize(Size size) async {
-    await _settingsProvider.setWindowSize(size);
-    _state = _state.copyWith(
-      windowPositionDx: size.width,
-      windowPositionDy: size.height,
-    );
-    _controller.add(_state);
+    // TODO: Implement
   }
 
-  /// Get app window position.
-  Offset getWindowPosition() => _settingsProvider.getWindowPosition();
+  /// Save settings [key] with value [value].
+  Future<void> setValue<T>(String key, T value) async {
+    if (!settingsTypeMap.containsKey(key)) {
+      error('failed to setValue: unknown settings name "$key"');
+      return;
+    }
+    if (settingsTypeMap[key] != T) {
+      error('failed to setValue: settings type mismatch: "$key" is not $T ');
+      return;
+    }
+    final _ = await switch (T) {
+      int => _storage.saveInt(key, value as int),
+      double => _storage.saveDouble(key, value as double),
+      String => _storage.saveString(key, value as String),
+      bool => _storage.saveBool(key, value: value as bool),
+      final t => () {
+          error('failed to save settings for key $key:'
+              ' unsupported type in storage: $t');
+        }(),
+    };
 
-  /// Set app window position.
-  Future<void> setWindowPosition(Offset offset) async {
-    await _settingsProvider.setWindowPosition(offset);
-    _state = _state.copyWith(
-      windowPositionDx: offset.dx,
-      windowPositionDy: offset.dy,
-    );
-    _controller.add(_state);
-  }
-
-  /// Get status of app window in center of screen.
-  bool getWindowInCenter() => _settingsProvider.getWindowInCenter();
-
-  /// Set status of app window in center of screen.
-  Future<void> setWindowInCenter({required bool inCenter}) async {
-    await _settingsProvider.setWindowInCenter(inCenter: inCenter);
-    _state = _state.copyWith(windowInCenter: inCenter);
-    _controller.add(_state);
-  }
-
-  /// Get app theme mode index.
-  int getThemeMode() => _settingsProvider.getThemeMode();
-
-  /// Set app theme mode index.
-  Future<void> setThemeMode(int themeMode) async {
-    await _settingsProvider.setThemeMode(themeMode);
-    _state = _state.copyWith(themeMode: themeMode);
-    _controller.add(_state);
-  }
-
-  /// Get current logged user info.
-  ///
-  /// Return (null, null) if no user logged.
-  (String? username, int? uid) getLoginInfo() =>
-      _settingsProvider.getLoginInfo();
-
-  /// Update current login user username.
-  ///
-  /// Because in some situation we don't know uid (e.g. try to login), use this
-  /// [username] to identify user.
-  ///
-  /// Note that the server side does not allow same username so it's safe to
-  /// treat username as user identifier.
-  Future<void> setLoginInfo(String username, int uid) async {
-    await _settingsProvider.setLoginInfo(username, uid);
-    _state = _state.copyWith(loginUsername: username, loginUid: uid);
-    _controller.add(_state);
-  }
-
-  /// Get a cookie belongs to user with [username].
-  ///
-  /// Return null if not found.
-  DatabaseCookie? getCookie(String username) =>
-      _settingsProvider.getCookie(username);
-
-  /// Save cookie into database.
-  ///
-  /// This function should only be called by cookie provider.
-  Future<void> saveCookie(String username, Map<String, String> cookie) async =>
-      _settingsProvider.saveCookie(username, cookie);
-
-  /// Delete user [username]'s cookie from database.
-  ///
-  /// This function should only be called by cookie provider.
-  Future<bool> deleteCookieByUsername(String username) async =>
-      _settingsProvider.deleteCookieByUsername(username);
-
-  /// Get app locale.
-  String getLocale() => _settingsProvider.getLocale();
-
-  /// Set app locale.
-  Future<void> setLocale(String locale) async {
-    await _settingsProvider.setLocale(locale);
-    _state = _state.copyWith(locale: locale);
-    _controller.add(_state);
-  }
-
-  /// Get checkin feeling.
-  String getCheckinFeeling() => _settingsProvider.getCheckinFeeling();
-
-  /// Set checkin feeling.
-  Future<void> setCheckinFeeling(String feeling) async {
-    await _settingsProvider.setCheckinFeeling(feeling);
-    _state = _state.copyWith(checkinFeeling: feeling);
-    _controller.add(_state);
-  }
-
-  /// Get checkin message.
-  String getCheckinMessage() => _settingsProvider.getCheckinMessage();
-
-  /// Set checkin message.
-  Future<void> setCheckinMessage(String message) async {
-    await _settingsProvider.setCheckinMessage(message);
-    _state = _state.copyWith(checkinMessage: message.truncate(50));
-    _controller.add(_state);
-  }
-
-  /// Get visibility of shortcut on forum card.
-  bool getShowShortcutInForumCard() =>
-      _settingsProvider.getShowShortcutInForumCard();
-
-  /// Set visibility of shortcut on forum card.
-  Future<void> setShowShortcutInForumCard({required bool visible}) async {
-    await _settingsProvider.setShowShortcutInForumCard(visible: visible);
-    _state = _state.copyWith(showShortcutInForumCard: visible);
-    _controller.add(_state);
-  }
-
-  /// [Color]'s value.
-  int getAccentColorValue() => _settingsProvider.getAccentColorValue();
-
-  /// Get app accent color.
-  Future<void> setAccentColor(Color color) async {
-    await _settingsProvider.setAccentColor(color);
-    _state = _state.copyWith(accentColor: color.value);
-    _controller.add(_state);
-  }
-
-  /// Reset app accent color to default.
-  Future<void> clearAccentColor() async {
-    await _settingsProvider.clearAccentColor();
-    _state = _state.copyWith(accentColor: -1);
-    _controller.add(_state);
-  }
-
-  /// Get the current visibility of unread info hint.
-  bool getShowUnreadInfoHint() => _settingsProvider.getShowUnreadInfoHint();
-
-  /// Set the visibility of unread info hint.
-  Future<void> setShowUnreadInfoHint({required bool enabled}) async {
-    await _settingsProvider.setShowUnreadInfoHint(enabled: enabled);
-    _state = _state.copyWith(showUnreadInfoHint: enabled);
-    _controller.add(_state);
-  }
-
-  /// Get the state of double press exit feature.
-  bool getDoublePressExit() => _settingsProvider.getDoublePressExit();
-
-  /// Set the state of double press exit feature.
-  Future<void> setDoublePressExit({required bool enabled}) async {
-    await _settingsProvider.setDoublePressExit(enabled: enabled);
-    _state = _state.copyWith(doublePressExit: enabled);
-    _controller.add(_state);
-  }
-
-  /// Get the state of reverse posts in thread feature.
-  bool getThreadReverseOrder() => _settingsProvider.getThreadReverseOrder();
-
-  /// Set the state of revers posts in thread feature.
-  Future<void> setThreadReverseOrder({required bool enabled}) async {
-    await _settingsProvider.setThreadReverseOrder(enabled: enabled);
-    _state = _state.copyWith(threadReverseOrder: enabled);
-    _controller.add(_state);
-  }
-
-  /// Get the state of thread card info row alignment.
-  bool getThreadCardInfoRowAlignCenter() =>
-      _settingsProvider.getThreadCardInfoRowAlignCenter();
-
-  /// Set the state of thread card info row alignment.
-  Future<void> setThreadCardInfoRowAlignCenter({required bool enabled}) async {
-    await _settingsProvider.setThreadCardInfoRowAlignCenter(enabled: enabled);
-    _state = _state.copyWith(threadCardInfoRowAlignCenter: enabled);
-    _controller.add(_state);
-  }
-
-  /// Get the state of visibility of last replied author's username in info row
-  /// in thread card.
-  bool get2() => _settingsProvider.getThreadCardShowLastReplyAuthor();
-
-  /// Set the visibility of last replied author's username in info row in thread
-  /// card.
-  Future<void> setThreadCardShowLastReplyAuthor({required bool enabled}) async {
-    await _settingsProvider.setThreadCardShowLastReplyAuthor(enabled: enabled);
-    _state = _state.copyWith(threadCardShowLastReplyAuthor: enabled);
+    _state = _state.copyWithKey(key, value);
     _controller.add(_state);
   }
 }

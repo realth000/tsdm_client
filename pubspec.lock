@@ -22,6 +22,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.7.0"
+  analyzer_plugin:
+    dependency: transitive
+    description:
+      name: analyzer_plugin
+      sha256: "9661b30b13a685efaee9f02e5d01ed9f2b423bd889d28a304d02d704aee69161"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.3"
   ansicolor:
     dependency: "direct main"
     description:
@@ -335,6 +343,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  drift:
+    dependency: "direct main"
+    description:
+      name: drift
+      sha256: "4e0ffee40d23f0b809e6cff1ad202886f51d629649073ed42d9cd1d194ea943e"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.19.1+1"
+  drift_dev:
+    dependency: "direct main"
+    description:
+      name: drift_dev
+      sha256: ac7647c6cedca99724ca300cff9181f6dd799428f8ed71f94159ed0528eaec26
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.19.1"
+  drift_flutter:
+    dependency: "direct main"
+    description:
+      name: drift_flutter
+      sha256: "0bc2f1dde59e59cedde0df67a4ff7bd8f0d42274f18b50bf7e7dae7ca3d77801"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   easy_refresh:
     dependency: "direct main"
     description:
@@ -728,6 +760,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  group_button:
+    dependency: transitive
+    description:
+      name: group_button
+      sha256: "0610fcf28ed122bfb4b410fce161a390f7f2531d55d1d65c5375982001415940"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.4"
   html:
     dependency: "direct main"
     description:
@@ -873,23 +913,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.0"
-  isar:
-    dependency: "direct main"
-    description:
-      name: isar
-      sha256: ebf74d87c400bd9f7da14acb31932b50c2407edbbd40930da3a6c2a8143f85a8
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.0.0-dev.14"
-  isar_flutter_libs:
-    dependency: "direct main"
-    description:
-      path: "packages/isar_flutter_libs"
-      ref: "98a6cc1236498ce79a9096f772da754df838da0c"
-      resolved-ref: "98a6cc1236498ce79a9096f772da754df838da0c"
-      url: "https://github.com/realth000/isar/"
-    source: git
-    version: "0.0.0-placeholder"
   js:
     dependency: transitive
     description:
@@ -1234,6 +1257,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.2.1"
+  recase:
+    dependency: transitive
+    description:
+      name: recase
+      sha256: e4eb4ec2dcdee52dcf99cb4ceabaffc631d7424ee55e56f280bc039737f89213
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   responsive_framework:
     dependency: "direct main"
     description:
@@ -1250,6 +1281,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.28.0"
+  share_plus:
+    dependency: transitive
+    description:
+      name: share_plus
+      sha256: ef3489a969683c4f3d0239010cc8b7a2a46543a8d139e111c06c558875083544
+      url: "https://pub.dev"
+    source: hosted
+    version: "9.0.0"
+  share_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: share_plus_platform_interface
+      sha256: "0f9e4418835d1b2c3ae78fdb918251959106cefdbc4dd43526e182f80e82f6d4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.0.0"
   shelf:
     dependency: transitive
     description:
@@ -1335,6 +1382,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  sqlite3:
+    dependency: "direct main"
+    description:
+      name: sqlite3
+      sha256: fde692580bee3379374af1f624eb3e113ab2865ecb161dbe2d8ac2de9735dbdb
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.5"
+  sqlite3_flutter_libs:
+    dependency: "direct main"
+    description:
+      name: sqlite3_flutter_libs
+      sha256: "62bbb4073edbcdf53f40c80775f33eea01d301b7b81417e5b3fb7395416258c1"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.24"
+  sqlparser:
+    dependency: transitive
+    description:
+      name: sqlparser
+      sha256: "3be52b4968fc2f098ba735863404756d2fe3ea0729cf006a5b5612618f74ca04"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.37.1"
   stack_trace:
     dependency: transitive
     description:
@@ -1391,6 +1462,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  talker:
+    dependency: "direct main"
+    description:
+      name: talker
+      sha256: "556ffa26387072702199a7bcf7c9a4672c46aaf28d99d122d72a2c5b6c9e1614"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
+  talker_flutter:
+    dependency: "direct main"
+    description:
+      name: talker_flutter
+      sha256: a24b977f1241714f18d714e2675a97cb9ac15c18ac602edf9426dd85f15cfd60
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
+  talker_logger:
+    dependency: transitive
+    description:
+      name: talker_logger
+      sha256: a0d06d9d29792251145bf19be540bb3bd6c8fb15478b2ea9b26c051dbda39669
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.4.0"
   term_glyph:
     dependency: transitive
     description:

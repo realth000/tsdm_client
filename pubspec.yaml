@@ -24,6 +24,10 @@ dependencies:
   device_info_plus: ^10.1.1
   dio: ^5.5.0+1
   dio_cookie_manager: ^3.1.1
+  drift: ^2.19.1+1
+  # For drift
+  drift_dev: ^2.19.1
+  drift_flutter: ^0.1.0
   easy_refresh: ^3.4.0
   equatable: ^2.0.5
   extended_nested_scroll_view: ^6.2.1
@@ -46,12 +50,6 @@ dependencies:
     git:
       url: https://github.com/realth000/infinite-carousel-flutter
       ref: 11742d44ddec450b324b49b22e2196438b4ebfe1
-  isar: ^4.0.0-dev.14
-  isar_flutter_libs:
-    git:
-      url: https://github.com/realth000/isar/
-      ref: 98a6cc1236498ce79a9096f772da754df838da0c
-      path: packages/isar_flutter_libs
   json_annotation: ^4.9.0
   material_design_icons_flutter: ^7.0.7296
   path: any
@@ -62,8 +60,14 @@ dependencies:
   shimmer: ^3.0.0
   slang: ^3.31.1
   slang_flutter: ^3.31.0
+  # For drift
+  sqlite3: ^2.4.5
+  # For drift
+  sqlite3_flutter_libs: ^0.5.24
   stream_transform: ^2.1.0
   surf_lint_rules: ^3.1.0
+  talker: ^4.4.0
+  talker_flutter: ^4.4.0
   universal_html: ^2.2.4
   url_launcher: ^6.3.0
   uuid: ^4.4.2

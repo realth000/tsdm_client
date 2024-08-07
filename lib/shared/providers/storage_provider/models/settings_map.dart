@@ -1,9 +1,13 @@
 // ignore_for_file: public_member_api_docs
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 
 part '../../../../generated/shared/providers/storage_provider/models/settings_map.mapper.dart';
 
+// TODO: SettingsMaps already exposed to presentation layer, so should move to
+// models folder.
+//
 /// Settings map.
 @MappableClass()
 class SettingsMap with SettingsMapMappable {
@@ -55,53 +59,78 @@ class SettingsMap with SettingsMapMappable {
   final bool threadReverseOrder;
   final bool threadCardInfoRowAlignCenter;
   final bool threadCardShowLastReplyAuthor;
-}
 
-const settingsNetClientAccept = 'dioAccept';
-const settingsNetClientAcceptEncoding = 'dioAcceptEncoding';
-const settingsNetClientAcceptLanguage = 'dioAcceptLanguage';
-const settingsNetClientUserAgent = 'dioUserAgent';
-const settingsWindowWidth = 'windowWidth';
-const settingsWindowHeight = 'windowHeight';
-const settingsWindowPositionDx = 'windowPositionX';
-const settingsWindowPositionDy = 'windowPositionY';
-const settingsWindowInCenter = 'windowInCenter';
-const settingsLoginUsername = 'loginUsername';
-const settingsLoginUid = 'loginUid';
-const settingsThemeMode = 'ThemeMode';
-const settingsLocale = 'locale';
-const settingsCheckinFeeling = 'checkInFeeling';
-const settingsCheckinMessage = 'checkInMessage';
-const settingsShowShortcutInForumCard = 'showShortcutInForumCard';
-const settingsAccentColor = 'accentColor';
-const settingsShowUnreadInfoHint = 'showUnreadInfoHint';
-const settingsDoublePressExit = 'doublePressExit';
-const settingsThreadReverseOrder = 'threadReverseOrder';
-const settingsThreadCardInfoRowAlignCenter = 'threadCardInfoRowAlignCenter';
-const settingsThreadCardShowLastReplyAuthor = 'threadCardShowLastReplyAuthor';
+  SettingsMap copyWithKey<T>(String key, T value) {
+    if (!settingsTypeMap.containsKey(key)) {
+      throw Exception('unknown settings $key');
+    }
+
+    if (settingsTypeMap[key] != T) {
+      throw Exception('settings type mismatch: '
+          'expected ${settingsTypeMap[key]}, got $T');
+    }
+
+    return switch (key) {
+      SettingsKeys.netClientAccept =>
+        copyWith(netClientAccept: value as String),
+      SettingsKeys.netClientAcceptEncoding =>
+        copyWith(netClientAcceptEncoding: value as String),
+      SettingsKeys.netClientAcceptLanguage =>
+        copyWith(netClientAcceptLanguage: value as String),
+      SettingsKeys.netClientUserAgent =>
+        copyWith(netClientUserAgent: value as String),
+      SettingsKeys.windowWidth => copyWith(windowWidth: value as double),
+      SettingsKeys.windowHeight => copyWith(windowHeight: value as double),
+      SettingsKeys.windowPositionDx =>
+        copyWith(windowPositionDx: value as double),
+      SettingsKeys.windowPositionDy =>
+        copyWith(windowPositionDy: value as double),
+      SettingsKeys.windowInCenter => copyWith(windowInCenter: value as bool),
+      SettingsKeys.loginUsername => copyWith(loginUsername: value as String),
+      SettingsKeys.loginUid => copyWith(loginUid: value as int),
+      SettingsKeys.themeMode => copyWith(themeMode: value as int),
+      SettingsKeys.locale => copyWith(locale: value as String),
+      SettingsKeys.checkinFeeling => copyWith(checkinFeeling: value as String),
+      SettingsKeys.checkinMessage => copyWith(checkinMessage: value as String),
+      SettingsKeys.showShortcutInForumCard =>
+        copyWith(showShortcutInForumCard: value as bool),
+      SettingsKeys.accentColor => copyWith(accentColor: value as int),
+      SettingsKeys.showUnreadInfoHint =>
+        copyWith(showUnreadInfoHint: value as bool),
+      SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool),
+      SettingsKeys.threadReverseOrder =>
+        copyWith(threadReverseOrder: value as bool),
+      SettingsKeys.threadCardInfoRowAlignCenter =>
+        copyWith(threadCardInfoRowAlignCenter: value as bool),
+      SettingsKeys.threadCardShowLastReplyAuthor =>
+        copyWith(threadCardShowLastReplyAuthor: value as bool),
+      final String v => throw Exception('settings key $v not handled'),
+    };
+  }
+}
 
 /// All settings names (as keys) and settings value types (as values).
 const settingsTypeMap = <String, Type>{
-  settingsNetClientAccept: String,
-  settingsNetClientAcceptEncoding: String,
-  settingsNetClientAcceptLanguage: String,
-  settingsNetClientUserAgent: String,
-  settingsWindowWidth: double,
-  settingsWindowHeight: double,
-  settingsWindowPositionDx: double,
-  settingsWindowPositionDy: double,
-  settingsWindowInCenter: bool,
-  settingsLoginUsername: String,
-  settingsLoginUid: int,
-  settingsThemeMode: int,
-  settingsLocale: String,
-  settingsCheckinFeeling: String,
-  settingsCheckinMessage: String,
-  settingsShowShortcutInForumCard: bool,
-  settingsAccentColor: int,
-  settingsShowUnreadInfoHint: bool,
-  settingsDoublePressExit: bool,
-  settingsThreadReverseOrder: bool,
-  settingsThreadCardInfoRowAlignCenter: bool,
-  settingsThreadCardShowLastReplyAuthor: bool,
+  SettingsKeys.netClientAccept: String,
+  SettingsKeys.netClientAcceptEncoding: String,
+  SettingsKeys.netClientAcceptLanguage: String,
+  SettingsKeys.netClientUserAgent: String,
+  SettingsKeys.windowWidth: double,
+  SettingsKeys.windowHeight: double,
+  SettingsKeys.windowPositionDx: double,
+  SettingsKeys.windowPositionDy: double,
+  SettingsKeys.windowInCenter: bool,
+  SettingsKeys.loginUsername: String,
+  SettingsKeys.loginUid: int,
+  SettingsKeys.themeMode: int,
+  SettingsKeys.locale: String,
+  SettingsKeys.checkinFeeling: String,
+  SettingsKeys.checkinMessage: String,
+  SettingsKeys.showShortcutInForumCard: bool,
+  SettingsKeys.accentColor: int,
+  SettingsKeys.showUnreadInfoHint: bool,
+  SettingsKeys.doublePressExit: bool,
+  SettingsKeys.threadReverseOrder: bool,
+  SettingsKeys.threadCardInfoRowAlignCenter: bool,
+  SettingsKeys.threadCardShowLastReplyAuthor: bool,
 };

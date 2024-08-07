@@ -1,0 +1,28 @@
+part of 'schema.dart';
+
+/// Table for app settings.
+///
+/// Each row stores a key of setting.
+@DataClassName('SettingsEntity')
+class Settings extends Table {
+  /// Name
+  TextColumn get name => text()();
+
+  /// Int value.
+  IntColumn get intValue => integer().nullable()();
+
+  /// Double type value.
+  RealColumn get doubleValue => real().nullable()();
+
+  /// String type value.
+  TextColumn get stringValue => text().nullable()();
+
+  /// Bool type value.
+  BoolColumn get boolValue => boolean().nullable()();
+
+  /// [DateTime] type value.
+  DateTimeColumn get dateTimeValue => dateTime().nullable()();
+
+  @override
+  Set<Column<Object>>? get primaryKey => {name};
+}

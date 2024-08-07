@@ -5,7 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 

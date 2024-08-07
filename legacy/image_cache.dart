@@ -1,10 +1,6 @@
-import 'package:isar/isar.dart';
 import 'package:tsdm_client/extensions/string.dart';
 
-part '../../../../../generated/shared/providers/storage_provider/models/database/image_cache.g.dart';
-
 /// Image cache schema.
-@Collection()
 class DatabaseImageCache {
   /// Constructor.
   DatabaseImageCache({
@@ -28,11 +24,9 @@ class DatabaseImageCache {
         lastUsedTime = lastUsedTime ?? DateTime.now();
 
   /// Database item id.
-  @Id()
   int id;
 
   /// Url to get this image.
-  @Index(unique: true)
   String imageUrl;
 
   /// File name when save as file cache.

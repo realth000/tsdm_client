@@ -4,7 +4,7 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/mixin/settings_default_mixin.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 
 /// Notifier of app settings.
@@ -157,7 +157,7 @@ class DatabaseSettingsProvider
   @override
   DatabaseCookie? getCookie(String username) {
     final storage = _getStorage();
-    final cookie = storage.getCookie(username);
+    final cookie = storage.getCookieByUsername(username);
     return cookie;
   }
 

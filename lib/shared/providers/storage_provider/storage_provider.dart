@@ -1,416 +1,161 @@
-import 'dart:io';
+import 'dart:convert';
 
-import 'package:isar/isar.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/models.dart';
+import 'package:drift/drift.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/dao/dao.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
 import 'package:tsdm_client/utils/debug.dart';
-
-/// Init settings, must call before start.
-Future<StorageProvider> initStorage() async {
-  final storage = StorageProvider._();
-  await storage.init();
-  return storage;
-}
 
 /// [StorageProvider] should be used by other providers.
 class StorageProvider {
-  StorageProvider._();
+  /// Constructor.
+  const StorageProvider(this._db);
 
-  late final Isar _isar;
-
-  bool _initialized = false;
-
-  /// Init the storage provider.
-  Future<StorageProvider> init() async {
-    if (_initialized) {
-      return this;
-    }
-    _initialized = true;
-
-    final isarStorageDir =
-        Directory('${(await getApplicationSupportDirectory()).path}/db');
-
-    if (!isarStorageDir.existsSync()) {
-      await isarStorageDir.create(recursive: true);
-    }
-
-    debug('init isar storage in $isarStorageDir');
-
-    _isar = await Isar.openAsync(
-      schemas: [
-        DatabaseSettingsSchema,
-        DatabaseCookieSchema,
-        DatabaseImageCacheSchema,
-      ],
-      directory: isarStorageDir.path,
-      name: 'main',
-    );
-    return this;
-  }
-
-  // TODO: Dispose before app exits.
-  // ignore: unused_element
-  void _dispose() {
-    // Only try to close isar instance when already initialized
-    if (_initialized) {
-      _isar.close();
-    }
-  }
+  /// Injected database
+  final AppDatabase _db;
 
   /*             cookie             */
 
-  /// Get [DatabaseCookie] with [username].
-  DatabaseCookie? getCookie(String username) {
-    return _isar.databaseCookies.where().usernameEqualTo(username).findFirst();
+  /// Get [Cookie] with [uid].
+  Future<Cookie?> getCookieByUid(int uid) async {
+    final cookieEntity = await CookieDao(_db).selectCookieByUid(uid);
+    if (cookieEntity == null) {
+      return null;
+    }
+    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
   }
 
-  /// Save cookie with [username].
-  Future<void> saveCookie(
-    String username,
+  /// Save cookie with [uid].
+  Future<void> saveCookieByUid(
+    int uid,
     Map<String, String> cookie,
   ) async {
-    final currentCookie = await _isar.databaseCookies
-        .where()
-        .usernameEqualTo(username)
-        .findFirstAsync();
-
-    final c = currentCookie?.cookie ?? {};
+    final currentCookie = (await getCookieByUid(uid)) ?? {};
 
     /// Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
-    c.addAll(cookie);
-    await _isar.writeAsync((isar) {
-      isar.databaseCookies.put(
-        DatabaseCookie(
-          id: currentCookie?.id ?? isar.databaseCookies.autoIncrement(),
-          username: username,
-          cookie: c,
-        ),
-      );
-    });
+    currentCookie.addAll(cookie);
+
+    await CookieDao(_db).upsertCookie(
+      CookieCompanion(
+        uid: Value(uid),
+        cookie: Value(jsonEncode(currentCookie)),
+      ),
+    );
   }
 
-  /// Delete cookie for [username].
-  Future<bool> deleteCookieByUsername(String username) async {
-    return _isar.writeAsync((isar) {
-      return isar.databaseCookies
-          .where()
-          .usernameEqualTo(username)
-          .deleteFirst();
-    });
+  /// Delete cookie for [uid].
+  Future<bool> deleteCookieByUid(int uid) async {
+    final affectedRows = await CookieDao(_db).deleteCookieByUid(uid);
+    return affectedRows != 0;
   }
 
   /*            image cache           */
 
-  /// Get the image cache for [imageUrl].
-  DatabaseImageCache? getImageCache(String imageUrl) {
-    return _isar.databaseImageCaches
-        .where()
-        .imageUrlEqualTo(imageUrl)
-        .findFirst();
+  /// Get the image cache for image from [url].
+  Future<ImageCacheEntity?> getImageCache(String url) async {
+    return ImageCacheDao(_db).selectImageCacheByUrl(url);
   }
 
   /// Insert or update cache info, update all info.
   Future<void> updateImageCache(
-    String imageUrl, {
+    String url, {
     String? fileName,
     DateTime? lastCacheTime,
     DateTime? lastUsedTime,
   }) async {
-    final cache = await _isar.databaseImageCaches
-        .where()
-        .imageUrlEqualTo(imageUrl)
-        .findFirstAsync();
-
-    await _isar.writeAsync((isar) {
-      isar.databaseImageCaches.put(
-        DatabaseImageCache.fromData(
-          id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
-          imageUrl: imageUrl,
-          fileName: fileName ?? cache?.fileName,
-          lastCachedTime: lastCacheTime,
-          lastUsedTime: lastUsedTime,
-        ),
-      );
-    });
+    await ImageCacheDao(_db).upsertImageCache(
+      ImageCacheCompanion(
+        url: Value(url),
+        fileName: fileName != null ? Value(fileName) : const Value.absent(),
+        lastCachedTime: lastCacheTime != null
+            ? Value(lastCacheTime)
+            : Value(DateTime.now()),
+        lastUsedTime:
+            lastUsedTime != null ? Value(lastUsedTime) : const Value.absent(),
+      ),
+    );
   }
 
   /// Insert or update cache info, only update last used time.
-  Future<void> updateImageCacheUsedTime(String imageUrl) async {
-    final cache = await _isar.databaseImageCaches
-        .where()
-        .imageUrlEqualTo(imageUrl)
-        .findFirstAsync();
-
-    await _isar.writeAsync((isar) {
-      isar.databaseImageCaches.put(
-        DatabaseImageCache.fromData(
-          id: cache?.id ?? isar.databaseImageCaches.autoIncrement(),
-          imageUrl: imageUrl,
-          fileName: cache?.fileName,
-          lastCachedTime: cache?.lastUsedTime,
-        ),
-      );
-    });
+  Future<void> updateImageCacheUsedTime(String url) async {
+    await ImageCacheDao(_db).upsertImageCache(
+      ImageCacheCompanion(url: Value(url), lastUsedTime: Value(DateTime.now())),
+    );
   }
 
   /// Clear all image cache in database.
   Future<void> clearImageCache() async {
-    await _isar.writeAsync((isar) {
-      isar.databaseImageCaches.clear();
-    });
+    await ImageCacheDao(_db).deleteAll();
   }
 
   /*             settings             */
 
-  /// Remove a settings with given [key].
-  Future<bool> removeByKey(String key) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
+  /// Load all saved settings.
+  Future<List<SettingsEntity>> getAllSettings() async {
+    return SettingsDao(_db).getAll();
+  }
+
+  /// Remove a settings with given [name].
+  Future<bool> removeByKey(String name) async {
+    if (!settingsTypeMap.containsKey(name)) {
+      debug('failed to save settings: invalid key $name');
       return false;
     }
-    final old = _isar.databaseSettings.where().nameEqualTo(key).findFirst();
-    if (old == null) {
-      return true;
-    }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.delete(old.id);
-    });
-    return true;
+    final affectedRows = await SettingsDao(_db).deleteByName(name);
+    return affectedRows != 0;
   }
 
   /// Get string type value of specified key.
-  String? getString(String key) =>
-      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.stringValue;
+  Future<String?> getString(String key) async =>
+      SettingsDao(_db).getValueByName<String>(key);
 
   /// Save string type value of specified key.
-  Future<bool> saveString(String key, String value) async {
+  Future<void> saveString(String key, String value) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
-      return false;
+      return;
     }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(
-        DatabaseSettings.fromString(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          stringValue: value,
-        ),
-      );
-    });
-    return true;
+    await SettingsDao(_db).setValue<String>(key, value);
   }
 
   /// Get int type value of specified key.
-  int? getInt(String key) =>
-      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.intValue;
+  Future<int?> getInt(String key) async =>
+      SettingsDao(_db).getValueByName<int>(key);
 
   /// Sae int type value of specified key.
-  Future<bool> saveInt(String key, int value) async {
+  Future<void> saveInt(String key, int value) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
-      return false;
+      return;
     }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(
-        DatabaseSettings.fromInt(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          intValue: value,
-        ),
-      );
-    });
-    return true;
+    await SettingsDao(_db).setValue<int>(key, value);
   }
 
   /// Get bool type value of specified key.
-  bool? getBool(String key) =>
-      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.boolValue;
+  Future<bool?> getBool(String key) async =>
+      SettingsDao(_db).getValueByName<bool>(key);
 
   /// Save bool type value of specified value.
-  Future<bool> saveBool(String key, {required bool value}) async {
+  Future<void> saveBool(String key, {required bool value}) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
-      return false;
+      return;
     }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(
-        DatabaseSettings.fromBool(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          boolValue: value,
-        ),
-      );
-    });
-    return true;
+    await SettingsDao(_db).setValue<bool>(key, value);
   }
 
   /// Get double type value of specified key.
-  double? getDouble(String key) =>
-      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.doubleValue;
+  Future<double?> getDouble(String key) async =>
+      SettingsDao(_db).getValueByName<double>(key);
 
   /// Save double type value of specified key.
-  Future<bool> saveDouble(String key, double value) async {
+  Future<void> saveDouble(String key, double value) async {
     if (!settingsTypeMap.containsKey(key)) {
       debug('failed to save settings: invalid key $key');
-      return false;
+      return;
     }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(
-        DatabaseSettings.fromDouble(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          doubleValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get [DateTime] type settings value with given [key].
-  DateTime? getDateTime(String key) => _isar.databaseSettings
-      .where()
-      .nameEqualTo(key)
-      .findFirst()
-      ?.dateTimeValue;
-
-  /// Save [DateTime] with given settings [key].
-  Future<bool> saveDateTime(String key, DateTime value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      isar.databaseSettings.put(
-        DatabaseSettings.fromDateTime(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          dateTimeValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get string list type value of specified key.
-  List<String>? getStringList(String key) => _isar.databaseSettings
-      .where()
-      .nameEqualTo(key)
-      .findFirst()
-      ?.stringListValue;
-
-  /// Save string list type value of specified key.
-  Future<bool> saveStringList(String key, List<String> value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(
-        DatabaseSettings.fromStringList(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          stringListValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get string list type value of specified key.
-  List<int>? getIntList(String key) =>
-      _isar.databaseSettings.where().nameEqualTo(key).findFirst()?.intListValue;
-
-  /// Save string list type value of specified key.
-  Future<bool> saveIntList(String key, List<int> value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(
-        DatabaseSettings.fromIntList(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          intListValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get string list type value of specified key.
-  List<double>? getDoubleList(String key) => _isar.databaseSettings
-      .where()
-      .nameEqualTo(key)
-      .findFirst()
-      ?.doubleListValue;
-
-  /// Save string list type value of specified key.
-  Future<bool> saveDoubleList(String key, List<double> value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(
-        DatabaseSettings.fromDoubleList(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          doubleListValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get string list type value of specified key.
-  List<bool>? getBoolList(String key) => _isar.databaseSettings
-      .where()
-      .nameEqualTo(key)
-      .findFirst()
-      ?.boolListValue;
-
-  /// Save string list type value of specified key.
-  Future<bool> saveBoolList(String key, List<bool> value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(
-        DatabaseSettings.fromBoolList(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          boolListValue: value,
-        ),
-      );
-    });
-    return true;
-  }
-
-  /// Get string list type value of specified key.
-  List<DateTime>? getDateTimeList(String key) => _isar.databaseSettings
-      .where()
-      .nameEqualTo(key)
-      .findFirst()
-      ?.dateTimeListValue;
-
-  /// Save string list type value of specified key.
-  Future<bool> saveDateTimeList(String key, List<DateTime> value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
-      return false;
-    }
-    await _isar.writeAsync((isar) {
-      _isar.databaseSettings.put(
-        DatabaseSettings.fromDateTimeList(
-          id: isar.databaseSettings.autoIncrement(),
-          name: key,
-          dateTimeListValue: value,
-        ),
-      );
-    });
-    return true;
+    await SettingsDao(_db).setValue<double>(key, value);
   }
 }
