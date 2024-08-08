@@ -7,7 +7,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/chat/bloc/chat_history_bloc.mapper.dart';
@@ -17,7 +17,8 @@ part 'chat_history_state.dart';
 typedef _Emit = Emitter<ChatHistoryState>;
 
 /// Bloc of chat history.
-final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
+final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState>
+    with LoggerMixin {
   /// Constructor.
   ChatHistoryBloc(this._chatRepository) : super(const ChatHistoryState()) {
     on<ChatHistoryLoadHistoryRequested>(_onChatHistoryLoadHistoryRequested);
@@ -43,7 +44,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
       );
       await _updateState(document, emit, event.page);
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch chat history: $e');
+      error('failed to fetch chat history: $e');
       emit(state.copyWith(status: ChatHistoryStatus.failure));
     }
   }
@@ -55,7 +56,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
   ) async {
     final rootNode = document.querySelector('div.bm.bw0');
     if (rootNode == null) {
-      debug('failed to build chat history: root node not found');
+      error('failed to build chat history: root node not found');
       emit(state.copyWith(status: ChatHistoryStatus.failure));
       return;
     }
@@ -64,7 +65,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     // Info node of the other user in chat.
     final userNode = rootNode.querySelector('div.tbmu.pml > div.xw1 > a');
     if (userNode == null) {
-      debug('failed to build chat history: user node not found');
+      error('failed to build chat history: user node not found');
       emit(state.copyWith(status: ChatHistoryStatus.failure));
       return;
     }
@@ -84,7 +85,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
     final messageCount =
         rootNode.querySelector('span#membernum')?.innerText.parseToInt();
     if (messageCount == null) {
-      debug('failed to build chat history: message count not found');
+      error('failed to build chat history: message count not found');
       emit(state.copyWith(status: ChatHistoryStatus.failure));
       return;
     }
@@ -130,11 +131,11 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> {
           formHash: formHash,
         );
       } else {
-        debug('failed to build send target in chat history page: '
+        error('failed to build send target in chat history page: '
             'targetUrl=$targetUrl, formHash=$formHash, pmid=$pmid');
       }
     } else {
-      debug('failed to build send target in chat history page: '
+      error('failed to build send target in chat history page: '
           'form node not found');
     }
 

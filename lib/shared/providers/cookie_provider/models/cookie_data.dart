@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// Cookie stored to use in [PersistCookieJar] as replacement of [FileStorage]
 /// that save in database.
@@ -14,25 +16,25 @@ import 'package:tsdm_client/utils/debug.dart';
 /// username), what we can do is save these cookies as cache in memory.
 ///
 /// Use the [getIt] to access database.
-class CookieData implements Storage {
+class CookieData with LoggerMixin implements Storage {
   /// Construct with no user name.
-  CookieData() : _username = null;
+  CookieData() : _userLoginInfo = null;
 
-  /// Construct with [username] and [cookie].
-  CookieData.withUsername({
-    required String username,
+  /// Construct with [userLoginInfo] and [cookie].
+  ///
+  /// [userLoginInfo] can be partly filled. What means is during login progress,
+  /// we may only have one of the following info:
+  ///
+  /// * Username.
+  /// * Uid.
+  /// * Password.
+  CookieData.withUserInfo({
+    required UserLoginInfo userLoginInfo,
     required Map<String, String> cookie,
-  })  : _username = username,
+  })  : _userLoginInfo = userLoginInfo,
         _cookieMap = cookie;
 
-  /// Construct with data.
-  CookieData.withData({
-    required String username,
-    required Map<String, String> cookie,
-  })  : _username = username,
-        _cookieMap = cookie;
-
-  final String? _username;
+  final UserLoginInfo? _userLoginInfo;
 
   /// Cookie data.
   Map<String, String> _cookieMap = {};
@@ -41,14 +43,8 @@ class CookieData implements Storage {
   ///
   /// We should not do anything with cookie storage when user info is not
   /// complete.
-  bool _isUserInfoComplete() {
-    /// Note that the server side does not allow same username so it's safe to
-    /// do this.
-    if (_username == null) {
-      return false;
-    }
-    return true;
-  }
+  bool _isUserInfoComplete() =>
+      _userLoginInfo != null && !_userLoginInfo.isComplete;
 
   /// Save cookie in database.
   ///
@@ -63,19 +59,21 @@ class CookieData implements Storage {
     // Do not save cookie if we don't know which user it belongs to.
     // This shall not happen.
     if (!_isUserInfoComplete()) {
-      debug('only save cookie in memory: user info incomplete');
+      info('only save cookie in memory: user info incomplete');
       return false;
     }
 
-    await getIt.get<SettingsProvider>().saveCookie(
-          _username!,
-          _cookieMap,
+    await getIt.get<StorageProvider>().saveCookie(
+          username: _userLoginInfo!.username!,
+          uid: _userLoginInfo.uid!,
+          email: _userLoginInfo.email!,
+          cookie: _cookieMap,
         );
 
     return true;
   }
 
-  /// Delete current user [_username]'s cookie from database.
+  /// Delete current user [_userLoginInfo]'s cookie from database.
   ///
   /// Return false if delete failed (maybe user not found in database) or
   /// missing
@@ -83,17 +81,16 @@ class CookieData implements Storage {
   /// Return true is success.
   Future<bool> _deleteUserCookie() async {
     if (!_isUserInfoComplete()) {
-      debug(
+      info(
         'refuse to delete single user cookie from database: '
         'user info incomplete',
       );
       return false;
     }
 
-    debug('CookieData $hashCode: delete cookie: $_username');
-    await getIt.get<SettingsProvider>().deleteCookieByUsername(
-          _username!,
-        );
+    debug('CookieData $hashCode: delete '
+        'cookie for uid: ${_userLoginInfo?.uid}');
+    await getIt.get<StorageProvider>().deleteCookieByUid(_userLoginInfo!.uid!);
     return true;
   }
 
@@ -115,9 +112,8 @@ class CookieData implements Storage {
     _cookieMap.remove(key);
     // If user cookie is empty, delete that item from database.
     if (_cookieMap.isEmpty) {
-      debug(
-        'delete user $_username from database because cookie value is empty',
-      );
+      debug('delete user (uid:${_userLoginInfo?.uid}) cookie from database '
+          'because cookie value is empty');
       await _deleteUserCookie();
     } else {
       await _syncCookie();
@@ -142,7 +138,6 @@ class CookieData implements Storage {
   @override
   Future<void> write(String key, String value) async {
     _cookieMap[key] = value;
-    //_setupWebPageStyle();
     await _syncCookie();
   }
 }

@@ -43,13 +43,13 @@ final class ChatMessage with ChatMessageMappable {
     // Not null when current logged user sent the message.
     final currentUserNode = element.querySelector('dd.ptm > span.xi2');
     if (username == null && currentUserNode == null) {
-      debug('failed to build chat message: author not found');
+      talker.error('failed to build chat message: author not found');
       return null;
     }
 
     final message = element.querySelector('dd:nth-child(4)')?.innerHtml;
     if (message == null) {
-      debug('failed to build chat message: message not found');
+      talker.error('failed to build chat message: message not found');
       return null;
     }
 
@@ -72,7 +72,7 @@ final class ChatMessage with ChatMessageMappable {
         element.querySelector('div.pmt')?.innerText.split(':').first;
     final message = element.querySelector('div.pmd')?.innerHtml;
     if (username == null || message == null) {
-      debug('failed to build chat message: '
+      talker.error('failed to build chat message: '
           'username=$username, message=$message');
       return null;
     }

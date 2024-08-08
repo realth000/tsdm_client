@@ -6,7 +6,9 @@ import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
+import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
@@ -14,22 +16,23 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
-import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
-import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
 
 /// Main app for tsdm_client.
 class App extends StatelessWidget {
   /// Constructor.
-  const App({super.key});
+  const App(this.color, this.themeModeIndex, {super.key});
+
+  /// Initial color value.
+  final int color;
+
+  /// Initial theme mode index.
+  final int themeModeIndex;
 
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<SettingsRepository>(
-          create: (_) => SettingsRepository(),
-        ),
         RepositoryProvider<AuthenticationRepository>(
           create: (_) => AuthenticationRepository(),
         ),
@@ -68,15 +71,10 @@ class App extends StatelessWidget {
         ),
       ],
       child: BlocProvider(
-        create: (context) {
-          final re = RepositoryProvider.of<SettingsRepository>(context);
-          final color = re.getAccentColorValue();
-          final theme = re.getThemeMode();
-          return ThemeCubit(
-            accentColor: color >= 0 ? Color(color) : null,
-            themeModeIndex: theme,
-          );
-        },
+        create: (context) => ThemeCubit(
+          accentColor: color >= 0 ? Color(color) : null,
+          themeModeIndex: themeModeIndex,
+        ),
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (prev, curr) => prev != curr,
           builder: (context, state) {

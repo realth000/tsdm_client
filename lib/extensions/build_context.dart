@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 /// Extension on [BuildContext] that provides ability to dispatch a [String]
@@ -21,11 +21,11 @@ extension DispatchUrl<T> on BuildContext {
     Map<String, String>? extraPathParameters,
     Map<String, String>? extraQueryParameters,
   }) async {
-    debug('dispatch url: $url');
+    talker.debug('dispatch url: $url');
     final u = Uri.tryParse(url);
     if (u == null) {
       // Do nothing if is invalid url.
-      debug('failed to dispatch invalid url: $url ');
+      talker.error('failed to dispatch invalid url: $url ');
       return null;
     }
     if (external) {

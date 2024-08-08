@@ -4,10 +4,11 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
 
 extension _WithFormExt<T> on Dio {
@@ -36,57 +37,48 @@ extension _WithFormExt<T> on Dio {
 /// Instance should be unique when making requests.
 class NetClientProvider {
   /// Constructor.
-  NetClientProvider({Dio? dio, String? username, bool disableCookie = false})
-      : _dio = dio ?? _buildDefaultDio() {
-    if (disableCookie) {
-      _dio.interceptors.add(_ErrorHandler());
-    } else {
-      final u = username ?? _getLoggedUsername();
-      final cookie = getIt.get<CookieProvider>().build(username: u);
-      final cookieJar = PersistCookieJar(
-        ignoreExpires: true,
-        storage: cookie,
-      );
-      // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
-      // certificate" error.
-      // ref: https://stackoverflow.com/a/77005574
-      _dio.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          // Don't trust any certificate just because their root cert is
-          // trusted.
-          final client = HttpClient(context: SecurityContext())
-            ..badCertificateCallback =
-                (X509Certificate cert, String host, int port) => true;
-          return client;
-        },
-      );
-      _dio.interceptors
-        ..add(CookieManager(cookieJar))
-        ..add(_ErrorHandler());
-    }
+  NetClientProvider._(Dio dio) : _dio = dio;
+
+  /// Build a [NetClientProvider] instance.
+  static Future<NetClientProvider> build({
+    Dio? dio,
+    UserLoginInfo? userLoginInfo,
+  }) async {
+    final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
+    final cookie =
+        await getIt.get<CookieProvider>().build(userLoginInfo: userLoginInfo);
+    final cookieJar = PersistCookieJar(
+      ignoreExpires: true,
+      storage: cookie,
+    );
+    // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
+    // certificate" error.
+    // ref: https://stackoverflow.com/a/77005574
+    d.httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        // Don't trust any certificate just because their root cert is
+        // trusted.
+        final client = HttpClient(context: SecurityContext())
+          ..badCertificateCallback =
+              (X509Certificate cert, String host, int port) => true;
+        return client;
+      },
+    );
+    d.interceptors
+      ..add(CookieManager(cookieJar))
+      ..add(_ErrorHandler());
+
+    return NetClientProvider._(d);
+  }
+
+  /// Build a [NetClientProvider] instance that does NOT load cookie.
+  static Future<NetClientProvider> buildNoCookie(Dio? dio) async {
+    final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
+    d.interceptors.add(_ErrorHandler());
+    return NetClientProvider._(d);
   }
 
   final Dio _dio;
-
-  /// Build a default dio.
-  static Dio _buildDefaultDio() {
-    final settings = getIt.get<SettingsProvider>();
-
-    return Dio()
-      ..options = BaseOptions(
-        headers: <String, String>{
-          'Accept': settings.getNetClientAccept(),
-          'Accept-Encoding': settings.getNetClientAcceptEncoding(),
-          'Accept-Language': settings.getNetClientAcceptLanguage(),
-          'User-Agent': settings.getNetClientUserAgent(),
-        },
-      );
-  }
-
-  static String? _getLoggedUsername() {
-    final loggedUser = getIt.get<SettingsProvider>().getLoginInfo();
-    return loggedUser.$1;
-  }
 
   /// Make a GET request to [path].
   Future<Response<dynamic>> get(

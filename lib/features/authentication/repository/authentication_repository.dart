@@ -4,35 +4,19 @@ import 'dart:io';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
-import 'package:tsdm_client/features/authentication/repository/internal/user_info.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
-
-/// Status of authentication.
-//sealed class AuthenticationStatus {
-//  const AuthenticationStatus();
-//}
-//
-//final class AuthenticationUnknown extends AuthenticationStatus {
-//  const AuthenticationUnknown() : super();
-//}
-//
-//final class AuthenticationAuthenticated extends AuthenticationStatus {
-//  const AuthenticationAuthenticated(this.user) : super();
-//  final User user;
-//}
-//
-//final class AuthenticationUnauthenticated extends AuthenticationStatus {
-//  const AuthenticationUnauthenticated() : super();
-//}
 
 /// Status of authentication.
 enum AuthenticationStatus {
@@ -53,9 +37,9 @@ enum AuthenticationStatus {
 /// Provides login, logout.
 ///
 /// **Need to call dispose.**
-class AuthenticationRepository {
+class AuthenticationRepository with LoggerMixin {
   /// Constructor.
-  AuthenticationRepository({User? user}) : _authedUser = user;
+  AuthenticationRepository({UserLoginInfo? user}) : _authedUser = user;
 
   static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
   static const _loginBaseUrl =
@@ -64,6 +48,8 @@ class AuthenticationRepository {
       '$baseUrl/member.php?mod=logging&action=logout&formhash=';
   static const _fakeFormUrl =
       '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
+  static const _passwordSettingsUrl =
+      '$baseUrl/home.php?mod=spacecp&ac=profile&op=password';
   static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
   static final _formHashRe = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 
@@ -78,10 +64,10 @@ class AuthenticationRepository {
   /// Provide a stream of [AuthenticationStatus].
   final _controller = BehaviorSubject<AuthenticationStatus>();
 
-  User? _authedUser;
+  UserLoginInfo? _authedUser;
 
   /// The current logged user.
-  User? get currentUser => _authedUser;
+  UserLoginInfo? get currentUser => _authedUser;
 
   /// Authentication status stream.
   Stream<AuthenticationStatus> get status => _controller.asBroadcastStream();
@@ -143,8 +129,26 @@ class AuthenticationRepository {
   /// * **[LoginException]** when login request was refused by the server side.
   Future<void> loginWithPassword(UserCredential credential) async {
     final target = _buildLoginUrl(credential.formHash);
-    // FIXME: Now we indicate the login field in credential is always username.
-    final netClient = NetClientProvider(username: credential.loginFieldValue);
+    final userLoginInfo = switch (credential.loginField) {
+      LoginField.username => UserLoginInfo(
+          username: credential.loginFieldValue,
+          uid: null,
+          email: null,
+        ),
+      LoginField.uid => UserLoginInfo(
+          username: null,
+          uid: credential.loginFieldValue.parseToInt(),
+          email: null,
+        ),
+      LoginField.email => UserLoginInfo(
+          username: null,
+          uid: null,
+          email: credential.loginFieldValue,
+        ),
+    };
+
+    final netClient =
+        await NetClientProvider.build(userLoginInfo: userLoginInfo);
     final resp = await netClient.postForm(target, data: credential.toJson());
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
@@ -152,22 +156,38 @@ class AuthenticationRepository {
     final document = parseHtmlDocument(resp.data as String);
     final messageNode = document.getElementById('messagetext');
     if (messageNode == null) {
+      error('failed to check login result: result node not found');
       throw LoginMessageNotFoundException();
     }
+
     final loginResult = LoginResult.fromLoginMessageNode(messageNode);
     if (loginResult == LoginResult.success) {
-      final userInfo = _parseUserInfoFromDocument(document);
-      if (userInfo == null) {
+      // Get complete user info from page.
+      final fullInfoResp = await netClient.get(_passwordSettingsUrl);
+      if (fullInfoResp.statusCode != HttpStatus.ok) {
+        error('failed to fetch complete user info: '
+            'code=${fullInfoResp.statusCode}');
         throw LoginUserInfoNotFoundException();
       }
-      // TODO: Here we need to find a way to get the email of logged user.
-      await getIt
-          .get<SettingsProvider>()
-          .setLoginInfo(userInfo.username, int.parse(userInfo.uid));
-      _authedUser = User(username: userInfo.username, uid: userInfo.uid);
+      final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
+      final fullUserInfo =
+          _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
+      if (fullUserInfo == null || !fullUserInfo.isComplete) {
+        error('failed to check login result: user info is null');
+        throw LoginUserInfoNotFoundException();
+      }
+
+      await _saveLoggedUserInfo(fullUserInfo);
+
+      _authedUser = UserLoginInfo(
+        username: fullUserInfo.username,
+        uid: fullUserInfo.uid,
+        email: fullUserInfo.email,
+      );
       _controller.add(AuthenticationStatus.authenticated);
       return;
     }
+
     try {
       _parseAndThrowLoginResult(loginResult);
     } on LoginException {
@@ -182,11 +202,27 @@ class AuthenticationRepository {
       debug('failed to login with document: user info not found');
       return;
     }
-    // TODO: Here we need to find a way to get the email of logged user.
-    await getIt
-        .get<SettingsProvider>()
-        .setLoginInfo(userInfo.username, int.parse(userInfo.uid));
-    _authedUser = User(username: userInfo.username, uid: userInfo.uid);
+
+    // Second check for email.
+    // Get complete user info from page.
+    final fullInfoResp =
+        await (await NetClientProvider.build(userLoginInfo: userInfo))
+            .get(_passwordSettingsUrl);
+    if (fullInfoResp.statusCode != HttpStatus.ok) {
+      error('failed to fetch complete user info: '
+          'code=${fullInfoResp.statusCode}');
+      return;
+    }
+    final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
+    final fullUserInfo =
+        _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
+    if (fullUserInfo == null || !fullUserInfo.isComplete) {
+      error('failed to: parse login result: email not foudn');
+      return;
+    }
+    await _saveLoggedUserInfo(fullUserInfo);
+
+    _authedUser = fullUserInfo;
     debug('login with document: user $userInfo');
     _controller.add(AuthenticationStatus.authenticated);
   }
@@ -216,7 +252,7 @@ class AuthenticationRepository {
     final userInfo = _parseUserInfoFromDocument(document);
     if (userInfo == null) {
       // Not logged in.
-      await getIt.get<SettingsProvider>().setLoginInfo('', -1);
+
       _authedUser = null;
       _controller.add(AuthenticationStatus.unauthenticated);
       return;
@@ -238,16 +274,26 @@ class AuthenticationRepository {
       // Here we'd better to check the failed reason, but it's ok without it.
       throw LogoutFailedException();
     }
-    await getIt
-        .get<SettingsProvider>()
-        .deleteCookieByUsername(_authedUser?.username ?? '');
-    await getIt.get<SettingsProvider>().setLoginInfo(null, null);
+
+    await getIt.get<StorageProvider>().deleteCookieByUid(_authedUser!.uid!);
+
+    final settings = getIt.get<SettingsRepository>();
+    await settings.deleteValue(SettingsKeys.loginUsername);
+    await settings.deleteValue(SettingsKeys.loginUid);
+    await settings.deleteValue(SettingsKeys.loginEmail);
+
     _authedUser = null;
     _controller.add(AuthenticationStatus.unauthenticated);
   }
 
   /// Parse html [document], find current logged in user uid in it.
-  UserInfo? _parseUserInfoFromDocument(uh.Document document) {
+  ///
+  /// Set [parseEmail] to true if [document] predicted to contain user email.
+  /// Now only support parsing email from password settings page.
+  UserLoginInfo? _parseUserInfoFromDocument(
+    uh.Document document, {
+    bool parseEmail = false,
+  }) {
     final userNode =
         // Style 1: With avatar.
         document.querySelector(
@@ -266,12 +312,17 @@ class AuthenticationRepository {
       debug('auth failed: user name not found');
       return null;
     }
-    final uid = userNode.firstHref()?.split('uid=').lastOrNull;
+    final uid = userNode.firstHref()?.split('uid=').lastOrNull?.parseToInt();
     if (uid == null) {
       debug('auth failed: user id not found');
       return null;
     }
-    return UserInfo(uid: uid, username: username);
+
+    String? email;
+    if (parseEmail) {
+      email = document.querySelector('input#emailnew')?.attributes['value'];
+    }
+    return UserLoginInfo(uid: uid, username: username, email: email);
   }
 
   /// Parse the login result.
@@ -300,5 +351,22 @@ class AuthenticationRepository {
       case LoginResult.unknown:
         throw LoginOtherErrorException('unknown result');
     }
+  }
+
+  Future<void> _saveLoggedUserInfo(UserLoginInfo userInfo) async {
+    // Save logged user info in settings.
+    final settings = getIt.get<SettingsRepository>();
+    await settings.setValue<String>(
+      SettingsKeys.loginUsername,
+      userInfo.username!,
+    );
+    await settings.setValue<int>(
+      SettingsKeys.loginUid,
+      userInfo.uid!,
+    );
+    await settings.setValue<String>(
+      SettingsKeys.loginEmail,
+      userInfo.email!,
+    );
   }
 }

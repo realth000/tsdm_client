@@ -1,9 +1,11 @@
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
-// TODO: Adapt with uid and email after can login with uid and email.
 /// Provides a [CookieData] that implement `Storage` class so can be used in
 /// `NetClient`.
 ///
@@ -30,49 +32,73 @@ import 'package:tsdm_client/utils/debug.dart';
 ///
 /// Load cookies from database and save them in memory. When required cookie to
 /// use in web requests, build a [CookieData] with current user info.
-class CookieProvider {
+class CookieProvider with LoggerMixin {
   /// Constructor.
   factory CookieProvider() => CookieProvider._();
 
   CookieProvider._();
 
-  /// Build a [CookieData] with [username].
+  /// Build a [CookieData] with [userLoginInfo].
   ///
-  /// * First look in storage and find the cached cookie related to [username].
+  /// * First look in storage and find the cached cookie related to
+  ///   [userLoginInfo].
   /// * Return empty cookie if not found in cache.
-  CookieData build({String? username}) {
+  Future<CookieData> build({UserLoginInfo? userLoginInfo}) async {
     // Specified user override.
-    if (username != null) {
-      // Here get the cookie from SettingsProvider's instance.
-      final databaseCookie = getIt.get<SettingsProvider>().getCookie(username);
+    if (userLoginInfo != null) {
+      final username = userLoginInfo.username;
+      final uid = userLoginInfo.uid;
+      final email = userLoginInfo.email;
+
+      Map<String, dynamic>? databaseCookie;
+
+      if (uid != null) {
+        databaseCookie = await getIt.get<StorageProvider>().getCookieByUid(uid);
+      } else if (username != null) {
+        databaseCookie =
+            await getIt.get<StorageProvider>().getCookieByUsername(username);
+      } else if (email != null) {
+        databaseCookie =
+            await getIt.get<StorageProvider>().getCookieByEmail(email);
+      }
+
       var cookie = <String, String>{};
       if (databaseCookie != null) {
-        cookie = Map.castFrom(databaseCookie.cookie);
+        cookie = Map.castFrom(databaseCookie);
       }
-      return CookieData.withUsername(
-        username: username,
-        cookie: cookie,
-      );
+
+      if (cookie.keys.isNotEmpty) {
+        debug('load cookie with user info');
+        return CookieData.withUserInfo(
+          userLoginInfo: userLoginInfo,
+          cookie: cookie,
+        );
+      }
     }
-    final loggedUsername = getIt.get<SettingsProvider>().getLoginInfo().$1;
-    if (loggedUsername?.isEmpty ?? true) {
+
+    final loggedUid = await getIt
+        .get<SettingsRepository>()
+        .getValue<int>(SettingsKeys.loginUid);
+    if (loggedUid != null) {
+      debug('load empty cookie');
       return CookieData();
     }
 
     // Has user login before, load cookie.
     final databaseCookie =
-        getIt.get<SettingsProvider>().getCookie(loggedUsername!);
+        await getIt.get<StorageProvider>().getCookieByUid(loggedUid!);
     if (databaseCookie == null) {
       debug(
         'failed to init cookie: current login user '
-        'username=$username not found in database',
+        'uid=$loggedUid not found in database',
       );
       return CookieData();
     }
 
-    return CookieData.withData(
-      username: loggedUsername,
-      cookie: Map.castFrom(databaseCookie.cookie),
+    debug('load cookie from last logged user uid=$loggedUid');
+    return CookieData.withUserInfo(
+      userLoginInfo: UserLoginInfo(username: null, uid: loggedUid, email: null),
+      cookie: Map.castFrom(databaseCookie),
     );
   }
 }

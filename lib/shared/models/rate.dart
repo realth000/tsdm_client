@@ -56,7 +56,7 @@ class Rate with RateMappable {
     final rateHeaders =
         element.querySelectorAll('table > tbody:nth-child(1) > tr > th');
     if (rateHeaders.length < 2) {
-      debug('failed to build rate: invalid rate header');
+      talker.error('failed to build rate: invalid rate header');
       return null;
     }
 
@@ -64,12 +64,12 @@ class Rate with RateMappable {
     final userCount =
         infoNode?.querySelector('span.xi1')?.firstEndDeepText()?.parseToInt();
     if (userCount == null) {
-      debug('failed to build rate: user count not found');
+      talker.error('failed to build rate: user count not found');
       return null;
     }
     final detailUrl = infoNode?.firstHref();
     if (detailUrl == null) {
-      debug('failed to build rate: detail url not found');
+      talker.error('failed to build rate: detail url not found');
       return null;
     }
     final attrList = rateHeaders
@@ -78,7 +78,7 @@ class Rate with RateMappable {
         .whereType<String>()
         .toList();
     if (attrList.isEmpty) {
-      debug('failed to build rate: rate attr list is empty');
+      talker.error('failed to build rate: rate attr list is empty');
       return null;
     }
 
@@ -87,7 +87,7 @@ class Rate with RateMappable {
     final records =
         recordNodeList.map(_parseSingleRate).whereType<SingleRate>().toList();
     if (records.isEmpty) {
-      debug('failed to build rate: records is empty');
+      talker.error('failed to build rate: records is empty');
       return null;
     }
 
@@ -99,7 +99,7 @@ class Rate with RateMappable {
         .toList()
         .join(' ');
     if (rateStatus == null) {
-      debug('failed to build rate: rate status not found');
+      talker.error('failed to build rate: rate status not found');
       return null;
     }
 

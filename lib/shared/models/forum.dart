@@ -89,7 +89,7 @@ final class Forum with ForumMappable {
     final url = titleNode?.firstHref();
     final forumID = url?.split('fid=').lastOrNull?.parseToInt();
     if (name == null || forumID == null || url == null) {
-      debug(
+      talker.error(
         'failed to build forum: name or fid or url not found: name=$name, '
         'fid=$forumID, url=$url',
       );
@@ -116,7 +116,8 @@ final class Forum with ForumMappable {
             ?.parseToInt();
 
     if (threadCount == null || replyCount == null) {
-      debug('failed to build forum: threadCount or replyCount not found');
+      talker.error('failed to build forum: threadCount '
+          'or replyCount not found');
       return null;
     }
 

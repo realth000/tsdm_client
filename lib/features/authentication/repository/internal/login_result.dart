@@ -1,4 +1,4 @@
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:universal_html/html.dart' as uh;
 
 /// Enum to represent whether a login attempt succeed.
@@ -36,7 +36,7 @@ enum LoginResult {
         ?.text;
     if (message == null) {
       const message = 'login result message text not found';
-      debug('failed to check login result: $message');
+      talker.error('failed to check login result: $message');
       return LoginResult.unknown;
     }
 
@@ -53,7 +53,7 @@ enum LoginResult {
 
       // Impossible unless server response page updated and changed these
       // messages.
-      debug(
+      talker.error(
         'login result check passed but message check maybe outdated: $message',
       );
       return LoginResult.success;
@@ -65,7 +65,7 @@ enum LoginResult {
       }
 
       // Other unrecognized error.
-      debug(
+      talker.error(
         'login result check not passed: '
         'alert_info class with unknown message: $message',
       );
@@ -86,14 +86,14 @@ enum LoginResult {
       }
 
       // Other unrecognized error.
-      debug(
+      talker.error(
         'login result check not passed: '
         'alert_error with unknown message: $message',
       );
       return LoginResult.otherError;
     }
 
-    debug('login result check not passed: unknown result');
+    talker.error('login result check not passed: unknown result');
     return LoginResult.unknown;
   }
 }

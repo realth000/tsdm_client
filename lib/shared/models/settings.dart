@@ -15,6 +15,7 @@ final class SettingsKeys {
   static const windowInCenter = 'windowInCenter';
   static const loginUsername = 'loginUsername';
   static const loginUid = 'loginUid';
+  static const loginEmail = 'loginEmail';
   static const themeMode = 'ThemeMode';
   static const locale = 'locale';
   static const checkinFeeling = 'checkInFeeling';

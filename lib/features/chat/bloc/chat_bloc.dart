@@ -7,7 +7,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/chat/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/chat/bloc/chat_bloc.mapper.dart';
@@ -23,7 +23,7 @@ typedef _Emit = Emitter<ChatState>;
 ///
 /// Way to access this page:
 /// see `formatChatUrl`.
-final class ChatBloc extends Bloc<ChatEvent, ChatState> {
+final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
   /// Constructor.
   ChatBloc(this._chatRepository) : super(const ChatState()) {
     on<ChatFetchHistoryRequested>(_onChatFetchHistoryRequested);
@@ -40,10 +40,10 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> {
       final document = await _chatRepository.fetchChat(event.uid);
       _updateState(document, emit);
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch chat data: $e');
+      error('failed to fetch chat data: $e');
       emit(state.copyWith(status: ChatStatus.failure));
     } on ChatDataDocumentNotFoundException catch (e) {
-      debug('failed to fetch chat data: $e');
+      error('failed to fetch chat data: $e');
       emit(state.copyWith(status: ChatStatus.failure));
     }
   }
@@ -67,10 +67,9 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> {
         .querySelector('div.pm_tac.bbda.cl > a:nth-child(2)')
         ?.attributes['href'];
     if (username == null || chatHistoryUrl == null || userspaceUrl == null) {
-      debug('failed to build chat state: '
+      error('failed to build chat state: '
           'username=$username, userspaceUrl=$userspaceUrl, '
           'chatHistoryUrl=$chatHistoryUrl');
-      debug('>>> ${document.querySelector('html')?.outerHtml}');
       emit(state.copyWith(status: ChatStatus.failure));
       return;
     }
@@ -85,7 +84,7 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> {
 
     final formNode = document.querySelector('div.pmfm > form');
     if (formNode == null) {
-      debug('failed to build chat state: form node not found');
+      error('failed to build chat state: form node not found');
       emit(state.copyWith(status: ChatStatus.failure));
       return;
     }
@@ -103,7 +102,7 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> {
     // Here we ignored message refresh url.
 
     if (touid == null || formHash == null) {
-      debug('failed to build chat state: touid=$touid formHash=$formHash');
+      error('failed to build chat state: touid=$touid formHash=$formHash');
       emit(state.copyWith(status: ChatStatus.failure));
       return;
     }

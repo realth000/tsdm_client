@@ -4,11 +4,10 @@ import 'package:drift/drift.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/dao/dao.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// [StorageProvider] should be used by other providers.
-class StorageProvider {
+class StorageProvider with LoggerMixin {
   /// Constructor.
   const StorageProvider(this._db);
 
@@ -26,20 +25,45 @@ class StorageProvider {
     return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
   }
 
-  /// Save cookie with [uid].
-  Future<void> saveCookieByUid(
-    int uid,
-    Map<String, String> cookie,
-  ) async {
+  /// Get [Cookie] with [username].
+  Future<Cookie?> getCookieByUsername(String username) async {
+    final cookieEntity = await CookieDao(_db).selectCookieByUsername(username);
+    if (cookieEntity == null) {
+      return null;
+    }
+    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
+  }
+
+  /// Get [Cookie] with [email].
+  Future<Cookie?> getCookieByEmail(String email) async {
+    final cookieEntity = await CookieDao(_db).selectCookieByEmail(email);
+    if (cookieEntity == null) {
+      return null;
+    }
+    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
+  }
+
+  /// Save cookie with completed user info.
+  ///
+  /// Required full user info and save by [uid] so that we handled some extreme
+  /// situation when username or email changed.
+  Future<void> saveCookie({
+    required String username,
+    required int uid,
+    required String email,
+    required Map<String, String> cookie,
+  }) async {
     final currentCookie = (await getCookieByUid(uid)) ?? {};
 
-    /// Combine two map together, do not directly use [cookie].
+    // Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
     currentCookie.addAll(cookie);
 
     await CookieDao(_db).upsertCookie(
       CookieCompanion(
+        username: Value(username),
         uid: Value(uid),
+        email: Value(email),
         cookie: Value(jsonEncode(currentCookie)),
       ),
     );
@@ -100,7 +124,7 @@ class StorageProvider {
   /// Remove a settings with given [name].
   Future<bool> removeByKey(String name) async {
     if (!settingsTypeMap.containsKey(name)) {
-      debug('failed to save settings: invalid key $name');
+      error('failed to save settings: invalid key $name');
       return false;
     }
     final affectedRows = await SettingsDao(_db).deleteByName(name);
@@ -114,7 +138,7 @@ class StorageProvider {
   /// Save string type value of specified key.
   Future<void> saveString(String key, String value) async {
     if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
+      error('failed to save settings: invalid key $key');
       return;
     }
     await SettingsDao(_db).setValue<String>(key, value);
@@ -127,7 +151,7 @@ class StorageProvider {
   /// Sae int type value of specified key.
   Future<void> saveInt(String key, int value) async {
     if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
+      error('failed to save settings: invalid key $key');
       return;
     }
     await SettingsDao(_db).setValue<int>(key, value);
@@ -140,7 +164,7 @@ class StorageProvider {
   /// Save bool type value of specified value.
   Future<void> saveBool(String key, {required bool value}) async {
     if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
+      error('failed to save settings: invalid key $key');
       return;
     }
     await SettingsDao(_db).setValue<bool>(key, value);
@@ -153,9 +177,19 @@ class StorageProvider {
   /// Save double type value of specified key.
   Future<void> saveDouble(String key, double value) async {
     if (!settingsTypeMap.containsKey(key)) {
-      debug('failed to save settings: invalid key $key');
+      error('failed to save settings: invalid key $key');
       return;
     }
     await SettingsDao(_db).setValue<double>(key, value);
+  }
+
+  /// Delete the given record from database.
+  Future<void> deleteKey(String key) async {
+    if (!settingsTypeMap.containsKey(key)) {
+      error('failed to save settings: invalid key $key');
+      return;
+    }
+
+    await SettingsDao(_db).deleteByName(key);
   }
 }

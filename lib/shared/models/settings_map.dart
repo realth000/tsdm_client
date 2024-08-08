@@ -1,14 +1,8 @@
 // ignore_for_file: public_member_api_docs
 
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/shared/models/models.dart';
+part of 'models.dart';
 
-part '../../../../generated/shared/providers/storage_provider/models/settings_map.mapper.dart';
-
-// TODO: SettingsMaps already exposed to presentation layer, so should move to
-// models folder.
-//
-/// Settings map.
+/// All settings and their keys.
 @MappableClass()
 class SettingsMap with SettingsMapMappable {
   /// Freezed constructor.
@@ -24,6 +18,7 @@ class SettingsMap with SettingsMapMappable {
     required this.windowInCenter,
     required this.loginUsername,
     required this.loginUid,
+    required this.loginEmail,
     required this.themeMode,
     required this.locale,
     required this.checkinFeeling,
@@ -48,6 +43,7 @@ class SettingsMap with SettingsMapMappable {
   final bool windowInCenter;
   final String? loginUsername;
   final int? loginUid;
+  final String? loginEmail;
   final int themeMode;
   final String locale;
   final String checkinFeeling;
@@ -72,38 +68,39 @@ class SettingsMap with SettingsMapMappable {
 
     return switch (key) {
       SettingsKeys.netClientAccept =>
-        copyWith(netClientAccept: value as String),
+        copyWith(netClientAccept: value as String?),
       SettingsKeys.netClientAcceptEncoding =>
-        copyWith(netClientAcceptEncoding: value as String),
+        copyWith(netClientAcceptEncoding: value as String?),
       SettingsKeys.netClientAcceptLanguage =>
-        copyWith(netClientAcceptLanguage: value as String),
+        copyWith(netClientAcceptLanguage: value as String?),
       SettingsKeys.netClientUserAgent =>
-        copyWith(netClientUserAgent: value as String),
-      SettingsKeys.windowWidth => copyWith(windowWidth: value as double),
-      SettingsKeys.windowHeight => copyWith(windowHeight: value as double),
+        copyWith(netClientUserAgent: value as String?),
+      SettingsKeys.windowWidth => copyWith(windowWidth: value as double?),
+      SettingsKeys.windowHeight => copyWith(windowHeight: value as double?),
       SettingsKeys.windowPositionDx =>
-        copyWith(windowPositionDx: value as double),
+        copyWith(windowPositionDx: value as double?),
       SettingsKeys.windowPositionDy =>
-        copyWith(windowPositionDy: value as double),
-      SettingsKeys.windowInCenter => copyWith(windowInCenter: value as bool),
-      SettingsKeys.loginUsername => copyWith(loginUsername: value as String),
-      SettingsKeys.loginUid => copyWith(loginUid: value as int),
-      SettingsKeys.themeMode => copyWith(themeMode: value as int),
-      SettingsKeys.locale => copyWith(locale: value as String),
-      SettingsKeys.checkinFeeling => copyWith(checkinFeeling: value as String),
-      SettingsKeys.checkinMessage => copyWith(checkinMessage: value as String),
+        copyWith(windowPositionDy: value as double?),
+      SettingsKeys.windowInCenter => copyWith(windowInCenter: value as bool?),
+      SettingsKeys.loginUsername => copyWith(loginUsername: value as String?),
+      SettingsKeys.loginUid => copyWith(loginUid: value as int?),
+      SettingsKeys.loginEmail => copyWith(loginEmail: value as String?),
+      SettingsKeys.themeMode => copyWith(themeMode: value as int?),
+      SettingsKeys.locale => copyWith(locale: value as String?),
+      SettingsKeys.checkinFeeling => copyWith(checkinFeeling: value as String?),
+      SettingsKeys.checkinMessage => copyWith(checkinMessage: value as String?),
       SettingsKeys.showShortcutInForumCard =>
-        copyWith(showShortcutInForumCard: value as bool),
-      SettingsKeys.accentColor => copyWith(accentColor: value as int),
+        copyWith(showShortcutInForumCard: value as bool?),
+      SettingsKeys.accentColor => copyWith(accentColor: value as int?),
       SettingsKeys.showUnreadInfoHint =>
-        copyWith(showUnreadInfoHint: value as bool),
-      SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool),
+        copyWith(showUnreadInfoHint: value as bool?),
+      SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool?),
       SettingsKeys.threadReverseOrder =>
-        copyWith(threadReverseOrder: value as bool),
+        copyWith(threadReverseOrder: value as bool?),
       SettingsKeys.threadCardInfoRowAlignCenter =>
-        copyWith(threadCardInfoRowAlignCenter: value as bool),
+        copyWith(threadCardInfoRowAlignCenter: value as bool?),
       SettingsKeys.threadCardShowLastReplyAuthor =>
-        copyWith(threadCardShowLastReplyAuthor: value as bool),
+        copyWith(threadCardShowLastReplyAuthor: value as bool?),
       final String v => throw Exception('settings key $v not handled'),
     };
   }
@@ -122,6 +119,7 @@ const settingsTypeMap = <String, Type>{
   SettingsKeys.windowInCenter: bool,
   SettingsKeys.loginUsername: String,
   SettingsKeys.loginUid: int,
+  SettingsKeys.loginEmail: String,
   SettingsKeys.themeMode: int,
   SettingsKeys.locale: String,
   SettingsKeys.checkinFeeling: String,

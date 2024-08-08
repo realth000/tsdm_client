@@ -1,10 +1,4 @@
-import 'package:collection/collection.dart';
-import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/utils/debug.dart';
-import 'package:universal_html/html.dart' as uh;
-
-part '../../generated/shared/models/user_brief_profile.mapper.dart';
+part of 'models.dart';
 
 /// A brief user profile shows along with user's post in thread page.
 @MappableClass()
@@ -154,12 +148,12 @@ final class UserBriefProfile with UserBriefProfileMappable {
   static UserBriefProfile? buildFromUserProfileNode(uh.Element element) {
     final postId = element.id.split('_').lastOrNull;
     if (postId == null) {
-      debug('failed to build UserBriefProfile: uid not found');
+      talker.error('failed to build UserBriefProfile: uid not found');
       return null;
     }
     final avatarNode = element.querySelector('div#ts_avatar_$postId');
     if (avatarNode == null) {
-      debug('failed to build UserBriefProfile: avatar node not found');
+      talker.error('failed to build UserBriefProfile: avatar node not found');
       return null;
     }
     final username = avatarNode.querySelector('div:nth-child(1)')?.innerText;
@@ -168,7 +162,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
     final avatarUrl =
         avatarNode.querySelector('div.avatar > a > img')?.imageUrl();
     if (username == null || nickname == null || avatarUrl == null) {
-      debug(
+      talker.error(
         'warning when build UserBriefProfile: username or nickname or'
         ' avatarUrl not found',
       );
@@ -176,7 +170,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
 
     final statBarNode = element.querySelector('div.tsdm_statbar');
     if (statBarNode == null) {
-      debug('failed to build UserBriefProfile: statBarNode not found');
+      talker.error('failed to build UserBriefProfile: statBarNode not found');
       return null;
     }
     final userGroup = statBarNode.children.firstOrNull?.innerText.trim();

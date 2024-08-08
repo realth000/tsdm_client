@@ -188,7 +188,7 @@ class NormalThread with NormalThreadMappable {
     }
     final threadIconUrl = threadIconNode?.attributes['src']?.prependHost();
     if (threadIconUrl == null) {
-      debug('failed to build thread: invalid thread icon url');
+      talker.error('failed to build thread: invalid thread icon url');
       return null;
     }
 
@@ -203,7 +203,7 @@ class NormalThread with NormalThreadMappable {
     final threadTitle = threadUrlNode?.firstEndDeepText()?.trim();
     final css = parseCssString(threadUrlNode?.attributes['style'] ?? '');
     if (threadUrl == null || threadTitle == null) {
-      debug('failed to build thread: url or title not found');
+      talker.error('failed to build thread: url or title not found');
       return null;
     }
 
@@ -239,7 +239,7 @@ class NormalThread with NormalThreadMappable {
     if (threadAuthorUrl == null ||
         threadAuthorName == null ||
         threadPublishDate == null) {
-      debug(
+      talker.error(
         'failed to build thread: invalid author or thread publish '
         'date not found',
       );
@@ -282,7 +282,7 @@ class NormalThread with NormalThreadMappable {
     if (threadLastReplyAuthorName == null ||
         threadLastReplyAuthorUrl == null ||
         threadLastReplyTime == null) {
-      debug(
+      talker.error(
         'failed to build thread: invalid last reply user info or last '
         'reply time not found',
       );
@@ -291,7 +291,7 @@ class NormalThread with NormalThreadMappable {
 
     final threadID = threadUrl.uriQueryParameter('tid');
     if (threadID == null) {
-      debug('failed to build thread: thread ID not found');
+      talker.error('failed to build thread: thread ID not found');
       return null;
     }
 

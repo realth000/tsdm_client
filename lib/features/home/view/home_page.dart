@@ -5,9 +5,9 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/widgets/widgets.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
-import 'package:tsdm_client/shared/repositories/settings_repository/settings_repository.dart';
+import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_homeorum_home_repository.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 const _drawerWidth = 250.0;

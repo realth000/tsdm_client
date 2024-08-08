@@ -4,7 +4,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/authentication/bloc/authentication_bloc.mapper.dart';
 part 'authentication_event.dart';
@@ -16,8 +16,8 @@ typedef AuthenticationEmitter = Emitter<AuthenticationState>;
 /// Bloc the authentication, including login and logout.
 ///
 /// This bloc should be used as a global long-live bloc.
-class AuthenticationBloc
-    extends Bloc<AuthenticationEvent, AuthenticationState> {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
+    with LoggerMixin {
   /// Constructor
   AuthenticationBloc({
     required AuthenticationRepository authenticationRepository,

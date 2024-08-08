@@ -99,7 +99,7 @@ class Post with PostMappable {
     final trRootNode = element.querySelector('table > tbody > tr');
     final postID = element.id.replaceFirst('post_', '');
     if (postID.isEmpty) {
-      debug('failed to build post: empty post ID');
+      talker.error('failed to build post: empty post ID');
       return null;
     }
     // <td class="pls">
@@ -124,7 +124,7 @@ class Post with PostMappable {
     );
 
     if (postAuthor.isNotValid()) {
-      debug('failed to build post: invalid author: $postAuthor');
+      talker.error('failed to build post: invalid author: $postAuthor');
       return null;
     }
 
@@ -265,7 +265,7 @@ class Post with PostMappable {
       userBriefProfile =
           UserBriefProfile.buildFromUserProfileNode(userProfileNode);
     } else {
-      debug('post $postID: user profile node not found');
+      talker.error('post $postID: user profile node not found');
     }
 
     return Post(
@@ -306,7 +306,7 @@ class Post with PostMappable {
         // Build post here.
         final post = Post.fromPostNode(currentElement);
         if (post == null) {
-          debug('warning: post is empty');
+          talker.error('warning: post is empty');
           continue;
         }
         tdPostList.add(post);
@@ -314,7 +314,7 @@ class Post with PostMappable {
       currentElement = currentElement.nextElementSibling;
     }
     if (tdPostList.isEmpty) {
-      debug('warning: post list is empty');
+      talker.error('warning: post list is empty');
     }
     return tdPostList;
   }

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// Captcha image size is 320x150.
 const _captchaImageWidth = 320;
@@ -27,7 +27,7 @@ class CaptchaImage extends StatefulWidget {
   State<CaptchaImage> createState() => _VerityImageState();
 }
 
-class _VerityImageState extends State<CaptchaImage> {
+class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
   /// Debounce refreshing.
   bool refreshDebounce = false;
 

@@ -5,10 +5,10 @@ import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// Repository of global image cache.
-final class ImageCacheRepository {
+final class ImageCacheRepository with LoggerMixin {
   /// Constructor.
   ImageCacheRepository(this._imageCacheProvider, this._netClientProvider);
 
@@ -41,7 +41,7 @@ final class ImageCacheRepository {
   FutureOr<void> updateImageCache(String url, {bool force = false}) async {
     // Use cache if intended to.
     if (!force) {
-      final cacheInfo = _imageCacheProvider.getCacheInfo(url);
+      final cacheInfo = await _imageCacheProvider.getCacheInfo(url);
       if (cacheInfo != null) {
         await _imageCacheProvider.getCache(url).then((x) {
           // Cache file may be deleted by external operations.
@@ -51,7 +51,7 @@ final class ImageCacheRepository {
         }).onError((e, st) {
           // Some error in reading cache, consider cache as invalid.
           // Do NOT return here, continue the caching progress.
-          debug('failed to update image cache: $e');
+          error('failed to update image cache: $e');
           _controller.add(ImageCacheFailedResponse(url));
         });
       }

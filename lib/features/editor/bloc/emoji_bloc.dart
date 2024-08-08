@@ -4,7 +4,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/editor/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/editor/bloc/emoji_bloc.mapper.dart';
 part 'emoji_event.dart';
@@ -16,7 +16,7 @@ typedef EmojiEmitter = Emitter<EmojiState>;
 /// Bloc of emoji.
 ///
 /// Controls loading emoji.
-final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> {
+final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
   /// Constructor.
   EmojiBloc({required EditorRepository editRepository})
       : _editorRepository = editRepository,
@@ -41,7 +41,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> {
         ),
       );
     } on EmojiRelatedException catch (e) {
-      debug('failed to load emoji from cache: $e');
+      error('failed to load emoji from cache: $e');
       emit(state.copyWith(status: EmojiStatus.failed));
     }
   }
@@ -65,7 +65,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> {
       }
       return;
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load emoji from server: $e');
+      error('failed to load emoji from server: $e');
       emit(state.copyWith(status: EmojiStatus.failed));
     }
   }

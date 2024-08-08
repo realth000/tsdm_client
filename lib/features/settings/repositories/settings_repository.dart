@@ -1,12 +1,14 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
+import 'package:tsdm_client/features/settings/repositories/mixin/settings_default_mixin.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
+import 'package:tsdm_client/shared/models/settings_map.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
-import 'package:tsdm_client/shared/repositories/settings_repository/mixin/settings_default_mixin.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 typedef _SK = SettingsKeys;
@@ -116,6 +118,7 @@ final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
     _controller.close();
   }
 
+  /// Get settings [key] with value in type [T}.
   Future<T?> getValue<T>(String key) async {
     if (!settingsTypeMap.containsKey(key)) {
       error('failed to getValue: unknown settings name "$key"');
@@ -126,7 +129,29 @@ final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
       return null;
     }
 
-    // TODO: Implement
+    return await switch (T) {
+      int => _storage.getInt(key),
+      double => _storage.getDouble(key),
+      String => _storage.getString(key),
+      bool => _storage.getBool(key),
+      _ => () {
+          error('failed to getValue for key $key: unsupported type $T');
+          return null;
+        }()
+    } as T?;
+  }
+
+  /// Delete the settings record in database.
+  Future<void> deleteValue(String key) async {
+    if (!settingsTypeMap.containsKey(key)) {
+      error('failed to setValue: unknown settings name "$key"');
+      return;
+    }
+
+    await _storage.deleteKey(key);
+
+    _state = _state.copyWithKey(key, null);
+    _controller.add(_state);
   }
 
   /// Save settings [key] with value [value].
@@ -153,4 +178,15 @@ final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
     _state = _state.copyWithKey(key, value);
     _controller.add(_state);
   }
+
+  /// Build a default [Dio] instance from current settings.
+  Dio buildDefaultDio() => Dio()
+    ..options = BaseOptions(
+      headers: <String, String>{
+        HttpHeaders.acceptHeader: _state.netClientAccept,
+        HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
+        HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
+        HttpHeaders.userAgentHeader: _state.netClientUserAgent,
+      },
+    );
 }

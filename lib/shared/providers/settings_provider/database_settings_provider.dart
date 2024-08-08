@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/settings_map.dart';
 import 'package:tsdm_client/shared/providers/settings_provider/mixin/settings_default_mixin.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/settings_map.dart';
+import 'package:tsdm_client/shared/providers/settings_provider/settings_providerovider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 
 /// Notifier of app settings.
