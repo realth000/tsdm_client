@@ -12,7 +12,7 @@ enum ForumStatus {
   success,
 
   /// Failed to load.
-  failed;
+  failure;
 
   /// Is loading data.
   bool isLoading() => this == initial || this == loading;

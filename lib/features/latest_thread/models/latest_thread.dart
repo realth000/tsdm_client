@@ -1,7 +1,7 @@
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
 import 'package:universal_html/html.dart' as uh;
 
 class _LatestThreadInfo {
@@ -155,7 +155,7 @@ class LatestThread {
         userUrl == null ||
         forumName == null ||
         forumUrl == null) {
-      debug('''
+      talker.error('''
 failed to parse LatestThread node: {
   title=$title,
   threadID=$threadID,

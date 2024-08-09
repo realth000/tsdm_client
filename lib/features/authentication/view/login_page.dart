@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         )..add(AuthenticationFetchLoginHashRequested()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
-            if (state.status == AuthenticationStatus.failed) {
+            if (state.status == AuthenticationStatus.failure) {
               final errorText = switch (state.loginException) {
                 LoginFormHashNotFoundException() =>
                   context.t.loginPage.hashValueNotFound,

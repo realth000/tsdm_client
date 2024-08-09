@@ -12,7 +12,7 @@ import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/widgets/post_list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/models/models/models.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
@@ -205,7 +205,7 @@ class _ThreadPageState extends State<ThreadPage>
             threadRepository: RepositoryProvider.of(context),
             reverseOrder: widget.overrideReverseOrder
                 ? RepositoryProvider.of<SettingsRepository>(context)
-                    .getThreadReverseOrder()
+                    .getValue<bool>(SettingsKeys.threadReverseOrder)
                 : null,
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),

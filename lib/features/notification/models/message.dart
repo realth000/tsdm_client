@@ -42,7 +42,7 @@ final class PersonalMessage with PersonalMessageMappable {
     }
     final messageId = element.id.split('_').elementAtOrNull(1);
     if (messageId == null) {
-      debug('failed to parse private message: message id not found');
+      talker.error('failed to parse private message: message id not found');
       return null;
     }
 
@@ -58,14 +58,14 @@ final class PersonalMessage with PersonalMessageMappable {
     final spaceUrl = element.querySelector('dd.m.avt > a')?.attributes['href'];
 
     if (avatarUrl == null || spaceUrl == null) {
-      debug('failed to parse private message: '
+      talker.error('failed to parse private message: '
           'avatarUrl=$avatarUrl, spaceUrl=$spaceUrl');
       return null;
     }
 
     final contentNode = element.querySelector('dd.ptm.pm_c');
     if (contentNode == null) {
-      debug('failed to parse private message: content node not found');
+      talker.error('failed to parse private message: content node not found');
       return null;
     }
 
@@ -97,7 +97,7 @@ final class PersonalMessage with PersonalMessageMappable {
         lastMessageTime == null ||
         chatUrl == null ||
         message == null) {
-      debug('failed to parse private message: '
+      talker.error('failed to parse private message: '
           'username=$username, lastMessageTime=$lastMessageTime, '
           'chatUrl=$chatUrl, message=$message');
       return null;
@@ -146,13 +146,13 @@ final class BroadcastMessage with BroadcastMessageMappable {
   /// Node MUST have id in format "gpmlist_${ID}".
   static BroadcastMessage? fromDl(uh.Element element) {
     if (!element.id.startsWith('gpmlist_')) {
-      debug('failed to build broadcast message: id not found');
+      talker.error('failed to build broadcast message: id not found');
       return null;
     }
 
     final infoNode = element.querySelector('dd:nth-child(3)');
     if (infoNode == null) {
-      debug('failed to build broadcast message: info node not found');
+      talker.error('failed to build broadcast message: info node not found');
       return null;
     }
     final message = infoNode.querySelector('span')?.innerText.trim();
@@ -167,7 +167,7 @@ final class BroadcastMessage with BroadcastMessageMappable {
         ?.unescapeHtml()
         ?.prependHost();
     if (message == null || messageTime == null) {
-      debug('failed to build broadcast message: '
+      talker.error('failed to build broadcast message: '
           'redirectUrl=$redirectUrl, messageTime=$messageTime');
       return null;
     }

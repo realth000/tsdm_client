@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/points/models/models.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/points/bloc/points_bloc.mapper.dart';
@@ -20,7 +20,8 @@ typedef PointsChangelogEmitter = Emitter<PointsChangelogState>;
 
 /// Bloc of user points statistics page.
 final class PointsStatisticsBloc
-    extends Bloc<PointsStatisticsEvent, PointsStatisticsState> {
+    extends Bloc<PointsStatisticsEvent, PointsStatisticsState>
+    with LoggerMixin {
   /// Constructor.
   PointsStatisticsBloc({required PointsRepository pointsRepository})
       : _pointsRepository = pointsRepository,
@@ -50,7 +51,7 @@ final class PointsStatisticsBloc
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch points statistics page: $e');
+      error('failed to fetch points statistics page: $e');
       emit(state.copyWith(status: PointsStatus.failed));
     }
   }
@@ -60,7 +61,7 @@ final class PointsStatisticsBloc
   ) {
     final rootNode = document.querySelector('div#ct_shell div.bm.bw0');
     if (rootNode == null) {
-      debug('points change root node not found');
+      error('points change root node not found');
       return null;
     }
     final pointsMapEntries = rootNode
@@ -72,7 +73,7 @@ final class PointsStatisticsBloc
 
     final tableNode = rootNode.querySelector('table.dt');
     if (tableNode == null) {
-      debug('points change table not found');
+      error('points change table not found');
       return null;
     }
     final pointsChangeList = _buildChangeListFromTable(tableNode);
@@ -82,7 +83,7 @@ final class PointsStatisticsBloc
 
 /// Bloc of the points changelog page.
 final class PointsChangelogBloc
-    extends Bloc<PointsChangelogEvent, PointsChangelogState> {
+    extends Bloc<PointsChangelogEvent, PointsChangelogState> with LoggerMixin {
   /// Constructor.
   PointsChangelogBloc({required PointsRepository pointsRepository})
       : _pointsRepository = pointsRepository,
@@ -112,7 +113,7 @@ final class PointsChangelogBloc
       final allParameters = _parseAllParameters(document);
       emit(s.copyWith(allParameters: allParameters));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to refresh changelog tab: $e');
+      error('failed to refresh changelog tab: $e');
       emit(state.copyWith(status: PointsStatus.failed));
     }
   }
@@ -127,7 +128,7 @@ final class PointsChangelogBloc
       );
       emit(_parseDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load more points changelog: $e');
+      error('failed to load more points changelog: $e');
       emit(state.copyWith(status: PointsStatus.failed));
     }
   }
@@ -150,7 +151,7 @@ final class PointsChangelogBloc
       final allParameters = _parseAllParameters(document);
       emit(s.copyWith(allParameters: allParameters));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to refresh changelog tab: $e');
+      error('failed to refresh changelog tab: $e');
       emit(state.copyWith(status: PointsStatus.failed));
     }
   }
@@ -208,7 +209,7 @@ final class PointsChangelogBloc
   PointsChangelogState _parseDocument(uh.Document document, int pageNumber) {
     final tableNode = document.querySelector('table.dt');
     if (tableNode == null) {
-      debug('points change table not found');
+      error('points change table not found');
       return state.copyWith(status: PointsStatus.failed);
     }
     final changeList = _buildChangeListFromTable(tableNode);

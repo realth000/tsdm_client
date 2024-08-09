@@ -42,7 +42,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
       );
     } on EmojiRelatedException catch (e) {
       error('failed to load emoji from cache: $e');
-      emit(state.copyWith(status: EmojiStatus.failed));
+      emit(state.copyWith(status: EmojiStatus.failure));
     }
   }
 
@@ -54,7 +54,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
     try {
       final result = await _editorRepository.loadEmojiFromServer();
       if (!result) {
-        emit(state.copyWith(status: EmojiStatus.failed));
+        emit(state.copyWith(status: EmojiStatus.failure));
       } else {
         emit(
           state.copyWith(
@@ -66,7 +66,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
       return;
     } on HttpRequestFailedException catch (e) {
       error('failed to load emoji from server: $e');
-      emit(state.copyWith(status: EmojiStatus.failed));
+      emit(state.copyWith(status: EmojiStatus.failure));
     }
   }
 }

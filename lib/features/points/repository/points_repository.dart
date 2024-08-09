@@ -5,12 +5,12 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 /// Repository of points statistics page and points changelog page.
-final class PointsRepository {
+final class PointsRepository with LoggerMixin {
   static const _statisticsPageUrl =
       '$baseUrl/home.php?mod=spacecp&ac=credit&op=base';
   static const _changelogPageUrl =
@@ -40,7 +40,7 @@ final class PointsRepository {
   Future<uh.Document> fetchChangelogPage(ChangelogParameter parameter) async {
     final netClient = getIt.get<NetClientProvider>();
     final target = '$_changelogPageUrl$parameter';
-    debug('fetch changelog page from $target');
+    info('fetch changelog page from $target');
     final resp = await netClient.get(target);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);

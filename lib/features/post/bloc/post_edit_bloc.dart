@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/post/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/post/models/post_edit_content.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/post/bloc/post_edit_bloc.mapper.dart';
@@ -16,7 +16,8 @@ part 'post_edit_state.dart';
 typedef PostEditEmit = Emitter<PostEditState>;
 
 /// Bloc of editing a post.
-final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
+final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
+    with LoggerMixin {
   /// Constructor.
   PostEditBloc({required PostEditRepository postEditRepository})
       : _postEditRepository = postEditRepository,
@@ -41,7 +42,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
       }
       emit(state.copyWith(status: PostEditStatus.editing, content: content));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load post edit data: $e');
+      error('failed to load post edit data: $e');
       emit(state.copyWith(status: PostEditStatus.failedToLoad));
     }
   }
@@ -72,10 +73,10 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
       );
       emit(state.copyWith(status: PostEditStatus.success));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to post edited post data: $e');
+      error('failed to post edited post data: $e');
       emit(state.copyWith(status: PostEditStatus.failedToUpload));
     } on PostEditFailedToUploadResult catch (e) {
-      debug('failed to post edited post data: $e');
+      error('failed to post edited post data: $e');
       emit(
         state.copyWith(
           status: PostEditStatus.failedToUpload,
@@ -203,7 +204,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> {
         pid == null ||
         page == null ||
         data == null) {
-      debug('invalid post edit form data: '
+      error('invalid post edit form data: '
           'formhash=$formHash, posttime=$postTime, '
           'delattachop=$delattachop, wysiwyg=$wysiwyg, '
           'fid=$fid, tid=$tid, pid=$pid, page=$page, data=$data');

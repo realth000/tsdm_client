@@ -45,7 +45,7 @@ class SearchedThread with SearchedThreadMappable {
         publishTime == null ||
         forumName == null ||
         forumUrl == null) {
-      debug(
+      talker.error(
         'invalid searched thread: $title, $url, $username, $userUrl, '
         '$publishTime, $forumName, $forumUrl',
       );

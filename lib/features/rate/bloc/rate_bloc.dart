@@ -4,7 +4,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/rate/bloc/rate_bloc.mapper.dart';
 part 'rate_event.dart';
@@ -14,7 +14,7 @@ part 'rate_state.dart';
 typedef RateEmitter = Emitter<RateState>;
 
 /// Bloc to rate.
-final class RateBloc extends Bloc<RateEvent, RateState> {
+final class RateBloc extends Bloc<RateEvent, RateState> with LoggerMixin {
   /// Constructor.
   RateBloc({required RateRepository rateRepository})
       : _rateRepository = rateRepository,
@@ -37,10 +37,10 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
       );
       emit(state.copyWith(status: RateStatus.gotInfo, info: rateInfo));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch rate info: $e');
+      error('failed to fetch rate info: $e');
       emit(state.copyWith(status: RateStatus.failed));
     } on RateInfoWithErrorException catch (e) {
-      debug('failed to fetch rate info: $e');
+      error('failed to fetch rate info: $e');
       // Do NOT retry if server returns an error.
       emit(
         state.copyWith(
@@ -50,7 +50,7 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
         ),
       );
     } on RateInfoException catch (e) {
-      debug('failed to fetch rate info: $e');
+      error('failed to fetch rate info: $e');
       emit(
         state.copyWith(
           status: RateStatus.failed,
@@ -69,10 +69,10 @@ final class RateBloc extends Bloc<RateEvent, RateState> {
       await _rateRepository.rate(event.rateInfo);
       emit(state.copyWith(status: RateStatus.success));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to rate: $e');
+      error('failed to rate: $e');
       emit(state.copyWith(status: RateStatus.failed));
     } on RateFailedException catch (e) {
-      debug('failed to rate: $e');
+      error('failed to rate: $e');
       emit(state.copyWith(status: RateStatus.failed, failedReason: e.reason));
     }
   }

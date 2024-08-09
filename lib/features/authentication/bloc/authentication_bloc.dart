@@ -46,12 +46,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
       );
     } on HttpRequestFailedException catch (e) {
       debug('failed to fetch login hash: $e');
-      emit(state.copyWith(status: AuthenticationStatus.failed));
+      emit(state.copyWith(status: AuthenticationStatus.failure));
     } on LoginException catch (e) {
       debug('failed to fetch login hash: $e');
       emit(
         state.copyWith(
-          status: AuthenticationStatus.failed,
+          status: AuthenticationStatus.failure,
           loginException: e,
         ),
       );
@@ -68,12 +68,12 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
       emit(state.copyWith(status: AuthenticationStatus.success));
     } on HttpRequestFailedException catch (e) {
       debug('failed to login: $e');
-      emit(state.copyWith(status: AuthenticationStatus.failed));
+      emit(state.copyWith(status: AuthenticationStatus.failure));
     } on LoginException catch (e) {
       debug('failed to login: $e');
       emit(
         state.copyWith(
-          status: AuthenticationStatus.failed,
+          status: AuthenticationStatus.failure,
           loginException: e,
         ),
       );

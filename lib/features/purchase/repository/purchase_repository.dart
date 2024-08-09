@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/purchase/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/purchase/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 extension _Regexp on String {
   String? matchValue() {
@@ -26,7 +26,7 @@ extension _Regexp on String {
 }
 
 /// Repository of purchasing.
-class PurchaseRepository {
+final class PurchaseRepository with LoggerMixin {
   static const _purchaseTarget =
       'https://tsdm39.com/forum.php?mod=misc&action=pay&paysubmit=yes&infloat=yes&inajax=1';
   static final _valueRe = RegExp(' value="(?<value>.+)" />');
@@ -58,14 +58,14 @@ class PurchaseRepository {
         .get(formatPurchaseDialogUrl(tid, pid));
     if (resp.statusCode != HttpStatus.ok) {
       // Network error.
-      debug('fetch purchase dialog failed: code${resp.statusCode}');
+      error('fetch purchase dialog failed: code${resp.statusCode}');
       throw HttpRequestFailedException(resp.statusCode!);
     }
     final dataList = (resp.data as String).split('\n');
     final inputList =
         dataList.where((e) => e.startsWith('<input type="hidden"')).toList();
     if (inputList.length != 4) {
-      debug(
+      error(
         'parse purchase dialog failed: invalid input length '
         '${inputList.length}',
       );
@@ -79,7 +79,7 @@ class PurchaseRepository {
         referer == null ||
         tidInDialog == null ||
         handleKey == null) {
-      debug(
+      error(
         'parse purchase dialog failed: formHash=$formHash, referer=$referer, '
         'tid=$tidInDialog, handleKey=$handleKey',
       );
@@ -88,7 +88,7 @@ class PurchaseRepository {
 
     final tdList = dataList.where((e) => e.startsWith('<td>')).toList();
     if (tdList.length != 4) {
-      debug('parse purchase dialog failed: invalid td length ${tdList.length}');
+      error('parse purchase dialog failed: invalid td length ${tdList.length}');
       throw PurchaseInfoInvalidNoticeException();
     }
 

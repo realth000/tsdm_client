@@ -3,7 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/notification/bloc/notification_bloc.mapper.dart';
 part 'notification_event.dart';
@@ -13,7 +13,8 @@ part 'notification_state.dart';
 typedef _Emit = Emitter<NotificationState>;
 
 /// Bloc of notification.
-class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
+class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
+    with LoggerMixin {
   /// Constructor.
   NotificationBloc({required NotificationRepository notificationRepository})
       : _notificationRepository = notificationRepository,
@@ -43,7 +44,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch notice: $e');
+      error('failed to fetch notice: $e');
       emit(state.copyWith(noticeStatus: NotificationStatus.failed));
     }
   }
@@ -63,7 +64,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch private messages: $e');
+      error('failed to fetch private messages: $e');
 
       emit(state.copyWith(personalMessageStatus: NotificationStatus.failed));
     }
@@ -84,7 +85,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch broad messages: $e');
+      error('failed to fetch broad messages: $e');
       emit(state.copyWith(broadcastMessageStatus: NotificationStatus.failed));
     }
   }

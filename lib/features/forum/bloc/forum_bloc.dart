@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/forum/bloc/forum_bloc.mapper.dart';
@@ -21,7 +21,7 @@ final _orderByRe = RegExp('&orderby=(?<orderby>[a-z]+)');
 final _datelineRe = RegExp(r'&dateline=(?<dateline>\d+)');
 
 /// Bloc of forum page.
-class ForumBloc extends Bloc<ForumEvent, ForumState> {
+class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
   /// Constructor.
   ForumBloc({
     required String fid,
@@ -50,9 +50,9 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load forum page: fid=${state.fid}, '
+      error('failed to load forum page: fid=${state.fid}, '
           'pageNumber=${event.pageNumber}: $e');
-      emit(state.copyWith(status: ForumStatus.failed));
+      emit(state.copyWith(status: ForumStatus.failure));
     }
   }
 
@@ -76,8 +76,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       );
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failed));
+      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failure));
     }
   }
 
@@ -95,8 +95,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failed));
+      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failure));
     }
   }
 
@@ -120,8 +120,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failed));
+      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failure));
     }
   }
 
@@ -305,7 +305,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
     final barNode = document.getElementById('pgt');
 
     if (barNode == null) {
-      debug('failed to check can load more: node not found');
+      error('failed to check can load more: node not found');
       return false;
     }
 
@@ -317,7 +317,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> {
 
     final lastNode = paginationNode.children.lastOrNull;
     if (lastNode == null) {
-      debug('failed to check can load more: empty pagination list');
+      error('failed to check can load more: empty pagination list');
       return false;
     }
 

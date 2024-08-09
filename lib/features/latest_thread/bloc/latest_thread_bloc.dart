@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
 import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/latest_thread/bloc/latest_thread_bloc.mapper.dart';
@@ -16,8 +16,8 @@ part 'latest_thread_state.dart';
 typedef LatestThreadEmitter = Emitter<LatestThreadState>;
 
 /// Bloc the the latest thread feature.
-final class LatestThreadBloc
-    extends Bloc<LatestThreadEvent, LatestThreadState> {
+final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
+    with LoggerMixin {
   /// Constructor.
   LatestThreadBloc({required LatestThreadRepository latestThreadRepository})
       : _latestThreadRepository = latestThreadRepository,
@@ -50,7 +50,7 @@ final class LatestThreadBloc
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load latest thread next page: $e');
+      error('failed to load latest thread next page: $e');
       emit(state.copyWith(status: LatestThreadStatus.failed));
     }
   }
@@ -72,7 +72,7 @@ final class LatestThreadBloc
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load latest thread page: $e');
+      error('failed to load latest thread page: $e');
       emit(state.copyWith(status: LatestThreadStatus.failed));
     }
   }

@@ -3,7 +3,7 @@ part of 'widgets.dart';
 /// All pinned thread in homepage.
 ///
 /// Threads are separated into different groups.
-class PinSection extends StatelessWidget {
+class PinSection extends StatelessWidget with LoggerMixin {
   /// Constructor.
   const PinSection(this.pinnedThreadGroup, {super.key});
 
@@ -53,7 +53,7 @@ class PinSection extends StatelessWidget {
       onTap: () {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
         if (target == null) {
-          debug('invalid pinned thread url: ${pinnedThread.threadUrl}');
+          error('invalid pinned thread url: ${pinnedThread.threadUrl}');
           return;
         }
         context.pushNamed(

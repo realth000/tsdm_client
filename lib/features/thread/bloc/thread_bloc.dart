@@ -4,7 +4,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/thread/bloc/thread_bloc.mapper.dart';
@@ -15,7 +15,7 @@ part 'thread_state.dart';
 typedef ThreadEmitter = Emitter<ThreadState>;
 
 /// Bloc the thread page.
-class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
+class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
   /// Constructor.
   ThreadBloc({
     required String? tid,
@@ -55,7 +55,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: $e');
+      error('failed to load thread page: $e');
       emit(state.copyWith(status: ThreadStatus.failed));
     }
   }
@@ -79,7 +79,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
       emit(await _parseFromDocument(document, 1));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: $e');
+      error('failed to load thread page: $e');
       emit(state.copyWith(status: ThreadStatus.failed));
     }
   }
@@ -105,7 +105,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
       emit(await _parseFromDocument(document, event.pageNumber));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
       emit(state.copyWith(status: ThreadStatus.failed));
     }
   }
@@ -140,7 +140,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       final s = await _parseFromDocument(document, 1);
       emit(s.copyWith(onlyVisibleUid: event.uid));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
       emit(
         state.copyWith(
           status: ThreadStatus.failed,
@@ -179,7 +179,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
       emit(s.copyWith(onlyVisibleUid: state.onlyVisibleUid));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
       emit(state.copyWith(status: ThreadStatus.failed));
     }
   }
@@ -210,7 +210,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
       );
       emit(s.copyWith(reverseOrder: state.reverseOrder));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
       emit(
         state.copyWith(
           status: ThreadStatus.failed,
@@ -295,7 +295,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> {
         postTime == null ||
         formHash == null ||
         subject == null) {
-      debug(
+      error(
         'failed to get reply form hash: fid=$fid postTime=$postTime '
         'formHash=$formHash subject=$subject',
       );

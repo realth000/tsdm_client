@@ -23,3 +23,13 @@ class HttpHandshakeFailedException implements Exception {
   /// Error message.
   final String message;
 }
+
+/// Invalid settings's key (aka name) when accessing settings values:
+/// setting values or getting values.
+class InvalidSettingsKeyException implements Exception {
+  /// Constructor.
+  const InvalidSettingsKeyException(this.message);
+
+  /// Error message.
+  final String message;
+}

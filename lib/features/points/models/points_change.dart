@@ -90,7 +90,7 @@ class PointsChange with PointsChangeMappable {
   static PointsChange? fromTrNode(uh.Element element) {
     final tdList = element.querySelectorAll('td');
     if (tdList.length != 4) {
-      debug('failed to build PointsChange instance: '
+      talker.error('failed to build PointsChange instance: '
           'invalid td count: ${tdList.length}');
       return null;
     }
@@ -98,7 +98,7 @@ class PointsChange with PointsChangeMappable {
     final operation = tdList[0].querySelector('a')?.innerText;
     final operationFilterUrl = tdList[0].querySelector('a')?.attributes['href'];
     if (operation == null || operationFilterUrl == null) {
-      debug('failed to build PointsChange: operation=$operation, '
+      talker.error('failed to build PointsChange: operation=$operation, '
           'operationFilterUrl=$operationFilterUrl');
       return null;
     }
@@ -118,7 +118,7 @@ class PointsChange with PointsChangeMappable {
       }
     }
     if (attrNameList.length != attrValueList.length) {
-      debug('failed to build PointsChange: invalid attar name '
+      talker.error('failed to build PointsChange: invalid attar name '
           'value length: $attrNameList and $attrValueList');
       return null;
     }
@@ -144,7 +144,7 @@ class PointsChange with PointsChangeMappable {
         tdList[2].querySelector('a')?.attributes['href']?.prependHost();
     final changedTime = tdList[3].innerText.trim().parseToDateTimeUtc8();
     if (changedTime == null) {
-      debug('failed to build PointsChange: invalid change time:'
+      talker.error('failed to build PointsChange: invalid change time:'
           '${tdList[3].innerText.trim()}');
       return null;
     }

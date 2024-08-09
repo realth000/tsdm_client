@@ -74,8 +74,9 @@ class _ThreadCardDialogState extends State<ThreadCardDialog> {
                 title: Text(tr.infoRowAlignCenter),
                 value: settings.threadCardInfoRowAlignCenter,
                 onChanged: (v) => context.read<SettingsBloc>().add(
-                      SettingsChangeThreadCardInfoRowAlignCenterRequested(
-                        enabled: v,
+                      SettingsValueChanged(
+                        SettingsKeys.threadCardInfoRowAlignCenter,
+                        v,
                       ),
                     ),
               ),
@@ -83,8 +84,9 @@ class _ThreadCardDialogState extends State<ThreadCardDialog> {
                 title: Text(tr.showLastReplyAuthor),
                 value: settings.threadCardShowLastReplyAuthor,
                 onChanged: (v) => context.read<SettingsBloc>().add(
-                      SettingsChangeThreadCardShowLastReplyAuthorRequested(
-                        enabled: v,
+                      SettingsValueChanged(
+                        SettingsKeys.threadCardShowLastReplyAuthor,
+                        v,
                       ),
                     ),
               ),

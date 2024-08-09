@@ -28,7 +28,7 @@ class WelcomeSection extends StatefulWidget {
   State<WelcomeSection> createState() => _WelcomeSectionState();
 }
 
-class _WelcomeSectionState extends State<WelcomeSection> {
+class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
   final _swiperController = InfiniteScrollController();
   Timer? _swiperTimer;
 
@@ -95,7 +95,7 @@ class _WelcomeSectionState extends State<WelcomeSection> {
             onTap: () {
               final target = e.$2.parseUrlToRoute();
               if (target == null) {
-                debug('invalid kahrpba link: ${e.$2}');
+                error('invalid kahrpba link: ${e.$2}');
                 return;
               }
               context.pushNamed(
@@ -125,7 +125,7 @@ class _WelcomeSectionState extends State<WelcomeSection> {
     );
   }
 
-  Widget _buildSection(BuildContext context) {
+  Future<Widget> _buildSection(BuildContext context) async {
     final linkTileList = <Widget>[];
 
     // username is plain text inside welcomeNode div.
@@ -154,8 +154,10 @@ class _WelcomeSectionState extends State<WelcomeSection> {
     final hasUnreadMessage = homePageState.hasUnreadMessage;
 
     late final Widget noticeIcon;
-    if (RepositoryProvider.of<SettingsRepository>(context)
-        .getShowUnreadInfoHint()) {
+    final showUnreadHint =
+        await RepositoryProvider.of<SettingsRepository>(context)
+            .getValue<bool>(SettingsKeys.showUnreadInfoHint);
+    if (showUnreadHint) {
       if (unreadNoticeCount > 0) {
         noticeIcon = Badge(
           label: Text('$unreadNoticeCount'),
@@ -168,6 +170,10 @@ class _WelcomeSectionState extends State<WelcomeSection> {
       }
     } else {
       noticeIcon = const Icon(Icons.notifications_outlined);
+    }
+
+    if (!context.mounted) {
+      return sizedBoxEmpty;
     }
 
     return ConstrainedBox(
@@ -268,7 +274,7 @@ class _WelcomeSectionState extends State<WelcomeSection> {
           _swiperTimer?.cancel();
         }
       },
-      child: _buildSection(context),
+      child: FutureWrapper(_buildSection(context)),
     );
   }
 }

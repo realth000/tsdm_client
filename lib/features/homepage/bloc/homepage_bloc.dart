@@ -9,9 +9,10 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
+import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
-import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/homepage/bloc/homepage_bloc.mapper.dart';
@@ -28,7 +29,7 @@ extension ExtractProfileAvatar on uh.Document {
 }
 
 /// Bloc for the homepage of the app.
-class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
+class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
   /// Constructor.
   HomepageBloc({
     required ForumHomeRepository forumHomeRepository,
@@ -67,6 +68,95 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
   /// Do not dispose this repo because it is not the owner.
   final AuthenticationRepository _authenticationRepository;
   late final StreamSubscription<AuthenticationStatus> _authStatusSub;
+
+  static List<String?> _buildKahrpbaPicUrlList(uh.Element? styleNode) {
+    if (styleNode == null) {
+      talker.error('failed to build kahrpba picture url list: node is null');
+      return [];
+    }
+
+    return styleNode
+        .innerHtmlEx()
+        .split('\n')
+        .where((e) => e.startsWith('.Kahrpba_pic_') && !e.contains('ctrlbtn'))
+        .map((e) => e.split('(').lastOrNull?.split(')').firstOrNull)
+        .toList();
+  }
+
+  static List<String?> _buildKahrpbaPicHrefList(uh.Element? scriptNode) {
+    if (scriptNode == null) {
+      talker.error('failed to build kahrpba picture href list: node is null');
+      return [];
+    }
+
+    return scriptNode
+        .innerHtmlEx()
+        .split('\n')
+        .where((e) => e.contains("window.location='"))
+        .map(
+          (e) => e
+              .split("window.location='")
+              .lastOrNull
+              ?.split("'")
+              .firstOrNull
+              ?.replaceFirst('&amp;', '&'),
+        )
+        .toList();
+  }
+
+  /// For the following structure, filter and combine thread and its author.
+  ///
+  /// <div class="Kahrpba_threads">
+  ///   <a href="thread_url">
+  ///     thread_title
+  ///   </a>
+  ///   <a href="author_url">
+  ///     <em>author_name</em>
+  ///   </a>
+  ///
+  /// Filter out thread_url, thread_title, author_url and author_name.
+  ///
+  /// Where [element] is <div class="Kahrpba_threads"> node.
+  static PinnedThread? _filterThreadAndAuthors(uh.Element element) {
+    final allNode = element.querySelectorAll('a').toList();
+    // There should be two <a> in children.
+    if (allNode.length != 2) {
+      talker.info('skip build thread author pair: '
+          'node count is ${allNode.length}');
+      return null;
+    }
+
+    final threadUrl = allNode[0].attributes['href'];
+    if (threadUrl == null) {
+      talker.info('skip incomplete thread author pair: thread url not found');
+      return null;
+    }
+
+    final threadTitle = allNode[0].firstEndDeepText();
+    if (threadTitle == null) {
+      talker.info('skip incomplete thread author pair: thread title not found');
+      return null;
+    }
+
+    final authorUrl = allNode[1].attributes['href'];
+    if (authorUrl == null) {
+      talker.info('skip incomplete thread author pair: author url not found');
+      return null;
+    }
+
+    final authorName = allNode[1].firstEndDeepText();
+    if (authorName == null) {
+      talker.info('skip incomplete thread author pair: author name not found');
+      return null;
+    }
+
+    return PinnedThread(
+      threadUrl: threadUrl,
+      threadTitle: threadTitle,
+      authorUrl: authorUrl,
+      authorName: authorName,
+    );
+  }
 
   Future<void> _onHomepageLoadRequested(
     HomepageLoadRequested event,
@@ -230,7 +320,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
         _buildKahrpbaPicHrefList(scriptNode).whereType<String>().toList();
     if ((picUrlList.isEmpty && picHrefList.isEmpty) ||
         (picUrlList.length != picHrefList.length)) {
-      debug('root content pinned pic not found: maybe not login');
+      talker.error('root content pinned pic not found: maybe not login');
       // There's no pinned recent threads when not login, just return
     } else {
       for (var i = 0; i < picUrlList.length; i++) {
@@ -331,92 +421,4 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> {
     await _authStatusSub.cancel();
     await super.close();
   }
-}
-
-List<String?> _buildKahrpbaPicUrlList(uh.Element? styleNode) {
-  if (styleNode == null) {
-    debug('failed to build kahrpba picture url list: node is null');
-    return [];
-  }
-
-  return styleNode
-      .innerHtmlEx()
-      .split('\n')
-      .where((e) => e.startsWith('.Kahrpba_pic_') && !e.contains('ctrlbtn'))
-      .map((e) => e.split('(').lastOrNull?.split(')').firstOrNull)
-      .toList();
-}
-
-List<String?> _buildKahrpbaPicHrefList(uh.Element? scriptNode) {
-  if (scriptNode == null) {
-    debug('failed to build kahrpba picture href list: node is null');
-    return [];
-  }
-
-  return scriptNode
-      .innerHtmlEx()
-      .split('\n')
-      .where((e) => e.contains("window.location='"))
-      .map(
-        (e) => e
-            .split("window.location='")
-            .lastOrNull
-            ?.split("'")
-            .firstOrNull
-            ?.replaceFirst('&amp;', '&'),
-      )
-      .toList();
-}
-
-/// For the following structure, filter and combine thread and its author.
-///
-/// <div class="Kahrpba_threads">
-///   <a href="thread_url">
-///     thread_title
-///   </a>
-///   <a href="author_url">
-///     <em>author_name</em>
-///   </a>
-///
-/// Filter out thread_url, thread_title, author_url and author_name.
-///
-/// Where [element] is <div class="Kahrpba_threads"> node.
-PinnedThread? _filterThreadAndAuthors(uh.Element element) {
-  final allNode = element.querySelectorAll('a').toList();
-  // There should be two <a> in children.
-  if (allNode.length != 2) {
-    debug('skip build thread author pair: node count is ${allNode.length}');
-    return null;
-  }
-
-  final threadUrl = allNode[0].attributes['href'];
-  if (threadUrl == null) {
-    debug('skip incomplete thread author pair: thread url not found');
-    return null;
-  }
-
-  final threadTitle = allNode[0].firstEndDeepText();
-  if (threadTitle == null) {
-    debug('skip incomplete thread author pair: thread title not found');
-    return null;
-  }
-
-  final authorUrl = allNode[1].attributes['href'];
-  if (authorUrl == null) {
-    debug('skip incomplete thread author pair: author url not found');
-    return null;
-  }
-
-  final authorName = allNode[1].firstEndDeepText();
-  if (authorName == null) {
-    debug('skip incomplete thread author pair: author name not found');
-    return null;
-  }
-
-  return PinnedThread(
-    threadUrl: threadUrl,
-    threadTitle: threadTitle,
-    authorUrl: authorUrl,
-    authorName: authorName,
-  );
 }

@@ -6,7 +6,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/my_thread/models/models.dart';
 import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/my_thread/bloc/my_thread_bloc.mapper.dart';
@@ -17,7 +17,8 @@ part 'my_thread_state.dart';
 typedef MyThreadEmitter = Emitter<MyThreadState>;
 
 /// Bloc of my thread page.
-final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
+final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
+    with LoggerMixin {
   /// Constructor.
   MyThreadBloc({required MyThreadRepository myThreadRepository})
       : _myThreadRepository = myThreadRepository,
@@ -69,7 +70,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to initial my thread page data: $e');
+      error('failed to initial my thread page data: $e');
       emit(
         state.copyWith(
           status: MyThreadStatus.failed,
@@ -101,7 +102,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load next page of thread tab: $e');
+      error('failed to load next page of thread tab: $e');
       emit(
         state.copyWith(
           status: MyThreadStatus.failed,
@@ -131,7 +132,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load next page of reply tab: $e');
+      error('failed to load next page of reply tab: $e');
       emit(
         state.copyWith(
           status: MyThreadStatus.failed,
@@ -159,7 +160,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load next page of thread tab: $e');
+      error('failed to load next page of thread tab: $e');
       emit(
         state.copyWith(
           status: MyThreadStatus.failed,
@@ -188,7 +189,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load next page of reply tab: $e');
+      error('failed to load next page of reply tab: $e');
       emit(
         state.copyWith(
           status: MyThreadStatus.failed,

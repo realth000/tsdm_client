@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Extension on [String] that provides filling rate url methods.
@@ -20,7 +20,7 @@ extension _FillRateTarget on String {
 }
 
 /// Repository of rate.
-final class RateRepository {
+final class RateRepository with LoggerMixin {
   static const _rateTarget =
       '$baseUrl/forum.php?mod=misc&action=rate&ratesubmit=yes&infloat=yes&inajax=1';
 

@@ -18,7 +18,7 @@ enum AuthenticationStatus {
   success,
 
   /// Login failed.
-  failed,
+  failure,
 }
 
 /// State of authentication.

@@ -4,7 +4,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/purchase/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/purchase/models/models.dart';
 import 'package:tsdm_client/features/purchase/repository/purchase_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/purchase/bloc/purchase_bloc.mapper.dart';
 part 'purchase_event.dart';
@@ -14,7 +14,8 @@ part 'purchase_state.dart';
 typedef PurchaseEmitter = Emitter<PurchaseState>;
 
 /// Bloc of purchasing.
-final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
+final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState>
+    with LoggerMixin {
   /// Constructor.
   PurchaseBloc({required PurchaseRepository purchaseRepository})
       : _purchaseRepository = purchaseRepository,
@@ -43,19 +44,19 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch purchase info: $e');
+      error('failed to fetch purchase info: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     } on PurchaseInfoInvalidParameterCountException catch (e) {
-      debug('failed to fetch purchase info: $e');
+      error('failed to fetch purchase info: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     } on PurchaseInfoIncompleteException catch (e) {
-      debug('failed to fetch purchase info: $e');
+      error('failed to fetch purchase info: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     } on PurchaseInfoInvalidNoticeException catch (e) {
-      debug('failed to fetch purchase info: $e');
+      error('failed to fetch purchase info: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     }
@@ -66,7 +67,7 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
     PurchaseEmitter emit,
   ) async {
     if (state.confirmInfo == null) {
-      debug('failed to purchase: confirm info not prepared');
+      error('failed to purchase: confirm info not prepared');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     }
@@ -83,11 +84,11 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> {
       );
       emit(state.copyWith(status: PurchaseStatus.success));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to purchase: $e');
+      error('failed to purchase: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     } on PurchaseActionFailedException catch (e) {
-      debug('failed to purchase: $e');
+      error('failed to purchase: $e');
       emit(state.copyWith(status: PurchaseStatus.failed));
       return;
     }

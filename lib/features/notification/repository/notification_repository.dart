@@ -5,12 +5,12 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 /// Repository of notification.
-class NotificationRepository {
+final class NotificationRepository with LoggerMixin {
   /// Get and parse a list of [Notice] from the given [url].
   ///
   /// * Return (List<Notice>, null) if success.
@@ -30,7 +30,7 @@ class NotificationRepository {
     final emptyNode =
         document.querySelector('div#ct > div.mn > div.bm.bw0 > div.emp');
     if (emptyNode != null) {
-      debug('empty notice');
+      error('empty notice');
       // No notice here.
       return (<Notice>[], null);
     }

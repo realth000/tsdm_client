@@ -15,7 +15,8 @@ import 'package:tsdm_client/features/settings/widgets/thread_card_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling/check_in_feeling.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
@@ -56,12 +57,16 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<(Color?, bool)?> _showAccentColorPickerDialog(
     BuildContext context,
   ) async {
+    final colorValue = await RepositoryProvider.of<SettingsRepository>(context)
+        .getValue<int>(SettingsKeys.accentColor);
+    if (!context.mounted) {
+      return null;
+    }
     return showCustomBottomSheet<(Color?, bool)>(
       title: context.t.colorPickerDialog.title,
       context: context,
       builder: (context) => ColorPickerDialog(
-        currentColorValue: RepositoryProvider.of<SettingsRepository>(context)
-            .getAccentColorValue(),
+        currentColorValue: colorValue,
         blocContext: context,
       ),
     );
@@ -134,7 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
             // Save to settings.
             context
                 .read<SettingsBloc>()
-                .add(SettingsChangeThemeModeRequested(themeIndex));
+                .add(SettingsValueChanged(SettingsKeys.themeMode, themeIndex));
           },
         ),
       ),
@@ -157,16 +162,19 @@ class _SettingsPageState extends State<SettingsPage> {
             }
             context
                 .read<SettingsBloc>()
-                .add(const SettingsChangeLocaleRequested(''));
+                .add(const SettingsValueChanged(SettingsKeys.locale, ''));
             return;
           }
           if (!context.mounted) {
             return;
           }
           LocaleSettings.setLocale(localeGroup.$1!);
-          context
-              .read<SettingsBloc>()
-              .add(SettingsChangeLocaleRequested(localeGroup.$1!.languageTag));
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(
+                  SettingsKeys.locale,
+                  localeGroup.$1!.languageTag,
+                ),
+              );
         },
       ),
 
@@ -178,9 +186,12 @@ class _SettingsPageState extends State<SettingsPage> {
         contentPadding: edgeInsetsL18R18,
         value: showForumCardShortcut,
         onChanged: (v) async {
-          context
-              .read<SettingsBloc>()
-              .add(SettingsChangeForumCardShortcutRequested(showShortcut: v));
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(
+                  SettingsKeys.showShortcutInForumCard,
+                  v,
+                ),
+              );
         },
       ),
       // Accent color
@@ -207,15 +218,16 @@ class _SettingsPageState extends State<SettingsPage> {
           if (color.$2) {
             // Effect immediately.
             context.read<ThemeCubit>().clearAccentColor();
+            // Set to -1 ( < 0) will clear accent color.
             context
                 .read<SettingsBloc>()
-                .add(const SettingClearAccentColorRequested());
+                .add(const SettingsValueChanged(SettingsKeys.accentColor, -1));
             return;
           }
           context.read<ThemeCubit>().setAccentColor(color.$1!);
           context
               .read<SettingsBloc>()
-              .add(SettingsChangeAccentColorRequested(color.$1!));
+              .add(SettingsValueChanged(SettingsKeys.accentColor, color.$1!));
         },
       ),
       SwitchListTile(
@@ -227,7 +239,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onChanged: (v) async {
           context
               .read<SettingsBloc>()
-              .add(SettingsChangeUnreadInfoHintRequested(enabled: v));
+              .add(SettingsValueChanged(SettingsKeys.showUnreadInfoHint, v));
         },
       ),
       SectionListTile(
@@ -264,7 +276,7 @@ class _SettingsPageState extends State<SettingsPage> {
           onChanged: (v) async {
             context
                 .read<SettingsBloc>()
-                .add(SettingsChangeDoublePressExitRequested(enabled: v));
+                .add(SettingsValueChanged(SettingsKeys.doublePressExit, v));
           },
         ),
       SwitchListTile(
@@ -275,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
         value: threadReverseOrder,
         onChanged: (v) async => context
             .read<SettingsBloc>()
-            .add(SettingsChangeThreadReverseOrderRequested(enabled: v)),
+            .add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
       ),
     ];
   }
@@ -324,8 +336,10 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
           context.read<SettingsBloc>().add(
-                SettingsChangeCheckinFeelingRequested(
-                  CheckinFeeling.from(result),
+                SettingsValueChanged(
+                  SettingsKeys.checkinFeeling,
+                  result,
+                  // CheckinFeeling.from(result),
                 ),
               );
         },
@@ -346,7 +360,7 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           context
               .read<SettingsBloc>()
-              .add(SettingsChangeCheckingMessageRequested(result));
+              .add(SettingsValueChanged(SettingsKeys.checkinMessage, result));
         },
       ),
     ];
@@ -455,3 +469,4 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 }
+

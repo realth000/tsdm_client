@@ -5,7 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/search/models/models.dart';
 import 'package:tsdm_client/features/search/repository/search_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/search/bloc/search_bloc.mapper.dart';
@@ -16,7 +16,7 @@ part 'search_state.dart';
 typedef SearchEmitter = Emitter<SearchState>;
 
 /// Bloc of search page of the app.
-class SearchBloc extends Bloc<SearchEvent, SearchState> {
+class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
   /// Constructor.
   SearchBloc({required SearchRepository searchRepository})
       : _searchRepository = searchRepository,
@@ -61,7 +61,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to search: $e');
+      error('failed to search: $e');
       emit(
         state.copyWith(
           status: SearchStatus.failed,
@@ -112,7 +112,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to search: $e');
+      error('failed to search: $e');
       emit(
         state.copyWith(
           status: SearchStatus.failed,
@@ -152,7 +152,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to search: $e');
+      error('failed to search: $e');
       emit(
         state.copyWith(
           status: SearchStatus.failed,
@@ -203,7 +203,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to search: $e');
+      error('failed to search: $e');
       emit(
         state.copyWith(
           status: SearchStatus.failed,

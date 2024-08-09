@@ -7,7 +7,8 @@ import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/widgets/widgets.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_homeorum_home_repository.dart';
+import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 const _drawerWidth = 250.0;
@@ -124,11 +125,17 @@ class _HomePageState extends State<HomePage> {
             value: widget._forumHomeRepository,
             child: BackButtonListener(
               onBackButtonPressed: () async {
-                if (!RepositoryProvider.of<SettingsRepository>(context)
-                    .getDoublePressExit()) {
+                final doublePressExit =
+                    await RepositoryProvider.of<SettingsRepository>(context)
+                        .getValue<bool>(SettingsKeys.doublePressExit);
+                if (!doublePressExit) {
                   // Do NOT handle pop events on double press check is disabled.
                   return false;
                 }
+                if (!context.mounted) {
+                  return false;
+                }
+
                 if (context.canPop()) {
                   // Do NOT handle pop events on other pages.
                   return false;

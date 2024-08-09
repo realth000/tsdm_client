@@ -3,14 +3,15 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/notification/bloc/notification_detail_cubit.mapper.dart';
 part 'notification_detail_state.dart';
 
 /// Cubit of the notification detail page.
-class NotificationDetailCubit extends Cubit<NotificationDetailState> {
+class NotificationDetailCubit extends Cubit<NotificationDetailState>
+    with LoggerMixin {
   /// Constructor.
   NotificationDetailCubit({
     required NotificationRepository notificationRepository,
@@ -36,14 +37,14 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
       final match = _pidRe.firstMatch(url);
       final pid = match?.namedGroup('pid');
       if (pid == null) {
-        debug('pid not found in url: $url');
+        error('pid not found in url: $url');
         emit(state.copyWith(status: NotificationDetailStatus.failed));
         return;
       }
 
       final postNode = document.querySelector('div#post_$pid');
       if (postNode == null) {
-        debug('failed to build reply page: post node not found for pid $pid');
+        error('failed to build reply page: post node not found for pid $pid');
         emit(state.copyWith(status: NotificationDetailStatus.failed));
         return;
       }
@@ -53,7 +54,7 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
       final tidMatch = _tidRe.firstMatch(url);
       final tid = tidMatch?.namedGroup('ptid');
       if (tid == null) {
-        debug('failed to build reply page: tid not found');
+        error('failed to build reply page: tid not found');
         emit(state.copyWith(status: NotificationDetailStatus.failed));
         return;
       }
@@ -73,7 +74,7 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch notification detail: $e');
+      error('failed to fetch notification detail: $e');
       emit(state.copyWith(status: NotificationDetailStatus.failed));
     }
   }

@@ -12,7 +12,7 @@ enum EmojiStatus {
   success,
 
   /// Failed
-  failed,
+  failure,
 }
 
 /// State of emoji bloc.

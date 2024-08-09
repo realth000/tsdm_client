@@ -233,7 +233,7 @@ class Notice with NoticeMappable {
     // Validate
     if (noticeType == NoticeType.mention) {
       if (username == null || userSpaceUrl == null || redirectUrl == null) {
-        debug(
+        talker.error(
           'failed to parse mention notice: $username, $userSpaceUrl, '
           '$noticeTime, $redirectUrl',
         );
@@ -241,12 +241,13 @@ class Notice with NoticeMappable {
       }
     } else if (noticeType == NoticeType.newFriend) {
       if (username == null || userSpaceUrl == null) {
-        debug('failed to parse new friend notice: $username, $userSpaceUrl');
+        talker.error('failed to parse new friend notice:'
+            '$username, $userSpaceUrl');
         return null;
       }
     } else if (noticeType == NoticeType.batchRate) {
       if (username == null || userSpaceUrl == null || taskId == null) {
-        debug('failed to parse batch rate notice: '
+        talker.error('failed to parse batch rate notice: '
             '$username, $userSpaceUrl, $taskId');
         return null;
       }
@@ -255,7 +256,7 @@ class Notice with NoticeMappable {
         noticeTime == null ||
         noticeThreadTitle == null ||
         redirectUrl == null) {
-      debug(
+      talker.error(
         'failed to parse $noticeType notice: $username, $userSpaceUrl, '
         '$noticeTime, $noticeThreadUrl, $noticeThreadTitle, $redirectUrl',
       );

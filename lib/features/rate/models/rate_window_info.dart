@@ -101,7 +101,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
     // Should have at least one type of score to rate and also the row title as
     // list elements.
     if (rateTableRowsNodeList.length < 2) {
-      debug(
+      talker.error(
         'invalid rate window info: incorrect rateTableRowsNodeList '
         'length: ${rateTableRowsNodeList.length}',
       );
@@ -116,7 +116,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
         .toList();
     // Explicitly check null here just make the compiler happy.
     if (rowTitleList == null || rowTitleList.length != 4) {
-      debug(
+      talker.error(
         'invalid rate window info: incorrect rowTitleList length: '
         '${rowTitleList?.length}',
       );
@@ -135,7 +135,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
 
     /// Score types available to rate should not be empty;
     if (scoreList.isEmpty) {
-      debug('invalid rate score list: no available score types');
+      talker.error('invalid rate score list: no available score types');
       return null;
     }
 
@@ -164,7 +164,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
         pid == null ||
         referer == null ||
         handleKey == null) {
-      debug(
+      talker.error(
         'invalid rate window info: invalid form data: formHash=$formHash, '
         'tid=$tid, pid=$pid, referer=$referer, handleKey=$handleKey',
       );
@@ -202,7 +202,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
         allowedRange == null ||
         allowedRangeDescription == null ||
         remaining == null) {
-      debug(
+      talker.error(
         'invalid rate score row: name=$name, id=$id, '
         'allowedRange=$allowedRange, '
         'allowedRangeDescription=$allowedRangeDescription',

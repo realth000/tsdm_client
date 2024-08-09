@@ -4,7 +4,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/notification/bloc/broadcast_message_detail_cubit.mapper.dart';
@@ -12,7 +12,7 @@ part 'broadcast_message_detail_state.dart';
 
 /// Cubit of broadcast message detail page.
 final class BroadcastMessageDetailCubit
-    extends Cubit<BroadcastMessageDetailState> {
+    extends Cubit<BroadcastMessageDetailState> with LoggerMixin {
   /// Constructor.
   BroadcastMessageDetailCubit(this._notificationRepository)
       : super(const BroadcastMessageDetailState());
@@ -32,7 +32,7 @@ final class BroadcastMessageDetailCubit
           .parseToDateTimeUtc8();
       final messageNode = infoNode?.querySelector('dl > dd > p.pm_smry');
       if (datetime == null || messageNode == null) {
-        debug('failed to build broadcast detail message page: '
+        error('failed to build broadcast detail message page: '
             'datetime=$datetime, messageNode=${messageNode?.innerHtml}');
         emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
         return;
@@ -45,7 +45,7 @@ final class BroadcastMessageDetailCubit
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch broadcast message detail: $e');
+      error('failed to fetch broadcast message detail: $e');
       emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
     }
   }

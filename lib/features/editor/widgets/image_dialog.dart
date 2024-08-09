@@ -11,7 +11,7 @@ import 'package:tsdm_client/features/cache/repository/image_cache_repository.dar
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// Show a picture dialog to add picture into editor.
 Future<BBCodeImageInfo?> showImagePicker(
@@ -45,7 +45,7 @@ class _ImageDialog extends StatefulWidget {
   State<_ImageDialog> createState() => _ImageDialogState();
 }
 
-class _ImageDialogState extends State<_ImageDialog> {
+class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
   final formKey = GlobalKey<FormState>();
   final urlFieldKey = GlobalKey<FormFieldState<String>>();
 
@@ -83,11 +83,13 @@ class _ImageDialogState extends State<_ImageDialog> {
 
   Future<void> _fillImageSize(BuildContext context, String url) async {
     try {
-      final cacheInfo = getIt.get<ImageCacheProvider>().getCacheInfo(url);
+      final cacheInfo = await getIt.get<ImageCacheProvider>().getCacheInfo(url);
       if (cacheInfo == null) {
         // Not cached
         // FIXME: SO CONFUSING
-        await context.read<ImageCacheRepository>().updateImageCache(url);
+        if (context.mounted) {
+          await context.read<ImageCacheRepository>().updateImageCache(url);
+        }
       }
       final imageData = await getIt.get<ImageCacheProvider>().getCache(url);
       final uiImage = await decodeImageFromList(imageData);
@@ -100,7 +102,7 @@ class _ImageDialogState extends State<_ImageDialog> {
       });
     } catch (e, _) {
       // Directly cache Future.error.
-      debug('[editor] failed to fill image size: invalid image: $e');
+      error('failed to fill image size: invalid image: $e');
       return;
     }
   }

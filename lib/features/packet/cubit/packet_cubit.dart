@@ -2,13 +2,13 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/packet/cubit/packet_cubit.mapper.dart';
 part 'packet_state.dart';
 
 /// Cubit of read packets.
-class PacketCubit extends Cubit<PacketState> {
+class PacketCubit extends Cubit<PacketState> with LoggerMixin {
   /// Constructor.
   PacketCubit({required PacketRepository packetRepository})
       : _packetRepository = packetRepository,
@@ -36,7 +36,7 @@ class PacketCubit extends Cubit<PacketState> {
         emit(state.copyWith(status: PacketStatus.failed, reason: result));
       }
     } on HttpRequestFailedException catch (e) {
-      debug('failed to receive packet: $e');
+      error('failed to receive packet: $e');
       emit(
         state.copyWith(
           status: PacketStatus.failed,

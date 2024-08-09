@@ -6,14 +6,14 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// The repository of bbcode editor features injected into bbcode editor.
 ///
 /// Provide materials including:
 /// * Emoji
 ///
-final class EditorRepository {
+final class EditorRepository with LoggerMixin {
   /// Url to fetch all available emoji info.
   ///
   /// It's a one-line javascript file expected in the following format:
@@ -158,7 +158,7 @@ final class EditorRepository {
     // Retry until success.
     while (true) {
       if (retryMaxTimes <= 0) {
-        debug('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
+        error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
             'exceed max retry times');
         return false;
       }
@@ -190,12 +190,12 @@ final class EditorRepository {
   ///
   /// Return false when single emoji file exceed max retry times.
   Future<bool> loadEmojiFromServer() async {
-    debug('load emoji from server');
+    info('load emoji from server');
     // TODO: Use injected net client.
-    final netClient = NetClientProvider(disableCookie: true);
+    final netClient = getIt.get<NetClientProvider>();
     final resp = await netClient.get(_emojiInfoUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      debug('failed to load emoji info: StatusCode=${resp.statusCode}');
+      error('failed to load emoji info: StatusCode=${resp.statusCode}');
       return false;
     }
     emojiGroupList = _parseEmojiInfo(resp.data as String);
@@ -212,6 +212,7 @@ final class EditorRepository {
       debug('download for emoji group: ${emojiGroup.id}');
       await Future.wait(downloadList);
     }
+    info('load emoji from server finished');
     return true;
   }
 

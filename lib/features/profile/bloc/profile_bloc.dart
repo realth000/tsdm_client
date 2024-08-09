@@ -6,8 +6,8 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/profile/models/models.dart';
-import 'package:tsdm_client/shared/repositories/profile_repository/profile_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../../generated/features/profile/bloc/profile_bloc.mapper.dart';
@@ -23,7 +23,7 @@ typedef ProfileEmitter = Emitter<ProfileState>;
 ///
 /// Actually other user's profile page should have a similar bloc but
 /// without [ProfileStatus.needLogin] status.
-class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
+class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
   /// Constructor.
   ProfileBloc({
     required ProfileRepository profileRepository,
@@ -74,7 +74,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       final userProfile = _buildProfile(document);
       if (userProfile == null) {
-        debug('failed to parse user profile');
+        error('failed to parse user profile');
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
@@ -89,7 +89,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load profile: $e');
+      error('failed to load profile: $e');
       emit(state.copyWith(status: ProfileStatus.failed));
     }
   }
@@ -107,7 +107,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       final userProfile = _buildProfile(document);
       if (userProfile == null) {
-        debug('failed to parse user profile');
+        error('failed to parse user profile');
         emit(state.copyWith(status: ProfileStatus.failed));
         return;
       }
@@ -122,7 +122,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to refresh profile: $e');
+      error('failed to refresh profile: $e');
       emit(state.copyWith(status: ProfileStatus.failed));
       return;
     }

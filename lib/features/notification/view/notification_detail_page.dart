@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
@@ -39,7 +39,7 @@ class NoticeDetailPage extends StatefulWidget {
   State<NoticeDetailPage> createState() => _NoticeDetailPage();
 }
 
-class _NoticeDetailPage extends State<NoticeDetailPage> {
+class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
   final _replyBarController = ReplyBarController();
 
   String? _tid;
@@ -163,7 +163,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> {
                       if (_tid == null || _page == null || _pid == null) {
                         return;
                       }
-                      debug('find post: tid:$_tid, page:$_page, pid:$_pid');
+                      info('find post: tid:$_tid, page:$_page, pid:$_pid');
                       await context.pushNamed(
                         ScreenPaths.thread,
                         queryParameters: <String, String>{

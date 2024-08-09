@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
@@ -38,7 +38,7 @@ class RatePostPage extends StatefulWidget {
   State<RatePostPage> createState() => _RatePostPageState();
 }
 
-class _RatePostPageState extends State<RatePostPage> {
+class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
   final formKey = GlobalKey<FormState>();
 
   Map<String, TextEditingController>? scoreMap;
@@ -85,7 +85,7 @@ class _RatePostPageState extends State<RatePostPage> {
 
   Future<void> _rate(BuildContext context, RateWindowInfo info) async {
     if (formKey.currentState == null || !(formKey.currentState!).validate()) {
-      debug('rate post page validate failed');
+      error('rate post page validate failed');
       return;
     }
     final tid = info.tid;

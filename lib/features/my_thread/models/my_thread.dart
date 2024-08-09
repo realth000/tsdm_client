@@ -116,7 +116,7 @@ class MyThread with MyThreadMappable {
         latestReplyAuthorName == null ||
         latestReplyAuthorUrl == null ||
         latestReplyTime == null) {
-      debug('''
+      talker.error('''
 failed to parse MyThread node: {
   title=$title,
   threadID=$threadID,

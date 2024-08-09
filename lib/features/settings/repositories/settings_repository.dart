@@ -4,20 +4,23 @@ import 'dart:io';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
-import 'package:tsdm_client/features/settings/repositories/mixin/settings_default_mixin.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/models/settings_map.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/database/database/database.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 typedef _SK = SettingsKeys;
 
 extension _ExtractExt on List<SettingsEntity> {
-  T extract<T>(String name, T fallback) {
-    final v = firstWhereOrNull((e) => e.name == name);
+  T extract<T>(SettingsKeys settings) {
+    assert(
+      T == settings.type,
+      'Settings value type and expected extract type MUST equal',
+    );
+
+    final v = firstWhereOrNull((e) => e.name == settings.name);
     if (v == null) {
-      return fallback;
+      return settings.defaultValue as T;
     }
     return (switch (T) {
           int => v.intValue,
@@ -26,14 +29,14 @@ extension _ExtractExt on List<SettingsEntity> {
           bool => v.boolValue,
           _ => null,
         } ??
-        fallback) as T;
+        settings.defaultValue) as T;
   }
 }
 
 /// Settings repository of this app.
 ///
 /// **Need to call dispose** before dispose.
-final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
+final class SettingsRepository with LoggerMixin {
   /// Constructor.
   SettingsRepository(this._storage);
 
@@ -68,48 +71,30 @@ final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
     final s = await _storage.getAllSettings();
 
     return SettingsMap(
-      netClientAccept: s.extract(_SK.netClientAccept, defaultNetClientAccept),
-      netClientAcceptEncoding: s.extract(
-        _SK.netClientAcceptEncoding,
-        defaultNetClientAcceptEncoding,
-      ),
-      netClientAcceptLanguage: s.extract(
-        _SK.netClientAcceptLanguage,
-        defaultNetClientAcceptLanguage,
-      ),
-      netClientUserAgent:
-          s.extract(_SK.netClientUserAgent, defaultNetClientUserAgent),
-      windowWidth: s.extract(_SK.windowWidth, defaultWindowWidth),
-      windowHeight: s.extract(_SK.windowHeight, defaultWindowHeight),
-      windowPositionDx:
-          s.extract(_SK.windowPositionDx, defaultWindowPositionDx),
-      windowPositionDy:
-          s.extract(_SK.windowPositionDy, defaultWindowPositionDy),
-      windowInCenter: s.extract(_SK.windowInCenter, defaultWindowInCenter),
-      loginUsername: s.extract(_SK.loginUsername, defaultLoginUsername),
-      loginUid: s.extract(_SK.loginUid, defaultLoginUid),
-      themeMode: s.extract(_SK.themeMode, defaultThemeMode),
-      locale: s.extract(_SK.locale, defaultLocale),
-      checkinFeeling: s.extract(_SK.checkinFeeling, defaultCheckInFeeling),
-      checkinMessage: s.extract(_SK.checkinMessage, defaultCheckInMessage),
-      showShortcutInForumCard: s.extract(
-        _SK.showShortcutInForumCard,
-        defaultShowRedirectInForumCard,
-      ),
-      accentColor: s.extract(_SK.accentColor, defaultAccentColor),
-      showUnreadInfoHint:
-          s.extract(_SK.showUnreadInfoHint, defaultShowUnreadInfoHint),
-      doublePressExit: s.extract(_SK.doublePressExit, defaultDoublePressExit),
-      threadReverseOrder:
-          s.extract(_SK.threadReverseOrder, defaultThreadReverseOrder),
-      threadCardInfoRowAlignCenter: s.extract(
-        _SK.threadCardInfoRowAlignCenter,
-        defaultThreadCardInfoRowAlignCenter,
-      ),
-      threadCardShowLastReplyAuthor: s.extract(
-        SettingsKeys.threadCardShowLastReplyAuthor,
-        defaultThreadCardShowLastReplyAuthor,
-      ),
+      netClientAccept: s.extract(_SK.netClientAccept),
+      netClientAcceptEncoding: s.extract(_SK.netClientAcceptEncoding),
+      netClientAcceptLanguage: s.extract(_SK.netClientAcceptLanguage),
+      netClientUserAgent: s.extract(_SK.netClientUserAgent),
+      windowWidth: s.extract(_SK.windowWidth),
+      windowHeight: s.extract(_SK.windowHeight),
+      windowPositionDx: s.extract(_SK.windowPositionDx),
+      windowPositionDy: s.extract(_SK.windowPositionDy),
+      windowInCenter: s.extract(_SK.windowInCenter),
+      loginUsername: s.extract(_SK.loginUsername),
+      loginUid: s.extract(_SK.loginUid),
+      loginEmail: s.extract(_SK.loginEmail),
+      themeMode: s.extract(_SK.themeMode),
+      locale: s.extract(_SK.locale),
+      checkinFeeling: s.extract(_SK.checkinFeeling),
+      checkinMessage: s.extract(_SK.checkinMessage),
+      showShortcutInForumCard: s.extract(_SK.showShortcutInForumCard),
+      accentColor: s.extract(_SK.accentColor),
+      showUnreadInfoHint: s.extract(_SK.showUnreadInfoHint),
+      doublePressExit: s.extract(_SK.doublePressExit),
+      threadReverseOrder: s.extract(_SK.threadReverseOrder),
+      threadCardInfoRowAlignCenter: s.extract(_SK.threadCardInfoRowAlignCenter),
+      threadCardShowLastReplyAuthor:
+          s.extract(SettingsKeys.threadCardShowLastReplyAuthor),
     );
   }
 
@@ -119,63 +104,53 @@ final class SettingsRepository with SettingsDefaultMapMixin, LoggerMixin {
   }
 
   /// Get settings [key] with value in type [T}.
-  Future<T?> getValue<T>(String key) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to getValue: unknown settings name "$key"');
-      return null;
-    }
-    if (settingsTypeMap[key] != T) {
-      error('failed to getValue: settings type mismatch: "$key" is not $T ');
-      return null;
-    }
+  Future<T> getValue<T>(SettingsKeys key) async {
+    assert(
+      T == key.type,
+      'Settings value type and expected extract type MUST equal',
+    );
 
+    final name = key.name;
     return await switch (T) {
-      int => _storage.getInt(key),
-      double => _storage.getDouble(key),
-      String => _storage.getString(key),
-      bool => _storage.getBool(key),
+      int => _storage.getInt(name),
+      double => _storage.getDouble(name),
+      String => _storage.getString(name),
+      bool => _storage.getBool(name),
       _ => () {
-          error('failed to getValue for key $key: unsupported type $T');
-          return null;
-        }()
-    } as T?;
+            error('failed to getValue for key $key: unsupported type $T');
+            return null;
+          }() ??
+          key.defaultValue
+    } as T;
   }
 
   /// Delete the settings record in database.
-  Future<void> deleteValue(String key) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to setValue: unknown settings name "$key"');
-      return;
-    }
-
-    await _storage.deleteKey(key);
-
-    _state = _state.copyWithKey(key, null);
+  Future<void> deleteValue(SettingsKeys key) async {
+    await _storage.deleteKey(key.name);
+    _state = _state.copyWithKey(key.name, null);
     _controller.add(_state);
   }
 
   /// Save settings [key] with value [value].
-  Future<void> setValue<T>(String key, T value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to setValue: unknown settings name "$key"');
-      return;
-    }
-    if (settingsTypeMap[key] != T) {
-      error('failed to setValue: settings type mismatch: "$key" is not $T ');
-      return;
-    }
+  Future<void> setValue<T>(SettingsKeys key, T value) async {
+    assert(
+      T == key.type,
+      'Settings value type and expected extract type MUST equal',
+    );
+
+    final name = key.name;
     final _ = await switch (T) {
-      int => _storage.saveInt(key, value as int),
-      double => _storage.saveDouble(key, value as double),
-      String => _storage.saveString(key, value as String),
-      bool => _storage.saveBool(key, value: value as bool),
+      int => _storage.saveInt(name, value as int),
+      double => _storage.saveDouble(name, value as double),
+      String => _storage.saveString(name, value as String),
+      bool => _storage.saveBool(name, value: value as bool),
       final t => () {
           error('failed to save settings for key $key:'
               ' unsupported type in storage: $t');
         }(),
     };
 
-    _state = _state.copyWithKey(key, value);
+    _state = _state.copyWithKey(name, value);
     _controller.add(_state);
   }
 

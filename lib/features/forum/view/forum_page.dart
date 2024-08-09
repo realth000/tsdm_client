@@ -15,8 +15,8 @@ import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
-import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
@@ -48,7 +48,7 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, LoggerMixin {
   final _pinnedScrollController = ScrollController();
   final _pinnedRefreshController =
       EasyRefreshController(controlFinishRefresh: true);
@@ -290,7 +290,7 @@ class _ForumPageState extends State<ForumPage>
           return;
         }
         if (state.currentPage >= state.totalPages) {
-          debug('already in last page');
+          info('already in last page');
           _threadRefreshController.finishLoad(IndicatorResult.noMore);
           showNoMoreSnackBar(context);
           return;
@@ -368,7 +368,7 @@ class _ForumPageState extends State<ForumPage>
             ),
           ],
         ),
-      ForumStatus.failed => buildRetryButton(context, () {
+      ForumStatus.failure => buildRetryButton(context, () {
           context
               .read<ForumBloc>()
               .add(ForumLoadMoreRequested(state.currentPage));
@@ -440,7 +440,7 @@ class _ForumPageState extends State<ForumPage>
       ],
       child: BlocListener<ForumBloc, ForumState>(
         listener: (context, state) {
-          if (state.status == ForumStatus.failed) {
+          if (state.status == ForumStatus.failure) {
             showFailedToLoadSnackBar(context);
           }
         },

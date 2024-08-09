@@ -1,14 +1,15 @@
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/settings_provider/settings_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 /// Repository to get profile page.
-class ProfileRepository {
+final class ProfileRepository with LoggerMixin {
   uh.Document? _loggedUserDocument;
 
   /// Check has cached html [_loggedUserDocument] for logged user or not.
@@ -48,16 +49,21 @@ class ProfileRepository {
       isLoggedUserProfile = false;
     } else {
       // Fetching logged user profile.
-      final loggedUser = getIt.get<SettingsProvider>().getLoginInfo();
-      if ((loggedUser.$1?.isEmpty ?? true) ||
-          (loggedUser.$2 == null || (loggedUser.$2! < 0))) {
+      final settings = getIt.get<SettingsRepository>();
+      final loginUsername =
+          await settings.getValue<String>(SettingsKeys.loginUsername);
+      final loginUid = await settings.getValue<int>(SettingsKeys.loginUid);
+      final loginEmail =
+          await settings.getValue<String>(SettingsKeys.loginEmail);
+      // TODO: Check if this condition check works during login progress.
+      if (loginUsername.isEmpty || loginUid == 0 || loginEmail.isEmpty) {
         // Not logged in.
         return null;
       }
       if (!force && _loggedUserDocument != null) {
         return _loggedUserDocument;
       }
-      targetUrl = '$uidProfilePage${loggedUser.$2}';
+      targetUrl = '$uidProfilePage$loginUid';
       isLoggedUserProfile = true;
     }
 
@@ -69,7 +75,7 @@ class ProfileRepository {
       }
       return document;
     } on HttpRequestFailedException catch (e) {
-      debug('failed to get profile: $targetUrl, $e');
+      error('failed to get profile: $targetUrl, $e');
       rethrow;
     }
   }
