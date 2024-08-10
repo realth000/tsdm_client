@@ -6,7 +6,7 @@ class HttpRequestFailedException implements Exception {
   const HttpRequestFailedException(this.statusCode);
 
   /// Returned status code.
-  final int statusCode;
+  final int? statusCode;
 }
 
 /// Exception represents that the SSL handshake process is terminated

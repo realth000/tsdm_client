@@ -23,7 +23,7 @@ final class ChatRepository {
           formatChatFullHistoryUrl(uid, page: page),
         );
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     return document;
@@ -38,7 +38,7 @@ final class ChatRepository {
   Future<uh.Document> fetchChat(String uid) async {
     final resp = await getIt.get<NetClientProvider>().get(formatChatUrl(uid));
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final xmlDoc = parseXmlDocument(resp.data as String);
     final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;

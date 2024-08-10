@@ -23,7 +23,7 @@ class ForumRepository {
     final netClient = getIt.get<NetClientProvider>();
     final resp = await netClient.getUri(fetchUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     return document;

@@ -14,6 +14,8 @@ import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart'
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
+import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
@@ -55,7 +57,10 @@ class App extends StatelessWidget {
           create: (_) => EditorRepository()..loadEmojiFromServer(),
         ),
         RepositoryProvider<ImageCacheRepository>(
-          create: (_) => ImageCacheRepository(getIt(), getIt()),
+          create: (_) => ImageCacheRepository(
+            getIt(),
+            getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie),
+          ),
         ),
         RepositoryProvider<ImageCacheTriggerCubit>(
           create: (context) =>
@@ -65,8 +70,7 @@ class App extends StatelessWidget {
           create: (context) => SettingsBloc(
             fragmentsRepository:
                 RepositoryProvider.of<FragmentsRepository>(context),
-            settingsRepository:
-                RepositoryProvider.of<SettingsRepository>(context),
+            settingsRepository: getIt.get<SettingsRepository>(),
           ),
         ),
       ],

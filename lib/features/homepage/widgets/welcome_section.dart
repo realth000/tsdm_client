@@ -154,9 +154,8 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     final hasUnreadMessage = homePageState.hasUnreadMessage;
 
     late final Widget noticeIcon;
-    final showUnreadHint = RepositoryProvider.of<SettingsRepository>(context)
-        .currentSettings
-        .showUnreadInfoHint;
+    final showUnreadHint =
+        getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
     if (showUnreadHint) {
       if (unreadNoticeCount > 0) {
         noticeIcon = Badge(

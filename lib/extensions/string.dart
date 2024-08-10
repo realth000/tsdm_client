@@ -259,3 +259,19 @@ extension ImageCacheFileName on String {
     return _uuid.v5(Namespace.URL, this);
   }
 }
+
+/// Make string secure.
+extension ObsecureStringExt on String {
+  /// Convert first [length] characters into "*".
+  String obscured([int length = 8]) {
+    if (isEmpty) {
+      return '<empty string>';
+    }
+
+    if (this.length <= length) {
+      return List.generate(this.length, (_) => '*').join();
+    }
+
+    return replaceRange(0, length, List.generate(length, (_) => '*').join());
+  }
+}

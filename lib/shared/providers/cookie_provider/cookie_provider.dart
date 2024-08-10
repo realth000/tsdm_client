@@ -51,14 +51,14 @@ class CookieProvider with LoggerMixin {
 
       Map<String, dynamic>? databaseCookie;
 
+      final storage = getIt.get<StorageProvider>();
+
       if (uid != null) {
-        databaseCookie = getIt.get<StorageProvider>().getCookieByUidSync(uid);
+        databaseCookie = storage.getCookieByUidSync(uid);
       } else if (username != null) {
-        databaseCookie =
-            getIt.get<StorageProvider>().getCookieByUsernameSync(username);
+        databaseCookie = storage.getCookieByUsernameSync(username);
       } else if (email != null) {
-        databaseCookie =
-            getIt.get<StorageProvider>().getCookieByEmailSync(email);
+        databaseCookie = storage.getCookieByEmailSync(email);
       }
 
       var cookie = <String, String>{};
@@ -66,20 +66,24 @@ class CookieProvider with LoggerMixin {
         cookie = Map.castFrom(databaseCookie);
       }
 
-      if (cookie.keys.isNotEmpty) {
-        debug('load cookie with user info');
-        return CookieData.withUserInfo(
-          userLoginInfo: userLoginInfo,
-          cookie: cookie,
-        );
-      }
+      debug('load cookie with user info');
+      return CookieData.withUserInfo(
+        userLoginInfo: userLoginInfo,
+        cookie: cookie,
+      );
     }
 
-    final loggedUid = getIt.get<SettingsRepository>().currentSettings.loginUid;
+    final settings = getIt.get<SettingsRepository>().currentSettings;
+    final loggedUid = settings.loginUid;
+    final userInfo = UserLoginInfo(
+      username: settings.loginUsername,
+      uid: loggedUid,
+      email: settings.loginEmail,
+    );
     // Valid uid > 0.
     if (loggedUid <= 0) {
       info('load empty cookie');
-      return CookieData();
+      return CookieData.withUserInfo(userLoginInfo: userInfo, cookie: {});
     }
 
     // Has user login before, load cookie.
@@ -88,14 +92,14 @@ class CookieProvider with LoggerMixin {
     if (databaseCookie == null) {
       error(
         'failed to init cookie: current login user '
-        'uid=$loggedUid not found in database',
+        'id not found in database',
       );
-      return CookieData();
+      return CookieData.withUserInfo(userLoginInfo: userInfo, cookie: {});
     }
 
-    debug('load cookie from last logged user uid=$loggedUid');
+    debug('load cookie from last logged user');
     return CookieData.withUserInfo(
-      userLoginInfo: UserLoginInfo(username: null, uid: loggedUid, email: null),
+      userLoginInfo: userInfo,
       cookie: databaseCookie,
     );
   }

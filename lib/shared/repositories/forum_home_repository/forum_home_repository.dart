@@ -33,6 +33,7 @@ final class ForumHomeRepository with LoggerMixin {
     }
     try {
       _document = await _fetchForumHome();
+      debug('use fetched home page');
       return _document!;
     } on HttpRequestFailedException {
       rethrow;
@@ -64,11 +65,12 @@ final class ForumHomeRepository with LoggerMixin {
   ///
   /// * [HttpHandshakeFailedException] if GET request failed.
   Future<uh.Document> _fetchForumHome() async {
+    debug('fetch forum home from server');
     final netClient = getIt.get<NetClientProvider>();
     try {
       final resp = await netClient.get(homePage);
       if (resp.statusCode != HttpStatus.ok) {
-        throw HttpRequestFailedException(resp.statusCode!);
+        throw HttpRequestFailedException(resp.statusCode);
       }
       final document = parseHtmlDocument(resp.data as String);
       return document;

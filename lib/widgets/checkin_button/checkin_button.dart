@@ -74,7 +74,7 @@ class CheckInButton extends StatelessWidget {
         checkinProvider: getIt.get<CheckinProvider>(),
         authenticationRepository:
             RepositoryProvider.of<AuthenticationRepository>(context),
-        settingsRepository: RepositoryProvider.of<SettingsRepository>(context),
+        settingsRepository: getIt.get<SettingsRepository>(),
       ),
       child: BlocListener<CheckinButtonBloc, CheckinButtonState>(
         listener: (context, state) async {

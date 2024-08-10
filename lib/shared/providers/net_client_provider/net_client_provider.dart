@@ -35,7 +35,7 @@ extension _WithFormExt<T> on Dio {
 /// Also a wrapper of [Dio] instance.
 ///
 /// Instance should be unique when making requests.
-class NetClientProvider {
+final class NetClientProvider with LoggerMixin {
   /// Constructor.
   NetClientProvider._(Dio dio) : _dio = dio;
 
@@ -217,9 +217,6 @@ class NetClientProvider {
     );
   }
 }
-
-/// Alias class to register as http client without cookie
-typedef NetClientNoCookieProvider = NetClientProvider;
 
 /// Handle exceptions during web request.
 class _ErrorHandler extends Interceptor with LoggerMixin {

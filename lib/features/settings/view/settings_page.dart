@@ -14,6 +14,7 @@ import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/thread_card_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
@@ -57,8 +58,8 @@ class _SettingsPageState extends State<SettingsPage> {
   Future<(Color?, bool)?> _showAccentColorPickerDialog(
     BuildContext context,
   ) async {
-    final colorValue = await RepositoryProvider.of<SettingsRepository>(context)
-        .getValue<int>(SettingsKeys.accentColor);
+    final colorValue =
+        getIt.get<SettingsRepository>().currentSettings.accentColor;
     if (!context.mounted) {
       return null;
     }

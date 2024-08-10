@@ -59,7 +59,7 @@ final class PurchaseRepository with LoggerMixin {
     if (resp.statusCode != HttpStatus.ok) {
       // Network error.
       error('fetch purchase dialog failed: code${resp.statusCode}');
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final dataList = (resp.data as String).split('\n');
     final inputList =
@@ -132,7 +132,7 @@ final class PurchaseRepository with LoggerMixin {
         .postForm(_purchaseTarget, data: body);
 
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     if (!(resp.data as String).contains('购买成功')) {

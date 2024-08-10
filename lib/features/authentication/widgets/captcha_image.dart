@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Captcha image size is 320x150.
@@ -42,7 +43,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
   Widget build(BuildContext context) {
     debug('fetching login captcha');
     f = getIt
-        .get<NetClientProvider>()
+        .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
         .getImageFromUri(
           CaptchaImage._fakeFormVerifyUri,
           // Uri.parse('https://source.unsplash.com/random/320x150'),

@@ -8,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// A provider that provides cached image.
@@ -96,7 +97,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
         // When error occurred in `getCache`, it means the image is not
         // correctly cached, fetch from network.
         final resp = await getIt
-            .get<NetClientProvider>()
+            .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
             .getImage(imageUrl)
             .onError((e, st) async {
           // Error occurred when fetching this image.
@@ -108,7 +109,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
           if (!context.mounted) {
             return Future.value(Response(requestOptions: RequestOptions()));
           }
-          return getIt.get<NetClientProvider>().getImage(fallbackImageUrl!);
+          return getIt
+              .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+              .getImage(fallbackImageUrl!);
         });
         if (!context.mounted) {
           return Uint8List(0);

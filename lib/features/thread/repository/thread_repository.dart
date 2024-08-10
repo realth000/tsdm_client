@@ -71,7 +71,7 @@ class ThreadRepository {
 
     final resp = await getIt.get<NetClientProvider>().get(_threadUrl!);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);

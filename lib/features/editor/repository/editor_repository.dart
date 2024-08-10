@@ -6,6 +6,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// The repository of bbcode editor features injected into bbcode editor.
@@ -192,7 +193,8 @@ final class EditorRepository with LoggerMixin {
   Future<bool> loadEmojiFromServer() async {
     info('load emoji from server');
     // TODO: Use injected net client.
-    final netClient = getIt.get<NetClientProvider>();
+    final netClient =
+        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
     final resp = await netClient.get(_emojiInfoUrl);
     if (resp.statusCode != HttpStatus.ok) {
       error('failed to load emoji info: StatusCode=${resp.statusCode}');

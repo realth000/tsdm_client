@@ -20,7 +20,7 @@ Future<Map<UserLoginInfo, Cookie>> preloadCookie(AppDatabase db) async {
         uid: e.uid,
         email: e.email,
       ),
-      jsonEncode(e.cookie) as Map<String, String>,
+      jsonDecode(e.cookie) as Map<String, dynamic>,
     ),
   );
 
@@ -70,15 +70,6 @@ class StorageProvider with LoggerMixin {
         ?.value;
   }
 
-  /// Get [Cookie] with [uid].
-  Future<Cookie?> getCookieByUid(int uid) async {
-    final cookieEntity = await CookieDao(_db).selectCookieByUid(uid);
-    if (cookieEntity == null) {
-      return null;
-    }
-    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
-  }
-
   /// Get [Cookie] with [username] from cookie cached saved in memory.
   ///
   /// Return null if not found.
@@ -89,15 +80,6 @@ class StorageProvider with LoggerMixin {
     return _cookieCache.entries
         .firstWhereOrNull((e) => e.key.username == username)
         ?.value;
-  }
-
-  /// Get [Cookie] with [username].
-  Future<Cookie?> getCookieByUsername(String username) async {
-    final cookieEntity = await CookieDao(_db).selectCookieByUsername(username);
-    if (cookieEntity == null) {
-      return null;
-    }
-    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
   }
 
   /// Get [Cookie] with [email] from cookie cached saved in memory.
@@ -112,15 +94,6 @@ class StorageProvider with LoggerMixin {
         ?.value;
   }
 
-  /// Get [Cookie] with [email].
-  Future<Cookie?> getCookieByEmail(String email) async {
-    final cookieEntity = await CookieDao(_db).selectCookieByEmail(email);
-    if (cookieEntity == null) {
-      return null;
-    }
-    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
-  }
-
   /// Save cookie with completed user info.
   ///
   /// Required full user info and save by [uid] so that we handled some extreme
@@ -131,24 +104,36 @@ class StorageProvider with LoggerMixin {
     required String email,
     required Cookie cookie,
   }) async {
-    final currentCookie = (await getCookieByUid(uid)) ?? {};
+    final allCookie = getCookieByUidSync(uid) ?? {};
 
     // Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
-    currentCookie.addAll(cookie);
+    allCookie.addAll(cookie);
 
     // Update cookie cache.
     final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
-    _cookieCache[userInfo] = cookie;
+    _cookieCache[userInfo] = allCookie;
 
     await CookieDao(_db).upsertCookie(
       CookieCompanion(
         username: Value(username),
         uid: Value(uid),
         email: Value(email),
-        cookie: Value(jsonEncode(currentCookie)),
+        cookie: Value(jsonEncode(allCookie)),
       ),
     );
+  }
+
+  /// Only save cookie in memory cache.
+  Future<void> saveCookieInCache({
+    required Cookie cookie,
+    String? username,
+    int? uid,
+    String? email,
+  }) async {
+    // Update cookie cache.
+    final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
+    _cookieCache[userInfo] = cookie;
   }
 
   /// Delete cookie for [uid].
@@ -156,6 +141,30 @@ class StorageProvider with LoggerMixin {
     // Update cookie cache.
     _cookieCache.removeWhere((e, _) => e.uid == uid);
     final affectedRows = await CookieDao(_db).deleteCookieByUid(uid);
+    return affectedRows != 0;
+  }
+
+  /// Delete stored cookie with [userInfo].
+  ///
+  /// uid > username > email.
+  Future<bool> deleteCookieByUserInfo(UserLoginInfo userInfo) async {
+    final username = userInfo.username;
+    final uid = userInfo.uid;
+    final email = userInfo.email;
+    final int affectedRows;
+    if (uid != null) {
+      _cookieCache.removeWhere((e, _) => e.uid == uid);
+      affectedRows = await CookieDao(_db).deleteCookieByUid(uid);
+    } else if (username != null) {
+      _cookieCache.removeWhere((e, _) => e.username == username);
+      affectedRows = await CookieDao(_db).deleteCookieByUsername(username);
+    } else if (email != null) {
+      _cookieCache.removeWhere((e, _) => e.email == email);
+      affectedRows = await CookieDao(_db).deleteCookieByEmail(email);
+    } else {
+      error('intend to delete cookie with empty user info');
+      affectedRows = 0;
+    }
     return affectedRows != 0;
   }
 

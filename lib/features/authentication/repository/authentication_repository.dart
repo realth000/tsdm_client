@@ -97,7 +97,7 @@ class AuthenticationRepository with LoggerMixin {
     // 其中"main_message_"后面的是本次登录的loginHash，登录时需要加到url上
     final rawDataResp = await getIt.get<NetClientProvider>().get(_fakeFormUrl);
     if (rawDataResp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(rawDataResp.statusCode!);
+      throw HttpRequestFailedException(rawDataResp.statusCode);
     }
     final data = rawDataResp.data as String;
     final match = _layerLoginRe.firstMatch(data);
@@ -147,10 +147,11 @@ class AuthenticationRepository with LoggerMixin {
         ),
     };
 
+    debug('login with user info: $userLoginInfo');
     final netClient = NetClientProvider.build(userLoginInfo: userLoginInfo);
     final resp = await netClient.postForm(target, data: credential.toJson());
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     final messageNode = document.getElementById('messagetext');
@@ -244,7 +245,7 @@ class AuthenticationRepository with LoggerMixin {
     final netClient = getIt.get<NetClientProvider>();
     final resp = await netClient.get(_checkAuthUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     final userInfo = _parseUserInfoFromDocument(document);
@@ -264,7 +265,7 @@ class AuthenticationRepository with LoggerMixin {
 
     final logoutResp = await netClient.get(_buildLogoutUrl(formHash));
     if (logoutResp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(logoutResp.statusCode!);
+      throw HttpRequestFailedException(logoutResp.statusCode);
     }
     final logoutDocument = parseHtmlDocument(logoutResp.data as String);
     final logoutMessage = logoutDocument.getElementById('messagetext');
@@ -352,6 +353,7 @@ class AuthenticationRepository with LoggerMixin {
   }
 
   Future<void> _saveLoggedUserInfo(UserLoginInfo userInfo) async {
+    debug('save logged user info: $userInfo');
     // Save logged user info in settings.
     final settings = getIt.get<SettingsRepository>();
     await settings.setValue<String>(

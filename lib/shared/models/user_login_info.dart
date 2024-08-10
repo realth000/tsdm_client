@@ -9,7 +9,12 @@ part of 'models.dart';
 /// * Email
 ///
 /// Use this model to store that state.
-@MappableClass()
+@MappableClass(
+  generateMethods: GenerateMethods.encode |
+      GenerateMethods.decode |
+      GenerateMethods.copy |
+      GenerateMethods.equals,
+)
 final class UserLoginInfo with UserLoginInfoMappable {
   /// Constructor.
   const UserLoginInfo({
@@ -29,4 +34,18 @@ final class UserLoginInfo with UserLoginInfoMappable {
 
   /// Check if info is completed.
   bool get isComplete => username != null && uid != null && email != null;
+
+  /// Check if all fields in user info is empty.
+  ///
+  /// Usually in some wrong state where we lost user info.
+  bool get isEmpty => username == null && uid == null && email == null;
+
+  @override
+  String toString() {
+    // Do NOT print detail.
+    return 'UserLoginInfo{ '
+        'username=${username?.obscured()}, '
+        'uid=${uid == null ? "null" : "<uid>"}, '
+        'email=${email?.obscured()}}';
+  }
 }

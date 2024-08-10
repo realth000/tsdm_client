@@ -34,8 +34,18 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
     return into(cookie).insertOnConflictUpdate(cookieCompanion);
   }
 
+  /// Delete cookie by user's [username].
+  Future<int> deleteCookieByUsername(String username) async {
+    return (delete(cookie)..where((e) => e.username.equals(username))).go();
+  }
+
   /// Delete cookie by user's [uid].
   Future<int> deleteCookieByUid(int uid) async {
     return (delete(cookie)..where((e) => e.uid.equals(uid))).go();
+  }
+
+  /// Delete cookie by user's [email].
+  Future<int> deleteCookieByEmail(String email) async {
+    return (delete(cookie)..where((e) => e.email.equals(email))).go();
   }
 }

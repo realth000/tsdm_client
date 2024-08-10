@@ -21,7 +21,7 @@ final class PostEditRepository {
   Future<uh.Document> fetchData(String url) async {
     final resp = await getIt.get<NetClientProvider>().get(url);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -98,7 +98,7 @@ final class PostEditRepository {
       );
     }
     if (resp.statusCode != HttpStatus.movedPermanently) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
   }
 }

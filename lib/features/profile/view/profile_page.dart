@@ -19,6 +19,7 @@ import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
@@ -125,9 +126,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     late final Widget noticeIcon;
     final showUnreadInfoHint =
-        RepositoryProvider.of<SettingsRepository>(context)
-            .currentSettings
-            .showUnreadInfoHint;
+        getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
 
     if (!context.mounted) {
       return sizedBoxEmpty;

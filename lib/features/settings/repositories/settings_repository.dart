@@ -111,17 +111,17 @@ final class SettingsRepository with LoggerMixin {
     );
 
     final name = key.name;
-    return await switch (T) {
+    final v = await switch (T) {
       int => _storage.getInt(name),
       double => _storage.getDouble(name),
       String => _storage.getString(name),
       bool => _storage.getBool(name),
       _ => () {
-            error('failed to getValue for key $key: unsupported type $T');
-            return null;
-          }() ??
-          key.defaultValue
-    } as T;
+          error('failed to getValue for key $key: unsupported type $T');
+          return null;
+        }()
+    };
+    return (v ?? key.defaultValue) as T;
   }
 
   /// Delete the settings record in database.

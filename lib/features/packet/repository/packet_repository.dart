@@ -16,7 +16,7 @@ final class PacketRepository {
   Future<uh.Document> receivePacket(String url) async {
     final resp = await getIt.get<NetClientProvider>().get(url);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     return document;

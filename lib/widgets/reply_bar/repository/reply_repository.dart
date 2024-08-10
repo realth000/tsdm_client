@@ -43,7 +43,7 @@ final class ReplyRepository with LoggerMixin {
     final replyWindowResp = await netClient.get(replyWindowUrl);
 
     if (replyWindowResp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(replyWindowResp.statusCode!);
+      throw HttpRequestFailedException(replyWindowResp.statusCode);
     }
 
     final replyWindowDoc = parseHtmlDocument(replyWindowResp.data as String);
@@ -142,7 +142,7 @@ final class ReplyRepository with LoggerMixin {
         );
 
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     if (!(resp.data as String).contains('回复发布成功')) {
       throw ReplyToThreadResultFailedException();
@@ -175,7 +175,7 @@ final class ReplyRepository with LoggerMixin {
           data: formData,
         );
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final data = resp.data as String;
@@ -214,7 +214,7 @@ final class ReplyRepository with LoggerMixin {
           data: formData,
         );
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final data = resp.data as String;

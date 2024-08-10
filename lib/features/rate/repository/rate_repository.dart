@@ -50,7 +50,7 @@ final class RateRepository with LoggerMixin {
           rateTarget._fillRateTarget(),
         );
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final xmlDoc = parseXmlDocument(resp.data as String);
     final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
@@ -85,7 +85,7 @@ final class RateRepository with LoggerMixin {
         .get<NetClientProvider>()
         .postForm(_rateTarget, data: formData);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final data = resp.data as String;

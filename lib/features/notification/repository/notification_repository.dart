@@ -61,10 +61,10 @@ final class NotificationRepository with LoggerMixin {
     final d1 = data[0];
     final d2 = data[1];
     if (d1.$2 != null) {
-      throw HttpRequestFailedException(d1.$2!);
+      throw HttpRequestFailedException(d1.$2);
     }
     if (d2.$2 != null) {
-      throw HttpRequestFailedException(d2.$2!);
+      throw HttpRequestFailedException(d2.$2);
     }
 
     // Filter duplicate notices.
@@ -86,7 +86,7 @@ final class NotificationRepository with LoggerMixin {
   Future<(uh.Document, String? page)> fetchDocument(String url) async {
     final resp = await getIt.get<NetClientProvider>().get(url);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -101,7 +101,7 @@ final class NotificationRepository with LoggerMixin {
   Future<List<PersonalMessage>> fetchPersonalMessage() async {
     final resp = await getIt.get<NetClientProvider>().get(personalMessageUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -121,7 +121,7 @@ final class NotificationRepository with LoggerMixin {
   Future<List<BroadcastMessage>> fetchBroadMessage() async {
     final resp = await getIt.get<NetClientProvider>().get(broadcastMessageUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);

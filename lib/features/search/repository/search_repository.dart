@@ -40,7 +40,7 @@ class SearchRepository {
     final resp =
         await netClient.get(_searchUrl, queryParameters: queryParameters);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);

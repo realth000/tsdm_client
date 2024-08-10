@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/widgets/post_list.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
@@ -191,9 +192,7 @@ class _ThreadPageState extends State<ThreadPage>
   @override
   Widget build(BuildContext context) {
     final threadReverseOrder =
-        RepositoryProvider.of<SettingsRepository>(context)
-            .currentSettings
-            .threadReverseOrder;
+        getIt.get<SettingsRepository>().currentSettings.threadReverseOrder;
 
     return MultiBlocProvider(
       providers: [

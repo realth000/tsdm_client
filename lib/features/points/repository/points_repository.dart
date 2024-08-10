@@ -25,7 +25,7 @@ final class PointsRepository with LoggerMixin {
     final netClient = getIt.get<NetClientProvider>();
     final resp = await netClient.get(_statisticsPageUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -43,7 +43,7 @@ final class PointsRepository with LoggerMixin {
     info('fetch changelog page from $target');
     final resp = await netClient.get(target);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);

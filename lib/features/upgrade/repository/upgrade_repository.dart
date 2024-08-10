@@ -6,6 +6,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -38,10 +39,11 @@ final class UpgradeRepository with LoggerMixin {
   ///
   /// * **[HttpRequestFailedException]** when request failed.
   Future<uh.Document> fetchLatestInfo() async {
-    final resp =
-        await getIt.get<NetClientNoCookieProvider>().get(_githubReleaseInfoUrl);
+    final resp = await getIt
+        .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+        .get(_githubReleaseInfoUrl);
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -55,10 +57,10 @@ final class UpgradeRepository with LoggerMixin {
   /// * **[HttpRequestFailedException]** when request failed.
   Future<uh.Document> fetchAssetsInfo(String title) async {
     final resp = await getIt
-        .get<NetClientNoCookieProvider>()
+        .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
         .get('$_githubReleaseAssetUrl/$title');
     if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode!);
+      throw HttpRequestFailedException(resp.statusCode);
     }
     final document = parseHtmlDocument(resp.data as String);
     return document;
@@ -69,7 +71,8 @@ final class UpgradeRepository with LoggerMixin {
     required String downloadUrl,
     required String savePath,
   }) async {
-    final netClient = getIt.get<NetClientNoCookieProvider>();
+    final netClient =
+        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
     await netClient.download(
       downloadUrl,
       savePath,
@@ -82,7 +85,8 @@ final class UpgradeRepository with LoggerMixin {
 
   /// Fetch the full changelog of the app.
   Future<String?> fetchChangelog() async {
-    final netClient = getIt.get<NetClientNoCookieProvider>();
+    final netClient =
+        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
     try {
       final resp = await netClient.get(_rawChangelogUrl);
       final data = resp.data as String;

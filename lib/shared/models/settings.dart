@@ -44,14 +44,14 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   windowWidth(
     name: 'windowWidth',
     type: double,
-    defaultValue: 600,
+    defaultValue: 600.0,
   ),
 
   /// Window height config on desktop platforms.
   windowHeight(
     name: 'windowHeight',
     type: double,
-    defaultValue: 800,
+    defaultValue: 800.0,
   ),
 
   /// Window position config on desktop platforms.

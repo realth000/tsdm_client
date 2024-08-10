@@ -16,9 +16,6 @@ import 'package:tsdm_client/utils/logger.dart';
 ///
 /// Use the [getIt] to access database.
 class CookieData with LoggerMixin implements Storage {
-  /// Construct with no user name.
-  CookieData() : _userLoginInfo = null;
-
   /// Construct with [userLoginInfo] and [cookie].
   ///
   /// [userLoginInfo] can be partly filled. What means is during login progress,
@@ -31,19 +28,19 @@ class CookieData with LoggerMixin implements Storage {
     required UserLoginInfo userLoginInfo,
     required Cookie cookie,
   })  : _userLoginInfo = userLoginInfo,
-        _cookieMap = cookie;
+        _cookieMap = Map.castFrom(cookie);
 
   final UserLoginInfo? _userLoginInfo;
 
   /// Cookie data.
-  Cookie _cookieMap = {};
+  final Map<String, String> _cookieMap;
 
   /// Check if user info completed or not.
   ///
   /// We should not do anything with cookie storage when user info is not
   /// complete.
   bool _isUserInfoComplete() =>
-      _userLoginInfo != null && !_userLoginInfo.isComplete;
+      _userLoginInfo != null && _userLoginInfo.isComplete;
 
   /// Save cookie in database.
   ///
@@ -58,9 +55,18 @@ class CookieData with LoggerMixin implements Storage {
     // Do not save cookie if we don't know which user it belongs to.
     // This shall not happen.
     if (!_isUserInfoComplete()) {
-      info('only save cookie in memory: user info incomplete');
+      info('only save cookie in memory: user info incomplete: $_userLoginInfo');
+
+      await getIt.get<StorageProvider>().saveCookieInCache(
+            username: _userLoginInfo?.username,
+            uid: _userLoginInfo?.uid,
+            email: _userLoginInfo?.email,
+            cookie: _cookieMap,
+          );
       return false;
     }
+    debug('save complete cookie in memory:'
+        ' user info incomplete: $_userLoginInfo');
 
     await getIt.get<StorageProvider>().saveCookie(
           username: _userLoginInfo!.username!,
@@ -87,9 +93,11 @@ class CookieData with LoggerMixin implements Storage {
       return false;
     }
 
-    debug('CookieData $hashCode: delete '
-        'cookie for uid: ${_userLoginInfo?.uid}');
-    await getIt.get<StorageProvider>().deleteCookieByUid(_userLoginInfo!.uid!);
+    if (_userLoginInfo != null) {
+      debug('CookieData $hashCode: delete '
+          'cookie for uid: $_userLoginInfo');
+      await getIt.get<StorageProvider>().deleteCookieByUserInfo(_userLoginInfo);
+    }
     return true;
   }
 
@@ -111,7 +119,7 @@ class CookieData with LoggerMixin implements Storage {
     _cookieMap.remove(key);
     // If user cookie is empty, delete that item from database.
     if (_cookieMap.isEmpty) {
-      debug('delete user (uid:${_userLoginInfo?.uid}) cookie from database '
+      debug('delete user ($_userLoginInfo) cookie from database '
           'because cookie value is empty');
       await _deleteUserCookie();
     } else {
