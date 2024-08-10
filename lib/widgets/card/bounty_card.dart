@@ -37,7 +37,7 @@ class BountyCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.done, color: secondaryColor),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Text(
             context.t.bountyCard.resolved,
             style: bountyStatusTextResolvedStyle,
@@ -49,7 +49,7 @@ class BountyCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(Icons.pending, color: tertiaryColor),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Text(context.t.bountyCard.processing, style: bountyStatusTextStyle),
         ],
       );
@@ -58,7 +58,7 @@ class BountyCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: ConstrainedBox(
           constraints: const BoxConstraints(minWidth: 100),
           child: Column(
@@ -72,7 +72,7 @@ class BountyCard extends StatelessWidget {
                           color: secondaryColor,
                         ),
                   ),
-                  sizedBoxW20H20,
+                  sizedBoxW24H24,
                   bountyStatusWidget,
                 ],
               ),
@@ -83,14 +83,14 @@ class BountyCard extends StatelessWidget {
                     FontAwesomeIcons.coins,
                     size: 20,
                   ),
-                  sizedBoxW5H5,
+                  sizedBoxW4H4,
                   Text(
                     context.t.bountyCard.price(price: price),
                     style: Theme.of(context).textTheme.bodyLarge,
                   ),
                 ],
               ),
-            ].insertBetween(sizedBoxW10H10),
+            ].insertBetween(sizedBoxW12H12),
           ),
         ),
       ),

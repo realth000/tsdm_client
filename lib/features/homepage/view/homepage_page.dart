@@ -163,14 +163,14 @@ class _HomepagePageState extends State<HomepagePage> {
                   },
                   child: ListView(
                     controller: _scrollController,
-                    padding: edgeInsetsL10T5R10B20,
+                    padding: edgeInsetsL12T4R12B24,
                     children: [
                       WelcomeSection(
                         forumStatus: state.forumStatus,
                         loggedUserInfo: state.loggedUserInfo,
                         swiperUrlList: state.swiperUrlList,
                       ),
-                      sizedBoxW5H5,
+                      sizedBoxW4H4,
                       PinSection(state.pinnedThreadGroupList),
                     ],
                   ),

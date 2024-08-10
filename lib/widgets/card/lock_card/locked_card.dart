@@ -175,7 +175,7 @@ class _LockedCardState extends State<LockedCard> {
           mainAxisSize: MainAxisSize.min,
           children: [
             const Icon(Icons.lock_outline),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Text(
               tr.author.title,
               style: Theme.of(context).textTheme.titleMedium,
@@ -188,10 +188,10 @@ class _LockedCardState extends State<LockedCard> {
     return Card(
       elevation: widget.elevation,
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: widgets.insertBetween(sizedBoxW5H5),
+          children: widgets.insertBetween(sizedBoxW4H4),
         ),
       ),
     );

@@ -54,7 +54,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
             },
           ),
         ),
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [

@@ -141,7 +141,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         descendantsAreFocusable: false,
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String?>(
-            padding: edgeInsetsR10,
+            padding: edgeInsetsR8,
             onChanged: (v) {
               if (v == null) {
                 return;
@@ -175,9 +175,9 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
             ),
             style: Theme.of(context).textTheme.titleMedium,
           ),
-          sizedBoxW5H5,
-          ...scoreWidgetList.insertBetween(sizedBoxW5H5),
-          if (scoreWidgetList.isNotEmpty) sizedBoxW5H5,
+          sizedBoxW4H4,
+          ...scoreWidgetList.insertBetween(sizedBoxW4H4),
+          if (scoreWidgetList.isNotEmpty) sizedBoxW4H4,
           TextFormField(
             controller: reasonController,
             decoration: InputDecoration(
@@ -199,7 +199,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
             onPressed: () async => _rate(context, state.info!),
             child: Text(context.t.ratePostPage.title),
           ),
-        ].insertBetween(sizedBoxW10H10),
+        ].insertBetween(sizedBoxW12H12),
       ),
     );
   }
@@ -272,7 +272,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                 title: Text(context.t.ratePostPage.title),
               ),
               body: Padding(
-                padding: edgeInsetsL15T15R15B15,
+                padding: edgeInsetsL16T16R16B16,
                 child: _buildBody(context, state),
               ),
             );

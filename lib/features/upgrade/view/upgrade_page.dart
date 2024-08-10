@@ -29,7 +29,7 @@ class _UpgradePageState extends State<UpgradePage> {
   Widget buildReleaseNotesCard(BuildContext context, UpgradeState state) {
     return Card(
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -37,7 +37,7 @@ class _UpgradePageState extends State<UpgradePage> {
               context.t.upgradePage.releaseNotes,
               style: Theme.of(context).textTheme.titleLarge,
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             munchElement(
               context,
               parseHtmlDocument(state.upgradeModel!.releaseNotes).body!,
@@ -78,7 +78,7 @@ class _UpgradePageState extends State<UpgradePage> {
           0;
     }
     return Padding(
-      padding: edgeInsetsL15T15R15B15,
+      padding: edgeInsetsL16T16R16B16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -86,7 +86,7 @@ class _UpgradePageState extends State<UpgradePage> {
             context.t.upgradePage.description,
             style: Theme.of(context).textTheme.titleLarge,
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           Text(
             context.t.upgradePage
                 .currentVersion(currentVersion: appVersion)
@@ -114,7 +114,7 @@ class _UpgradePageState extends State<UpgradePage> {
               subtitle: LinearProgressIndicator(value: dp / 100.0),
               trailing: Text('$dp%'),
             ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           Row(
             children: [
               Expanded(
@@ -125,7 +125,7 @@ class _UpgradePageState extends State<UpgradePage> {
               ),
             ],
           ),
-        ].insertBetween(sizedBoxW5H5),
+        ].insertBetween(sizedBoxW4H4),
       ),
     );
   }
@@ -235,7 +235,7 @@ class _UpgradePageState extends State<UpgradePage> {
                     ScrollConfiguration.of(context).copyWith(scrollbars: false),
                 child: SingleChildScrollView(
                   child: Padding(
-                    padding: edgeInsetsL10T5R10B20,
+                    padding: edgeInsetsL12T4R12B24,
                     child: Row(
                       children: [
                         Expanded(

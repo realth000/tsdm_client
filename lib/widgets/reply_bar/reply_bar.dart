@@ -124,7 +124,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: edgeInsetsL10T10R10B10,
+      padding: edgeInsetsL12T12R12B12,
       child: TextField(
         controller: controller,
         readOnly: true,
@@ -403,7 +403,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
     final outlineColor = Theme.of(context).colorScheme.outline;
     return Padding(
-      padding: edgeInsetsL10T10R10,
+      padding: edgeInsetsL12T12R12,
       child: Row(
         children: [
           Text(
@@ -441,14 +441,14 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         // Editor.
         Flexible(
           child: Padding(
-            padding: edgeInsetsL10T10R10B10,
+            padding: edgeInsetsL12T12R12B12,
             child: _buildRichEditor(context),
           ),
         ),
 
         // Rich editor toolbar
         Padding(
-          padding: edgeInsetsL10R10B10,
+          padding: edgeInsetsL12R12B12,
           child: Row(
             children: [
               Expanded(
@@ -463,7 +463,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           ),
         ),
         Padding(
-          padding: edgeInsetsL10R10B10,
+          padding: edgeInsetsL12R12B12,
           child: Row(
             children: [
               IconButton(
@@ -497,7 +497,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                 onPressed: () => context.pop(),
                 child: const Icon(Icons.close_outlined),
               ),
-              sizedBoxW30H30,
+              sizedBoxW32H32,
               // Send Button
               FilledButton(
                 onPressed:

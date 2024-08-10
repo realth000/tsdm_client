@@ -221,7 +221,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
                 });
               },
             ),
-          ].insertBetween(sizedBoxW10H10),
+          ].insertBetween(sizedBoxW12H12),
         ),
       ),
       actions: [

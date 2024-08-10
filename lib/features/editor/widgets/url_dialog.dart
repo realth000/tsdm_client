@@ -119,7 +119,7 @@ class _UrlDialogState extends State<UrlDialog> {
                 ),
               ],
             ),
-          ].insertBetween(sizedBoxW10H10),
+          ].insertBetween(sizedBoxW12H12),
         ),
       ),
     );

@@ -17,86 +17,83 @@ const sizeButtonInCardMinWidth = 200.0;
 /// Zero size [SizedBox] represents no widget.
 const sizedBoxEmpty = SizedBox.shrink();
 
-/// A [SizedBox] with 5 width and 5 height.
-const sizedBoxW5H5 = SizedBox(width: 5, height: 5);
+/// A [SizedBox] with 4 width and 4 height.
+const sizedBoxW4H4 = SizedBox(width: 4, height: 4);
 
-/// A [SizedBox] with 10 width and 10 height.
-const sizedBoxW10H10 = SizedBox(width: 10, height: 10);
+/// A [SizedBox] with 12 width and 12 height.
+const sizedBoxW12H12 = SizedBox(width: 12, height: 12);
 
-/// A [SizedBox] with 15 width and 15 height.
-const sizedBoxW15H15 = SizedBox(width: 15, height: 15);
+/// A [SizedBox] with 16 width and 16 height.
+const sizedBoxW16H16 = SizedBox(width: 16, height: 16);
 
-/// A [SizedBox] with 20 width and 20 height.
-const sizedBoxW20H20 = SizedBox(width: 20, height: 20);
+/// A [SizedBox] with 24 width and 24 height.
+const sizedBoxW24H24 = SizedBox(width: 24, height: 25);
 
-/// A [SizedBox] with 30 width and 30 height.
-const sizedBoxW30H30 = SizedBox(width: 30, height: 30);
+/// A [SizedBox] with 32 width and 32 height.
+const sizedBoxW32H32 = SizedBox(width: 32, height: 32);
 
 /// A [SizedBox] with 12 width and 48 height.
 ///
 /// Size following [material design 3 spec](https://m3.material.io/components/menus/specs#6928c7b9-2c6e-4ff6-98a6-55883fb299bd).
 const sizedBoxPopupMenuItemIconSpacing = SizedBox(width: 12, height: 48);
 
-/// An [EdgeInsets] with 10 at top.
-const edgeInsetsT10 = EdgeInsets.only(top: 10);
+/// An [EdgeInsets] with 8 at top.
+const edgeInsetsT8 = EdgeInsets.only(top: 8);
 
-/// An [EdgeInsets] with 10 at right.
-const edgeInsetsR10 = EdgeInsets.only(right: 10);
+/// An [EdgeInsets] with 8 at right.
+const edgeInsetsR8 = EdgeInsets.only(right: 8);
 
-/// An [EdgeInsets] with 10 at left and 10 at right.
-const edgeInsetsL10R10 = EdgeInsets.only(left: 10, right: 10);
+/// An [EdgeInsets] with 8 at left and 8 at right.
+const edgeInsetsL8R8 = EdgeInsets.only(left: 8, right: 8);
 
-/// An [EdgeInsets] with 15 at left and 15 at right.
-const edgeInsetsL15R15 = EdgeInsets.only(left: 15, right: 15);
+/// An [EdgeInsets] with 16 at left and 16 at right.
+const edgeInsetsL16R16 = EdgeInsets.only(left: 16, right: 16);
 
-/// An [EdgeInsets] with 15 at left, top, right and bottom.
-const edgeInsetsL15T15R15B15 = EdgeInsets.all(15);
+/// An [EdgeInsets] with 16 at left, top, right and bottom.
+const edgeInsetsL16T16R16B16 = EdgeInsets.all(16);
 
-/// An [EdgeInsets] with 18 at left and 18 at right.
-const edgeInsetsL18R18 = EdgeInsets.symmetric(horizontal: 18);
-
-/// An [EdgeInsets] with 18 at left and 18 at right, 10 at top and 10 at bottom.
-const edgeInsetsL18T10R18B10 = EdgeInsets.only(
-  left: 18,
-  top: 10,
-  right: 18,
-  bottom: 10,
+/// An [EdgeInsets] with 16 at left and 16 at right, 12 at top and 12 at bottom.
+const edgeInsetsL16T12R16B12 = EdgeInsets.only(
+  left: 16,
+  top: 12,
+  right: 16,
+  bottom: 12,
 );
 
-/// An [EdgeInsets] with 10 at left, top and right.
-const edgeInsetsL10T10R10 = EdgeInsets.only(left: 10, top: 10, right: 10);
+/// An [EdgeInsets] with 12 at left, top and right.
+const edgeInsetsL12T12R12 = EdgeInsets.only(left: 12, top: 12, right: 12);
 
-/// An [EdgeInsets] with 10 at left, top, right and bottoom.
-const edgeInsetsL10T10R10B10 = EdgeInsets.all(10);
+/// An [EdgeInsets] with 12 at left, top, right and bottom.
+const edgeInsetsL12T12R12B12 = EdgeInsets.all(12);
 
 /// An [EdgeInsets] with 10 at top, right and bottom.
-const edgeInsetsL10R10B10 = EdgeInsets.only(left: 10, right: 10, bottom: 10);
+const edgeInsetsL12R12B12 = EdgeInsets.only(left: 12, right: 12, bottom: 12);
 
-/// An [EdgeInsets] with 10 at top and right, 20 at bottom.
-const edgeInsetsL10R10B20 = EdgeInsets.only(left: 10, right: 10, bottom: 20);
+/// An [EdgeInsets] with 12 at top and right, 24 at bottom.
+const edgeInsetsL12R12B24 = EdgeInsets.only(left: 12, right: 12, bottom: 24);
 
-/// An [EdgeInsets] with 15 at left and right, 10 at bottom.
-const edgeInsetsL15R15B10 = EdgeInsets.only(left: 15, right: 15, bottom: 10);
+/// An [EdgeInsets] with 16 at left and right, 12 at bottom.
+const edgeInsetsL16R16B12 = EdgeInsets.only(left: 16, right: 16, bottom: 12);
 
-/// An [EdgeInsets] with 20 at left and right.
-const edgeInsetsL20R20 = EdgeInsets.only(left: 20, right: 20);
+/// An [EdgeInsets] with 24 at left and right.
+const edgeInsetsL24R24 = EdgeInsets.only(left: 24, right: 24);
 
-/// An [EdgeInsets] with 20 at left and right, 10 at bottom.
-const edgeInsetsL20R20B10 = EdgeInsets.only(left: 20, right: 20, bottom: 10);
+/// An [EdgeInsets] with 24 at left and right, 12 at bottom.
+const edgeInsetsL24R24B12 = EdgeInsets.only(left: 24, right: 24, bottom: 12);
 
-/// An [EdgeInsets] with 10 at left, 5 at top and 5 at bottom.
-const edgeInsetsL10T5R5B5 =
-    EdgeInsets.only(left: 10, top: 5, right: 5, bottom: 5);
+/// An [EdgeInsets] with 12 at left, 4 at top and 4 at bottom.
+const edgeInsetsL12T4R4B4 =
+    EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4);
 
-/// An [EdgeInsets] with 10 at left, 5 at top and 10 at right.
-const edgeInsetsL10T5R10 = EdgeInsets.only(left: 10, top: 5, right: 10);
+/// An [EdgeInsets] with 12 at left, 4 at top and 12 at right.
+const edgeInsetsL12T4R12 = EdgeInsets.only(left: 12, top: 4, right: 12);
 
 /// An [EdgeInsets] with 10 at left, 5 at top, 10 at right and 20 at bottom.
-const edgeInsetsL10T5R10B20 =
-    EdgeInsets.only(left: 10, top: 5, right: 10, bottom: 20);
+const edgeInsetsL12T4R12B24 =
+    EdgeInsets.only(left: 12, top: 4, right: 12, bottom: 24);
 
-/// An [EdgeInsets] with 60 at left and 10 at bottom.
-const edgeInsetsL60B10 = EdgeInsets.only(left: 60, bottom: 10);
+/// An [EdgeInsets] with 60 at left and 12 at bottom.
+const edgeInsetsL60B12 = EdgeInsets.only(left: 60, bottom: 12);
 
 /// A minimum sized [CircularProgressIndicator] that should use in buttons.
 const sizedCircularProgressIndicator = SizedBox(
@@ -105,12 +102,12 @@ const sizedCircularProgressIndicator = SizedBox(
   child: CircularProgressIndicator(strokeWidth: 3),
 );
 
-/// Widget with 20 height and infinite width to use in shimmers.
-const sizedH20Shimmer = ClipRRect(
+/// Widget with 24 height and infinite width to use in shimmers.
+const sizedH24Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
   child: SizedBox(
     width: double.infinity,
-    height: 20,
+    height: 24,
     child: ColoredBox(
       color: Colors.white,
     ),

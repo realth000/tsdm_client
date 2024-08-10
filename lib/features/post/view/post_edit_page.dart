@@ -294,7 +294,7 @@ class _PostEditPageState extends State<PostEditPage> {
     if (ret.isEmpty) {
       return Container();
     }
-    return Row(children: ret.insertBetween(sizedBoxW20H20));
+    return Row(children: ret.insertBetween(sizedBoxW24H24));
   }
 
   /// Build the row to control a
@@ -438,7 +438,7 @@ class _PostEditPageState extends State<PostEditPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
-                sizedBoxW20H20,
+                sizedBoxW24H24,
                 // Post data editor.
                 Expanded(
                   child: RichEditor(
@@ -446,7 +446,7 @@ class _PostEditPageState extends State<PostEditPage> {
                     initialText: state.content?.data,
                   ),
                 ),
-                sizedBoxW5H5,
+                sizedBoxW4H4,
                 EditorToolbar(
                   bbcodeController: bbcodeController,
                   disabledFeatures: defaultFullScreenDisabledEditorFeatures,
@@ -484,7 +484,7 @@ class _PostEditPageState extends State<PostEditPage> {
       child: Scaffold(
         appBar: AppBar(title: Text(title)),
         body: Padding(
-          padding: edgeInsetsL15T15R15B15,
+          padding: edgeInsetsL16T16R16B16,
           child: _buildBody(context),
         ),
       ),

@@ -57,9 +57,9 @@ final class PrivateMessageCard extends StatelessWidget {
                   : null,
               subtitle: Text(message.lastMessageTime.yyyyMMDD()),
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Padding(
-              padding: edgeInsetsL15R15B10,
+              padding: edgeInsetsL16R16B12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -100,9 +100,9 @@ final class BroadcastMessageCard extends StatelessWidget {
               title: SingleLineText(tr.system),
               subtitle: Text(message.messageTime.yyyyMMDD()),
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Padding(
-              padding: edgeInsetsL15R15B10,
+              padding: edgeInsetsL16R16B12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,

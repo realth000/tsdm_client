@@ -176,7 +176,7 @@ class _ForumPageState extends State<ForumPage>
 
   Widget _buildNormalThreadFilterRow(BuildContext context, ForumState state) {
     return Padding(
-      padding: edgeInsetsL10T5R10,
+      padding: edgeInsetsL12T4R12,
       child: SizedBox(
         height: 40,
         child: SingleChildScrollView(
@@ -190,7 +190,7 @@ class _ForumPageState extends State<ForumPage>
               const ThreadOrderChip(),
               const ThreadDigestChip(),
               const ThreadRecommendedChip(),
-            ].insertBetween(sizedBoxW10H10),
+            ].insertBetween(sizedBoxW12H12),
           ),
         ),
       ),
@@ -205,16 +205,16 @@ class _ForumPageState extends State<ForumPage>
     if (state.rulesElement == null) {
       content = ListView.separated(
         controller: _pinnedScrollController,
-        padding: edgeInsetsL10T5R10B20,
+        padding: edgeInsetsL12T4R12B24,
         itemCount: state.stickThreadList.length,
         itemBuilder: (context, index) =>
             NormalThreadCard(state.stickThreadList[index]),
-        separatorBuilder: (context, index) => sizedBoxW5H5,
+        separatorBuilder: (context, index) => sizedBoxW4H4,
       );
     } else {
       content = ListView.separated(
         controller: _pinnedScrollController,
-        padding: edgeInsetsL10T5R10B20,
+        padding: edgeInsetsL12T4R12B24,
         itemCount: state.stickThreadList.length + 1,
         itemBuilder: (context, index) {
           // TODO: Do NOT add leading rules card by checking index value.
@@ -224,7 +224,7 @@ class _ForumPageState extends State<ForumPage>
             return NormalThreadCard(state.stickThreadList[index - 1]);
           }
         },
-        separatorBuilder: (context, index) => sizedBoxW5H5,
+        separatorBuilder: (context, index) => sizedBoxW4H4,
       );
     }
 
@@ -307,7 +307,7 @@ class _ForumPageState extends State<ForumPage>
           _buildNormalThreadFilterRow(context, state),
           Expanded(
             child: Padding(
-              padding: edgeInsetsL10T5R10B20,
+              padding: edgeInsetsL12T4R12B24,
               child: CustomScrollView(
                 controller: _threadScrollController,
                 physics: physics,
@@ -316,7 +316,7 @@ class _ForumPageState extends State<ForumPage>
                     itemCount: normalThreadList.length,
                     itemBuilder: (context, index) =>
                         NormalThreadCard(normalThreadList[index]),
-                    separatorBuilder: (context, index) => sizedBoxW5H5,
+                    separatorBuilder: (context, index) => sizedBoxW4H4,
                   ),
                 ],
               ),
@@ -396,10 +396,10 @@ class _ForumPageState extends State<ForumPage>
       },
       child: ListView.separated(
         controller: _subredditScrollController,
-        padding: edgeInsetsL10T5R10B20,
+        padding: edgeInsetsL12T4R12B24,
         itemCount: subredditList.length,
         itemBuilder: (context, index) => ForumCard(subredditList[index]),
-        separatorBuilder: (context, index) => sizedBoxW5H5,
+        separatorBuilder: (context, index) => sizedBoxW4H4,
       ),
     );
   }

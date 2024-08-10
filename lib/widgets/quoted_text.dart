@@ -59,7 +59,7 @@ class QuotedText extends StatelessWidget {
               ),
             ),
           ),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Expanded(
             child: Text.rich(
               TextSpan(

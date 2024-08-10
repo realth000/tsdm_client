@@ -9,7 +9,7 @@ class HomepagePlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
-      padding: edgeInsetsL10T5R10,
+      padding: edgeInsetsL12T4R12,
       children: <Widget>[
         Row(
           children: [
@@ -27,15 +27,15 @@ class HomepagePlaceholder extends StatelessWidget {
             ),
           ],
         ),
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         const Row(
           children: [
             Expanded(
               child: Row(
                 children: [
                   CircleAvatar(),
-                  sizedBoxW10H10,
-                  Expanded(child: sizedH20Shimmer),
+                  sizedBoxW12H12,
+                  Expanded(child: sizedH24Shimmer),
                 ],
               ),
             ),
@@ -43,7 +43,7 @@ class HomepagePlaceholder extends StatelessWidget {
         ),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         const Row(
           children: [
             Flexible(flex: 2, child: sizedH60Shimmer),
@@ -54,7 +54,7 @@ class HomepagePlaceholder extends StatelessWidget {
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         const Row(
           children: [
             Flexible(flex: 2, child: sizedH60Shimmer),
@@ -65,7 +65,7 @@ class HomepagePlaceholder extends StatelessWidget {
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
         const Row(children: [Expanded(child: sizedH40Shimmer)]),
-      ].insertBetween(sizedBoxW5H5),
+      ].insertBetween(sizedBoxW4H4),
     );
   }
 }

@@ -23,7 +23,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
   Widget _buildBody(BuildContext context, BroadcastMessageDetailState state) {
     return SingleChildScrollView(
       child: Padding(
-        padding: edgeInsetsL10R10B10,
+        padding: edgeInsetsL12R12B12,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -34,9 +34,9 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
               ),
               subtitle: Text(state.dateTime?.yyyyMMDD() ?? ''),
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Padding(
-              padding: edgeInsetsL15R15,
+              padding: edgeInsetsL16R16,
               child: munchElement(context, state.messageNode!),
             ),
           ],

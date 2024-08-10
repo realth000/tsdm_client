@@ -102,7 +102,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           TextFormField(
             autofocus: true,
             focusNode: loginFieldFocus,
@@ -148,7 +148,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
             ),
             validator: (v) => v!.trim().isNotEmpty ? null : tr.usernameEmpty,
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
@@ -172,7 +172,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
             obscureText: !_showPassword,
             validator: (v) => v!.trim().isNotEmpty ? null : tr.passwordEmpty,
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           Row(
             children: [
               Expanded(
@@ -186,7 +186,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                       v!.trim().isNotEmpty ? null : tr.verifyCodeEmpty,
                 ),
               ),
-              sizedBoxW10H10,
+              sizedBoxW12H12,
               ConstrainedBox(
                 constraints: const BoxConstraints(
                   maxWidth: 150,
@@ -195,7 +195,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               ),
             ],
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           InputDecorator(
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.question_mark_outlined),
@@ -222,7 +222,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               ),
             ),
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           TextFormField(
             controller: answerController,
             decoration: InputDecoration(
@@ -235,7 +235,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                     ? null
                     : tr.answerEmpty,
           ),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           Row(
             children: [
               Expanded(

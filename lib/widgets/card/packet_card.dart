@@ -78,14 +78,14 @@ class PacketCard extends StatelessWidget {
 
             return Card(
               child: Padding(
-                padding: edgeInsetsL15T15R15B15,
+                padding: edgeInsetsL16T16R16B16,
                 child: Column(
                   children: [
                     Text(
                       context.t.packetCard.title,
                       style: Theme.of(context).textTheme.titleMedium,
                     ),
-                    sizedBoxW10H10,
+                    sizedBoxW12H12,
                     SizedBox(
                       width: sizeButtonInCardMinWidth,
                       child: FilledButton.icon(

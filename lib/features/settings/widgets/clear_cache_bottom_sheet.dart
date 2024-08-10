@@ -108,7 +108,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                 children: [
                   Expanded(
                     child: Padding(
-                      padding: edgeInsetsL10T10R10B10,
+                      padding: edgeInsetsL12T12R12B12,
                       child: FilledButton(
                         onPressed: state.status == SettingsCacheStatus.loaded
                             ? () {

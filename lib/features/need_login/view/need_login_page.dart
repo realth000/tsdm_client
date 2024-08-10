@@ -47,7 +47,7 @@ class NeedLoginPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(context.t.general.needLoginToSeeThisPage),
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             FilledButton(
               child: Text(t.loginPage.login),
               onPressed: () async {

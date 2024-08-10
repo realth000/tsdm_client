@@ -23,7 +23,7 @@ class PointsChangeCard extends StatelessWidget {
                 await context.dispatchAsUrl(pointsChange.redirectUrl!);
               },
         child: Padding(
-          padding: edgeInsetsL10R10B10,
+          padding: edgeInsetsL12R12B12,
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,

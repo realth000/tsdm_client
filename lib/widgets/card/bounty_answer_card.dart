@@ -34,14 +34,14 @@ class BountyAnswerCard extends StatelessWidget {
     return Card(
       margin: EdgeInsets.zero,
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Row(
               children: [
                 Icon(Icons.verified, size: 28, color: secondaryColor),
-                sizedBoxW10H10,
+                sizedBoxW12H12,
                 Text(
                   context.t.bountyAnswerCard.title,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
@@ -50,7 +50,7 @@ class BountyAnswerCard extends StatelessWidget {
                 ),
               ],
             ),
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             ListTile(
               contentPadding: EdgeInsets.zero,
               leading: GestureDetector(

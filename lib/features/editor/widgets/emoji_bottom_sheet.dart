@@ -94,7 +94,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           controller: tabController,
           tabs: tabs.toList(),
         ),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         Expanded(
           child: TabBarView(
             controller: tabController,
@@ -116,12 +116,12 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           final body = switch (state.status) {
             EmojiStatus.initial || EmojiStatus.loading => Center(
                 child: Padding(
-                  padding: edgeInsetsL20R20,
+                  padding: edgeInsetsL24R24,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       const CircularProgressIndicator(),
-                      sizedBoxW10H10,
+                      sizedBoxW12H12,
                       Expanded(
                         child: Text(
                           context.t.bbcodeEditor.emoji.downloading,

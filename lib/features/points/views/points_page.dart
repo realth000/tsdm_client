@@ -52,11 +52,11 @@ class _PointsPageState extends State<PointsPage>
       child: SingleChildScrollView(
         controller: _statisticsScrollController,
         child: Padding(
-          padding: edgeInsetsL10T5R10B20,
+          padding: edgeInsetsL12T4R12B24,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              sizedBoxW5H5,
+              sizedBoxW4H4,
               GridView.builder(
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
@@ -85,12 +85,12 @@ class _PointsPageState extends State<PointsPage>
                   ),
                 ],
               ),
-              sizedBoxW10H10,
+              sizedBoxW12H12,
               ...state.recentChangelog
                   .map(PointsChangeCard.new)
                   .toList()
                   .cast<Widget>()
-                  .insertBetween(sizedBoxW5H5),
+                  .insertBetween(sizedBoxW4H4),
             ],
           ),
         ),
@@ -130,12 +130,12 @@ class _PointsPageState extends State<PointsPage>
         },
         child: ListView.separated(
           shrinkWrap: true,
-          padding: edgeInsetsL10T5R10B20,
+          padding: edgeInsetsL12T4R12B24,
           itemCount: state.fullChangelog.length,
           itemBuilder: (context, index) {
             return PointsChangeCard(state.fullChangelog[index]);
           },
-          separatorBuilder: (context, index) => sizedBoxW5H5,
+          separatorBuilder: (context, index) => sizedBoxW4H4,
         ),
       );
 
@@ -148,12 +148,12 @@ class _PointsPageState extends State<PointsPage>
 
     return Column(
       children: [
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         Padding(
-          padding: edgeInsetsL10T5R10,
+          padding: edgeInsetsL12T4R12,
           child: PointsQueryForm(state.allParameters),
         ),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         body,
       ],
     );

@@ -31,7 +31,7 @@ class _MyThreadPageState extends State<MyThreadPage>
       ..finishRefresh()
       ..finishLoad();
     return Padding(
-      padding: edgeInsetsL10T5R10B20,
+      padding: edgeInsetsL12T4R12B24,
       child: EasyRefresh(
         controller: _threadRefreshController,
         header: const MaterialHeader(),
@@ -53,7 +53,7 @@ class _MyThreadPageState extends State<MyThreadPage>
           itemBuilder: (context, index) {
             return MyThreadCard(state.threadList[index]);
           },
-          separatorBuilder: (context, index) => sizedBoxW5H5,
+          separatorBuilder: (context, index) => sizedBoxW4H4,
         ),
       ),
     );
@@ -67,7 +67,7 @@ class _MyThreadPageState extends State<MyThreadPage>
       ..finishRefresh()
       ..finishLoad();
     return Padding(
-      padding: edgeInsetsL10T5R10B20,
+      padding: edgeInsetsL12T4R12B24,
       child: EasyRefresh(
         controller: _replyRefreshController,
         header: const MaterialHeader(),
@@ -89,7 +89,7 @@ class _MyThreadPageState extends State<MyThreadPage>
           itemBuilder: (context, index) {
             return MyThreadCard(state.replyList[index]);
           },
-          separatorBuilder: (context, index) => sizedBoxW5H5,
+          separatorBuilder: (context, index) => sizedBoxW4H4,
         ),
       ),
     );

@@ -48,7 +48,7 @@ Future<T?> showCustomBottomSheet<T>({
           centerTitle: true,
         ),
         body: Padding(
-          padding: edgeInsetsL15T15R15B15,
+          padding: edgeInsetsL16T16R16B16,
           child: content,
         ),
       );
@@ -91,12 +91,12 @@ Future<void> showImageActionBottomSheet({
               child: Card(
                 color: Theme.of(context).colorScheme.surfaceContainer,
                 child: Padding(
-                  padding: edgeInsetsL15T15R15B15,
+                  padding: edgeInsetsL16T16R16B16,
                   child: NetworkIndicatorImage(imageUrl),
                 ),
               ),
             ),
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             Expanded(
               child: SingleChildScrollView(
                 child: Column(

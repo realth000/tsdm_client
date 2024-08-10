@@ -85,7 +85,7 @@ final class _ChatPageState extends State<ChatPage> {
         Expanded(
           child: messageList,
         ),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         ReplyBar(
           controller: _replyBarController,
           replyType: ReplyTypes.chat,
@@ -192,7 +192,7 @@ final class _ChatPageState extends State<ChatPage> {
                   preferredSize:
                       const Size(kToolbarHeight / 2, kToolbarHeight / 2),
                   child: Padding(
-                    padding: edgeInsetsL10R10B10,
+                    padding: edgeInsetsL12R12B12,
                     child: Row(
                       children: [
                         SingleLineText(

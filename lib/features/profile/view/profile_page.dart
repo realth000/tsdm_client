@@ -329,14 +329,14 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Checkin
     return [
-      sizedBoxW20H20,
+      sizedBoxW24H24,
       Text(
         tr.checkin.title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
       ),
-      sizedBoxW10H10,
+      sizedBoxW12H12,
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -348,7 +348,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       color: Theme.of(context).primaryColor,
                     ),
               ),
-              sizedBoxW10H10,
+              sizedBoxW12H12,
               Text(
                 description,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
@@ -398,7 +398,7 @@ class _ProfilePageState extends State<ProfilePage> {
               title: Text(tr.checkinTodayStatus),
               subtitle: Text(userProfile.checkinTodayStatus ?? '-'),
             ),
-        ].insertBetween(sizedBoxW5H5),
+        ].insertBetween(sizedBoxW4H4),
       ),
     ];
   }
@@ -459,7 +459,7 @@ class _ProfilePageState extends State<ProfilePage> {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             GestureDetector(
               child: SingleLineText(
                 userProfile.username ?? context.t.profilePage.title,
@@ -470,7 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
               onTap: () async =>
                   copyToClipboard(context, userProfile.username ?? ''),
             ),
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             if (userProfile.uid != null)
               SingleLineText(
                 userProfile.uid!,
@@ -483,12 +483,12 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       // Nickname and custom title.
       if (userProfile.nickname != null || userProfile.customTitle != null)
-        sizedBoxW5H5,
+        sizedBoxW4H4,
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
           children: [
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             if (userProfile.nickname != null)
               SingleLineText(
                 userProfile.nickname!,
@@ -508,7 +508,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      sizedBoxW5H5,
+      sizedBoxW4H4,
       // email/video verify state, friends, gender
       // This row always exists.
       SingleChildScrollView(
@@ -551,7 +551,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 iconData: Icons.face_2_outlined,
                 text: Text(userProfile.gender!),
               ),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       ),
       // Birthday, zodiac,
@@ -569,7 +569,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 iconData: MdiIcons.starCrescent,
                 text: Text(userProfile.zodiac!),
               ),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       ),
       // Location.
@@ -582,7 +582,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 iconData: Icons.location_on_outlined,
                 text: Text(userProfile.from!),
               ),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       ),
       SingleChildScrollView(
@@ -600,11 +600,11 @@ class _ProfilePageState extends State<ProfilePage> {
                 text: Text(userProfile.qq!),
                 iconSize: 14,
               ),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       ),
 
-      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW10H10,
+      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW12H12,
       Row(
         children: [
           if (moderatorGroupImg != null)
@@ -631,11 +631,11 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
         ],
       ),
-      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW10H10,
+      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW12H12,
 
       // Self introduction.
       if (introductionContent != null) ...[
-        sizedBoxW15H15,
+        sizedBoxW16H16,
         InputDecorator(
           decoration: InputDecoration(
             labelText: tr.introduction,
@@ -647,7 +647,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // Signature.
       if (signatureContent != null) ...[
-        sizedBoxW15H15,
+        sizedBoxW16H16,
         InputDecorator(
           decoration: InputDecoration(
             labelText: tr.signature,
@@ -661,14 +661,14 @@ class _ProfilePageState extends State<ProfilePage> {
       ..._buildCheckinInfoRow(context, state),
 
       /// Statistics.
-      sizedBoxW20H20,
+      sizedBoxW24H24,
       Text(
         tr.statistics.title,
         style: Theme.of(context).textTheme.titleMedium?.copyWith(
               fontWeight: FontWeight.bold,
             ),
       ),
-      sizedBoxW10H10,
+      sizedBoxW12H12,
       GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 3,
@@ -751,7 +751,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // Real app bar when data loaded.
           _buildSliverAppBar(context, state, logout: logout),
           SliverPadding(
-            padding: edgeInsetsL10T5R10,
+            padding: edgeInsetsL12T4R12,
             sliver: SliverList(
               delegate: SliverChildListDelegate(
                 _buildSliverContent(context, state),

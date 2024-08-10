@@ -104,7 +104,7 @@ class _CardLayout extends StatelessWidget {
     if (infoRowAlignCenter) {
       // In center.
       return Padding(
-        padding: edgeInsetsL15R15B10,
+        padding: edgeInsetsL16R16B12,
         child: Row(
           children: [
             Expanded(
@@ -115,7 +115,7 @@ class _CardLayout extends StatelessWidget {
                         child: Row(
                           children: [
                             Icon(e.$1, size: smallIconSize),
-                            sizedBoxW5H5,
+                            sizedBoxW4H4,
                             Expanded(
                               child: Text(
                                 e.$2,
@@ -137,7 +137,7 @@ class _CardLayout extends StatelessWidget {
     } else {
       // Not in center.
       return Padding(
-        padding: edgeInsetsL15R15B10,
+        padding: edgeInsetsL16R16B12,
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
@@ -145,13 +145,13 @@ class _CardLayout extends StatelessWidget {
                 .map(
                   (e) => [
                     Icon(e.$1, size: smallIconSize),
-                    sizedBoxW5H5,
+                    sizedBoxW4H4,
                     Text(
                       e.$2,
                       style: const TextStyle(fontSize: smallTextSize),
                       maxLines: 1,
                     ),
-                    sizedBoxW20H20,
+                    sizedBoxW24H24,
                   ],
                 )
                 .flattened
@@ -213,11 +213,11 @@ class _CardLayout extends StatelessWidget {
                   if (stateSet != null)
                     ...stateSet!.map((e) => Icon(e.icon, size: 16)),
                   Text(threadType?.name ?? ''),
-                ].insertBetween(sizedBoxW5H5),
+                ].insertBetween(sizedBoxW4H4),
               ),
             ),
             Padding(
-              padding: edgeInsetsL15R15B10,
+              padding: edgeInsetsL16R16B12,
               child: Row(
                 children: [
                   Expanded(
@@ -236,7 +236,7 @@ class _CardLayout extends StatelessWidget {
             ),
             if (quotedMessage != null)
               Padding(
-                padding: edgeInsetsL15R15B10,
+                padding: edgeInsetsL16R16B12,
                 child: Row(
                   children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
                 ),
@@ -246,7 +246,7 @@ class _CardLayout extends StatelessWidget {
               infoRowAlignCenter: infoRowAlignCenter,
               showLastReplyAuthor: showLastReplyAuthor,
             ),
-          ].insertBetween(sizedBoxW10H10),
+          ].insertBetween(sizedBoxW12H12),
         ),
       ),
     );

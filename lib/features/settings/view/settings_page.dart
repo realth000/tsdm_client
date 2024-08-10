@@ -184,7 +184,7 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.shortcut_outlined),
         title: Text(tr.showShortcutInForumCard.title),
         subtitle: Text(tr.showShortcutInForumCard.detail),
-        contentPadding: edgeInsetsL18R18,
+        contentPadding: edgeInsetsL16R16,
         value: showForumCardShortcut,
         onChanged: (v) async {
           context.read<SettingsBloc>().add(
@@ -235,7 +235,7 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notifications_outlined),
         title: Text(tr.showUnreadInfoHint.title),
         subtitle: Text(tr.showUnreadInfoHint.detail),
-        contentPadding: edgeInsetsL18R18,
+        contentPadding: edgeInsetsL16R16,
         value: showUnreadInfoHint,
         onChanged: (v) async {
           context
@@ -272,7 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
           secondary: const Icon(Icons.block_outlined),
           title: Text(tr.doublePressExit.title),
           subtitle: Text(tr.doublePressExit.detail),
-          contentPadding: edgeInsetsL18R18,
+          contentPadding: edgeInsetsL16R16,
           value: doublePressExit,
           onChanged: (v) async {
             context
@@ -284,7 +284,7 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.align_vertical_top_outlined),
         title: Text(tr.threadReverseOrder.title),
         subtitle: Text(tr.threadReverseOrder.detail),
-        contentPadding: edgeInsetsL18R18,
+        contentPadding: edgeInsetsL16R16,
         value: threadReverseOrder,
         onChanged: (v) async => context
             .read<SettingsBloc>()

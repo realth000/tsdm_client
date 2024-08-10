@@ -21,7 +21,7 @@ class SectionListTile extends ListTile {
     super.titleTextStyle,
     super.subtitleTextStyle,
     super.leadingAndTrailingTextStyle,
-    super.contentPadding = edgeInsetsL18R18,
+    super.contentPadding = edgeInsetsL16R16,
     super.enabled = true,
     super.onTap,
     super.onLongPress,

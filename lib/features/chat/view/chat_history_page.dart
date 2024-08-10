@@ -82,7 +82,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         Expanded(
           child: messageList,
         ),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         ReplyBar(
           controller: _replyBarController,
           replyType: ReplyTypes.chatHistory,
@@ -180,7 +180,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
                 preferredSize:
                     const Size(kToolbarHeight / 2, kToolbarHeight / 2),
                 child: Padding(
-                  padding: edgeInsetsL10R10B10,
+                  padding: edgeInsetsL12R12B12,
                   child: Row(
                     children: [
                       SingleLineText(

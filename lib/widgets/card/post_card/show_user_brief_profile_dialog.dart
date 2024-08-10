@@ -105,7 +105,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
               ),
             ],
           ),
-          sizedBoxW15H15,
+          sizedBoxW16H16,
           // Fix text style lost.
           // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
           Hero(
@@ -120,7 +120,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Text(
             'UID ${profile.uid}',
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
@@ -249,7 +249,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 profile.online ? tr.status.online : tr.status.offline,
                 style: _UserProfileAttrStyle.tertiary,
               ),
-            ].insertBetween(sizedBoxW5H5),
+            ].insertBetween(sizedBoxW4H4),
           ),
         ),
       ),
@@ -290,9 +290,9 @@ class _UserProfilePair extends StatelessWidget {
     return Row(
       children: [
         Icon(iconData, size: 18, color: color),
-        sizedBoxW5H5,
+        sizedBoxW4H4,
         Text(name, style: TextStyle(color: color)),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         Expanded(child: Text(value ?? '', style: TextStyle(color: color))),
       ],
     );

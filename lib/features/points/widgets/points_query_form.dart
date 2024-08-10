@@ -174,7 +174,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
               ),
             ),
           ),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Expanded(
             child: GestureDetector(
               onTap: () async => pickChangeType(context),
@@ -260,7 +260,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
               ],
             ),
             if (showQueryFilter) ..._buildContent(context, state),
-          ].insertBetween(sizedBoxW10H10),
+          ].insertBetween(sizedBoxW12H12),
         );
       },
     );

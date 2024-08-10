@@ -57,7 +57,7 @@ class RateCard extends StatelessWidget {
                       ),
                     ),
                   ),
-                  sizedBoxW5H5,
+                  sizedBoxW4H4,
                   Expanded(
                     child: GestureDetector(
                       onTap: () async => context.dispatchAsUrl(e.user.url),
@@ -81,7 +81,7 @@ class RateCard extends StatelessWidget {
 
     return Card(
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,

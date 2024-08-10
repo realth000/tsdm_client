@@ -60,10 +60,10 @@ class NoticeCard extends StatelessWidget {
               ),
             ),
             if (notice.quotedMessage?.isNotEmpty ?? false) ...[
-              sizedBoxW5H5,
+              sizedBoxW4H4,
               QuotedText(notice.quotedMessage ?? ''),
             ],
-            if (notice.taskId != null) sizedBoxW5H5,
+            if (notice.taskId != null) sizedBoxW4H4,
             if (notice.taskId != null)
               Text(
                 context.t.noticePage.noticeTab.taskID(taskId: notice.taskId!),
@@ -76,7 +76,7 @@ class NoticeCard extends StatelessWidget {
           children: <Widget>[
             Text(context.t.noticePage.noticeTab.mentionBody),
             QuotedText(notice.quotedMessage ?? ''),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       NoticeType.invite => Text.rich(
           context.t.noticePage.noticeTab.inviteBody(
@@ -141,9 +141,9 @@ class NoticeCard extends StatelessWidget {
               trailing: Text(notice.noticeTimeString),
               subtitle: SingleLineText(notice.noticeTime?.yyyyMMDD() ?? ''),
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Padding(
-              padding: edgeInsetsL15R15B10,
+              padding: edgeInsetsL16R16B12,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisSize: MainAxisSize.min,
@@ -155,7 +155,7 @@ class NoticeCard extends StatelessWidget {
                           .ignoredSameNotice(count: notice.ignoreCount!),
                       style: outlineStyle,
                     ),
-                ].insertBetween(sizedBoxW5H5),
+                ].insertBetween(sizedBoxW4H4),
               ),
             ),
           ],

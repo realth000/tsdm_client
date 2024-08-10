@@ -30,7 +30,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
       ..finishLoad();
 
     return Padding(
-      padding: edgeInsetsL10T5R10B20,
+      padding: edgeInsetsL12T4R12B24,
       child: EasyRefresh(
         controller: _refreshController,
         header: const MaterialHeader(),
@@ -52,7 +52,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
           itemBuilder: (context, index) {
             return LatestThreadCard(state.threadList[index]);
           },
-          separatorBuilder: (context, index) => sizedBoxW5H5,
+          separatorBuilder: (context, index) => sizedBoxW4H4,
         ),
       ),
     );

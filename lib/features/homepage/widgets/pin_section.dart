@@ -102,7 +102,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
       );
       ret.add(
         Padding(
-          padding: edgeInsetsT10,
+          padding: edgeInsetsT8,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -110,7 +110,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
                 sectionName,
                 style: Theme.of(context).textTheme.titleLarge,
               ),
-              sizedBoxW10H10,
+              sizedBoxW12H12,
               threadWidgetList,
             ],
           ),

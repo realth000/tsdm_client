@@ -64,12 +64,12 @@ class _NotificationPageState extends State<NotificationPage>
             content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
-              padding: edgeInsetsL10T5R10B20,
+              padding: edgeInsetsL12T4R12B24,
               itemCount: state.noticeList.length,
               itemBuilder: (context, index) {
                 return NoticeCard(notice: state.noticeList[index]);
               },
-              separatorBuilder: (context, index) => sizedBoxW5H5,
+              separatorBuilder: (context, index) => sizedBoxW4H4,
             );
           }
 
@@ -117,11 +117,11 @@ class _NotificationPageState extends State<NotificationPage>
             content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
-              padding: edgeInsetsL10T5R10B20,
+              padding: edgeInsetsL12T4R12B24,
               itemCount: state.personalMessageList.length,
               itemBuilder: (context, index) =>
                   PrivateMessageCard(message: state.personalMessageList[index]),
-              separatorBuilder: (context, index) => sizedBoxW5H5,
+              separatorBuilder: (context, index) => sizedBoxW4H4,
             );
           }
 
@@ -169,14 +169,14 @@ class _NotificationPageState extends State<NotificationPage>
             content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
-              padding: edgeInsetsL10T5R10B20,
+              padding: edgeInsetsL12T4R12B24,
               itemCount: state.broadcastMessageList.length,
               itemBuilder: (context, index) {
                 return BroadcastMessageCard(
                   message: state.broadcastMessageList[index],
                 );
               },
-              separatorBuilder: (context, index) => sizedBoxW5H5,
+              separatorBuilder: (context, index) => sizedBoxW4H4,
             );
           }
 

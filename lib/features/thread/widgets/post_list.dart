@@ -99,7 +99,7 @@ class _PostListState extends State<PostList> {
   ) {
     if (_listScrollController.offset <= expandHeight) {
       return Padding(
-        padding: edgeInsetsL10R10B10,
+        padding: edgeInsetsL12R12B12,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
@@ -110,7 +110,7 @@ class _PostListState extends State<PostList> {
                   .labelLarge
                   ?.copyWith(color: Theme.of(context).colorScheme.outline),
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Text(
               '[${_threadType ?? ""}]',
               style: Theme.of(context)
@@ -132,7 +132,7 @@ class _PostListState extends State<PostList> {
     return ColoredBox(
       color: bg,
       child: Padding(
-        padding: edgeInsetsL10R10B10,
+        padding: edgeInsetsL12R12B12,
         child: Text(
           _listScrollController.offset > expandHeight
               ? (widget.title ?? '')
@@ -172,7 +172,7 @@ class _PostListState extends State<PostList> {
               },
               separatorBuilder: (context, index) => widget.useDivider
                   ? const Divider(thickness: 0.5)
-                  : sizedBoxW5H5,
+                  : sizedBoxW4H4,
             ),
           ],
         ),
@@ -240,7 +240,7 @@ class _PostListState extends State<PostList> {
               ),
             ),
             SliverPadding(
-              padding: edgeInsetsL10R10B10,
+              padding: edgeInsetsL12R12B12,
               sliver: SliverToBoxAdapter(
                 child: Text(
                   widget.title ?? '',

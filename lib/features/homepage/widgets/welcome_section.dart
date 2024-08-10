@@ -54,7 +54,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
           ),
           itemBuilder: (context, itemIndex, realIndex) {
             return Padding(
-              padding: edgeInsetsL10T10R10B10,
+              padding: edgeInsetsL12T12R12B12,
               child: GestureDetector(
                 child: CachedImage(swiperUrlList[itemIndex].coverUrl),
                 onTap: () async {
@@ -112,7 +112,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
   Widget _buildForumStatusRow(BuildContext context, ForumStatus forumStatus) {
     return Expanded(
       child: Padding(
-        padding: edgeInsetsL10T10R10,
+        padding: edgeInsetsL12T12R12,
         child: SingleLineText(
           '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
           '帖子:${forumStatus.threadCount}',
@@ -183,7 +183,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
         direction: needExpand ? Axis.horizontal : Axis.vertical,
         children: [
           Expanded(child: _buildKahrpbaSwiper(context, widget.swiperUrlList)),
-          sizedBoxW5H5,
+          sizedBoxW4H4,
           Expanded(
             child: Card(
               margin: EdgeInsets.zero,

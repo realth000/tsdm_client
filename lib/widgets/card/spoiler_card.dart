@@ -38,7 +38,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
     return Card(
       elevation: widget.elevation,
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -62,7 +62,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
               ),
             ),
             if (_visible) RichText(text: widget.content),
-          ].insertBetween(sizedBoxW5H5),
+          ].insertBetween(sizedBoxW4H4),
         ),
       ),
     );

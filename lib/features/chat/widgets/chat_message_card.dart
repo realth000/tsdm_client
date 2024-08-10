@@ -20,7 +20,7 @@ final class ChatMessageCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: edgeInsetsL10R10,
+      padding: edgeInsetsL8R8,
       child: Column(
         children: [
           ListTile(
@@ -38,7 +38,7 @@ final class ChatMessageCard extends StatelessWidget {
             children: [
               Expanded(
                 child: Padding(
-                  padding: edgeInsetsL15R15,
+                  padding: edgeInsetsL16R16,
                   child: munchElement(
                     context,
                     parseHtmlDocument(chatMessage.message).body!,

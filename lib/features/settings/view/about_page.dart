@@ -40,10 +40,10 @@ class AboutPage extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: edgeInsetsT10,
+        padding: edgeInsetsT8,
         children: [
           SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           SectionListTile(
             leading: const Icon(Icons.contact_support_outlined),
             title: Text(tr.whatIsThis),

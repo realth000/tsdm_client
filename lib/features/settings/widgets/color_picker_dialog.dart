@@ -54,7 +54,7 @@ final class ColorPickerDialog extends StatelessWidget {
             itemCount: items.length,
           ),
         ),
-        sizedBoxW20H20,
+        sizedBoxW24H24,
         TextButton(
           child: Text(context.t.general.reset),
           onPressed: () async {
@@ -62,7 +62,7 @@ final class ColorPickerDialog extends StatelessWidget {
             context.pop((null, true));
           },
         ),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
       ],
     );
   }

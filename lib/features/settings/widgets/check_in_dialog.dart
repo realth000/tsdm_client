@@ -108,7 +108,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
               ),
             ),
           ),
-          sizedBoxW20H20,
+          sizedBoxW24H24,
           Text('$textRestLength'),
         ],
       ),

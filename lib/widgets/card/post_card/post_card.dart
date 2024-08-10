@@ -86,7 +86,7 @@ class _PostCardState extends State<PostCard>
         'Name-${widget.post.author.name}-${widget.post.postFloor}';
 
     return Padding(
-      padding: edgeInsetsL10R10B10,
+      padding: edgeInsetsL12R12B12,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -146,7 +146,7 @@ class _PostCardState extends State<PostCard>
           if (widget.post.lastEditUsername != null &&
               widget.post.lastEditTime != null)
             Padding(
-              padding: edgeInsetsL10T5R10,
+              padding: edgeInsetsL12T4R12,
               child: Text(
                 context.t.postCard.lastEditInfo(
                   username: widget.post.lastEditUsername!,
@@ -158,7 +158,7 @@ class _PostCardState extends State<PostCard>
               ),
             ),
           // Post body
-          sizedBoxW10H10,
+          sizedBoxW12H12,
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () async {
@@ -172,7 +172,7 @@ class _PostCardState extends State<PostCard>
               children: [
                 Expanded(
                   child: Padding(
-                    padding: edgeInsetsL15R15,
+                    padding: edgeInsetsL16R16,
                     child: munchElement(
                       context,
                       parseHtmlDocument(widget.post.data).body!,
@@ -186,12 +186,12 @@ class _PostCardState extends State<PostCard>
           if (widget.post.locked.isNotEmpty)
             ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
           if (widget.post.packetUrl != null) ...[
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             PacketCard(widget.post.packetUrl!),
           ],
           // Rate status if any.
           if (widget.post.rate != null) ...[
-            sizedBoxW10H10,
+            sizedBoxW12H12,
             ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 712),
               child: RateCard(widget.post.rate!),

@@ -93,7 +93,7 @@ class _ThreadCardDialogState extends State<ThreadCardDialog> {
             ],
           ),
         ),
-        sizedBoxW20H20,
+        sizedBoxW24H24,
         _buildExampleRow(context),
       ],
     );

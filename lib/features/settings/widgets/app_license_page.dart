@@ -28,9 +28,9 @@ class AppLicensePage extends StatelessWidget {
             applicationIcon: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                sizedBoxW10H10,
+                sizedBoxW12H12,
                 SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
-                sizedBoxW10H10,
+                sizedBoxW12H12,
               ],
             ),
             applicationLegalese: snapshot.data,

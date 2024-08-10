@@ -319,7 +319,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             },
           ),
           _buildSearchButton(context, state),
-        ].insertBetween(sizedBoxW10H10),
+        ].insertBetween(sizedBoxW12H12),
       ),
     );
   }
@@ -391,7 +391,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             final d = state.searchResult!.data![index];
             return SearchedThreadCard(d);
           },
-          separatorBuilder: (context, index) => sizedBoxW5H5,
+          separatorBuilder: (context, index) => sizedBoxW4H4,
         ),
       ),
     );
@@ -399,13 +399,13 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
   Widget _buildBody(BuildContext context, SearchState state) {
     return Padding(
-      padding: edgeInsetsL10T5R10B20,
+      padding: edgeInsetsL12T4R12B24,
       child: Column(
         children: [
           if (expandForm) _buildSearchForm(context, state),
           _buildResultInfoRow(context, state),
           _buildSearchResult(context, state),
-        ].insertBetween(sizedBoxW10H10),
+        ].insertBetween(sizedBoxW12H12),
       ),
     );
   }

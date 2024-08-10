@@ -21,7 +21,7 @@ class CodeCard extends StatelessWidget {
     return Card(
       elevation: elevation,
       child: Padding(
-        padding: edgeInsetsL15T15R15B15,
+        padding: edgeInsetsL16T16R16B16,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -31,14 +31,14 @@ class CodeCard extends StatelessWidget {
                   context.t.codeCard.title,
                   style: Theme.of(context).textTheme.titleMedium,
                 ),
-                sizedBoxW5H5,
+                sizedBoxW4H4,
                 IconButton(
                   icon: const Icon(Icons.copy_outlined),
                   onPressed: () async => copyToClipboard(context, code),
                 ),
               ],
             ),
-            sizedBoxW5H5,
+            sizedBoxW4H4,
             Text(code),
           ],
         ),

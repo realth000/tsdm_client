@@ -14,14 +14,14 @@ class TopicsPlaceholder extends StatelessWidget {
             child: Row(
               children: [
                 sizedW120H40Shimmer,
-                sizedBoxW10H10,
+                sizedBoxW12H12,
                 sizedW80H40Shimmer,
               ],
             ),
           ),
         ],
       ),
-      sizedBoxW20H20,
+      sizedBoxW24H24,
       const Row(children: [Expanded(child: sizedH40Shimmer)]),
     ];
   }
@@ -30,16 +30,16 @@ class TopicsPlaceholder extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       physics: const NeverScrollableScrollPhysics(),
-      padding: edgeInsetsL10T5R10,
+      padding: edgeInsetsL12T4R12,
       children: <Widget>[
         sizedH40Shimmer,
-        sizedBoxW20H20,
+        sizedBoxW24H24,
         ..._buildThreadPlaceholder(context),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         ..._buildThreadPlaceholder(context),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         ..._buildThreadPlaceholder(context),
-        sizedBoxW10H10,
+        sizedBoxW12H12,
         ..._buildThreadPlaceholder(context),
       ],
     );

@@ -118,7 +118,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
       ),
       if (state)
         Padding(
-          padding: edgeInsetsL10R10,
+          padding: edgeInsetsL8R8,
           child: Row(
             children: [
               Expanded(
@@ -159,7 +159,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
             child: Row(
               children: [
                 Icon(e.$1, size: smallIconSize),
-                sizedBoxW5H5,
+                sizedBoxW4H4,
                 Flexible(
                   child: Text(
                     '${e.$2}',
@@ -219,10 +219,10 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
               },
             ),
             Padding(
-              padding: edgeInsetsL15R15B10,
+              padding: edgeInsetsL16R16B12,
               child: Column(
                 children: [
-                  sizedBoxW10H10,
+                  sizedBoxW12H12,
                   Row(children: forumInfoWidgets),
                 ],
               ),
