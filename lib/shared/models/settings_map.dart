@@ -56,7 +56,7 @@ class SettingsMap with SettingsMapMappable {
   final bool threadCardInfoRowAlignCenter;
   final bool threadCardShowLastReplyAuthor;
 
-  SettingsMap copyWithKey<T>(SettingsKeys key, T value) {
+  SettingsMap copyWithKey<T>(SettingsKeys<T> key, T value) {
     assert(
       T == key.type || T == Null,
       'Settings value type and expected extract type MUST equal\n'

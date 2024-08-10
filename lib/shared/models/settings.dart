@@ -2,9 +2,9 @@ part of 'models.dart';
 
 /// Keys for all settings.
 // ignore_for_file: public_member_api_docs
-enum SettingsKeys implements Comparable<SettingsKeys> {
+enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Net client config: Accept.
-  netClientAccept(
+  netClientAccept<String>(
     name: 'netClientAccept',
     type: String,
     defaultValue:
@@ -19,21 +19,21 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   /// After debugging like this:
   /// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
   /// Remove "gzip" encoding in "Accept-Encoding" can fix this.
-  netClientAcceptEncoding(
+  netClientAcceptEncoding<String>(
     name: 'netClientAcceptEncoding',
     type: String,
     defaultValue: 'deflate, br',
   ),
 
   /// Net client config: Accept-Language.
-  netClientAcceptLanguage(
+  netClientAcceptLanguage<String>(
     name: 'dioAcceptLanguage',
     type: String,
     defaultValue: 'zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6,zh-TW;q=0.5',
   ),
 
   /// Net client config: User-Agent.
-  netClientUserAgent(
+  netClientUserAgent<String>(
     name: 'dioUserAgent',
     type: String,
     defaultValue:
@@ -41,56 +41,56 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   ),
 
   /// Window width config on desktop platforms.
-  windowWidth(
+  windowWidth<double>(
     name: 'windowWidth',
     type: double,
-    defaultValue: 600.0,
+    defaultValue: 600,
   ),
 
   /// Window height config on desktop platforms.
-  windowHeight(
+  windowHeight<double>(
     name: 'windowHeight',
     type: double,
-    defaultValue: 800.0,
+    defaultValue: 800,
   ),
 
   /// Window position config on desktop platforms.
-  windowPositionDx(
+  windowPositionDx<double>(
     name: 'windowPositionX',
     type: double,
-    defaultValue: 0.0,
+    defaultValue: 0,
   ),
 
   /// Window position config on desktop platforms.
-  windowPositionDy(
+  windowPositionDy<double>(
     name: 'windowPositionY',
     type: double,
-    defaultValue: 0.0,
+    defaultValue: 0,
   ),
 
   /// Window whether in the center of screen config on desktop platforms.
-  windowInCenter(
+  windowInCenter<bool>(
     name: 'windowInCenter',
     type: bool,
     defaultValue: false,
   ),
 
   /// Login user username.
-  loginUsername(
+  loginUsername<String>(
     name: 'loginUsername',
     type: String,
     defaultValue: '',
   ),
 
   /// Login user uid.
-  loginUid(
+  loginUid<int>(
     name: 'loginUid',
     type: int,
     defaultValue: 0,
   ),
 
   /// Login user email address.
-  loginEmail(
+  loginEmail<String>(
     name: 'loginEmail',
     type: String,
     defaultValue: '',
@@ -101,7 +101,7 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   /// 0: [ThemeMode.system]
   /// 1: [ThemeMode.light]
   /// 2: [ThemeMode.dark]
-  themeMode(
+  themeMode<int>(
     name: 'ThemeMode',
     type: int,
     defaultValue: 0,
@@ -110,21 +110,21 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   /// Locale
   ///
   /// Empty means follow system locale.
-  locale(
+  locale<String>(
     name: 'locale',
     type: String,
     defaultValue: '',
   ),
 
   /// Default feeling when check in
-  checkinFeeling(
+  checkinFeeling<String>(
     name: 'checkInFeeling',
     type: String,
     defaultValue: 'kx',
   ),
 
   /// Default check in message when check in
-  checkinMessage(
+  checkinMessage<String>(
     name: 'checkInMessage',
     type: String,
     defaultValue: '每日签到',
@@ -132,7 +132,7 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
 
   /// Show shortcut widget that to redirect to latest thread or subreddit in
   /// forum card.
-  showShortcutInForumCard(
+  showShortcutInForumCard<bool>(
     name: 'showShortcutInForumCard',
     type: bool,
     defaultValue: false,
@@ -141,14 +141,14 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   /// Default accent color.
   ///
   /// Less than zero represents default color.
-  accentColor(
+  accentColor<int>(
     name: 'accentColor',
     type: int,
     defaultValue: 4280391411, // PrimaryColors.blue
   ),
 
   /// Show badge or unread notice count on notice button.
-  showUnreadInfoHint(
+  showUnreadInfoHint<bool>(
     name: 'showUnreadInfoHint',
     type: bool,
     defaultValue: true,
@@ -157,7 +157,7 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   /// Only exit the app when user press back button twice or more.
   ///
   /// Avoid accidentally exit the app.
-  doublePressExit(
+  doublePressExit<bool>(
     name: 'doublePressExit',
     type: bool,
     defaultValue: true,
@@ -165,21 +165,21 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
 
   /// View latest posts in thread first, in other words, posts are sorted in
   /// desc order.
-  threadReverseOrder(
+  threadReverseOrder<bool>(
     name: 'threadReverseOrder',
     type: bool,
     defaultValue: false,
   ),
 
   /// Center align the info row in thread card.
-  threadCardInfoRowAlignCenter(
+  threadCardInfoRowAlignCenter<bool>(
     name: 'threadCardInfoRowAlignCenter',
     type: bool,
     defaultValue: false,
   ),
 
   /// Show last replied author's username in info row in `ThreadCard`.
-  threadCardShowLastReplyAuthor(
+  threadCardShowLastReplyAuthor<bool>(
     name: 'threadCardShowLastReplyAuthor',
     type: bool,
     defaultValue: true,
@@ -193,8 +193,8 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
 
   final String name;
   final Type type;
-  final dynamic defaultValue;
+  final T defaultValue;
 
   @override
-  int compareTo(SettingsKeys other) => name.compareTo(other.name);
+  int compareTo(SettingsKeys<dynamic> other) => name.compareTo(other.name);
 }

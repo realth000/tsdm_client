@@ -9,10 +9,10 @@ import 'package:tsdm_client/shared/providers/storage_provider/models/database/da
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-typedef _SK = SettingsKeys;
+typedef _SK<T> = SettingsKeys<T>;
 
 extension _ExtractExt on List<SettingsEntity> {
-  T extract<T>(SettingsKeys settings) {
+  T extract<T>(SettingsKeys<T> settings) {
     assert(
       T == settings.type,
       'Settings value type and expected extract type MUST equal\n'
@@ -21,7 +21,7 @@ extension _ExtractExt on List<SettingsEntity> {
 
     final v = firstWhereOrNull((e) => e.name == settings.name);
     if (v == null) {
-      return settings.defaultValue as T;
+      return settings.defaultValue;
     }
     return (switch (T) {
           int => v.intValue,
@@ -105,7 +105,7 @@ final class SettingsRepository with LoggerMixin {
   }
 
   /// Get settings [key] with value in type [T}.
-  Future<T> getValue<T>(SettingsKeys key) async {
+  Future<T> getValue<T>(SettingsKeys<T> key) async {
     assert(
       T == key.type,
       'Settings value type and expected extract type MUST equal\n'
@@ -127,14 +127,14 @@ final class SettingsRepository with LoggerMixin {
   }
 
   /// Delete the settings record in database.
-  Future<void> deleteValue(SettingsKeys key) async {
+  Future<void> deleteValue<T>(SettingsKeys<T> key) async {
     await _storage.deleteKey(key.name);
     _state = _state.copyWithKey(key, null);
     _controller.add(_state);
   }
 
   /// Save settings [key] with value [value].
-  Future<void> setValue<T>(SettingsKeys key, T value) async {
+  Future<void> setValue<T>(SettingsKeys<T> key, T value) async {
     assert(
       T == key.type,
       'Settings value type and expected extract type MUST equal\n'

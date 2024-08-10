@@ -43,7 +43,7 @@ final class SettingsValueChanged<T> extends SettingsEvent
   const SettingsValueChanged(this.settings, this.value) : super();
 
   /// Settings that changed.
-  final SettingsKeys settings;
+  final SettingsKeys<T> settings;
 
   /// New value.
   final T value;
