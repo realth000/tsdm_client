@@ -7,6 +7,7 @@ import 'package:stream_transform/stream_transform.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 part '../../../generated/features/settings/bloc/settings_bloc.mapper.dart';
 part 'settings_event.dart';
@@ -23,7 +24,7 @@ EventTransformer<Event> debounce<Event>(Duration duration) {
 }
 
 /// Bloc of app settings.
-class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
+class SettingsBloc extends Bloc<SettingsEvent, SettingsState> with LoggerMixin {
   /// Constructor.
   SettingsBloc({
     required SettingsRepository settingsRepository,
@@ -50,10 +51,29 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
         final SettingsMapChanged e => _onSettingsMapChanged(e, emit),
         final SettingsScrollOffsetChanged e =>
           _onSettingsScrollOffsetChanged(e, emit),
-        final SettingsValueChanged<dynamic> e => _onSettingsValueChanged(
+        final SettingsValueChanged<int> e => _onSettingsValueChanged<int>(
             e,
             emit,
           ),
+        final SettingsValueChanged<double> e => _onSettingsValueChanged<double>(
+            e,
+            emit,
+          ),
+        final SettingsValueChanged<bool> e => _onSettingsValueChanged<bool>(
+            e,
+            emit,
+          ),
+        final SettingsValueChanged<String> e => _onSettingsValueChanged<String>(
+            e,
+            emit,
+          ),
+        final SettingsValueChanged<DateTime> e =>
+          _onSettingsValueChanged<DateTime>(
+            e,
+            emit,
+          ),
+        final SettingsValueChanged<dynamic> _ =>
+          throw Exception('Unsupported settings change event type'),
       },
     );
   }
@@ -81,6 +101,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     SettingsValueChanged<T> event,
     _Emitter emit,
   ) async {
+    debug('settings value changed: ${event.settings.name}: ${event.value}');
     await _settingsRepository.setValue<T>(event.settings, event.value);
   }
 

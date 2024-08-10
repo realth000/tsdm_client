@@ -15,7 +15,8 @@ extension _ExtractExt on List<SettingsEntity> {
   T extract<T>(SettingsKeys settings) {
     assert(
       T == settings.type,
-      'Settings value type and expected extract type MUST equal',
+      'Settings value type and expected extract type MUST equal\n'
+      'expected ${settings.type}, but got $T',
     );
 
     final v = firstWhereOrNull((e) => e.name == settings.name);
@@ -107,7 +108,8 @@ final class SettingsRepository with LoggerMixin {
   Future<T> getValue<T>(SettingsKeys key) async {
     assert(
       T == key.type,
-      'Settings value type and expected extract type MUST equal',
+      'Settings value type and expected extract type MUST equal\n'
+      'expected ${key.type}, but got $T',
     );
 
     final name = key.name;
@@ -135,7 +137,8 @@ final class SettingsRepository with LoggerMixin {
   Future<void> setValue<T>(SettingsKeys key, T value) async {
     assert(
       T == key.type,
-      'Settings value type and expected extract type MUST equal',
+      'Settings value type and expected extract type MUST equal\n'
+      'expected ${key.type}, but got $T',
     );
 
     final name = key.name;

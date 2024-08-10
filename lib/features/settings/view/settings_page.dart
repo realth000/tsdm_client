@@ -226,9 +226,9 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
           context.read<ThemeCubit>().setAccentColor(color.$1!);
-          context
-              .read<SettingsBloc>()
-              .add(SettingsValueChanged(SettingsKeys.accentColor, color.$1!));
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(SettingsKeys.accentColor, color.$1!.value),
+              );
         },
       ),
       SwitchListTile(
