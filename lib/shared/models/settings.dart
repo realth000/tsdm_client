@@ -144,7 +144,7 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
   accentColor(
     name: 'accentColor',
     type: int,
-    defaultValue: -1,
+    defaultValue: 4280391411, // PrimaryColors.blue
   ),
 
   /// Show badge or unread notice count on notice button.
