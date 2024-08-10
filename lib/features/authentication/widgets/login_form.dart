@@ -50,6 +50,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
   late final TextEditingController passwordController;
   late final TextEditingController answerController;
   late final TextEditingController verifyCodeController;
+  late final CaptchaImageController captchaImageController;
 
   bool _showPassword = false;
 
@@ -191,7 +192,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                 constraints: const BoxConstraints(
                   maxWidth: 150,
                 ),
-                child: const CaptchaImage(),
+                child: CaptchaImage(captchaImageController),
               ),
             ],
           ),
@@ -260,6 +261,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
     answerController = TextEditingController();
     verifyCodeController = TextEditingController();
     loginFieldFocus = FocusNode();
+    captchaImageController = CaptchaImageController();
   }
 
   @override
@@ -269,6 +271,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
     answerController.dispose();
     verifyCodeController.dispose();
     loginFieldFocus.dispose();
+    captchaImageController.dispose();
     super.dispose();
   }
 
@@ -292,6 +295,9 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               extra: widget.redirectExtra,
             );
           }
+        } else if (state.status == AuthenticationStatus.failure) {
+          captchaImageController.reload();
+          verifyCodeController.clear();
         }
       },
       child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
