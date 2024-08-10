@@ -117,6 +117,11 @@ class StorageProvider with LoggerMixin {
     final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
     _cookieCache[userInfo] = allCookie;
 
+    if (!allCookie.toString().contains('s_gkr8_682f_auth')) {
+      info('refuse to save not authed cookie');
+      return;
+    }
+
     await CookieDao(_db).upsertCookie(
       CookieCompanion(
         username: Value(username),
