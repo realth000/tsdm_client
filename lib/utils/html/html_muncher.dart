@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/types.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
 import 'package:tsdm_client/widgets/card/bounty_card.dart';
@@ -156,7 +156,7 @@ class _MunchState {
 }
 
 /// Munch html nodes into flutter widgets.
-class _Muncher {
+final class _Muncher with LoggerMixin {
   /// Constructor.
   _Muncher(this.context);
 
@@ -684,7 +684,7 @@ class _Muncher {
         username == null ||
         userSpaceUrl == null ||
         answer == null) {
-      debug('failed to parse bounty answer: '
+      error('failed to parse bounty answer: '
           'avatar=$userAvatarUrl, username=$username, '
           'userSpaceUrl=$userSpaceUrl, answer=$answer');
       return null;

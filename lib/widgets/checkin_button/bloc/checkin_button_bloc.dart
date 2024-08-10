@@ -4,9 +4,10 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_resultn_result.dart';
+import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 
 part '../../../generated/widgets/checkin_button/bloc/checkin_button_bloc.mapper.dart';
 part 'checkin_button_event.dart';
@@ -49,8 +50,10 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
       return;
     }
     emit(const CheckinButtonLoading());
-    final checkinFeeling = _settingsRepository.getCheckinFeeling();
-    final checkinMessage = _settingsRepository.getCheckinMessage();
+    final checkinFeeling =
+        await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
+    final checkinMessage =
+        await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
     final result = await _checkinProvider.checkin(
       CheckinFeeling.from(checkinFeeling),
       checkinMessage,

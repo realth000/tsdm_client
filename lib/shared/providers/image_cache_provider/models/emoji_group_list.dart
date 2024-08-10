@@ -4,7 +4,7 @@ part of 'models.dart';
 ///
 /// Wrapper class to save to/from json with cache.
 @MappableClass()
-class EmojiGroupList with EmojiGroupListMappable {
+class EmojiGroupList with EmojiGroupListMappable, LoggerMixin {
   /// Constructor.
   const EmojiGroupList(this.emojiGroupList);
 
@@ -19,7 +19,7 @@ class EmojiGroupList with EmojiGroupListMappable {
       for (final emoji in emojiGroup.emojiList) {
         final cachePath = '$rootDir/${emojiGroup.id}_${emoji.id}.jpg';
         if (!File(cachePath).existsSync()) {
-          debug('invalid emoji at $cachePath');
+          error('invalid emoji at $cachePath');
           return false;
         }
       }

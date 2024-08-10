@@ -125,7 +125,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     );
   }
 
-  Future<Widget> _buildSection(BuildContext context) async {
+  Widget _buildSection(BuildContext context) {
     final linkTileList = <Widget>[];
 
     // username is plain text inside welcomeNode div.
@@ -154,9 +154,9 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     final hasUnreadMessage = homePageState.hasUnreadMessage;
 
     late final Widget noticeIcon;
-    final showUnreadHint =
-        await RepositoryProvider.of<SettingsRepository>(context)
-            .getValue<bool>(SettingsKeys.showUnreadInfoHint);
+    final showUnreadHint = RepositoryProvider.of<SettingsRepository>(context)
+        .currentSettings
+        .showUnreadInfoHint;
     if (showUnreadHint) {
       if (unreadNoticeCount > 0) {
         noticeIcon = Badge(
@@ -274,7 +274,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
           _swiperTimer?.cancel();
         }
       },
-      child: FutureWrapper(_buildSection(context)),
+      child: _buildSection(context),
     );
   }
 }

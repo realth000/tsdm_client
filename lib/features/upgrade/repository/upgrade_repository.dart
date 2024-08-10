@@ -4,8 +4,9 @@ import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
@@ -13,7 +14,7 @@ const _rawChangelogUrl =
     'https://raw.githubusercontent.com/realth000/tsdm_client/master/CHANGELOG.md';
 
 /// Repository of upgrading the app.
-class UpgradeRepository {
+final class UpgradeRepository with LoggerMixin {
   /// Constructor.
   UpgradeRepository();
 
@@ -38,7 +39,7 @@ class UpgradeRepository {
   /// * **[HttpRequestFailedException]** when request failed.
   Future<uh.Document> fetchLatestInfo() async {
     final resp =
-        await NetClientProvider(disableCookie: true).get(_githubReleaseInfoUrl);
+        await getIt.get<NetClientNoCookieProvider>().get(_githubReleaseInfoUrl);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
     }
@@ -53,7 +54,8 @@ class UpgradeRepository {
   ///
   /// * **[HttpRequestFailedException]** when request failed.
   Future<uh.Document> fetchAssetsInfo(String title) async {
-    final resp = await NetClientProvider(disableCookie: true)
+    final resp = await getIt
+        .get<NetClientNoCookieProvider>()
         .get('$_githubReleaseAssetUrl/$title');
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
@@ -67,7 +69,7 @@ class UpgradeRepository {
     required String downloadUrl,
     required String savePath,
   }) async {
-    final netClient = NetClientProvider(disableCookie: true);
+    final netClient = getIt.get<NetClientNoCookieProvider>();
     await netClient.download(
       downloadUrl,
       savePath,
@@ -80,7 +82,7 @@ class UpgradeRepository {
 
   /// Fetch the full changelog of the app.
   Future<String?> fetchChangelog() async {
-    final netClient = NetClientProvider(disableCookie: true);
+    final netClient = getIt.get<NetClientNoCookieProvider>();
     try {
       final resp = await netClient.get(_rawChangelogUrl);
       final data = resp.data as String;

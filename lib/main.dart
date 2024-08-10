@@ -35,7 +35,7 @@ Future<void> main() async {
         breakpoints: WindowSize.values
             .map((e) => Breakpoint(start: e.start, end: e.end, name: e.name))
             .toList(),
-        child: const App(color, themeModeIndex),
+        child: App(color, themeModeIndex),
       ),
     ),
   );

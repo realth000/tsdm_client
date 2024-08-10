@@ -9,7 +9,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 extension _WithFormExt<T> on Dio {
   Future<Response<T>> postWithForm(
@@ -40,13 +40,13 @@ class NetClientProvider {
   NetClientProvider._(Dio dio) : _dio = dio;
 
   /// Build a [NetClientProvider] instance.
-  static Future<NetClientProvider> build({
+  factory NetClientProvider.build({
     Dio? dio,
     UserLoginInfo? userLoginInfo,
-  }) async {
+  }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     final cookie =
-        await getIt.get<CookieProvider>().build(userLoginInfo: userLoginInfo);
+        getIt.get<CookieProvider>().build(userLoginInfo: userLoginInfo);
     final cookieJar = PersistCookieJar(
       ignoreExpires: true,
       storage: cookie,
@@ -72,7 +72,7 @@ class NetClientProvider {
   }
 
   /// Build a [NetClientProvider] instance that does NOT load cookie.
-  static Future<NetClientProvider> buildNoCookie(Dio? dio) async {
+  factory NetClientProvider.buildNoCookie({Dio? dio}) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
     return NetClientProvider._(d);
@@ -218,14 +218,17 @@ class NetClientProvider {
   }
 }
 
+/// Alias class to register as http client without cookie
+typedef NetClientNoCookieProvider = NetClientProvider;
+
 /// Handle exceptions during web request.
-class _ErrorHandler extends Interceptor {
+class _ErrorHandler extends Interceptor with LoggerMixin {
   @override
   void onError(
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
-    debug('${err.type}: ${err.error},${err.message}');
+    error('${err.type}: ${err.error},${err.message}');
 
     if (err.type == DioExceptionType.badResponse) {
       // Till now we can do nothing if encounter a bad response.

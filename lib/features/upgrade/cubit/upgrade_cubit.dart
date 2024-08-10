@@ -12,7 +12,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/upgrade/models/models.dart';
 import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -44,7 +44,7 @@ extension _FilterExt on Map<String, String> {
 }
 
 /// Cubit of upgrading the app.
-class UpgradeCubit extends Cubit<UpgradeState> {
+class UpgradeCubit extends Cubit<UpgradeState> with LoggerMixin {
   /// Constructor.
   UpgradeCubit({required UpgradeRepository upgradeRepository})
       : _upgradeRepository = upgradeRepository,
@@ -69,7 +69,7 @@ class UpgradeCubit extends Cubit<UpgradeState> {
       final document = await _upgradeRepository.fetchLatestInfo();
       final model = await _parseUpgradeModel(document);
       if (model == null) {
-        debug('failed to parse model');
+        error('failed to parse model');
         emit(state.copyWith(status: UpgradeStatus.failed));
         return;
       }
@@ -80,7 +80,7 @@ class UpgradeCubit extends Cubit<UpgradeState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch latest release info: $e');
+      error('failed to fetch latest release info: $e');
       emit(state.copyWith(status: UpgradeStatus.failed));
     }
   }

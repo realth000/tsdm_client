@@ -41,9 +41,9 @@ class SettingsMap with SettingsMapMappable {
   final double windowPositionDx;
   final double windowPositionDy;
   final bool windowInCenter;
-  final String? loginUsername;
-  final int? loginUid;
-  final String? loginEmail;
+  final String loginUsername;
+  final int loginUid;
+  final String loginEmail;
   final int themeMode;
   final String locale;
   final String checkinFeeling;
@@ -56,15 +56,11 @@ class SettingsMap with SettingsMapMappable {
   final bool threadCardInfoRowAlignCenter;
   final bool threadCardShowLastReplyAuthor;
 
-  SettingsMap copyWithKey<T>(String key, T value) {
-    if (!settingsTypeMap.containsKey(key)) {
-      throw Exception('unknown settings $key');
-    }
-
-    if (settingsTypeMap[key] != T) {
-      throw Exception('settings type mismatch: '
-          'expected ${settingsTypeMap[key]}, got $T');
-    }
+  SettingsMap copyWithKey<T>(SettingsKeys key, T value) {
+    assert(
+      T == key.type,
+      'Settings value type and expected extract type MUST equal',
+    );
 
     return switch (key) {
       SettingsKeys.netClientAccept =>
@@ -101,34 +97,6 @@ class SettingsMap with SettingsMapMappable {
         copyWith(threadCardInfoRowAlignCenter: value as bool?),
       SettingsKeys.threadCardShowLastReplyAuthor =>
         copyWith(threadCardShowLastReplyAuthor: value as bool?),
-      final String v => throw Exception('settings key $v not handled'),
     };
   }
 }
-
-/// All settings names (as keys) and settings value types (as values).
-const settingsTypeMap = <String, Type>{
-  SettingsKeys.netClientAccept: String,
-  SettingsKeys.netClientAcceptEncoding: String,
-  SettingsKeys.netClientAcceptLanguage: String,
-  SettingsKeys.netClientUserAgent: String,
-  SettingsKeys.windowWidth: double,
-  SettingsKeys.windowHeight: double,
-  SettingsKeys.windowPositionDx: double,
-  SettingsKeys.windowPositionDy: double,
-  SettingsKeys.windowInCenter: bool,
-  SettingsKeys.loginUsername: String,
-  SettingsKeys.loginUid: int,
-  SettingsKeys.loginEmail: String,
-  SettingsKeys.themeMode: int,
-  SettingsKeys.locale: String,
-  SettingsKeys.checkinFeeling: String,
-  SettingsKeys.checkinMessage: String,
-  SettingsKeys.showShortcutInForumCard: bool,
-  SettingsKeys.accentColor: int,
-  SettingsKeys.showUnreadInfoHint: bool,
-  SettingsKeys.doublePressExit: bool,
-  SettingsKeys.threadReverseOrder: bool,
-  SettingsKeys.threadCardInfoRowAlignCenter: bool,
-  SettingsKeys.threadCardShowLastReplyAuthor: bool,
-};

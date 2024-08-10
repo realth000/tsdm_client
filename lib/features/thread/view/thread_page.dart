@@ -190,6 +190,11 @@ class _ThreadPageState extends State<ThreadPage>
 
   @override
   Widget build(BuildContext context) {
+    final threadReverseOrder =
+        RepositoryProvider.of<SettingsRepository>(context)
+            .currentSettings
+            .threadReverseOrder;
+
     return MultiBlocProvider(
       providers: [
         RepositoryProvider<ThreadRepository>(
@@ -203,10 +208,8 @@ class _ThreadPageState extends State<ThreadPage>
             tid: widget.threadID,
             pid: widget.findPostID,
             threadRepository: RepositoryProvider.of(context),
-            reverseOrder: widget.overrideReverseOrder
-                ? RepositoryProvider.of<SettingsRepository>(context)
-                    .getValue<bool>(SettingsKeys.threadReverseOrder)
-                : null,
+            reverseOrder:
+                widget.overrideReverseOrder ? threadReverseOrder : null,
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(

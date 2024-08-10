@@ -5,12 +5,12 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Repository of reply.
-class ReplyRepository {
+final class ReplyRepository with LoggerMixin {
   /// Constructor.
   const ReplyRepository();
 
@@ -79,11 +79,11 @@ class ReplyRepository {
         replyUid == null ||
         repPid == null ||
         repPost == null) {
-      debug(
+      error(
         'failed to fetch reply to post parameters: formHash=$formHash, '
         'handleKey=$handleKey, noticeAuthor=$noticeAuthor',
       );
-      debug(
+      error(
         'failed to fetch reply to post parameters: '
         'noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, '
         'reppid=$repPid, reppost=$repPost',
@@ -112,7 +112,7 @@ class ReplyRepository {
     );
 
     if (!(resp.data as String).contains('回复发布成功')) {
-      debug('failed to reply to post: resp data not succeed: ${resp.data}');
+      error('failed to reply to post: resp data not succeed: ${resp.data}');
       throw ReplyToPostResultFailedException();
     }
   }

@@ -2,7 +2,7 @@ part of 'models.dart';
 
 /// Keys for all settings.
 // ignore_for_file: public_member_api_docs
-enum SettingsKeys {
+enum SettingsKeys implements Comparable<SettingsKeys> {
   /// Net client config: Accept.
   netClientAccept(
     name: 'netClientAccept',
@@ -194,4 +194,7 @@ enum SettingsKeys {
   final String name;
   final Type type;
   final dynamic defaultValue;
+
+  @override
+  int compareTo(SettingsKeys other) => name.compareTo(other.name);
 }

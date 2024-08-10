@@ -10,7 +10,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 
 /// Directory to save common image cache.
 late final Directory _imageCacheDirectory;
@@ -60,22 +60,21 @@ Future<void> initCache() async {
 }
 
 /// Provider of cached images.
-class ImageCacheProvider {
+final class ImageCacheProvider with LoggerMixin {
   /// Regexp that matches emoji bbcode.
   ///
   /// {:10_200:} format.
   static final _emojiCodeRe = RegExp(r'{:(?<groupId>\d+)_(?<id>\d+):}');
 
   /// Get the cache info related to [imageUrl].
-  Future<ImageCacheEntity?> getCacheInfo(String imageUrl) async {
-    return getIt.get<StorageProvider>().getImageCache(imageUrl);
-  }
+  ImageCacheEntity? getCacheInfo(String imageUrl) =>
+      getIt.get<StorageProvider>().getImageCacheSync(imageUrl);
 
   /// Get the cache image data related to [imageUrl].
   ///
   /// Only return the image data.
   Future<Uint8List> getCache(String imageUrl) async {
-    final cacheInfo = await getCacheInfo(imageUrl);
+    final cacheInfo = getCacheInfo(imageUrl);
     if (cacheInfo == null) {
       return Future.error('$imageUrl not cached');
     }
@@ -174,7 +173,7 @@ class ImageCacheProvider {
       final validateResult = info.validateCache(_emojiCacheDirectory.path);
       return validateResult;
     } catch (e) {
-      debug('validate emoji cache failed: invalid emoji info: $e');
+      error('validate emoji cache failed: invalid emoji info: $e');
       return false;
     }
   }
@@ -201,7 +200,7 @@ class ImageCacheProvider {
           EmojiGroupListMapper.fromJson(_emojiCacheInfoFile.readAsStringSync());
       return info.emojiGroupList;
     } catch (e) {
-      debug('failed to load emoji info when decoding json: $e');
+      error('failed to load emoji info when decoding json: $e');
       return null;
     }
   }
@@ -246,7 +245,7 @@ class ImageCacheProvider {
   Future<Uint8List?> getEmojiCache(String groupId, String id) async {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     if (!cacheFile.existsSync()) {
-      debug('$cacheFile cache file not exists');
+      error('$cacheFile cache file not exists');
       return null;
     }
     return cacheFile.readAsBytes();
@@ -256,7 +255,7 @@ class ImageCacheProvider {
   Uint8List? getEmojiCacheSync(String groupId, String id) {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     if (!cacheFile.existsSync()) {
-      debug('$cacheFile cache file not exists');
+      error('$cacheFile cache file not exists');
       return null;
     }
     return cacheFile.readAsBytesSync();

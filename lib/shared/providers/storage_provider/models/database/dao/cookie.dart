@@ -7,6 +7,11 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
   /// Constructor.
   CookieDao(super.db);
 
+  /// Get all cookies.
+  Future<List<CookieEntity>> selectAll() async {
+    return select(cookie).get();
+  }
+
   /// Get cookie by [username].
   Future<CookieEntity?> selectCookieByUsername(String username) async {
     return (select(cookie)..where((e) => e.username.equals(username)))

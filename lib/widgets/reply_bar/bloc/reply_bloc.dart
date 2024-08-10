@@ -2,7 +2,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
@@ -15,7 +15,7 @@ part 'reply_state.dart';
 typedef _Emit = Emitter<ReplyState>;
 
 /// Bloc of reply
-class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
+class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
   /// Constructor.
   ReplyBloc({required ReplyRepository replyRepository})
       : _replyRepository = replyRepository,
@@ -62,13 +62,13 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       );
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to reply to post: http failed with $e');
+      error('failed to reply to post: http failed with $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyToPostFetchParameterFailedException catch (e) {
-      debug('failed to reply to post: failed to fetch parameters: $e');
+      error('failed to reply to post: failed to fetch parameters: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyToPostResultFailedException catch (e) {
-      debug('failed to reply to post: failed result: $e');
+      error('failed to reply to post: failed result: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     }
   }
@@ -85,10 +85,10 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       );
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to reply to thread: http failed with $e');
+      error('failed to reply to thread: http failed with $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyToThreadResultFailedException catch (e) {
-      debug('failed to reply to thread: failed result: $e');
+      error('failed to reply to thread: failed result: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     }
   }
@@ -114,10 +114,10 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       );
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to reply chat history: $e');
+      error('failed to reply chat history: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyPersonalMessageFailedException catch (e) {
-      debug('failed to reply chat history: $e');
+      error('failed to reply chat history: $e');
       emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
     }
   }
@@ -135,10 +135,10 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> {
       );
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
-      debug('failed to reply chat history: $e');
+      error('failed to reply chat history: $e');
       emit(state.copyWith(status: ReplyStatus.failed));
     } on ReplyPersonalMessageFailedException catch (e) {
-      debug('failed to reply chat history: $e');
+      error('failed to reply chat history: $e');
       emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
     }
   }

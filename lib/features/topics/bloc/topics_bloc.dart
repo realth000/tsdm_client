@@ -6,7 +6,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part '../../../generated/features/topics/bloc/topics_bloc.mapper.dart';
@@ -14,7 +14,7 @@ part 'topics_event.dart';
 part 'topics_state.dart';
 
 /// Bloc of topic.
-class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
+class TopicsBloc extends Bloc<TopicsEvent, TopicsState> with LoggerMixin {
   /// Constructor.
   TopicsBloc({required ForumHomeRepository forumHomeRepository})
       : _forumHomeRepository = forumHomeRepository,
@@ -41,7 +41,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load topics page: $e');
+      error('failed to load topics page: $e');
       emit(state.copyWith(status: TopicsStatus.failed));
     }
   }
@@ -61,7 +61,7 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> {
         ),
       );
     } on HttpRequestFailedException catch (e) {
-      debug('failed to load topics page: $e');
+      error('failed to load topics page: $e');
       emit(state.copyWith(status: TopicsStatus.failed));
     }
   }

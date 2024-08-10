@@ -3,7 +3,6 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Provides a [CookieData] that implement `Storage` class so can be used in
@@ -43,7 +42,7 @@ class CookieProvider with LoggerMixin {
   /// * First look in storage and find the cached cookie related to
   ///   [userLoginInfo].
   /// * Return empty cookie if not found in cache.
-  Future<CookieData> build({UserLoginInfo? userLoginInfo}) async {
+  CookieData build({UserLoginInfo? userLoginInfo}) {
     // Specified user override.
     if (userLoginInfo != null) {
       final username = userLoginInfo.username;
@@ -53,13 +52,13 @@ class CookieProvider with LoggerMixin {
       Map<String, dynamic>? databaseCookie;
 
       if (uid != null) {
-        databaseCookie = await getIt.get<StorageProvider>().getCookieByUid(uid);
+        databaseCookie = getIt.get<StorageProvider>().getCookieByUidSync(uid);
       } else if (username != null) {
         databaseCookie =
-            await getIt.get<StorageProvider>().getCookieByUsername(username);
+            getIt.get<StorageProvider>().getCookieByUsernameSync(username);
       } else if (email != null) {
         databaseCookie =
-            await getIt.get<StorageProvider>().getCookieByEmail(email);
+            getIt.get<StorageProvider>().getCookieByEmailSync(email);
       }
 
       var cookie = <String, String>{};
@@ -76,19 +75,18 @@ class CookieProvider with LoggerMixin {
       }
     }
 
-    final loggedUid = await getIt
-        .get<SettingsRepository>()
-        .getValue<int>(SettingsKeys.loginUid);
-    if (loggedUid != null) {
-      debug('load empty cookie');
+    final loggedUid = getIt.get<SettingsRepository>().currentSettings.loginUid;
+    // Valid uid > 0.
+    if (loggedUid <= 0) {
+      info('load empty cookie');
       return CookieData();
     }
 
     // Has user login before, load cookie.
     final databaseCookie =
-        await getIt.get<StorageProvider>().getCookieByUid(loggedUid!);
+        getIt.get<StorageProvider>().getCookieByUidSync(loggedUid);
     if (databaseCookie == null) {
-      debug(
+      error(
         'failed to init cookie: current login user '
         'uid=$loggedUid not found in database',
       );
@@ -98,7 +96,7 @@ class CookieProvider with LoggerMixin {
     debug('load cookie from last logged user uid=$loggedUid');
     return CookieData.withUserInfo(
       userLoginInfo: UserLoginInfo(username: null, uid: loggedUid, email: null),
-      cookie: Map.castFrom(databaseCookie),
+      cookie: databaseCookie,
     );
   }
 }

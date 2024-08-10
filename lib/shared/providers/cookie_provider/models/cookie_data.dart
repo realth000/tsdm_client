@@ -4,7 +4,6 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Cookie stored to use in [PersistCookieJar] as replacement of [FileStorage]
@@ -30,14 +29,14 @@ class CookieData with LoggerMixin implements Storage {
   /// * Password.
   CookieData.withUserInfo({
     required UserLoginInfo userLoginInfo,
-    required Map<String, String> cookie,
+    required Cookie cookie,
   })  : _userLoginInfo = userLoginInfo,
         _cookieMap = cookie;
 
   final UserLoginInfo? _userLoginInfo;
 
   /// Cookie data.
-  Map<String, String> _cookieMap = {};
+  Cookie _cookieMap = {};
 
   /// Check if user info completed or not.
   ///

@@ -83,7 +83,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
 
   Future<void> _fillImageSize(BuildContext context, String url) async {
     try {
-      final cacheInfo = await getIt.get<ImageCacheProvider>().getCacheInfo(url);
+      final cacheInfo = getIt.get<ImageCacheProvider>().getCacheInfo(url);
       if (cacheInfo == null) {
         // Not cached
         // FIXME: SO CONFUSING

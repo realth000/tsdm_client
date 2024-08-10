@@ -41,7 +41,7 @@ final class ImageCacheRepository with LoggerMixin {
   FutureOr<void> updateImageCache(String url, {bool force = false}) async {
     // Use cache if intended to.
     if (!force) {
-      final cacheInfo = await _imageCacheProvider.getCacheInfo(url);
+      final cacheInfo = _imageCacheProvider.getCacheInfo(url);
       if (cacheInfo != null) {
         await _imageCacheProvider.getCache(url).then((x) {
           // Cache file may be deleted by external operations.

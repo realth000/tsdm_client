@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_resultn_result.dart';
+import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/checkin_button/bloc/checkin_button_bloc.dart';
 

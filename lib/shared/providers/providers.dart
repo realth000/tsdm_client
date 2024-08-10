@@ -14,12 +14,21 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 Future<void> initProviders() async {
   await initCache();
 
+  final db = AppDatabase();
+  final preloadedCookie = await preloadCookie(db);
+  final preloadedImageCache = await preloadImageCache(db);
+
   getIt
-    ..registerSingleton(AppDatabase())
-    ..registerSingleton(StorageProvider(getIt()))
+    ..registerSingleton<AppDatabase>(db)
+    ..registerSingleton(
+      StorageProvider(getIt(), preloadedCookie, preloadedImageCache),
+    )
     ..registerFactory(CookieProvider.new)
     ..registerSingleton(SettingsRepository(getIt()))
-    ..registerFactory(NetClientProvider.build)
+    ..registerFactory<NetClientProvider>(NetClientProvider.build)
+    ..registerFactory<NetClientNoCookieProvider>(
+      NetClientNoCookieProvider.buildNoCookie,
+    )
     ..registerFactory<CheckinProvider>(CheckInProviderImpl.new)
     ..registerFactory(ImageCacheProvider.new);
   await getIt.allReady();

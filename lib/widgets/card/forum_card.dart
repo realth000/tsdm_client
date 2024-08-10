@@ -7,9 +7,9 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/modelsls/models.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Card to show forum information.
@@ -24,7 +24,7 @@ class ForumCard extends StatefulWidget {
   State<ForumCard> createState() => _ForumCardState();
 }
 
-class _ForumCardState extends State<ForumCard> {
+final class _ForumCardState extends State<ForumCard> with LoggerMixin {
   bool showingSubThread = false;
   bool showingSubForum = false;
 
@@ -50,7 +50,7 @@ class _ForumCardState extends State<ForumCard> {
             onTap: () async {
               final target = widget.forum.latestThreadUrl?.parseUrlToRoute();
               if (target == null) {
-                debug(
+                error(
                   'invalid latest thread url: '
                   '${widget.forum.latestThreadUrl}',
                 );

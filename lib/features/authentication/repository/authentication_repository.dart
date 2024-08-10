@@ -147,8 +147,7 @@ class AuthenticationRepository with LoggerMixin {
         ),
     };
 
-    final netClient =
-        await NetClientProvider.build(userLoginInfo: userLoginInfo);
+    final netClient = NetClientProvider.build(userLoginInfo: userLoginInfo);
     final resp = await netClient.postForm(target, data: credential.toJson());
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode!);
@@ -205,9 +204,8 @@ class AuthenticationRepository with LoggerMixin {
 
     // Second check for email.
     // Get complete user info from page.
-    final fullInfoResp =
-        await (await NetClientProvider.build(userLoginInfo: userInfo))
-            .get(_passwordSettingsUrl);
+    final fullInfoResp = await NetClientProvider.build(userLoginInfo: userInfo)
+        .get(_passwordSettingsUrl);
     if (fullInfoResp.statusCode != HttpStatus.ok) {
       error('failed to fetch complete user info: '
           'code=${fullInfoResp.statusCode}');

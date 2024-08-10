@@ -7,6 +7,11 @@ final class ImageCacheDao extends DatabaseAccessor<AppDatabase>
   /// Constructor.
   ImageCacheDao(super.db);
 
+  /// Get all image cache.
+  Future<List<ImageCacheEntity>> selectAll() async {
+    return select(imageCache).get();
+  }
+
   /// Get image cache info by image's [url].
   Future<ImageCacheEntity?> selectImageCacheByUrl(String url) async {
     return (select(imageCache)..where((e) => e.url.equals(url)))

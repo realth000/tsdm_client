@@ -20,7 +20,6 @@ import 'package:tsdm_client/features/profile/repository/profile_repository.dart'
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
@@ -30,7 +29,6 @@ import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/checkin_button/checkin_button.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
-import 'package:tsdm_client/widgets/future_wrapper.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
@@ -116,19 +114,20 @@ class _ProfilePageState extends State<ProfilePage> {
     }
   }
 
-  Future<Widget> _buildSliverAppBar(
+  Widget _buildSliverAppBar(
     BuildContext context,
     ProfileState state, {
     required bool logout,
-  }) async {
+  }) {
     final userProfile = state.userProfile!;
     final unreadNoticeCount = state.unreadNoticeCount;
     final hasUnreadMessage = state.hasUnreadMessage;
 
     late final Widget noticeIcon;
     final showUnreadInfoHint =
-        await RepositoryProvider.of<SettingsRepository>(context)
-            .getValue<bool>(SettingsKeys.showUnreadInfoHint);
+        RepositoryProvider.of<SettingsRepository>(context)
+            .currentSettings
+            .showUnreadInfoHint;
 
     if (!context.mounted) {
       return sizedBoxEmpty;
@@ -751,9 +750,7 @@ class _ProfilePageState extends State<ProfilePage> {
         physics: physics,
         slivers: [
           // Real app bar when data loaded.
-          SliverFutureWrapper(
-            _buildSliverAppBar(context, state, logout: logout),
-          ),
+          _buildSliverAppBar(context, state, logout: logout),
           SliverPadding(
             padding: edgeInsetsL10T5R10,
             sliver: SliverList(

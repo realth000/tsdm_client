@@ -8,14 +8,14 @@ import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/fallback_picture.dart';
 
 /// Image that supports caching.
 ///
 /// * First try to read from cache.
 /// * If no cache available, fetch image from [imageUrl].
-class CachedImage extends StatelessWidget {
+class CachedImage extends StatelessWidget with LoggerMixin {
   /// Constructor.
   const CachedImage(
     this.imageUrl, {
@@ -70,7 +70,7 @@ class CachedImage extends StatelessWidget {
       imageData,
       fit: fit,
       errorBuilder: (context, e, st) {
-        debug('failed to load image from $imageUrl: $e');
+        error('failed to load image from $imageUrl: $e');
         return FallbackPicture(fit: fit);
       },
       // Use frameBuilder to reduce the widget splash when loading image.
@@ -196,7 +196,7 @@ class CachedImage extends StatelessWidget {
                 ImageCacheSuccessResponse(:final imageData) =>
                   _buildImage(context, imageData),
                 ImageCacheFailedResponse() => () {
-                    debug('failed to load image from $imageUrl');
+                    error('failed to load image from $imageUrl');
                     return _buildErrorWidget(context);
                   }(),
                 ImageCacheStatusResponse(:final status, :final imageData) =>

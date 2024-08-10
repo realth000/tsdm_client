@@ -5,12 +5,12 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 /// A repository that fetches the homepage html data from website.
-class ForumHomeRepository {
+final class ForumHomeRepository with LoggerMixin {
   /// Cached document of forum homepage.
   uh.Document? _document;
 
@@ -26,9 +26,9 @@ class ForumHomeRepository {
   ///
   /// * [HttpRequestFailedException] if GET request failed.
   Future<uh.Document> fetchHomePage({bool force = false}) async {
-    debug('[ForumHomeRepo] fetch home page');
+    debug('fetch home page');
     if (!force && _document != null) {
-      debug('[ForumHomeRepo] use cached home page');
+      debug('use cached home page');
       return _document!;
     }
     try {
@@ -45,9 +45,9 @@ class ForumHomeRepository {
   ///
   /// * [HttpRequestFailedException] if GET request failed.
   Future<uh.Document> fetchTopicPage({bool force = false}) async {
-    debug('[ForumHomeRepo] fetch topics page');
+    debug('fetch topics page');
     if (!force && _document != null) {
-      debug('[ForumHomeRepo] use cached topics page');
+      debug('use cached topics page');
       return _document!;
     }
     try {

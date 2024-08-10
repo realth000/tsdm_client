@@ -1,20 +1,74 @@
 import 'dart:convert';
 
+import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/dao/dao.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
+/// Load all cookie info from database without any dependency except [db].
+///
+/// Only use this function to preload cookie before initializing
+/// [StorageProvider].
+Future<Map<UserLoginInfo, Cookie>> preloadCookie(AppDatabase db) async {
+  final allCookie = await CookieDao(db).selectAll();
+  final mappedCookie = allCookie.map(
+    (e) => MapEntry(
+      UserLoginInfo(
+        username: e.username,
+        uid: e.uid,
+        email: e.email,
+      ),
+      jsonEncode(e.cookie) as Map<String, String>,
+    ),
+  );
+
+  return Map.fromEntries(mappedCookie);
+}
+
+/// Load all image cache info from database without any dependency except [db].
+///
+/// Only use this function to preload cookie before initializing
+/// [StorageProvider].
+Future<List<ImageCacheEntity>> preloadImageCache(AppDatabase db) async =>
+    ImageCacheDao(db).selectAll();
+
 /// [StorageProvider] should be used by other providers.
 class StorageProvider with LoggerMixin {
   /// Constructor.
-  const StorageProvider(this._db);
+  const StorageProvider(this._db, this._cookieCache, this._imageCache);
 
   /// Injected database
   final AppDatabase _db;
 
+  /// All cookie cached in memory.
+  ///
+  /// Read cache to avoid disk IO and make it synchronous.
+  ///
+  /// MUST update during cookie setter calls.
+  final Map<UserLoginInfo, Cookie> _cookieCache;
+
+  /// All image cache cached in memory.
+  ///
+  /// Access this field to avoid disk IO and make it synchronous.
+  ///
+  /// MUST update during image cache setter calls.
+  final List<ImageCacheEntity> _imageCache;
+
   /*             cookie             */
+
+  /// Get [Cookie] with [uid] from cookie cached saved in memory.
+  ///
+  /// Return null if not found.
+  ///
+  /// Generally the cookie cache is synced with database cookie values.
+  /// So may not need to use the async version API to retry to read.
+  Cookie? getCookieByUidSync(int uid) {
+    return _cookieCache.entries
+        .firstWhereOrNull((e) => e.key.uid == uid)
+        ?.value;
+  }
 
   /// Get [Cookie] with [uid].
   Future<Cookie?> getCookieByUid(int uid) async {
@@ -22,7 +76,19 @@ class StorageProvider with LoggerMixin {
     if (cookieEntity == null) {
       return null;
     }
-    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
+    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
+  }
+
+  /// Get [Cookie] with [username] from cookie cached saved in memory.
+  ///
+  /// Return null if not found.
+  ///
+  /// Generally the cookie cache is synced with database cookie values.
+  /// So may not need to use the async version API to retry to read.
+  Cookie? getCookieByUsernameSync(String username) {
+    return _cookieCache.entries
+        .firstWhereOrNull((e) => e.key.username == username)
+        ?.value;
   }
 
   /// Get [Cookie] with [username].
@@ -31,7 +97,19 @@ class StorageProvider with LoggerMixin {
     if (cookieEntity == null) {
       return null;
     }
-    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
+    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
+  }
+
+  /// Get [Cookie] with [email] from cookie cached saved in memory.
+  ///
+  /// Return null if not found.
+  ///
+  /// Generally the cookie cache is synced with database cookie values.
+  /// So may not need to use the async version API to retry to read.
+  Cookie? getCookieByEmailSync(String email) {
+    return _cookieCache.entries
+        .firstWhereOrNull((e) => e.key.email == email)
+        ?.value;
   }
 
   /// Get [Cookie] with [email].
@@ -40,7 +118,7 @@ class StorageProvider with LoggerMixin {
     if (cookieEntity == null) {
       return null;
     }
-    return jsonDecode(cookieEntity.cookie) as Map<String, dynamic>?;
+    return jsonDecode(cookieEntity.cookie) as Map<String, String>?;
   }
 
   /// Save cookie with completed user info.
@@ -51,13 +129,17 @@ class StorageProvider with LoggerMixin {
     required String username,
     required int uid,
     required String email,
-    required Map<String, String> cookie,
+    required Cookie cookie,
   }) async {
     final currentCookie = (await getCookieByUid(uid)) ?? {};
 
     // Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
     currentCookie.addAll(cookie);
+
+    // Update cookie cache.
+    final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
+    _cookieCache[userInfo] = cookie;
 
     await CookieDao(_db).upsertCookie(
       CookieCompanion(
@@ -71,11 +153,17 @@ class StorageProvider with LoggerMixin {
 
   /// Delete cookie for [uid].
   Future<bool> deleteCookieByUid(int uid) async {
+    // Update cookie cache.
+    _cookieCache.removeWhere((e, _) => e.uid == uid);
     final affectedRows = await CookieDao(_db).deleteCookieByUid(uid);
     return affectedRows != 0;
   }
 
   /*            image cache           */
+
+  /// Get the image cache for image from [url].
+  ImageCacheEntity? getImageCacheSync(String url) =>
+      _imageCache.firstWhereOrNull((e) => e.url == url);
 
   /// Get the image cache for image from [url].
   Future<ImageCacheEntity?> getImageCache(String url) async {
@@ -123,10 +211,6 @@ class StorageProvider with LoggerMixin {
 
   /// Remove a settings with given [name].
   Future<bool> removeByKey(String name) async {
-    if (!settingsTypeMap.containsKey(name)) {
-      error('failed to save settings: invalid key $name');
-      return false;
-    }
     final affectedRows = await SettingsDao(_db).deleteByName(name);
     return affectedRows != 0;
   }
@@ -137,10 +221,6 @@ class StorageProvider with LoggerMixin {
 
   /// Save string type value of specified key.
   Future<void> saveString(String key, String value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to save settings: invalid key $key');
-      return;
-    }
     await SettingsDao(_db).setValue<String>(key, value);
   }
 
@@ -150,10 +230,6 @@ class StorageProvider with LoggerMixin {
 
   /// Sae int type value of specified key.
   Future<void> saveInt(String key, int value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to save settings: invalid key $key');
-      return;
-    }
     await SettingsDao(_db).setValue<int>(key, value);
   }
 
@@ -163,10 +239,6 @@ class StorageProvider with LoggerMixin {
 
   /// Save bool type value of specified value.
   Future<void> saveBool(String key, {required bool value}) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to save settings: invalid key $key');
-      return;
-    }
     await SettingsDao(_db).setValue<bool>(key, value);
   }
 
@@ -176,20 +248,11 @@ class StorageProvider with LoggerMixin {
 
   /// Save double type value of specified key.
   Future<void> saveDouble(String key, double value) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to save settings: invalid key $key');
-      return;
-    }
     await SettingsDao(_db).setValue<double>(key, value);
   }
 
   /// Delete the given record from database.
   Future<void> deleteKey(String key) async {
-    if (!settingsTypeMap.containsKey(key)) {
-      error('failed to save settings: invalid key $key');
-      return;
-    }
-
     await SettingsDao(_db).deleteByName(key);
   }
 }

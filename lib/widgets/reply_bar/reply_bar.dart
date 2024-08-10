@@ -11,7 +11,7 @@ import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/debug.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
@@ -184,7 +184,7 @@ class _ReplyBar extends StatefulWidget {
   State<_ReplyBar> createState() => _ReplyBarState();
 }
 
-class _ReplyBarState extends State<_ReplyBar> {
+final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   /// Indicate current thread is closed.
   bool _closed = false;
 
@@ -272,7 +272,7 @@ class _ReplyBarState extends State<_ReplyBar> {
       return;
     }
     if (_replyRichController.isEmpty) {
-      debug('refuse to send post to thread: empty rich text message');
+      error('refuse to send post to thread: empty rich text message');
       return;
     }
     context.read<ReplyBloc>().add(
@@ -287,12 +287,12 @@ class _ReplyBarState extends State<_ReplyBar> {
   /// This will add a post in that thread, as a reply to another post.
   Future<void> _sendReplyPostMessage() async {
     if (_replyParameters == null || _replyAction == null) {
-      debug('failed to reply to post: reply action not set');
+      error('failed to reply to post: reply action not set');
       return;
     }
 
     if (_replyRichController.isEmpty) {
-      debug('failed to reply to post: reply message is empty');
+      error('failed to reply to post: reply message is empty');
       return;
     }
 
@@ -308,12 +308,12 @@ class _ReplyBarState extends State<_ReplyBar> {
   /// Send message in chat history reply type.
   Future<void> _sendChatHistoryMessage() async {
     if (widget.chatHistorySendTarget == null) {
-      debug('failed to reply in chat history type: send target is null');
+      error('failed to reply in chat history type: send target is null');
       return;
     }
 
     if (_replyRichController.isEmpty) {
-      debug('failed to reply chat history: reply message is empty');
+      error('failed to reply chat history: reply message is empty');
       return;
     }
 
@@ -328,12 +328,12 @@ class _ReplyBarState extends State<_ReplyBar> {
 
   Future<void> _sendChatMessage() async {
     if (widget.chatSendTarget == null) {
-      debug('failed to reply in chat: send target is null');
+      error('failed to reply in chat: send target is null');
       return;
     }
 
     if (_replyRichController.isEmpty) {
-      debug('failed to reply chat: reply message is empty');
+      error('failed to reply chat: reply message is empty');
       return;
     }
 
@@ -355,7 +355,7 @@ class _ReplyBarState extends State<_ReplyBar> {
       case ReplyTypes.thread:
         {
           if (_replyAction == null && _replyParameters == null) {
-            debug(
+            error(
               'failed to send reply: null action and '
               'parameters',
             );
@@ -598,7 +598,7 @@ class _ReplyBarState extends State<_ReplyBar> {
 /// Controller of [ReplyBar].
 ///
 /// Used to fill parameters and update state.
-class ReplyBarController {
+final class ReplyBarController with LoggerMixin {
   _ReplyBarState? _state;
 
   void Function()? _onSetHintTextCallback;
