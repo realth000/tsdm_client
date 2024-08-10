@@ -201,7 +201,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
               _UserProfilePair(
                 MdiIcons.dominoMask,
                 tr.scheming,
-                profile.natural,
+                profile.scheming,
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
