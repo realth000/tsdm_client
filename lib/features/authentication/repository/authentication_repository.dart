@@ -43,7 +43,7 @@ class AuthenticationRepository with LoggerMixin {
 
   static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
   static const _loginBaseUrl =
-      '$baseUrl/member.php?mod=logging&action=login&loginsubmit=yes&frommessage&loginhash=';
+      '$baseUrl/member.php?mod=logging&action=login&handlekey=ls&loginsubmit=yes&loginhash=';
   static const _logoutBaseUrl =
       '$baseUrl/member.php?mod=logging&action=logout&formhash=';
   static const _fakeFormUrl =

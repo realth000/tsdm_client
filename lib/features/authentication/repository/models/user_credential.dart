@@ -100,11 +100,14 @@ class UserCredential with UserCredentialMappable {
       'formhash': formHash,
       'tsdm_verify': tsdmVerify,
       'referer': referer,
-      'questionid': securityQuestion?.questionId ?? 0,
-      'answer': securityQuestion?.answer ?? 0,
       'cookietime': cookieTime,
       'loginsubmit': loginSubmit,
     };
+
+    if (securityQuestion != null) {
+      m['questionid'] = securityQuestion!.questionId;
+      m['answer'] = securityQuestion!.answer;
+    }
 
     return m;
   }
