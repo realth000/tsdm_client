@@ -107,11 +107,11 @@ class StorageProvider with LoggerMixin {
     required String email,
     required Cookie cookie,
   }) async {
-    final allCookie = getCookieByUidSync(uid) ?? {};
+    final allCookie = getCookieByUidSync(uid) ?? <String, dynamic>{};
 
     // Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
-    allCookie.addAll(cookie);
+    allCookie.addAll(Map.castFrom<String, dynamic, String, String>(cookie));
 
     // Update cookie cache.
     final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
