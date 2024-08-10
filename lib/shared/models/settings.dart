@@ -37,7 +37,7 @@ enum SettingsKeys implements Comparable<SettingsKeys> {
     name: 'dioUserAgent',
     type: String,
     defaultValue:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 Edg/110.0.1587.57',
+        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   ),
 
   /// Window width config on desktop platforms.
