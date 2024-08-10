@@ -23,10 +23,6 @@ class ThemeCubit extends Cubit<ThemeState> {
   void setAccentColor(Color accentColor) =>
       emit(state.copyWith(accentColor: accentColor));
 
-  /// Reset the app accent color.
-  void clearAccentColor() =>
-      emit(ThemeState(themeModeIndex: state.themeModeIndex));
-
   /// Set the app the mode by its index.
   void setThemeModeIndex(int themeModeIndex) =>
       emit(state.copyWith(themeModeIndex: themeModeIndex));

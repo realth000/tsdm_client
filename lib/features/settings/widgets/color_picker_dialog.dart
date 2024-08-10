@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 
 const _colorBoxSize = 50.0;
@@ -58,7 +56,6 @@ final class ColorPickerDialog extends StatelessWidget {
         TextButton(
           child: Text(context.t.general.reset),
           onPressed: () async {
-            blocContext.read<ThemeCubit>().clearAccentColor();
             context.pop((null, true));
           },
         ),

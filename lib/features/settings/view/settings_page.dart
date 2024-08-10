@@ -218,7 +218,9 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           if (color.$2) {
             // Effect immediately.
-            context.read<ThemeCubit>().clearAccentColor();
+            context
+                .read<ThemeCubit>()
+                .setAccentColor(Color(SettingsKeys.accentColor.defaultValue));
             // Set to -1 ( < 0) will clear accent color.
             context.read<SettingsBloc>().add(
                   SettingsValueChanged(
