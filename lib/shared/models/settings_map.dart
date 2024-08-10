@@ -58,7 +58,7 @@ class SettingsMap with SettingsMapMappable {
 
   SettingsMap copyWithKey<T>(SettingsKeys key, T value) {
     assert(
-      T == key.type,
+      T == key.type || T == Null,
       'Settings value type and expected extract type MUST equal\n'
       'expected ${key.type}, but got $T',
     );
