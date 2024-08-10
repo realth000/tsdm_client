@@ -62,9 +62,7 @@ class AppTheme {
       background: seedScheme?.surface,
       onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
-      scheme: seedColor == null
-          ? FlexScheme.bahamaBlue
-          : FlexScheme.materialBaseline,
+      scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
       subThemesData: const FlexSubThemesData(
@@ -124,9 +122,7 @@ class AppTheme {
       background: seedScheme?.surface,
       onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
-      scheme: seedColor == null
-          ? FlexScheme.bahamaBlue
-          : FlexScheme.materialBaseline,
+      scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
       subThemesData: const FlexSubThemesData(
