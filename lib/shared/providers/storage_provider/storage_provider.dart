@@ -31,8 +31,11 @@ Future<Map<UserLoginInfo, Cookie>> preloadCookie(AppDatabase db) async {
 ///
 /// Only use this function to preload cookie before initializing
 /// [StorageProvider].
-Future<List<ImageCacheEntity>> preloadImageCache(AppDatabase db) async =>
-    ImageCacheDao(db).selectAll();
+Future<Map<String, ImageCacheEntity>> preloadImageCache(AppDatabase db) async {
+  final allImageCache = await ImageCacheDao(db).selectAll();
+  final mappedImageCache = allImageCache.map((e) => MapEntry(e.url, e));
+  return Map.fromEntries(mappedImageCache);
+}
 
 /// [StorageProvider] should be used by other providers.
 class StorageProvider with LoggerMixin {
@@ -54,7 +57,7 @@ class StorageProvider with LoggerMixin {
   /// Access this field to avoid disk IO and make it synchronous.
   ///
   /// MUST update during image cache setter calls.
-  final List<ImageCacheEntity> _imageCache;
+  final Map<String, ImageCacheEntity> _imageCache;
 
   /*             cookie             */
 
@@ -172,42 +175,47 @@ class StorageProvider with LoggerMixin {
 
   /// Get the image cache for image from [url].
   ImageCacheEntity? getImageCacheSync(String url) =>
-      _imageCache.firstWhereOrNull((e) => e.url == url);
-
-  /// Get the image cache for image from [url].
-  Future<ImageCacheEntity?> getImageCache(String url) async {
-    return ImageCacheDao(_db).selectImageCacheByUrl(url);
-  }
+      _imageCache.entries.firstWhereOrNull((e) => e.key == url)?.value;
 
   /// Insert or update cache info, update all info.
   Future<void> updateImageCache(
     String url, {
-    String? fileName,
+    required String fileName,
     DateTime? lastCacheTime,
     DateTime? lastUsedTime,
   }) async {
+    final now = DateTime.now();
+    _imageCache[url] = ImageCacheEntity(
+      url: url,
+      fileName: fileName,
+      lastCachedTime: lastCacheTime ?? now,
+      lastUsedTime: lastUsedTime ?? now,
+    );
     await ImageCacheDao(_db).upsertImageCache(
       ImageCacheCompanion(
         url: Value(url),
-        fileName: fileName != null ? Value(fileName) : const Value.absent(),
-        lastCachedTime: lastCacheTime != null
-            ? Value(lastCacheTime)
-            : Value(DateTime.now()),
-        lastUsedTime:
-            lastUsedTime != null ? Value(lastUsedTime) : const Value.absent(),
+        fileName: Value(fileName),
+        lastCachedTime:
+            lastCacheTime != null ? Value(lastCacheTime) : Value(now),
+        lastUsedTime: lastUsedTime != null ? Value(lastUsedTime) : Value(now),
       ),
     );
   }
 
   /// Insert or update cache info, only update last used time.
   Future<void> updateImageCacheUsedTime(String url) async {
+    final now = DateTime.now();
+    if (_imageCache.containsKey(url)) {
+      _imageCache[url] = _imageCache[url]!.copyWith(lastUsedTime: now);
+    }
     await ImageCacheDao(_db).upsertImageCache(
-      ImageCacheCompanion(url: Value(url), lastUsedTime: Value(DateTime.now())),
+      ImageCacheCompanion(url: Value(url), lastUsedTime: Value(now)),
     );
   }
 
   /// Clear all image cache in database.
   Future<void> clearImageCache() async {
+    _imageCache.clear();
     await ImageCacheDao(_db).deleteAll();
   }
 
