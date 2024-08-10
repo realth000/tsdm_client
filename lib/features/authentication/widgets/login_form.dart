@@ -46,22 +46,30 @@ class LoginForm extends StatefulWidget {
 
 class _LoginFormState extends State<LoginForm> with LoggerMixin {
   final formKey = GlobalKey<FormState>();
-  final usernameController = TextEditingController();
-  final passwordController = TextEditingController();
-  final answerController = TextEditingController();
-  final verifyCodeController = TextEditingController();
+  late final TextEditingController usernameController;
+  late final TextEditingController passwordController;
+  late final TextEditingController answerController;
+  late final TextEditingController verifyCodeController;
 
   bool _showPassword = false;
 
   String _question = _loginQuestions.first;
 
-  Future<void> _login(BuildContext context, AuthenticationState state) async {
+  LoginField loginField = LoginField.username;
+
+  late final FocusNode loginFieldFocus;
+
+  Future<void> _login(
+    BuildContext context,
+    LoginField loginField,
+    AuthenticationState state,
+  ) async {
     if (formKey.currentState == null || !(formKey.currentState!).validate()) {
       return;
     }
 
     final credential = UserCredential(
-      loginField: LoginField.username,
+      loginField: loginField,
       loginFieldValue: usernameController.text,
       password: passwordController.text,
       formHash: state.loginHash!.formHash,
@@ -82,6 +90,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
   Widget _buildForm(BuildContext context, AuthenticationState state) {
     // Only allow to press login button when got hash but not logged in.
     final pending = state.status != AuthenticationStatus.gotHash;
+    final tr = context.t.loginPage;
 
     return Form(
       key: formKey,
@@ -89,27 +98,62 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
         children: [
           Center(
             child: Text(
-              t.loginPage.login,
+              tr.login,
               style: Theme.of(context).textTheme.titleLarge,
             ),
           ),
           sizedBoxW10H10,
           TextFormField(
             autofocus: true,
+            focusNode: loginFieldFocus,
             controller: usernameController,
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.person),
-              labelText: t.loginPage.username,
+              // prefixIcon: const Icon(Icons.person),
+              labelText: switch (loginField) {
+                LoginField.username => tr.loginField.username,
+                LoginField.uid => tr.loginField.uid,
+                LoginField.email => tr.loginField.email,
+              },
+              // Follow M3 spec:
+              // https://m3.material.io/components/text-fields/specs
+              constraints: const BoxConstraints(maxHeight: specTextFieldHeight),
+              prefix: DropdownButtonHideUnderline(
+                child: DropdownButton<LoginField>(
+                  value: loginField,
+                  onChanged: (v) {
+                    if (v == null) {
+                      return;
+                    }
+                    setState(() {
+                      loginField = v;
+                    });
+                    loginFieldFocus.requestFocus();
+                  },
+                  items: [
+                    DropdownMenuItem(
+                      value: LoginField.username,
+                      child: Text(tr.loginField.username),
+                    ),
+                    DropdownMenuItem(
+                      value: LoginField.uid,
+                      child: Text(tr.loginField.uid),
+                    ),
+                    DropdownMenuItem(
+                      value: LoginField.email,
+                      child: Text(tr.loginField.email),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            validator: (v) =>
-                v!.trim().isNotEmpty ? null : t.loginPage.usernameEmpty,
+            validator: (v) => v!.trim().isNotEmpty ? null : tr.usernameEmpty,
           ),
           sizedBoxW10H10,
           TextFormField(
             controller: passwordController,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.password),
-              labelText: t.loginPage.password,
+              labelText: tr.password,
               suffixIcon: Focus(
                 canRequestFocus: false,
                 descendantsAreFocusable: false,
@@ -126,8 +170,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               ),
             ),
             obscureText: !_showPassword,
-            validator: (v) =>
-                v!.trim().isNotEmpty ? null : t.loginPage.passwordEmpty,
+            validator: (v) => v!.trim().isNotEmpty ? null : tr.passwordEmpty,
           ),
           sizedBoxW10H10,
           Row(
@@ -137,10 +180,10 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                   controller: verifyCodeController,
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.pin),
-                    labelText: t.loginPage.verifyCode,
+                    labelText: tr.verifyCode,
                   ),
                   validator: (v) =>
-                      v!.trim().isNotEmpty ? null : t.loginPage.verifyCodeEmpty,
+                      v!.trim().isNotEmpty ? null : tr.verifyCodeEmpty,
                 ),
               ),
               sizedBoxW10H10,
@@ -156,7 +199,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           InputDecorator(
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.question_mark_outlined),
-              labelText: t.loginPage.securityQuestion,
+              labelText: tr.securityQuestion,
             ),
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
@@ -184,13 +227,13 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
             controller: answerController,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.question_answer_outlined),
-              labelText: context.t.loginPage.answer,
+              labelText: tr.answer,
               enabled: _question != _loginQuestions.first,
             ),
             validator: (v) =>
                 _question == _loginQuestions.first || v!.trim().isNotEmpty
                     ? null
-                    : t.loginPage.answerEmpty,
+                    : tr.answerEmpty,
           ),
           sizedBoxW10H10,
           Row(
@@ -198,8 +241,8 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               Expanded(
                 child: DebounceFilledButton(
                   shouldDebounce: pending,
-                  onPressed: () async => _login(context, state),
-                  child: Text(context.t.loginPage.login),
+                  onPressed: () async => _login(context, loginField, state),
+                  child: Text(tr.login),
                 ),
               ),
             ],
@@ -207,6 +250,26 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
         ],
       ),
     );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    usernameController = TextEditingController();
+    passwordController = TextEditingController();
+    answerController = TextEditingController();
+    verifyCodeController = TextEditingController();
+    loginFieldFocus = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    usernameController.dispose();
+    passwordController.dispose();
+    answerController.dispose();
+    verifyCodeController.dispose();
+    loginFieldFocus.dispose();
+    super.dispose();
   }
 
   @override

@@ -172,7 +172,12 @@
     "failedToGetCaptcha": "Failed to get captcha: $err",
     "failedToGetFormHash": "Failed to get form hash",
     "hashValueNotFound": "Hash not found",
-    "preparingLogin": "Preparing login"
+    "preparingLogin": "Preparing login",
+    "loginField": {
+      "username": "Username",
+      "uid": "UID",
+      "email": "Email"
+    }
   },
   "rootPage": {
     "initFailed": "Init failed: $err",

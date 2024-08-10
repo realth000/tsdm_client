@@ -172,7 +172,12 @@
     "failedToGetCaptcha": "取得驗證碼失敗: $err",
     "failedToGetFormHash": "取得表格雜湊失敗",
     "hashValueNotFound": "找不到hash",
-    "preparingLogin": "準備登入"
+    "preparingLogin": "準備登入",
+    "loginField": {
+      "username": "使用者名稱",
+      "uid": "UID",
+      "email": "信箱"
+    }
   },
   "rootPage": {
     "initFailed": "初始化失敗: $err",

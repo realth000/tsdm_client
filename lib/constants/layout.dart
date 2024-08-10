@@ -239,3 +239,9 @@ enum WindowSize {
   /// DP on Android and default LP in flutter, both are the same.
   final double end;
 }
+
+// All values of variables in this section are defined in Material 3 spec:
+// https://m3.material.io/components/
+
+/// Spec defined [TextField] height.
+const specTextFieldHeight = 56.0;

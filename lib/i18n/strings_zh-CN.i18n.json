@@ -172,7 +172,12 @@
     "failedToGetCaptcha": "获取验证码失败: $err",
     "failedToGetFormHash": "获取表格哈希失败",
     "hashValueNotFound": "找不到hash",
-    "preparingLogin": "准备登录"
+    "preparingLogin": "准备登录",
+    "loginField": {
+      "username": "用户名",
+      "uid": "UID",
+      "email": "邮箱"
+    }
   },
   "rootPage": {
     "initFailed": "初始化失败: $err",
