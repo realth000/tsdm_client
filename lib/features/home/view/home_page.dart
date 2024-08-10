@@ -4,11 +4,13 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
+import 'package:tsdm_client/features/home/cubit/init_cubit.dart';
 import 'package:tsdm_client/features/home/widgets/widgets.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 const _drawerWidth = 250.0;
@@ -92,71 +94,91 @@ class _HomePageState extends State<HomePage> {
         ),
       );
 
+  Widget _buildContent(BuildContext context) {
+    final Widget child;
+    if (ResponsiveBreakpoints.of(context)
+        .largerThan(WindowSize.expanded.name)) {
+      child = _buildDrawerBody(context);
+    } else if (ResponsiveBreakpoints.of(context)
+        .largerThan(WindowSize.compact.name)) {
+      child = Scaffold(
+        body: Row(
+          children: [
+            if (widget.showNavigationBar) const HomeNavigationRail(),
+            Expanded(child: widget.child),
+          ],
+        ),
+      );
+    } else {
+      child = Scaffold(
+        body: widget.child,
+        bottomNavigationBar:
+            widget.showNavigationBar ? const HomeNavigationBar() : null,
+      );
+    }
+
+    return RepositoryProvider.value(
+      value: widget._forumHomeRepository,
+      child: BackButtonListener(
+        onBackButtonPressed: () async {
+          final doublePressExit =
+              getIt.get<SettingsRepository>().currentSettings.doublePressExit;
+          if (!doublePressExit) {
+            // Do NOT handle pop events on double press check is disabled.
+            return false;
+          }
+          if (!context.mounted) {
+            return false;
+          }
+
+          if (context.canPop()) {
+            // Do NOT handle pop events on other pages.
+            return false;
+          }
+          final tr = context.t.home;
+          final currentTime = DateTime.now();
+          if (lastPopTime == null ||
+              currentTime.difference(lastPopTime!).inMilliseconds >
+                  exitConfirmDuration.inMilliseconds) {
+            lastPopTime = currentTime;
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            showSnackBar(context: context, message: tr.confirmExit);
+            return true;
+          }
+          return false;
+        },
+        child: child,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Translations.of(context);
-    return BlocProvider(
-      create: (_) => HomeCubit(),
-      child: Builder(
-        builder: (context) {
-          final Widget child;
-          if (ResponsiveBreakpoints.of(context)
-              .largerThan(WindowSize.expanded.name)) {
-            child = _buildDrawerBody(context);
-          } else if (ResponsiveBreakpoints.of(context)
-              .largerThan(WindowSize.compact.name)) {
-            child = Scaffold(
-              body: Row(
-                children: [
-                  if (widget.showNavigationBar) const HomeNavigationRail(),
-                  Expanded(child: widget.child),
-                ],
-              ),
-            );
-          } else {
-            child = Scaffold(
-              body: widget.child,
-              bottomNavigationBar:
-                  widget.showNavigationBar ? const HomeNavigationBar() : null,
-            );
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => HomeCubit(),
+        ),
+        BlocProvider(
+          create: (context) => InitCubit()..deleteV0LegacyData(),
+        ),
+      ],
+      child: BlocListener<InitCubit, InitState>(
+        listenWhen: (prev, curr) =>
+            prev.v0LegacyDataDeleted != curr.v0LegacyDataDeleted,
+        listener: (context, state) {
+          if (state.v0LegacyDataDeleted != true) {
+            return;
           }
-
-          return RepositoryProvider.value(
-            value: widget._forumHomeRepository,
-            child: BackButtonListener(
-              onBackButtonPressed: () async {
-                final doublePressExit = getIt
-                    .get<SettingsRepository>()
-                    .currentSettings
-                    .doublePressExit;
-                if (!doublePressExit) {
-                  // Do NOT handle pop events on double press check is disabled.
-                  return false;
-                }
-                if (!context.mounted) {
-                  return false;
-                }
-
-                if (context.canPop()) {
-                  // Do NOT handle pop events on other pages.
-                  return false;
-                }
-                final tr = context.t.home;
-                final currentTime = DateTime.now();
-                if (lastPopTime == null ||
-                    currentTime.difference(lastPopTime!).inMilliseconds >
-                        exitConfirmDuration.inMilliseconds) {
-                  lastPopTime = currentTime;
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  showSnackBar(context: context, message: tr.confirmExit);
-                  return true;
-                }
-                return false;
-              },
-              child: child,
-            ),
+          final tr = context.t.init.v1DeleteLegacyData;
+          showMessageSingleButtonDialog(
+            context: context,
+            title: tr.title,
+            message: tr.detail,
           );
         },
+        child: _buildContent(context),
       ),
     );
   }
