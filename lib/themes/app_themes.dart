@@ -124,7 +124,9 @@ class AppTheme {
       background: seedScheme?.surface,
       onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
-      scheme: seedColor == null ? FlexScheme.bahamaBlue : FlexScheme.material,
+      scheme: seedColor == null
+          ? FlexScheme.bahamaBlue
+          : FlexScheme.materialBaseline,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
       subThemesData: const FlexSubThemesData(
@@ -140,6 +142,7 @@ class AppTheme {
         drawerRadius: 0,
       ),
       keyColors: const FlexKeyColors(
+        useKeyColors: false,
         useSecondary: true,
         useTertiary: true,
       ),
