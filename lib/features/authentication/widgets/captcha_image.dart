@@ -9,12 +9,13 @@ import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Captcha image size is 320x150.
-const _captchaImageWidth = 320;
-const _captchaImageHeight = 150;
+const _captchaImageWidth = 320.0;
+const _captchaImageHeight = 150.0;
 
-/// Row height is 60 (Default).
-/// So indicator should use (150 / 60) * 320 width.
-const _indicatorBoxWidth = (60 / _captchaImageHeight) * _captchaImageWidth;
+const _renderHeight = 52.0;
+
+const _indicatorBoxWidth =
+    (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
 
 /// The captcha image used in login form.
 class CaptchaImage extends StatefulWidget {
@@ -81,7 +82,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () async => reload,
+      onTap: () async => reload(),
       child: FutureBuilder(
         future: f,
         builder: (context, snapshot) {
@@ -94,7 +95,8 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
           if (snapshot.hasData && futureComplete) {
             final bytes = Uint8List.fromList(snapshot.data!.data as List<int>);
             debug('fetch login captcha finished, ${f.hashCode}');
-            return Image.memory(bytes, height: 60);
+            // 130 x 60 -> 110.9 -> 52
+            return Image.memory(bytes, height: _renderHeight);
           }
           return const SizedBox(
             width: _indicatorBoxWidth,
