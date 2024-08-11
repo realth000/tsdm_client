@@ -31,7 +31,7 @@ jobs:
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          prerelease: $PRERELEASE
+          prerelease: ${{ env.PRERELEASE }}
           allowUpdates: true
           body: '${{ steps.extract-release-notes.outputs.release_notes }}'
 
