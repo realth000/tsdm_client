@@ -32,6 +32,7 @@ jobs:
 
   build-linux-android:
     name: Build Linux and Android
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -99,6 +100,7 @@ jobs:
 
   build-windows:
     name: Build Windows
+    needs: [release]
     runs-on: windows-latest
     permissions:
       contents: write
@@ -138,6 +140,7 @@ jobs:
           artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
   build-macos-and-ios:
     name: Build MacOS and iOS
+    needs: [release]
     runs-on: macos-latest
     permissions:
       contents: write

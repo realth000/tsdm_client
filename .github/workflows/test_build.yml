@@ -84,7 +84,7 @@ jobs:
           path: tsdm_client
       - name: Upload Linux artifacts
         if: ${{ github.event_name != 'push' && inputs.build_linux && !inputs.dry_run }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tsdm_client-linux-tarball
           path: build/linux/x64/release/tsdm_client-linux.tar.gz
@@ -106,7 +106,7 @@ jobs:
           popd
       - name: Upload Android artifacts
         if: ${{ github.event_name != 'push' && inputs.build_android && !inputs.dry_run }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tsdm_client-apk-arm64_v8a
           path: |
@@ -144,7 +144,7 @@ jobs:
           path: tsdm_client
       - name: Upload Windows artifacts
         if: ${{ github.event_name != 'push' && !inputs.dry_run }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tsdm_client-windows-tarball
           path: build/windows/x64/runner/tsdm_client-windows.zip
@@ -177,7 +177,7 @@ jobs:
           appdmg appdmg.json build/tsdm_client-universal.dmg
       - name: Upload MacOS artifacts
         if: ${{ github.event_name != 'push' && inputs.build_macos && !inputs.dry_run }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tsdm_client-macos-tarball
           path: build/tsdm_client-universal.dmg
@@ -193,7 +193,7 @@ jobs:
           zip -r9 tsdm_client.ipa Payload
       - name: Upload iOS artifacts
         if: ${{ github.event_name != 'push' && inputs.build_ios && !inputs.dry_run }}
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: tsdm_client-ios-tarball
           path: tsdm_client.ipa
