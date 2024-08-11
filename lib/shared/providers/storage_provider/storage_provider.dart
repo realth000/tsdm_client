@@ -118,6 +118,7 @@ class StorageProvider with LoggerMixin {
     _cookieCache[userInfo] = allCookie;
 
     if (!allCookie.toString().contains('s_gkr8_682f_auth')) {
+      // Only save cookie when cookie is authed.
       info('refuse to save not authed cookie');
       return;
     }
@@ -130,18 +131,6 @@ class StorageProvider with LoggerMixin {
         cookie: Value(jsonEncode(allCookie)),
       ),
     );
-  }
-
-  /// Only save cookie in memory cache.
-  Future<void> saveCookieInCache({
-    required Cookie cookie,
-    String? username,
-    int? uid,
-    String? email,
-  }) async {
-    // Update cookie cache.
-    final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
-    _cookieCache[userInfo] = cookie;
   }
 
   /// Delete cookie for [uid].

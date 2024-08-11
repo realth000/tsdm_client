@@ -6,6 +6,8 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
+part 'current_user_cookie.dart';
+
 /// Cookie stored to use in [PersistCookieJar] as replacement of [FileStorage]
 /// that save in database.
 ///
@@ -16,6 +18,26 @@ import 'package:tsdm_client/utils/logger.dart';
 ///
 /// Use the [getIt] to access database.
 class CookieData with LoggerMixin implements Storage {
+  /// Constructor.
+  ///
+  /// Use this constructor when logout.
+  CookieData.logout({
+    required UserLoginInfo userLoginInfo,
+    required Cookie cookie,
+  })  : _userLoginInfo = userLoginInfo,
+        _cookieMap = Map.castFrom(cookie) {
+    debug('logout progress with userinfo $_userLoginInfo');
+
+    // We may logout another user, or current user.
+    //
+    // Only clear static cookie cache when current user logout.
+    // This progress is prepared for the multiuser feature.
+    if (userLoginInfo == _currentUserCookie.userLoginInfo) {
+      debug('clear temporary cookie static cache for current login user');
+      _currentUserCookie = _CurrentUserCookie.empty();
+    }
+  }
+
   /// Construct with [userLoginInfo] and [cookie].
   ///
   /// [userLoginInfo] can be partly filled. What means is during login progress,
@@ -26,9 +48,54 @@ class CookieData with LoggerMixin implements Storage {
   /// * Password.
   CookieData.withUserInfo({
     required UserLoginInfo userLoginInfo,
-    required Cookie cookie,
+    Cookie? cookie,
   })  : _userLoginInfo = userLoginInfo,
-        _cookieMap = Map.castFrom(cookie);
+        _cookieMap = cookie != null
+            ? Map.castFrom(cookie)
+            : _currentUserCookie.cookie ?? {} {
+    if (userLoginInfo.isComplete && cookie != null) {
+      // User info is complete, means already has user login.
+      _currentUserCookie.copyWith(
+        userLoginInfo: userLoginInfo,
+        cookie: Map.castFrom(cookie),
+      );
+    }
+  }
+
+  /// Construct with [userLoginInfo].
+  ///
+  /// Use this constructor when starting a new login progress.
+  CookieData.startLogin(UserLoginInfo userLoginInfo)
+      : _userLoginInfo = userLoginInfo,
+        _cookieMap = {} {
+    // Clear current user cookie when going to start a login progress.
+    debug('start login progress with userinfo $userLoginInfo');
+    _currentUserCookie =
+        _CurrentUserCookie.empty().copyWith(userLoginInfo: userLoginInfo);
+  }
+
+  // FIXME: This static method is bad practise.
+  /// Call when a login progress is going to end.
+  ///
+  /// **Note that [userLoginInfo] MUST be completed**.
+  static Future<void> endLogin(UserLoginInfo userLoginInfo) async {
+    assert(
+      userLoginInfo.isComplete,
+      'The UserLoginInfo intend to finish a '
+      'login progress MUST be complete',
+    );
+    // Fulfill user info.
+    talker.debug('end login progress with userinfo $userLoginInfo');
+    _currentUserCookie =
+        _currentUserCookie.copyWith(userLoginInfo: userLoginInfo);
+
+    await getIt.get<StorageProvider>().saveCookie(
+          username: userLoginInfo.username!,
+          uid: userLoginInfo.uid!,
+          email: userLoginInfo.email!,
+          cookie: _currentUserCookie.cookie!,
+        );
+  }
 
   final UserLoginInfo? _userLoginInfo;
 
@@ -41,6 +108,33 @@ class CookieData with LoggerMixin implements Storage {
   /// complete.
   bool _isUserInfoComplete() =>
       _userLoginInfo != null && _userLoginInfo.isComplete;
+
+  /// Temporary cookie data to save current user cookie.
+  ///
+  /// We have a principle, that we only have the complete info about a user
+  /// when the user has logged in. So that during the login progress, we only
+  /// have part of the user info: It's username, uid or email, and with some
+  /// cookie that received from server.
+  ///
+  /// Another principle: Only complete userinfo together with cookie can be
+  /// saved in storage.
+  ///
+  /// The problem is, the cookie received MUST be saved somewhere till we
+  /// successfully login and get complete user info, then the cookie becomes
+  /// usable and need to save in database.
+  ///
+  /// So during login progress, save the info here.
+  /// When auth repo get complete user info, call some method to fulfill user
+  /// info.
+  ///
+  /// 1. Try to login, this time incomplete user info passed in, save user info
+  ///    here. Now cookie is empty.
+  /// 2. During login progress, get cookie (already authed) and save here. Now
+  ///    cookie is ok but user info still incomplete.
+  /// 3. Auth repo (or auth provider else) get full user info using the cookie
+  ///    we save in step 2, call some method to save full user info.
+  /// 4. Check user info is complete and save data into storage.
+  static _CurrentUserCookie _currentUserCookie = _CurrentUserCookie.empty();
 
   /// Save cookie in database.
   ///
@@ -56,13 +150,10 @@ class CookieData with LoggerMixin implements Storage {
     // This shall not happen.
     if (!_isUserInfoComplete()) {
       info('only save cookie in memory: user info incomplete: $_userLoginInfo');
-
-      await getIt.get<StorageProvider>().saveCookieInCache(
-            username: _userLoginInfo?.username,
-            uid: _userLoginInfo?.uid,
-            email: _userLoginInfo?.email,
-            cookie: _cookieMap,
-          );
+      if (_cookieMap.toString().contains('s_gkr8_682f_auth')) {
+        // Only save cookie when cookie is authed.
+        _currentUserCookie = _currentUserCookie.copyWith(cookie: _cookieMap);
+      }
       return false;
     }
     debug('save complete cookie in memory:'
@@ -94,8 +185,7 @@ class CookieData with LoggerMixin implements Storage {
     }
 
     if (_userLoginInfo != null) {
-      debug('CookieData $hashCode: delete '
-          'cookie for uid: $_userLoginInfo');
+      debug('CookieData $hashCode: delete cookie for uid: $_userLoginInfo');
       await getIt.get<StorageProvider>().deleteCookieByUserInfo(_userLoginInfo);
     }
     return true;

@@ -43,10 +43,16 @@ final class NetClientProvider with LoggerMixin {
   factory NetClientProvider.build({
     Dio? dio,
     UserLoginInfo? userLoginInfo,
+    bool startLogin = false,
+    bool logout = false,
   }) {
+    talker.debug('build cookie with user info: $userLoginInfo');
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
-    final cookie =
-        getIt.get<CookieProvider>().build(userLoginInfo: userLoginInfo);
+    final cookie = getIt.get<CookieProvider>().build(
+          userLoginInfo: userLoginInfo,
+          startLogin: startLogin,
+          logout: logout,
+        );
     final cookieJar = PersistCookieJar(
       ignoreExpires: true,
       storage: cookie,

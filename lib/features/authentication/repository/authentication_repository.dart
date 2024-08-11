@@ -12,6 +12,7 @@ import 'package:tsdm_client/features/authentication/repository/models/models.dar
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -148,7 +149,13 @@ class AuthenticationRepository with LoggerMixin {
     };
 
     debug('login with user info: $userLoginInfo');
-    final netClient = NetClientProvider.build(userLoginInfo: userLoginInfo);
+    // Here the userLoginInfo is incomplete:
+    //
+    // Only contains one login field: Username, uid or email.
+    final netClient = NetClientProvider.build(
+      userLoginInfo: userLoginInfo,
+      startLogin: true,
+    );
     final resp = await netClient.postForm(target, data: credential.toJson());
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode);
@@ -177,14 +184,16 @@ class AuthenticationRepository with LoggerMixin {
         throw LoginUserInfoNotFoundException();
       }
 
+      // Mark login progress has ended.
+      await CookieData.endLogin(fullUserInfo);
+
+      // Here we get complete user info.
       await _saveLoggedUserInfo(fullUserInfo);
 
-      _authedUser = UserLoginInfo(
-        username: fullUserInfo.username,
-        uid: fullUserInfo.uid,
-        email: fullUserInfo.email,
-      );
+      debug('login finished');
+
       _controller.add(AuthenticationStatus.authenticated);
+
       return;
     }
 
@@ -216,14 +225,15 @@ class AuthenticationRepository with LoggerMixin {
     final fullUserInfo =
         _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
     if (fullUserInfo == null || !fullUserInfo.isComplete) {
-      error('failed to: parse login result: email not foudn');
+      error('failed to: parse login result: email not found');
       return;
     }
-    await _saveLoggedUserInfo(fullUserInfo);
 
-    _authedUser = fullUserInfo;
-    debug('login with document: user $userInfo');
+    // Here we get complete user info.
+    await _saveLoggedUserInfo(fullUserInfo);
     _controller.add(AuthenticationStatus.authenticated);
+
+    debug('login with document: user $userInfo');
   }
 
   /// Logout the current user.
@@ -242,7 +252,14 @@ class AuthenticationRepository with LoggerMixin {
     if (_authedUser == null) {
       return;
     }
-    final netClient = getIt.get<NetClientProvider>();
+    final netClient = NetClientProvider.build(
+      userLoginInfo: UserLoginInfo(
+        username: _authedUser!.username,
+        uid: _authedUser!.uid,
+        email: _authedUser!.email,
+      ),
+      logout: true,
+    );
     final resp = await netClient.get(_checkAuthUrl);
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode);
@@ -368,5 +385,7 @@ class AuthenticationRepository with LoggerMixin {
       SettingsKeys.loginEmail,
       userInfo.email!,
     );
+
+    _authedUser = userInfo;
   }
 }

@@ -42,9 +42,25 @@ class CookieProvider with LoggerMixin {
   /// * First look in storage and find the cached cookie related to
   ///   [userLoginInfo].
   /// * Return empty cookie if not found in cache.
-  CookieData build({UserLoginInfo? userLoginInfo}) {
-    // Specified user override.
+  CookieData build({
+    UserLoginInfo? userLoginInfo,
+    bool startLogin = false,
+    bool logout = false,
+  }) {
+    assert(
+      !(startLogin && logout),
+      'startLogin and logout can NOT be true at the same time',
+    );
+
     if (userLoginInfo != null) {
+      if (startLogin) {
+        assert(
+          !userLoginInfo.isEmpty,
+          'A UserLoginInfo intend to start login can NOT be empty',
+        );
+        return CookieData.startLogin(userLoginInfo);
+      }
+
       final username = userLoginInfo.username;
       final uid = userLoginInfo.uid;
       final email = userLoginInfo.email;
@@ -66,7 +82,18 @@ class CookieProvider with LoggerMixin {
         cookie = Map.castFrom(databaseCookie);
       }
 
-      debug('load cookie with user info');
+      if (logout) {
+        assert(
+          userLoginInfo.isComplete,
+          'A UserLoginInfo intend to start login can MUST be complete',
+        );
+        return CookieData.logout(
+          userLoginInfo: userLoginInfo,
+          cookie: cookie,
+        );
+      }
+
+      debug('load cookie with user info : $userLoginInfo');
       return CookieData.withUserInfo(
         userLoginInfo: userLoginInfo,
         cookie: cookie,
