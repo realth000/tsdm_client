@@ -33,6 +33,7 @@ jobs:
         with:
           prerelease: ${{ env.PRERELEASE }}
           allowUpdates: true
+          omitPrereleaseDuringUpdate: true
           body: '${{ steps.extract-release-notes.outputs.release_notes }}'
 
   build-linux-android:
@@ -81,6 +82,7 @@ jobs:
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           artifacts: 'build/linux/x64/release/tsdm_client-linux.tar.gz'
       - name: Setup Android sign key
         run: |
@@ -101,6 +103,7 @@ jobs:
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           artifacts: 'build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk'
 
   build-windows:
@@ -142,6 +145,7 @@ jobs:
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
   build-macos-and-ios:
     name: Build MacOS and iOS
@@ -174,6 +178,7 @@ jobs:
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           artifacts: 'build/tsdm_client-universal.dmg'
       - name: Build iOS ipa
         run: |
@@ -189,4 +194,5 @@ jobs:
           allowUpdates: true
           omitBody: true
           omitBodyDuringUpdate: true
+          omitPrereleaseDuringUpdate: true
           artifacts: 'tsdm_client.ipa'
