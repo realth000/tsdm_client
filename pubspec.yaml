@@ -9,7 +9,7 @@ version: 1.0.0-alpha+20
 
 environment:
   flutter: ">=3.24.0 <4.0.0"
-  sdk: '>=3.4.0 <4.0.0'
+  sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
   # Workaround for dart_mappable build issue
