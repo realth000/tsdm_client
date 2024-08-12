@@ -352,7 +352,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   /// Send message, according to [ReplyTypes].
   Future<void> _sendMessage() async {
     switch (widget.replyType) {
-      case ReplyTypes.thread:
+      case ReplyTypes.thread || ReplyTypes.notice:
         {
           if (_replyAction == null && _replyParameters == null) {
             error(
@@ -547,7 +547,12 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       ..removeListener(_checkEditorContent)
       ..dispose();
     // Mark controller state is disposed.
-    widget.controller._unbind();
+    widget.controller._unbind(
+      clearParameters: switch (widget.replyType) {
+        ReplyTypes.notice => false,
+        ReplyTypes.thread || ReplyTypes.chat || ReplyTypes.chatHistory => true,
+      },
+    );
     super.dispose();
   }
 
@@ -583,7 +588,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           // Should update close state of the current reply bar because we may
           // not send reply to closed threads.
           _closed = switch (widget.replyType) {
-            ReplyTypes.thread => state.closed,
+            ReplyTypes.thread || ReplyTypes.notice => state.closed,
             ReplyTypes.chatHistory || ReplyTypes.chat => false,
           };
           _replyParameters = state.replyParameters;
@@ -636,14 +641,20 @@ final class ReplyBarController with LoggerMixin {
   ///
   /// 1. Saved temporarily in controller.
   /// 2. Applied to new state when next state init.
-  void _unbind() {
+  ///
+  /// Clear [_replyAction], [_hintText] and [_closed].
+  /// when [clearParameters] is true.
+  /// Set [clearParameters] to false when you want to reserve these parameters.
+  void _unbind({bool clearParameters = true}) {
     // Clear state.
     _state = null;
 
     // Clear temporarily saved values.
-    _replyAction = null;
-    _closed = null;
-    _hintText = null;
+    if (clearParameters) {
+      _replyAction = null;
+      _hintText = null;
+      _closed = null;
+    }
   }
 
   /// Set reply action url to current state. Call this when user try to reply

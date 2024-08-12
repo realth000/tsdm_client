@@ -72,7 +72,9 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
         // visiting locked thread.
         ReplyBar(
           controller: _replyBarController,
-          replyType: ReplyTypes.thread,
+          // Set to [ReplyTypes.notice] to avoid clear reply parameters when
+          // [ReplyBar] closed.
+          replyType: ReplyTypes.notice,
           disabledEditorFeatures: defaultEditorDisabledFeatures,
           fullScreenDisabledEditorFeatures:
               defaultFullScreenDisabledEditorFeatures,
