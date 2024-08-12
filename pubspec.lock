@@ -872,15 +872,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+1"
-  infinite_carousel:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "11742d44ddec450b324b49b22e2196438b4ebfe1"
-      resolved-ref: "11742d44ddec450b324b49b22e2196438b4ebfe1"
-      url: "https://github.com/realth000/infinite-carousel-flutter"
-    source: git
-    version: "1.1.1"
   intl:
     dependency: transitive
     description:
@@ -1807,5 +1798,5 @@ packages:
     source: hosted
     version: "9.0.1"
 sdks:
-  dart: ">=3.5.0-259.0.dev <4.0.0"
+  dart: ">=3.5.0 <4.0.0"
   flutter: ">=3.24.0"

@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:ui';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:infinite_carousel/infinite_carousel.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';

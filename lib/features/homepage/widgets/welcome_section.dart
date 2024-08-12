@@ -29,7 +29,7 @@ class WelcomeSection extends StatefulWidget {
 }
 
 class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
-  final _swiperController = InfiniteScrollController();
+  late final CarouselController _swiperController;
   Timer? _swiperTimer;
 
   Widget _buildKahrpbaSwiper(
@@ -41,37 +41,27 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight + 20),
-        child: InfiniteCarousel.builder(
-          itemCount: swiperUrlList.length,
-          itemExtent: _kahrpbaPicWidth,
-          onIndexChanged: (index) {},
+        child: CarouselView(
           controller: _swiperController,
-          scrollBehavior: ScrollConfiguration.of(context).copyWith(
-            dragDevices: {
-              PointerDeviceKind.touch,
-              PointerDeviceKind.mouse,
-            },
-          ),
-          itemBuilder: (context, itemIndex, realIndex) {
-            return Padding(
-              padding: edgeInsetsL12T12R12B12,
-              child: GestureDetector(
-                child: CachedImage(swiperUrlList[itemIndex].coverUrl),
-                onTap: () async {
-                  final parseResult =
-                      swiperUrlList[itemIndex].linkUrl.parseUrlToRoute();
-                  if (parseResult == null) {
-                    return;
-                  }
-                  await context.pushNamed(
-                    parseResult.screenPath,
-                    pathParameters: parseResult.pathParameters,
-                    queryParameters: parseResult.queryParameters,
-                  );
-                },
-              ),
+          itemSnapping: true,
+          itemExtent: _kahrpbaPicWidth,
+          shrinkExtent: _kahrpbaPicWidth,
+          onTap: (index) async {
+            final parseResult = swiperUrlList[index].linkUrl.parseUrlToRoute();
+            if (parseResult == null) {
+              return;
+            }
+            await context.pushNamed(
+              parseResult.screenPath,
+              pathParameters: parseResult.pathParameters,
+              queryParameters: parseResult.queryParameters,
             );
           },
+          children: swiperUrlList
+              .mapIndexed(
+                (index, e) => CachedImage(swiperUrlList[index].coverUrl),
+              )
+              .toList(),
         ),
       ),
     );
@@ -239,16 +229,23 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     );
   }
 
-  void setupSwiperTimer() {
+  void setupSwiperTimer(int itemCount) {
     _swiperTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      _swiperController.nextItem();
+      _swiperController.animateTo(
+        _swiperController.offset >= (itemCount - 2) * _kahrpbaPicWidth
+            ? 0
+            : _swiperController.offset + _kahrpbaPicWidth,
+        duration: duration200,
+        curve: Curves.ease,
+      );
     });
   }
 
   @override
   void initState() {
     super.initState();
-    setupSwiperTimer();
+    _swiperController = CarouselController();
+    setupSwiperTimer(widget.swiperUrlList.length);
   }
 
   @override
@@ -268,7 +265,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
         //
         // The info about in home tab or not is passed from shell route builder.
         if (state.scrollSwiper) {
-          setupSwiperTimer();
+          setupSwiperTimer(widget.swiperUrlList.length);
         } else {
           _swiperTimer?.cancel();
         }
