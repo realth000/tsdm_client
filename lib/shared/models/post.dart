@@ -26,6 +26,7 @@ class Post with PostMappable {
     required this.rateAction,
     required this.lastEditUsername,
     required this.lastEditTime,
+    required this.shareLink,
     this.locked = const [],
     this.rate,
     this.packetUrl,
@@ -88,6 +89,9 @@ class Post with PostMappable {
 
   /// Time of last edited.
   final String? lastEditTime;
+
+  /// Url to share this floor
+  final String? shareLink;
 
   /// Brief user profile of current post.
   ///
@@ -192,6 +196,11 @@ class Post with PostMappable {
         ?.firstEndDeepText()
         ?.parseToInt();
 
+    final shareLink = postDataNode
+        ?.querySelector('div.pi > strong > a')
+        ?.attributes['href']
+        ?.prependHost();
+
     // Some users have style overflow in signature so the following selector not
     // works:
     //
@@ -283,6 +292,7 @@ class Post with PostMappable {
       lastEditUsername: lastEditUsername,
       lastEditTime: lastEditTime,
       userBriefProfile: userBriefProfile,
+      shareLink: shareLink,
     );
   }
 

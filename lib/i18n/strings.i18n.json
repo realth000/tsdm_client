@@ -498,7 +498,8 @@
         "online": "Online",
         "offline": "Offline"
       }
-    }
+    },
+    "share": "Copy share link"
   },
   "packetCard": {
     "title": "You found a packet!",

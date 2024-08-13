@@ -498,7 +498,8 @@
         "online": "在线",
         "offline": "离线"
       }
-    }
+    },
+    "share": "复制分享链接"
   },
   "packetCard": {
     "title": "你找到了一个红包！",

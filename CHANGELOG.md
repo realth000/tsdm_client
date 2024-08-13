@@ -23,6 +23,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 解析网页：解析网页中的字体背景颜色。
 - 认证：支持使用UID和邮箱登录。
 - 认证：登录失败时自动刷新验证码。
+- 帖子：支持复制楼层的分享链接
 
 ### Fixed
 
