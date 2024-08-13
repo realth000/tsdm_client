@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
-import 'package:tsdm_client/features/thread/widgets/post_group.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -156,26 +155,34 @@ class _PostListState extends State<PostList> {
     // Each page has at most 10 posts.
     final postGroupList = widget.postList.slices(10);
     for (final postGroup in postGroupList) {
-      final pageNumber =
-          ((postGroup.firstOrNull?.postFloor ?? 0) / 10).floor() + 1;
+      // final pageNumber =
+      //     ((postGroup.firstOrNull?.postFloor ?? 0) / 10).floor() + 1;
       ret.add(
-        SliverMainAxisGroup(
-          slivers: [
-            SliverPersistentHeader(
-              pinned: true,
-              delegate: PostGroupHeaderDelegate(groupIndex: '$pageNumber'),
-            ),
-            SliverList.separated(
-              itemCount: postGroup.length,
-              itemBuilder: (context, index) {
-                return widget.widgetBuilder(context, postGroup[index]);
-              },
-              separatorBuilder: (context, index) => widget.useDivider
-                  ? const Divider(thickness: 0.5)
-                  : sizedBoxW4H4,
-            ),
-          ],
+        SliverList.separated(
+          itemCount: postGroup.length,
+          itemBuilder: (context, index) {
+            return widget.widgetBuilder(context, postGroup[index]);
+          },
+          separatorBuilder: (context, index) =>
+              widget.useDivider ? const Divider(thickness: 0.5) : sizedBoxW4H4,
         ),
+        // SliverMainAxisGroup(
+        //   slivers: [
+        //     SliverPersistentHeader(
+        //       pinned: true,
+        //       delegate: PostGroupHeaderDelegate(groupIndex: '$pageNumber'),
+        //     ),
+        //     SliverList.separated(
+        //       itemCount: postGroup.length,
+        //       itemBuilder: (context, index) {
+        //         return widget.widgetBuilder(context, postGroup[index]);
+        //       },
+        //       separatorBuilder: (context, index) => widget.useDivider
+        //           ? const Divider(thickness: 0.5)
+        //           : sizedBoxW4H4,
+        //     ),
+        //   ],
+        // ),
       );
     }
 
