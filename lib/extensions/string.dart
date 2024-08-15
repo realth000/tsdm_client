@@ -32,11 +32,18 @@ class RecognizedRoute {
 /// Extension on [String] that provides methods to parsing [String] as app
 /// routes.
 extension ParseUrl on String {
+  /// Regexp to match anchor in url.
+  ///
+  /// Anchor is not supported in dart url parsing.
+  static final _anchorRe = RegExp(r'#pid(?<anchor>\d+)');
+
   /// Try parse string to [RecognizedRoute] with arguments.
   /// Return null if string is unsupported route.
   RecognizedRoute? parseUrlToRoute() {
     final url = Uri.parse(this);
     final queryParameters = url.queryParameters;
+    final anchor = _anchorRe.firstMatch(this)?.namedGroup('anchor');
+
     final mod = queryParameters['mod'];
 
     if (mod == 'forumdisplay' && queryParameters.containsKey('fid')) {
@@ -47,9 +54,20 @@ extension ParseUrl on String {
     }
 
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
+      // When anchor is used, means need to scroll to a target post by its pid.
+      //
+      // In this situation, do NOT override page order because the page number
+      // is also provided, overriding post sort order will go into the wrong
+      // page which does not contain the target post.
       return RecognizedRoute(
         ScreenPaths.thread,
-        queryParameters: {'tid': "${queryParameters['tid']}"},
+        queryParameters: {
+          'tid': "${queryParameters['tid']}",
+          if (queryParameters.containsKey('page'))
+            'pageNumber': "${queryParameters['page']}",
+          if (anchor != null) 'overrideReverseOrder': 'false',
+          if (anchor != null) 'pid': anchor,
+        },
       );
     }
 

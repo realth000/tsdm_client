@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 /// A widget that retrieve data from network and supports refresh.
@@ -67,7 +68,7 @@ class PostList extends StatefulWidget {
   State<PostList> createState() => _PostListState();
 }
 
-class _PostListState extends State<PostList> {
+class _PostListState extends State<PostList> with LoggerMixin {
   /// Thread type name.
   /// Actually this should provided by [NormalThread].
   /// But till now we haven't parse this attr in forum page.
@@ -116,6 +117,7 @@ class _PostListState extends State<PostList> {
     if (widget.initialPostID != null) {
       // Scroll to post, if any.
       WidgetsBinding.instance.addPostFrameCallback((_) {
+        debug('scroll to pid: ${widget.initialPostID}');
         var pos = -1;
         final p = '${widget.initialPostID}';
         for (final (index, post) in widget.postList.indexed) {
@@ -127,10 +129,11 @@ class _PostListState extends State<PostList> {
         if (pos < 0) {
           return;
         }
+        debug('scroll to position: ${pos * 2}');
         _listController.animateToItem(
           index: pos * 2,
           scrollController: _listScrollController,
-          alignment: 0.5,
+          alignment: 0,
           duration: (_) => duration200,
           curve: (_) => Curves.ease,
         );
