@@ -66,7 +66,7 @@ final class PointsStatisticsBloc
     }
     final pointsMapEntries = rootNode
         .querySelectorAll('ul.creditl > li')
-        .map((e) => e.parseLiEmNode())
+        .map((e) => e.parseLiEmNode(second: true))
         .whereType<(String, String)>()
         .map((e) => MapEntry(e.$1.split(':').first, e.$2));
     final pointsMap = Map<String, String>.fromEntries(pointsMapEntries);

@@ -36,6 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：修复帖子评分中头像无法加载时不显示且不断重试的问题。
 - 帖子：修复用户资料中的腹黑显示为天然的问题。
 - 认证：修复登录页面刷新验证码时布局抖动的问题。
+- 统计：修复积分统计中的积分值。
 
 ### Changed
 

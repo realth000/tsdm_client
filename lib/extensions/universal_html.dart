@@ -169,14 +169,18 @@ extension GrepExtension on Element {
   /// Note: Returns the html code if value is an or more Element not text node.
   ///
   /// If any of key or value is null, return null.
-  (String key, String value)? parseLiEmNode() {
+  ///
+  /// Set [second] to true to force retrieve the second node (text) as value.
+  (String key, String value)? parseLiEmNode({bool second = false}) {
     if (children.elementAtOrNull(0)?.localName != 'em') {
       return null;
     }
 
     final key = children.elementAtOrNull(0)?.text?.trim();
-    late final String? value;
-    if (children.length >= 2) {
+    final String? value;
+    if (second) {
+      value = nodes.elementAtOrNull(1)?.text;
+    } else if (children.length >= 2 && !second) {
       // More than one element.
       // Try remove the first <em> element and return all html code left.
       value = nodes
