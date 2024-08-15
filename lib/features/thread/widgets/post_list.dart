@@ -24,6 +24,7 @@ class PostList extends StatefulWidget {
     this.title,
     this.pageNumber = 1,
     this.useDivider = false,
+    this.initialPostID,
     super.key,
   });
 
@@ -55,6 +56,12 @@ class PostList extends StatefulWidget {
 
   /// The [ScrollController] passed from outside.
   final ScrollController scrollController;
+
+  /// Optional initial post id.
+  ///
+  /// Scroll to this post once page built.
+  /// Useful in some "find post" situation.
+  final int? initialPostID;
 
   @override
   State<PostList> createState() => _PostListState();
@@ -105,6 +112,30 @@ class _PostListState extends State<PostList> {
     _listScrollController = widget.scrollController;
     _listController = ListController();
     _listController.addListener(_updatePageNumber);
+
+    if (widget.initialPostID != null) {
+      // Scroll to post, if any.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        var pos = -1;
+        final p = '${widget.initialPostID}';
+        for (final (index, post) in widget.postList.indexed) {
+          if (post.postID == p) {
+            pos = index;
+            break;
+          }
+        }
+        if (pos < 0) {
+          return;
+        }
+        _listController.animateToItem(
+          index: pos * 2,
+          scrollController: _listScrollController,
+          alignment: 0.5,
+          duration: (_) => duration200,
+          curve: (_) => Curves.ease,
+        );
+      });
+    }
   }
 
   @override

@@ -24,6 +24,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 认证：支持使用UID和邮箱登录。
 - 认证：登录失败时自动刷新验证码。
 - 帖子：支持复制楼层的分享链接
+- 帖子：从消息页跳转后滚动到相应回复。
 
 ### Fixed
 

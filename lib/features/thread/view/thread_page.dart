@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -124,6 +125,7 @@ class _ThreadPageState extends State<ThreadPage>
             title: widget.title ?? state.title,
             threadType: widget.threadType,
             pageNumber: pageNumber,
+            initialPostID: widget.findPostID?.parseToInt(),
             scrollController: _listScrollController,
             widgetBuilder: (context, post) => PostCard(
               post,
