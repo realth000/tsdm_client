@@ -27,6 +27,7 @@ class Post with PostMappable {
     required this.lastEditUsername,
     required this.lastEditTime,
     required this.shareLink,
+    required this.page,
     this.locked = const [],
     this.rate,
     this.packetUrl,
@@ -98,8 +99,11 @@ class Post with PostMappable {
   /// May be null, maybe...
   final UserBriefProfile? userBriefProfile;
 
+  /// Current page number.
+  final int page;
+
   /// Build [Post] from [element] that has attribute id "post_$postID".
-  static Post? fromPostNode(uh.Element element) {
+  static Post? fromPostNode(uh.Element element, int page) {
     final trRootNode = element.querySelector('table > tbody > tr');
     final postID = element.id.replaceFirst('post_', '');
     if (postID.isEmpty) {
@@ -293,13 +297,14 @@ class Post with PostMappable {
       lastEditTime: lastEditTime,
       userBriefProfile: userBriefProfile,
       shareLink: shareLink,
+      page: page,
     );
   }
 
   /// Build a list of [Post] from the given [ThreadData] [uh.Element].
   ///
   /// [element]'s id is "postlist".
-  static List<Post> buildListFromThreadDataNode(uh.Element? element) {
+  static List<Post> buildListFromThreadDataNode(uh.Element? element, int page) {
     if (element == null) {
       return [];
     }
@@ -314,7 +319,7 @@ class Post with PostMappable {
       // This while is a while (0), will not loop twice.
       if ((currentElement.attributes['id'] ?? '').startsWith('post_')) {
         // Build post here.
-        final post = Post.fromPostNode(currentElement);
+        final post = Post.fromPostNode(currentElement, page);
         if (post == null) {
           talker.error('warning: post is empty');
           continue;

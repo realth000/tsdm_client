@@ -230,7 +230,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
 
     final threadClosed = document.querySelector('form#fastpostform') == null;
     final threadDataNode = document.querySelector('div#postlist');
-    final postList = Post.buildListFromThreadDataNode(threadDataNode);
+    final postList = Post.buildListFromThreadDataNode(
+      threadDataNode,
+      document.currentPage() ?? 1,
+    );
     String? title;
     // Most threads have thread type node before the title.
     title =

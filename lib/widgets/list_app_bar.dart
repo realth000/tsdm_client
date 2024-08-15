@@ -95,7 +95,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     var totalPages = 0;
     var canJumpPage = false;
     if (onJumpPage != null) {
-      final jumpPageState = context.read<JumpPageCubit>().state;
+      final jumpPageState = context.watch<JumpPageCubit>().state;
       currentPage = jumpPageState.currentPage;
       totalPages = jumpPageState.totalPages;
       canJumpPage = jumpPageState.canJumpPage;

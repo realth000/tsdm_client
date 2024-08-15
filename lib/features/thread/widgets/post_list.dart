@@ -1,10 +1,11 @@
 import 'dart:core';
 
-import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/generated/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -75,7 +76,26 @@ class _PostListState extends State<PostList> {
   /// [ScrollController] comes from outside.
   ///
   /// Do NOT dispose it here.
-  late final ScrollController _listScrollController;
+  late ScrollController _listScrollController;
+
+  late ListController _listController;
+
+  /// Current page number
+  int pageNumber = 1;
+
+  void _updatePageNumber() {
+    final p = _listController.visibleRange?.$1;
+    if (p != null) {
+      // List forms through separator builder, divide 2 because of the separator
+      // widget.
+      final p2 = widget.postList[p ~/ 2].page;
+      if (p2 != pageNumber) {
+        pageNumber = p2;
+        //  Current page changes.
+        context.read<JumpPageCubit>().setPageInfo(currentPage: p2);
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -83,11 +103,16 @@ class _PostListState extends State<PostList> {
     // Try use the thread type in widget which comes from routing.
     _threadType = widget.threadType;
     _listScrollController = widget.scrollController;
+    _listController = ListController();
+    _listController.addListener(_updatePageNumber);
   }
 
   @override
   void dispose() {
     _refreshController.dispose();
+    _listController
+      ..removeListener(_updatePageNumber)
+      ..dispose();
     super.dispose();
   }
 
@@ -143,50 +168,20 @@ class _PostListState extends State<PostList> {
     );
   }
 
-  List<Widget> _buildPostList(BuildContext context) {
+  Widget _buildPostList(BuildContext context) {
     if (widget.postList.isEmpty) {
-      return [];
-    }
-    final ret = <Widget>[];
-
-    // Current sliver group index.
-    //
-    // All posts in the same page will be gathered in a group.
-    // Each page has at most 10 posts.
-    final postGroupList = widget.postList.slices(10);
-    for (final postGroup in postGroupList) {
-      // final pageNumber =
-      //     ((postGroup.firstOrNull?.postFloor ?? 0) / 10).floor() + 1;
-      ret.add(
-        SliverList.separated(
-          itemCount: postGroup.length,
-          itemBuilder: (context, index) {
-            return widget.widgetBuilder(context, postGroup[index]);
-          },
-          separatorBuilder: (context, index) =>
-              widget.useDivider ? const Divider(thickness: 0.5) : sizedBoxW4H4,
-        ),
-        // SliverMainAxisGroup(
-        //   slivers: [
-        //     SliverPersistentHeader(
-        //       pinned: true,
-        //       delegate: PostGroupHeaderDelegate(groupIndex: '$pageNumber'),
-        //     ),
-        //     SliverList.separated(
-        //       itemCount: postGroup.length,
-        //       itemBuilder: (context, index) {
-        //         return widget.widgetBuilder(context, postGroup[index]);
-        //       },
-        //       separatorBuilder: (context, index) => widget.useDivider
-        //           ? const Divider(thickness: 0.5)
-        //           : sizedBoxW4H4,
-        //     ),
-        //   ],
-        // ),
-      );
+      return sizedBoxEmpty;
     }
 
-    return ret;
+    return SuperSliverList.separated(
+      listController: _listController,
+      itemCount: widget.postList.length,
+      itemBuilder: (context, index) {
+        return widget.widgetBuilder(context, widget.postList[index]);
+      },
+      separatorBuilder: (context, index) =>
+          widget.useDivider ? const Divider(thickness: 0.5) : sizedBoxW4H4,
+    );
   }
 
   Widget _buildBody(BuildContext context, ThreadState state) {
@@ -255,7 +250,7 @@ class _PostListState extends State<PostList> {
                 ),
               ),
             ),
-            ..._buildPostList(context),
+            _buildPostList(context),
           ],
         );
       },

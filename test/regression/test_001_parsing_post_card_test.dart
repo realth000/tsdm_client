@@ -167,7 +167,10 @@ void main() {
   group('ParsePostBody', () {
     test('with pcb and table', () {
       final document = parseHtmlDocument(_postBodyWithPcbTable);
-      final postData = Post.fromPostNode(document.body!.querySelector('div')!);
+      final postData = Post.fromPostNode(
+        document.body!.querySelector('div')!,
+        1,
+      );
       expect(postData?.data.contains('test_body_with_pcb_table'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
@@ -178,7 +181,10 @@ void main() {
     });
     test('with pcb', () {
       final document = parseHtmlDocument(_postBodyWithPcb);
-      final postData = Post.fromPostNode(document.body!.querySelector('div')!);
+      final postData = Post.fromPostNode(
+        document.body!.querySelector('div')!,
+        1,
+      );
       expect(postData?.data.contains('test_body_with_pcb'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
@@ -189,7 +195,10 @@ void main() {
     });
     test('with pcbs', () {
       final document = parseHtmlDocument(_postBodyWithPcbs);
-      final postData = Post.fromPostNode(document.body!.querySelector('div')!);
+      final postData = Post.fromPostNode(
+        document.body!.querySelector('div')!,
+        1,
+      );
       expect(postData?.data.contains('test_body_with_pcbs'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
@@ -200,7 +209,10 @@ void main() {
     });
     test('with locked with purchase', () {
       final document = parseHtmlDocument(_postBodyWithLockedWithPurchase);
-      final postData = Post.fromPostNode(document.body!.querySelector('div')!);
+      final postData = Post.fromPostNode(
+        document.body!.querySelector('div')!,
+        1,
+      );
       expect(
         postData?.data.contains('test_body_with_locked_with_purchase'),
         true,
