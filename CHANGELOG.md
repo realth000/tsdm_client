@@ -26,7 +26,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：支持复制楼层的分享链接
 - 帖子：支持从消息页的回复提醒跳转过来后滚动到相应回复。
 - 帖子：支持在解析网页链接时解析其中指定的楼层，并在页面加载后跳转到该楼层。
-  - 当网页链接形式为`tid=$THREAD_ID&page=$PAGE#pid$POST_ID`时，忽视“倒序浏览楼层”的设置以保证加载指定的页数。
+  - 当网页链接形式为`tid=THREAD_ID&page=PAGE#pidPOST_ID`时，忽视“倒序浏览楼层”的设置以保证加载指定的页数。
 
 ### Fixed
 
