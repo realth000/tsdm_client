@@ -136,25 +136,32 @@ class _PostCardState extends State<PostCard>
           sizedBoxW4H4,
           if (widget.post.userBriefProfile?.nickname != null)
             Text(
-              '(${widget.post.userBriefProfile!.nickname!})',
+              widget.post.userBriefProfile!.nickname!,
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: Theme.of(context).colorScheme.tertiary,
+                    color: Theme.of(context).colorScheme.secondary,
                   ),
+              maxLines: 1,
             ),
-          sizedBoxW4H4,
-          Text(
-            widget.post.userBriefProfile?.userGroup ?? '-',
-            style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: Theme.of(context).colorScheme.tertiary,
-                ),
-          ),
           const Spacer(),
         ],
       ),
-      subtitle: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+      subtitle: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('${widget.post.publishTime?.elapsedTillNow()}'),
+          Text(
+            widget.post.userBriefProfile?.userGroup ?? '',
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                ),
+          ),
+          sizedBoxW4H4,
+          Text(
+            '${widget.post.publishTime?.yyyyMMDDHHMMSS()}',
+            style: Theme.of(context)
+                .textTheme
+                .labelSmall
+                ?.copyWith(color: Theme.of(context).colorScheme.outline),
+          ),
         ],
       ),
       trailing: Column(
@@ -165,14 +172,6 @@ class _PostCardState extends State<PostCard>
             const Text('#')
           else
             Text('#${widget.post.postFloor}'),
-          sizedBoxW4H4,
-          Text(
-            '${widget.post.publishTime?.yyyyMMDDHHMMSS()}',
-            style: Theme.of(context)
-                .textTheme
-                .labelSmall
-                ?.copyWith(color: Theme.of(context).colorScheme.outline),
-          ),
         ],
       ),
     );
