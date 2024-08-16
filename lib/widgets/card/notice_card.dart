@@ -102,15 +102,36 @@ class NoticeCard extends StatelessWidget {
                   return context.dispatchAsUrl(notice.redirectUrl!);
                 }
 
-                await context.pushNamed(
-                  ScreenPaths.reply,
-                  pathParameters: <String, String>{
-                    'target': notice.redirectUrl!,
-                  },
-                  queryParameters: {
-                    'noticeType': '${notice.noticeType.index}',
-                  },
-                );
+                // These types of notice redirect to thread page with target
+                // post:
+                //
+                // NoticeType.reply
+                // NoticeType.rate
+                // NoticeType.batchRate
+                // NoticeType.mention
+                //
+                // These types of notice redirect to thread page:
+                //
+                // NoticeType.invite (no tested)
+                // NoticeType.newFriend (no tested)
+                switch (notice.noticeType) {
+                  case NoticeType.reply ||
+                        NoticeType.rate ||
+                        NoticeType.batchRate ||
+                        NoticeType.mention:
+                    // Use dispatch, not parsing parameters from url again.
+                    await context.dispatchAsUrl(notice.redirectUrl!);
+                  case NoticeType.invite || NoticeType.newFriend:
+                    await context.pushNamed(
+                      ScreenPaths.reply,
+                      pathParameters: <String, String>{
+                        'target': notice.redirectUrl!,
+                      },
+                      queryParameters: {
+                        'noticeType': '${notice.noticeType.index}',
+                      },
+                    );
+                }
               }
             : null,
         child: Column(
