@@ -341,39 +341,36 @@ class _PostCardState extends State<PostCard>
   Widget build(BuildContext context) {
     super.build(context);
 
-    return Padding(
-      padding: edgeInsetsL12R12B12,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Post author user info.
-          _buildAuthorRow(context),
-          // Last edit status.
-          if (widget.post.lastEditUsername != null &&
-              widget.post.lastEditTime != null)
-            _buildLastEditInfoRow(context),
-          // Post body
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        // Post author user info.
+        _buildAuthorRow(context),
+        // Last edit status.
+        if (widget.post.lastEditUsername != null &&
+            widget.post.lastEditTime != null)
+          _buildLastEditInfoRow(context),
+        // Post body
+        sizedBoxW12H12,
+        _buildPostBody(context),
+        // 红包 if any.
+        if (widget.post.locked.isNotEmpty)
+          ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
+        if (widget.post.packetUrl != null) ...[
           sizedBoxW12H12,
-          _buildPostBody(context),
-          // 红包 if any.
-          if (widget.post.locked.isNotEmpty)
-            ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
-          if (widget.post.packetUrl != null) ...[
-            sizedBoxW12H12,
-            PacketCard(widget.post.packetUrl!),
-          ],
-          // Rate status if any.
-          if (widget.post.rate != null) ...[
-            sizedBoxW12H12,
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 712),
-              child: RateCard(widget.post.rate!),
-            ),
-          ],
-          // Context menu.
-          _buildContextMenu(context),
+          PacketCard(widget.post.packetUrl!),
         ],
-      ),
+        // Rate status if any.
+        if (widget.post.rate != null) ...[
+          sizedBoxW12H12,
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 712),
+            child: RateCard(widget.post.rate!),
+          ),
+        ],
+        // Context menu.
+        _buildContextMenu(context),
+      ],
     );
   }
 

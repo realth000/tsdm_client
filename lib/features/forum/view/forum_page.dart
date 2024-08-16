@@ -307,7 +307,7 @@ class _ForumPageState extends State<ForumPage>
           _buildNormalThreadFilterRow(context, state),
           Expanded(
             child: Padding(
-              padding: edgeInsetsL12T4R12B24,
+              padding: edgeInsetsL12T4R12,
               child: CustomScrollView(
                 controller: _threadScrollController,
                 physics: physics,
