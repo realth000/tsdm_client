@@ -105,4 +105,7 @@ flutter_launcher_icons:
   windows:
     generate: true
     image_path: "assets/images/tsdm_client-large-300x300.png"
+  web:
+    generate: true
+    image_path: "assets/images/tsdm_client-large-300x300.png"
 
