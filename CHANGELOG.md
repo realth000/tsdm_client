@@ -55,6 +55,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 分区：分区内筛选帖子的选项现在会一直显示在帖子列表顶部。
 - 帖子：现在帖子的当前页码只会显示在顶部菜单栏右上角，随页面滚动而刷新。
 - internal: 提高flutter版本至 3.24（dart 3.5）。
+- internal: 最低要求macOS 11。
 - internal: 重构功能：
   - 大部分设置项配置和读写逻辑。
   - 使用`talker`代替默认的`printer`做日志审计。
