@@ -51,15 +51,86 @@
 
 ## 下载
 
-* [GitHub Release](https://github.com/realth000/tsdm_client/releases)
-  * [Android apk (armv8)](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk)
-  * [Android apk (armv7)](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk)
-  * [iOS ipa](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa)
-  * [Linux tar.gz](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz)
-  * [MacOS dmg](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg)
-  * [Windows](https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip)
+**从v0.x版本升级到v1.x版本会失去登录状态并重置设置**
+
+**有关v1.0.0版本的功能计划，详见[#3](https://github.com/realth000/tsdm_client/issues/3)**
+
+<div align="left">
+  <table>
+    <thead align="left">
+     <tr>
+       <th>系统</th>
+       <th>稳定版（0.14）</th>
+       <th>预览版（1.0.0-alpha）</th>
+     </tr>
+    </thead>
+<tbody>
+  <tr>
+    <td>Android</td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white"/></a><br>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white"/></a><br>
+    </td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white"/></a><br>
+      <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white"/></a><br>
+    </td>
+  </tr>
+  <tr>
+    <td>iOS</td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white"/></a><br>
+    </td>
+    <td>
+      <img src="https://img.shields.io/badge/ipa-comming%20soon-c0c0c0.svg?logo=ios&logoColor=white"/>
+    </td>
+  </tr>
+  <tr>
+    <td>Linux</td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86_64-blue.svg?logo=linux&logoColor=white"/></a><br>
+    </td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86_64-orange.svg?logo=linux&logoColor=white"/></a><br>
+    </td>
+  </tr>
+  <tr>
+    <td>macOS</td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white"/></a><br>
+    </td>
+    <td>
+      <img src="https://img.shields.io/badge/dmg-comming%20soon-c0c0c0.svg?logo=apple&logoColor=white"/>
+    </td>
+  </tr>
+  <tr>
+    <td>Web</td>
+    <td>
+      <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white"/><br>
+      <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=javascript&logoColor=white"/>
+    </td>
+    <td>
+      <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white"/><br>
+      <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=javascript&logoColor=white"/>
+    </td>
+  </tr>
+  <tr>
+    <td>Windows</td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86_64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg=="/></a><br>
+    </td>
+    <td>
+      <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86_64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg=="/></a><br>
+    </td>
+  </tr>
+</tbody>
+  </table>
+
+</div>
 
 ## 功能
+
+**粗体字功能目前只存在于预览版**
 
 * [ ] 看贴
   * [x] 回复
@@ -76,14 +147,15 @@
   * [x] 查看点评
   * [x] 评分/查看评分
   * [x] 代码块
-  * [ ] 复制内容
   * [x] 我的帖子
   * [x] 查看新帖
   * [x] 帖子类型（加精，置顶，已关闭等）
   * [x] 置顶帖
   * [x] 领取红包
   * [x] 悬赏/悬赏答案
-  * [x] 用户积分信息
+  * [x] 积分信息
+  * [ ] 签到信息
+  * [ ] 勋章
   * [ ] 签名档
   * [x] 查看图片
 * [x] 回帖
@@ -109,9 +181,9 @@
   * [ ] 设置阅读权限
   * [ ] 设置售价
   * [ ] [富文本模式](#富文本支持)
-* [ ] 登录
+* [x] 登录
   * [x] 用户名登录
-  * [ ] UID或邮箱登录
+  * [x] **UID或邮箱登录**
   * [x] 带安全问题登录
   * [x] 登录一次后cookie自动登录
   * [x] 退出登录
@@ -127,10 +199,10 @@
 * [ ] 签到
   * [x] 手动签到
   * [ ] 自动签到
-* [ ] 深色模式
+* [x] 深色模式
   * [x] 手动设置
   * [x] 跟随系统
-  * [ ] 自动调整字体颜色
+  * [x] **自动调整帖子内的颜色**
 * [ ] 主题
   * [x] 更换主题色
   * [ ] 动态颜色（Android）
@@ -159,6 +231,7 @@
 * [x] 应用内更新
 * [ ] 收藏
   * [ ] 收藏帖子或分区
+  * [ ] RSS订阅
 * [ ] 多用户
 * [ ] 多语言
   * [x] 软件界面
@@ -178,12 +251,6 @@
 ### 概述
 
 目前正在添加bbcode的富文本支持，最终会在发表帖子/回复/消息等场景内支持所见即所得的bbcode书写体验。
-
-然而这部分内容很多，无法在短期内实现 ~~（实际上已经导致发版延期很久了）~~。
-
-故采用逐步添加功能的方式逐渐改进。
-
-在富文本功能稳定之前，同时保留现有的普通编辑器和（实验性的）富文本编辑器。
 
 BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https://github.com/realth000/flutter_bbcode_editor)中。
 
@@ -216,7 +283,6 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 * [ ] 隐藏内容
 * [ ] 代码块
 * [ ] 引用文字
-* [ ] 对齐
 * [ ] 分隔线
 * [x] 提醒用户（@）
 * [ ] 无序列表
@@ -239,8 +305,8 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 * [x] iOS
 * [x] Linux
 * [x] MacOS
+* [ ] Web
 * [x] Windows
-* [ ] ~~Web（为什么不试试神奇的浏览器呢？）~~
 
 > [!IMPORTANT]
 >
