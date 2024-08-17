@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/types.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -938,7 +939,11 @@ final class _Muncher with LoggerMixin {
     final attr = colorString ?? element.attributes['color'];
     final color = attr.toColor();
     if (color != null) {
-      state.colorStack.add(color);
+      if (Theme.of(context).brightness == Brightness.dark) {
+        state.colorStack.add(color.adaptiveDark());
+      } else {
+        state.colorStack.add(color);
+      }
       return true;
     }
     return false;
