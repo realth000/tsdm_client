@@ -53,7 +53,7 @@
 
 **从v0.x版本升级到v1.x版本会失去登录状态并重置设置**
 
-**有关v1.0.0版本的功能计划，详见[#3](https://github.com/realth000/tsdm_client/issues/3)**
+有关v1.0.0版本的功能计划，详见[#3](https://github.com/realth000/tsdm_client/issues/3)
 
 <div align="left">
   <table>
@@ -79,7 +79,7 @@
   <tr>
     <td>iOS</td>
     <td>
-      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white"/></a><br>
+      <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white"/></a><br>
     </td>
     <td>
       <img src="https://img.shields.io/badge/ipa-comming%20soon-c0c0c0.svg?logo=ios&logoColor=white"/>
