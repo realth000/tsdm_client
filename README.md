@@ -1,6 +1,6 @@
 <h1 align="center">
     <a href="https://github.com/realth000/tsdm_client/">
-        <img src="./assets/images/tsdm_client.svg" width="120px">
+        <img src="./assets/images/tsdm_client.svg" width="120px" alt="tsdm_client_logo">
     </a>
     <br>
     tsdm_client
@@ -11,15 +11,15 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test"/></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=stable"></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=preview&include_prereleases"></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_macOS_%7C_Windows-19A6E6"></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total"></a>
-  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.24-19A6E6?logo=flutter"></a>
-  <a href="https://dart.dev/"><img src="https://img.shields.io/github/languages/top/realth000/tsdm_client?logo=dart"/></a>
-  <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3"></a>
-  <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg"></a>
+  <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test" alt="test_ci"/></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=stable" alt="stable_version"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=preview&include_prereleases" alt="preview_version"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_macOS_%7C_Windows-19A6E6" alt="platforms"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total" alt="download_total"></a>
+  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.24-19A6E6?logo=flutter" alt="flutter_version"></a>
+  <a href="https://dart.dev/"><img src="https://img.shields.io/github/languages/top/realth000/tsdm_client?logo=dart" alt="dart_percentage"/></a>
+  <a href="https://app.codacy.com/gh/realth000/tsdm_client/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade"><img src="https://app.codacy.com/project/badge/Grade/28ffb16db1ba4d8a943d9feba3a402b3" alt="codacy_code_analyze"></a>
+  <a href="https://pub.dev/packages/very_good_analysis"><img src="https://img.shields.io/badge/style-very_good_analysis-B22C89.svg" alt="vga_lint"></a>
 </p>
 
 > [!TIP]
@@ -32,18 +32,18 @@
   <table>
     <tr>
       <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_01.png">
+        <img width="100%" src="./doc/pic/screenshot_01.png" alt="screenshot_01">
       </td>
       <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_02.png">
+        <img width="100%" src="./doc/pic/screenshot_02.png" alt="screenshot_02">
       </td>
     </tr>
     <tr>
       <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_03.png">
+        <img width="100%" src="./doc/pic/screenshot_03.png" alt="screenshot_03">
       </td>
       <td align="center">
-        <img width="100%" src="./doc/pic/screenshot_04.png">
+        <img width="100%" src="./doc/pic/screenshot_04.png" alt="screenshot_04">
       </td>
     </tr>
   </table>
@@ -68,59 +68,59 @@
     <tr>
       <td>Android</td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
       </td>
     </tr>
     <tr>
       <td>iOS</td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br>
       </td>
       <td>
-        <img src="https://img.shields.io/badge/ipa-comming%20soon-c0c0c0.svg?logo=ios&logoColor=white"/>
+        <img src="https://img.shields.io/badge/ipa-coming%20soon-c0c0c0.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/>
       </td>
     </tr>
     <tr>
       <td>Linux</td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86_64-blue.svg?logo=linux&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86_64-orange.svg?logo=linux&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
       </td>
     </tr>
     <tr>
       <td>macOS</td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br>
       </td>
       <td>
-        <img src="https://img.shields.io/badge/dmg-comming%20soon-c0c0c0.svg?logo=apple&logoColor=white"/>
+        <img src="https://img.shields.io/badge/dmg-coming%20soon-c0c0c0.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/>
       </td>
     </tr>
     <tr>
       <td>Web</td>
       <td>
-        <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white"/><br>
-        <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=javascript&logoColor=white"/>
+        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white" alt="stable_zip_wasm"/><br>
+        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=javascript&logoColor=white" alt="stable_zip_js"/>
       </td>
       <td>
-        <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white"/><br>
-        <img src="https://img.shields.io/badge/zip-comming%20soon-c0c0c0.svg?logo=javascript&logoColor=white"/>
+        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white" alt="preview_zip_wasm"/><br>
+        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=javascript&logoColor=white" alt="preview_zip_js"/>
       </td>
     </tr>
     <tr>
       <td>Windows</td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86_64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg=="/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86_64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg=="/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
       </td>
     </tr>
   </tbody>
