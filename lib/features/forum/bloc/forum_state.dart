@@ -106,4 +106,12 @@ class ForumState with ForumStateMappable {
 
   /// All available [FilterDateline] list.
   final List<FilterDateline> filterDatelineList;
+
+  /// Check if any filter option applied on current state.
+  bool get hasFilter =>
+      filterState.isFiltering() ||
+      filterTypeList.isNotEmpty ||
+      filterSpecialTypeList.isNotEmpty ||
+      filterOrderList.isNotEmpty ||
+      filterDatelineList.isNotEmpty;
 }

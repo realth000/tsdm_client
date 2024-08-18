@@ -143,7 +143,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     // When jump to other pages, pinned thread and subreddits should be
     // reserved in state.
     // Only the first page has pinned threads and subreddits.
-    if (pageNumber == 1) {
+    //
+    // If any filter options applied on current state, ignore the pinned thread
+    // result in fetched dom because none may found.
+    if (pageNumber == 1 && !state.hasFilter) {
       stickThreadList = _buildThreadList<StickThread>(
         document,
         'tsdm_stickthread',
