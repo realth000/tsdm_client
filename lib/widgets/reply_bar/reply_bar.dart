@@ -252,6 +252,16 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     focusNode.requestFocus();
   }
 
+  void _clearTextAndHint() {
+    setState(() {
+      _hintText = null;
+      _replyAction = null;
+    });
+    // Clear saved hint text in controller so text not restore
+    // when next time opens.
+    widget.controller._hintText = null;
+  }
+
   void _checkEditorContent() {
     final empty = _replyRichController.isEmpty;
     if (empty && canSendReply) {
@@ -419,12 +429,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               color: outlineColor,
               size: 16,
             ),
-            onPressed: () {
-              setState(() {
-                _hintText = null;
-                _replyAction = null;
-              });
-            },
+            onPressed: _clearTextAndHint,
           ),
         ],
       ),
@@ -546,13 +551,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     _replyRichController
       ..removeListener(_checkEditorContent)
       ..dispose();
-    // Mark controller state is disposed.
-    widget.controller._unbind(
-      clearParameters: switch (widget.replyType) {
-        ReplyTypes.notice => false,
-        ReplyTypes.thread || ReplyTypes.chat || ReplyTypes.chatHistory => true,
-      },
-    );
+    widget.controller._unbind(clearParameters: false);
     super.dispose();
   }
 
@@ -562,10 +561,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       listener: (context, state) {
         // Clear text one time when user send request succeed.
         if (state.status == ReplyStatus.success && state.needClearText) {
-          // TODO: Implement
           _replyRichController.clear();
           // Reset flag because we only want to clear the sent text.
           context.read<ReplyBloc>().add(ReplyResetClearTextStateTriggered());
+          _clearTextAndHint();
         }
       },
       child: BlocBuilder<ReplyBloc, ReplyState>(
