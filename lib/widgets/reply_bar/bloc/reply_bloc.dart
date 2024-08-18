@@ -7,8 +7,9 @@ import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
-part '../../../generated/widgets/reply_bar/bloc/reply_bloc.mapper.dart';
+part 'reply_bloc.mapper.dart';
 part 'reply_event.dart';
+
 part 'reply_state.dart';
 
 /// Emitter

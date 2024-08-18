@@ -10,8 +10,9 @@ import 'package:tsdm_client/features/profile/repository/profile_repository.dart'
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../../generated/features/profile/bloc/profile_bloc.mapper.dart';
+part 'profile_bloc.mapper.dart';
 part 'profile_event.dart';
+
 part 'profile_state.dart';
 
 /// Emitter

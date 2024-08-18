@@ -5,7 +5,7 @@ import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_detail_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';

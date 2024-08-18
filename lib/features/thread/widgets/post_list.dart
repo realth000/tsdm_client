@@ -7,7 +7,7 @@ import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';

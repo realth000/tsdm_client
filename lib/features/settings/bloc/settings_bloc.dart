@@ -9,8 +9,9 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-part '../../../generated/features/settings/bloc/settings_bloc.mapper.dart';
+part 'settings_bloc.mapper.dart';
 part 'settings_event.dart';
+
 part 'settings_state.dart';
 
 const _scrollDebounceDuration = Duration(milliseconds: 300);

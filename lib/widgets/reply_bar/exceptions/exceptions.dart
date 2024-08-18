@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/widgets/reply_bar/exceptions/exceptions.mapper.dart';
+part 'exceptions.mapper.dart';
 
 /// Failed to fetch parameters used in replying to a post.
 @MappableClass()

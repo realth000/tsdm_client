@@ -9,8 +9,9 @@ import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.d
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/my_thread/bloc/my_thread_bloc.mapper.dart';
+part 'my_thread_bloc.mapper.dart';
 part 'my_thread_event.dart';
+
 part 'my_thread_state.dart';
 
 /// Emitter

@@ -68,6 +68,7 @@ dependencies:
   universal_html: ^2.2.4
   url_launcher: ^6.3.0
   uuid: ^4.4.2
+  web: ^0.5.1
   widget_zoom: ^0.0.4
 
 dev_dependencies:

@@ -8,7 +8,7 @@ import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repo
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/latest_thread/bloc/latest_thread_bloc.mapper.dart';
+part 'latest_thread_bloc.mapper.dart';
 part 'latest_thread_event.dart';
 part 'latest_thread_state.dart';
 

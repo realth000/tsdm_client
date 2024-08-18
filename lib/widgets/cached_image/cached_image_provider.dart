@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:ui' as ui;
 
 import 'package:dio/dio.dart';

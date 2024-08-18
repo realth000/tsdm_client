@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 
 /// Card to display code block, from html node type <div class="blockcode">.

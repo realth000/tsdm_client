@@ -13,7 +13,7 @@ import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/thread_card_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';

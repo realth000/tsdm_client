@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/editor/exceptions/exceptions.mapper.dart';
+part 'exceptions.mapper.dart';
 
 /// Basic exception related to emoji.
 @MappableClass()

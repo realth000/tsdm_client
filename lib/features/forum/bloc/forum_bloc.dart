@@ -8,7 +8,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/forum/bloc/forum_bloc.mapper.dart';
+part 'forum_bloc.mapper.dart';
 part 'forum_event.dart';
 part 'forum_state.dart';
 

@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/post/models/post_edit_content.mapper.dart';
+part 'post_edit_content.mapper.dart';
 
 /// Definition Thread type.
 ///

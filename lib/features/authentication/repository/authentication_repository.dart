@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';

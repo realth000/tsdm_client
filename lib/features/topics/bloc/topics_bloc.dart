@@ -9,8 +9,9 @@ import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/topics/bloc/topics_bloc.mapper.dart';
+part 'topics_bloc.mapper.dart';
 part 'topics_event.dart';
+
 part 'topics_state.dart';
 
 /// Bloc of topic.

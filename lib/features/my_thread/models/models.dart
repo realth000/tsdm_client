@@ -5,5 +5,5 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/my_thread/models/models.mapper.dart';
+part 'models.mapper.dart';
 part 'my_thread.dart';

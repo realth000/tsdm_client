@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/chat/exceptions/exceptions.mapper.dart';
+part 'exceptions.mapper.dart';
 
 /// Chat html document not found.
 @MappableClass()

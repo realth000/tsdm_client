@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';

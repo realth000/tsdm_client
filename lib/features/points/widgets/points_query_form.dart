@@ -7,7 +7,7 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/models/models.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Form to make the user points changelog query filter.

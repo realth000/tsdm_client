@@ -5,6 +5,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/notification/models/models.mapper.dart';
 part 'message.dart';
+part 'models.mapper.dart';
+
 part 'notice.dart';

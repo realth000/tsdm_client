@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';

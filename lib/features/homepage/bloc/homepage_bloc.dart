@@ -15,8 +15,9 @@ import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/homepage/bloc/homepage_bloc.mapper.dart';
+part 'homepage_bloc.mapper.dart';
 part 'homepage_event.dart';
+
 part 'homepage_state.dart';
 
 /// Extension on [uh.Document] to extract user info.

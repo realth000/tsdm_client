@@ -7,7 +7,7 @@ import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
 import 'package:tsdm_client/features/points/widgets/points_card.dart';
 import 'package:tsdm_client/features/points/widgets/points_query_form.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';

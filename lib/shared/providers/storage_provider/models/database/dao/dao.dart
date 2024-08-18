@@ -3,8 +3,8 @@ import 'package:tsdm_client/shared/providers/storage_provider/models/database/da
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/schema/schema.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-// part '../../../../../../generated/shared/providers/storage_provider/models/database/dao/dao.g.dart';
-part '../../../../../../generated/shared/providers/storage_provider/models/database/dao/dao.g.dart';
 part 'cookie.dart';
+// part 'dao.g.dart';
+part 'dao.g.dart';
 part 'image_cache.dart';
 part 'settings.dart';

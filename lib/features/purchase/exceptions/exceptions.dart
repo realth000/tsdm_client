@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/purchase/exceptions/exceptions.mapper.dart';
+part 'exceptions.mapper.dart';
 
 /// Basic exception class that may happen in purchasing.
 @MappableClass()

@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/authentication/repository/exceptions/except
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-part '../../../generated/features/authentication/bloc/authentication_bloc.mapper.dart';
+part 'authentication_bloc.mapper.dart';
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 

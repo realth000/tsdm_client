@@ -7,8 +7,9 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/thread/bloc/thread_bloc.mapper.dart';
+part 'thread_bloc.mapper.dart';
 part 'thread_event.dart';
+
 part 'thread_state.dart';
 
 /// Emitter.

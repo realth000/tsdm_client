@@ -5,8 +5,9 @@ import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-part '../../../generated/features/notification/bloc/notification_bloc.mapper.dart';
+part 'notification_bloc.mapper.dart';
 part 'notification_event.dart';
+
 part 'notification_state.dart';
 
 /// Emitter

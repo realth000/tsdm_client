@@ -16,7 +16,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/upgrade/cubit/upgrade_cubit.mapper.dart';
+part 'upgrade_cubit.mapper.dart';
 part 'upgrade_state.dart';
 
 extension _FilterExt on Map<String, String> {

@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/post/exceptions/exceptions.mapper.dart';
+part 'exceptions.mapper.dart';
 
 /// Exceptions used in editing post.
 @MappableClass()

@@ -10,8 +10,9 @@ import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/chat/bloc/chat_bloc.mapper.dart';
+part 'chat_bloc.mapper.dart';
 part 'chat_event.dart';
+
 part 'chat_state.dart';
 
 /// Emit

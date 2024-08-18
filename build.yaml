@@ -1,27 +1,14 @@
 targets:
   $default:
     builders:
-      source_gen|combining_builder:
-        generate_for:
-          - lib/**.dart
-        options:
-          build_extensions:
-            '^lib/{{}}.dart': 'lib/generated/{{}}.g.dart'
       slang_build_runner:
         enabled: true
         options:
           base_locale: en
-          output_directory: 'lib/generated/i18n'
       gitsumu|info:
         generate_for:
           - lib/utils/git_info.dart
-        options:
-          build_extensions:
-            '^lib/{{}}.dart': 'lib/generated/{{}}.gitsumu.dart'
       dart_mappable_builder:
         options:
-          build_extensions:
-            'lib/{{}}.dart':
-              - 'lib/generated/{{}}.mapper.dart'
           generatedMethods: [ decode, encode, copy, stringify, equals ]
 

@@ -6,7 +6,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/upgrade/cubit/upgrade_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/show_toast.dart';

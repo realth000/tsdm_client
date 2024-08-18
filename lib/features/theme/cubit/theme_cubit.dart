@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/features/theme/cubit/theme_cubit.mapper.dart';
+part 'theme_cubit.mapper.dart';
 part 'theme_state.dart';
 
 /// Cubit controlling app theme.

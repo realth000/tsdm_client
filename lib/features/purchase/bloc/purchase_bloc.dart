@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/purchase/models/models.dart';
 import 'package:tsdm_client/features/purchase/repository/purchase_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-part '../../../generated/features/purchase/bloc/purchase_bloc.mapper.dart';
+part 'purchase_bloc.mapper.dart';
 part 'purchase_event.dart';
 part 'purchase_state.dart';
 

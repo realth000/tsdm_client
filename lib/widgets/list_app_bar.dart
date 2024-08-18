@@ -7,7 +7,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 
 /// App bar actions.
 enum MenuActions {

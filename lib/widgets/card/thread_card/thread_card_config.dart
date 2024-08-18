@@ -1,6 +1,6 @@
 import 'package:dart_mappable/dart_mappable.dart';
 
-part '../../../generated/widgets/card/thread_card/thread_card_config.mapper.dart';
+part 'thread_card_config.mapper.dart';
 
 /// Layout configuration.
 @MappableClass()

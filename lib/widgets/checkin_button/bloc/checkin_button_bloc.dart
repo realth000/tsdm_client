@@ -9,7 +9,7 @@ import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.d
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 
-part '../../../generated/widgets/checkin_button/bloc/checkin_button_bloc.mapper.dart';
+part 'checkin_button_bloc.mapper.dart';
 part 'checkin_button_event.dart';
 part 'checkin_button_state.dart';
 

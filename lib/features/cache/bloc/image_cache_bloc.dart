@@ -7,7 +7,7 @@ import 'package:equatable/equatable.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 
-part '../../../generated/features/cache/bloc/image_cache_bloc.mapper.dart';
+part 'image_cache_bloc.mapper.dart';
 part 'image_cache_event.dart';
 part 'image_cache_state.dart';
 

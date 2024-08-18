@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 
 // ignore_for_file: public_member_api_docs
 

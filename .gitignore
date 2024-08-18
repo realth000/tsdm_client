@@ -1,8 +1,17 @@
+# Not bundle drift web artifacts
+/web/drift_worker.dart.js
+/web/sqlite3.debug.wasm
+/web/sqlite3.wasm
+
+# Genetated files
 /lib/generated
 *.g.dart
 *.mapper.dart
 *.freezed.dart
+
+# Devtools
 /devtools_options.yaml
+
 # Miscellaneous
 *.class
 *.log

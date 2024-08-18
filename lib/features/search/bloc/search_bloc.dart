@@ -8,8 +8,9 @@ import 'package:tsdm_client/features/search/repository/search_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/search/bloc/search_bloc.mapper.dart';
+part 'search_bloc.mapper.dart';
 part 'search_event.dart';
+
 part 'search_state.dart';
 
 /// Emitter

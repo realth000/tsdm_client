@@ -4,7 +4,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/packet/cubit/packet_cubit.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 
 /// 红包
 class PacketCard extends StatelessWidget {

@@ -7,6 +7,7 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/utils/platform.dart';
 
 /// Instance names can be used.
 abstract final class ServiceKeys {
@@ -18,7 +19,10 @@ abstract final class ServiceKeys {
 ///
 /// This rule is to ensure clear and lightweight dependencies.
 Future<void> initProviders() async {
-  await initCache();
+  if (!isWeb) {
+    // Only init cache directories on native platforms.
+    await initCache();
+  }
 
   // TODO: These separated init steps make it not testable.
 

@@ -5,7 +5,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/authentication/widgets/captcha_image.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 

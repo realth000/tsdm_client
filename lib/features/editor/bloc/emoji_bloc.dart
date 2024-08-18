@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-part '../../../generated/features/editor/bloc/emoji_bloc.mapper.dart';
+part 'emoji_bloc.mapper.dart';
 part 'emoji_event.dart';
 part 'emoji_state.dart';
 

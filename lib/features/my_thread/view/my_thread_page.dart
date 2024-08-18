@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/my_thread/bloc/my_thread_bloc.dart';
 import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 
 /// Page to show the threads and replies published by current logged user.

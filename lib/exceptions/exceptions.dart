@@ -1,3 +1,7 @@
+import 'package:dart_mappable/dart_mappable.dart';
+
+part 'exceptions.mapper.dart';
+
 /// Exception represents an error occurred in http request.
 ///
 /// Usually the response status code is not 200.
@@ -16,7 +20,10 @@ class HttpRequestFailedException implements Exception {
 ///
 /// Till now we manually set the status code to 999 to indicate this error, but
 /// it should be refactored to a more proper way.
-class HttpHandshakeFailedException implements Exception {
+@MappableClass()
+class HttpHandshakeFailedException
+    with HttpHandshakeFailedExceptionMappable
+    implements Exception {
   /// Constructor.
   const HttpHandshakeFailedException(this.message);
 
@@ -24,9 +31,12 @@ class HttpHandshakeFailedException implements Exception {
   final String message;
 }
 
-/// Invalid settings's key (aka name) when accessing settings values:
+/// Invalid setting's key (aka name) when accessing settings values:
 /// setting values or getting values.
-class InvalidSettingsKeyException implements Exception {
+@MappableClass()
+class InvalidSettingsKeyException
+    with InvalidSettingsKeyExceptionMappable
+    implements Exception {
   /// Constructor.
   const InvalidSettingsKeyException(this.message);
 

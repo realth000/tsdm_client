@@ -6,7 +6,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';

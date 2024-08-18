@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet provides all available foreground colors for user to

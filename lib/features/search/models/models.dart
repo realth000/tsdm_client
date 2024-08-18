@@ -5,6 +5,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/html.dart' as uh;
 
-part '../../../generated/features/search/models/models.mapper.dart';
+part 'models.mapper.dart';
 part 'search_result.dart';
+
 part 'searched_thread.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 
 /// Build a retry button with [context] and callback [onPressed].
 Widget buildRetryButton(BuildContext context, VoidCallback onPressed) {

@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/widgets/login_form.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 /// Page of user to login.

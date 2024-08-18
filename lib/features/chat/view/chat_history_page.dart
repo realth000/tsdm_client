@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/chat/bloc/chat_history_bloc.dart';
 import 'package:tsdm_client/features/chat/models/editor_features.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';

@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:flutter/foundation.dart';
 

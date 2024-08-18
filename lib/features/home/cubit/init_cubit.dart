@@ -1,10 +1,10 @@
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:path_provider/path_provider.dart';
 
-part '../../../generated/features/home/cubit/init_cubit.mapper.dart';
+part 'init_cubit.mapper.dart';
 part 'init_state.dart';
 
 /// Cubit to do some initializing work during app start.

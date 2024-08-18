@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/generated/i18n/strings.g.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 
 /// Show a snack bar contains message show no more contents.
 void showNoMoreSnackBar(

@@ -2,7 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 
-part '../../../generated/features/cache/bloc/image_cache_trigger_cubit.mapper.dart';
+part 'image_cache_trigger_cubit.mapper.dart';
 part 'image_cache_trigger_state.dart';
 
 /// Global cubit as a trigger to enable widgets triggering image reload.

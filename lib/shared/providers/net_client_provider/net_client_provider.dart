@@ -1,4 +1,4 @@
-import 'dart:io';
+import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
@@ -10,6 +10,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/utils/platform.dart';
 
 extension _WithFormExt<T> on Dio {
   Future<Response<T>> postWithForm(
@@ -46,33 +47,35 @@ final class NetClientProvider with LoggerMixin {
     bool startLogin = false,
     bool logout = false,
   }) {
-    talker.debug('build cookie with user info: $userLoginInfo');
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
-    final cookie = getIt.get<CookieProvider>().build(
-          userLoginInfo: userLoginInfo,
-          startLogin: startLogin,
-          logout: logout,
-        );
-    final cookieJar = PersistCookieJar(
-      ignoreExpires: true,
-      storage: cookie,
-    );
-    // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
-    // certificate" error.
-    // ref: https://stackoverflow.com/a/77005574
-    d.httpClientAdapter = IOHttpClientAdapter(
-      createHttpClient: () {
-        // Don't trust any certificate just because their root cert is
-        // trusted.
-        final client = HttpClient(context: SecurityContext())
-          ..badCertificateCallback =
-              (X509Certificate cert, String host, int port) => true;
-        return client;
-      },
-    );
-    d.interceptors
-      ..add(CookieManager(cookieJar))
-      ..add(_ErrorHandler());
+    if (!isWeb) {
+      talker.debug('build cookie with user info: $userLoginInfo');
+      final cookie = getIt.get<CookieProvider>().build(
+            userLoginInfo: userLoginInfo,
+            startLogin: startLogin,
+            logout: logout,
+          );
+      final cookieJar = PersistCookieJar(
+        ignoreExpires: true,
+        storage: cookie,
+      );
+      d.interceptors.add(CookieManager(cookieJar));
+
+      // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
+      // certificate" error.
+      // ref: https://stackoverflow.com/a/77005574
+      d.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          // Don't trust any certificate just because their root cert is
+          // trusted.
+          final client = HttpClient(context: SecurityContext())
+            ..badCertificateCallback =
+                (X509Certificate cert, String host, int port) => true;
+          return client;
+        },
+      );
+      d.interceptors.add(_ErrorHandler());
+    }
 
     return NetClientProvider._(d);
   }
@@ -231,7 +234,7 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
-    error('${err.type}: ${err.error},${err.message}');
+    error('${err.requestOptions} ${err.type}: ${err.error},${err.message}');
 
     if (err.type == DioExceptionType.badResponse) {
       // Till now we can do nothing if encounter a bad response.
