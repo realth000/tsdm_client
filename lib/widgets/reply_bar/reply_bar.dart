@@ -123,12 +123,30 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
   @override
   Widget build(BuildContext context) {
+    final hasLogin = context.select<AuthenticationRepository, bool>(
+      (repo) => repo.currentUser != null,
+    );
+    final closed = context.select<ReplyBloc, bool>((bloc) => bloc.state.closed);
+
+    Future<void> Function()? onTapCallback;
+
+    if (!hasLogin) {
+      controller.text = context.t.threadPage.needLogin;
+      onTapCallback = null;
+    } else if (closed) {
+      controller.text = context.t.threadPage.closed;
+      onTapCallback = null;
+    } else {
+      onTapCallback = showEditor;
+    }
+
     return Padding(
       padding: edgeInsetsL12T12R12B12,
       child: TextField(
         controller: controller,
         readOnly: true,
-        onTap: showEditor,
+        enabled: onTapCallback != null,
+        onTap: onTapCallback,
       ),
     );
   }
