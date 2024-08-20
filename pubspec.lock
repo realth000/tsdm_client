@@ -363,10 +363,10 @@ packages:
     dependency: "direct main"
     description:
       name: drift_flutter
-      sha256: "0bc2f1dde59e59cedde0df67a4ff7bd8f0d42274f18b50bf7e7dae7ca3d77801"
+      sha256: c670c947fe17ad149678a43fdbbfdb69321f0c83d315043e34e8ad2729e11f49
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.2.0"
   easy_refresh:
     dependency: "direct main"
     description:
@@ -646,7 +646,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "10.0.2"
+    version: "10.4.0"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -661,7 +661,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill/flutter_quill_extensions"
       relative: true
     source: path
-    version: "10.0.2"
+    version: "10.4.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -1312,6 +1312,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.0"
+  simple_spell_checker:
+    dependency: transitive
+    description:
+      name: simple_spell_checker
+      sha256: b3b57930702e972b55e3d7f656691e26fc66f05ca66969ef6c9dbb5c192968e6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   sky_engine:
     dependency: transitive
     description: flutter
