@@ -42,5 +42,5 @@ final class AuthenticationState with AuthenticationStateMappable {
   final LoginHash? loginHash;
 
   /// Exception happened in login.
-  final LoginException? loginException;
+  final AppException? loginException;
 }

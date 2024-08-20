@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 
 /// Logger mixin.
@@ -54,13 +55,15 @@ mixin LoggerMixin {
   }
 
   /// Exception
-  void handle(
-    Object exception, [
-    StackTrace? stackTrace,
-    dynamic msg,
-  ]) {
+  void handle(AppException exception) {
     talker
       ..error('$runtimeType: handle error:')
-      ..handle(exception, stackTrace, msg);
+      ..handle(exception, exception.stackTrace, exception.message);
+  }
+
+  /// Handle [exception] then run [callback].
+  void handleThen(AppException exception, VoidCallback callback) {
+    handle(exception);
+    callback();
   }
 }

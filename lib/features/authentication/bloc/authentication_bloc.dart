@@ -2,7 +2,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
@@ -11,7 +10,7 @@ part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 /// Emitter
-typedef AuthenticationEmitter = Emitter<AuthenticationState>;
+typedef _Emitter = Emitter<AuthenticationState>;
 
 /// Bloc the authentication, including login and logout.
 ///
@@ -23,60 +22,45 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
     required AuthenticationRepository authenticationRepository,
   })  : _authenticationRepository = authenticationRepository,
         super(const AuthenticationState()) {
-    on<AuthenticationFetchLoginHashRequested>(
-      _onAuthenticationFetchLoginHashRequested,
+    on<AuthenticationEvent>(
+      (event, emitter) => switch (event) {
+        AuthenticationFetchLoginHashRequested() =>
+          _onFetchLoginHashRequested(emitter),
+        AuthenticationLoginRequested(:final userCredential) =>
+          _onLoginRequested(emitter, userCredential),
+      },
     );
-    on<AuthenticationLoginRequested>(_onAuthenticationLoginRequested);
   }
 
   final AuthenticationRepository _authenticationRepository;
 
-  Future<void> _onAuthenticationFetchLoginHashRequested(
-    AuthenticationFetchLoginHashRequested event,
-    AuthenticationEmitter emit,
-  ) async {
+  Future<void> _onFetchLoginHashRequested(_Emitter emit) async {
     emit(state.copyWith(status: AuthenticationStatus.fetchingHash));
-    try {
-      final loginHash = await _authenticationRepository.fetchHash();
-      emit(
+    await _authenticationRepository.fetchHash().match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: AuthenticationStatus.failure));
+      },
+      (v) => emit(
         state.copyWith(
           status: AuthenticationStatus.gotHash,
-          loginHash: loginHash,
+          loginHash: v,
         ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch login hash: $e');
-      emit(state.copyWith(status: AuthenticationStatus.failure));
-    } on LoginException catch (e) {
-      debug('failed to fetch login hash: $e');
-      emit(
-        state.copyWith(
-          status: AuthenticationStatus.failure,
-          loginException: e,
-        ),
-      );
-    }
+      ),
+    ).run();
   }
 
-  Future<void> _onAuthenticationLoginRequested(
-    AuthenticationLoginRequested event,
-    AuthenticationEmitter emit,
+  Future<void> _onLoginRequested(
+    _Emitter emit,
+    UserCredential userCredential,
   ) async {
     emit(state.copyWith(status: AuthenticationStatus.loggingIn));
-    try {
-      await _authenticationRepository.loginWithPassword(event.userCredential);
-      emit(state.copyWith(status: AuthenticationStatus.success));
-    } on HttpRequestFailedException catch (e) {
-      debug('failed to login: $e');
-      emit(state.copyWith(status: AuthenticationStatus.failure));
-    } on LoginException catch (e) {
-      debug('failed to login: $e');
-      emit(
-        state.copyWith(
-          status: AuthenticationStatus.failure,
-          loginException: e,
-        ),
-      );
-    }
+    await _authenticationRepository.loginWithPassword(userCredential).match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: AuthenticationStatus.failure));
+      },
+      (_) => emit(state.copyWith(status: AuthenticationStatus.success)),
+    ).run();
   }
 }

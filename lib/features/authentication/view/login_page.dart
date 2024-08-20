@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
-import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/authentication/widgets/login_form.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -52,7 +52,7 @@ class _LoginPageState extends State<LoginPage> {
                   context.t.loginPage.loginFailed,
                 LoginOtherErrorException() =>
                   context.t.loginPage.loginResultOtherErrors,
-                null => context.t.general.failedToLoad,
+                _ => context.t.general.failedToLoad,
               };
               showSnackBar(context: context, message: errorText);
               context

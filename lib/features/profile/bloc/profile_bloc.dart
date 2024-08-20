@@ -4,7 +4,6 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/authentication/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/profile/models/models.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -12,11 +11,10 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'profile_bloc.mapper.dart';
 part 'profile_event.dart';
-
 part 'profile_state.dart';
 
 /// Emitter
-typedef ProfileEmitter = Emitter<ProfileState>;
+typedef _Emitter = Emitter<ProfileState>;
 
 /// Bloc of user profile page.
 ///
@@ -32,9 +30,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
   })  : _profileRepository = profileRepository,
         _authenticationRepository = authenticationRepository,
         super(const ProfileState()) {
-    on<ProfileLoadRequested>(_onProfileLoadRequested);
-    on<ProfileRefreshRequested>(_onProfileRefreshRequested);
-    on<ProfileLogoutRequested>(_onProfileLogoutRequested);
+    on<ProfileEvent>(
+      (event, emit) => switch (event) {
+        ProfileLoadRequested(:final username, :final uid) =>
+          _onLoadRequested(emit, username: username, uid: uid),
+        ProfileRefreshRequested() => _onRefreshRequested(emit),
+        ProfileLogoutRequested() => _onLogoutRequested(emit),
+      },
+    );
   }
 
   final ProfileRepository _profileRepository;
@@ -43,13 +46,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
   final RegExp _birthdayRe =
       RegExp(r'((?<y>\d+) 年)? ?((?<m>\d+) 月)? ?((?<d>\d+) 日)?');
 
-  Future<void> _onProfileLoadRequested(
-    ProfileLoadRequested event,
-    ProfileEmitter emit,
-  ) async {
-    if (event.username == null &&
-        event.uid == null &&
-        _profileRepository.hasCache()) {
+  Future<void> _onLoadRequested(
+    _Emitter emit, {
+    String? username,
+    String? uid,
+  }) async {
+    if (username == null && uid == null && _profileRepository.hasCache()) {
       final userProfile = _buildProfile(_profileRepository.getCache()!);
       final (unreadNoticeCount, hasUnreadMessage) =
           _buildUnreadInfoStatus(_profileRepository.getCache()!);
@@ -66,8 +68,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
       final document = await _profileRepository.fetchProfile(
-        username: event.username,
-        uid: event.uid,
+        username: username,
+        uid: uid,
       );
       if (document == null) {
         emit(state.copyWith(status: ProfileStatus.needLogin));
@@ -76,7 +78,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       final userProfile = _buildProfile(document);
       if (userProfile == null) {
         error('failed to parse user profile');
-        emit(state.copyWith(status: ProfileStatus.failed));
+        emit(state.copyWith(status: ProfileStatus.failure));
         return;
       }
       final (unreadNoticeCount, hasUnreadMessage) =
@@ -91,14 +93,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       );
     } on HttpRequestFailedException catch (e) {
       error('failed to load profile: $e');
-      emit(state.copyWith(status: ProfileStatus.failed));
+      emit(state.copyWith(status: ProfileStatus.failure));
     }
   }
 
-  Future<void> _onProfileRefreshRequested(
-    ProfileRefreshRequested event,
-    ProfileEmitter emit,
-  ) async {
+  Future<void> _onRefreshRequested(_Emitter emit) async {
     try {
       emit(state.copyWith(status: ProfileStatus.loading));
       final document = await _profileRepository.fetchProfile(force: true);
@@ -109,7 +108,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       final userProfile = _buildProfile(document);
       if (userProfile == null) {
         error('failed to parse user profile');
-        emit(state.copyWith(status: ProfileStatus.failed));
+        emit(state.copyWith(status: ProfileStatus.failure));
         return;
       }
       final (unreadNoticeCount, hasUnreadMessage) =
@@ -124,35 +123,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       );
     } on HttpRequestFailedException catch (e) {
       error('failed to refresh profile: $e');
-      emit(state.copyWith(status: ProfileStatus.failed));
+      emit(state.copyWith(status: ProfileStatus.failure));
       return;
     }
   }
 
-  Future<void> _onProfileLogoutRequested(
-    ProfileLogoutRequested event,
-    ProfileEmitter emit,
-  ) async {
-    emit(state.copyWith(status: ProfileStatus.logout));
-    try {
-      await _authenticationRepository.logout();
-      _profileRepository.logout();
-      emit(state.copyWith(status: ProfileStatus.needLogin));
-    } on HttpRequestFailedException catch (e) {
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          failedToLogoutReason: e,
-        ),
-      );
-    } on LogoutException catch (e) {
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          failedToLogoutReason: e,
-        ),
-      );
-    }
+  Future<void> _onLogoutRequested(_Emitter emit) async {
+    emit(state.copyWith(status: ProfileStatus.loggingOut));
+    await _authenticationRepository.logout().match(
+      (e) {
+        handle(e);
+        emit(
+          state.copyWith(
+            status: ProfileStatus.success,
+            failedToLogoutReason: e,
+          ),
+        );
+      },
+      (_) => emit(state.copyWith(status: ProfileStatus.needLogin)),
+    ).run();
   }
 
   /// Build a user profile [UserProfile] from given html [document].

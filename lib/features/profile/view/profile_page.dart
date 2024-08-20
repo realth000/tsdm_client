@@ -788,7 +788,7 @@ class _ProfilePageState extends State<ProfilePage> {
       )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
-          if (state.status == ProfileStatus.failed) {
+          if (state.status == ProfileStatus.failure) {
             showFailedToLoadSnackBar(context);
           }
         },
@@ -800,9 +800,9 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileStatus.initial ||
             ProfileStatus.loading ||
             ProfileStatus.needLogin ||
-            ProfileStatus.failed =>
+            ProfileStatus.failure =>
               AppBar(title: Text(context.t.profilePage.title)),
-            ProfileStatus.success || ProfileStatus.logout => null,
+            ProfileStatus.success || ProfileStatus.loggingOut => null,
           };
 
           // Main content of user profile.
@@ -818,7 +818,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   context.read<ProfileBloc>().add(ProfileRefreshRequested());
                 },
               ),
-            ProfileStatus.failed => buildRetryButton(context, () {
+            ProfileStatus.failure => buildRetryButton(context, () {
                 context.read<ProfileBloc>().add(
                       ProfileLoadRequested(
                         username: widget.username,
@@ -826,11 +826,11 @@ class _ProfilePageState extends State<ProfilePage> {
                       ),
                     );
               }),
-            ProfileStatus.success || ProfileStatus.logout => _buildContent(
+            ProfileStatus.success || ProfileStatus.loggingOut => _buildContent(
                 context,
                 state,
                 failedToLogoutReason: state.failedToLogoutReason,
-                logout: state.status == ProfileStatus.logout,
+                logout: state.status == ProfileStatus.loggingOut,
               ),
           };
 

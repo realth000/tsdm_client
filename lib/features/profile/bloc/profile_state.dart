@@ -12,13 +12,13 @@ enum ProfileStatus {
   needLogin,
 
   /// Processing logout action
-  logout,
+  loggingOut,
 
   /// Login or logout succeed.
   success,
 
   /// Login or logout failed.
-  failed,
+  failure,
 }
 
 /// State of profile page of the app.
