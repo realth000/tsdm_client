@@ -133,7 +133,10 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
     if (!hasLogin) {
       controller.text = context.t.threadPage.needLogin;
       onTapCallback = null;
-    } else if (closed) {
+    } else if (closed &&
+        // Never close in chat page.
+        (widget.replyType != ReplyTypes.chat &&
+            widget.replyType != ReplyTypes.chatHistory)) {
       controller.text = context.t.threadPage.closed;
       onTapCallback = null;
     } else {
