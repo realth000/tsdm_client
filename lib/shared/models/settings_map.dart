@@ -30,6 +30,7 @@ class SettingsMap with SettingsMapMappable {
     required this.threadReverseOrder,
     required this.threadCardInfoRowAlignCenter,
     required this.threadCardShowLastReplyAuthor,
+    required this.threadCardHighlightRecentThread,
   });
 
   final String netClientAccept;
@@ -55,6 +56,7 @@ class SettingsMap with SettingsMapMappable {
   final bool threadReverseOrder;
   final bool threadCardInfoRowAlignCenter;
   final bool threadCardShowLastReplyAuthor;
+  final bool threadCardHighlightRecentThread;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -98,6 +100,8 @@ class SettingsMap with SettingsMapMappable {
         copyWith(threadCardInfoRowAlignCenter: value as bool?),
       SettingsKeys.threadCardShowLastReplyAuthor =>
         copyWith(threadCardShowLastReplyAuthor: value as bool?),
+      SettingsKeys.threadCardHighlightRecentThread =>
+        copyWith(threadCardHighlightRecentThread: value as bool?),
     };
   }
 }

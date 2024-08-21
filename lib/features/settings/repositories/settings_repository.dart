@@ -96,6 +96,8 @@ final class SettingsRepository with LoggerMixin {
       threadCardInfoRowAlignCenter: s.extract(_SK.threadCardInfoRowAlignCenter),
       threadCardShowLastReplyAuthor:
           s.extract(SettingsKeys.threadCardShowLastReplyAuthor),
+      threadCardHighlightRecentThread:
+          s.extract(SettingsKeys.threadCardHighlightRecentThread),
     );
   }
 

@@ -68,6 +68,7 @@
         "detail": "Configure the appearance of thread card",
         "infoRowAlignCenter": "Info row align center",
         "showLastReplyAuthor": "Show last reply author",
+        "highlightRecentThread": "Highlight recently published thread",
         "example": {
           "title": "TV Anime \"A Certain Magical Index\" 4th Season Coming Out",
           "author": "茵蒂克丝",

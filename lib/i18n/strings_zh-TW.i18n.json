@@ -68,6 +68,7 @@
         "detail": "設定貼文卡的外觀",
         "infoRowAlignCenter": "訊息居中排列",
         "showLastReplyAuthor": "顯示最後回覆的使用者的名字",
+        "highlightRecentThread": "高亮顯示近期發佈的貼文",
         "example": {
           "title": "TV動畫《魔法禁書目錄》第四季製作決定！",
           "author": "茵蒂克絲",
@@ -560,10 +561,10 @@
     "reloadImage": "重新載入圖片",
     "openLink": "開啟連結"
   },
-    "init": {
-      "v1DeleteLegacyData": {
-        "title": "舊資料已清除",
-        "detail": "此應用程式似乎剛從低於1.0的版本升級上來，使用者登入資料和設定偏好已不可用，現已清除。\n您可能需要再登入一次並重新設定偏好，抱歉給您帶來不便。"
-      }
+  "init": {
+    "v1DeleteLegacyData": {
+      "title": "舊資料已清除",
+      "detail": "此應用程式似乎剛從低於1.0的版本升級上來，使用者登入資料和設定偏好已不可用，現已清除。\n您可能需要再登入一次並重新設定偏好，抱歉給您帶來不便。"
+    }
   }
 }

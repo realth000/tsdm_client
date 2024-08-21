@@ -105,6 +105,7 @@ class NormalThread with NormalThreadMappable {
     required this.privilege,
     required this.css,
     required this.stateSet,
+    required this.isRecentThread,
   });
 
   /// Thread title.
@@ -174,6 +175,11 @@ class NormalThread with NormalThreadMappable {
   /// For example, a thread can be rated and marked pinned at the same time.
   final Set<ThreadStateModel> stateSet;
 
+  /// Published in recent 24 hours or not.
+  ///
+  /// If so, thread name is highlighted.
+  final bool isRecentThread;
+
   /// Build a [NormalThread] model with the given [uh.Element]
   ///
   /// <tbody id="normalthread_xxxxxxx"
@@ -236,6 +242,13 @@ class NormalThread with NormalThreadMappable {
         ?.firstEndDeepText()
         ?.trim()
         .parseToDateTimeUtc8();
+
+    // Thread published in 24 hours get highlight on its publish time with
+    // css class `xi1`.
+    final isRecentThread =
+        threadAuthorNode?.querySelector('em > span')?.classes.contains('xi1') ??
+            false;
+
     if (threadAuthorUrl == null ||
         threadAuthorName == null ||
         threadPublishDate == null) {
@@ -327,6 +340,7 @@ class NormalThread with NormalThreadMappable {
       privilege: privilege,
       css: css,
       stateSet: stateSet,
+      isRecentThread: isRecentThread,
     );
   }
 }

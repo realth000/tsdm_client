@@ -37,6 +37,7 @@ class _CardLayout extends StatelessWidget {
     this.css,
     this.stateSet,
     this.disableTap = false,
+    this.isRecentThread = false,
   });
 
   final String threadID;
@@ -54,6 +55,7 @@ class _CardLayout extends StatelessWidget {
   final String? quotedMessage;
   final CssTypes? css;
   final Set<ThreadStateModel>? stateSet;
+  final bool isRecentThread;
 
   Widget _buildAvatar(BuildContext context) {
     final avatar = author.avatarUrl;
@@ -165,6 +167,22 @@ class _CardLayout extends StatelessWidget {
   Widget _buildContent(BuildContext context, SettingsState state) {
     final infoRowAlignCenter = state.settingsMap.threadCardInfoRowAlignCenter;
     final showLastReplyAuthor = state.settingsMap.threadCardShowLastReplyAuthor;
+    final highlightRecentThread =
+        state.settingsMap.threadCardHighlightRecentThread;
+
+    final TextStyle? timeStyle;
+    if (isRecentThread && highlightRecentThread) {
+      timeStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary,
+        fontWeight: FontWeight.bold,
+        // decoration: TextDecoration.combine([
+        //   TextDecoration.underline,
+        // ]),
+      );
+    } else {
+      timeStyle = null;
+    }
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -204,7 +222,7 @@ class _CardLayout extends StatelessWidget {
                 ],
               ),
               subtitle: publishTime != null
-                  ? SingleLineText(publishTime!.yyyyMMDD())
+                  ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle)
                   : null,
               trailing: Row(
                 mainAxisAlignment: MainAxisAlignment.end,
@@ -262,7 +280,9 @@ class _CardLayout extends StatelessWidget {
         return pm.threadCardInfoRowAlignCenter !=
                 cm.threadCardInfoRowAlignCenter ||
             pm.threadCardShowLastReplyAuthor !=
-                cm.threadCardShowLastReplyAuthor;
+                cm.threadCardShowLastReplyAuthor ||
+            pm.threadCardHighlightRecentThread !=
+                cm.threadCardHighlightRecentThread;
       },
       builder: _buildContent,
     );
@@ -297,6 +317,7 @@ class NormalThreadCard extends StatelessWidget {
       css: thread.css,
       stateSet: thread.stateSet,
       disableTap: disableTap,
+      isRecentThread: thread.isRecentThread,
     );
   }
 }

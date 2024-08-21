@@ -20,6 +20,7 @@ class StickThread extends NormalThread with StickThreadMappable {
     required super.privilege,
     required super.css,
     required super.stateSet,
+    required super.isRecentThread,
   });
 
   /// Build a [StickThread] from [threadElement] <tbody id="stickthread_xxx">.
@@ -46,6 +47,7 @@ class StickThread extends NormalThread with StickThreadMappable {
       privilege: t.privilege,
       css: t.css,
       stateSet: t.stateSet,
+      isRecentThread: t.isRecentThread,
     );
   }
 }

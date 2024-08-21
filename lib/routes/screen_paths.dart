@@ -56,7 +56,11 @@ class ScreenPaths {
   static const String profile = '/profile';
 
   /// App settings page.
-  static const String settings = '/settings';
+  static const settings = NestedPath._('/settings');
+
+  /// Settings page for thread card appearance.
+  static const settingsThreadAppearance =
+      NestedPath._('threadAppearance', settings);
 
   /// Thread page.
   ///
@@ -162,4 +166,19 @@ class ScreenPaths {
 
   /// Page to show image in full page.
   static const String imageDetail = '/imageDetail/:imageUrl';
+}
+
+/// Route path for a screen.
+final class NestedPath {
+  const NestedPath._(this._path, [this._parent]);
+
+  final NestedPath? _parent;
+
+  final String _path;
+
+  /// Page path.
+  String get path => _path;
+
+  /// Full path.
+  String get fullPath => _parent != null ? '${_parent.fullPath}/$path' : path;
 }

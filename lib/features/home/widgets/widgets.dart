@@ -60,7 +60,7 @@ List<_NavigationItem> _buildNavigationItems(BuildContext context) => [
         icon: const Icon(Icons.settings_outlined),
         selectedIcon: const Icon(Icons.settings),
         label: context.t.navigation.settings,
-        targetPath: ScreenPaths.settings,
+        targetPath: ScreenPaths.settings.path,
         tab: HomeTab.settings,
       ),
     ];

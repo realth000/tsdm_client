@@ -68,6 +68,7 @@
         "detail": "设置帖子卡片的外观",
         "infoRowAlignCenter": "信息居中排列",
         "showLastReplyAuthor": "显示最后回复的用户的名字",
+        "highlightRecentThread": "高亮显示近期发布的帖子",
         "example": {
           "title": "TV动画《魔法禁书目录》第四季制作决定！",
           "author": "茵蒂克丝",

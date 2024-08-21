@@ -11,7 +11,6 @@ import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
-import 'package:tsdm_client/features/settings/widgets/thread_card_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -252,12 +251,14 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const Icon(Icons.article_outlined),
         title: Text(tr.threadCard.title),
         subtitle: Text(tr.threadCard.detail),
-        onTap: () async => showCustomBottomSheet(
-          context: context,
-          title: tr.title,
-          builder: (context) => const ThreadCardDialog(),
-          constraints: const BoxConstraints(maxHeight: 400),
-        ),
+        onTap: () =>
+            context.pushNamed(ScreenPaths.settingsThreadAppearance.path),
+        // onTap: () async => showCustomBottomSheet(
+        //   context: context,
+        //   title: tr.title,
+        //   builder: (context) => const ThreadCardDialog(),
+        //   constraints: const BoxConstraints(maxHeight: 400),
+        // ),
       ),
     ];
   }

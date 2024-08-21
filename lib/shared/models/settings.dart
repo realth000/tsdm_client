@@ -183,6 +183,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'threadCardShowLastReplyAuthor',
     type: bool,
     defaultValue: true,
+  ),
+
+  /// Highlight recent thread (published in recent 24 hours).
+  threadCardHighlightRecentThread<bool>(
+    name: 'threadCardHighlightRecentThread',
+    type: bool,
+    defaultValue: true,
   );
 
   const SettingsKeys({

@@ -24,6 +24,7 @@ import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
+import 'package:tsdm_client/features/settings/view/thread_card_appearance.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
 import 'package:tsdm_client/features/thread/view/thread_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
@@ -52,10 +53,14 @@ final router = GoRouter(
           }
         }
 
+        final hideNavigationBarPages = [
+          ScreenPaths.settingsThreadAppearance.fullPath,
+        ];
+
         return HomePage(
           forumHomeRepository:
               RepositoryProvider.of<ForumHomeRepository>(context),
-          showNavigationBar: true,
+          showNavigationBar: !hideNavigationBarPages.contains(router.fullPath),
           inHome: inHome,
           child: navigator,
         );
@@ -80,8 +85,14 @@ final router = GoRouter(
         StatefulShellBranch(
           routes: [
             AppRoute(
-              path: ScreenPaths.settings,
+              path: ScreenPaths.settings.path,
               builder: (_) => const SettingsPage(),
+              routes: [
+                AppRoute(
+                  path: ScreenPaths.settingsThreadAppearance.path,
+                  builder: (_) => const SettingsThreadCardAppearancePage(),
+                ),
+              ],
             ),
           ],
         ),
