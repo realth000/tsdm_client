@@ -45,6 +45,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 认证：修复登录页面刷新验证码时布局抖动的问题。
 - 统计：修复积分统计中的积分值。
 - 分区：修复开启帖子筛选条件时，显示没有置顶帖的问题。
+- 消息：修复解析7天内的公共消息时失败的问题。
 
 ### Changed
 

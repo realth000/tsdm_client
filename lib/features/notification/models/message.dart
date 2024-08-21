@@ -157,10 +157,12 @@ final class BroadcastMessage with BroadcastMessageMappable {
     }
     final message = infoNode.querySelector('span')?.innerText.trim();
     final messageTime = infoNode
-        .querySelector('span.xg1')
-        ?.innerText
-        .trim()
-        .parseToDateTimeUtc8();
+            .querySelector('span.xg1')
+            ?.innerText
+            .trim()
+            .parseToDateTimeUtc8() ??
+        // Less than 7 days
+        infoNode.querySelector('span.xg1 > span')?.title?.parseToDateTimeUtc8();
     final redirectUrl = infoNode
         .querySelector('a')
         ?.attributes['href']
