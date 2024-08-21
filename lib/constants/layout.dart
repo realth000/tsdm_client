@@ -37,6 +37,9 @@ const sizedBoxW32H32 = SizedBox(width: 32, height: 32);
 /// Size following [material design 3 spec](https://m3.material.io/components/menus/specs#6928c7b9-2c6e-4ff6-98a6-55883fb299bd).
 const sizedBoxPopupMenuItemIconSpacing = SizedBox(width: 12, height: 48);
 
+/// An [EdgeInsets] 4 at top and 4 at bottom.
+const edgeInsetsT4B4 = EdgeInsets.only(top: 4, bottom: 4);
+
 /// An [EdgeInsets] with 8 at top.
 const edgeInsetsT8 = EdgeInsets.only(top: 8);
 
@@ -87,6 +90,9 @@ const edgeInsetsL12T4R4B4 =
 
 /// An [EdgeInsets] with 12 at left, 4 at top and 12 at right.
 const edgeInsetsL12T4R12 = EdgeInsets.only(left: 12, top: 4, right: 12);
+
+/// An [EdgeInsets] with 12 at left and 12 at right.
+const edgeInsetsL12R12 = EdgeInsets.only(left: 12, right: 12);
 
 /// An [EdgeInsets] with 10 at left, 5 at top, 10 at right and 20 at bottom.
 const edgeInsetsL12T4R12B24 =

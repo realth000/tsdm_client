@@ -17,4 +17,9 @@ extension Spacing<T> on List<T> {
 
     return ret;
   }
+
+  /// Prepend [item] in front of this.
+  List<T> prepend(T item) {
+    return [item, ...this];
+  }
 }

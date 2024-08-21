@@ -177,7 +177,7 @@ class _ForumPageState extends State<ForumPage>
 
   Widget _buildNormalThreadFilterRow(BuildContext context, ForumState state) {
     return Padding(
-      padding: edgeInsetsL12T4R12,
+      padding: edgeInsetsT4B4,
       child: SizedBox(
         height: 40,
         child: SingleChildScrollView(
@@ -191,7 +191,7 @@ class _ForumPageState extends State<ForumPage>
               const ThreadOrderChip(),
               const ThreadDigestChip(),
               const ThreadRecommendedChip(),
-            ].insertBetween(sizedBoxW12H12),
+            ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
           ),
         ),
       ),
@@ -308,7 +308,7 @@ class _ForumPageState extends State<ForumPage>
           _buildNormalThreadFilterRow(context, state),
           Expanded(
             child: Padding(
-              padding: edgeInsetsL12T4R12,
+              padding: edgeInsetsL12R12,
               child: CustomScrollView(
                 controller: _threadScrollController,
                 physics: physics,
