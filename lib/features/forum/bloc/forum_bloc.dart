@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
@@ -42,18 +41,21 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     ForumLoadMoreRequested event,
     ForumEmitter emit,
   ) async {
-    try {
-      final document = await _forumRepository.fetchForum(
-        fid: state.fid,
-        pageNumber: event.pageNumber,
-        filterState: state.filterState,
-      );
-      emit(await _parseFromDocument(document, event.pageNumber));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load forum page: fid=${state.fid}, '
-          'pageNumber=${event.pageNumber}: $e');
-      emit(state.copyWith(status: ForumStatus.failure));
-    }
+    await await _forumRepository
+        .fetchForum(
+      fid: state.fid,
+      pageNumber: event.pageNumber,
+      filterState: state.filterState,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load forum page: fid=${state.fid}, '
+            'pageNumber=${event.pageNumber}: $e');
+        emit(state.copyWith(status: ForumStatus.failure));
+      },
+      (v) async => emit(await _parseFromDocument(v, event.pageNumber)),
+    ).run();
   }
 
   Future<void> _onForumRefreshRequested(
@@ -69,16 +71,19 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
       ),
     );
 
-    try {
-      final document = await _forumRepository.fetchForum(
-        fid: state.fid,
-        filterState: state.filterState,
-      );
-      emit(await _parseFromDocument(document, 1));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failure));
-    }
+    await await _forumRepository
+        .fetchForum(
+      fid: state.fid,
+      filterState: state.filterState,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+        emit(state.copyWith(status: ForumStatus.failure));
+      },
+      (v) async => emit(await _parseFromDocument(v, 1)),
+    ).run();
   }
 
   Future<void> _onForumJumpPageRequested(
@@ -86,18 +91,20 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     ForumEmitter emit,
   ) async {
     emit(state.copyWith(status: ForumStatus.loading, normalThreadList: []));
-
-    try {
-      final document = await _forumRepository.fetchForum(
-        fid: state.fid,
-        pageNumber: event.pageNumber,
-        filterState: state.filterState,
-      );
-      emit(await _parseFromDocument(document, event.pageNumber));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failure));
-    }
+    await await _forumRepository
+        .fetchForum(
+      fid: state.fid,
+      pageNumber: event.pageNumber,
+      filterState: state.filterState,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+        emit(state.copyWith(status: ForumStatus.failure));
+      },
+      (v) async => emit(await _parseFromDocument(v, event.pageNumber)),
+    ).run();
   }
 
   Future<void> _onForumChangeThreadFilterStateRequested(
@@ -111,18 +118,19 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
         filterState: event.filterState,
       ),
     );
-
-    try {
-      final document = await _forumRepository.fetchForum(
-        fid: state.fid,
-        filterState: state.filterState,
-      );
-
-      emit(await _parseFromDocument(document, 1));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ForumStatus.failure));
-    }
+    await await _forumRepository
+        .fetchForum(
+      fid: state.fid,
+      filterState: state.filterState,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+        emit(state.copyWith(status: ForumStatus.failure));
+      },
+      (v) async => emit(await _parseFromDocument(v, 1)),
+    ).run();
   }
 
   Future<ForumState> _parseFromDocument(

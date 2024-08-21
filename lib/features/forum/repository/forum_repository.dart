@@ -1,5 +1,6 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/instance.dart';
@@ -11,23 +12,21 @@ import 'package:universal_html/parsing.dart';
 class ForumRepository {
   /// Fetch the html document of given [fid] at page [pageNumber].
   ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** if http request failed.
-  Future<uh.Document> fetchForum({
+  AsyncEither<uh.Document> fetchForum({
     required String fid,
     required FilterState filterState,
     int pageNumber = 1,
-  }) async {
-    final fetchUrl = _formatForumUrl(fid, pageNumber, filterState);
-    final netClient = getIt.get<NetClientProvider>();
-    final resp = await netClient.getUri(fetchUrl);
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
-    final document = parseHtmlDocument(resp.data as String);
-    return document;
-  }
+  }) =>
+      AsyncEither(() async {
+        final fetchUrl = _formatForumUrl(fid, pageNumber, filterState);
+        final netClient = getIt.get<NetClientProvider>();
+        final resp = await netClient.getUri(fetchUrl);
+        if (resp.statusCode != HttpStatus.ok) {
+          return left(HttpRequestFailedException(resp.statusCode));
+        }
+        final document = parseHtmlDocument(resp.data as String);
+        return right(document);
+      });
 
   Uri _formatForumUrl(
     String fid,

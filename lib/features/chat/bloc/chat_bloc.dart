@@ -3,8 +3,6 @@ import 'dart:async';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/chat/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -12,7 +10,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'chat_bloc.mapper.dart';
 part 'chat_event.dart';
-
 part 'chat_state.dart';
 
 /// Emit
@@ -37,16 +34,14 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
     _Emit emit,
   ) async {
     emit(state.copyWith(status: ChatStatus.loading));
-    try {
-      final document = await _chatRepository.fetchChat(event.uid);
-      _updateState(document, emit);
-    } on HttpRequestFailedException catch (e) {
-      error('failed to fetch chat data: $e');
-      emit(state.copyWith(status: ChatStatus.failure));
-    } on ChatDataDocumentNotFoundException catch (e) {
-      error('failed to fetch chat data: $e');
-      emit(state.copyWith(status: ChatStatus.failure));
-    }
+
+    await await _chatRepository.fetchChat(event.uid).match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: ChatStatus.failure));
+      },
+      (v) async => _updateState(v, emit),
+    ).run();
   }
 
   void _updateState(uh.Document document, _Emit emit) {

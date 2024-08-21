@@ -143,3 +143,13 @@ final class LogoutFormHashNotFoundException extends AppException
 @MappableClass()
 final class LogoutFailedException extends AppException
     with LogoutFailedExceptionMappable {}
+
+/// Document contains chat data not found.
+@MappableClass()
+final class ChatDataDocumentNotFoundException extends AppException
+    with ChatDataDocumentNotFoundExceptionMappable {}
+
+/// Failed to load emoji
+@MappableClass()
+final class EmojiLoadFailedException extends AppException
+    with EmojiLoadFailedExceptionMappable {}

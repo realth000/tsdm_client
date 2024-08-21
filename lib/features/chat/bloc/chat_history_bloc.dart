@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
@@ -37,16 +36,18 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState>
     } else {
       emit(state.copyWith(status: ChatHistoryStatus.loadingMore));
     }
-    try {
-      final document = await _chatRepository.fetchChatHistory(
-        event.uid,
-        page: event.page,
-      );
-      await _updateState(document, emit, event.page);
-    } on HttpRequestFailedException catch (e) {
-      error('failed to fetch chat history: $e');
-      emit(state.copyWith(status: ChatHistoryStatus.failure));
-    }
+    await await _chatRepository
+        .fetchChatHistory(
+      event.uid,
+      page: event.page,
+    )
+        .match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: ChatHistoryStatus.failure));
+      },
+      (v) async => _updateState(v, emit, event.page),
+    ).run();
   }
 
   FutureOr<void> _updateState(

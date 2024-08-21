@@ -1,7 +1,8 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/features/editor/exceptions/exceptions.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -234,21 +235,18 @@ final class EditorRepository with LoggerMixin {
   /// Only load the emoji info, do not load the emoji image data.
   ///
   /// Currently there there is no validation on emoji and emoji groups.
-  ///
-  /// # Sealed Exceptions
-  ///
-  /// * **[EmojiRelatedException]** when failed to load emoji.
-  Future<void> loadEmojiFromCacheOrServer() async {
-    final cacheProvider = getIt.get<ImageCacheProvider>();
-    if (await cacheProvider.validateEmojiCache()) {
-      // Have valid emoji cache.
-      emojiGroupList = await cacheProvider.loadEmojiInfo();
-    } else {
-      // Do not have valid emoji cache, reload from server.
-      final ret = await loadEmojiFromServer();
-      if (!ret) {
-        throw EmojiLoadFailedException();
-      }
-    }
-  }
+  AsyncVoidEither loadEmojiFromCacheOrServer() => AsyncVoidEither(() async {
+        final cacheProvider = getIt.get<ImageCacheProvider>();
+        if (await cacheProvider.validateEmojiCache()) {
+          // Have valid emoji cache.
+          emojiGroupList = await cacheProvider.loadEmojiInfo();
+        } else {
+          // Do not have valid emoji cache, reload from server.
+          final ret = await loadEmojiFromServer();
+          if (!ret) {
+            return left(EmojiLoadFailedException());
+          }
+        }
+        return rightVoid();
+      });
 }

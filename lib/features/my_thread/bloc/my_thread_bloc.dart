@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/my_thread/models/models.dart';
@@ -11,7 +11,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'my_thread_bloc.mapper.dart';
 part 'my_thread_event.dart';
-
 part 'my_thread_state.dart';
 
 /// Emitter
@@ -47,38 +46,36 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
         refreshingReply: true,
       ),
     );
-    // FIXME: If only one tab threw exception.
-    try {
-      final data = await Future.wait([
-        _myThreadRepository.fetchDocument(myThreadThreadUrl),
-        _myThreadRepository.fetchDocument(myThreadReplyUrl),
-      ]);
-      final d1 = data[0];
-      final d2 = data[1];
-      final (threadList, threadNextPageUrl) = _parseThreadList(d1);
-      final (replyList, replyNextPageUrl) = _parseReplyList(d2);
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.success,
-          threadList: threadList,
-          threadPageNumber: 1,
-          nextThreadPageUrl: threadNextPageUrl,
-          replyList: replyList,
-          replyPageNumber: 1,
-          nextReplyPageUrl: replyNextPageUrl,
-          refreshingThread: false,
-          refreshingReply: false,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to initial my thread page data: $e');
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.failed,
-          refreshingThread: false,
-          refreshingReply: false,
-        ),
-      );
+    final data = await Future.wait([
+      _myThreadRepository.fetchDocument(myThreadThreadUrl).run(),
+      _myThreadRepository.fetchDocument(myThreadReplyUrl).run(),
+    ]);
+    switch ((data[0], data[1])) {
+      case (Right(value: final v1), Right(value: final v2)):
+        final (threadList, threadNextPageUrl) = _parseThreadList(v1);
+        final (replyList, replyNextPageUrl) = _parseReplyList(v2);
+        emit(
+          state.copyWith(
+            status: MyThreadStatus.success,
+            threadList: threadList,
+            threadPageNumber: 1,
+            nextThreadPageUrl: threadNextPageUrl,
+            replyList: replyList,
+            replyPageNumber: 1,
+            nextReplyPageUrl: replyNextPageUrl,
+            refreshingThread: false,
+            refreshingReply: false,
+          ),
+        );
+      default:
+        error('failed to initial my thread page data: ${data[0]}/${data[1]}');
+        emit(
+          state.copyWith(
+            status: MyThreadStatus.failed,
+            refreshingThread: false,
+            refreshingReply: false,
+          ),
+        );
     }
   }
 
@@ -90,10 +87,17 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
     if (state.nextThreadPageUrl == null) {
       return;
     }
-    try {
-      final document =
-          await _myThreadRepository.fetchDocument(state.nextThreadPageUrl!);
-      final (threadList, nextThreadPageUrl) = _parseThreadList(document);
+    await _myThreadRepository.fetchDocument(state.nextThreadPageUrl!).match(
+        (e) {
+      handle(e);
+      error('failed to load next page of thread tab: $e');
+      emit(
+        state.copyWith(
+          status: MyThreadStatus.failed,
+        ),
+      );
+    }, (v) {
+      final (threadList, nextThreadPageUrl) = _parseThreadList(v);
       emit(
         state.copyWith(
           status: MyThreadStatus.success,
@@ -102,14 +106,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
           nextThreadPageUrl: nextThreadPageUrl,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load next page of thread tab: $e');
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.failed,
-        ),
-      );
-    }
+    }).run();
   }
 
   Future<void> _onMyThreadLoadMoreReplyRequested(
@@ -120,10 +117,16 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
     if (state.nextReplyPageUrl == null) {
       return;
     }
-    try {
-      final document =
-          await _myThreadRepository.fetchDocument(state.nextReplyPageUrl!);
-      final (replyList, nextReplyPageUrl) = _parseReplyList(document);
+    await _myThreadRepository.fetchDocument(state.nextReplyPageUrl!).match((e) {
+      handle(e);
+      error('failed to load next page of reply tab: $e');
+      emit(
+        state.copyWith(
+          status: MyThreadStatus.failed,
+        ),
+      );
+    }, (v) {
+      final (replyList, nextReplyPageUrl) = _parseReplyList(v);
       emit(
         state.copyWith(
           status: MyThreadStatus.success,
@@ -132,14 +135,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
           nextReplyPageUrl: nextReplyPageUrl,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load next page of reply tab: $e');
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.failed,
-        ),
-      );
-    }
+    }).run();
   }
 
   Future<void> _onMyThreadRefreshThreadRequested(
@@ -147,10 +143,17 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
     MyThreadEmitter emit,
   ) async {
     emit(state.copyWith(refreshingThread: true));
-    try {
-      final document =
-          await _myThreadRepository.fetchDocument(myThreadThreadUrl);
-      final (threadList, nextThreadPageUrl) = _parseThreadList(document);
+    await _myThreadRepository.fetchDocument(myThreadThreadUrl).match((e) {
+      handle(e);
+      error('failed to load next page of thread tab: $e');
+      emit(
+        state.copyWith(
+          status: MyThreadStatus.failed,
+          refreshingThread: false,
+        ),
+      );
+    }, (v) {
+      final (threadList, nextThreadPageUrl) = _parseThreadList(v);
       emit(
         state.copyWith(
           status: MyThreadStatus.success,
@@ -160,15 +163,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
           refreshingThread: false,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load next page of thread tab: $e');
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.failed,
-          refreshingThread: false,
-        ),
-      );
-    }
+    }).run();
   }
 
   Future<void> _onMyThreadRefreshReplyRequested(
@@ -176,10 +171,17 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
     MyThreadEmitter emit,
   ) async {
     emit(state.copyWith(refreshingReply: true));
-    try {
-      final document =
-          await _myThreadRepository.fetchDocument(myThreadReplyUrl);
-      final (replyList, nextReplyPageUrl) = _parseReplyList(document);
+    await _myThreadRepository.fetchDocument(myThreadReplyUrl).match((e) {
+      handle(e);
+      error('failed to load next page of reply tab: $e');
+      emit(
+        state.copyWith(
+          status: MyThreadStatus.failed,
+          refreshingReply: false,
+        ),
+      );
+    }, (v) {
+      final (replyList, nextReplyPageUrl) = _parseReplyList(v);
       emit(
         state.copyWith(
           status: MyThreadStatus.success,
@@ -189,15 +191,7 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState>
           refreshingReply: false,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load next page of reply tab: $e');
-      emit(
-        state.copyWith(
-          status: MyThreadStatus.failed,
-          refreshingReply: false,
-        ),
-      );
-    }
+    }).run();
   }
 
   (List<MyThread>, String? nextPageurl) _parseThreadList(uh.Document document) {

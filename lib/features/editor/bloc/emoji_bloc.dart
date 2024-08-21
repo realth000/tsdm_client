@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/features/editor/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -32,18 +31,18 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
     EmojiEmitter emit,
   ) async {
     emit(state.copyWith(status: EmojiStatus.loading));
-    try {
-      await _editorRepository.loadEmojiFromCacheOrServer();
-      emit(
+    await _editorRepository.loadEmojiFromCacheOrServer().match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: EmojiStatus.failure));
+      },
+      (v) => emit(
         state.copyWith(
           status: EmojiStatus.success,
           emojiGroupList: _editorRepository.emojiGroupList,
         ),
-      );
-    } on EmojiRelatedException catch (e) {
-      error('failed to load emoji from cache: $e');
-      emit(state.copyWith(status: EmojiStatus.failure));
-    }
+      ),
+    ).run();
   }
 
   Future<void> _onEmojiFetchFromServerEvent(

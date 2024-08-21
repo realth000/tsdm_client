@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
@@ -36,11 +35,12 @@ final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
     if (state.nextPageUrl == null) {
       return;
     }
-
-    try {
-      final document =
-          await _latestThreadRepository.fetchDocument(state.nextPageUrl!);
-      final (threadList, nextPageUrl) = _parseThreadList(document);
+    await _latestThreadRepository.fetchDocument(state.nextPageUrl!).match((e) {
+      handle(e);
+      error('failed to load latest thread next page: $e');
+      emit(state.copyWith(status: LatestThreadStatus.failed));
+    }, (v) {
+      final (threadList, nextPageUrl) = _parseThreadList(v);
       emit(
         state.copyWith(
           status: LatestThreadStatus.success,
@@ -49,10 +49,7 @@ final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
           nextPageUrl: nextPageUrl,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load latest thread next page: $e');
-      emit(state.copyWith(status: LatestThreadStatus.failed));
-    }
+    }).run();
   }
 
   Future<void> _onLatestThreadRefreshRequested(
@@ -60,9 +57,12 @@ final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
     LatestThreadEmitter emit,
   ) async {
     emit(state.copyWith(status: LatestThreadStatus.loading, threadList: []));
-    try {
-      final document = await _latestThreadRepository.fetchDocument(event.url);
-      final (threadList, nextPageUrl) = _parseThreadList(document);
+    await _latestThreadRepository.fetchDocument(event.url).match((e) {
+      handle(e);
+      error('failed to load latest thread page: $e');
+      emit(state.copyWith(status: LatestThreadStatus.failed));
+    }, (v) {
+      final (threadList, nextPageUrl) = _parseThreadList(v);
       emit(
         state.copyWith(
           status: LatestThreadStatus.success,
@@ -71,10 +71,7 @@ final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
           nextPageUrl: nextPageUrl,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load latest thread page: $e');
-      emit(state.copyWith(status: LatestThreadStatus.failed));
-    }
+    }).run();
   }
 
   (List<LatestThread>?, String? nextPageUrl) _parseThreadList(
