@@ -68,7 +68,8 @@
         "detail": "設定貼文卡的外觀",
         "infoRowAlignCenter": "訊息居中排列",
         "showLastReplyAuthor": "顯示最後回覆的使用者的名字",
-        "highlightRecentThread": "高亮顯示近期發佈的貼文",
+        "highlightRecentThread": "突出顯示顯示近期發佈的貼文",
+        "highlightAuthorName": "突出顯示貼文作者的使用者名稱",
         "example": {
           "title": "TV動畫《魔法禁書目錄》第四季製作決定！",
           "author": "茵蒂克絲",

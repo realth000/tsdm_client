@@ -170,6 +170,15 @@ class _CardLayout extends StatelessWidget {
     final highlightRecentThread =
         state.settingsMap.threadCardHighlightRecentThread;
 
+    final TextStyle? authorNameStyle;
+    if (state.settingsMap.threadCardHighlightAuthorName) {
+      authorNameStyle = TextStyle(
+        color: Theme.of(context).colorScheme.primary,
+      );
+    } else {
+      authorNameStyle = null;
+    }
+
     final TextStyle? timeStyle;
     if (isRecentThread && highlightRecentThread) {
       timeStyle = TextStyle(
@@ -216,7 +225,7 @@ class _CardLayout extends StatelessWidget {
                     onTap: disableTap
                         ? null
                         : () async => context.dispatchAsUrl(author.url),
-                    child: SingleLineText(author.name),
+                    child: SingleLineText(author.name, style: authorNameStyle),
                   ),
                   Expanded(child: Container()),
                 ],
@@ -282,7 +291,9 @@ class _CardLayout extends StatelessWidget {
             pm.threadCardShowLastReplyAuthor !=
                 cm.threadCardShowLastReplyAuthor ||
             pm.threadCardHighlightRecentThread !=
-                cm.threadCardHighlightRecentThread;
+                cm.threadCardHighlightRecentThread ||
+            pm.threadCardHighlightAuthorName !=
+                cm.threadCardHighlightAuthorName;
       },
       builder: _buildContent,
     );

@@ -98,6 +98,8 @@ final class SettingsRepository with LoggerMixin {
           s.extract(SettingsKeys.threadCardShowLastReplyAuthor),
       threadCardHighlightRecentThread:
           s.extract(SettingsKeys.threadCardHighlightRecentThread),
+      threadCardHighlightAuthorName:
+          s.extract(SettingsKeys.threadCardHighlightAuthorName),
     );
   }
 

@@ -120,6 +120,17 @@ class _SettingsThreadCardAppearancePageState
                         ),
                       ),
                 ),
+                SwitchListTile(
+                  title: Text(tr.highlightAuthorName),
+                  contentPadding: edgeInsetsL16R16,
+                  value: settings.threadCardHighlightAuthorName,
+                  onChanged: (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(
+                          SettingsKeys.threadCardHighlightAuthorName,
+                          v,
+                        ),
+                      ),
+                ),
               ],
             ),
           ),

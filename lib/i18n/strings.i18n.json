@@ -69,6 +69,7 @@
         "infoRowAlignCenter": "Info row align center",
         "showLastReplyAuthor": "Show last reply author",
         "highlightRecentThread": "Highlight recently published thread",
+        "highlightAuthorName": "Highlight thread author's username",
         "example": {
           "title": "TV Anime \"A Certain Magical Index\" 4th Season Coming Out",
           "author": "茵蒂克丝",

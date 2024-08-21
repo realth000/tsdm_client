@@ -190,6 +190,11 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'threadCardHighlightRecentThread',
     type: bool,
     defaultValue: true,
+  ),
+  threadCardHighlightAuthorName<bool>(
+    name: 'threadCardHighlightAuthorName',
+    type: bool,
+    defaultValue: true,
   );
 
   const SettingsKeys({
