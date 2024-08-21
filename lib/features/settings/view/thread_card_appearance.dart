@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
+import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Settings page for thread card appearance
 class SettingsThreadCardAppearancePage extends StatefulWidget {
@@ -87,9 +88,8 @@ class _SettingsThreadCardAppearancePageState
             child: ListView(
               shrinkWrap: true,
               children: [
-                SwitchListTile(
+                SectionSwitchListTile(
                   title: Text(tr.infoRowAlignCenter),
-                  contentPadding: edgeInsetsL16R16,
                   value: settings.threadCardInfoRowAlignCenter,
                   onChanged: (v) => context.read<SettingsBloc>().add(
                         SettingsValueChanged(
@@ -98,9 +98,8 @@ class _SettingsThreadCardAppearancePageState
                         ),
                       ),
                 ),
-                SwitchListTile(
+                SectionSwitchListTile(
                   title: Text(tr.showLastReplyAuthor),
-                  contentPadding: edgeInsetsL16R16,
                   value: settings.threadCardShowLastReplyAuthor,
                   onChanged: (v) => context.read<SettingsBloc>().add(
                         SettingsValueChanged(
@@ -109,9 +108,8 @@ class _SettingsThreadCardAppearancePageState
                         ),
                       ),
                 ),
-                SwitchListTile(
+                SectionSwitchListTile(
                   title: Text(tr.highlightRecentThread),
-                  contentPadding: edgeInsetsL16R16,
                   value: settings.threadCardHighlightRecentThread,
                   onChanged: (v) => context.read<SettingsBloc>().add(
                         SettingsValueChanged(
@@ -120,9 +118,8 @@ class _SettingsThreadCardAppearancePageState
                         ),
                       ),
                 ),
-                SwitchListTile(
+                SectionSwitchListTile(
                   title: Text(tr.highlightAuthorName),
-                  contentPadding: edgeInsetsL16R16,
                   value: settings.threadCardHighlightAuthorName,
                   onChanged: (v) => context.read<SettingsBloc>().add(
                         SettingsValueChanged(

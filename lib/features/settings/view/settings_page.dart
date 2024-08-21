@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
@@ -20,6 +19,7 @@ import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_fe
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
+import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
 /// Settings page of the app.
@@ -179,11 +179,10 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
 
       /// Shortcut in forum card.
-      SwitchListTile(
+      SectionSwitchListTile(
         secondary: const Icon(Icons.shortcut_outlined),
         title: Text(tr.showShortcutInForumCard.title),
         subtitle: Text(tr.showShortcutInForumCard.detail),
-        contentPadding: edgeInsetsL16R16,
         value: showForumCardShortcut,
         onChanged: (v) async {
           context.read<SettingsBloc>().add(
@@ -235,11 +234,10 @@ class _SettingsPageState extends State<SettingsPage> {
               );
         },
       ),
-      SwitchListTile(
+      SectionSwitchListTile(
         secondary: const Icon(Icons.notifications_outlined),
         title: Text(tr.showUnreadInfoHint.title),
         subtitle: Text(tr.showUnreadInfoHint.detail),
-        contentPadding: edgeInsetsL16R16,
         value: showUnreadInfoHint,
         onChanged: (v) async {
           context
@@ -274,11 +272,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return [
       SectionTitleText(tr.title),
       if (isMobile)
-        SwitchListTile(
+        SectionSwitchListTile(
           secondary: const Icon(Icons.block_outlined),
           title: Text(tr.doublePressExit.title),
           subtitle: Text(tr.doublePressExit.detail),
-          contentPadding: edgeInsetsL16R16,
           value: doublePressExit,
           onChanged: (v) async {
             context
@@ -286,11 +283,10 @@ class _SettingsPageState extends State<SettingsPage> {
                 .add(SettingsValueChanged(SettingsKeys.doublePressExit, v));
           },
         ),
-      SwitchListTile(
+      SectionSwitchListTile(
         secondary: const Icon(Icons.align_vertical_top_outlined),
         title: Text(tr.threadReverseOrder.title),
         subtitle: Text(tr.threadReverseOrder.detail),
-        contentPadding: edgeInsetsL16R16,
         value: threadReverseOrder,
         onChanged: (v) async => context
             .read<SettingsBloc>()
