@@ -153,3 +153,100 @@ final class ChatDataDocumentNotFoundException extends AppException
 @MappableClass()
 final class EmojiLoadFailedException extends AppException
     with EmojiLoadFailedExceptionMappable {}
+
+/// Failed to upload edit result.
+@MappableClass()
+final class PostEditFailedToUploadResult extends AppException
+    with PostEditFailedToUploadResultMappable {
+  /// Constructor.
+  PostEditFailedToUploadResult(this.errorText);
+
+  /// Html element contains the error message.
+  final String errorText;
+}
+
+/// Failed to parse purchase info because the parameter in
+/// confirm info is incorrect.
+@MappableClass()
+final class PurchaseInfoInvalidParameterCountException extends AppException
+    with PurchaseInfoInvalidParameterCountExceptionMappable {}
+
+/// Confirm info is incomplete.
+@MappableClass()
+final class PurchaseInfoIncompleteException extends AppException
+    with PurchaseInfoIncompleteExceptionMappable {}
+
+/// Some info that need to display in the confirm process is invalid.
+///
+/// Maybe invalid username or uid.
+@MappableClass()
+final class PurchaseInfoInvalidNoticeException extends AppException
+    with PurchaseInfoInvalidNoticeExceptionMappable {}
+
+/// Failed to do the purchase action.
+@MappableClass()
+final class PurchaseActionFailedException extends AppException
+    with PurchaseActionFailedExceptionMappable {}
+
+/// Basic exception class of rate.
+@MappableClass()
+class RateFailedException extends AppException
+    with RateFailedExceptionMappable {
+  /// Constructor.
+  RateFailedException(this.reason);
+
+  /// Failed reason string.
+  final String reason;
+}
+
+/// Result of fetching rate window info.
+@MappableClass()
+sealed class RateInfoException extends AppException
+    with RateInfoExceptionMappable {
+  RateInfoException();
+}
+
+/// Html info content not found in response.
+/// This is not the "404 NOT FOUND".
+@MappableClass()
+final class RateInfoNotFound extends AppException
+    with RateInfoNotFoundMappable {
+  /// Constructor.
+  RateInfoNotFound();
+}
+
+/// The html body should contains the rate info is missing
+/// in the response.
+@MappableClass()
+final class RateInfoHtmlBodyNotFound extends AppException
+    with RateInfoHtmlBodyNotFoundMappable {
+  /// Constructor.
+  RateInfoHtmlBodyNotFound();
+}
+
+/// Rate info html body is missing.
+@MappableClass()
+final class RateInfoDivCNodeNotFound extends AppException
+    with RateInfoDivCNodeNotFoundMappable {
+  /// Constructor.
+  RateInfoDivCNodeNotFound();
+}
+
+/// Rate window info body not found and error text not found.
+///
+/// This is a fallback exception after [RateInfoWithErrorException].
+/// Because we encountered an error and no error text found.
+@MappableClass()
+final class RateInfoInvalidDivCNode extends AppException
+    with RateInfoInvalidDivCNodeMappable {
+  /// Constructor.
+  RateInfoInvalidDivCNode();
+}
+
+/// Rate failed but luckily we found the error text in response.
+@MappableClass()
+final class RateInfoWithErrorException extends AppException
+    with RateInfoWithErrorExceptionMappable {
+  /// Constructor.
+  RateInfoWithErrorException(String message) : super(message: message);
+}

@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/points/models/models.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
@@ -10,7 +9,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'points_bloc.mapper.dart';
 part 'points_event.dart';
-
 part 'points_state.dart';
 
 /// Statistics emitter.
@@ -37,24 +35,28 @@ final class PointsStatisticsBloc
     PointsStatisticsEmitter emit,
   ) async {
     emit(state.copyWith(status: PointsStatus.loading));
-    try {
-      final document = await _pointsRepository.fetchStatisticsPage();
-      final result = _parseDocument(document);
-      if (result == null) {
+    await _pointsRepository.fetchStatisticsPage().match(
+      (e) {
+        handle(e);
+        error('failed to fetch points statistics page: $e');
         emit(state.copyWith(status: PointsStatus.failed));
-        return;
-      }
-      emit(
-        state.copyWith(
-          status: PointsStatus.success,
-          pointsMap: result.$1,
-          recentChangelog: result.$2,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to fetch points statistics page: $e');
-      emit(state.copyWith(status: PointsStatus.failed));
-    }
+      },
+      (v) {
+        final document = v;
+        final result = _parseDocument(document);
+        if (result == null) {
+          emit(state.copyWith(status: PointsStatus.failed));
+          return;
+        }
+        emit(
+          state.copyWith(
+            status: PointsStatus.success,
+            pointsMap: result.$1,
+            recentChangelog: result.$2,
+          ),
+        );
+      },
+    ).run();
   }
 
   (Map<String, String>, List<PointsChange>)? _parseDocument(
@@ -107,31 +109,39 @@ final class PointsChangelogBloc
         fullChangelog: [],
       ),
     );
-    try {
-      final document = await _pointsRepository
-          .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));
-      final s = _parseDocument(document, state.currentPage);
-      final allParameters = _parseAllParameters(document);
-      emit(s.copyWith(allParameters: allParameters));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to refresh changelog tab: $e');
-      emit(state.copyWith(status: PointsStatus.failed));
-    }
+    await _pointsRepository
+        .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1))
+        .match(
+      (e) {
+        handle(e);
+        error('failed to refresh changelog tab: $e');
+        emit(state.copyWith(status: PointsStatus.failed));
+      },
+      (v) {
+        final document = v;
+        final s = _parseDocument(document, state.currentPage);
+        final allParameters = _parseAllParameters(document);
+        emit(s.copyWith(allParameters: allParameters));
+      },
+    ).run();
   }
 
   Future<void> _onPointsChangelogLoadMoreRequested(
     PointsChangelogLoadMoreRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    try {
-      final document = await _pointsRepository.fetchChangelogPage(
-        state.parameter.copyWith(pageNumber: state.currentPage + 1),
-      );
-      emit(_parseDocument(document, event.pageNumber));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load more points changelog: $e');
-      emit(state.copyWith(status: PointsStatus.failed));
-    }
+    await _pointsRepository
+        .fetchChangelogPage(
+      state.parameter.copyWith(pageNumber: state.currentPage + 1),
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load more points changelog: $e');
+        emit(state.copyWith(status: PointsStatus.failed));
+      },
+      (v) => emit(_parseDocument(v, event.pageNumber)),
+    ).run();
   }
 
   Future<void> _onPointsChangelogQueryRequested(
@@ -145,16 +155,17 @@ final class PointsChangelogBloc
         parameter: event.parameter,
       ),
     );
-    try {
-      final document = await _pointsRepository
-          .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1));
+    await _pointsRepository
+        .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1))
+        .match((e) {
+      error('failed to refresh changelog tab: $e');
+      emit(state.copyWith(status: PointsStatus.failed));
+    }, (v) {
+      final document = v;
       final s = _parseDocument(document, state.currentPage);
       final allParameters = _parseAllParameters(document);
       emit(s.copyWith(allParameters: allParameters));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to refresh changelog tab: $e');
-      emit(state.copyWith(status: PointsStatus.failed));
-    }
+    }).run();
   }
 
   ChangelogAllParameters _parseAllParameters(uh.Document document) {

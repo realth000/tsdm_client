@@ -41,36 +41,43 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
         hasNextPage: false,
       ),
     );
-    try {
-      final document = await _searchRepository.searchWithParameters(
-        keyword: event.keyword,
-        fid: event.fid,
-        uid: event.uid,
-        pageNumber: event.pageNumer,
-      );
-      final searchResult = await _parseSearchResult(document);
-      emit(
-        state.copyWith(
-          status: SearchStatus.success,
-          keyword: event.keyword,
-          fid: event.fid,
-          uid: event.uid,
-          searchResult: searchResult,
-          pageNumber: event.pageNumer,
-          hasPreviousPage: searchResult.currentPage > 1,
-          hasNextPage: searchResult.currentPage < searchResult.totalPages,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }
+    await await _searchRepository
+        .searchWithParameters(
+      keyword: event.keyword,
+      fid: event.fid,
+      uid: event.uid,
+      pageNumber: event.pageNumer,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to search: $e');
+        emit(
+          state.copyWith(
+            status: SearchStatus.failed,
+            hasPreviousPage: false,
+            hasNextPage: false,
+          ),
+        );
+      },
+      (v) async {
+        final document = v;
+        final searchResult = await _parseSearchResult(document);
+
+        emit(
+          state.copyWith(
+            status: SearchStatus.success,
+            keyword: event.keyword,
+            fid: event.fid,
+            uid: event.uid,
+            searchResult: searchResult,
+            pageNumber: event.pageNumer,
+            hasPreviousPage: searchResult.currentPage > 1,
+            hasNextPage: searchResult.currentPage < searchResult.totalPages,
+          ),
+        );
+      },
+    ).run();
   }
 
   Future<void> _onSearchJumpPageRequested(
@@ -95,33 +102,39 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
         hasNextPage: false,
       ),
     );
-    try {
-      final document = await _searchRepository.searchWithParameters(
-        keyword: state.keyword!,
-        fid: state.fid,
-        uid: state.uid,
-        pageNumber: event.pageNumber,
-      );
-      final searchResult = await _parseSearchResult(document);
-      emit(
-        state.copyWith(
-          status: SearchStatus.success,
-          pageNumber: event.pageNumber,
-          searchResult: searchResult,
-          hasPreviousPage: searchResult.currentPage > 1,
-          hasNextPage: searchResult.currentPage < searchResult.totalPages,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }
+    await await _searchRepository
+        .searchWithParameters(
+      keyword: state.keyword!,
+      fid: state.fid,
+      uid: state.uid,
+      pageNumber: event.pageNumber,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to search: $e');
+        emit(
+          state.copyWith(
+            status: SearchStatus.failed,
+            hasPreviousPage: false,
+            hasNextPage: false,
+          ),
+        );
+      },
+      (v) async {
+        final document = v;
+        final searchResult = await _parseSearchResult(document);
+        emit(
+          state.copyWith(
+            status: SearchStatus.success,
+            pageNumber: event.pageNumber,
+            searchResult: searchResult,
+            hasPreviousPage: searchResult.currentPage > 1,
+            hasNextPage: searchResult.currentPage < searchResult.totalPages,
+          ),
+        );
+      },
+    ).run();
   }
 
   Future<void> _onSearchGotoNextPageRequested(
@@ -135,13 +148,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
         hasNextPage: false,
       ),
     );
-    try {
-      final document = await _searchRepository.searchWithParameters(
-        keyword: state.keyword!,
-        fid: state.fid,
-        uid: state.uid,
-        pageNumber: state.pageNumber + 1,
+    await await _searchRepository
+        .searchWithParameters(
+      keyword: state.keyword!,
+      fid: state.fid,
+      uid: state.uid,
+      pageNumber: state.pageNumber + 1,
+    )
+        .match((e) {
+      handle(e);
+      error('failed to search: $e');
+      emit(
+        state.copyWith(
+          status: SearchStatus.failed,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        ),
       );
+    }, (v) async {
+      final document = v;
       final searchResult = await _parseSearchResult(document);
       emit(
         state.copyWith(
@@ -152,16 +177,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
           hasNextPage: searchResult.currentPage < searchResult.totalPages,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }
+    }).run();
   }
 
   Future<void> _onSearchGotoPreviousPageRequested(
@@ -186,13 +202,25 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
         hasNextPage: false,
       ),
     );
-    try {
-      final document = await _searchRepository.searchWithParameters(
-        keyword: state.keyword!,
-        fid: state.fid,
-        uid: state.uid,
-        pageNumber: state.pageNumber - 1,
+    await await _searchRepository
+        .searchWithParameters(
+      keyword: state.keyword!,
+      fid: state.fid,
+      uid: state.uid,
+      pageNumber: state.pageNumber - 1,
+    )
+        .match((e) {
+      handle(e);
+      error('failed to search: $e');
+      emit(
+        state.copyWith(
+          status: SearchStatus.failed,
+          hasPreviousPage: false,
+          hasNextPage: false,
+        ),
       );
+    }, (v) async {
+      final document = v;
       final searchResult = await _parseSearchResult(document);
       emit(
         state.copyWith(
@@ -203,16 +231,7 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
           hasNextPage: searchResult.currentPage < searchResult.totalPages,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }
+    }).run();
   }
 
   Future<SearchResult> _parseSearchResult(uh.Document document) async {

@@ -1,9 +1,9 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
-import 'package:tsdm_client/features/rate/repository/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -34,69 +34,59 @@ final class RateRepository with LoggerMixin {
       RegExp(r"{errorhandle_rate\('(?<error>[^']+)',");
 
   /// Fetch rate info for given [pid].
-  ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** when http request failed.
-  ///
-  /// # Sealed Exception
-  ///
-  /// * **RateInfoException** when failed to fetch rate info.
-  Future<RateWindowInfo> fetchInfo({
+  AsyncEither<RateWindowInfo> fetchInfo({
     required String pid,
     required String rateTarget,
-  }) async {
-    final resp = await getIt.get<NetClientProvider>().get(
-          rateTarget._fillRateTarget(),
-        );
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
-    final xmlDoc = parseXmlDocument(resp.data as String);
-    final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
-    if (htmlBodyData == null) {
-      throw const RateInfoHtmlBodyNotFound();
-    }
-    final divCNode = parseHtmlDocument(htmlBodyData).body;
-    if (divCNode == null) {
-      throw const RateInfoDivCNodeNotFound();
-    }
-    final rateWindowInfo = RateWindowInfo.fromDivCNode(divCNode);
-    if (rateWindowInfo == null) {
-      final errorText =
-          divCNode.querySelector('div.alert_error')?.childNodes[0].text;
-      if (errorText != null) {
-        throw RateInfoWithErrorException(errorText);
-      }
-      throw const RateInfoInvalidDivCNode();
-    }
-    debug('get rate formHash: ${rateWindowInfo.formHash}');
-    return rateWindowInfo;
-  }
+  }) =>
+      AsyncEither(() async {
+        final resp = await getIt.get<NetClientProvider>().get(
+              rateTarget._fillRateTarget(),
+            );
+        if (resp.statusCode != HttpStatus.ok) {
+          return left(HttpRequestFailedException(resp.statusCode));
+        }
+        final xmlDoc = parseXmlDocument(resp.data as String);
+        final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
+        if (htmlBodyData == null) {
+          return left(RateInfoHtmlBodyNotFound());
+        }
+        final divCNode = parseHtmlDocument(htmlBodyData).body;
+        if (divCNode == null) {
+          return left(RateInfoDivCNodeNotFound());
+        }
+        final rateWindowInfo = RateWindowInfo.fromDivCNode(divCNode);
+        if (rateWindowInfo == null) {
+          final errorText =
+              divCNode.querySelector('div.alert_error')?.childNodes[0].text;
+          if (errorText != null) {
+            return left(RateInfoWithErrorException(errorText));
+          }
+          return left(RateInfoInvalidDivCNode());
+        }
+        debug('get rate formHash: ${rateWindowInfo.formHash}');
+        return right(rateWindowInfo);
+      });
 
   /// Rate with given info [formData].
-  ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** when http request failed.
-  /// * **RateFailedException** when rate failed.
-  Future<void> rate(Map<String, String> formData) async {
-    final resp = await getIt
-        .get<NetClientProvider>()
-        .postForm(_rateTarget, data: formData);
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
+  AsyncVoidEither rate(Map<String, String> formData) =>
+      AsyncVoidEither(() async {
+        final resp = await getIt
+            .get<NetClientProvider>()
+            .postForm(_rateTarget, data: formData);
+        if (resp.statusCode != HttpStatus.ok) {
+          return left(HttpRequestFailedException(resp.statusCode));
+        }
 
-    final data = resp.data as String;
-    final errorText = _errorTextRe.firstMatch(data)?.namedGroup('error');
-    if (errorText != null) {
-      throw RateFailedException(errorText);
-    }
-    final errorHandleRateText =
-        _errorHandleRateRe.firstMatch(data)?.namedGroup('error');
-    if (errorHandleRateText != null) {
-      throw RateFailedException(errorHandleRateText);
-    }
-  }
+        final data = resp.data as String;
+        final errorText = _errorTextRe.firstMatch(data)?.namedGroup('error');
+        if (errorText != null) {
+          return left(RateFailedException(errorText));
+        }
+        final errorHandleRateText =
+            _errorHandleRateRe.firstMatch(data)?.namedGroup('error');
+        if (errorHandleRateText != null) {
+          return left(RateFailedException(errorHandleRateText));
+        }
+        return rightVoid();
+      });
 }

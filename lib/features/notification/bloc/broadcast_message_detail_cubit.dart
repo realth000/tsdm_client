@@ -1,7 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -22,9 +21,14 @@ final class BroadcastMessageDetailCubit
   /// Fetch detail status from [pmid].
   Future<void> fetchDetail(String pmid) async {
     emit(state.copyWith(status: BroadcastMessageDetailStatus.loading));
-    try {
-      final (document, _) = await _notificationRepository
-          .fetchDocument('$broadcastMessageDetailUrl$pmid');
+    await _notificationRepository
+        .fetchDocument('$broadcastMessageDetailUrl$pmid')
+        .match((e) {
+      handle(e);
+      error('failed to fetch broadcast message detail: $e');
+      emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
+    }, (v) {
+      final (document, _) = v;
       final infoNode = document.querySelector('div#pm_ul');
       final datetime = infoNode
           ?.querySelector('dl > dd.ptm > span.xg1')
@@ -44,9 +48,6 @@ final class BroadcastMessageDetailCubit
           messageNode: messageNode,
         ),
       );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to fetch broadcast message detail: $e');
-      emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
-    }
+    }).run();
   }
 }

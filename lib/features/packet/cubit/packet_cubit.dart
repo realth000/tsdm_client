@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
@@ -19,8 +18,18 @@ class PacketCubit extends Cubit<PacketState> with LoggerMixin {
   /// Try to get coins from the packet.
   Future<void> receivePacket(String url) async {
     emit(state.copyWith(status: PacketStatus.loading));
-    try {
-      final document = await _packetRepository.receivePacket(url);
+    await _packetRepository.receivePacket(url).match((e) {
+      handle(e);
+
+      error('failed to receive packet: $e');
+      emit(
+        state.copyWith(
+          status: PacketStatus.failed,
+          reason: e.toString(),
+        ),
+      );
+    }, (v) {
+      final document = v;
       final result = document
           .querySelector('div#messagetext > p')
           ?.innerText
@@ -35,14 +44,6 @@ class PacketCubit extends Cubit<PacketState> with LoggerMixin {
       } else {
         emit(state.copyWith(status: PacketStatus.failed, reason: result));
       }
-    } on HttpRequestFailedException catch (e) {
-      error('failed to receive packet: $e');
-      emit(
-        state.copyWith(
-          status: PacketStatus.failed,
-          reason: e.toString(),
-        ),
-      );
-    }
+    }).run();
   }
 }
