@@ -2,10 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/constants.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/widgets/card/error_card.dart';
 
 /// A page to show need to login hint.
 ///
@@ -43,60 +42,37 @@ class NeedLoginPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: showAppBar ? AppBar(title: Text(context.t.appName)) : null,
-      body: Center(
-        child: Card(
-          child: Padding(
-            padding: edgeInsetsL12T12R12B12,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Image.asset(assetErrorImagePath),
+      body: ErrorCard(
+        message: t.general.needLoginToSeeThisPage,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 150),
+          child: Row(
+            children: [
+              Expanded(
+                child: FilledButton(
+                  child: Text(t.loginPage.login),
+                  onPressed: () async {
+                    await context.pushNamed(ScreenPaths.login);
+                    if (!context.mounted) {
+                      return;
+                    }
+                    if (needPop) {
+                      await popCallback?.call(context);
+                      if (!context.mounted) {
+                        return;
+                      }
+                      context.pushReplacement(
+                        backUri.toString(),
+                      );
+                    } else {
+                      await context.push(
+                        backUri.toString(),
+                      );
+                    }
+                  },
                 ),
-                sizedBoxW24H24,
-                Text(
-                  context.t.general.needLoginToSeeThisPage,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyLarge
-                      ?.copyWith(color: Theme.of(context).colorScheme.outline),
-                ),
-                sizedBoxW24H24,
-                ConstrainedBox(
-                  constraints: const BoxConstraints(maxWidth: 150),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: FilledButton(
-                          child: Text(t.loginPage.login),
-                          onPressed: () async {
-                            await context.pushNamed(ScreenPaths.login);
-                            if (!context.mounted) {
-                              return;
-                            }
-                            if (needPop) {
-                              await popCallback?.call(context);
-                              if (!context.mounted) {
-                                return;
-                              }
-                              context.pushReplacement(
-                                backUri.toString(),
-                              );
-                            } else {
-                              await context.push(
-                                backUri.toString(),
-                              );
-                            }
-                          },
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                sizedBoxW12H12,
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

@@ -10,6 +10,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
+import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 
@@ -251,11 +252,21 @@ final class NetClientProvider with LoggerMixin {
 /// Handle exceptions during web request.
 class _ErrorHandler extends Interceptor with LoggerMixin {
   @override
+  void onResponse(
+    Response<dynamic> response,
+    ResponseInterceptorHandler handler,
+  ) {
+    getIt.get<NetErrorSaver>().clear();
+    handler.next(response);
+  }
+
+  @override
   void onError(
     DioException err,
     ErrorInterceptorHandler handler,
   ) {
     error('${err.requestOptions} ${err.type}: ${err.error},${err.message}');
+    getIt.get<NetErrorSaver>().save(err.message);
 
     if (err.type == DioExceptionType.badResponse) {
       // Till now we can do nothing if encounter a bad response.

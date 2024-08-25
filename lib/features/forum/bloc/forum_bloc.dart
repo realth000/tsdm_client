@@ -50,8 +50,6 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
         .match(
       (e) {
         handle(e);
-        error('failed to load forum page: fid=${state.fid}, '
-            'pageNumber=${event.pageNumber}: $e');
         emit(state.copyWith(status: ForumStatus.failure));
       },
       (v) async => emit(await _parseFromDocument(v, event.pageNumber)),

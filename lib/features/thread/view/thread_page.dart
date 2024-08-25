@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -20,6 +19,7 @@ import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
@@ -153,30 +153,9 @@ class _ThreadPageState extends State<ThreadPage>
       );
     } else if (!state.havePermission) {
       if (state.permissionDeniedMessage != null) {
-        return Center(
-          child: Card(
-            child: Padding(
-              padding: edgeInsetsL12T12R12B12,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                    child: Image.asset(assetErrorImagePath),
-                  ),
-                  sizedBoxW24H24,
-                  Text(
-                    context.t.general.noPermission,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: Theme.of(context).colorScheme.outline,
-                        ),
-                  ),
-                  sizedBoxW24H24,
-                  munchElement(context, state.permissionDeniedMessage!),
-                ],
-              ),
-            ),
-          ),
+        return ErrorCard(
+          message: context.t.general.noPermission,
+          child: munchElement(context, state.permissionDeniedMessage!),
         );
       } else {
         return Center(child: Text(context.t.general.noPermission));

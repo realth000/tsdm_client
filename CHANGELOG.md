@@ -42,6 +42,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app：修复图片加载失败时依然显示正在加载的问题。
 - app：修复先前升级flutter版本导致的默认配色问题，现在使用默认的蓝色作为色调。
 - app：修正各类边距值不是Material 3取值的问题。
+- app：修复一些情况下，网络连接报错但UI没有更新的问题。
 - 翻译：修复部分错误翻译。
 - 帖子：修复部分签名档存在样式溢出的用户的所在楼层无法回复和评分的问题。
 - 帖子：修复帖子评分中头像无法加载时不显示且不断重试的问题。
@@ -59,6 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app：更新app描述和版权页样式。
 - app：去除各种卡片的高度，更符合Material 3。
 - app: 优化布局，除去一些空白。
+- app：现在会显示网络连接报错的原因。
 - 关于：更新版本号格式，更符合semver。
 - 分区：某些情况下分区为空时显示登录按钮。
 - 分区：分区内筛选帖子的选项现在会一直显示在帖子列表顶部。

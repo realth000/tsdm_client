@@ -5,6 +5,7 @@ import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider_i
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -48,6 +49,7 @@ Future<void> initProviders() async {
       instanceName: ServiceKeys.noCookie,
     )
     ..registerFactory<CheckinProvider>(CheckInProviderImpl.new)
-    ..registerFactory(ImageCacheProvider.new);
+    ..registerFactory(ImageCacheProvider.new)
+    ..registerSingleton(NetErrorSaver());
   await getIt.allReady();
 }
