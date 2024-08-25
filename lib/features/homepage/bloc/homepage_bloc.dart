@@ -180,6 +180,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
         _profileRepository.fetchProfile().mapLeft(handle).run(),
       ],
     ))
+        .where((e) => e.isRight())
+        .map((e) => e.unwrap())
         .whereType<uh.Document>()
         .toList();
     if (documentList.length != 2) {
