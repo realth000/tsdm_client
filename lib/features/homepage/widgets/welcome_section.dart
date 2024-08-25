@@ -31,6 +31,7 @@ class WelcomeSection extends StatefulWidget {
 class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
   late final CarouselController _swiperController;
   Timer? _swiperTimer;
+  bool _reverseSwiper = false;
 
   Widget _buildKahrpbaSwiper(
     BuildContext context,
@@ -42,6 +43,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       child: ConstrainedBox(
         constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight + 20),
         child: CarouselView(
+          reverse: _reverseSwiper,
           controller: _swiperController,
           itemSnapping: true,
           itemExtent: _kahrpbaPicWidth,
@@ -231,13 +233,31 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
 
   void setupSwiperTimer(int itemCount) {
     _swiperTimer = Timer.periodic(const Duration(seconds: 4), (timer) {
-      _swiperController.animateTo(
-        _swiperController.offset >= (itemCount - 2) * _kahrpbaPicWidth
-            ? 0
-            : _swiperController.offset + _kahrpbaPicWidth,
-        duration: duration200,
-        curve: Curves.ease,
-      );
+      double? target;
+      if (_reverseSwiper) {
+        if (_swiperController.offset <= 100) {
+          setState(() {
+            _reverseSwiper = false;
+          });
+        } else {
+          target = _swiperController.offset - _kahrpbaPicWidth;
+        }
+      } else {
+        if (_swiperController.offset >= (itemCount - 3) * _kahrpbaPicWidth) {
+          setState(() {
+            _reverseSwiper = true;
+          });
+        } else {
+          target = _swiperController.offset + _kahrpbaPicWidth;
+        }
+      }
+      if (target != null) {
+        _swiperController.animateTo(
+          target,
+          duration: duration200,
+          curve: Curves.ease,
+        );
+      }
     });
   }
 
