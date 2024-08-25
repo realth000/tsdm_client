@@ -25,7 +25,7 @@ final class CheckinWebRequestFailed extends CheckinResult {
   const CheckinWebRequestFailed(this.statusCode) : super();
 
   /// Response status code.
-  final int statusCode;
+  final int? statusCode;
 }
 
 /// Form hash used in checkin request is not found.

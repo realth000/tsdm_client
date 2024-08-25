@@ -3,6 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -17,117 +18,118 @@ final class NotificationRepository with LoggerMixin {
   /// * Return (List<Notice>, null) if success.
   /// * Return (null, resp.StatusCode) if http request failed.
   /// * Return (<Notice>[], null) if success but no notice found.
-  Future<(List<Notice>?, int?)> _fetchNotice(
+  AsyncEither<(List<Notice>?, int?)> _fetchNotice(
     NetClientProvider netClient,
     String url,
-  ) async {
-    final resp = await netClient.get(url);
-    if (resp.statusCode != HttpStatus.ok) {
-      return (null, resp.statusCode);
-    }
-    final document = parseHtmlDocument(resp.data as String);
+  ) =>
+      AsyncEither(
+        () async => netClient.get(url).map((value) {
+          if (value.statusCode != HttpStatus.ok) {
+            return (null, value.statusCode);
+          }
 
-    // Check if empty
-    final emptyNode =
-        document.querySelector('div#ct > div.mn > div.bm.bw0 > div.emp');
-    if (emptyNode != null) {
-      error('empty notice');
-      // No notice here.
-      return (<Notice>[], null);
-    }
+          final document = parseHtmlDocument(value.data as String);
 
-    final noticeList = document
-        .querySelectorAll(
-          'div#ct div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl',
-        )
-        .map(Notice.fromClNode)
-        .whereType<Notice>()
-        .toList();
-    return (noticeList, null);
-  }
+          // Check if empty
+          final emptyNode =
+              document.querySelector('div#ct > div.mn > div.bm.bw0 > div.emp');
+          if (emptyNode != null) {
+            error('empty notice');
+            // No notice here.
+            return (<Notice>[], null);
+          }
+
+          final noticeList = document
+              .querySelectorAll(
+                'div#ct div.mn > div.bm.bw0 > div.xld.xlda > div.nts > dl.cl',
+              )
+              .map(Notice.fromClNode)
+              .whereType<Notice>()
+              .toList();
+          return (noticeList, null);
+        }).run(),
+      );
 
   /// Fetch notice from web server, including unread notices and read notices.
   AsyncEither<List<Notice>> fetchNotice() => AsyncEither(() async {
         final netClient = getIt.get<NetClientProvider>();
 
         final data = await Future.wait([
-          _fetchNotice(netClient, noticeUrl),
-          _fetchNotice(netClient, readNoticeUrl),
+          _fetchNotice(netClient, noticeUrl).run(),
+          _fetchNotice(netClient, readNoticeUrl).run(),
         ]);
 
         final d1 = data[0];
         final d2 = data[1];
-        if (d1.$2 != null) {
-          return left(HttpRequestFailedException(d1.$2));
+        if (d1.isLeft()) {
+          return left(d1.unwrapErr());
         }
-        if (d2.$2 != null) {
-          return left(HttpRequestFailedException(d2.$2));
+        if (d2.isLeft()) {
+          return left(d2.unwrapErr());
+        }
+        final d1d = d1.unwrap();
+        final d2d = d2.unwrap();
+        if (d1d.$2 != null) {
+          return left(HttpRequestFailedException(d1d.$2));
+        }
+        if (d2d.$2 != null) {
+          return left(HttpRequestFailedException(d2d.$2));
         }
 
         // Filter duplicate notices.
         // Only filter on reply type notices for now.
-        final d3 = d1.$1!.where(
+        final d3 = d1d.$1!.where(
           (x) =>
               x.redirectUrl == null ||
-              !d2.$1!.any((y) => y.redirectUrl == x.redirectUrl),
+              !d2d.$1!.any((y) => y.redirectUrl == x.redirectUrl),
         );
 
-        return right([...d3, ...?d2.$1]);
+        return right([...d3, ...?d2d.$1]);
       });
 
   /// Fetch the html document of notice detail page.
   AsyncEither<(uh.Document, String? page)> fetchDocument(String url) =>
-      AsyncEither(() async {
-        final resp = await getIt.get<NetClientProvider>().get(url);
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-
-        final document = parseHtmlDocument(resp.data as String);
-        return right((document, resp.realUri.queryParameters['page']));
-      });
+      AsyncEither(
+        () async =>
+            switch (await getIt.get<NetClientProvider>().get(url).run()) {
+          Left(:final value) => left(value),
+          Right(:final value) when value.statusCode != HttpStatus.ok =>
+            left(HttpRequestFailedException(value.statusCode)),
+          Right(:final value) => right(
+              (
+                parseHtmlDocument(value.data as String),
+                value.realUri.queryParameters['page']
+              ),
+            ),
+        },
+      );
 
   /// Fetch all personal messages from server page.
-  AsyncEither<List<PersonalMessage>> fetchPersonalMessage() =>
-      AsyncEither(() async {
-        final resp =
-            await getIt.get<NetClientProvider>().get(personalMessageUrl);
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-
-        final document = parseHtmlDocument(resp.data as String);
-
-        return right(
-          document
-              .querySelectorAll('form#deletepmform > div > dl')
-              .map(PersonalMessage.fromDl)
-              .whereType<PersonalMessage>()
-              .toList(),
-        );
-      });
+  AsyncEither<List<PersonalMessage>> fetchPersonalMessage() => AsyncEither(
+        () async => switch (await getIt
+            .get<NetClientProvider>()
+            .get(personalMessageUrl)
+            .run()) {
+          Left(:final value) => left(value),
+          Right(:final value) when value.statusCode != HttpStatus.ok =>
+            left(HttpRequestFailedException(value.statusCode)),
+          Right(:final value) => right(
+              parseHtmlDocument(value.data as String)
+                  .querySelectorAll('form#deletepmform > div > dl')
+                  .map(PersonalMessage.fromDl)
+                  .whereType<PersonalMessage>()
+                  .toList(),
+            )
+        },
+      );
 
   /// Fetch all broadcast messages from server page.
-  ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** when http request failed.
   AsyncEither<List<BroadcastMessage>> fetchBroadMessage() =>
-      AsyncEither(() async {
-        final resp =
-            await getIt.get<NetClientProvider>().get(broadcastMessageUrl);
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-
-        final document = parseHtmlDocument(resp.data as String);
-
-        return right(
-          document
-              .querySelectorAll('form#deletepmform > div > dl')
-              .map(BroadcastMessage.fromDl)
-              .whereType<BroadcastMessage>()
-              .toList(),
-        );
-      });
+      getIt.get<NetClientProvider>().get(broadcastMessageUrl).mapHttp(
+            (v) => parseHtmlDocument(v.data as String)
+                .querySelectorAll('form#deletepmform > div > dl')
+                .map(BroadcastMessage.fromDl)
+                .whereType<BroadcastMessage>()
+                .toList(),
+          );
 }

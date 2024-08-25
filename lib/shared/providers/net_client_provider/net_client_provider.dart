@@ -4,6 +4,7 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -12,21 +13,31 @@ import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 
+/// Map exception to [AppException].
+AppException mapException(Object error, StackTrace st) {
+  if (error case DioException()) {
+    return HttpHandshakeFailedException(error.message ?? '<unknown error>');
+  }
+  return HttpRequestFailedException(null);
+}
+
 extension _WithFormExt<T> on Dio {
-  Future<Response<T>> postWithForm(
+  AsyncEither<Response<T>> postWithForm(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-  }) async {
-    return post(
-      path,
-      data: data,
-      queryParameters: queryParameters,
-      options: Options(
-        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      ),
-    );
-  }
+  }) =>
+      AsyncEither.tryCatch(
+        () async => post(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: Options(
+            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+          ),
+        ),
+        mapException,
+      );
 }
 
 /// A http client to do web request.
@@ -90,119 +101,127 @@ final class NetClientProvider with LoggerMixin {
   final Dio _dio;
 
   /// Make a GET request to [path].
-  Future<Response<dynamic>> get(
+  AsyncEither<Response<dynamic>> get(
     String path, {
     Map<String, dynamic>? queryParameters,
-  }) async {
-    final resp =
-        // FIXME: Handle DioException.
-        await _dio.get<dynamic>(path, queryParameters: queryParameters);
-    return resp;
-  }
+  }) =>
+      AsyncEither.tryCatch(
+        () async => _dio.get<dynamic>(path, queryParameters: queryParameters),
+        mapException,
+      );
 
   /// Make a GET request to the given [uri].
-  Future<Response<dynamic>> getUri(Uri uri) async {
-    // FIXME: Handle DioException.
-    final resp = await _dio.getUri<dynamic>(uri);
-    return resp;
-  }
+  AsyncEither<Response<dynamic>> getUri(Uri uri) => AsyncEither.tryCatch(
+        () async => _dio.getUri<dynamic>(uri),
+        mapException,
+      );
 
   /// Make a GET request to [path], with options set to image types.
-  Future<Response<dynamic>> getImage(
+  AsyncEither<Response<dynamic>> getImage(
     String path, {
     Map<String, dynamic>? queryParameters,
-  }) async {
-    // FIXME: Handle DioException.
-    final resp = await _dio.get<dynamic>(
-      path,
-      queryParameters: queryParameters,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: {
-          HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-        },
-      ),
-    );
+  }) =>
+      AsyncEither.tryCatch(
+        () async {
+          final resp = await _dio.get<dynamic>(
+            path,
+            queryParameters: queryParameters,
+            options: Options(
+              responseType: ResponseType.bytes,
+              headers: {
+                HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+                HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+              },
+            ),
+          );
 
-    if (resp.statusCode != HttpStatus.ok) {
-      return Future.error('resp code=${resp.statusCode}');
-    }
-    return resp;
-  }
+          if (resp.statusCode != HttpStatus.ok) {
+            throw HttpRequestFailedException(resp.statusCode);
+          }
+          return resp;
+        },
+        mapException,
+      );
 
   /// Get a image from the given [uri].
-  Future<Response<dynamic>> getImageFromUri(Uri uri) async {
-    final resp = await _dio.getUri<dynamic>(
-      uri,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: {
-          HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-        },
-      ),
-    );
+  AsyncEither<Response<dynamic>> getImageFromUri(Uri uri) =>
+      AsyncEither.tryCatch(
+        () async {
+          final resp = await _dio.getUri<dynamic>(
+            uri,
+            options: Options(
+              responseType: ResponseType.bytes,
+              headers: {
+                HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+                HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+              },
+            ),
+          );
 
-    if (resp.statusCode != HttpStatus.ok) {
-      return Future.error('resp code=${resp.statusCode}');
-    }
-    return resp;
-  }
+          if (resp.statusCode != HttpStatus.ok) {
+            throw HttpRequestFailedException(resp.statusCode);
+          }
+          return resp;
+        },
+        mapException,
+      );
 
   /// Post [data] to [path] with [queryParameters].
   ///
   /// When post a form data, use [postForm] instead.
-  Future<Response<dynamic>> post(
+  AsyncEither<Response<dynamic>> post(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-  }) async {
-    final resp =
-        _dio.post<dynamic>(path, data: data, queryParameters: queryParameters);
-    return resp;
-  }
+  }) =>
+      AsyncEither.tryCatch(
+        () async => _dio.post<dynamic>(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+        ),
+        mapException,
+      );
 
   /// Post a form [data] to url [path] with [queryParameters].
   ///
   /// Automatically set `Content-Type` to `application/x-www-form-urlencoded`.
-  Future<Response<dynamic>> postForm(
+  AsyncEither<Response<dynamic>> postForm(
     String path, {
     Object? data,
     Map<String, dynamic>? queryParameters,
-  }) async {
-    final resp =
-        _dio.postWithForm(path, data: data, queryParameters: queryParameters);
-    return resp;
-  }
+  }) =>
+      _dio.postWithForm(path, data: data, queryParameters: queryParameters);
 
   /// Post a form [data] to url [path] in `Content-Type` multipart/form-data.
   ///
   /// Automatically set `Content-Type` to `multipart/form-data`.
-  Future<Response<dynamic>> postMultipartForm(
+  AsyncEither<Response<dynamic>> postMultipartForm(
     String path, {
     required Map<String, String> data,
-  }) async {
-    final resp = _dio.post<dynamic>(
-      path,
-      options: Options(
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: Headers.multipartFormDataContentType,
-        },
-        validateStatus: (code) {
-          if (code == 301 || code == 200) {
-            return true;
-          }
-          return false;
-        },
-      ),
-      data: FormData.fromMap(data),
-    );
-    return resp;
-  }
+  }) =>
+      AsyncEither.tryCatch(
+        () async => _dio.post<dynamic>(
+          path,
+          options: Options(
+            headers: <String, String>{
+              HttpHeaders.contentTypeHeader:
+                  Headers.multipartFormDataContentType,
+            },
+            validateStatus: (code) {
+              if (code == 301 || code == 200) {
+                return true;
+              }
+              return false;
+            },
+          ),
+          data: FormData.fromMap(data),
+        ),
+        mapException,
+      );
 
   /// Download the file from url [path] and save to [savePath].
-  Future<void> download(
+  AsyncVoidEither download(
     String path,
     dynamic savePath, {
     ProgressCallback? onReceiveProgress,
@@ -212,19 +231,21 @@ final class NetClientProvider with LoggerMixin {
     String lengthHeader = Headers.contentLengthHeader,
     Object? data,
     Options? options,
-  }) async {
-    await _dio.download(
-      path,
-      savePath,
-      onReceiveProgress: onReceiveProgress,
-      queryParameters: queryParameters,
-      cancelToken: cancelToken,
-      deleteOnError: deleteOnError,
-      lengthHeader: lengthHeader,
-      data: data,
-      options: options,
-    );
-  }
+  }) =>
+      AsyncVoidEither.tryCatch(
+        () async => _dio.download(
+          path,
+          savePath,
+          onReceiveProgress: onReceiveProgress,
+          queryParameters: queryParameters,
+          cancelToken: cancelToken,
+          deleteOnError: deleteOnError,
+          lengthHeader: lengthHeader,
+          data: data,
+          options: options,
+        ),
+        mapException,
+      );
 }
 
 /// Handle exceptions during web request.

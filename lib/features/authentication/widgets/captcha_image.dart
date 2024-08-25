@@ -2,11 +2,14 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/fallback_picture.dart';
 
 /// Captcha image size is 320x150.
 const _captchaImageWidth = 320.0;
@@ -41,7 +44,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
   /// that the [FutureBuilder] below has the previous data and does not show
   /// [CircularProgressIndicator] as planned.
   bool futureComplete = false;
-  Future<Response<dynamic>>? f;
+  Future<SyncEither<Response<dynamic>>>? f;
 
   Future<void> reload() async {
     if (refreshDebounce) {
@@ -51,9 +54,11 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
     f = getIt
         .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
         .getImageFromUri(CaptchaImage._fakeFormVerifyUri)
+        .run()
         .whenComplete(() {
       futureComplete = true;
     });
+
     setState(() {
       refreshDebounce = true;
       futureComplete = false;
@@ -87,13 +92,22 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
         future: f,
         builder: (context, snapshot) {
           if (snapshot.hasError) {
+            // Impossible.
             final message =
                 t.loginPage.failedToGetCaptcha(err: snapshot.error!);
             debug(message);
             return Text(message);
           }
+
           if (snapshot.hasData && futureComplete) {
-            final bytes = Uint8List.fromList(snapshot.data!.data as List<int>);
+            final either = snapshot.data!;
+            if (either.isLeft()) {
+              handle(either.unwrapErr());
+              return const FallbackPicture();
+            }
+
+            final bytes =
+                Uint8List.fromList(snapshot.data!.unwrap().data as List<int>);
             debug('fetch login captcha finished, ${f.hashCode}');
             // 130 x 60 -> 110.9 -> 52
             return Image.memory(bytes, height: _renderHeight);

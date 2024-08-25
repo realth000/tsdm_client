@@ -1,6 +1,3 @@
-import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
-
-import 'package:dio/dio.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/upgrade/repository/models/models.dart';
@@ -30,72 +27,40 @@ final class UpgradeRepository with LoggerMixin {
   Stream<DownloadStatus> get downloadStatus =>
       _downloadStream.asBroadcastStream();
 
-  /// Get url of realse info.
+  /// Get url of release info.
   String get releaseInfoUrl => _githubReleaseInfoUrl;
 
   /// Fetch the latest version info from github.
-  ///
-  /// # Exception
-  ///
-  /// * **[HttpRequestFailedException]** when request failed.
-  Future<uh.Document> fetchLatestInfo() async {
-    final resp = await getIt
-        .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-        .get(_githubReleaseInfoUrl);
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
-
-    final document = parseHtmlDocument(resp.data as String);
-    return document;
-  }
+  AsyncEither<uh.Document> fetchLatestInfo() => getIt
+      .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+      .get(_githubReleaseInfoUrl)
+      .mapHttp((v) => parseHtmlDocument(v.data as String));
 
   /// Fetch the assets info with tag [title].
-  ///
-  /// # Exception
-  ///
-  /// * **[HttpRequestFailedException]** when request failed.
-  Future<uh.Document> fetchAssetsInfo(String title) async {
-    final resp = await getIt
-        .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-        .get('$_githubReleaseAssetUrl/$title');
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
-    final document = parseHtmlDocument(resp.data as String);
-    return document;
-  }
+  AsyncEither<uh.Document> fetchAssetsInfo(String title) => getIt
+      .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+      .get('$_githubReleaseAssetUrl/$title')
+      .mapHttp((v) => parseHtmlDocument(v.data as String));
 
   /// Download assets from [downloadUrl] and save to [savePath].
-  Future<void> download({
+  AsyncVoidEither download({
     required String downloadUrl,
     required String savePath,
-  }) async {
-    final netClient =
-        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
-    await netClient.download(
-      downloadUrl,
-      savePath,
-      onReceiveProgress: (recv, total) {
-        _downloadStream.add(DownloadStatus(recv: recv, total: total));
-        // downloadProgress = ((recv / total) * 100).toStringAsFixed(0);
-      },
-    );
-  }
+  }) =>
+      getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie).download(
+        downloadUrl,
+        savePath,
+        onReceiveProgress: (recv, total) {
+          _downloadStream.add(DownloadStatus(recv: recv, total: total));
+          // downloadProgress = ((recv / total) * 100).toStringAsFixed(0);
+        },
+      );
 
   /// Fetch the full changelog of the app.
-  Future<String?> fetchChangelog() async {
-    final netClient =
-        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
-    try {
-      final resp = await netClient.get(_rawChangelogUrl);
-      final data = resp.data as String;
-      return data;
-    } on DioException catch (e) {
-      debug('failed to load raw changelog: $e');
-    }
-    return null;
-  }
+  AsyncEither<String> fetchChangelog() => getIt
+      .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+      .get(_rawChangelogUrl)
+      .mapHttp((v) => v.data as String);
 
   /// Dispose the stream.
   void dispose() {

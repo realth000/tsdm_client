@@ -1,12 +1,13 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
-import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Repository of reply.
@@ -17,7 +18,7 @@ final class ReplyRepository with LoggerMixin {
   /// Regexp to grep pmid wrapped in chat message send response.
   ///
   /// {'pmid':'${PMID}'}.
-  static final _messagePmidRe = RegExp(r"'pmid':'(?<pmid>\d+)'");
+  // static final _messagePmidRe = RegExp(r"'pmid':'(?<pmid>\d+)'");
 
   /// Regexp to grep error message in chat message send response.
   ///
@@ -25,97 +26,103 @@ final class ReplyRepository with LoggerMixin {
   static final _messageErrorRe = RegExp(r"\('(?<err>.+)', \{\}\);\}");
 
   /// Reply to a post.
-  ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** when http request failed.
-  /// * **ReplyToPostFetchParameterFailedException** when failed to fetch
-  ///   parameters in reply window.
-  /// * **ReplyToPostResultFailedException** when reply finished but no
-  ///   successful result found in response.
-  Future<void> replyToPost({
+  AsyncVoidEither replyToPost({
     required ReplyParameters replyParameters,
     required String replyAction,
     required String replyMessage,
-  }) async {
-    final netClient = getIt.get<NetClientProvider>();
-    final replyWindowUrl = '$baseUrl/$replyAction/$replyPostWindowSuffix';
-    final replyWindowResp = await netClient.get(replyWindowUrl);
+  }) =>
+      AsyncVoidEither(() async {
+        final netClient = getIt.get<NetClientProvider>();
+        final replyWindowUrl = '$baseUrl/$replyAction/$replyPostWindowSuffix';
+        final respEither = await netClient.get(replyWindowUrl).run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
 
-    if (replyWindowResp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(replyWindowResp.statusCode);
-    }
+        final replyWindowResp = respEither.unwrap();
+        if (replyWindowResp.statusCode != HttpStatus.ok) {
+          return left(HttpRequestFailedException(replyWindowResp.statusCode));
+        }
 
-    final replyWindowDoc = parseHtmlDocument(replyWindowResp.data as String);
-    final formHash = replyWindowDoc
-        .querySelector('input[name="formhash"]')
-        ?.attributes['value'];
-    final handleKey = replyWindowDoc
-        .querySelector('input[name="handlekey"]')
-        ?.attributes['value'];
-    final noticeAuthor = replyWindowDoc
-        .querySelector('input[name="noticeauthor"]')
-        ?.attributes['value'];
-    final noticeTrimStr = replyWindowDoc
-        .querySelector('input[name="noticetrimstr"]')
-        ?.attributes['value'];
-    final noticeAuthorMsg = replyWindowDoc
-        .querySelector('input[name="noticeauthormsg"]')
-        ?.attributes['value'];
-    final replyUid = replyWindowDoc
-        .querySelector('input[name="replyuid"]')
-        ?.attributes['value'];
-    final repPid = replyWindowDoc
-        .querySelector('input[name="reppid"]')
-        ?.attributes['value'];
-    final repPost = replyWindowDoc
-        .querySelector('input[name="reppost"]')
-        ?.attributes['value'];
-    if (formHash == null ||
-        handleKey == null ||
-        noticeAuthor == null ||
-        noticeTrimStr == null ||
-        noticeAuthorMsg == null ||
-        replyUid == null ||
-        repPid == null ||
-        repPost == null) {
-      error(
-        'failed to fetch reply to post parameters: formHash=$formHash, '
-        'handleKey=$handleKey, noticeAuthor=$noticeAuthor',
-      );
-      error(
-        'failed to fetch reply to post parameters: '
-        'noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, '
-        'reppid=$repPid, reppost=$repPost',
-      );
-      throw ReplyToPostFetchParameterFailedException();
-    }
+        final replyWindowDoc =
+            parseHtmlDocument(replyWindowResp.data as String);
+        final formHash = replyWindowDoc
+            .querySelector('input[name="formhash"]')
+            ?.attributes['value'];
+        final handleKey = replyWindowDoc
+            .querySelector('input[name="handlekey"]')
+            ?.attributes['value'];
+        final noticeAuthor = replyWindowDoc
+            .querySelector('input[name="noticeauthor"]')
+            ?.attributes['value'];
+        final noticeTrimStr = replyWindowDoc
+            .querySelector('input[name="noticetrimstr"]')
+            ?.attributes['value'];
+        final noticeAuthorMsg = replyWindowDoc
+            .querySelector('input[name="noticeauthormsg"]')
+            ?.attributes['value'];
+        final replyUid = replyWindowDoc
+            .querySelector('input[name="replyuid"]')
+            ?.attributes['value'];
+        final repPid = replyWindowDoc
+            .querySelector('input[name="reppid"]')
+            ?.attributes['value'];
+        final repPost = replyWindowDoc
+            .querySelector('input[name="reppost"]')
+            ?.attributes['value'];
+        if (formHash == null ||
+            handleKey == null ||
+            noticeAuthor == null ||
+            noticeTrimStr == null ||
+            noticeAuthorMsg == null ||
+            replyUid == null ||
+            repPid == null ||
+            repPost == null) {
+          error(
+            'failed to fetch reply to post parameters: formHash=$formHash, '
+            'handleKey=$handleKey, noticeAuthor=$noticeAuthor',
+          );
+          error(
+            'failed to fetch reply to post parameters: '
+            'noticeAuthorMsg=$noticeAuthorMsg, replyuid=$replyUid, '
+            'reppid=$repPid, reppost=$repPost',
+          );
+          return left(ReplyToPostFetchParameterFailedException());
+        }
 
-    final formData = <String, String>{
-      'formhash': formHash,
-      'handlekey': handleKey,
-      'noticeauthor': noticeAuthor,
-      'noticetrimstr': noticeTrimStr,
-      'noticeauthormsg': noticeAuthorMsg,
-      'replyuid': replyUid,
-      'reppid': repPid,
-      'reppost': repPost,
-      // TODO: Build subject instead of const empty string.
-      'subject': '',
-      // TODO: Support reply with rich text.
-      'message': replyMessage,
-    };
+        final formData = <String, String>{
+          'formhash': formHash,
+          'handlekey': handleKey,
+          'noticeauthor': noticeAuthor,
+          'noticetrimstr': noticeTrimStr,
+          'noticeauthormsg': noticeAuthorMsg,
+          'replyuid': replyUid,
+          'reppid': repPid,
+          'reppost': repPost,
+          // TODO: Build subject instead of const empty string.
+          'subject': '',
+          // TODO: Support reply with rich text.
+          'message': replyMessage,
+        };
 
-    final resp = await netClient.postForm(
-      formatReplyPostUrl(replyParameters.fid, replyParameters.tid),
-      data: formData,
-    );
+        final respEither2 = await netClient
+            .postForm(
+              formatReplyPostUrl(replyParameters.fid, replyParameters.tid),
+              data: formData,
+            )
+            .run();
 
-    if (!(resp.data as String).contains('回复发布成功')) {
-      error('failed to reply to post: resp data not succeed: ${resp.data}');
-      throw ReplyToPostResultFailedException();
-    }
-  }
+        if (respEither2.isLeft()) {
+          return left(respEither2.unwrapErr());
+        }
+
+        final resp2 = respEither2.unwrap();
+        if (!(resp2.data as String).contains('回复发布成功')) {
+          return left(ReplyToPostResultFailedException());
+        }
+
+        return rightVoid();
+      });
 
   /// Post reply to thread tid/fid.
   /// This will add a post in thread, as reply to that thread.
@@ -136,11 +143,18 @@ final class ReplyRepository with LoggerMixin {
       'formhash': replyParameters.formHash,
       'subject': replyParameters.subject,
     };
-    final resp = await getIt.get<NetClientProvider>().postForm(
+    final e = await getIt
+        .get<NetClientProvider>()
+        .postForm(
           formatReplyThreadUrl(replyParameters.fid, replyParameters.tid),
           data: formData,
-        );
+        )
+        .run();
+    if (e.isLeft()) {
+      handle(e.unwrapErr());
+    }
 
+    final resp = e.unwrap();
     if (resp.statusCode != HttpStatus.ok) {
       throw HttpRequestFailedException(resp.statusCode);
     }
@@ -150,48 +164,48 @@ final class ReplyRepository with LoggerMixin {
   }
 
   /// Reply personalMessage in history page.
-  ///
-  /// # Exception
-  ///
-  /// * **HttpRequestFailedException** when http request failed.
-  /// * **ReplyPersonalMessageFailedException** when reply failed.
-  ///
-  /// # Return
-  ///
-  /// Return the pmid if send message succeed which is used to show the new
-  /// generated message.
-  Future<String?> replyHistoryPersonalMessage({
+  AsyncVoidEither replyHistoryPersonalMessage({
     required String targetUrl,
     required String formHash,
     required String message,
-  }) async {
-    final formData = <String, String>{
-      'message': message,
-      'formhash': formHash,
-    };
+  }) =>
+      AsyncVoidEither(() async {
+        final formData = <String, String>{
+          'message': message,
+          'formhash': formHash,
+        };
 
-    final resp = await getIt.get<NetClientProvider>().postForm(
-          targetUrl,
-          data: formData,
-        );
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
+        final e = await getIt
+            .get<NetClientProvider>()
+            .postForm(
+              targetUrl,
+              data: formData,
+            )
+            .run();
+        if (e.isLeft()) {
+          return left(e.unwrapErr());
+        }
+        final resp = e.unwrap();
+        if (resp.statusCode != HttpStatus.ok) {
+          throw HttpRequestFailedException(resp.statusCode);
+        }
 
-    final data = resp.data as String;
+        final data = resp.data as String;
 
-    if (data.contains('succeedhandle_pmsend')) {
-      // Success.
-      return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
-    }
-    if (data.contains('errorhandle_pmsend')) {
-      final errorMessage = _messageErrorRe.firstMatch(data)?.namedGroup('err');
-      throw ReplyPersonalMessageFailedException(
-        errorMessage ?? 'unknown error',
-      );
-    }
-    return null;
-  }
+        if (data.contains('succeedhandle_pmsend')) {
+          // Success.
+          // return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
+          return rightVoid();
+        }
+        if (data.contains('errorhandle_pmsend')) {
+          final errorMessage =
+              _messageErrorRe.firstMatch(data)?.namedGroup('err');
+          throw ReplyPersonalMessageFailedException(
+            errorMessage ?? 'unknown error',
+          );
+        }
+        return rightVoid();
+      });
 
   /// Reply a personal message, use as we are chatting though the chat dialog
   /// when we in browser, this means in chat page, not chat history page.
@@ -205,31 +219,43 @@ final class ReplyRepository with LoggerMixin {
   ///
   /// Return the pmid if send message succeed which is used to show the new
   /// generated message.
-  Future<String?> replyPersonalMessage(
+  AsyncVoidEither replyPersonalMessage(
     String touid,
     Map<String, dynamic> formData,
-  ) async {
-    final resp = await getIt.get<NetClientProvider>().postForm(
-          formatSendMessageUrl(touid),
-          data: formData,
-        );
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
+  ) =>
+      AsyncVoidEither(() async {
+        final e = await getIt
+            .get<NetClientProvider>()
+            .postForm(
+              formatSendMessageUrl(touid),
+              data: formData,
+            )
+            .run();
+        if (e.isLeft()) {
+          return left(e.unwrapErr());
+        }
 
-    final data = resp.data as String;
+        final resp = e.unwrap();
 
-    if (data.contains('succeedhandle_pmsend')) {
-      // Success.
-      return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
-    }
-    if (data.contains('errorhandle_showmsg_$touid')) {
-      final errorMessage = _messageErrorRe.firstMatch(data)?.namedGroup('err');
-      throw ReplyPersonalMessageFailedException(
-        errorMessage ?? 'unknown error',
-      );
-    }
+        if (resp.statusCode != HttpStatus.ok) {
+          throw HttpRequestFailedException(resp.statusCode);
+        }
 
-    return null;
-  }
+        final data = resp.data as String;
+
+        if (data.contains('succeedhandle_pmsend')) {
+          // Success.
+          // return _messagePmidRe.firstMatch(data)?.namedGroup('pmid');
+          return rightVoid();
+        }
+        if (data.contains('errorhandle_showmsg_$touid')) {
+          final errorMessage =
+              _messageErrorRe.firstMatch(data)?.namedGroup('err');
+          throw ReplyPersonalMessageFailedException(
+            errorMessage ?? 'unknown error',
+          );
+        }
+
+        return rightVoid();
+      });
 }

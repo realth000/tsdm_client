@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/upgrade/cubit/upgrade_cubit.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:universal_html/parsing.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -22,7 +24,7 @@ class UpgradePage extends StatefulWidget {
   State<UpgradePage> createState() => _UpgradePageState();
 }
 
-class _UpgradePageState extends State<UpgradePage> {
+class _UpgradePageState extends State<UpgradePage> with LoggerMixin {
   /// Flag indicating loading full changelog or not.
   bool loadingChangelog = false;
 
@@ -172,11 +174,12 @@ class _UpgradePageState extends State<UpgradePage> {
                       setState(() {
                         loadingChangelog = true;
                       });
-                      final changelogData = await repo.fetchChangelog();
+                      final changelogData = await repo.fetchChangelog().run();
                       if (!context.mounted) {
                         return;
                       }
-                      if (changelogData == null) {
+                      if (changelogData.isLeft()) {
+                        handle(changelogData.unwrapErr());
                         showFailedToLoadSnackBar(context);
                         setState(() {
                           loadingChangelog = false;
@@ -199,7 +202,7 @@ class _UpgradePageState extends State<UpgradePage> {
                                 behavior: ScrollConfiguration.of(context)
                                     .copyWith(scrollbars: false),
                                 child: Markdown(
-                                  data: changelogData,
+                                  data: changelogData.unwrap(),
                                 ),
                               ),
                             ),

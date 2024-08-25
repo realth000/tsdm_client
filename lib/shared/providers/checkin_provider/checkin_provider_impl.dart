@@ -2,6 +2,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:collection/collection.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
@@ -23,13 +24,19 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
   ) async {
     final netClient = getIt.get<NetClientProvider>();
 
-    final resp = await netClient.get(_checkInPageUrl);
+    final respEither = await netClient.get(_checkInPageUrl).run();
+    if (respEither.isLeft()) {
+      handle(respEither.unwrapErr());
+      return const CheckinWebRequestFailed(null);
+    }
+
+    final resp = respEither.unwrap();
     if (resp.statusCode != HttpStatus.ok) {
       error(
         'failed to check in: web request failed with status code '
         '${resp.statusCode}',
       );
-      return CheckinWebRequestFailed(resp.statusCode!);
+      return CheckinWebRequestFailed(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -48,10 +55,15 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
       'fastreply': 1,
     };
 
-    final checkInResp = await getIt
+    final checkInRespEither = await getIt
         .get<NetClientProvider>()
-        .postForm(_checkInRequestUrl, data: body);
+        .postForm(_checkInRequestUrl, data: body)
+        .run();
+    if (checkInRespEither.isLeft()) {
+      return const CheckinWebRequestFailed(null);
+    }
 
+    final checkInResp = checkInRespEither.unwrap();
     final checkInRespData = (checkInResp.data as String).split('\n');
 
     final checkInResult = checkInRespData

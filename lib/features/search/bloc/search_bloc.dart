@@ -1,6 +1,5 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/search/models/models.dart';
@@ -10,7 +9,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'search_bloc.mapper.dart';
 part 'search_event.dart';
-
 part 'search_state.dart';
 
 /// Emitter

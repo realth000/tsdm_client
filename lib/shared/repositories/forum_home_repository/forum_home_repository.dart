@@ -1,8 +1,7 @@
-import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
-
-import 'package:dio/dio.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -21,61 +20,47 @@ final class ForumHomeRepository with LoggerMixin {
   uh.Document? getCache() => _document;
 
   /// Fetch the home page of app from server.
-  ///
-  /// # Exception
-  ///
-  /// * [HttpRequestFailedException] if GET request failed.
-  Future<uh.Document> fetchHomePage({bool force = false}) async {
-    debug('fetch home page');
-    if (!force && _document != null) {
-      debug('use cached home page');
-      return _document!;
-    }
-    try {
-      _document = await _fetchForumHome();
-      debug('use fetched home page');
-      return _document!;
-    } on HttpRequestFailedException {
-      rethrow;
-    }
-  }
+  AsyncEither<uh.Document> fetchHomePage({bool force = false}) =>
+      AsyncEither(() async {
+        debug('fetch home page');
+        if (!force && _document != null) {
+          debug('use cached home page');
+          return right(_document!);
+        }
+
+        final docEither = await _fetchForumHome().run();
+        if (docEither.isLeft()) {
+          return left(docEither.unwrapErr());
+        }
+
+        _document = docEither.unwrap();
+        debug('use fetched home page');
+        return right(_document!);
+      });
 
   /// Fetch the topic page of app from server.
-  ///
-  /// # Exception
-  ///
-  /// * [HttpRequestFailedException] if GET request failed.
-  Future<uh.Document> fetchTopicPage({bool force = false}) async {
-    debug('fetch topics page');
-    if (!force && _document != null) {
-      debug('use cached topics page');
-      return _document!;
-    }
-    try {
-      _document = await _fetchForumHome();
-      return _document!;
-    } on HttpRequestFailedException {
-      rethrow;
-    }
-  }
+  AsyncEither<uh.Document> fetchTopicPage({bool force = false}) =>
+      AsyncEither(() async {
+        debug('fetch topics page');
+        if (!force && _document != null) {
+          debug('use cached topics page');
+          return right(_document!);
+        }
+        final e = await _fetchForumHome().run();
+        if (e.isLeft()) {
+          return left(e.unwrapErr());
+        }
+        _document = e.unwrap();
+        return right(_document!);
+      });
 
   /// Fetch the [homePage] of forum.
   ///
   /// # Exception
   ///
   /// * [HttpHandshakeFailedException] if GET request failed.
-  Future<uh.Document> _fetchForumHome() async {
-    debug('fetch forum home from server');
-    final netClient = getIt.get<NetClientProvider>();
-    try {
-      final resp = await netClient.get(homePage);
-      if (resp.statusCode != HttpStatus.ok) {
-        throw HttpRequestFailedException(resp.statusCode);
-      }
-      final document = parseHtmlDocument(resp.data as String);
-      return document;
-    } on DioException catch (e) {
-      throw HttpHandshakeFailedException('handshake failed: $e');
-    }
-  }
+  AsyncEither<uh.Document> _fetchForumHome() => getIt
+      .get<NetClientProvider>()
+      .get(homePage)
+      .mapHttp((v) => parseHtmlDocument(v.data as String));
 }

@@ -3,6 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -165,7 +166,13 @@ final class EditorRepository with LoggerMixin {
         return false;
       }
       try {
-        final resp = await netClient.getImage(emoji.url);
+        final respEither = await netClient.getImage(emoji.url).run();
+        if (respEither.isLeft()) {
+          final err = respEither.unwrapErr();
+          handle(err);
+          throw err;
+        }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           await Future.delayed(const Duration(milliseconds: 200), () {});
           retryMaxTimes -= 1;
@@ -196,7 +203,12 @@ final class EditorRepository with LoggerMixin {
     // TODO: Use injected net client.
     final netClient =
         getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
-    final resp = await netClient.get(_emojiInfoUrl);
+    final respEither = await netClient.get(_emojiInfoUrl).run();
+    if (respEither.isLeft()) {
+      handle(respEither.unwrapErr());
+      return false;
+    }
+    final resp = respEither.unwrap();
     if (resp.statusCode != HttpStatus.ok) {
       error('failed to load emoji info: StatusCode=${resp.statusCode}');
       return false;

@@ -4,7 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
@@ -17,7 +18,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'homepage_bloc.mapper.dart';
 part 'homepage_event.dart';
-
 part 'homepage_state.dart';
 
 /// Extension on [uh.Document] to extract user info.
@@ -174,78 +174,84 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     }
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
-    try {
-      final documentList = (await Future.wait(
-        [
-          _forumHomeRepository.fetchHomePage(),
-          _profileRepository.fetchProfile(),
-        ],
-      ))
-          .whereType<uh.Document>()
-          .toList();
-      if (documentList.length != 2) {
-        if (_authenticationRepository.currentUser == null) {
-          emit(state.copyWith(status: HomepageStatus.needLogin));
-          return;
-        } else {
-          emit(state.copyWith(status: HomepageStatus.failure));
-          return;
-        }
+    final documentList = (await Future.wait(
+      [
+        _forumHomeRepository.fetchHomePage().mapLeft(handle).run(),
+        _profileRepository.fetchProfile().mapLeft(handle).run(),
+      ],
+    ))
+        .whereType<uh.Document>()
+        .toList();
+    if (documentList.length != 2) {
+      if (_authenticationRepository.currentUser == null) {
+        emit(state.copyWith(status: HomepageStatus.needLogin));
+        return;
+      } else {
+        emit(state.copyWith(status: HomepageStatus.failure));
+        return;
       }
-      final document = documentList[0];
-      final avatarUrl = documentList[1]
-          .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-          ?.imageUrl();
-      await _authenticationRepository.loginWithDocument(document);
-      // Parse data and change state.
-      final s = _parseStateFromDocument(
-        document,
-        _authenticationRepository.currentUser?.username,
-        avatarUrl: avatarUrl,
-      );
-      emit(s);
-    } on HttpHandshakeFailedException catch (e) {
-      debug('[HomepageBloc]: Failed to fetch home page: $e');
-      emit(state.copyWith(status: HomepageStatus.failure));
-      return;
-    } on HttpRequestFailedException catch (e) {
-      debug('[HomepageBloc]: Failed to fetch home page: $e');
-      emit(state.copyWith(status: HomepageStatus.failure));
-      return;
     }
+    final document = documentList[0];
+    final avatarUrl = documentList[1]
+        .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+        ?.imageUrl();
+    await _authenticationRepository
+        .loginWithDocument(document)
+        .mapLeft(handle)
+        .run();
+    // Parse data and change state.
+    final s = _parseStateFromDocument(
+      document,
+      _authenticationRepository.currentUser?.username,
+      avatarUrl: avatarUrl,
+    );
+    emit(s);
   }
 
   Future<void> _onHomepageRefreshRequested(
     HomepageRefreshRequested event,
     Emitter<HomepageState> emit,
   ) async {
-    try {
-      // Clear data.
-      emit(const HomepageState(status: HomepageStatus.loading));
-      final document = await _forumHomeRepository.fetchHomePage(force: true);
-      await _authenticationRepository.loginWithDocument(document);
-      final loggedUser = _authenticationRepository.currentUser;
-      if (loggedUser == null) {
-        emit(const HomepageState(status: HomepageStatus.needLogin));
-        return;
-      }
-      final d2 = await _profileRepository.fetchProfile(force: true);
-      final avatarUrl = d2
-          ?.querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-          ?.imageUrl();
-      // Parse data and change state.
-      final s = _parseStateFromDocument(
-        document,
-        _authenticationRepository.currentUser?.username,
-        avatarUrl: avatarUrl,
-      );
-      emit(s);
-    } on HttpHandshakeFailedException catch (e) {
-      debug('failed to fetch dom: $e');
-      emit(state.copyWith(status: HomepageStatus.failure));
-    } on HttpRequestFailedException catch (e) {
-      debug('failed to fetch dom: $e');
-      emit(state.copyWith(status: HomepageStatus.failure));
+    // Clear data.
+    emit(const HomepageState(status: HomepageStatus.loading));
+
+    switch (await _forumHomeRepository.fetchHomePage(force: true).run()) {
+      case Left(:final value):
+        handle(value);
+        debug('failed to fetch dom: $value');
+        emit(state.copyWith(status: HomepageStatus.failure));
+      case Right(:final value):
+        await _authenticationRepository
+            .loginWithDocument(value)
+            .mapLeft((e) {
+              handle(e);
+              error('failed to login with document: $e');
+              emit(state.copyWith(status: HomepageStatus.failure));
+            })
+            .map((v) => v)
+            .run();
+        final loggedUser = _authenticationRepository.currentUser;
+        if (loggedUser == null) {
+          emit(const HomepageState(status: HomepageStatus.needLogin));
+          return;
+        }
+        final d2 = await _profileRepository.fetchProfile(force: true).run();
+        if (d2.isLeft()) {
+          handle(d2.unwrapErr());
+          emit(state.copyWith(status: HomepageStatus.failure));
+          return;
+        }
+        final avatarUrl = d2
+            .unwrap()
+            .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
+            ?.imageUrl();
+        // Parse data and change state.
+        final s = _parseStateFromDocument(
+          value,
+          _authenticationRepository.currentUser?.username,
+          avatarUrl: avatarUrl,
+        );
+        emit(s);
     }
   }
 

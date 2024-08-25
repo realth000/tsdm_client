@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:rxdart/rxdart.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -67,8 +68,13 @@ final class ImageCacheRepository with LoggerMixin {
     _controller.add(ImageCacheLoadingResponse(url));
 
     try {
-      final resp = await _netClientProvider.getImage(url);
-      final imageData = resp.data as List<int>;
+      final respEither = await _netClientProvider.getImage(url).run();
+      if (respEither.isLeft()) {
+        final err = respEither.unwrapErr();
+        handle(err);
+        throw err;
+      }
+      final imageData = respEither.unwrap().data as List<int>;
       await _imageCacheProvider.updateCache(url, imageData);
       _controller
           .add(ImageCacheSuccessResponse(url, Uint8List.fromList(imageData)));

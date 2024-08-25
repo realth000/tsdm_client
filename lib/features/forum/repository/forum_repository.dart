@@ -2,6 +2,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -20,7 +21,11 @@ class ForumRepository {
       AsyncEither(() async {
         final fetchUrl = _formatForumUrl(fid, pageNumber, filterState);
         final netClient = getIt.get<NetClientProvider>();
-        final resp = await netClient.getUri(fetchUrl);
+        final respEither = await netClient.getUri(fetchUrl).run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }

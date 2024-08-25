@@ -5,6 +5,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
@@ -79,7 +80,8 @@ class AuthenticationRepository with LoggerMixin {
   }
 
   /// Fetch login hash and form hash for logging in.
-  AsyncEither<LoginHash> fetchHash() => AsyncEither(() async {
+  AsyncEither<LoginHash> fetchHash() =>
+      getIt.get<NetClientProvider>().get(_fakeFormUrl).flatMap((v) {
         // TODO: Parse CDATA.
         // 返回的data是xml：
         //
@@ -89,36 +91,29 @@ class AuthenticationRepository with LoggerMixin {
         // <div id="layer_login_L5hJN">
         //
         // 其中"main_message_"后面的是本次登录的loginHash，登录时需要加到url上
-        final rawDataResp =
-            await getIt.get<NetClientProvider>().get(_fakeFormUrl);
-        if (rawDataResp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(rawDataResp.statusCode));
+        if (v.statusCode != HttpStatus.ok) {
+          return taskLeft(HttpRequestFailedException(v.statusCode));
         }
-        final data = rawDataResp.data as String;
+        final data = v.data as String;
         final match = _layerLoginRe.firstMatch(data);
         final loginHash = match?.namedGroup('Hash');
         if (loginHash == null) {
-          return left(LoginFormHashNotFoundException());
+          return taskLeft(LoginFormHashNotFoundException());
         }
 
         final formHashMatch = _formHashRe.firstMatch(data);
         final formHash = formHashMatch?.namedGroup('FormHash');
         if (formHash == null) {
-          return left(LoginInvalidFormHashException());
+          return taskLeft(LoginInvalidFormHashException());
         }
 
         debug('get login hash $loginHash');
-        return right(LoginHash(formHash: formHash, loginHash: loginHash));
+        return taskRight(LoginHash(formHash: formHash, loginHash: loginHash));
       });
 
   /// Login with password and other parameters in [credential].
   ///
   /// Will not change authentication status if failed to login.
-  ///
-  /// # Exception
-  ///
-  /// * **[HttpRequestFailedException]** when http request failed.
-  ///
   AsyncVoidEither loginWithPassword(UserCredential credential) =>
       AsyncVoidEither(() async {
         final target = _buildLoginUrl(credential.formHash);
@@ -148,8 +143,14 @@ class AuthenticationRepository with LoggerMixin {
           userLoginInfo: userLoginInfo,
           startLogin: true,
         );
-        final resp =
-            await netClient.postForm(target, data: credential.toJson());
+
+        final respEither =
+            await netClient.postForm(target, data: credential.toJson()).run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
+
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }
@@ -163,7 +164,13 @@ class AuthenticationRepository with LoggerMixin {
         final loginResult = LoginResult.fromLoginMessageNode(messageNode);
         if (loginResult == LoginResult.success) {
           // Get complete user info from page.
-          final fullInfoResp = await netClient.get(_passwordSettingsUrl);
+          final fullInfoRespEither =
+              await netClient.get(_passwordSettingsUrl).run();
+          if (fullInfoRespEither.isLeft()) {
+            return left(fullInfoRespEither.unwrapErr());
+          }
+
+          final fullInfoResp = fullInfoRespEither.unwrap();
           if (fullInfoResp.statusCode != HttpStatus.ok) {
             error('failed to fetch complete user info: '
                 'code=${fullInfoResp.statusCode}');
@@ -194,36 +201,44 @@ class AuthenticationRepository with LoggerMixin {
       });
 
   /// Parse logged user info from html [document].
-  Future<void> loginWithDocument(uh.Document document) async {
-    final userInfo = _parseUserInfoFromDocument(document);
-    if (userInfo == null) {
-      debug('failed to login with document: user info not found');
-      return;
-    }
+  AsyncVoidEither loginWithDocument(uh.Document document) =>
+      AsyncVoidEither(() async {
+        final userInfo = _parseUserInfoFromDocument(document);
+        if (userInfo == null) {
+          debug('failed to login with document: user info not found');
+          return left(LoginUserInfoNotFoundException());
+        }
 
-    // Second check for email.
-    // Get complete user info from page.
-    final fullInfoResp = await NetClientProvider.build(userLoginInfo: userInfo)
-        .get(_passwordSettingsUrl);
-    if (fullInfoResp.statusCode != HttpStatus.ok) {
-      error('failed to fetch complete user info: '
-          'code=${fullInfoResp.statusCode}');
-      return;
-    }
-    final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
-    final fullUserInfo =
-        _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
-    if (fullUserInfo == null || !fullUserInfo.isComplete) {
-      error('failed to: parse login result: email not found');
-      return;
-    }
+        // Second check for email.
+        // Get complete user info from page.
+        final fullInfoRespEither =
+            await NetClientProvider.build(userLoginInfo: userInfo)
+                .get(_passwordSettingsUrl)
+                .run();
+        if (fullInfoRespEither.isLeft()) {
+          return left(fullInfoRespEither.unwrapErr());
+        }
+        final fullInfoResp = fullInfoRespEither.unwrap();
+        if (fullInfoResp.statusCode != HttpStatus.ok) {
+          error('failed to fetch complete user info: '
+              'code=${fullInfoResp.statusCode}');
+          return left(HttpRequestFailedException(fullInfoResp.statusCode));
+        }
+        final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
+        final fullUserInfo =
+            _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
+        if (fullUserInfo == null || !fullUserInfo.isComplete) {
+          error('failed to: parse login result: email not found');
+          return left(LoginUserInfoIncompleteException());
+        }
 
-    // Here we get complete user info.
-    await _saveLoggedUserInfo(fullUserInfo);
-    _controller.add(AuthenticationStatus.authenticated);
+        // Here we get complete user info.
+        await _saveLoggedUserInfo(fullUserInfo);
+        _controller.add(AuthenticationStatus.authenticated);
 
-    debug('login with document: user $userInfo');
-  }
+        debug('login with document: user $userInfo');
+        return rightVoid();
+      });
 
   /// Logout the current user.
   ///
@@ -241,7 +256,11 @@ class AuthenticationRepository with LoggerMixin {
           ),
           logout: true,
         );
-        final resp = await netClient.get(_checkAuthUrl);
+        final respEither = await netClient.get(_checkAuthUrl).run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }
@@ -261,7 +280,12 @@ class AuthenticationRepository with LoggerMixin {
           return left(LogoutFormHashNotFoundException());
         }
 
-        final logoutResp = await netClient.get(_buildLogoutUrl(formHash));
+        final logoutRespEither =
+            await netClient.get(_buildLogoutUrl(formHash)).run();
+        if (logoutRespEither.isLeft()) {
+          return left(logoutRespEither.unwrapErr());
+        }
+        final logoutResp = logoutRespEither.unwrap();
         if (logoutResp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(logoutResp.statusCode));
         }

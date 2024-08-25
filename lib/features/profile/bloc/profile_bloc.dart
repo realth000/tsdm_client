@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
@@ -65,67 +66,73 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       );
       return;
     }
-    try {
-      emit(state.copyWith(status: ProfileStatus.loading));
-      final document = await _profileRepository.fetchProfile(
-        username: username,
-        uid: uid,
-      );
-      if (document == null) {
+    emit(state.copyWith(status: ProfileStatus.loading));
+    final documentEither = await _profileRepository
+        .fetchProfile(
+          username: username,
+          uid: uid,
+        )
+        .run();
+    if (documentEither.isLeft()) {
+      final err = documentEither.unwrapErr();
+      handle(err);
+      if (err case ProfileNeedLoginException()) {
         emit(state.copyWith(status: ProfileStatus.needLogin));
         return;
       }
-      final userProfile = _buildProfile(document);
-      if (userProfile == null) {
-        error('failed to parse user profile');
-        emit(state.copyWith(status: ProfileStatus.failure));
-        return;
-      }
-      final (unreadNoticeCount, hasUnreadMessage) =
-          _buildUnreadInfoStatus(document);
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          userProfile: userProfile,
-          unreadNoticeCount: unreadNoticeCount,
-          hasUnreadMessage: hasUnreadMessage,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load profile: $e');
-      emit(state.copyWith(status: ProfileStatus.failure));
-    }
-  }
-
-  Future<void> _onRefreshRequested(_Emitter emit) async {
-    try {
-      emit(state.copyWith(status: ProfileStatus.loading));
-      final document = await _profileRepository.fetchProfile(force: true);
-      if (document == null) {
-        emit(state.copyWith(status: ProfileStatus.needLogin));
-        return;
-      }
-      final userProfile = _buildProfile(document);
-      if (userProfile == null) {
-        error('failed to parse user profile');
-        emit(state.copyWith(status: ProfileStatus.failure));
-        return;
-      }
-      final (unreadNoticeCount, hasUnreadMessage) =
-          _buildUnreadInfoStatus(document);
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          userProfile: userProfile,
-          unreadNoticeCount: unreadNoticeCount,
-          hasUnreadMessage: hasUnreadMessage,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to refresh profile: $e');
       emit(state.copyWith(status: ProfileStatus.failure));
       return;
     }
+    final document = documentEither.unwrap();
+    final userProfile = _buildProfile(document);
+    if (userProfile == null) {
+      error('failed to parse user profile');
+      emit(state.copyWith(status: ProfileStatus.failure));
+      return;
+    }
+    final (unreadNoticeCount, hasUnreadMessage) =
+        _buildUnreadInfoStatus(document);
+    emit(
+      state.copyWith(
+        status: ProfileStatus.success,
+        userProfile: userProfile,
+        unreadNoticeCount: unreadNoticeCount,
+        hasUnreadMessage: hasUnreadMessage,
+      ),
+    );
+  }
+
+  Future<void> _onRefreshRequested(_Emitter emit) async {
+    emit(state.copyWith(status: ProfileStatus.loading));
+    final documentEither =
+        await _profileRepository.fetchProfile(force: true).run();
+    if (documentEither.isLeft()) {
+      final err = documentEither.unwrapErr();
+      handle(err);
+      if (err case ProfileNeedLoginException()) {
+        emit(state.copyWith(status: ProfileStatus.needLogin));
+        return;
+      }
+      emit(state.copyWith(status: ProfileStatus.failure));
+      return;
+    }
+    final document = documentEither.unwrap();
+    final userProfile = _buildProfile(document);
+    if (userProfile == null) {
+      error('failed to parse user profile');
+      emit(state.copyWith(status: ProfileStatus.failure));
+      return;
+    }
+    final (unreadNoticeCount, hasUnreadMessage) =
+        _buildUnreadInfoStatus(document);
+    emit(
+      state.copyWith(
+        status: ProfileStatus.success,
+        userProfile: userProfile,
+        unreadNoticeCount: unreadNoticeCount,
+        hasUnreadMessage: hasUnreadMessage,
+      ),
+    );
   }
 
   Future<void> _onLogoutRequested(_Emitter emit) async {

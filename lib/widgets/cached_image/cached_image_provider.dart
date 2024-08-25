@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:ui' as ui;
 
-import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -96,26 +96,32 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
         }
         // When error occurred in `getCache`, it means the image is not
         // correctly cached, fetch from network.
-        final resp = await getIt
+        final respEither = await getIt
             .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
             .getImage(imageUrl)
-            .onError((e, st) async {
+            .run();
+        if (respEither.isLeft()) {
           // Error occurred when fetching this image.
           // If we have [fallbackImageUrl], use it.
           if (fallbackImageUrl == null) {
             // Rethrow if can not fallback.
-            throw Exception(e);
           }
-          if (!context.mounted) {
-            return Future.value(Response(requestOptions: RequestOptions()));
-          }
-          return getIt
+          final cacheRet = await getIt
               .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-              .getImage(fallbackImageUrl!);
-        });
+              .getImage(fallbackImageUrl!)
+              .run();
+          if (cacheRet.isLeft()) {
+            handle(cacheRet.unwrapErr());
+            return Uint8List(0);
+          }
+          handle(respEither.unwrapErr());
+          return Uint8List(0);
+        }
+
         if (!context.mounted) {
           return Uint8List(0);
         }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           error('failed to get image from $imageUrl, code=${resp.statusCode}');
           return Uint8List(0);

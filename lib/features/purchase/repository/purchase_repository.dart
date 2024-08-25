@@ -3,6 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/purchase/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -41,9 +42,14 @@ final class PurchaseRepository with LoggerMixin {
     required String pid,
   }) =>
       AsyncEither(() async {
-        final resp = await getIt
+        final respEither = await getIt
             .get<NetClientProvider>()
-            .get(formatPurchaseDialogUrl(tid, pid));
+            .get(formatPurchaseDialogUrl(tid, pid))
+            .run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           // Network error.
           error('fetch purchase dialog failed: code${resp.statusCode}');
@@ -114,10 +120,15 @@ final class PurchaseRepository with LoggerMixin {
           'tid': tid,
           'handlekey': handleKey,
         };
-        final resp = await getIt
+        final respEither = await getIt
             .get<NetClientProvider>()
-            .postForm(_purchaseTarget, data: body);
+            .postForm(_purchaseTarget, data: body)
+            .run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
 
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }

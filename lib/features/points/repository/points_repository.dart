@@ -1,6 +1,3 @@
-import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
-
-import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/points/repository/model/models.dart';
@@ -18,29 +15,15 @@ final class PointsRepository with LoggerMixin {
       '$baseUrl/home.php?mod=spacecp&op=log&ac=credit';
 
   /// Fetch the points statistics page.
-  AsyncEither<uh.Document> fetchStatisticsPage() => AsyncEither(() async {
-        final netClient = getIt.get<NetClientProvider>();
-        final resp = await netClient.get(_statisticsPageUrl);
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-
-        final document = parseHtmlDocument(resp.data as String);
-        return right(document);
-      });
+  AsyncEither<uh.Document> fetchStatisticsPage() => getIt
+      .get<NetClientProvider>()
+      .get(_statisticsPageUrl)
+      .mapHttp((v) => parseHtmlDocument(v.data as String));
 
   /// Fetch the points changelog page with given [parameter].
   AsyncEither<uh.Document> fetchChangelogPage(ChangelogParameter parameter) =>
-      AsyncEither(() async {
-        final netClient = getIt.get<NetClientProvider>();
-        final target = '$_changelogPageUrl$parameter';
-        info('fetch changelog page from $target');
-        final resp = await netClient.get(target);
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-
-        final document = parseHtmlDocument(resp.data as String);
-        return right(document);
-      });
+      getIt
+          .get<NetClientProvider>()
+          .get('$_changelogPageUrl$parameter')
+          .mapHttp((v) => parseHtmlDocument(v.data as String));
 }

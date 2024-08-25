@@ -3,10 +3,10 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/upgrade/models/models.dart';
@@ -64,25 +64,22 @@ class UpgradeCubit extends Cubit<UpgradeState> with LoggerMixin {
 
   /// Fetch the latest release info from github.
   Future<void> fetchLatestInfo() async {
-    try {
-      emit(state.copyWith(status: UpgradeStatus.fetching));
-      final document = await _upgradeRepository.fetchLatestInfo();
-      final model = await _parseUpgradeModel(document);
-      if (model == null) {
-        error('failed to parse model');
-        emit(state.copyWith(status: UpgradeStatus.failed));
-        return;
-      }
-      emit(
-        state.copyWith(
-          status: UpgradeStatus.ready,
-          upgradeModel: model,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
+    emit(state.copyWith(status: UpgradeStatus.fetching));
+    await _upgradeRepository.fetchLatestInfo().mapLeft((e) {
+      handle(e);
       error('failed to fetch latest release info: $e');
       emit(state.copyWith(status: UpgradeStatus.failed));
-    }
+    }).map((v) async {
+      switch (await _parseUpgradeModel(v).run()) {
+        case None():
+          error('failed to parse model');
+          emit(state.copyWith(status: UpgradeStatus.failed));
+        case Some(:final value):
+          emit(
+            state.copyWith(status: UpgradeStatus.ready, upgradeModel: value),
+          );
+      }
+    }).run();
   }
 
   /// Download the latest version assets.
@@ -156,42 +153,58 @@ class UpgradeCubit extends Cubit<UpgradeState> with LoggerMixin {
 
     debug('upgrade: download latest version from $downloadUrl');
     debug('upgrade: save download file to $savePath');
-    await _upgradeRepository.download(
-      downloadUrl: downloadUrl,
-      savePath: savePath,
-    );
+    await _upgradeRepository
+        .download(downloadUrl: downloadUrl, savePath: savePath)
+        .mapLeft((e) {
+          handle(e);
+          emit(state.copyWith(status: UpgradeStatus.failed));
+        })
+        .map((_) => emit(state.copyWith(status: UpgradeStatus.success)))
+        .run();
   }
 
-  Future<UpgradeModel?> _parseUpgradeModel(uh.Document document) async {
-    final originalTitle =
-        document.querySelector('h1.d-inline.mr-3')?.firstEndDeepText();
-    final releaseVersion = originalTitle?.replaceFirst('v', '');
-    final releaseNotes =
-        document.querySelector('div.markdown-body.my-3')?.outerHtml;
-    if (releaseVersion == null || releaseNotes == null) {
-      return null;
-    }
+  TaskOption<UpgradeModel> _parseUpgradeModel(uh.Document document) =>
+      TaskOption(() async {
+        final originalTitle =
+            document.querySelector('h1.d-inline.mr-3')?.firstEndDeepText();
+        final releaseVersion = originalTitle?.replaceFirst('v', '');
+        final releaseNotes =
+            document.querySelector('div.markdown-body.my-3')?.outerHtml;
+        if (releaseVersion == null || releaseNotes == null) {
+          return none();
+        }
 
-    // The assets info is not in the previous release page.
-    final assetsDocument =
-        await _upgradeRepository.fetchAssetsInfo(originalTitle!);
-    final assetsEntries =
-        assetsDocument.querySelectorAll('a.Truncate').map((e) {
-      final link = e.attributes['href']?.prepend('https://github.com');
-      final name = e.querySelector('span')?.firstEndDeepText();
-      if (link == null || name == null || name == 'Source code') {
-        return null;
-      }
-      return MapEntry(name, link);
-    }).whereType<MapEntry<String, String>>();
-    final assetsMap = Map<String, String>.fromEntries(assetsEntries);
-    return UpgradeModel(
-      releaseVersion: releaseVersion,
-      releaseNotes: releaseNotes,
-      assetsMap: assetsMap,
-      releaseUrl: _upgradeRepository.releaseInfoUrl,
-    );
-  }
+        // The assets info is not in the previous release page.
+        final assetsDocument = await _upgradeRepository
+            .fetchAssetsInfo(originalTitle!)
+            .mapLeft((e) {
+          handle(e);
+          return null;
+        }).run();
+
+        switch (assetsDocument) {
+          case Left():
+            return none();
+          case Right(:final value):
+            final assetsEntries = value.querySelectorAll('a.Truncate').map((e) {
+              final link = e.attributes['href']?.prepend('https://github.com');
+              final name = e.querySelector('span')?.firstEndDeepText();
+              if (link == null || name == null || name == 'Source code') {
+                return null;
+              }
+              return MapEntry(name, link);
+            }).whereType<MapEntry<String, String>>();
+            final assetsMap = Map<String, String>.fromEntries(assetsEntries);
+            return Some(
+              UpgradeModel(
+                releaseVersion: releaseVersion,
+                releaseNotes: releaseNotes,
+                assetsMap: assetsMap,
+                releaseUrl: _upgradeRepository.releaseInfoUrl,
+              ),
+            );
+        }
+      });
 
   @override
   Future<void> close() async {

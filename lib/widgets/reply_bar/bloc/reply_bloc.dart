@@ -1,15 +1,14 @@
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
-import 'package:tsdm_client/widgets/reply_bar/exceptions/exceptions.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 
 part 'reply_bloc.mapper.dart';
 part 'reply_event.dart';
-
 part 'reply_state.dart';
 
 /// Emitter
@@ -54,24 +53,20 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     ReplyToPostRequested event,
     _Emit emit,
   ) async {
-    try {
-      emit(state.copyWith(status: ReplyStatus.loading));
-      await _replyRepository.replyToPost(
-        replyParameters: event.replyParameters,
-        replyAction: event.replyAction,
-        replyMessage: event.replyMessage,
-      );
-      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to reply to post: http failed with $e');
+    emit(state.copyWith(status: ReplyStatus.loading));
+    final ret = await _replyRepository
+        .replyToPost(
+          replyParameters: event.replyParameters,
+          replyAction: event.replyAction,
+          replyMessage: event.replyMessage,
+        )
+        .run();
+    if (ret.isLeft()) {
+      handle(ret.unwrapErr());
       emit(state.copyWith(status: ReplyStatus.failed));
-    } on ReplyToPostFetchParameterFailedException catch (e) {
-      error('failed to reply to post: failed to fetch parameters: $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
-    } on ReplyToPostResultFailedException catch (e) {
-      error('failed to reply to post: failed result: $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
+      return;
     }
+    emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
   }
 
   Future<void> _onReplyToThreadRequested(
@@ -106,21 +101,31 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     _Emit emit,
   ) async {
     emit(state.copyWith(status: ReplyStatus.loading));
-    try {
-      // TODO: Update chat history with returned pmid.
-      final _ = await _replyRepository.replyHistoryPersonalMessage(
-        targetUrl: event.targetUrl,
-        formHash: event.formHash,
-        message: event.message,
-      );
-      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to reply chat history: $e');
+    // TODO: Update chat history with returned pmid.
+    final result = await _replyRepository
+        .replyHistoryPersonalMessage(
+          targetUrl: event.targetUrl,
+          formHash: event.formHash,
+          message: event.message,
+        )
+        .run();
+    if (result.isLeft()) {
+      final err = result.unwrapErr();
+      if (err case ReplyPersonalMessageFailedException()) {
+        error('failed to reply chat history');
+        emit(
+          state.copyWith(
+            status: ReplyStatus.failed,
+            failedReason: err.message,
+          ),
+        );
+        return;
+      }
+      handle(err);
       emit(state.copyWith(status: ReplyStatus.failed));
-    } on ReplyPersonalMessageFailedException catch (e) {
-      error('failed to reply chat history: $e');
-      emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
+      return;
     }
+    emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
   }
 
   Future<void> _onReplyChatRequested(
@@ -128,19 +133,25 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     _Emit emit,
   ) async {
     emit(state.copyWith(status: ReplyStatus.loading));
-    try {
-      // TODO: Update chat history with returned pmid.
-      final _ = await _replyRepository.replyPersonalMessage(
-        event.touid,
-        event.formData,
-      );
-      emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to reply chat history: $e');
+    // TODO: Update chat history with returned pmid.
+    final result = await _replyRepository
+        .replyPersonalMessage(event.touid, event.formData)
+        .run();
+    if (result.isLeft()) {
+      final err = result.unwrapErr();
+      if (err case ReplyPersonalMessageFailedException()) {
+        emit(
+          state.copyWith(
+            status: ReplyStatus.failed,
+            failedReason: err.message,
+          ),
+        );
+        return;
+      }
+      handle(err);
       emit(state.copyWith(status: ReplyStatus.failed));
-    } on ReplyPersonalMessageFailedException catch (e) {
-      error('failed to reply chat history: $e');
-      emit(state.copyWith(status: ReplyStatus.failed, failedReason: e.message));
+      return;
     }
+    emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
   }
 }

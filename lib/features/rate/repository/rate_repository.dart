@@ -3,6 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -38,41 +39,55 @@ final class RateRepository with LoggerMixin {
     required String pid,
     required String rateTarget,
   }) =>
-      AsyncEither(() async {
-        final resp = await getIt.get<NetClientProvider>().get(
-              rateTarget._fillRateTarget(),
-            );
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-        final xmlDoc = parseXmlDocument(resp.data as String);
-        final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
-        if (htmlBodyData == null) {
-          return left(RateInfoHtmlBodyNotFound());
-        }
-        final divCNode = parseHtmlDocument(htmlBodyData).body;
-        if (divCNode == null) {
-          return left(RateInfoDivCNodeNotFound());
-        }
-        final rateWindowInfo = RateWindowInfo.fromDivCNode(divCNode);
-        if (rateWindowInfo == null) {
-          final errorText =
-              divCNode.querySelector('div.alert_error')?.childNodes[0].text;
-          if (errorText != null) {
-            return left(RateInfoWithErrorException(errorText));
+      AsyncEither(
+        () async {
+          switch (await getIt
+              .get<NetClientProvider>()
+              .get(rateTarget._fillRateTarget())
+              .run()) {
+            case Left(:final value):
+              return left(value);
+            case Right(:final value) when value.statusCode != HttpStatus.ok:
+              return left(HttpRequestFailedException(value.statusCode));
+            case Right(:final value):
+              final xmlDoc = parseXmlDocument(value.data as String);
+              final htmlBodyData =
+                  xmlDoc.documentElement?.nodes.firstOrNull?.text;
+              if (htmlBodyData == null) {
+                return left(RateInfoHtmlBodyNotFound());
+              }
+              final divCNode = parseHtmlDocument(htmlBodyData).body;
+              if (divCNode == null) {
+                return left(RateInfoDivCNodeNotFound());
+              }
+              final rateWindowInfo = RateWindowInfo.fromDivCNode(divCNode);
+              if (rateWindowInfo == null) {
+                final errorText = divCNode
+                    .querySelector('div.alert_error')
+                    ?.childNodes[0]
+                    .text;
+                if (errorText != null) {
+                  return left(RateInfoWithErrorException(errorText));
+                }
+                return left(RateInfoInvalidDivCNode());
+              }
+              debug('get rate formHash: ${rateWindowInfo.formHash}');
+              return right(rateWindowInfo);
           }
-          return left(RateInfoInvalidDivCNode());
-        }
-        debug('get rate formHash: ${rateWindowInfo.formHash}');
-        return right(rateWindowInfo);
-      });
+        },
+      );
 
   /// Rate with given info [formData].
   AsyncVoidEither rate(Map<String, String> formData) =>
       AsyncVoidEither(() async {
-        final resp = await getIt
+        final respEither = await getIt
             .get<NetClientProvider>()
-            .postForm(_rateTarget, data: formData);
+            .postForm(_rateTarget, data: formData)
+            .run();
+        if (respEither.isLeft()) {
+          return left(respEither.unwrapErr());
+        }
+        final resp = respEither.unwrap();
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }

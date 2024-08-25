@@ -1,6 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -9,7 +9,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'thread_bloc.mapper.dart';
 part 'thread_event.dart';
-
 part 'thread_state.dart';
 
 /// Emitter.
@@ -46,19 +45,21 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     ThreadLoadMoreRequested event,
     ThreadEmitter emit,
   ) async {
-    try {
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        pageNumber: event.pageNumber,
-        onlyVisibleUid: state.onlyVisibleUid,
-        reverseOrder: state.reverseOrder,
-      );
-      emit(await _parseFromDocument(document, event.pageNumber));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: $e');
-      emit(state.copyWith(status: ThreadStatus.failed));
-    }
+    await _threadRepository
+        .fetchThread(
+      tid: state.tid,
+      pid: state.pid,
+      pageNumber: event.pageNumber,
+      onlyVisibleUid: state.onlyVisibleUid,
+      reverseOrder: state.reverseOrder,
+    )
+        .match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: ThreadStatus.failed));
+      },
+      (v) => _parseFromDocument(v, event.pageNumber).map((v) => emit(v)).run(),
+    ).run();
   }
 
   Future<void> _onThreadRefreshRequested(
@@ -71,18 +72,20 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         postList: [],
       ),
     );
-    try {
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        onlyVisibleUid: state.onlyVisibleUid,
-        reverseOrder: state.reverseOrder,
-      );
-      emit(await _parseFromDocument(document, 1));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: $e');
-      emit(state.copyWith(status: ThreadStatus.failed));
-    }
+    await _threadRepository
+        .fetchThread(
+      tid: state.tid,
+      pid: state.pid,
+      onlyVisibleUid: state.onlyVisibleUid,
+      reverseOrder: state.reverseOrder,
+    )
+        .match(
+      (e) {
+        handle(e);
+        emit(state.copyWith(status: ThreadStatus.failed));
+      },
+      (v) => _parseFromDocument(v, 1).map((v) => emit(v)).run(),
+    ).run();
   }
 
   Future<void> _onThreadJumpPageRequested(
@@ -95,20 +98,22 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         postList: [],
       ),
     );
-
-    try {
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        pageNumber: event.pageNumber,
-        onlyVisibleUid: state.onlyVisibleUid,
-        reverseOrder: state.reverseOrder,
-      );
-      emit(await _parseFromDocument(document, event.pageNumber));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
+    await _threadRepository
+        .fetchThread(
+          tid: state.tid,
+          pid: state.pid,
+          pageNumber: event.pageNumber,
+          onlyVisibleUid: state.onlyVisibleUid,
+          reverseOrder: state.reverseOrder,
+        )
+        .map(
+          (v) =>
+              _parseFromDocument(v, event.pageNumber).map((v) => emit(v)).run(),
+        )
+        .mapLeft((e) {
+      handle(e);
       emit(state.copyWith(status: ThreadStatus.failed));
-    }
+    }).run();
   }
 
   Future<void> _onThreadUpdateClosedState(
@@ -128,27 +133,31 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         postList: [],
       ),
     );
-
-    try {
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        pageNumber: state.currentPage,
-        onlyVisibleUid: event.uid,
-        reverseOrder: state.reverseOrder,
-      );
+    await _threadRepository
+        .fetchThread(
+      tid: state.tid,
+      pid: state.pid,
+      pageNumber: state.currentPage,
+      onlyVisibleUid: event.uid,
+      reverseOrder: state.reverseOrder,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load thread page: '
+            'fid=${state.tid}, pageNumber=1 : $e');
+        emit(
+          state.copyWith(
+            status: ThreadStatus.failed,
+            onlyVisibleUid: event.uid,
+          ),
+        );
+      },
       // Use "1" as current page number to prevent page number overflow.
-      final s = await _parseFromDocument(document, 1);
-      emit(s.copyWith(onlyVisibleUid: event.uid));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
-      emit(
-        state.copyWith(
-          status: ThreadStatus.failed,
-          onlyVisibleUid: event.uid,
-        ),
-      );
-    }
+      (v) => _parseFromDocument(v, 1)
+          .map((v) => emit(v.copyWith(onlyVisibleUid: event.uid)))
+          .run(),
+    ).run();
   }
 
   Future<void> _onThreadViewAllAuthorsRequested(
@@ -161,28 +170,35 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         postList: [],
       ),
     );
-
-    try {
-      // Switching from "only view specified author" to "view all authors"
-      // will have more posts and pages so there is no page number overflow
-      // risk.
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        pageNumber: state.currentPage,
-        reverseOrder: state.reverseOrder,
-      );
-      // Use "1" as current page number to prevent page number overflow.
-      final s = await _parseFromDocument(
-        document,
+    // Switching from "only view specified author" to "view all authors"
+    // will have more posts and pages so there is no page number overflow
+    // risk.
+    await _threadRepository
+        .fetchThread(
+      tid: state.tid,
+      pid: state.pid,
+      pageNumber: state.currentPage,
+      reverseOrder: state.reverseOrder,
+    )
+        .match(
+      (e) {
+        handle(e);
+        error('failed to load thread page:'
+            ' fid=${state.tid}, pageNumber=1 : $e');
+        emit(state.copyWith(status: ThreadStatus.failed));
+      },
+      (v) => _parseFromDocument(
+        v,
         state.currentPage,
         clearOnlyVisibleUid: true,
-      );
-      emit(s.copyWith(onlyVisibleUid: state.onlyVisibleUid));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
-      emit(state.copyWith(status: ThreadStatus.failed));
-    }
+      )
+          .map(
+            (v) => emit(
+              v.copyWith(onlyVisibleUid: state.onlyVisibleUid),
+            ),
+          )
+          .run(),
+    ).run();
   }
 
   Future<void> _onThreadChangeViewOrderRequested(
@@ -197,140 +213,152 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         currentPage: 1,
       ),
     );
-    try {
-      final document = await _threadRepository.fetchThread(
-        tid: state.tid,
-        pid: state.pid,
-        pageNumber: state.currentPage,
-        onlyVisibleUid: state.onlyVisibleUid,
-        reverseOrder: state.reverseOrder,
-      );
-      final s = await _parseFromDocument(
-        document,
+    await _threadRepository
+        .fetchThread(
+      tid: state.tid,
+      pid: state.pid,
+      pageNumber: state.currentPage,
+      onlyVisibleUid: state.onlyVisibleUid,
+      reverseOrder: state.reverseOrder,
+    )
+        .match(
+      (e) {
+        error('failed to load thread page: '
+            'fid=${state.tid}, pageNumber=1 : $e');
+        emit(
+          state.copyWith(
+            status: ThreadStatus.failed,
+            reverseOrder: state.reverseOrder,
+          ),
+        );
+      },
+      (v) => _parseFromDocument(
+        v,
         state.currentPage,
-      );
-      emit(s.copyWith(reverseOrder: state.reverseOrder));
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load thread page: fid=${state.tid}, pageNumber=1 : $e');
-      emit(
-        state.copyWith(
-          status: ThreadStatus.failed,
-          reverseOrder: state.reverseOrder,
-        ),
-      );
-    }
+      ).map((v) => emit(v.copyWith(reverseOrder: state.reverseOrder))).run(),
+    ).run();
   }
 
-  Future<ThreadState> _parseFromDocument(
+  IO<ThreadState> _parseFromDocument(
     uh.Document document,
     int pageNumber, {
     bool? clearOnlyVisibleUid,
-  }) async {
-    // Reset the thread id from document.
-    final threadID = document.querySelector('head > link')?.attributes['href'];
+  }) =>
+      IO(() {
+        // Reset the thread id from document.
+        final threadID =
+            document.querySelector('head > link')?.attributes['href'];
 
-    final threadClosed = document.querySelector('form#fastpostform') == null;
-    final threadDataNode = document.querySelector('div#postlist');
-    final postList = Post.buildListFromThreadDataNode(
-      threadDataNode,
-      document.currentPage() ?? 1,
-    );
-    String? title;
-    // Most threads have thread type node before the title.
-    title =
-        // Thread belongs to not types.
-        document
-                .querySelector('div#postlist h1.ts > a:nth-child(1)')
-                ?.nextNode
-                ?.text
-                ?.trim() ??
-            // Thread belongs to some type.
+        final threadClosed =
+            document.querySelector('form#fastpostform') == null;
+        final threadDataNode = document.querySelector('div#postlist');
+        final postList = Post.buildListFromThreadDataNode(
+          threadDataNode,
+          document.currentPage() ?? 1,
+        );
+        String? title;
+        // Most threads have thread type node before the title.
+        title =
+            // Thread belongs to not types.
             document
-                .querySelector('div#postlist h1.ts > a:nth-child(1)')
-                ?.innerText
-                .trim();
-    if (title?.isEmpty ?? true) {
-      // Some thread
-      title = document
-          .querySelector('div#postlist h1.ts')
-          ?.nodes
-          .elementAtOrNull(0)
-          ?.text
-          ?.trim();
-    }
+                    .querySelector('div#postlist h1.ts > a:nth-child(1)')
+                    ?.nextNode
+                    ?.text
+                    ?.trim() ??
+                // Thread belongs to some type.
+                document
+                    .querySelector('div#postlist h1.ts > a:nth-child(1)')
+                    ?.innerText
+                    .trim();
+        if (title?.isEmpty ?? true) {
+          // Some thread
+          title = document
+              .querySelector('div#postlist h1.ts')
+              ?.nodes
+              .elementAtOrNull(0)
+              ?.text
+              ?.trim();
+        }
 
-    final currentPage = document.currentPage() ?? pageNumber;
-    final totalPages = document.totalPages() ?? pageNumber;
+        final currentPage = document.currentPage() ?? pageNumber;
+        final totalPages = document.totalPages() ?? pageNumber;
 
-    var needLogin = false;
-    var havePermission = true;
-    uh.Element? permissionDeniedMessage;
-    if (postList.isEmpty) {
-      // Here both normal thread list and subreddit is empty, check permission.
-      final docMessage = document.getElementById('messagetext');
-      final docLogin = document.getElementById('messagelogin');
-      if (docLogin != null) {
-        needLogin = true;
-      } else if (docMessage != null) {
-        havePermission = false;
-        permissionDeniedMessage = docMessage.querySelector('p');
-      }
-    }
+        var needLogin = false;
+        var havePermission = true;
+        uh.Element? permissionDeniedMessage;
+        if (postList.isEmpty) {
+          // Here both normal thread list and subreddit is empty,
+          // check permission.
+          final docMessage = document.getElementById('messagetext');
+          final docLogin = document.getElementById('messagelogin');
+          if (docLogin != null) {
+            needLogin = true;
+          } else if (docMessage != null) {
+            havePermission = false;
+            permissionDeniedMessage = docMessage.querySelector('p');
+          }
+        }
 
-    /// Parse thread type from thread page document.
-    /// This should only run once.
-    final node = document.querySelector('div#postlist h1.ts > a');
-    final threadType =
-        node?.firstEndDeepText()?.replaceFirst('[', '').replaceFirst(']', '');
+        /// Parse thread type from thread page document.
+        /// This should only run once.
+        final node = document.querySelector('div#postlist h1.ts > a');
+        final threadType = node
+            ?.firstEndDeepText()
+            ?.replaceFirst('[', '')
+            .replaceFirst(']', '');
 
-    // Update reply parameters.
-    // These reply parameters should be sent to [ReplyBar] later.
-    final fid =
-        document.querySelector('input[name="srhfid"]')?.attributes['value'];
-    final postTime =
-        document.querySelector('input[name="posttime"]')?.attributes['value'];
-    final formHash =
-        document.querySelector('input[name="formhash"]')?.attributes['value'];
-    final subject =
-        document.querySelector('input[name="subject"]')?.attributes['value'];
+        // Update reply parameters.
+        // These reply parameters should be sent to [ReplyBar] later.
+        final fid =
+            document.querySelector('input[name="srhfid"]')?.attributes['value'];
+        final postTime = document
+            .querySelector('input[name="posttime"]')
+            ?.attributes['value'];
+        final formHash = document
+            .querySelector('input[name="formhash"]')
+            ?.attributes['value'];
+        final subject = document
+            .querySelector('input[name="subject"]')
+            ?.attributes['value'];
 
-    ReplyParameters? replyParameters;
-    if (fid == null ||
-        postTime == null ||
-        formHash == null ||
-        subject == null) {
-      error(
-        'failed to get reply form hash: fid=$fid postTime=$postTime '
-        'formHash=$formHash subject=$subject',
-      );
-    } else {
-      replyParameters = ReplyParameters(
-        fid: fid,
-        tid: threadID!,
-        postTime: postTime,
-        formHash: formHash,
-        subject: subject,
-      );
-    }
+        ReplyParameters? replyParameters;
+        if (fid == null ||
+            postTime == null ||
+            formHash == null ||
+            subject == null) {
+          error(
+            'failed to get reply form hash: fid=$fid postTime=$postTime '
+            'formHash=$formHash subject=$subject',
+          );
+        } else {
+          replyParameters = ReplyParameters(
+            fid: fid,
+            tid: threadID!,
+            postTime: postTime,
+            formHash: formHash,
+            subject: subject,
+          );
+        }
+        final threadState = ThreadState(
+          tid: threadID,
+          pid: state.pid,
+          replyParameters: replyParameters,
+          status: ThreadStatus.success,
+          title: title ?? state.title,
+          canLoadMore: currentPage < totalPages,
+          currentPage: currentPage,
+          totalPages: totalPages,
+          havePermission: havePermission,
+          permissionDeniedMessage: permissionDeniedMessage,
+          needLogin: needLogin,
+          threadClosed: threadClosed,
+          postList: [...state.postList, ...postList],
+          threadType: threadType,
+          onlyVisibleUid:
+              (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
+          reverseOrder: state.reverseOrder,
+        );
 
-    return ThreadState(
-      tid: threadID,
-      pid: state.pid,
-      replyParameters: replyParameters,
-      status: ThreadStatus.success,
-      title: title ?? state.title,
-      canLoadMore: currentPage < totalPages,
-      currentPage: currentPage,
-      totalPages: totalPages,
-      havePermission: havePermission,
-      permissionDeniedMessage: permissionDeniedMessage,
-      needLogin: needLogin,
-      threadClosed: threadClosed,
-      postList: [...state.postList, ...postList],
-      threadType: threadType,
-      onlyVisibleUid:
-          (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
-      reverseOrder: state.reverseOrder,
-    );
-  }
+        return threadState;
+      });
 }

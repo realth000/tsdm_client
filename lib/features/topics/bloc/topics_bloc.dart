@@ -1,7 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
-import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -11,7 +11,6 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'topics_bloc.mapper.dart';
 part 'topics_event.dart';
-
 part 'topics_state.dart';
 
 /// Bloc of topic.
@@ -31,40 +30,44 @@ class TopicsBloc extends Bloc<TopicsEvent, TopicsState> with LoggerMixin {
     TopicsLoadRequested event,
     Emitter<TopicsState> emit,
   ) async {
-    try {
-      emit(state.copyWith(status: TopicsStatus.loading));
-      final document = await _forumHomeRepository.fetchTopicPage();
-      final forumGroupList = _buildGroupListFromDocument(document);
-      emit(
-        state.copyWith(
-          status: TopicsStatus.success,
-          forumGroupList: forumGroupList,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load topics page: $e');
+    emit(state.copyWith(status: TopicsStatus.loading));
+    final documentEither = await _forumHomeRepository.fetchTopicPage().run();
+    if (documentEither.isLeft()) {
+      handle(documentEither.unwrapErr());
       emit(state.copyWith(status: TopicsStatus.failed));
+      return;
     }
+    final document = documentEither.unwrap();
+    final forumGroupList = _buildGroupListFromDocument(document);
+    emit(
+      state.copyWith(
+        status: TopicsStatus.success,
+        forumGroupList: forumGroupList,
+      ),
+    );
   }
 
   Future<void> _onTopicsRefreshRequested(
     TopicsRefreshRequested event,
     Emitter<TopicsState> emit,
   ) async {
-    try {
-      emit(state.copyWith(status: TopicsStatus.loading));
-      final document = await _forumHomeRepository.fetchTopicPage(force: true);
-      final forumGroupList = _buildGroupListFromDocument(document);
-      emit(
-        state.copyWith(
-          status: TopicsStatus.success,
-          forumGroupList: forumGroupList,
-        ),
-      );
-    } on HttpRequestFailedException catch (e) {
-      error('failed to load topics page: $e');
+    emit(state.copyWith(status: TopicsStatus.loading));
+
+    final documentEither =
+        await _forumHomeRepository.fetchTopicPage(force: true).run();
+    if (documentEither.isLeft()) {
+      handle(documentEither.unwrapErr());
       emit(state.copyWith(status: TopicsStatus.failed));
+      return;
     }
+    final document = documentEither.unwrap();
+    final forumGroupList = _buildGroupListFromDocument(document);
+    emit(
+      state.copyWith(
+        status: TopicsStatus.success,
+        forumGroupList: forumGroupList,
+      ),
+    );
   }
 
   void _onTopicsTabSelected(

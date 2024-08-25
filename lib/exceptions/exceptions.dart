@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io' if (dart.library.js) 'package:web/web.dart';
 
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
 
 part 'exceptions.mapper.dart';
@@ -16,6 +18,12 @@ typedef SyncVoidEither = Either<AppException, void>;
 
 /// App wide wrapped exception for future with void as value.
 typedef AsyncVoidEither = TaskEither<AppException, void>;
+
+/// App wide wrapped left builder for [TaskEither].
+TaskEither<L, R> taskLeft<L, R>(L l) => TaskEither<L, R>.left(l);
+
+/// App wide wrapped right builder for [TaskEither].
+TaskEither<L, R> taskRight<L, R>(R r) => TaskEither<L, R>.right(r);
 
 /// Convenient `right(null)`
 Either<L, void> rightVoid<L>() => Right<L, void>(null);
@@ -34,6 +42,22 @@ extension FPFutureExt<T> on AsyncEither<T> {
         onRight(value);
     }
   }
+}
+
+/// Map http request result.
+extension FPHttpExt on AsyncEither<Response<dynamic>> {
+  /// * Return error if any.
+  /// * Return `HttpRequestFailedException` when status code is not 200.
+  /// * Return result called on [onOk] when ok.
+  AsyncEither<T> mapHttp<T>(T Function(Response<dynamic> resp) onOk) =>
+      AsyncEither(
+        () async => switch (await run()) {
+          Left(:final value) => left(value),
+          Right(:final value) when value.statusCode != HttpStatus.ok =>
+            left(HttpRequestFailedException(value.statusCode)),
+          Right(:final value) => right(onOk(value)),
+        },
+      );
 }
 
 /// Base class for all exceptions.
@@ -131,6 +155,13 @@ final class LoginOtherErrorException extends AppException
   /// Constructor.
   LoginOtherErrorException(String message) : super(message: message);
 }
+
+/// Incomplete user info parsed from html document in login progress.
+///
+/// This means either an unexpected html doc change, or not authorized.
+@MappableClass()
+final class LoginUserInfoIncompleteException extends AppException
+    with LoginUserInfoIncompleteExceptionMappable {}
 
 /// The form hash used to logout is not found.
 @MappableClass()
@@ -249,4 +280,37 @@ final class RateInfoWithErrorException extends AppException
     with RateInfoWithErrorExceptionMappable {
   /// Constructor.
   RateInfoWithErrorException(String message) : super(message: message);
+}
+
+/// Need to login when trying to fetch profile page.
+///
+/// Used in profile feature.
+@MappableClass()
+final class ProfileNeedLoginException extends AppException
+    with ProfileNeedLoginExceptionMappable {
+  /// Constructor.
+  ProfileNeedLoginException();
+}
+
+/// Failed to fetch parameters used in replying to a post.
+@MappableClass()
+class ReplyToPostFetchParameterFailedException extends AppException
+    with ReplyToPostFetchParameterFailedExceptionMappable {}
+
+/// Reply to a post, but no successful result found in response.
+@MappableClass()
+class ReplyToPostResultFailedException extends AppException
+    with ReplyToPostResultFailedExceptionMappable {}
+
+/// Reply to thread, but no successful result found in response.
+@MappableClass()
+class ReplyToThreadResultFailedException extends AppException
+    with ReplyToThreadResultFailedExceptionMappable {}
+
+/// Reply personal message, but failed in response.
+@MappableClass()
+class ReplyPersonalMessageFailedException extends AppException
+    with ReplyPersonalMessageFailedExceptionMappable {
+  /// Constructor.
+  ReplyPersonalMessageFailedException(String message) : super(message: message);
 }
