@@ -2,53 +2,77 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-const _visibleLuminance = 60;
+// Convert calculation comes from darkreader.
+// Not the same but similar result.
+
+typedef _Matrix5 = List<List<num>>;
+
+const _identifiedMatrix = [
+  [1, 0, 0, 0, 0],
+  [0, 1, 0, 0, 0],
+  [0, 0, 1, 0, 0],
+  [0, 0, 0, 1, 0],
+  [0, 0, 0, 0, 1],
+];
+
+const _invertNHueMatrix = [
+  [0.333, -0.667, -0.667, 0, 1],
+  [-0.667, 0.333, -0.667, 0, 1],
+  [-0.667, -0.667, 0.333, 0, 1],
+  [0, 0, 0, 1, 0],
+  [0, 0, 0, 0, 1],
+];
+
+_Matrix5 _multiplyMatrix(_Matrix5 m1, _Matrix5 m2) {
+  _Matrix5 result;
+  result = List.generate(
+    m1.length,
+    (_) => List.generate(
+      m2.length,
+      (_) => 0,
+    ),
+  );
+  for (var i = 0, len = m1.length; i < len; i++) {
+    result[i] = List.generate(len, (_) => 0);
+    for (var j = 0, len2 = m2[0].length; j < len2; j++) {
+      num sum = 0;
+      // 3. m1[0].length是列数
+      for (var k = 0, len3 = m1[0].length; k < len3; k++) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+  return result;
+}
+
+List<num> _applyColorMatrix(Color color, _Matrix5 m) {
+  final m5x1 = [
+    [color.red / 255],
+    [color.green / 255],
+    [color.blue / 255],
+    [1],
+    [1],
+  ];
+
+  final result = _multiplyMatrix(m, m5x1);
+
+  return [0, 1, 2]
+      .map((e) => _clamp((result[e][0] * 255).round(), 0, 255))
+      .toList();
+}
+
+num _clamp(num x, num min, num max) {
+  return math.min(max, math.max(min, x));
+}
 
 /// Make the color adaptive with dark mode.
 extension AdaptiveColorExt on Color {
-  // From flex_color_scheme.
-  Color _lighten([int amount = 10]) {
-    if (amount <= 0) return this;
-    if (amount > 100) return Colors.white;
-    // HSLColor returns saturation 1 for black, we want 0 instead to be able
-    // lighten black color up along the grey scale from black.
-    final hsl = this == const Color(0xFF000000)
-        ? HSLColor.fromColor(this).withSaturation(0)
-        : HSLColor.fromColor(this);
-    return hsl
-        .withLightness(math.min(1, math.max(0, hsl.lightness + amount / 100)))
-        .toColor();
-  }
-
-  // From flex_color_scheme.
-  Color _blendAlpha(Color input, [int alpha = 0x0A]) {
-    // Skip blending for impossible value and return the instance color value.
-    if (alpha <= 0) return this;
-    // Blend amounts >= 255 results in the input Color.
-    if (alpha >= 255) return input;
-    return Color.alphaBlend(input.withAlpha(alpha), this);
-  }
-
-  // refer: https://stackoverflow.com/a/596243
-  int _calcLuminance() {
-    return (0.2126 * red + 0.7152 * green + 0.0722 * blue).truncate();
-  }
-
-  Color _inverted() {
-    final r = 255 - red;
-    final g = 255 - green;
-    final b = 255 - blue;
-
-    return Color.fromARGB((opacity * 255).round(), r, g, b);
-  }
-
   /// Transform into a more contrastive color on dark background.
   Color adaptiveDark() {
-    final lum = _calcLuminance();
-    if (lum >= _visibleLuminance) {
-      return this;
-    }
+    final matrix = _multiplyMatrix(_identifiedMatrix, _invertNHueMatrix);
+    final c1 = _applyColorMatrix(this, matrix);
 
-    return _blendAlpha(_inverted(), (_visibleLuminance - lum) * 4)._lighten(1);
+    return Color.fromRGBO(c1[0] as int, c1[1] as int, c1[2] as int, 100);
   }
 }

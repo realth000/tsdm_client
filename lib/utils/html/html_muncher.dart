@@ -956,7 +956,11 @@ final class _Muncher with LoggerMixin {
     }
     final color = parseCssString(attr)?.backgroundColor;
     if (color != null) {
-      state.backgroundColorStack.add(color);
+      if (Theme.of(context).brightness == Brightness.dark) {
+        state.backgroundColorStack.add(color.adaptiveDark());
+      } else {
+        state.backgroundColorStack.add(color);
+      }
       return true;
     }
     return false;
