@@ -153,7 +153,7 @@ class _CardLayout extends StatelessWidget {
                       style: const TextStyle(fontSize: smallTextSize),
                       maxLines: 1,
                     ),
-                    sizedBoxW24H24,
+                    sizedBoxW12H12,
                   ],
                 )
                 .flattened
