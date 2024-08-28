@@ -314,3 +314,22 @@ class ReplyPersonalMessageFailedException extends AppException
   /// Constructor.
   ReplyPersonalMessageFailedException(String message) : super(message: message);
 }
+
+/// Failed to publish a thread.
+///
+/// Server returned unexpected status code.
+@MappableClass()
+final class ThreadPublishFailedException extends AppException
+    with ThreadPublishFailedExceptionMappable {
+  /// Constructor.
+  ThreadPublishFailedException(this.code);
+
+  /// Unexpected http status code.
+  final int code;
+}
+
+/// Thread published, but the redirect location of published thread page
+/// is not found in the response header.
+@MappableClass()
+final class ThreadPublishLocationNotFoundException extends AppException
+    with ThreadPublishLocationNotFoundExceptionMappable {}

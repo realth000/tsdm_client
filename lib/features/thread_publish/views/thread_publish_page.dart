@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/features/thread_publish/bloc/thread_publish_bloc.dart';
+import 'package:tsdm_client/features/thread_publish/repository/thread_pub_repository.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
-
-import '../../../routes/screen_paths.dart';
 
 /// Page to publish new thread.
 ///
@@ -31,17 +35,37 @@ class ThreadPublishPage extends StatefulWidget {
 class _ThreadPublishPageState extends State<ThreadPublishPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: ListAppBar(
-        title: 'publish new thread',
-        onSearch: () async {
-          await context.pushNamed(
-            ScreenPaths.search,
-            queryParameters: {'fid': widget.fid},
-          );
+    return MultiBlocProvider(
+      providers: [
+        RepositoryProvider(create: (_) => const ThreadPubRepository()),
+        BlocProvider(
+          create: (context) => ThreadPubBloc(RepositoryProvider.of(context)),
+        ),
+      ],
+      child: BlocListener<ThreadPubBloc, ThreadPubState>(
+        listener: (context, state) {
+          if (state.status == ThreadPubStatus.failure) {
+            showFailedToLoadSnackBar(context);
+          }
         },
+        child: BlocBuilder(
+          builder: (context, state) {
+            // TODO: Page body.
+            return Scaffold(
+              appBar: ListAppBar(
+                title: context.t.threadPublishPage.title,
+                onSearch: () async {
+                  await context.pushNamed(
+                    ScreenPaths.search,
+                    queryParameters: {'fid': widget.fid},
+                  );
+                },
+              ),
+              body: Center(child: Text('FID=${widget.fid}')),
+            );
+          },
+        ),
       ),
-      body: Center(child: Text('FID=${widget.fid}')),
     );
   }
 }
