@@ -27,6 +27,7 @@ import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/view/thread_card_appearance.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
 import 'package:tsdm_client/features/thread/view/thread_page.dart';
+import 'package:tsdm_client/features/thread_publish/views/thread_publish_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
 import 'package:tsdm_client/features/upgrade/view/upgrade_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -320,6 +321,14 @@ final router = GoRouter(
       builder: (state) {
         final imageUrl = state.pathParameters['imageUrl']!;
         return ImageDetailPage(imageUrl);
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.publishThread,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final fid = state.pathParameters['fid']!;
+        return ThreadPublishPage(fid: fid);
       },
     ),
   ],

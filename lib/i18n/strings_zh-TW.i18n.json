@@ -267,6 +267,9 @@
     "subredditTab": {
       "title": "子版塊",
       "noSubreddit": "沒有子版塊"
+    },
+    "tooltip": {
+      "fab": "發佈新帖"
     }
   },
   "threadPage": {
@@ -566,6 +569,13 @@
     "v1DeleteLegacyData": {
       "title": "舊資料已清除",
       "detail": "此應用程式似乎剛從低於1.0的版本升級上來，使用者登入資料和設定偏好已不可用，現已清除。\n您可能需要再登入一次並重新設定偏好，抱歉給您帶來不便。"
+    }
+  },
+  "threadPublishPage": {
+    "title": "發布新帖",
+    "warningBeforePost": {
+      "body(rich)": "請在發布新帖子前檢查以下資訊:\n1. 發文所在分區：$forumName\n2. 我已閱讀版規。\n 3. 標題: $threadTitle\n3. 正文滿足最少字數需求。\n4. 貼文分類正確: $threadType\n $warning",
+      "warning": "違反版規將會收到提醒、警告、扣分甚至禁言"
     }
   }
 }

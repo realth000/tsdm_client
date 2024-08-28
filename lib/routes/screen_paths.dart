@@ -1,5 +1,7 @@
 /// All app routes.
 class ScreenPaths {
+  ScreenPaths._();
+
   /// Root page to load [homepage].
   static const String root = '/';
 
@@ -166,6 +168,9 @@ class ScreenPaths {
 
   /// Page to show image in full page.
   static const String imageDetail = '/imageDetail/:imageUrl';
+
+  /// Page to publish new thread.
+  static const String publishThread = '/publishThread/:fid';
 }
 
 /// Route path for a screen.

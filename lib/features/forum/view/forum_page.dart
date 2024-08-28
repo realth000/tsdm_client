@@ -1,5 +1,6 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -28,6 +29,9 @@ const _tabsCount = 3;
 const _pinnedTabIndex = 0;
 const _threadTabIndex = 1;
 const _subredditTabIndex = 2;
+
+/// Show [FloatingActionButton] when offset is larger than this value.
+const _showFabOffset = 100;
 
 /// Page to show all forum status.
 class ForumPage extends StatefulWidget {
@@ -68,6 +72,9 @@ class _ForumPageState extends State<ForumPage>
 
   /// Controller of current tab: thread, subreddit.
   TabController? tabController;
+
+  /// Visibility of FAB.
+  bool _fabVisible = false;
 
   PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
     return ListAppBar(
@@ -406,6 +413,26 @@ class _ForumPageState extends State<ForumPage>
     );
   }
 
+  Widget? _buildFloatingActionButton(
+    BuildContext context,
+    ForumState state,
+  ) {
+    if (state.status != ForumStatus.success || !_fabVisible) {
+      return null;
+    }
+
+    return FloatingActionButton(
+      onPressed: () async => context.pushNamed(
+        ScreenPaths.publishThread,
+        pathParameters: {
+          'fid': widget.fid,
+        },
+      ),
+      tooltip: context.t.forumPage.tooltip.fab,
+      child: const Icon(Icons.add_outlined),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -414,6 +441,36 @@ class _ForumPageState extends State<ForumPage>
       length: _tabsCount,
       vsync: this,
     );
+  }
+
+  bool _onBodyScrollNotification(UserScrollNotification notification) {
+    if (notification.metrics.axis != Axis.vertical) {
+      return false;
+    }
+
+    // Update fab visibility according to scroll offset.
+    if (notification.metrics.pixels <= _showFabOffset) {
+      // Offset smaller than boundary.
+      if (_fabVisible) {
+        setState(() {
+          _fabVisible = false;
+        });
+      }
+      return true;
+    }
+
+    // Update fab visibility according to scroll direction.
+    if (notification.direction == ScrollDirection.forward && !_fabVisible) {
+      setState(() {
+        _fabVisible = true;
+      });
+    } else if (notification.direction == ScrollDirection.reverse &&
+        _fabVisible) {
+      setState(() {
+        _fabVisible = false;
+      });
+    }
+    return true;
   }
 
   @override
@@ -473,7 +530,11 @@ class _ForumPageState extends State<ForumPage>
 
             return Scaffold(
               appBar: _buildListAppBar(context, state),
-              body: _buildBody(context, state),
+              body: NotificationListener<UserScrollNotification>(
+                onNotification: _onBodyScrollNotification,
+                child: _buildBody(context, state),
+              ),
+              floatingActionButton: _buildFloatingActionButton(context, state),
             );
           },
         ),

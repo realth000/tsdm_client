@@ -267,6 +267,9 @@
     "subredditTab": {
       "title": "Subreddit",
       "noSubreddit": "No Subreddit"
+    },
+    "tooltip": {
+      "fab": "Post new thread"
     }
   },
   "threadPage": {
@@ -566,6 +569,13 @@
     "v1DeleteLegacyData": {
       "title": "Legacy data deleted",
       "detail": "Seems this app have just upgraded from version older than 1.0, user login data and preferences are deleted because they are not usable any more.\nYou may need to login and set preferences once more. Sorry for inconvenience."
+    }
+  },
+  "threadPublishPage": {
+    "title": "Post New Thread",
+    "warningBeforePost": {
+      "body(rich)": "Please check these info before posting a new thread:\n1. The subreddit you post to $forumName\n2. I have read forum rules.\n 3. Title: $threadTitle\n3. Content length meets minimum length requirement.\n4. Thread type is correct: $threadType\n $warning",
+      "warning": "Violation of the rules will result in reminders, warnings, deductions, or even bans"
     }
   }
 }
