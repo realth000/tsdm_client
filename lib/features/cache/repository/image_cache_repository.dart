@@ -74,10 +74,9 @@ final class ImageCacheRepository with LoggerMixin {
         handle(err);
         throw err;
       }
-      final imageData = respEither.unwrap().data as List<int>;
-      await _imageCacheProvider.updateCache(url, imageData);
-      _controller
-          .add(ImageCacheSuccessResponse(url, Uint8List.fromList(imageData)));
+      final imageData = respEither.unwrap().data as Uint8List;
+      await _imageCacheProvider.updateCache(url, Uint8List.fromList(imageData));
+      _controller.add(ImageCacheSuccessResponse(url, imageData));
     } catch (e) {
       _controller.add(ImageCacheFailedResponse(url));
     }

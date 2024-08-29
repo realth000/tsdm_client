@@ -3,6 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:dio_brotli_transformer/dio_brotli_transformer.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -95,6 +96,8 @@ final class NetClientProvider with LoggerMixin {
         },
       );
       d.interceptors.add(_ErrorHandler());
+      // decode br content-type.
+      d.transformer = DioBrotliTransformer();
     }
 
     return NetClientProvider._(d);
@@ -104,6 +107,8 @@ final class NetClientProvider with LoggerMixin {
   factory NetClientProvider.buildNoCookie({Dio? dio}) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
+    // decode br content-type.
+    d.transformer = DioBrotliTransformer();
     return NetClientProvider._(d);
   }
 

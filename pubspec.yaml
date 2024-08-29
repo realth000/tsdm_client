@@ -23,6 +23,7 @@ dependencies:
   dart_mappable: 4.2.2
   device_info_plus: ^10.1.2
   dio: ^5.6.0
+  dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1
   drift: ^2.19.1+1
   # For drift

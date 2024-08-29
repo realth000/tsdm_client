@@ -86,6 +86,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  brotli:
+    dependency: transitive
+    description:
+      name: brotli
+      sha256: "7f891558ed779aab2bed874f0a36b8123f9ff3f19cf6efbee89e18ed294945ae"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.0"
   build:
     dependency: transitive
     description:
@@ -327,6 +335,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.6.0"
+  dio_brotli_transformer:
+    dependency: "direct main"
+    description:
+      name: dio_brotli_transformer
+      sha256: "2ceeaa997a6c2faeda7e1ad1765e87316c9be853fb9892fd0c80c71ca6788e92"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   dio_cookie_manager:
     dependency: "direct main"
     description:

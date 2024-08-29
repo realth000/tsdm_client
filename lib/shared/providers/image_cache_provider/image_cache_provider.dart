@@ -99,7 +99,7 @@ final class ImageCacheProvider with LoggerMixin {
   /// Update image cached file.
   ///
   /// Update cache file and info in database.
-  Future<void> updateCache(String imageUrl, List<int> imageData) async {
+  Future<void> updateCache(String imageUrl, Uint8List imageData) async {
     final fileName = imageUrl.fileNameV5();
 
     // Update image cache info to database.

@@ -126,7 +126,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
           error('failed to get image from $imageUrl, code=${resp.statusCode}');
           return Uint8List(0);
         }
-        final imageData = resp.data as List<int>;
+        final imageData = resp.data as Uint8List;
 
         // Make cache.
         await getIt.get<ImageCacheProvider>().updateCache(imageUrl, imageData);
