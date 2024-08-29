@@ -48,7 +48,7 @@ class _ThreadPublishPageState extends State<ThreadPublishPage> {
             showFailedToLoadSnackBar(context);
           }
         },
-        child: BlocBuilder(
+        child: BlocBuilder<ThreadPubBloc, ThreadPubState>(
           builder: (context, state) {
             // TODO: Page body.
             return Scaffold(
