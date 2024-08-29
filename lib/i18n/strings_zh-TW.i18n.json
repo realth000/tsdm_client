@@ -118,7 +118,13 @@
         "port": "連接埠",
         "disabled": "已停用代理",
         "invalidHostOrIp": "無效的host或IP",
-        "invalidPort": "無效的連接埠"
+        "invalidPort": "無效的連接埠",
+        "testConnection": {
+          "waiting": "測試連線",
+          "testing": "測試中。。。",
+          "connected": "代理正在運行",
+          "disconnected": "代理程式可能未執行"
+        }
       }
     },
     "othersSection": {

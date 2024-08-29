@@ -118,7 +118,13 @@
         "port": "Port",
         "disabled": "Proxy is disabled",
         "invalidHostOrIp": "Invalid host or IP",
-        "invalidPort": "Invalid port"
+        "invalidPort": "Invalid port",
+        "testConnection": {
+          "waiting": "Test connection",
+          "testing": "Testing...",
+          "connected": "Proxy is running",
+          "disconnected": "Proxy may not running"
+        }
       }
     },
     "othersSection": {

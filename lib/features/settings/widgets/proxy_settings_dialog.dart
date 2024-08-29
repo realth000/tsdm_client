@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -25,11 +26,64 @@ class ProxySettingsDialog extends StatefulWidget {
   State<ProxySettingsDialog> createState() => _ProxySettingsDialogState();
 }
 
+/// Status of testing proxy target connection.
+enum _TestConnStatus {
+  /// Waiting for a new test.
+  waiting,
+
+  /// Testing.
+  testing,
+
+  /// Connected to proxy target.
+  connected,
+
+  /// Disconnected to proxy target.
+  disconnected,
+}
+
 class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
   late TextEditingController hostController;
   late TextEditingController portController;
 
   final formKey = GlobalKey<FormState>();
+
+  _TestConnStatus connStatus = _TestConnStatus.waiting;
+
+  Future<void> testConnection() async {
+    // Do not run test if proxy settings is illegal.
+    if (!formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      connStatus = _TestConnStatus.testing;
+    });
+    try {
+      final _ = await Dio().getUri<dynamic>(
+        Uri.http('${hostController.text.trim()}'
+            ':${portController.text.trim()}'),
+        options: Options(sendTimeout: const Duration(seconds: 3)),
+      );
+      setState(() {
+        connStatus = _TestConnStatus.connected;
+      });
+    } on DioException catch (e, _) {
+      setState(() {
+        connStatus = _TestConnStatus.connected;
+      });
+      setState(() {
+        if (e.response == null) {
+          // No response, maybe proxy is not running.
+          connStatus = _TestConnStatus.disconnected;
+        } else {
+          // Proxy returns reply, no matter what status code is, proxy
+          // is running.
+          connStatus = _TestConnStatus.connected;
+        }
+      });
+      return;
+    }
+  }
 
   @override
   void initState() {
@@ -54,6 +108,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
       content: Form(
         key: formKey,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             TextFormField(
               controller: hostController,
@@ -86,6 +141,22 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
                 }
                 return null;
               },
+            ),
+            sizedBoxW16H16,
+            TextButton.icon(
+              label: Text(
+                switch (connStatus) {
+                  _TestConnStatus.waiting => tr.testConnection.waiting,
+                  _TestConnStatus.testing => tr.testConnection.testing,
+                  _TestConnStatus.connected => tr.testConnection.connected,
+                  _TestConnStatus.disconnected =>
+                    tr.testConnection.disconnected,
+                },
+              ),
+              icon: const Icon(Icons.refresh_outlined),
+              onPressed: connStatus == _TestConnStatus.testing
+                  ? null
+                  : () async => testConnection(),
             ),
           ],
         ),

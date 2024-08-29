@@ -118,7 +118,13 @@
         "port": "端口",
         "disabled": "已禁用代理",
         "invalidHostOrIp": "无效的host或IP",
-        "invalidPort": "无效的端口"
+        "invalidPort": "无效的端口",
+        "testConnection": {
+          "waiting": "测试连接",
+          "testing": "测试中。。。",
+          "connected": "代理正在运行",
+          "disconnected": "代理可能未运行"
+        }
       }
     },
     "othersSection": {
