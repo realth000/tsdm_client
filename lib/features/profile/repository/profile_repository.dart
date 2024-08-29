@@ -36,6 +36,7 @@ final class ProfileRepository with LoggerMixin {
     bool force = false,
   }) =>
       AsyncEither(() async {
+        debug('fetch profile page');
         late final String targetUrl;
         late final bool isLoggedUserProfile;
         if (uid != null) {

@@ -15,7 +15,8 @@
     "reset": "Reset to default",
     "more": "More",
     "pageIndex": "Page $index",
-    "copiedToClipboard": "Copied to clipboard"
+    "copiedToClipboard": "Copied to clipboard",
+    "affectAfterRestart": "Changes will take effect after the app restarted"
   },
   "navigation": {
     "homepage": "Home",
@@ -107,6 +108,18 @@
       "emoji": "Emoji",
       "selectOneCache": "Need to select at least one kind of cache",
       "clearSuccess": "Cleared successfully"
+    },
+    "advancedSection": {
+      "title": "Advanced",
+      "useProxy": "Use proxy",
+      "proxySettings": {
+        "title": "Proxy Settings",
+        "host": "Host",
+        "port": "Port",
+        "disabled": "Proxy is disabled",
+        "invalidHostOrIp": "Invalid host or IP",
+        "invalidPort": "Invalid port"
+      }
     },
     "othersSection": {
       "title": "Others",

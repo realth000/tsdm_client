@@ -15,7 +15,8 @@
     "reset": "重置为默认值",
     "more": "更多",
     "pageIndex": "第 $index 頁",
-    "copiedToClipboard": "已複製到剪切板"
+    "copiedToClipboard": "已複製到剪切板",
+    "affectAfterRestart": "變更將在應用程式重新啟動後生效"
   },
   "navigation": {
     "homepage": "首頁",
@@ -107,6 +108,18 @@
       "emoji": "表情",
       "selectOneCache": "需要至少選擇一項快取",
       "clearSuccess": "清除成功"
+    },
+    "advancedSection": {
+      "title": "高級",
+      "useProxy": "啟用代理",
+      "proxySettings": {
+        "title": "代理設定",
+        "host": "位址",
+        "port": "連接埠",
+        "disabled": "已停用代理",
+        "invalidHostOrIp": "無效的host或IP",
+        "invalidPort": "無效的連接埠"
+      }
     },
     "othersSection": {
       "title": "其他",

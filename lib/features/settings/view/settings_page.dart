@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -10,6 +11,7 @@ import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -386,6 +388,51 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
+  List<Widget> _buildAdvanceSection(
+    BuildContext context,
+    SettingsState state,
+  ) {
+    final netClientUseProxy = state.settingsMap.netClientUseProxy;
+    final netClientProxy = state.settingsMap.netClientProxy;
+    String? host;
+    String? port;
+    if (netClientProxy.contains(':')) {
+      final parts = netClientProxy.split(':');
+      host = parts.elementAtOrNull(0);
+      port = parts.elementAtOrNull(1);
+    }
+
+    final tr = context.t.settingsPage.advancedSection;
+    return [
+      SectionTitleText(tr.title),
+      SectionSwitchListTile(
+        secondary: Icon(MdiIcons.networkOutline),
+        title: Text(tr.useProxy),
+        value: netClientUseProxy,
+        onChanged: (v) => context.read<SettingsBloc>().add(
+              SettingsValueChanged(
+                SettingsKeys.netClientUseProxy,
+                v,
+              ),
+            ),
+      ),
+      SectionListTile(
+        enabled: netClientUseProxy,
+        leading: const Icon(Icons.network_locked_outlined),
+        title: Text(tr.proxySettings.title),
+        subtitle: netClientUseProxy ? null : Text(tr.proxySettings.disabled),
+        onTap: () async => showDialog<void>(
+          context: context,
+          builder: (context) => ProxySettingsDialog(
+            host: host,
+            port: port,
+          ),
+          barrierDismissible: false,
+        ),
+      ),
+    ];
+  }
+
   List<Widget> _buildOtherSection(BuildContext context) {
     final tr = context.t.settingsPage.othersSection;
     return [
@@ -464,6 +511,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ..._buildBehaviorSection(context, state),
               ..._buildCheckinSection(context, state),
               ..._buildStorageSection(context, state),
+              ..._buildAdvanceSection(context, state),
               ..._buildOtherSection(context),
             ],
           ),

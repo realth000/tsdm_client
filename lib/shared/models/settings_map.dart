@@ -32,6 +32,8 @@ class SettingsMap with SettingsMapMappable {
     required this.threadCardShowLastReplyAuthor,
     required this.threadCardHighlightRecentThread,
     required this.threadCardHighlightAuthorName,
+    required this.netClientProxy,
+    required this.netClientUseProxy,
   });
 
   final String netClientAccept;
@@ -59,6 +61,8 @@ class SettingsMap with SettingsMapMappable {
   final bool threadCardShowLastReplyAuthor;
   final bool threadCardHighlightRecentThread;
   final bool threadCardHighlightAuthorName;
+  final String netClientProxy;
+  final bool netClientUseProxy;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -106,6 +110,9 @@ class SettingsMap with SettingsMapMappable {
         copyWith(threadCardHighlightRecentThread: value as bool?),
       SettingsKeys.threadCardHighlightAuthorName =>
         copyWith(threadCardHighlightAuthorName: value as bool?),
+      SettingsKeys.netClientProxy => copyWith(netClientProxy: value as String?),
+      SettingsKeys.netClientUseProxy =>
+        copyWith(netClientUseProxy: value as bool?),
     };
   }
 }

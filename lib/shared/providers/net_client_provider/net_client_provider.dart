@@ -83,6 +83,14 @@ final class NetClientProvider with LoggerMixin {
           final client = HttpClient(context: SecurityContext())
             ..badCertificateCallback =
                 (X509Certificate cert, String host, int port) => true;
+
+          final settings = getIt.get<SettingsRepository>().currentSettings;
+          final useProxy = settings.netClientUseProxy;
+          final proxy = settings.netClientProxy;
+          if (useProxy && proxy.isNotEmpty) {
+            client.findProxy = (uri) => 'PROXY $proxy';
+          }
+
           return client;
         },
       );

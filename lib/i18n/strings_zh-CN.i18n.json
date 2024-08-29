@@ -15,7 +15,8 @@
     "reset": "重置为默认值",
     "more": "更多",
     "pageIndex": "第 $index 页",
-    "copiedToClipboard": "已复制到剪切板"
+    "copiedToClipboard": "已复制到剪切板",
+    "affectAfterRestart": "变更将在应用重启后生效"
   },
   "navigation": {
     "homepage": "主页",
@@ -107,6 +108,18 @@
       "emoji": "表情",
       "selectOneCache": "需要至少选择一项缓存",
       "clearSuccess": "清除成功"
+    },
+    "advancedSection": {
+      "title": "高级",
+      "useProxy": "启用代理",
+      "proxySettings": {
+        "title": "代理设置",
+        "host": "地址",
+        "port": "端口",
+        "disabled": "已禁用代理",
+        "invalidHostOrIp": "无效的host或IP",
+        "invalidPort": "无效的端口"
+      }
     },
     "othersSection": {
       "title": "其他",

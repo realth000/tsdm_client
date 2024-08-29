@@ -35,6 +35,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 帖子：支持在解析网页链接时解析其中指定的楼层，并在页面加载后跳转到该楼层。
   - 当网页链接形式为`tid=THREAD_ID&page=PAGE#pidPOST_ID`时，忽视“倒序浏览楼层”的设置以保证加载指定的页数。
 - 消息：现在来源于帖子中的消息会直接跳转到帖子的相应楼层，而不经过消息详情页。
+- app：支持设置和使用代理。
 
 ### Fixed
 

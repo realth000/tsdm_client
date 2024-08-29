@@ -191,10 +191,28 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     type: bool,
     defaultValue: true,
   ),
+
+  /// Highlight author's username in thread card.
   threadCardHighlightAuthorName<bool>(
     name: 'threadCardHighlightAuthorName',
     type: bool,
     defaultValue: true,
+  ),
+
+  /// Use network proxy config below or not.
+  netClientUseProxy<bool>(
+    name: 'netClientUseProxy',
+    type: bool,
+    defaultValue: false,
+  ),
+
+  /// Network proxy.
+  ///
+  /// Manually set, in format: $domain:$port where $domain is usually localhost.
+  netClientProxy<String>(
+    name: 'netClientProxy',
+    type: String,
+    defaultValue: '',
   );
 
   const SettingsKeys({

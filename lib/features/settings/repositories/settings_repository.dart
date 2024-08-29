@@ -100,6 +100,8 @@ final class SettingsRepository with LoggerMixin {
           s.extract(SettingsKeys.threadCardHighlightRecentThread),
       threadCardHighlightAuthorName:
           s.extract(SettingsKeys.threadCardHighlightAuthorName),
+      netClientUseProxy: s.extract(SettingsKeys.netClientUseProxy),
+      netClientProxy: s.extract(SettingsKeys.netClientProxy),
     );
   }
 
@@ -169,6 +171,8 @@ final class SettingsRepository with LoggerMixin {
         HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
         HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
         HttpHeaders.userAgentHeader: _state.netClientUserAgent,
+        // HttpHeaders.hostHeader: baseUrl,
+        // HttpHeaders.pragmaHeader: 'no-cache',
       },
     );
 }
