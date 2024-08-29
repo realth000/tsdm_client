@@ -20,6 +20,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
@@ -409,12 +410,18 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: Icon(MdiIcons.networkOutline),
         title: Text(tr.useProxy),
         value: netClientUseProxy,
-        onChanged: (v) => context.read<SettingsBloc>().add(
-              SettingsValueChanged(
-                SettingsKeys.netClientUseProxy,
-                v,
-              ),
-            ),
+        onChanged: (v) {
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(
+                  SettingsKeys.netClientUseProxy,
+                  v,
+                ),
+              );
+          showSnackBar(
+            context: context,
+            message: context.t.general.affectAfterRestart,
+          );
+        },
       ),
       SectionListTile(
         enabled: netClientUseProxy,
