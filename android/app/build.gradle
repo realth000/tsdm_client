@@ -30,8 +30,10 @@ if (keystorePropertiesFile.exists()) {
 
 
 android {
-    compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
+    namespace = "kzs.th000.tsdm_client"
+    compileSdkVersion 35
+    // ndkVersion flutter.ndkVersion
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -55,7 +57,7 @@ android {
         // webview_flutter_android acquires minSdkVersion >= 19, restore this when no longer use it.
         // minSdkVersion flutter.minSdkVersion
         minSdkVersion 23
-        targetSdkVersion 34
+        targetSdkVersion 35
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }
