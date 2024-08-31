@@ -30,31 +30,29 @@ class _MyThreadPageState extends State<MyThreadPage>
     _threadRefreshController
       ..finishRefresh()
       ..finishLoad();
-    return Padding(
-      padding: edgeInsetsL12T4R12B24,
-      child: EasyRefresh(
-        controller: _threadRefreshController,
-        header: const MaterialHeader(),
-        footer: const MaterialFooter(),
-        onRefresh: () async {
-          context.read<MyThreadBloc>().add(MyThreadRefreshThreadRequested());
+    return EasyRefresh(
+      controller: _threadRefreshController,
+      header: const MaterialHeader(),
+      footer: const MaterialFooter(),
+      onRefresh: () async {
+        context.read<MyThreadBloc>().add(MyThreadRefreshThreadRequested());
+      },
+      onLoad: () async {
+        if (state.nextThreadPageUrl == null) {
+          _threadRefreshController.finishLoad(IndicatorResult.noMore);
+          return;
+        }
+        context
+            .read<MyThreadBloc>()
+            .add(const MyThreadLoadMoreThreadRequested());
+      },
+      child: ListView.separated(
+        padding: edgeInsetsL12T4R12,
+        itemCount: state.threadList.length,
+        itemBuilder: (context, index) {
+          return MyThreadCard(state.threadList[index]);
         },
-        onLoad: () async {
-          if (state.nextThreadPageUrl == null) {
-            _threadRefreshController.finishLoad(IndicatorResult.noMore);
-            return;
-          }
-          context
-              .read<MyThreadBloc>()
-              .add(const MyThreadLoadMoreThreadRequested());
-        },
-        child: ListView.separated(
-          itemCount: state.threadList.length,
-          itemBuilder: (context, index) {
-            return MyThreadCard(state.threadList[index]);
-          },
-          separatorBuilder: (context, index) => sizedBoxW4H4,
-        ),
+        separatorBuilder: (context, index) => sizedBoxW4H4,
       ),
     );
   }
