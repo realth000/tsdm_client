@@ -10,11 +10,12 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
-import 'package:tsdm_client/features/post/models/post_edit_content.dart';
-import 'package:tsdm_client/features/post/models/post_edit_type.dart';
+import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -26,16 +27,39 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// if not found.
 const _defaultThreadTitleMaxlength = 210;
 
+/// Enum indicating the way to save data, or call it post data to server.
+///
+/// When publishing a new thread or editing thread draft, user can choose one of
+/// the following save method.
+///
+/// * Save in draft.
+/// * Publish as new thread (no longer a draft).
+///
+/// So here is going to have two buttons for each method.
+///
+/// Use this enum to display different widget style so that user knows which
+/// method was chosen.
+enum _UploadMethod {
+  /// No upload action triggered yet.
+  notYet,
+
+  /// Publish new thread action triggered.
+  publish,
+
+  /// Save thread in draft action triggered.
+  saveDraft,
+}
+
 /// Page lets the user to edit a post.
 ///
 /// This is a full screen page, as an alternative choice to edit a post.
 ///
 /// Not only edit the post:
 ///
-/// * Write a new post.
 /// * Edit an existing post.
 /// * Write a new thread. Because the "thread" is a special post that at the
 ///   first floor.
+/// * Edit existing thread.
 ///
 /// Though writing a new thread looks like a different reason, it is the same
 /// with editing a new post.
@@ -82,10 +106,10 @@ class PostEditPage extends StatefulWidget {
   final String fid;
 
   /// Thread id of the post.
-  final String tid;
+  final String? tid;
 
   /// Post id of the post.
-  final String pid;
+  final String? pid;
 
   static String _formatDataUrl({
     required String fid,
@@ -99,7 +123,7 @@ class PostEditPage extends StatefulWidget {
   State<PostEditPage> createState() => _PostEditPageState();
 }
 
-class _PostEditPageState extends State<PostEditPage> {
+class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// Show text attribute control button or not.
   bool showTextAttributeButtons = false;
 
@@ -151,6 +175,103 @@ class _PostEditPageState extends State<PostEditPage> {
   Color? foregroundColor;
   Color? backgroundColor;
   int? fontSizeLevel;
+
+  /// Enum indicating which upload method user has triggered.
+  ///
+  /// Only used when:
+  ///
+  /// * Drafting a new thread.
+  /// * Editing thread draft.
+  _UploadMethod uploadMethod = _UploadMethod.notYet;
+
+  Future<void> _onFinish(
+    BuildContext context,
+    PostEditState state, {
+    bool saveDraft = false,
+  }) async {
+    if (widget.editType.isDraftingNewThread) {
+      final tr = context.t.postEditPage.threadPublish;
+      final ret = await showQuestionDialog(
+        context: context,
+        title: tr.title,
+        richMessage: tr.warningBeforePost.body(
+          forumName: TextSpan(
+            text: state.forumName ?? '<unknown>',
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          threadTitle: TextSpan(
+            text: threadTitleController.text,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          threadType: TextSpan(
+            text: threadTypeController.text,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.primary,
+            ),
+          ),
+          warning: TextSpan(
+            text: tr.warningBeforePost.warning,
+            style: TextStyle(
+              color: Theme.of(context).colorScheme.error,
+            ),
+          ),
+        ),
+      );
+      if (ret != true) {
+        return;
+      }
+    }
+    if (!context.mounted) {
+      return;
+    }
+
+    final event = switch (widget.editType) {
+      PostEditType.editPost => PostEditCompleteEditRequested(
+          formHash: state.content!.formHash,
+          postTime: state.content!.postTime,
+          delattachop: state.content?.delattachop ?? '0',
+          page: state.content!.page!,
+          wysiwyg: state.content!.wysiwyg,
+          fid: widget.fid,
+          // Not null when editing post
+          tid: widget.tid!,
+          // Not null when editing post
+          pid: widget.pid!,
+          threadType: threadType,
+          threadTitle: threadTitleController.text,
+          data: bbcodeController.toBBCode(),
+          options: additionalOptionsMap?.values.toList() ?? [],
+        ),
+      PostEditType.newThread => ThreadPubPostThread(
+          ThreadPublishInfo(
+            formHash: state.content!.formHash,
+            postTime: state.content!.postTime,
+            delAttachOp: state.content?.delattachop ?? '0',
+            wysiwyg: state.content?.wysiwyg ?? '0',
+            fid: widget.fid,
+            threadType: threadType!,
+            checkbox: '0',
+            subject: threadTitleController.text,
+            message: bbcodeController.toBBCode(),
+            price: '',
+            readPerm: '',
+            save: saveDraft ? '1' : '',
+            options: additionalOptionsMap?.values.toList() ?? [],
+          ),
+        ),
+    };
+    if (saveDraft) {
+      uploadMethod = _UploadMethod.saveDraft;
+    } else {
+      uploadMethod = _UploadMethod.publish;
+    }
+    context.read<PostEditBloc>().add(event);
+    return;
+  }
 
   /// Show a modal bottom sheet to let user select a thread type.
   ///
@@ -217,8 +338,7 @@ class _PostEditPageState extends State<PostEditPage> {
 
   Widget _buildTitleRow(BuildContext context, PostEditState state) {
     final ret = <Widget>[];
-    if (state.content?.threadType != null &&
-        (state.content?.threadTypeList?.isNotEmpty ?? false)) {
+    if (state.content?.threadTypeList?.isNotEmpty ?? false) {
       ret.add(
         ConstrainedBox(
           constraints: const BoxConstraints(maxWidth: 100),
@@ -232,7 +352,6 @@ class _PostEditPageState extends State<PostEditPage> {
             readOnly: true,
             onTap: () async => _showSelectThreadTypeBottomSheet(context, state),
             // Only auto focus to title field when writing new thread.
-            autofocus: widget.editType == PostEditType.newThread,
             validator: (v) {
               if (widget.editType.isEditingPost) {
                 // Skip check when editing post, post have no thread type.
@@ -257,6 +376,7 @@ class _PostEditPageState extends State<PostEditPage> {
         Expanded(
           child: TextFormField(
             controller: threadTitleController,
+            autofocus: true,
             decoration: InputDecoration(
               labelText: context.t.postEditPage.threadTitle,
               suffixText: ' $threadTitleRestLength',
@@ -321,35 +441,38 @@ class _PostEditPageState extends State<PostEditPage> {
               : null,
         ),
         const Spacer(),
+        if (widget.editType.isDraftingNewThread) ...[
+          FilledButton.tonal(
+            onPressed: state.status == PostEditStatus.uploading
+                ? null
+                : () async => _onFinish(context, state, saveDraft: true),
+            child: state.status == PostEditStatus.uploading &&
+                    uploadMethod == _UploadMethod.saveDraft
+                ? sizedCircularProgressIndicator
+                : Row(
+                    children: [
+                      const Icon(Icons.save),
+                      sizedBoxW4H4,
+                      Text(context.t.postEditPage.saveAsDraft),
+                    ],
+                  ),
+          ),
+          sizedBoxW12H12,
+        ],
         FilledButton(
-          // label: Text(context.t.postEditPage.saveAndBack),
           onPressed: state.status == PostEditStatus.uploading
               ? null
-              : () {
-                  if (widget.editType.isEditingPost) {
-                    final event = PostEditCompleteEditRequested(
-                      formHash: state.content!.formHash,
-                      postTime: state.content!.postTime,
-                      delattachop: state.content!.delattachop,
-                      page: state.content!.page,
-                      wysiwyg: state.content!.wysiwyg,
-                      fid: widget.fid,
-                      tid: widget.tid,
-                      pid: widget.pid,
-                      threadType: threadType,
-                      threadTitle: threadTitleController.text,
-                      data: bbcodeController.toBBCode(),
-                      options: additionalOptionsMap?.values.toList() ?? [],
-                    );
-                    context.read<PostEditBloc>().add(event);
-                    return;
-                  }
-                  // TODO: Handle creating a post.
-                  // TODO: Handle creating a thread.
-                },
-          child: state.status == PostEditStatus.uploading
+              : () async => _onFinish(context, state),
+          child: state.status == PostEditStatus.uploading &&
+                  uploadMethod == _UploadMethod.publish
               ? sizedCircularProgressIndicator
-              : const Icon(Icons.send_outlined),
+              : Row(
+                  children: [
+                    const Icon(Icons.send),
+                    sizedBoxW4H4,
+                    Text(context.t.postEditPage.publish),
+                  ],
+                ),
         ),
       ],
     );
@@ -362,38 +485,30 @@ class _PostEditPageState extends State<PostEditPage> {
           create: (_) => PostEditRepository(),
         ),
         BlocProvider(
-          create: (context) => PostEditBloc(
-            postEditRepository: RepositoryProvider.of(context),
-          )..add(
-              PostEditLoadDataRequested(
-                PostEditPage._formatDataUrl(
-                  fid: widget.fid,
-                  tid: widget.tid,
-                  pid: widget.pid,
+          create: (context) {
+            final bloc = PostEditBloc(
+              postEditRepository: RepositoryProvider.of(context),
+            );
+
+            final event = switch (widget.editType) {
+              PostEditType.editPost => PostEditLoadDataRequested(
+                  PostEditPage._formatDataUrl(
+                    fid: widget.fid,
+                    tid: widget.tid!,
+                    pid: widget.pid!,
+                  ),
                 ),
-              ),
-            ),
+              PostEditType.newThread => ThreadPubFetchInfoRequested(
+                  fid: widget.fid,
+                ),
+            };
+            bloc.add(event);
+            return bloc;
+          },
         ),
       ],
       child: BlocListener<PostEditBloc, PostEditState>(
-        listener: (context, state) {
-          if (state.status == PostEditStatus.failedToLoad) {
-            showSnackBar(
-              context: context,
-              message: context.t.postEditPage.failedToLoadData,
-            );
-          } else if (state.status == PostEditStatus.failedToUpload &&
-              state.errorText != null) {
-            showSnackBar(context: context, message: state.errorText!);
-          } else if (state.status == PostEditStatus.success &&
-              widget.editType.isEditingPost) {
-            showSnackBar(
-              context: context,
-              message: context.t.postEditPage.editSuccess,
-            );
-            context.pop();
-          }
-        },
+        listener: (context, state) async => _onListen(context, state),
         child: BlocBuilder<PostEditBloc, PostEditState>(
           builder: (context, state) {
             if (state.status == PostEditStatus.initial ||
@@ -402,43 +517,32 @@ class _PostEditPageState extends State<PostEditPage> {
             }
             if (state.status == PostEditStatus.failedToLoad) {
               return buildRetryButton(context, () {
-                context.read<PostEditBloc>().add(
-                      PostEditLoadDataRequested(
-                        PostEditPage._formatDataUrl(
-                          fid: widget.fid,
-                          tid: widget.tid,
-                          pid: widget.pid,
-                        ),
-                      ),
-                    );
+                switch (widget.editType) {
+                  case PostEditType.editPost:
+                    context.read<PostEditBloc>().add(
+                          PostEditLoadDataRequested(
+                            PostEditPage._formatDataUrl(
+                              fid: widget.fid,
+                              // Not null when editing post
+                              tid: widget.tid!,
+                              // Not null when editing post
+                              pid: widget.pid!,
+                            ),
+                          ),
+                        );
+                  case PostEditType.newThread:
+                    context.read<PostEditBloc>().add(
+                          ThreadPubFetchInfoRequested(fid: widget.fid),
+                        );
+                }
               });
-            }
-
-            // Only init these values once.
-            if (!init) {
-              threadTypeController.text =
-                  state.content?.threadType?.name ?? '  ';
-              threadType = state.content?.threadType;
-              threadTitleController.text = state.content?.threadTitle ?? '';
-              // Update the length of chars user can still input.
-              // Bytes of chars for title in utf-8 encoding.
-              threadTitleRestLength = (state.content?.threadTitleMaxLength ??
-                      _defaultThreadTitleMaxlength) -
-                  threadTitleController.text.parseUtf8Length;
-              dataController.text = state.content?.data ?? '';
-              if (state.content?.options != null) {
-                additionalOptionsMap = Map.fromEntries(
-                  state.content!.options!.map((e) => MapEntry(e.name, e)),
-                );
-              }
-              init = true;
             }
 
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
-                sizedBoxW24H24,
+                sizedBoxW8H8,
                 // Post data editor.
                 Expanded(
                   child: RichEditor(
@@ -460,10 +564,99 @@ class _PostEditPageState extends State<PostEditPage> {
     );
   }
 
+  Future<void> _onListen(BuildContext context, PostEditState state) async {
+    if (state.status == PostEditStatus.failedToLoad) {
+      showSnackBar(
+        context: context,
+        message: context.t.postEditPage.failedToLoadData,
+      );
+    } else if (state.status == PostEditStatus.failedToUpload) {
+      showSnackBar(
+        context: context,
+        message: state.errorText ?? context.t.general.failedToLoad,
+      );
+    } else if (state.status == PostEditStatus.success) {
+      // Some action succeeded.
+      if (widget.editType.isEditingPost) {
+        // Edit post.
+        showSnackBar(
+          context: context,
+          message: context.t.postEditPage.editSuccess,
+        );
+        context.pop();
+        return;
+      } else if (widget.editType.isDraftingNewThread) {
+        // Writing new post.
+        //
+        // Ask for a redirect to just published thread page.
+        if (state.redirectTid != null) {
+          // Could redirect to new thread page.
+          final tr = context.t.postEditPage.threadPublish.afterPostDialog;
+          final result = await showQuestionDialog(
+            context: context,
+            title: tr.title,
+            message: tr.message,
+          );
+          if (!context.mounted) {
+            return;
+          }
+          if (result ?? false) {
+            context.pushReplacementNamed(
+              ScreenPaths.thread,
+              queryParameters: {'tid': state.redirectTid},
+            );
+            return;
+          }
+        }
+
+        context.pop();
+      }
+    } else if (state.status == PostEditStatus.editing && !init) {
+      threadTypeController.text = state.content?.threadType?.name ?? '  ';
+      threadTitleController.text = state.content?.threadTitle ?? '';
+      // Update the length of chars user can still input.
+      // Bytes of chars for title in utf-8 encoding.
+      threadTitleRestLength = (state.content?.threadTitleMaxLength ??
+              _defaultThreadTitleMaxlength) -
+          threadTitleController.text.parseUtf8Length;
+      dataController.text = state.content?.data ?? '';
+      if (state.content?.options != null) {
+        additionalOptionsMap = Map.fromEntries(
+          state.content!.options!.map((e) => MapEntry(e.name, e)),
+        );
+      }
+
+      setState(() {
+        threadType ??= state.content?.threadType;
+        // Automatically select the first thread type like the server
+        // does.
+        //
+        // Usually the first type is a hint to choose type with 0 as
+        // value.
+        threadType ??= state.content?.threadTypeList?.firstOrNull;
+        threadTypeController.text = threadType?.name ?? '';
+      });
+
+      init = true;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    debug('enter post edit page: '
+        'editType=${widget.editType}, fid=${widget.fid}');
+  }
+
+  @override
+  void dispose() {
+    bbcodeController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     final title = switch (widget.editType) {
-      PostEditType.newPost => context.t.postEditPage.newPostTitle,
       PostEditType.newThread => context.t.postEditPage.newThreadTitle,
       PostEditType.editPost => context.t.postEditPage.editPostTitle,
     };

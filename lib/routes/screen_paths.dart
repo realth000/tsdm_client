@@ -164,13 +164,10 @@ class ScreenPaths {
   /// * Edit an existing post.
   ///
   /// Index of `PostEditType` is needed to specify the reason.
-  static const String editPost = '/editPost/:editType/:fid/:tid/:pid';
+  static const String editPost = '/editPost/:editType/:fid';
 
   /// Page to show image in full page.
   static const String imageDetail = '/imageDetail/:imageUrl';
-
-  /// Page to publish new thread.
-  static const String publishThread = '/publishThread/:fid';
 }
 
 /// Route path for a screen.

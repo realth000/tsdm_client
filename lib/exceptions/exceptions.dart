@@ -98,7 +98,17 @@ final class HttpRequestFailedException extends AppException
 final class HttpHandshakeFailedException extends AppException
     with HttpHandshakeFailedExceptionMappable {
   /// Constructor.
-  HttpHandshakeFailedException(String message) : super(message: message);
+  HttpHandshakeFailedException(
+    String message, {
+    this.statusCode,
+    this.headers,
+  }) : super(message: message);
+
+  /// Optional status code.
+  final int? statusCode;
+
+  /// Optional response headers.
+  final Headers? headers;
 }
 
 /// The form hash used in login progress is not found.

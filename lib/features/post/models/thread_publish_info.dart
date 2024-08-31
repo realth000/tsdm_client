@@ -15,7 +15,7 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
     required this.delAttachOp,
     required this.wysiwyg,
     required this.fid,
-    required this.typeId,
+    required this.threadType,
     required this.checkbox,
     required this.subject,
     required this.message,
@@ -24,6 +24,26 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
     required this.save,
     required this.options,
   });
+
+  /// Build to json format payload which can be used in publishing new thread.
+  Map<String, String> toPostPayload() {
+    final body = <String, String>{
+      'formhash': formHash,
+      'posttime': postTime,
+      'wysiwyg': wysiwyg,
+      'typeid': threadType.typeID ?? '0',
+      'checkbox': '0',
+      'subject': subject,
+      'message': message,
+      'save': save,
+      'mastertid': '',
+    };
+    for (final entry in options) {
+      body[entry.name] = entry.checked ? '1' : '';
+    }
+
+    return body;
+  }
 
   /// Form hash used in action
   final String formHash;
@@ -51,7 +71,7 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
   /// Thread type id.
   ///
   /// Provided by server, selected by user.
-  final String typeId;
+  final PostEditThreadType threadType;
 
   /// Checkbox?
   ///

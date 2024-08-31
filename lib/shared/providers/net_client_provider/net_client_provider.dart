@@ -17,8 +17,12 @@ import 'package:tsdm_client/utils/platform.dart';
 
 /// Map exception to [AppException].
 AppException mapException(Object error, StackTrace st) {
-  if (error case DioException()) {
-    return HttpHandshakeFailedException(error.message ?? '<unknown error>');
+  if (error case DioException(:final response)) {
+    return HttpHandshakeFailedException(
+      error.message ?? '<unknown error>',
+      statusCode: response?.statusCode,
+      headers: response?.headers,
+    );
   }
   return HttpRequestFailedException(null);
 }
@@ -288,8 +292,6 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
     if (err.type == DioExceptionType.unknown &&
         err.error.runtimeType == HandshakeException) {
       // Likely we have an error in SSL handshake.
-      handler.resolve(Response(requestOptions: RequestOptions()));
-      return;
     }
 
     // Do not block error handling.

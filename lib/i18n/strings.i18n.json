@@ -396,13 +396,25 @@
     "threadTitle": "Thread Title",
     "body": "Post",
     "additionalOptions": "Additional Options",
-    "saveAndBack": "Save And Back",
+    "publish": "Publish",
     "failedToLoadData": "Failed to load data",
     "threadTypeShouldNotBeEmpty": "Thread type should not be empty",
     "titleShouldNotBeEmpty": "Title should not be empty",
     "titleTooLong": "Title too long",
     "threadBodyTooShort": "Thread body too short",
-    "editSuccess": "Edit success"
+    "editSuccess": "Edit success",
+    "saveAsDraft": "Save Draft",
+    "threadPublish": {
+      "title": "Post New Thread",
+      "warningBeforePost": {
+        "body(rich)": "Please check these info before posting a new thread:\n\n1. The subreddit you post to $forumName\n2. I have read forum rules.\n3. Title: $threadTitle\n4. Content length meets minimum length requirement.\n5. Thread type is correct: $threadType\n\n$warning",
+        "warning": "Violation of the rules will result in reminders, warnings, deductions, or even bans"
+      },
+      "afterPostDialog": {
+        "title": "Post succeed",
+        "message": "Would like to go to the new thread page?"
+      }
+    }
   },
   "chatHistoryPage": {
     "title": "Chat History",
@@ -588,13 +600,6 @@
     "v1DeleteLegacyData": {
       "title": "Legacy data deleted",
       "detail": "Seems this app have just upgraded from version older than 1.0, user login data and preferences are deleted because they are not usable any more.\nYou may need to login and set preferences once more. Sorry for inconvenience."
-    }
-  },
-  "threadPublishPage": {
-    "title": "Post New Thread",
-    "warningBeforePost": {
-      "body(rich)": "Please check these info before posting a new thread:\n1. The subreddit you post to $forumName\n2. I have read forum rules.\n 3. Title: $threadTitle\n3. Content length meets minimum length requirement.\n4. Thread type is correct: $threadType\n $warning",
-      "warning": "Violation of the rules will result in reminders, warnings, deductions, or even bans"
     }
   }
 }

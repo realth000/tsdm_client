@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:html/parser.dart' as h;
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/features/post/models/post_edit_type.dart';
+import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:uuid/uuid.dart';
 
@@ -130,6 +130,8 @@ extension ParseUrl on String {
         pathParameters: {
           'editType': '${PostEditType.editPost.index}',
           'fid': '${queryParameters["fid"]}',
+        },
+        queryParameters: {
           'tid': '${queryParameters["tid"]}',
           'pid': '${queryParameters["pid"]}',
         },

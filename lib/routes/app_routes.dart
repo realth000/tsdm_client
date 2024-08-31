@@ -17,7 +17,7 @@ import 'package:tsdm_client/features/notification/view/broadcast_message_detail_
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
-import 'package:tsdm_client/features/post/models/post_edit_type.dart';
+import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
@@ -27,7 +27,6 @@ import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/view/thread_card_appearance.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
 import 'package:tsdm_client/features/thread/view/thread_page.dart';
-import 'package:tsdm_client/features/thread_publish/views/thread_publish_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
 import 'package:tsdm_client/features/upgrade/view/upgrade_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -266,8 +265,8 @@ final router = GoRouter(
       builder: (state) {
         final editType = state.pathParameters['editType']?.parseToInt();
         final fid = state.pathParameters['fid']!;
-        final tid = state.pathParameters['tid']!;
-        final pid = state.pathParameters['pid']!;
+        final tid = state.uri.queryParameters['tid'];
+        final pid = state.uri.queryParameters['pid'];
         assert(
           editType != null,
           'PostEditType enum value is not a integer: $editType',
@@ -321,14 +320,6 @@ final router = GoRouter(
       builder: (state) {
         final imageUrl = state.pathParameters['imageUrl']!;
         return ImageDetailPage(imageUrl);
-      },
-    ),
-    AppRoute(
-      path: ScreenPaths.publishThread,
-      parentNavigatorKey: _rootRouteKey,
-      builder: (state) {
-        final fid = state.pathParameters['fid']!;
-        return ThreadPublishPage(fid: fid);
       },
     ),
   ],

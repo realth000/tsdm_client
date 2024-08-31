@@ -82,3 +82,25 @@ final class PostEditCompleteEditRequested extends PostEditEvent
   /// Additional options provided by server.
   final List<PostEditContentOption> options;
 }
+
+/// Fetch required info for publishing, including form hash, post time and more.
+@MappableClass()
+final class ThreadPubFetchInfoRequested extends PostEditEvent
+    with ThreadPubFetchInfoRequestedMappable {
+  /// Constructor.
+  const ThreadPubFetchInfoRequested({required this.fid});
+
+  /// Forum id.
+  final String fid;
+}
+
+/// Post a new thread to forum.
+@MappableClass()
+final class ThreadPubPostThread extends PostEditEvent
+    with ThreadPubPostThreadMappable {
+  /// Constructor.
+  const ThreadPubPostThread(this.info);
+
+  /// All info to post in body.
+  final ThreadPublishInfo info;
+}

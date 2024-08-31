@@ -20,6 +20,9 @@ const sizedBoxEmpty = SizedBox.shrink();
 /// A [SizedBox] with 4 width and 4 height.
 const sizedBoxW4H4 = SizedBox(width: 4, height: 4);
 
+/// A [SizedBox] with 8 width and 8 height.
+const sizedBoxW8H8 = SizedBox(width: 8, height: 8);
+
 /// A [SizedBox] with 12 width and 12 height.
 const sizedBoxW12H12 = SizedBox(width: 12, height: 12);
 

@@ -35,18 +35,30 @@ Future<void> showMessageSingleButtonDialog({
 /// Return true if user pressed ok.
 /// Return false if user pressed cancel.
 /// Return null if user pressed outside the dialog to close it.
+///
+/// For rich text, use [richMessage] parameter.
 Future<bool?> showQuestionDialog({
   required BuildContext context,
   required String title,
-  required String message,
+  String? message,
+  TextSpan? richMessage,
 }) async {
+  assert(
+    message != null || richMessage != null,
+    'MUST provide message or richMessage',
+  );
+
   return showDialog<bool?>(
     context: context,
     builder: (context) {
       return AlertDialog(
         scrollable: true,
         title: Text(title),
-        content: SelectableText(message),
+        content: message != null
+            ? SelectableText(message)
+            : RichText(
+                text: richMessage!,
+              ),
         actions: [
           TextButton(
             child: Text(context.t.general.cancel),

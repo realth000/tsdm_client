@@ -31,12 +31,18 @@ final class PostEditState with PostEditStateMappable {
   /// Constructor.
   const PostEditState({
     this.status = PostEditStatus.initial,
+    this.forumName,
     this.content,
     this.errorText,
+    this.threadPublishInfo,
+    this.redirectTid,
   });
 
   /// Status.
   final PostEditStatus status;
+
+  /// Forum name as hint when publishing thread.
+  final String? forumName;
 
   /// Post content.
   final PostEditContent? content;
@@ -45,4 +51,12 @@ final class PostEditState with PostEditStateMappable {
   ///
   /// Use this to show the error message.
   final String? errorText;
+
+  /// Information used in publishing thread.
+  final ThreadPublishInfo? threadPublishInfo;
+
+  /// Thread id of new published thread after publish succeeded.
+  ///
+  /// Redirect to this page.
+  final String? redirectTid;
 }
