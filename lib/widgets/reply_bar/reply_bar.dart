@@ -523,7 +523,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                 onPressed: () => context.pop(),
                 child: const Icon(Icons.close),
               ),
-              sizedBoxW32H32,
+              sizedBoxW12H12,
               // Send Button
               FilledButton(
                 onPressed:
