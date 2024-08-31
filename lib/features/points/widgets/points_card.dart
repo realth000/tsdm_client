@@ -31,15 +31,14 @@ class PointsChangeCard extends StatelessWidget {
               ListTile(
                 leading: switch (pointsChange.pointsChangeType) {
                   PointsChangeType.more => const Icon(
-                      Icons.trending_up_outlined,
+                      Icons.trending_up,
                       color: Color(0xF26C4F00),
                     ),
                   PointsChangeType.less => const Icon(
-                      Icons.trending_down_outlined,
+                      Icons.trending_down,
                       color: Color(0x99999999),
                     ),
-                  PointsChangeType.unlimited =>
-                    const Icon(Icons.trending_flat_outlined),
+                  PointsChangeType.unlimited => const Icon(Icons.trending_flat),
                 },
                 title: Text(pointsChange.operation),
                 subtitle: Text(pointsChange.changeMapString),

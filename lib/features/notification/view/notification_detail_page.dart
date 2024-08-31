@@ -160,7 +160,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
                 title: Text(title),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.open_in_new_outlined),
+                    icon: const Icon(Icons.open_in_new),
                     onPressed: () async {
                       if (_tid == null || _page == null || _pid == null) {
                         return;

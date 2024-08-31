@@ -90,7 +90,7 @@ class _HomepagePageState extends State<HomepagePage> {
         duration: duration200,
         curve: Curves.easeInOut,
       ),
-      child: const Icon(Icons.arrow_upward_outlined),
+      child: const Icon(Icons.arrow_upward),
     );
   }
 
@@ -184,7 +184,7 @@ class _HomepagePageState extends State<HomepagePage> {
                 title: Text(context.t.homepage.title),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.search_outlined),
+                    icon: const Icon(Icons.search),
                     onPressed: () async {
                       await context.pushNamed(ScreenPaths.search);
                     },

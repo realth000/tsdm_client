@@ -146,7 +146,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //             setState(() {});
   //           },
   //           child: IconButton(
-  //             icon: const Icon(Icons.format_size_outlined),
+  //             icon: const Icon(Icons.format_size),
   //             isSelected: fontSizeLevel != null,
   //             onPressed: widget.bbcodeController.collapsed
   //                 ? null
@@ -163,7 +163,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //         isLabelVisible: foregroundColor != null,
   //         backgroundColor: foregroundColor,
   //         child: IconButton(
-  //           icon: const Icon(Icons.format_color_text_outlined),
+  //           icon: const Icon(Icons.format_color_text),
   //           isSelected: foregroundColor != null,
   //           onPressed: () async => showForegroundColorBottomSheet(
   //             context,
@@ -177,7 +177,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //         isLabelVisible: backgroundColor != null,
   //         backgroundColor: backgroundColor,
   //         child: IconButton(
-  //           icon: const Icon(Icons.format_color_fill_outlined),
+  //           icon: const Icon(Icons.format_color_fill),
   //           isSelected: backgroundColor != null,
   //           onPressed: () async => showBackgroundColorBottomSheet(
   //             context,
@@ -188,7 +188,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Bold
   //     if (!_disabledFeatures.contains(EditorFeatures.bold))
   //       IconButton(
-  //         icon: const Icon(Icons.format_bold_outlined),
+  //         icon: const Icon(Icons.format_bold),
   //         isSelected: widget.bbcodeController.bold,
   //         onPressed: () {
   //           // ignore:unnecessary_lambdas
@@ -200,7 +200,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Italic
   //     if (!_disabledFeatures.contains(EditorFeatures.italic))
   //       IconButton(
-  //         icon: const Icon(Icons.format_italic_outlined),
+  //         icon: const Icon(Icons.format_italic),
   //         isSelected: widget.bbcodeController.italic,
   //         onPressed: () {
   //           // ignore:unnecessary_lambdas
@@ -212,7 +212,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Underline
   //     if (!_disabledFeatures.contains(EditorFeatures.underline))
   //       IconButton(
-  //         icon: const Icon(Icons.format_underline_outlined),
+  //         icon: const Icon(Icons.format_underline),
   //         isSelected: widget.bbcodeController.underline,
   //         onPressed: () {
   //           // ignore:unnecessary_lambdas
@@ -224,7 +224,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Strikethrough
   //     if (!_disabledFeatures.contains(EditorFeatures.strikethrough))
   //       IconButton(
-  //         icon: const Icon(Icons.format_strikethrough_outlined),
+  //         icon: const Icon(Icons.format_strikethrough),
   //         isSelected: widget.bbcodeController.strikethrough,
   //         onPressed: () {
   //           // ignore:unnecessary_lambdas
@@ -263,7 +263,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Text style
   //     if (!_disabledFeatures.contains(EditorFeatures.textStyle))
   //       IconButton(
-  //         icon: const Icon(Icons.text_format_outlined),
+  //         icon: const Icon(Icons.text_format),
   //         isSelected: showTextAttributeButtons,
   //         onPressed: () {
   //           // ignore:unnecessary_lambdas
@@ -275,7 +275,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Emoji
   //     if (!_disabledFeatures.contains(EditorFeatures.emoji))
   //       IconButton(
-  //         icon: const Icon(Icons.emoji_emotions_outlined),
+  //         icon: const Icon(Icons.emoji_emotions),
   //         onPressed: () async {
   //           await showEmojiBottomSheet(context, widget.bbcodeController);
   //         },
@@ -283,7 +283,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // Url link
   //     if (!_disabledFeatures.contains(EditorFeatures.link))
   //       IconButton(
-  //         icon: const Icon(Icons.link_outlined),
+  //         icon: const Icon(Icons.link),
   //         onPressed: () async =>
   //             showUrlDialog(context, widget.bbcodeController),
   //       ),
@@ -291,7 +291,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     if (!_disabledFeatures.contains(EditorFeatures.picture))
   //       IconButton(
   //         icon: Icon(
-  //           Icons.image_outlined,
+  //           Icons.image,
   //           color: widget.bbcodeController.strikethrough
   //               ? Theme.of(context).primaryColor
   //               : null,
@@ -302,7 +302,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   //     // User mention
   //     if (!_disabledFeatures.contains(EditorFeatures.userMention))
   //       IconButton(
-  //         icon: const Icon(Icons.alternate_email_outlined),
+  //         icon: const Icon(Icons.alternate_email),
   //         onPressed: () async => showMentionUserDialog(
   //           context,
   //           widget.bbcodeController,

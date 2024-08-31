@@ -159,7 +159,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                 )
                 .toList(),
           ),
-          // icon: const Icon(Icons.expand_more_outlined),
+          // icon: const Icon(Icons.expand_more),
         ),
       );
     }

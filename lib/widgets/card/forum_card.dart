@@ -140,15 +140,15 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
     final settingsStream = getIt.get<SettingsRepository>().settings;
     final forumInfoList = [
       (
-        Icons.forum_outlined,
+        Icons.forum,
         widget.forum.threadCount,
       ),
       (
-        Icons.chat_outlined,
+        Icons.chat,
         widget.forum.replyCount,
       ),
       (
-        Icons.mark_chat_unread_outlined,
+        Icons.mark_chat_unread,
         widget.forum.threadTodayCount ?? 0,
       ),
     ];

@@ -446,7 +446,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           const Spacer(),
           IconButton(
             icon: Icon(
-              Icons.clear_outlined,
+              Icons.clear,
               color: outlineColor,
               size: 16,
             ),
@@ -508,7 +508,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               IconButton(
                 icon: const Icon(Icons.expand),
                 selectedIcon: Icon(
-                  Icons.expand_outlined,
+                  Icons.expand,
                   color: Theme.of(context).primaryColor,
                 ),
                 isSelected: fullScreen,
@@ -521,7 +521,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               const Spacer(),
               FilledButton.tonal(
                 onPressed: () => context.pop(),
-                child: const Icon(Icons.close_outlined),
+                child: const Icon(Icons.close),
               ),
               sizedBoxW32H32,
               // Send Button
@@ -532,7 +532,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                         : null,
                 child: isSendingReply
                     ? sizedCircularProgressIndicator
-                    : const Icon(Icons.send_outlined),
+                    : const Icon(Icons.send),
               ),
             ],
           ),

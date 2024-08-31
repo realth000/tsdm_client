@@ -25,7 +25,7 @@ class AboutPage extends StatelessWidget {
         title: Text(context.t.settingsPage.othersSection.about),
         actions: [
           IconButton(
-            icon: const Icon(Icons.copy_outlined),
+            icon: const Icon(Icons.copy),
             onPressed: () async {
               const data = '''
 ## Info
@@ -45,22 +45,22 @@ class AboutPage extends StatelessWidget {
           SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
           sizedBoxW12H12,
           SectionListTile(
-            leading: const Icon(Icons.contact_support_outlined),
+            leading: const Icon(Icons.contact_support),
             title: Text(tr.whatIsThis),
             subtitle: Text(tr.description),
           ),
           SectionListTile(
-            leading: const Icon(Icons.app_shortcut_outlined),
+            leading: const Icon(Icons.app_shortcut),
             title: Text(tr.packageName),
             subtitle: const Text('kzs.th000.tsdm_client'),
           ),
           SectionListTile(
-            leading: const Icon(Icons.terminal_outlined),
+            leading: const Icon(Icons.terminal),
             title: Text(tr.version),
             subtitle: const Text(appFullVersion),
           ),
           SectionListTile(
-            leading: const Icon(Icons.home_max_outlined),
+            leading: const Icon(Icons.home_max),
             title: Text(context.t.aboutPage.forumHomepage),
             subtitle: const Text(baseUrl),
             onTap: () async {
@@ -71,7 +71,7 @@ class AboutPage extends StatelessWidget {
             },
           ),
           SectionListTile(
-            leading: const Icon(Icons.home_outlined),
+            leading: const Icon(Icons.home),
             title: Text(context.t.aboutPage.homepage),
             subtitle: const Text('https://github.com/realth000/tsdm_client'),
             onTap: () async {
@@ -106,7 +106,7 @@ class AboutPage extends StatelessWidget {
             },
           ),
           SectionListTile(
-            leading: const Icon(Icons.balance_outlined),
+            leading: const Icon(Icons.balance),
             title: Text(context.t.aboutPage.license),
             subtitle: const Text('MIT license'),
             onTap: () async => context.pushNamed(ScreenPaths.license),

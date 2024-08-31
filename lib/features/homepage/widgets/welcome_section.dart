@@ -152,15 +152,15 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       if (unreadNoticeCount > 0) {
         noticeIcon = Badge(
           label: Text('$unreadNoticeCount'),
-          child: const Icon(Icons.notifications_outlined),
+          child: const Icon(Icons.notifications),
         );
       } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+        noticeIcon = const Badge(child: Icon(Icons.notifications));
       } else {
-        noticeIcon = const Icon(Icons.notifications_outlined);
+        noticeIcon = const Icon(Icons.notifications);
       }
     } else {
-      noticeIcon = const Icon(Icons.notifications_outlined);
+      noticeIcon = const Icon(Icons.notifications);
     }
 
     if (!context.mounted) {

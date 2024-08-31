@@ -136,15 +136,15 @@ class _ProfilePageState extends State<ProfilePage> {
       if (unreadNoticeCount > 0) {
         noticeIcon = Badge(
           label: Text('$unreadNoticeCount'),
-          child: const Icon(Icons.notifications_outlined),
+          child: const Icon(Icons.notifications),
         );
       } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
+        noticeIcon = const Badge(child: Icon(Icons.notifications));
       } else {
-        noticeIcon = const Icon(Icons.notifications_outlined);
+        noticeIcon = const Icon(Icons.notifications);
       }
     } else {
-      noticeIcon = const Icon(Icons.notifications_outlined);
+      noticeIcon = const Icon(Icons.notifications);
     }
 
     late final List<Widget> actions;
@@ -152,7 +152,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // Current is current logged user's profile page.
       actions = [
         IconButton(
-          icon: const Icon(Icons.show_chart_outlined),
+          icon: const Icon(Icons.show_chart),
           onPressed: () async {
             await context.pushNamed(ScreenPaths.points);
           },
@@ -165,7 +165,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         const CheckInButton(),
         DebounceIconButton(
-          icon: const Icon(Icons.logout_outlined),
+          icon: const Icon(Icons.logout),
           shouldDebounce: logout,
           onPressed: () async {
             final logout = await showQuestionDialog(
@@ -187,7 +187,7 @@ class _ProfilePageState extends State<ProfilePage> {
       // Other user's profile page.
       actions = [
         IconButton(
-          icon: const Icon(Icons.email_outlined),
+          icon: const Icon(Icons.email),
           onPressed: () async => context.pushNamed(
             ScreenPaths.chat,
             pathParameters: {
@@ -362,7 +362,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               contentPadding: EdgeInsets.zero,
               minTileHeight: 0,
-              leading: const Icon(Icons.calendar_month_outlined),
+              leading: const Icon(Icons.calendar_month),
               title: Text(tr.checkinDaysInThisMonth),
               subtitle: Text(userProfile.checkinThisMonthCount!),
             ),
@@ -370,7 +370,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               minTileHeight: 0,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.history_outlined),
+              leading: const Icon(Icons.history),
               title: Text(tr.checkinRecentTime),
               subtitle: Text(userProfile.checkinRecentTime!),
             ),
@@ -386,7 +386,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               minTileHeight: 0,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.monetization_on_outlined),
+              leading: const Icon(Icons.monetization_on),
               title: Text(tr.checkinLastTimeCoins),
               subtitle: Text(userProfile.checkinLastTimeCoin!),
             ),
@@ -394,7 +394,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ListTile(
               minTileHeight: 0,
               contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.today_outlined),
+              leading: const Icon(Icons.today),
               title: Text(tr.checkinTodayStatus),
               subtitle: Text(userProfile.checkinTodayStatus ?? '-'),
             ),
@@ -518,7 +518,7 @@ class _ProfilePageState extends State<ProfilePage> {
             if (userProfile.uid != null)
               // Email verify state.
               IconButton(
-                icon: const Icon(Icons.email_outlined),
+                icon: const Icon(Icons.email),
                 onPressed: () async {
                   final content = userProfile.emailVerified ?? false
                       ? tr.emailVerified
@@ -528,7 +528,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 isSelected: userProfile.emailVerified ?? false,
               ),
             IconButton(
-              icon: const Icon(Icons.photo_camera_outlined),
+              icon: const Icon(Icons.photo_camera),
               onPressed: () async {
                 final content = userProfile.videoVerified ?? false
                     ? tr.videoVerified
@@ -538,7 +538,7 @@ class _ProfilePageState extends State<ProfilePage> {
               isSelected: userProfile.videoVerified ?? false,
             ),
             TextButton.icon(
-              icon: const Icon(Icons.group_outlined),
+              icon: const Icon(Icons.group),
               label: Text(friendsCount),
               onPressed: friendsPage != null
                   ? () async {
@@ -548,7 +548,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             if (userProfile.gender != null)
               IconChip(
-                iconData: Icons.face_2_outlined,
+                iconData: Icons.face_2,
                 text: Text(userProfile.gender!),
               ),
           ].insertBetween(sizedBoxW4H4),
@@ -561,7 +561,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             if (birthDayText.isNotEmpty)
               IconChip(
-                iconData: Icons.cake_outlined,
+                iconData: Icons.cake,
                 text: Text(birthDayText),
               ),
             if (userProfile.zodiac != null)
@@ -579,7 +579,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             if (userProfile.from != null)
               IconChip(
-                iconData: Icons.location_on_outlined,
+                iconData: Icons.location_on,
                 text: Text(userProfile.from!),
               ),
           ].insertBetween(sizedBoxW4H4),
@@ -591,7 +591,7 @@ class _ProfilePageState extends State<ProfilePage> {
           children: <Widget>[
             if (userProfile.msn != null)
               IconChip(
-                iconData: Icons.group_outlined,
+                iconData: Icons.group,
                 text: Text(userProfile.msn!),
               ),
             if (userProfile.qq != null)

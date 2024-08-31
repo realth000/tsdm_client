@@ -231,7 +231,7 @@ class _PostCardState extends State<PostCard>
               value: _PostCardActions.reply,
               child: Row(
                 children: [
-                  const Icon(Icons.reply_outlined),
+                  const Icon(Icons.reply),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.postCard.reply),
                 ],
@@ -242,7 +242,7 @@ class _PostCardState extends State<PostCard>
                 value: _PostCardActions.rate,
                 child: Row(
                   children: [
-                    const Icon(Icons.rate_review_outlined),
+                    const Icon(Icons.rate_review),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(context.t.postCard.rate),
                   ],
@@ -258,7 +258,7 @@ class _PostCardState extends State<PostCard>
                 value: _PostCardActions.viewTheAuthor,
                 child: Row(
                   children: [
-                    const Icon(Icons.person_outlined),
+                    const Icon(Icons.person),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(context.t.postCard.onlyViewAuthor),
                   ],
@@ -272,7 +272,7 @@ class _PostCardState extends State<PostCard>
                 value: _PostCardActions.viewAllAuthors,
                 child: Row(
                   children: [
-                    const Icon(Icons.group_outlined),
+                    const Icon(Icons.group),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(context.t.postCard.viewAllAuthors),
                   ],
@@ -283,7 +283,7 @@ class _PostCardState extends State<PostCard>
                 value: _PostCardActions.edit,
                 child: Row(
                   children: [
-                    const Icon(Icons.edit_outlined),
+                    const Icon(Icons.edit),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(context.t.postCard.edit),
                   ],
@@ -294,7 +294,7 @@ class _PostCardState extends State<PostCard>
                 value: _PostCardActions.share,
                 child: Row(
                   children: [
-                    const Icon(Icons.share_outlined),
+                    const Icon(Icons.share),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(context.t.postCard.share),
                   ],

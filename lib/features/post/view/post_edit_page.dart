@@ -289,7 +289,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             (e) => ListTile(
               title: Text(e.name),
               trailing: e.name == threadTypeController.text
-                  ? const Icon(Icons.check_outlined)
+                  ? const Icon(Icons.check)
                   : null,
               onTap: () {
                 threadType = e;
@@ -435,7 +435,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           },
         ),
         IconButton(
-          icon: const Icon(Icons.settings_outlined),
+          icon: const Icon(Icons.settings),
           onPressed: additionalOptionsMap != null
               ? () async => _showAdditionalOptionBottomSheet(context, state)
               : null,

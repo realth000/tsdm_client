@@ -88,7 +88,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
               ),
               const Spacer(),
               IconButton(
-                icon: const Icon(Icons.email_outlined),
+                icon: const Icon(Icons.email),
                 onPressed: () => context.pushNamed(
                   ScreenPaths.chat,
                   pathParameters: {
@@ -138,14 +138,14 @@ class _UserBriefProfileDialog extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _UserProfilePair(
-                Icons.group_outlined,
+                Icons.group,
                 tr.group,
                 profile.userGroup,
                 style: _UserProfileAttrStyle.primary,
               ),
               if (profile.title != null)
                 _UserProfilePair(
-                  Icons.badge_outlined,
+                  Icons.badge,
                   tr.title,
                   profile.title,
                   style: _UserProfileAttrStyle.primary,
@@ -157,13 +157,13 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 style: _UserProfileAttrStyle.primary,
               ),
               _UserProfilePair(
-                Icons.thumb_up_outlined,
+                Icons.thumb_up,
                 tr.recommended,
                 profile.recommended,
                 style: _UserProfileAttrStyle.primary,
               ),
               _UserProfilePair(
-                Icons.book_outlined,
+                Icons.book,
                 tr.thread,
                 profile.threadCount,
                 style: _UserProfileAttrStyle.primary,
@@ -175,7 +175,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 style: _UserProfileAttrStyle.primary,
               ),
               _UserProfilePair(
-                Icons.emoji_people_outlined,
+                Icons.emoji_people,
                 tr.famous,
                 profile.famous,
                 style: _UserProfileAttrStyle.secondary,
@@ -187,13 +187,13 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
-                Icons.campaign_outlined,
+                Icons.campaign,
                 tr.publicity,
                 profile.publicity,
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
-                Icons.water_drop_outlined,
+                Icons.water_drop,
                 tr.natural,
                 profile.natural,
                 style: _UserProfileAttrStyle.secondary,
@@ -205,7 +205,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 style: _UserProfileAttrStyle.secondary,
               ),
               _UserProfilePair(
-                Icons.stream_outlined,
+                Icons.stream,
                 tr.spirit,
                 profile.spirit,
                 style: _UserProfileAttrStyle.secondary,
@@ -219,32 +219,32 @@ class _UserBriefProfileDialog extends StatelessWidget {
               ),
               if (profile.couple != null && profile.couple!.isNotEmpty)
                 _UserProfilePair(
-                  Icons.diversity_1_outlined,
+                  Icons.diversity_1,
                   tr.cp,
                   profile.couple,
                   style: _UserProfileAttrStyle.tertiary,
                 ),
               _UserProfilePair(
-                Icons.feedback_outlined,
+                Icons.feedback,
                 tr.privilege,
                 profile.privilege,
                 style: _UserProfileAttrStyle.tertiary,
               ),
               _UserProfilePair(
-                Icons.event_note_outlined,
+                Icons.event_note,
                 tr.registration,
                 profile.registrationDate,
                 style: _UserProfileAttrStyle.tertiary,
               ),
               if (profile.comeFrom != null)
                 _UserProfilePair(
-                  Icons.pin_drop_outlined,
+                  Icons.pin_drop,
                   tr.from,
                   profile.comeFrom,
                   style: _UserProfileAttrStyle.tertiary,
                 ),
               _UserProfilePair(
-                Icons.online_prediction_outlined,
+                Icons.online_prediction,
                 tr.status.title,
                 profile.online ? tr.status.online : tr.status.offline,
                 style: _UserProfileAttrStyle.tertiary,

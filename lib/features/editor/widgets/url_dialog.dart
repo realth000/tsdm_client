@@ -77,14 +77,14 @@ class _UrlDialogState extends State<UrlDialog> {
               controller: descController,
               autofocus: true,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.description_outlined),
+                prefixIcon: const Icon(Icons.description),
                 labelText: tr.description,
               ),
             ),
             TextFormField(
               controller: urlController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.link_outlined),
+                prefixIcon: const Icon(Icons.link),
                 labelText: tr.link,
               ),
               validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
