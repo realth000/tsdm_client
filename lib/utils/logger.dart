@@ -56,9 +56,11 @@ mixin LoggerMixin {
 
   /// Exception
   void handle(AppException exception) {
-    talker
-      ..error('$runtimeType: handle error:')
-      ..handle(exception, exception.stackTrace, exception.message);
+    talker.handle(
+      exception,
+      exception.stackTrace,
+      '$runtimeType: handle error: ',
+    );
   }
 
   /// Handle [exception] then run [callback].
