@@ -5,6 +5,7 @@ import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -174,10 +175,29 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     }
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
+    var needLogin = false;
     final documentList = (await Future.wait(
       [
-        _forumHomeRepository.fetchHomePage().mapLeft(handle).run(),
-        _profileRepository.fetchProfile().mapLeft(handle).run(),
+        _forumHomeRepository.fetchHomePage().mapLeft((e) {
+          if (e case HttpHandshakeFailedException(:final statusCode)) {
+            if (statusCode == 200) {
+              needLogin = true;
+            }
+          } else if (e case LoginUserInfoNotFoundException()) {
+            needLogin = true;
+          } else {
+            handle(e);
+          }
+        }).run(),
+        _profileRepository.fetchProfile().mapLeft((e) {
+          switch (e) {
+            case LoginUserInfoNotFoundException() ||
+                  ProfileNeedLoginException():
+              needLogin = true;
+            default:
+              handle(e);
+          }
+        }).run(),
       ],
     ))
         .where((e) => e.isRight())
@@ -185,7 +205,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
         .whereType<uh.Document>()
         .toList();
     if (documentList.length != 2) {
-      if (_authenticationRepository.currentUser == null) {
+      if (_authenticationRepository.currentUser == null && needLogin) {
         emit(state.copyWith(status: HomepageStatus.needLogin));
         return;
       } else {
