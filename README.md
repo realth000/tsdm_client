@@ -61,7 +61,7 @@
      <tr>
        <th>系统</th>
        <th>稳定版（0.14）</th>
-       <th>预览版（1.0.0-alpha.3）</th>
+       <th>预览版（1.0.0-alpha.4）</th>
      </tr>
     </thead>
   <tbody>
@@ -72,8 +72,8 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
       </td>
     </tr>
     <tr>
@@ -82,7 +82,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -91,7 +91,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
       </td>
     </tr>
     <tr>
@@ -100,7 +100,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -120,7 +120,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.3/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.4/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
       </td>
     </tr>
   </tbody>
@@ -134,7 +134,7 @@
 
 ## 功能
 
-**粗体字功能目前只存在于预览版**
+<u>下划线功能目前只存在于预览版</u>
 
 * [ ] 看贴
   * [x] 回复
@@ -176,18 +176,18 @@
   * [ ] 设置售价
   * [x] [富文本模式](#富文本支持)
 * [ ] 发帖
-  * [ ] 纯文本内容
-  * [ ] 保存为草稿
+  * [x] <u>纯文本内容</u>
+  * [x] <u>保存为草稿</u>
   * [ ] 编辑草稿
   * [ ] 本地自动保存
-  * [ ] 设置分类和标题
+  * [x] <u>设置分类和标题</u>
   * [ ] 设置附加选项
   * [ ] 设置阅读权限
   * [ ] 设置售价
-  * [ ] [富文本模式](#富文本支持)
+  * [x] <u>[富文本模式](#富文本支持)</u>
 * [x] 登录
   * [x] 用户名登录
-  * [x] **UID或邮箱登录**
+  * [x] <u>UID或邮箱登录</u>
   * [x] 带安全问题登录
   * [x] 登录一次后cookie自动登录
   * [x] 退出登录
@@ -206,7 +206,7 @@
 * [x] 深色模式
   * [x] 手动设置
   * [x] 跟随系统
-  * [x] **自动调整帖子内的颜色**
+  * [x] <u>自动调整帖子内的颜色</u>
 * [ ] 主题
   * [x] 更换主题色
   * [ ] 动态颜色（Android）
