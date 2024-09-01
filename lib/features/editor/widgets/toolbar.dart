@@ -341,7 +341,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
       backgroundColorPicker: (context) async => showColorPicker(context),
       imagePicker: (context, url, width, height) =>
           showImagePicker(context, url: url, width: width, height: height),
-      usernamePicker: (context) async => showUsernamePickerDialog(context),
+      usernamePicker: showUsernamePickerDialog,
       // Features.
       showUndo: hasFeature(EditorFeatures.undo),
       showRedo: hasFeature(EditorFeatures.redo),

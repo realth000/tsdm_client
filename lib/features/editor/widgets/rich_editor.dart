@@ -3,6 +3,7 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
+import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
@@ -61,6 +62,7 @@ class RichEditor extends StatelessWidget {
           height: _defaultEmojiHeight,
         );
       },
+      usernamePicker: showUsernamePickerDialog,
       // TODO: Implement imageBuilder in editor package.
       // imageBuilder: (String url) => CachedImageProvider(url, context),
       urlLauncher: (url) async => context.dispatchAsUrl(url),

@@ -40,17 +40,23 @@ class _UsernameText extends StatelessWidget {
 ///
 /// This dialog wrapped extra functionality more than the original one in editor
 /// package so that user could do the same quick search as what server provides.
-Future<String?> showUsernamePickerDialog(BuildContext context) async =>
+Future<String?> showUsernamePickerDialog(
+  BuildContext context, {
+  String? username,
+}) async =>
     showDialog<String>(
       context: context,
-      builder: (_) => const _UsernamePickerDialog(),
+      builder: (_) => _UsernamePickerDialog(username),
     );
 
 /// A dialog to let user pick user to mention.
 ///
 /// With extra user searching features.
 class _UsernamePickerDialog extends StatefulWidget {
-  const _UsernamePickerDialog();
+  const _UsernamePickerDialog(this.initialName);
+
+  /// Optional initial username;
+  final String? initialName;
 
   @override
   State<_UsernamePickerDialog> createState() => _UsernamePickerDialogState();
@@ -181,7 +187,8 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog>
   @override
   void initState() {
     super.initState();
-    controller = TextEditingController()..addListener(onUsernameChanged);
+    controller = TextEditingController(text: widget.initialName)
+      ..addListener(onUsernameChanged);
   }
 
   @override
