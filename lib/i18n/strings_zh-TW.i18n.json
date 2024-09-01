@@ -583,10 +583,14 @@
       "autoFillSize": "自動填入大小",
       "autoFillSizeDetail": "填寫圖片的實際大小"
     },
-    "mentionUser": {
-      "title": "提醒使用者",
+    "userMention": {
+      "title": "提醒使用者（@）",
       "username": "使用者名稱",
-      "errorEmpty": "不能為空"
+      "errorEmpty": "不能為空",
+      "visitUserSpace": "存取TA的主頁",
+      "search": "搜尋",
+      "searchResult": "結果",
+      "randomFriend": "隨機好友"
     }
   },
   "imageBottomSheet": {

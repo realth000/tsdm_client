@@ -583,10 +583,14 @@
       "autoFillSize": "Auto fill size",
       "autoFillSizeDetail": "Fill size with image real size"
     },
-    "mentionUser": {
-      "title": "Mention User",
+    "userMention": {
+      "title": "Mention Someone",
       "username": "Username",
-      "errorEmpty": "Should not be empty"
+      "errorEmpty": "Should not be empty",
+      "visitUserSpace": "Visit user space",
+      "search": "Search",
+      "searchResult": "Result",
+      "randomFriend": "Random friend"
     }
   },
   "imageBottomSheet": {

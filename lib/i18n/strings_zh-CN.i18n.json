@@ -583,10 +583,14 @@
       "autoFillSize": "自动填写大小",
       "autoFillSizeDetail": "填写图片的实际大小"
     },
-    "mentionUser": {
-      "title": "提醒用户",
+    "userMention": {
+      "title": "提醒用户（@）",
       "username": "用户名",
-      "errorEmpty": "不能为空"
+      "errorEmpty": "不能为空",
+      "visitUserSpace": "访问TA的主页",
+      "search": "搜索",
+      "searchResult": "结果",
+      "randomFriend": "随机好友"
     }
   },
   "imageBottomSheet": {

@@ -4,6 +4,7 @@ import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
+import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 
 /// Representing all features types.
 enum EditorFeatures {
@@ -340,6 +341,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
       backgroundColorPicker: (context) async => showColorPicker(context),
       imagePicker: (context, url, width, height) =>
           showImagePicker(context, url: url, width: width, height: height),
+      usernamePicker: (context) async => showUsernamePickerDialog(context),
       // Features.
       showUndo: hasFeature(EditorFeatures.undo),
       showRedo: hasFeature(EditorFeatures.redo),

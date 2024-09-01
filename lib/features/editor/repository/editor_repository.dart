@@ -10,6 +10,7 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:universal_html/parsing.dart';
 
 /// The repository of bbcode editor features injected into bbcode editor.
 ///
@@ -72,6 +73,79 @@ final class EditorRepository with LoggerMixin {
 
   static final _emojiGroupDataRe =
       RegExp(r'smilies_array\[(?<groupId>\d+)\]\[\d+\] = \[(?<data>.+)\]');
+
+  /// Url to get random recommend friends.
+  ///
+  /// Originally there is a query parameter called "tp" which contains thread id
+  /// and page number, but seems work well without that so removed it.
+  /// Add it back if any unexpected error occurred.
+  static const _userRecommendUrl =
+      '$baseUrl/plugin.php?id=amucallme_dzx:callme&adds=fastpostmessage&'
+      'infloat=yes&handlekey=amucallme_dzx_add&'
+      'inajax=1&ajaxtarget=fwin_content_amucallme_dzx_add';
+
+  /// User to search user by name.
+  ///
+  /// Post to this url with form hash, handle key and keyword.
+  static const _searchUserByName = '$baseUrl/plugin.php?id=amucallme_dzx:js&'
+      'sreach=1&callmesubmit=true&ajax=1&adds=fastpostmessage&inajax=1';
+
+  /// Parse username from document.
+  ///
+  /// For user search or friend recommendation.
+  ///
+  /// Returns the parsed list of username, and optional form hash.
+  /// Currently two api use this function to parse username wrapped in server
+  /// response:
+  ///
+  /// 1. Get random recommend friend for current logged user.
+  /// 2. Search user by username keyword.
+  ///
+  /// The first api is a get result which only requires cookie (authenticated),
+  /// while the second api is a POST to server that requires form hash. Form
+  /// hash would be provided from repository caller but it's hard to
+  /// consistently inject form hash because there are many places using editor.
+  /// So alternatively, we use the form hash came from the first api then the
+  /// form hash is provided internally inside this repository.
+  /// But this solution add implicit requirements for the caller:
+  /// MUST call random friend api before search user, otherwise search will
+  /// fail due to lack of form hash.
+  (List<String>, String?) _parseUserFromXmlDocument(
+    String xml, {
+    bool parseFormHash = false,
+  }) {
+    //<?xml version="1.0" encoding="utf-8"?>
+    // <root><![CDATA[
+    //
+    // <form id="sform" ... >
+    // <input ... />
+    // <div class="c" style="width: 340px">
+    // 要@好友，直接在贴子内打上<span><font color="#F00">[@]好友名称[/@]</font></span>就可以了。
+    //
+    // <div class="p_opt mpx pns cl">
+    //
+    // <span ... ><A ... >user1</A></span>
+    // <span ... ><A ... >user2</A></span>
+    // ...
+    // </form>
+    //
+    // ]]></root>
+    final xmlDoc = parseXmlDocument(xml);
+    final htmlDoc = parseHtmlDocument(xmlDoc.documentElement?.innerText ?? '');
+    final nameList = htmlDoc
+        .querySelectorAll('a[onclick*="seditor_insertunit"]')
+        .map((e) => e.innerText);
+    final formHash =
+        htmlDoc.querySelector('input[name="formhash"]')?.attributes['value'];
+    if (parseFormHash) {
+      if (formHash == null) {
+        error('form hash not found in user mention response');
+      } else {
+        debug('user mention, search form hash set to $formHash');
+      }
+    }
+    return (nameList.toList(), formHash);
+  }
 
   /// All groups of emoji.
   ///
@@ -261,4 +335,24 @@ final class EditorRepository with LoggerMixin {
         }
         return rightVoid();
       });
+
+  /// Search user by name.
+  AsyncEither<List<String>> searchUserByName({
+    required String keyword,
+    required String formHash,
+  }) =>
+      getIt.get<NetClientProvider>().postForm(
+        _searchUserByName,
+        data: {
+          'handlekey': 'amucallme_dzx_add',
+          'formhash': formHash,
+          'keywords': keyword,
+        },
+      ).mapHttp((e) => _parseUserFromXmlDocument(e.data as String).$1);
+
+  /// Get random recommended user from server.
+  AsyncEither<(List<String>, String?)> recommendUser() => getIt
+      .get<NetClientProvider>()
+      .get(_userRecommendUrl)
+      .mapHttp((e) => _parseUserFromXmlDocument(e.data as String));
 }
