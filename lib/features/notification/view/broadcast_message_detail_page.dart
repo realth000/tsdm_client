@@ -28,7 +28,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.campaign)),
+              leading: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
               title: SingleLineText(
                 context.t.noticePage.broadcastMessageTab.system,
               ),
@@ -85,7 +85,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
                 title: Text(context.t.noticePage.broadcastMessageTab.title),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.open_in_new),
+                    icon: const Icon(Icons.open_in_new_outlined),
                     onPressed: () async => context.dispatchAsUrl(
                       '$broadcastMessageDetailUrl$pmid',
                       external: true,

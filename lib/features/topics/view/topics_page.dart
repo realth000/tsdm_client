@@ -155,7 +155,7 @@ class _TopicsPageState extends State<TopicsPage>
               title: Text(context.t.navigation.topics),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(Icons.search_outlined),
                   onPressed: () async {
                     await context.pushNamed(ScreenPaths.search);
                   },

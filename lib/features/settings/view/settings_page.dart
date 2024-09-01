@@ -103,7 +103,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionTitleText(tr.title),
       // Theme mode
       SectionListTile(
-        leading: const Icon(Icons.contrast),
+        leading: const Icon(Icons.contrast_outlined),
         title: Text(tr.themeMode.title),
         subtitle: Text(
           <String>[
@@ -119,9 +119,9 @@ class _SettingsPageState extends State<SettingsPage> {
             themeModeIndex == ThemeMode.dark.index,
           ],
           children: const [
-            Icon(Icons.light_mode),
-            Icon(Icons.auto_mode),
-            Icon(Icons.dark_mode),
+            Icon(Icons.light_mode_outlined),
+            Icon(Icons.auto_mode_outlined),
+            Icon(Icons.dark_mode_outlined),
           ],
           onPressed: (index) async {
             // Default: ThemeData.system.
@@ -148,7 +148,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       // Language
       SectionListTile(
-        leading: const Icon(Icons.translate),
+        leading: const Icon(Icons.translate_outlined),
         title: Text(tr.languages.title),
         subtitle: Text(localeName),
         onTap: () async {
@@ -183,7 +183,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       /// Shortcut in forum card.
       SectionSwitchListTile(
-        secondary: const Icon(Icons.shortcut),
+        secondary: const Icon(Icons.shortcut_outlined),
         title: Text(tr.showShortcutInForumCard.title),
         subtitle: Text(tr.showShortcutInForumCard.detail),
         value: showForumCardShortcut,
@@ -198,7 +198,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       // Accent color
       SectionListTile(
-        leading: const Icon(Icons.color_lens),
+        leading: const Icon(Icons.color_lens_outlined),
         title: Text(tr.colorScheme.title),
         trailing: accentColor < 0
             ? null
@@ -238,7 +238,7 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       ),
       SectionSwitchListTile(
-        secondary: const Icon(Icons.notifications),
+        secondary: const Icon(Icons.notifications_outlined),
         title: Text(tr.showUnreadInfoHint.title),
         subtitle: Text(tr.showUnreadInfoHint.detail),
         value: showUnreadInfoHint,
@@ -249,7 +249,7 @@ class _SettingsPageState extends State<SettingsPage> {
         },
       ),
       SectionListTile(
-        leading: const Icon(Icons.article),
+        leading: const Icon(Icons.article_outlined),
         title: Text(tr.threadCard.title),
         subtitle: Text(tr.threadCard.detail),
         onTap: () =>
@@ -276,7 +276,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionTitleText(tr.title),
       if (isMobile)
         SectionSwitchListTile(
-          secondary: const Icon(Icons.block),
+          secondary: const Icon(Icons.block_outlined),
           title: Text(tr.doublePressExit.title),
           subtitle: Text(tr.doublePressExit.detail),
           value: doublePressExit,
@@ -287,7 +287,7 @@ class _SettingsPageState extends State<SettingsPage> {
           },
         ),
       SectionSwitchListTile(
-        secondary: const Icon(Icons.align_vertical_top),
+        secondary: const Icon(Icons.align_vertical_top_outlined),
         title: Text(tr.threadReverseOrder.title),
         subtitle: Text(tr.threadReverseOrder.detail),
         value: threadReverseOrder,
@@ -329,7 +329,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionTitleText(context.t.settingsPage.checkinSection.title),
       // Feeling
       SectionListTile(
-        leading: const Icon(Icons.emoji_emotions),
+        leading: const Icon(Icons.emoji_emotions_outlined),
         title: Text(context.t.settingsPage.checkinSection.feeling),
         subtitle: Text(CheckinFeeling.from(checkinFeeling).translate(context)),
         onTap: () async {
@@ -352,7 +352,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       // Message
       SectionListTile(
-        leading: const Icon(Icons.textsms),
+        leading: const Icon(Icons.textsms_outlined),
         title: Text(context.t.settingsPage.checkinSection.anythingToSay),
         subtitle: Text(checkinMessage),
         onTap: () async {
@@ -380,7 +380,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // Cache.
       SectionTitleText(context.t.settingsPage.storageSection.title),
       SectionListTile(
-        leading: const Icon(Icons.cleaning_services),
+        leading: const Icon(Icons.cleaning_services_outlined),
         title: Text(context.t.settingsPage.storageSection.clearCache),
         onTap: () async {
           await showClearCacheBottomSheet(context: context);
@@ -425,7 +425,7 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       SectionListTile(
         enabled: netClientUseProxy,
-        leading: const Icon(Icons.network_locked),
+        leading: const Icon(Icons.network_locked_outlined),
         title: Text(tr.proxySettings.title),
         subtitle: netClientUseProxy ? null : Text(tr.proxySettings.disabled),
         onTap: () async => showDialog<void>(
@@ -455,7 +455,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       /// Update
       SectionListTile(
-        leading: const Icon(Icons.new_releases),
+        leading: const Icon(Icons.new_releases_outlined),
         title: Text(tr.upgrade),
         onTap: () async {
           await context.pushNamed(ScreenPaths.upgrade);
@@ -464,7 +464,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
       /// Changelog till publish.
       SectionListTile(
-        leading: const Icon(Icons.history),
+        leading: const Icon(Icons.history_outlined),
         title: Text(tr.changelog),
         onTap: () async {
           await showDialog<void>(

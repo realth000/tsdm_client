@@ -199,7 +199,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           sizedBoxW12H12,
           InputDecorator(
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.question_mark),
+              prefixIcon: const Icon(Icons.question_mark_outlined),
               labelText: tr.securityQuestion,
             ),
             child: DropdownButtonHideUnderline(
@@ -227,7 +227,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           TextFormField(
             controller: answerController,
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.question_answer),
+              prefixIcon: const Icon(Icons.question_answer_outlined),
               labelText: tr.answer,
               enabled: _question != _loginQuestions.first,
             ),

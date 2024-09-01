@@ -139,7 +139,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
               controller: urlController,
               autofocus: true,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.image),
+                prefixIcon: const Icon(Icons.image_outlined),
                 labelText: tr.link,
               ),
               validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
@@ -174,7 +174,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
                 ),
               ],
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.horizontal_distribute),
+                prefixIcon: const Icon(Icons.horizontal_distribute_outlined),
                 labelText: tr.width,
               ),
               validator: (v) {

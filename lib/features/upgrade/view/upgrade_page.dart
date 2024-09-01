@@ -56,8 +56,8 @@ class _UpgradePageState extends State<UpgradePage> with LoggerMixin {
         state.status == UpgradeStatus.fetching;
     return IconButton.filled(
       icon: upgradeModel == null
-          ? const Icon(Icons.refresh)
-          : const Icon(Icons.download),
+          ? const Icon(Icons.refresh_outlined)
+          : const Icon(Icons.download_outlined),
       onPressed: isBusy
           ? null
           : () async {
@@ -163,7 +163,7 @@ class _UpgradePageState extends State<UpgradePage> with LoggerMixin {
                   IconButton(
                     icon: loadingChangelog
                         ? sizedCircularProgressIndicator
-                        : const Icon(Icons.update),
+                        : const Icon(Icons.update_outlined),
                     onPressed: () async {
                       // FIXME: Do NOT use repository directly.
                       // Here use UpgradeRepository directly to avoid updating
@@ -223,7 +223,7 @@ class _UpgradePageState extends State<UpgradePage> with LoggerMixin {
                     },
                   ),
                   IconButton(
-                    icon: const Icon(Icons.launch),
+                    icon: const Icon(Icons.launch_outlined),
                     onPressed: () async {
                       await launchUrl(
                         Uri.parse(upgradeGithubReleaseUrl),

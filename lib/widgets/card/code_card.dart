@@ -33,7 +33,7 @@ class CodeCard extends StatelessWidget {
                 ),
                 sizedBoxW4H4,
                 IconButton(
-                  icon: const Icon(Icons.copy),
+                  icon: const Icon(Icons.copy_outlined),
                   onPressed: () async => copyToClipboard(context, code),
                 ),
               ],

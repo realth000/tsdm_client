@@ -96,7 +96,7 @@ final class BroadcastMessageCard extends StatelessWidget {
         child: Column(
           children: [
             ListTile(
-              leading: const CircleAvatar(child: Icon(Icons.campaign)),
+              leading: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
               title: SingleLineText(tr.system),
               subtitle: Text(message.messageTime.yyyyMMDD()),
             ),

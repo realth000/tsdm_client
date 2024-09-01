@@ -128,7 +128,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
             TextFormField(
               controller: portController,
               decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.network_ping),
+                prefixIcon: const Icon(Icons.network_ping_outlined),
                 labelText: tr.port,
               ),
               validator: (v) {
@@ -153,7 +153,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
                     tr.testConnection.disconnected,
                 },
               ),
-              icon: const Icon(Icons.refresh),
+              icon: const Icon(Icons.refresh_outlined),
               onPressed: connStatus == _TestConnStatus.testing
                   ? null
                   : () async => testConnection(),

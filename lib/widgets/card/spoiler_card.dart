@@ -47,8 +47,8 @@ class _SpoilerCardState extends State<SpoilerCard> {
               width: sizeButtonInCardMinWidth,
               child: FilledButton.icon(
                 icon: _visible
-                    ? const Icon(Icons.expand_less)
-                    : const Icon(Icons.expand_more),
+                    ? const Icon(Icons.expand_less_outlined)
+                    : const Icon(Icons.expand_more_outlined),
                 label: Text(
                   _visible
                       ? context.t.spoilerCard.expandLess

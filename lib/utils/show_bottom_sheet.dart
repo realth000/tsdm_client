@@ -102,7 +102,7 @@ Future<void> showImageActionBottomSheet({
                 child: Column(
                   children: [
                     ListTile(
-                      leading: const Icon(Icons.fullscreen),
+                      leading: const Icon(Icons.fullscreen_outlined),
                       title: Text(tr.checkDetail),
                       onTap: () async {
                         await context.pushNamed(
@@ -115,7 +115,7 @@ Future<void> showImageActionBottomSheet({
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.copy),
+                      leading: const Icon(Icons.copy_outlined),
                       title: Text(tr.copyImageUrl),
                       onTap: () async {
                         await copyToClipboard(context, imageUrl);
@@ -125,7 +125,7 @@ Future<void> showImageActionBottomSheet({
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.refresh),
+                      leading: const Icon(Icons.refresh_outlined),
                       title: Text(tr.reloadImage),
                       onTap: () => context
                           .read<ImageCacheTriggerCubit>()
@@ -133,7 +133,7 @@ Future<void> showImageActionBottomSheet({
                     ),
                     if (hrefUrl != null)
                       ListTile(
-                        leading: const Icon(Icons.link),
+                        leading: const Icon(Icons.link_outlined),
                         title: Text(tr.openLink),
                         onTap: () async {
                           await context.dispatchAsUrl(hrefUrl);

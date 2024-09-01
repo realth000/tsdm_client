@@ -178,12 +178,12 @@ final class _ChatPageState extends State<ChatPage> {
                 title: Text(tr.title),
                 actions: [
                   IconButton(
-                    icon: const Icon(Icons.contact_page),
+                    icon: const Icon(Icons.contact_page_outlined),
                     onPressed: () async =>
                         context.dispatchAsUrl(state.spaceUrl),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.history),
+                    icon: const Icon(Icons.history_outlined),
                     onPressed: () async =>
                         context.dispatchAsUrl(state.chatHistoryUrl),
                   ),

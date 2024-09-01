@@ -100,12 +100,12 @@ class CheckInButton extends StatelessWidget {
             }
             if (state is CheckinButtonNeedLogin) {
               return const IconButton(
-                icon: Icon(Icons.domain_verification),
+                icon: Icon(Icons.domain_verification_outlined),
                 onPressed: null,
               );
             }
             return IconButton(
-              icon: const Icon(Icons.domain_verification),
+              icon: const Icon(Icons.domain_verification_outlined),
               onPressed: () {
                 context
                     .read<CheckinButtonBloc>()

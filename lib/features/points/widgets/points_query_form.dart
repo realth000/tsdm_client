@@ -57,7 +57,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing: e == pointsType ? const Icon(Icons.check) : null,
+                trailing:
+                    e == pointsType ? const Icon(Icons.check_outlined) : null,
                 onTap: () {
                   setState(() {
                     pointsType = e;
@@ -81,7 +82,9 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing: e == operationType ? const Icon(Icons.check) : null,
+                trailing: e == operationType
+                    ? const Icon(Icons.check_outlined)
+                    : null,
                 onTap: () {
                   setState(() {
                     operationType = e;
@@ -104,7 +107,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing: e == changeType ? const Icon(Icons.check) : null,
+                trailing:
+                    e == changeType ? const Icon(Icons.check_outlined) : null,
                 onTap: () {
                   setState(() {
                     changeType = e;
@@ -163,8 +167,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: context.t.pointsPage.changelogTab.extType,
-                  prefixIcon: const Icon(Icons.monetization_on),
-                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                  prefixIcon: const Icon(Icons.monetization_on_outlined),
+                  suffixIcon: const Icon(Icons.arrow_drop_down_outlined),
                 ),
                 child: Text(pointsType?.name ?? ''),
               ),
@@ -177,8 +181,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
               child: InputDecorator(
                 decoration: InputDecoration(
                   labelText: context.t.pointsPage.changelogTab.changeType,
-                  prefixIcon: const Icon(Icons.ssid_chart),
-                  suffixIcon: const Icon(Icons.arrow_drop_down),
+                  prefixIcon: const Icon(Icons.ssid_chart_outlined),
+                  suffixIcon: const Icon(Icons.arrow_drop_down_outlined),
                 ),
                 child: Text(changeType?.name ?? ''),
               ),
@@ -191,8 +195,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
         child: InputDecorator(
           decoration: InputDecoration(
             labelText: context.t.pointsPage.changelogTab.operationType,
-            prefixIcon: const Icon(Icons.select_all),
-            suffixIcon: const Icon(Icons.arrow_drop_down),
+            prefixIcon: const Icon(Icons.select_all_outlined),
+            suffixIcon: const Icon(Icons.arrow_drop_down_outlined),
           ),
           child: Text(operationType?.name ?? ''),
         ),
@@ -202,7 +206,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
         child: InputDecorator(
           decoration: InputDecoration(
             labelText: context.t.pointsPage.changelogTab.dateRange,
-            prefixIcon: const Icon(Icons.date_range),
+            prefixIcon: const Icon(Icons.date_range_outlined),
           ),
           child: Text('$startTime - $endTime'),
         ),
@@ -245,8 +249,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
                 const Spacer(),
                 IconButton(
                   icon: showQueryFilter
-                      ? const Icon(Icons.expand_less)
-                      : const Icon(Icons.expand_more),
+                      ? const Icon(Icons.expand_less_outlined)
+                      : const Icon(Icons.expand_more_outlined),
                   onPressed: () {
                     setState(() {
                       showQueryFilter = !showQueryFilter;

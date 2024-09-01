@@ -68,7 +68,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                 child: Column(
                   children: [
                     CheckboxListTile(
-                      secondary: const Icon(Icons.image),
+                      secondary: const Icon(Icons.image_outlined),
                       title: Text(tr.images),
                       subtitle: _buildCacheHint(
                         context,
@@ -82,7 +82,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                           ),
                     ),
                     CheckboxListTile(
-                      secondary: const Icon(Icons.emoji_emotions),
+                      secondary: const Icon(Icons.emoji_emotions_outlined),
                       title: Text(tr.emoji),
                       subtitle: _buildCacheHint(
                         context,

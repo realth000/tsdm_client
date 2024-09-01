@@ -56,28 +56,28 @@ enum ThreadStateModel {
   closed(Icons.lock_outline),
 
   /// Rated by other user.
-  agreed(Icons.thumb_up),
+  agreed(Icons.thumb_up_outlined),
 
   /// Has attached pictures.
-  pictureAttached(Icons.image),
+  pictureAttached(Icons.image_outlined),
 
   /// Marked as essential thread.
-  digested(Icons.recommend),
+  digested(Icons.recommend_outlined),
 
   /// Globally pinned across the forum.
-  pinnedGlobally(Icons.looks_3),
+  pinnedGlobally(Icons.looks_3_outlined),
 
   /// Pinned in current thread type.
-  pinnedInType(Icons.looks_two),
+  pinnedInType(Icons.looks_two_outlined),
 
   /// Pinned in current subreddit.
-  pinnedInForum(Icons.looks_one),
+  pinnedInForum(Icons.looks_one_outlined),
 
   /// Has poll (also called "rate").
-  poll(Icons.poll),
+  poll(Icons.poll_outlined),
 
   /// Asks for help and provides reward.
-  rewarded(Icons.live_help);
+  rewarded(Icons.live_help_outlined);
 
   const ThreadStateModel(this.icon);
 

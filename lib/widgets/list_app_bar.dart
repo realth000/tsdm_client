@@ -109,7 +109,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
       bottom: bottom,
       actions: [
         IconButton(
-          icon: const Icon(Icons.search),
+          icon: const Icon(Icons.search_outlined),
           onPressed: onSearch,
         ),
         if (onJumpPage != null)
@@ -125,7 +125,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: MenuActions.refresh,
               child: Row(
                 children: [
-                  const Icon(Icons.refresh),
+                  const Icon(Icons.refresh_outlined),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionRefresh),
                 ],
@@ -135,7 +135,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: MenuActions.copyUrl,
               child: Row(
                 children: [
-                  const Icon(Icons.copy),
+                  const Icon(Icons.copy_outlined),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionCopyUrl),
                 ],
@@ -145,7 +145,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: MenuActions.openInBrowser,
               child: Row(
                 children: [
-                  const Icon(Icons.launch),
+                  const Icon(Icons.launch_outlined),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionOpenInBrowser),
                 ],
@@ -155,7 +155,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: MenuActions.backToTop,
               child: Row(
                 children: [
-                  const Icon(Icons.vertical_align_top),
+                  const Icon(Icons.vertical_align_top_outlined),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionBackToTop),
                 ],
@@ -168,8 +168,8 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   children: [
                     Icon(
                       reverseOrder
-                          ? Icons.align_vertical_bottom
-                          : Icons.align_vertical_top,
+                          ? Icons.align_vertical_bottom_outlined
+                          : Icons.align_vertical_top_outlined,
                     ),
                     sizedBoxPopupMenuItemIconSpacing,
                     Text(

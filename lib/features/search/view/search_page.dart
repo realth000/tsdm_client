@@ -244,7 +244,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             autofocus: true,
             controller: keywordController,
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.abc),
+              prefixIcon: const Icon(Icons.abc_outlined),
               labelText: context.t.searchPage.form.keyword,
             ),
             validator: (v) {
@@ -292,7 +292,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             controller: fidController,
             keyboardType: TextInputType.number,
             decoration: InputDecoration(
-              prefixIcon: const Icon(Icons.forum),
+              prefixIcon: const Icon(Icons.forum_outlined),
               labelText: context.t.searchPage.form.fid,
               suffixText: unlimitedFid ? context.t.searchPage.form.any : null,
             ),
@@ -344,7 +344,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
         ),
         // Text(),
         IconButton(
-          icon: const Icon(Icons.arrow_left),
+          icon: const Icon(Icons.arrow_left_outlined),
           onPressed: !searching && _hasPreviousPage(state)
               ? () async => _searchPreviousPage(context, state)
               : null,
@@ -360,7 +360,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
           child: Text('${state.searchResult?.currentPage ?? "-"}'),
         ),
         IconButton(
-          icon: const Icon(Icons.arrow_right),
+          icon: const Icon(Icons.arrow_right_outlined),
           onPressed: !searching && _hasNextPage(state)
               ? () async => _searchNextPage(context, state)
               : null,

@@ -86,17 +86,17 @@ class _CardLayout extends StatelessWidget {
     required bool showLastReplyAuthor,
   }) {
     final infoList = <_ThreadInfo>[
-      if (replyCount != null) (Icons.forum, '$replyCount'),
-      if (viewCount != null) (Icons.bar_chart, '$viewCount'),
+      if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
+      if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
       if (showLastReplyAuthor && lastReplyAuthor != null)
         (Icons.person_outline, lastReplyAuthor!.name),
       if (latestReplyTime != null)
         (
-          Icons.timelapse,
+          Icons.timelapse_outlined,
           latestReplyTime!.elapsedTillNow(),
         ),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
-      if ((privilege ?? 0) > 0) (Icons.feedback, '$privilege'),
+      if ((privilege ?? 0) > 0) (Icons.feedback_outlined, '$privilege'),
     ];
 
     if (infoList.isEmpty) {
