@@ -21,6 +21,7 @@ import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_fe
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/color_palette.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
@@ -200,15 +201,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionListTile(
         leading: const Icon(Icons.color_lens_outlined),
         title: Text(tr.colorScheme.title),
-        trailing: accentColor < 0
-            ? null
-            : Hero(
-                tag: Color(accentColor).toString(),
-                child: CircleAvatar(
-                  radius: 15,
-                  backgroundColor: Color(accentColor),
-                ),
-              ),
+        trailing:
+            accentColor < 0 ? null : ColorPalette(color: Color(accentColor)),
         onTap: () async {
           final color = await _showAccentColorPickerDialog(context);
           if (color == null) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/color_palette.dart';
 
 const _colorBoxSize = 50.0;
 
@@ -38,16 +39,25 @@ final class ColorPickerDialog extends StatelessWidget {
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async =>
                   context.pop((Color(items[index].value), false)),
-              child: Badge(
-                isLabelVisible: items[index].value == currentColorValue,
-                label: const Icon(Icons.check, size: 10),
-                offset: Offset.zero,
-                child: SizedBox(
-                  width: _colorBoxSize,
-                  height: _colorBoxSize,
-                  child: CircleAvatar(backgroundColor: items[index]),
-                ),
+              child: ColorPalette(
+                color: items[index],
+                width: _colorBoxSize,
+                height: _colorBoxSize,
+                borderRadius: _colorBoxSize / 2,
+                padding: 10,
+                selected: items[index].value == currentColorValue,
               ),
+
+              // Badge(
+              //   isLabelVisible: ,
+              //   label: const Icon(Icons.check, size: 10),
+              //   offset: Offset.zero,
+              //   child: SizedBox(
+              //     width: _colorBoxSize,
+              //     height: _colorBoxSize,
+              //     child: CircleAvatar(backgroundColor: items[index]),
+              //   ),
+              // ),
             ),
             itemCount: items.length,
           ),

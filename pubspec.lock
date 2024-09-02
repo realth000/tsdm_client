@@ -663,7 +663,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "10.5.0"
+    version: "10.5.2"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -678,7 +678,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill/flutter_quill_extensions"
       relative: true
     source: path
-    version: "10.5.0"
+    version: "10.5.2"
   flutter_svg:
     dependency: "direct main"
     description:
