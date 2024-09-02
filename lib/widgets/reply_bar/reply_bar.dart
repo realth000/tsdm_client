@@ -143,13 +143,16 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       onTapCallback = showEditor;
     }
 
-    return Padding(
-      padding: edgeInsetsL12T12R12B12,
-      child: TextField(
-        controller: controller,
-        readOnly: true,
-        enabled: onTapCallback != null,
-        onTap: onTapCallback,
+    return ColoredBox(
+      color: Theme.of(context).colorScheme.surface,
+      child: Padding(
+        padding: edgeInsetsL12T12R12B12,
+        child: TextField(
+          controller: controller,
+          readOnly: true,
+          enabled: onTapCallback != null,
+          onTap: onTapCallback,
+        ),
       ),
     );
   }
