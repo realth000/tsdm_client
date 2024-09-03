@@ -86,17 +86,22 @@ Future<void> showImageActionBottomSheet({
         ),
         body: Column(
           children: [
-            ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: Card(
-                color: Theme.of(context).colorScheme.surfaceContainer,
-                child: Padding(
-                  padding: edgeInsetsL16T16R16B16,
-                  child: NetworkIndicatorImage(imageUrl),
+            Row(
+              children: [
+                Expanded(
+                  child: ColoredBox(
+                    color: Theme.of(context).colorScheme.surfaceContainerLow,
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxHeight: 100),
+                      child: Padding(
+                        padding: edgeInsetsT4B4,
+                        child: NetworkIndicatorImage(imageUrl),
+                      ),
+                    ),
+                  ),
                 ),
-              ),
+              ],
             ),
-            sizedBoxW12H12,
             Expanded(
               child: SingleChildScrollView(
                 child: Column(
