@@ -41,23 +41,9 @@ final class ColorPickerDialog extends StatelessWidget {
                   context.pop((Color(items[index].value), false)),
               child: ColorPalette(
                 color: items[index],
-                width: _colorBoxSize,
-                height: _colorBoxSize,
-                borderRadius: _colorBoxSize / 2,
                 padding: 10,
                 selected: items[index].value == currentColorValue,
               ),
-
-              // Badge(
-              //   isLabelVisible: ,
-              //   label: const Icon(Icons.check, size: 10),
-              //   offset: Offset.zero,
-              //   child: SizedBox(
-              //     width: _colorBoxSize,
-              //     height: _colorBoxSize,
-              //     child: CircleAvatar(backgroundColor: items[index]),
-              //   ),
-              // ),
             ),
             itemCount: items.length,
           ),

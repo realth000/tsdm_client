@@ -6,9 +6,9 @@ class ColorPalette extends StatelessWidget {
   /// Constructor.
   const ColorPalette({
     required this.color,
-    this.width = 40,
-    this.height = 40,
-    this.borderRadius = 15,
+    this.width = 50,
+    this.height = 50,
+    this.borderRadius = 25,
     this.selected = false,
     this.padding = 8,
     super.key,
@@ -34,10 +34,12 @@ class ColorPalette extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: color,
-      brightness: Theme.of(context).brightness,
-    );
+    final brightness = Theme.of(context).brightness;
+    final paddingColor = brightness == Brightness.dark
+        ? Theme.of(context).colorScheme.surfaceBright
+        : Theme.of(context).colorScheme.surfaceDim;
+    final colorScheme =
+        ColorScheme.fromSeed(seedColor: color, brightness: brightness);
     final palette = ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
       child: Column(
@@ -71,9 +73,9 @@ class ColorPalette extends StatelessWidget {
       width: width,
       height: height,
       decoration: ShapeDecoration(
-        color: Theme.of(context).colorScheme.surfaceBright,
+        color: paddingColor,
         shape: StarBorder(
-          side: BorderSide(color: Theme.of(context).colorScheme.surfaceBright),
+          side: BorderSide(color: paddingColor),
           points: 12,
           pointRounding: 1,
           innerRadiusRatio: 0.7,
