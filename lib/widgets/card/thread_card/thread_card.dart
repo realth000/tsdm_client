@@ -370,6 +370,10 @@ class MyThreadCard extends StatelessWidget {
       threadType: ThreadType(name: thread.forumName, url: thread.forumUrl),
       publishTime: thread.latestReplyTime,
       quotedMessage: thread.quotedMessage,
+      lastReplyAuthor: thread.latestReplyAuthor,
+      latestReplyTime: thread.latestReplyTime,
+      replyCount: thread.replyCount,
+      viewCount: thread.viewCount,
     );
   }
 }
