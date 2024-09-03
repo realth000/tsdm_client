@@ -31,9 +31,6 @@ const _pinnedTabIndex = 0;
 const _threadTabIndex = 1;
 const _subredditTabIndex = 2;
 
-/// Show [FloatingActionButton] when offset is larger than this value.
-const _showFabOffset = 100;
-
 /// Page to show all forum status.
 class ForumPage extends StatefulWidget {
   /// Constructor.
@@ -72,10 +69,22 @@ class _ForumPageState extends State<ForumPage>
   );
 
   /// Controller of current tab: thread, subreddit.
-  TabController? tabController;
+  late TabController tabController;
 
   /// Visibility of FAB.
-  bool _fabVisible = false;
+  bool _fabVisible = true;
+
+  void _updateFabVisibilityByTabIndex() {
+    if (tabController.index == _threadTabIndex) {
+      setState(() {
+        _fabVisible = true;
+      });
+    } else {
+      setState(() {
+        _fabVisible = false;
+      });
+    }
+  }
 
   PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
     return ListAppBar(
@@ -100,14 +109,14 @@ class _ForumPageState extends State<ForumPage>
                 // Here we want to scroll the current tab to the top.
                 // Only scroll to top when user taps on the current
                 // tab, which means index is not changing.
-                if (tabController?.indexIsChanging ?? true) {
+                if (tabController.indexIsChanging) {
                   // Do nothing because user tapped another index
                   // and want to switch to it.
                   return;
                 }
                 const duration = Duration(milliseconds: 300);
                 const curve = Curves.ease;
-                switch (tabController!.index) {
+                switch (tabController.index) {
                   case _pinnedTabIndex:
                     _pinnedScrollController.animateTo(
                       0,
@@ -149,11 +158,7 @@ class _ForumPageState extends State<ForumPage>
       onSelected: (value) async {
         switch (value) {
           case MenuActions.refresh:
-            if (tabController == null) {
-              context.read<ForumBloc>().add(ForumRefreshRequested());
-              return;
-            }
-            switch (tabController!.index) {
+            switch (tabController.index) {
               case _pinnedTabIndex:
                 await _pinnedRefreshController.callRefresh();
               case _threadTabIndex:
@@ -442,23 +447,12 @@ class _ForumPageState extends State<ForumPage>
       initialIndex: _threadTabIndex,
       length: _tabsCount,
       vsync: this,
-    );
+    )..addListener(_updateFabVisibilityByTabIndex);
   }
 
   bool _onBodyScrollNotification(UserScrollNotification notification) {
     if (notification.metrics.axis != Axis.vertical) {
       return false;
-    }
-
-    // Update fab visibility according to scroll offset.
-    if (notification.metrics.pixels <= _showFabOffset) {
-      // Offset smaller than boundary.
-      if (_fabVisible) {
-        setState(() {
-          _fabVisible = false;
-        });
-      }
-      return true;
     }
 
     // Update fab visibility according to scroll direction.
@@ -483,7 +477,7 @@ class _ForumPageState extends State<ForumPage>
     _threadRefreshController.dispose();
     _subredditScrollController.dispose();
     _subredditRefreshController.dispose();
-    tabController?.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
@@ -511,7 +505,7 @@ class _ForumPageState extends State<ForumPage>
                 state.normalThreadList.isEmpty &&
                 // Do not switch tab if filtering but filtering non result left.
                 !state.filterState.isFiltering()) {
-              tabController?.animateTo(
+              tabController.animateTo(
                 _subredditTabIndex,
                 duration: const Duration(milliseconds: 500),
               );
