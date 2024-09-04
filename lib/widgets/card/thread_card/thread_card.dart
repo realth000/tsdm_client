@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
 import 'package:tsdm_client/features/my_thread/models/models.dart';
 import 'package:tsdm_client/features/search/models/models.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/themes/widget_themes.dart';
@@ -24,7 +25,8 @@ class _CardLayout extends StatelessWidget {
   const _CardLayout({
     required this.threadID,
     required this.title,
-    required this.author,
+    this.forum,
+    this.author,
     this.publishTime,
     this.threadType,
     this.replyCount,
@@ -42,8 +44,9 @@ class _CardLayout extends StatelessWidget {
 
   final String threadID;
   final String title;
+  final String? forum;
   final ThreadType? threadType;
-  final User author;
+  final User? author;
   final DateTime? publishTime;
 
   final int? replyCount;
@@ -57,24 +60,45 @@ class _CardLayout extends StatelessWidget {
   final Set<ThreadStateModel>? stateSet;
   final bool isRecentThread;
 
+  Card _wrapWithCard(BuildContext context, Widget child) => Card(
+        margin: EdgeInsets.zero,
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: disableTap
+              ? null
+              : () async {
+                  await context.pushNamed(
+                    ScreenPaths.thread,
+                    queryParameters: {
+                      'tid': threadID,
+                      'appBarTitle': title,
+                      'threadType': threadType?.name,
+                    },
+                  );
+                },
+          child: child,
+        ),
+      );
+
+  /// [author] MUST not be null.
   Widget _buildAvatar(BuildContext context) {
-    final avatar = author.avatarUrl;
+    final avatar = author!.avatarUrl;
     if (avatar != null) {
       if (avatar.isEmpty) {
-        return CircleAvatar(child: Text(author.name[0]));
+        return CircleAvatar(child: Text(author!.name[0]));
       }
 
       if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
         return HeroUserAvatar(
-          username: author.name,
-          avatarUrl: author.avatarUrl,
+          username: author!.name,
+          avatarUrl: author!.avatarUrl,
           disableHero: true,
         );
       }
       return CircleAvatar(backgroundImage: AssetImage(avatar));
     }
 
-    return CircleAvatar(child: Text(author.name[0]));
+    return CircleAvatar(child: Text(author!.name[0]));
   }
 
   /// Mainly for test.
@@ -85,6 +109,8 @@ class _CardLayout extends StatelessWidget {
     required bool infoRowAlignCenter,
     required bool showLastReplyAuthor,
   }) {
+    final infoColor = Theme.of(context).colorScheme.secondaryFixed;
+
     final infoList = <_ThreadInfo>[
       if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
       if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
@@ -146,11 +172,14 @@ class _CardLayout extends StatelessWidget {
             children: infoList
                 .map(
                   (e) => [
-                    Icon(e.$1, size: smallIconSize),
+                    Icon(e.$1, size: smallIconSize, color: infoColor),
                     sizedBoxW4H4,
                     Text(
                       e.$2,
-                      style: const TextStyle(fontSize: smallTextSize),
+                      style: TextStyle(
+                        fontSize: smallTextSize,
+                        color: infoColor,
+                      ),
                       maxLines: 1,
                     ),
                     sizedBoxW12H12,
@@ -164,117 +193,130 @@ class _CardLayout extends StatelessWidget {
     }
   }
 
-  Widget _buildContent(BuildContext context, SettingsState state) {
-    final infoRowAlignCenter = state.settingsMap.threadCardInfoRowAlignCenter;
-    final showLastReplyAuthor = state.settingsMap.threadCardShowLastReplyAuthor;
+  Widget _buildCardTitle(BuildContext context, SettingsState state) {
     final highlightRecentThread =
         state.settingsMap.threadCardHighlightRecentThread;
-
     final TextStyle? authorNameStyle;
     if (state.settingsMap.threadCardHighlightAuthorName) {
       authorNameStyle = TextStyle(
         color: Theme.of(context).colorScheme.primary,
       );
     } else {
-      authorNameStyle = null;
+      authorNameStyle = TextStyle(
+        color: Theme.of(context).colorScheme.primary,
+      );
     }
 
     final TextStyle? timeStyle;
     if (isRecentThread && highlightRecentThread) {
       timeStyle = TextStyle(
         color: Theme.of(context).colorScheme.secondary,
-        fontWeight: FontWeight.bold,
-        // decoration: TextDecoration.combine([
-        //   TextDecoration.underline,
-        // ]),
       );
     } else {
-      timeStyle = null;
+      timeStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary,
+      );
     }
 
-    return Card(
-      margin: EdgeInsets.zero,
-      clipBehavior: Clip.antiAlias,
-      child: InkWell(
-        onTap: disableTap
-            ? null
-            : () async {
-                await context.pushNamed(
-                  ScreenPaths.thread,
-                  queryParameters: {
-                    'tid': threadID,
-                    'appBarTitle': title,
-                    'threadType': threadType?.name,
-                  },
-                );
-              },
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+    if (author != null) {
+      return ListTile(
+        leading: GestureDetector(
+          onTap: disableTap
+              ? null
+              : () async => context.dispatchAsUrl(author!.url),
+          child: _buildAvatar(context),
+        ),
+        title: Row(
           children: [
-            // TODO: Tap to navigate to user space.
-            ListTile(
-              leading: GestureDetector(
-                onTap: disableTap
-                    ? null
-                    : () async => context.dispatchAsUrl(author.url),
-                child: _buildAvatar(context),
-              ),
-              title: Row(
-                children: [
-                  GestureDetector(
-                    onTap: disableTap
-                        ? null
-                        : () async => context.dispatchAsUrl(author.url),
-                    child: SingleLineText(author.name, style: authorNameStyle),
-                  ),
-                  Expanded(child: Container()),
-                ],
-              ),
-              subtitle: publishTime != null
-                  ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle)
-                  : null,
-              trailing: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  if (stateSet != null)
-                    ...stateSet!.map((e) => Icon(e.icon, size: 16)),
-                  Text(threadType?.name ?? ''),
-                ].insertBetween(sizedBoxW4H4),
-              ),
+            GestureDetector(
+              onTap: disableTap
+                  ? null
+                  : () async => context.dispatchAsUrl(author!.url),
+              child: SingleLineText(author!.name, style: authorNameStyle),
             ),
+            Expanded(child: Container()),
+          ],
+        ),
+        subtitle: publishTime != null
+            ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle)
+            : null,
+        trailing: Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min,
+          children: <Widget>[
+            if (stateSet != null)
+              ...stateSet!.map((e) => Icon(e.icon, size: 16)),
+            Text(threadType?.name ?? ''),
+          ].insertBetween(sizedBoxW4H4),
+        ),
+      );
+    }
+
+    return ListTile(
+      leading: Chip(label: Text(context.t.myThreadPage.forum)),
+      title: Text('$forum', style: authorNameStyle),
+      subtitle: publishTime != null
+          ? SingleLineText(
+              publishTime!.yyyyMMDD(),
+              style: timeStyle,
+            )
+          : null,
+      trailing: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          if (stateSet != null) ...stateSet!.map((e) => Icon(e.icon, size: 16)),
+          Text(threadType?.name ?? ''),
+        ].insertBetween(sizedBoxW4H4),
+      ),
+    );
+  }
+
+  /// Build a thread card that has [author] (or [forum] when [author] is null)
+  /// info like title, thread title or
+  /// content as body, and thread info as bottom.
+  Widget _buildContent(BuildContext context, SettingsState state) {
+    final infoRowAlignCenter = state.settingsMap.threadCardInfoRowAlignCenter;
+    final showLastReplyAuthor = state.settingsMap.threadCardShowLastReplyAuthor;
+
+    return _wrapWithCard(
+      context,
+      Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // TODO: Tap to navigate to user space.
+          _buildCardTitle(context, state),
+          Padding(
+            padding: edgeInsetsL16R16B12,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    maxLines: 3,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: css?.color,
+                      fontWeight: css?.fontWeight,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (quotedMessage != null)
             Padding(
               padding: edgeInsetsL16R16B12,
               child: Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      title,
-                      maxLines: 3,
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        color: css?.color,
-                        fontWeight: css?.fontWeight,
-                      ),
-                    ),
-                  ),
-                ],
+                children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
               ),
             ),
-            if (quotedMessage != null)
-              Padding(
-                padding: edgeInsetsL16R16B12,
-                child: Row(
-                  children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
-                ),
-              ),
-            _buildInfoWidgetRow(
-              context,
-              infoRowAlignCenter: infoRowAlignCenter,
-              showLastReplyAuthor: showLastReplyAuthor,
-            ),
-          ].insertBetween(sizedBoxW12H12),
-        ),
+          _buildInfoWidgetRow(
+            context,
+            infoRowAlignCenter: infoRowAlignCenter,
+            showLastReplyAuthor: showLastReplyAuthor,
+          ),
+        ].insertBetween(sizedBoxW12H12),
       ),
     );
   }
@@ -365,9 +407,8 @@ class MyThreadCard extends StatelessWidget {
     return _CardLayout(
       threadID: thread.threadID,
       title: thread.title,
-      author: thread.latestReplyAuthor!,
-      // FIXME: Do not use thread type to represent forum.
-      threadType: ThreadType(name: thread.forumName, url: thread.forumUrl),
+      forum: thread.forumName,
+      stateSet: thread.stateSet,
       publishTime: thread.latestReplyTime,
       quotedMessage: thread.quotedMessage,
       lastReplyAuthor: thread.latestReplyAuthor,
@@ -391,7 +432,7 @@ class LatestThreadCard extends StatelessWidget {
     return _CardLayout(
       threadID: thread.threadID!,
       title: thread.title!,
-      author: thread.latestReplyAuthor!,
+      author: thread.latestReplyAuthor,
       // FIXME: Do not use thread type to represent forum.
       threadType: ThreadType(name: thread.forumName!, url: thread.forumUrl!),
       publishTime: thread.latestReplyTime,

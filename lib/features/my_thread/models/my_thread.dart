@@ -15,6 +15,7 @@ class MyThread with MyThreadMappable {
     required this.latestReplyAuthor,
     required this.latestReplyTime,
     required this.quotedMessage,
+    required this.stateSet,
   });
 
   /// Thread title.
@@ -55,6 +56,11 @@ class MyThread with MyThreadMappable {
 
   /// Quoted message of last replied user that only exists in reply list.
   final String? quotedMessage;
+
+  /// List of thread state.
+  ///
+  /// For example, a thread can be rated and marked pinned at the same time.
+  final Set<ThreadStateModel> stateSet;
 
   /// <tbody>
   ///   <tr>
@@ -133,6 +139,19 @@ failed to parse MyThread node: {
       return null;
     }
 
+    // Unfortunately here we can not parse trailing thread state as what we do
+    // in parsing normal thread because the state here only contains text not
+    // image at the tail of thread title.
+    final stateSet = ThreadStateModel.buildSetFromTr(element);
+    for (final stateText in element.querySelectorAll('th > span.xg1')) {
+      switch (stateText.innerText.trim()) {
+        case '草稿箱':
+          stateSet.add(ThreadStateModel.draft);
+        case '已关闭':
+          stateSet.add(ThreadStateModel.closed);
+      }
+    }
+
     return MyThread(
       title: title,
       threadID: threadID,
@@ -147,6 +166,7 @@ failed to parse MyThread node: {
       ),
       latestReplyTime: latestReplyTime,
       quotedMessage: quotedMessage,
+      stateSet: stateSet,
     );
   }
 }

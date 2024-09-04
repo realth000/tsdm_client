@@ -355,7 +355,8 @@
     },
     "replyTab": {
       "title": "ReplyThread"
-    }
+    },
+    "forum": "Forum"
   },
   "latestThreadPage": {
     "title": "Latest Thread"

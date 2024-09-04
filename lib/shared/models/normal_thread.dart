@@ -77,9 +77,44 @@ enum ThreadStateModel {
   poll(Icons.poll_outlined),
 
   /// Asks for help and provides reward.
-  rewarded(Icons.live_help_outlined);
+  rewarded(Icons.live_help_outlined),
+
+  /// Thread in draft.
+  ///
+  /// Only used in MyThread page.
+  draft(Icons.drafts_outlined);
 
   const ThreadStateModel(this.icon);
+
+  /// Build a [Set] of [ThreadStateModel].
+  ///
+  /// This factory function in only useful when:
+  ///
+  /// * In forum page.
+  /// * In my thread page.
+  ///
+  /// In both usage, [threadElement] is the `<tr>` node parent of the thread
+  /// row.
+  static Set<ThreadStateModel> buildSetFromTr(
+    uh.Element threadElement,
+  ) {
+    final stateSet = <ThreadStateModel>{};
+
+    final threadIconNode = threadElement.querySelector('td > a > img');
+    if (threadIconNode != null) {
+      stateSet.addAll(threadIconNode._parseThreadStateFromImg());
+    }
+    // Parse thread state from images following title text.
+    final stateList = threadElement
+        .querySelectorAll('th > img')
+        .map((e) => e._parseThreadStateFromImg())
+        .toList()
+        .flattened
+        .toList();
+    stateSet.addAll(stateList);
+
+    return stateSet;
+  }
 
   /// Icon of thread.
   final IconData icon;
@@ -186,12 +221,7 @@ class NormalThread with NormalThreadMappable {
   ///   class="tsdm_normalthread"
   ///   name="tsdm_normalthread">
   static NormalThread? fromTBody(uh.Element threadElement) {
-    final stateSet = <ThreadStateModel>{};
-
     final threadIconNode = threadElement.querySelector('tr > td > a > img');
-    if (threadIconNode != null) {
-      stateSet.addAll(threadIconNode._parseThreadStateFromImg());
-    }
     final threadIconUrl = threadIconNode?.attributes['src']?.prependHost();
     if (threadIconUrl == null) {
       talker.error('failed to build thread: invalid thread icon url');
@@ -308,14 +338,11 @@ class NormalThread with NormalThreadMappable {
       return null;
     }
 
-    // Parse thread state from images following title text.
-    final stateList = threadElement
-        .querySelectorAll('tr > th > img')
-        .map((e) => e._parseThreadStateFromImg())
-        .toList()
-        .flattened
-        .toList();
-    stateSet.addAll(stateList);
+    final stateTrNode = threadElement.querySelector('tr');
+    final stateSet = <ThreadStateModel>{};
+    if (stateTrNode != null) {
+      stateSet.addAll(ThreadStateModel.buildSetFromTr(stateTrNode));
+    }
 
     return NormalThread(
       title: threadTitle,

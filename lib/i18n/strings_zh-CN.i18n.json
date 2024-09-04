@@ -355,7 +355,8 @@
     },
     "replyTab": {
       "title": "回复"
-    }
+    },
+    "forum": "分区"
   },
   "latestThreadPage": {
     "title": "最新主题"
