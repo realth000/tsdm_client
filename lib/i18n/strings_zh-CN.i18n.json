@@ -71,6 +71,7 @@
         "showLastReplyAuthor": "显示最后回复的用户的名字",
         "highlightRecentThread": "高亮显示近期发布的帖子",
         "highlightAuthorName": "高亮帖子作者的用户名",
+        "highlightInfoRow": "高亮显示帖子信息",
         "example": {
           "title": "TV动画《魔法禁书目录》第四季制作决定！",
           "author": "茵蒂克丝",

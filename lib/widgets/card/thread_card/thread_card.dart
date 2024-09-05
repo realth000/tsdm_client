@@ -104,12 +104,16 @@ class _CardLayout extends StatelessWidget {
   /// Mainly for test.
   final bool disableTap;
 
-  Widget _buildInfoWidgetRow(
-    BuildContext context, {
+  Widget _buildInfoWidgetRow({
+    required BuildContext context,
     required bool infoRowAlignCenter,
     required bool showLastReplyAuthor,
+    required bool highlightInfoRow,
   }) {
-    final infoColor = Theme.of(context).colorScheme.secondaryFixed;
+    final infoColor = switch (highlightInfoRow) {
+      true => Theme.of(context).colorScheme.secondary,
+      false => null,
+    };
 
     final infoList = <_ThreadInfo>[
       if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
@@ -202,9 +206,7 @@ class _CardLayout extends StatelessWidget {
         color: Theme.of(context).colorScheme.primary,
       );
     } else {
-      authorNameStyle = TextStyle(
-        color: Theme.of(context).colorScheme.primary,
-      );
+      authorNameStyle = null;
     }
 
     final TextStyle? timeStyle;
@@ -213,9 +215,7 @@ class _CardLayout extends StatelessWidget {
         color: Theme.of(context).colorScheme.secondary,
       );
     } else {
-      timeStyle = TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
-      );
+      timeStyle = null;
     }
 
     if (author != null) {
@@ -278,6 +278,7 @@ class _CardLayout extends StatelessWidget {
   Widget _buildContent(BuildContext context, SettingsState state) {
     final infoRowAlignCenter = state.settingsMap.threadCardInfoRowAlignCenter;
     final showLastReplyAuthor = state.settingsMap.threadCardShowLastReplyAuthor;
+    final highlightInfoRow = state.settingsMap.threadCardHighlightInfoRow;
 
     return _wrapWithCard(
       context,
@@ -312,9 +313,10 @@ class _CardLayout extends StatelessWidget {
               ),
             ),
           _buildInfoWidgetRow(
-            context,
+            context: context,
             infoRowAlignCenter: infoRowAlignCenter,
             showLastReplyAuthor: showLastReplyAuthor,
+            highlightInfoRow: highlightInfoRow,
           ),
         ].insertBetween(sizedBoxW12H12),
       ),
@@ -335,7 +337,8 @@ class _CardLayout extends StatelessWidget {
             pm.threadCardHighlightRecentThread !=
                 cm.threadCardHighlightRecentThread ||
             pm.threadCardHighlightAuthorName !=
-                cm.threadCardHighlightAuthorName;
+                cm.threadCardHighlightAuthorName ||
+            pm.threadCardHighlightInfoRow != cm.threadCardHighlightInfoRow;
       },
       builder: _buildContent,
     );

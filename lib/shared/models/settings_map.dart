@@ -32,6 +32,7 @@ class SettingsMap with SettingsMapMappable {
     required this.threadCardShowLastReplyAuthor,
     required this.threadCardHighlightRecentThread,
     required this.threadCardHighlightAuthorName,
+    required this.threadCardHighlightInfoRow,
     required this.netClientProxy,
     required this.netClientUseProxy,
   });
@@ -61,6 +62,7 @@ class SettingsMap with SettingsMapMappable {
   final bool threadCardShowLastReplyAuthor;
   final bool threadCardHighlightRecentThread;
   final bool threadCardHighlightAuthorName;
+  final bool threadCardHighlightInfoRow;
   final String netClientProxy;
   final bool netClientUseProxy;
 
@@ -110,6 +112,8 @@ class SettingsMap with SettingsMapMappable {
         copyWith(threadCardHighlightRecentThread: value as bool?),
       SettingsKeys.threadCardHighlightAuthorName =>
         copyWith(threadCardHighlightAuthorName: value as bool?),
+      SettingsKeys.threadCardHighlightInfoRow =>
+        copyWith(threadCardHighlightInfoRow: value as bool?),
       SettingsKeys.netClientProxy => copyWith(netClientProxy: value as String?),
       SettingsKeys.netClientUseProxy =>
         copyWith(netClientUseProxy: value as bool?),

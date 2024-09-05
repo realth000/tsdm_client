@@ -198,6 +198,11 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     type: bool,
     defaultValue: true,
   ),
+  threadCardHighlightInfoRow<bool>(
+    name: 'threadCardHighlightInfoRow',
+    type: bool,
+    defaultValue: true,
+  ),
 
   /// Use network proxy config below or not.
   netClientUseProxy<bool>(

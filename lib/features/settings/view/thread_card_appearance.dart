@@ -128,6 +128,16 @@ class _SettingsThreadCardAppearancePageState
                         ),
                       ),
                 ),
+                SectionSwitchListTile(
+                  title: Text(tr.highlightInfoRow),
+                  value: settings.threadCardHighlightInfoRow,
+                  onChanged: (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(
+                          SettingsKeys.threadCardHighlightInfoRow,
+                          v,
+                        ),
+                      ),
+                ),
               ],
             ),
           ),

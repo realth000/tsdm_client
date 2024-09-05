@@ -100,6 +100,8 @@ final class SettingsRepository with LoggerMixin {
           s.extract(SettingsKeys.threadCardHighlightRecentThread),
       threadCardHighlightAuthorName:
           s.extract(SettingsKeys.threadCardHighlightAuthorName),
+      threadCardHighlightInfoRow:
+          s.extract(SettingsKeys.threadCardHighlightInfoRow),
       netClientUseProxy: s.extract(SettingsKeys.netClientUseProxy),
       netClientProxy: s.extract(SettingsKeys.netClientProxy),
     );
