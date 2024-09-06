@@ -4,7 +4,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
 
-const _colorBoxSize = 50.0;
+const _colorBoxSize = 55.0;
 
 /// Dialog to let user select accent color.
 final class ColorPickerDialog extends StatelessWidget {
@@ -41,7 +41,6 @@ final class ColorPickerDialog extends StatelessWidget {
                   context.pop((Color(items[index].value), false)),
               child: ColorPalette(
                 color: items[index],
-                padding: 10,
                 selected: items[index].value == currentColorValue,
               ),
             ),
