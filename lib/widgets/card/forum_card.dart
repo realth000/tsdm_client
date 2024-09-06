@@ -153,19 +153,17 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
       ),
     ];
 
-    final fixedColor = Theme.of(context).colorScheme.secondaryFixed;
     final forumInfoWidgets = forumInfoList
         .map(
           (e) => Expanded(
             child: Row(
               children: [
-                Icon(e.$1, size: smallIconSize, color: fixedColor),
+                Icon(e.$1, size: smallIconSize),
                 sizedBoxW4H4,
                 Flexible(
                   child: Text(
                     '${e.$2}',
-                    style:
-                        TextStyle(fontSize: smallTextSize, color: fixedColor),
+                    style: const TextStyle(fontSize: smallTextSize),
                     maxLines: 1,
                     overflow: TextOverflow.clip,
                   ),
@@ -201,9 +199,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
               ),
               title: Text(
                 widget.forum.name,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium,
                 maxLines: 2,
               ),
               subtitle: widget.forum.latestThreadTime != null
