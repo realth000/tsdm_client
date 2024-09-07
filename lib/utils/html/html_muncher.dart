@@ -903,8 +903,11 @@ final class _Muncher with LoggerMixin {
   List<InlineSpan>? _buildDetails(uh.Element element) {
     final summary = element.children.elementAtOrNull(0);
     state.elevation += 1;
-    final dataSpanList =
-        element.children.skip(1).map(_munch).whereType<InlineSpan>().toList();
+    final dataSpanList = element.children
+        .skip(1)
+        .map(_munch)
+        .whereType<List<InlineSpan>>()
+        .toList();
     state.elevation -= 1;
     if (summary == null || dataSpanList.isEmpty) {
       return null;
@@ -919,7 +922,7 @@ final class _Muncher with LoggerMixin {
       WidgetSpan(
         child: SpoilerCard(
           title: TextSpan(children: summarySpan),
-          content: TextSpan(children: dataSpanList.toList()),
+          content: TextSpan(children: dataSpanList.flattened.toList()),
           elevation: state.elevation,
         ),
       ),
