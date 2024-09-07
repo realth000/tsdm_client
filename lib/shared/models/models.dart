@@ -22,6 +22,7 @@ part 'reply_parameters.dart';
 part 'settings.dart';
 part 'settings_map.dart';
 part 'stick_thread.dart';
+part 'thread_perm.dart';
 part 'thread_type.dart';
 part 'user.dart';
 part 'user_brief_profile.dart';

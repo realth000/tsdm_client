@@ -93,6 +93,7 @@ final class PostEditContent with PostEditContentMappable {
     required this.page,
     required this.data,
     required this.options,
+    required this.permList,
   });
 
   /// Build a instance of [PostEditContent] from [document].
@@ -231,6 +232,12 @@ final class PostEditContent with PostEditContentMappable {
       },
     ).toList();
 
+    final permListNode = rootNode?.querySelector('select#readperm');
+    List<ThreadPerm>? permList;
+    if (permListNode != null) {
+      permList = ThreadPerm.buildListFromSelect(permListNode);
+    }
+
     return PostEditContent(
       threadType: threadType,
       threadTypeList: threadTypeList,
@@ -246,6 +253,7 @@ final class PostEditContent with PostEditContentMappable {
       page: page,
       data: data,
       options: options,
+      permList: permList,
     );
   }
 
@@ -314,4 +322,9 @@ final class PostEditContent with PostEditContentMappable {
   ///
   /// Allow null values.
   final List<PostEditContentOption>? options;
+
+  /// All available perms to select, require to access this thread.
+  ///
+  /// Only used in editing thread.
+  final List<ThreadPerm>? permList;
 }

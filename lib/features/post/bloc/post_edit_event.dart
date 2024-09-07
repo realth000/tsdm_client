@@ -37,6 +37,8 @@ final class PostEditCompleteEditRequested extends PostEditEvent
     required this.data,
     required this.options,
     required this.save,
+    required this.perm,
+    required this.price,
   }) : super();
 
   /// Form hash.
@@ -87,6 +89,12 @@ final class PostEditCompleteEditRequested extends PostEditEvent
   ///
   /// Only set to "1" when editing thread in draft state.
   final String save;
+
+  /// Optional permission required to access this thread.
+  final String? perm;
+
+  /// Optional thread price.
+  final int? price;
 }
 
 /// Fetch required info for publishing, including form hash, post time and more.

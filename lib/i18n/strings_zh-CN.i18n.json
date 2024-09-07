@@ -417,6 +417,9 @@
         "title": "发布成功",
         "message": "想跳转到新帖子吗？"
       }
+    },
+    "permDialog": {
+      "title": "设置阅读权限"
     }
   },
   "chatHistoryPage": {

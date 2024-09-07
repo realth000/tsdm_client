@@ -417,6 +417,9 @@
         "title": "Post succeed",
         "message": "Would like to go to the new thread page?"
       }
+    },
+    "permDialog": {
+      "title": "Set read perm"
     }
   },
   "chatHistoryPage": {

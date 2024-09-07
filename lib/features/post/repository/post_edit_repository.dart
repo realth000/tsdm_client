@@ -58,6 +58,7 @@ final class PostEditRepository with LoggerMixin {
     required String data,
     required Map<String, String> options,
     required String save,
+    required String? perm,
   }) =>
       AsyncVoidEither(() async {
         final body = <String, String>{
@@ -78,6 +79,10 @@ final class PostEditRepository with LoggerMixin {
         if (threadType != null) {
           body['typeid'] = threadType;
         }
+        if (perm != null) {
+          body['readperm'] = perm;
+        }
+
         for (final entry in options.entries) {
           body[entry.key] = entry.value;
         }

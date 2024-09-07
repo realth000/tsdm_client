@@ -12,6 +12,7 @@ import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
+import 'package:tsdm_client/features/post/widgets/select_perm_dialog.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -161,6 +162,16 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// Value is the option itself.
   Map<String, PostEditContentOption>? additionalOptionsMap;
 
+  /// Optional permission set to access this thread.
+  ///
+  /// Only used when editing thread, not other floors' posts.
+  String? perm;
+
+  /// Optional price set to this thread.
+  ///
+  /// Only used when editing thread, not other floors' posts.
+  int? price;
+
   final bbcodeController = BBCodeEditorController();
 
   // BBCode text attribute status.
@@ -248,6 +259,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           data: bbcodeController.toBBCode(),
           options: additionalOptionsMap?.values.toList() ?? [],
           save: saveDraft ? '1' : '',
+          perm: perm,
+          price: price,
         ),
       PostEditType.newThread => ThreadPubPostThread(
           ThreadPublishInfo(
@@ -260,8 +273,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             checkbox: '0',
             subject: threadTitleController.text,
             message: bbcodeController.toBBCode(),
-            price: '',
-            readPerm: '',
+            perm: perm,
+            price: price,
             save: saveDraft ? '1' : '',
             options: additionalOptionsMap?.values.toList() ?? [],
           ),
@@ -443,6 +456,26 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               ? () async => _showAdditionalOptionBottomSheet(context, state)
               : null,
         ),
+        IconButton(
+          icon: const Icon(Icons.lock_open_outlined),
+          selectedIcon: const Icon(Icons.lock_outline),
+          isSelected: perm != null && perm!.isNotEmpty,
+          onPressed: state.content?.permList?.isNotEmpty != true
+              ? null
+              : () async {
+                  final selectedPerm = await showSelectPermDialog(
+                    context,
+                    state.content!.permList!,
+                    perm,
+                  );
+                  if (selectedPerm == null || !context.mounted) {
+                    return;
+                  }
+                  setState(() {
+                    perm = selectedPerm;
+                  });
+                },
+        ),
         const Spacer(),
         if (widget.editType.isEditingDraft) ...[
           FilledButton.tonal(
@@ -580,6 +613,11 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         context: context,
         message: state.errorText ?? context.t.general.failedToLoad,
       );
+    } else if (state.status == PostEditStatus.editing) {
+      setState(() {
+        perm =
+            state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+      });
     } else if (state.status == PostEditStatus.success) {
       // Some action succeeded.
       if (widget.editType.isEditingPost) {

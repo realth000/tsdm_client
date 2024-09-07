@@ -417,6 +417,9 @@
         "title": "發佈成功",
         "message": "想跳到新貼文嗎？"
       }
+    },
+    "permDialog": {
+      "title": "設定讀取權限"
     }
   },
   "chatHistoryPage": {

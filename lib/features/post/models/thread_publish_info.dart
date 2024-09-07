@@ -20,7 +20,7 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
     required this.subject,
     required this.message,
     required this.price,
-    required this.readPerm,
+    required this.perm,
     required this.save,
     required this.options,
   });
@@ -85,10 +85,10 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
   final String message;
 
   /// Sell price used in post.
-  final String price;
+  final int? price;
 
   /// Least permission to read this thread.
-  final String readPerm;
+  final String? perm;
 
   /// Save to draft or not.
   ///
