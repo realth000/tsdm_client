@@ -299,7 +299,8 @@
     "closed": "帖子已关闭",
     "needLogin": "需要登录",
     "replySuccess": "回复成功",
-    "replyFailed": "回复失败：$err"
+    "replyFailed": "回复失败：$err",
+    "draft": "草稿"
   },
   "noticePage": {
     "title": "通知",

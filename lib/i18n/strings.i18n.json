@@ -299,7 +299,8 @@
     "closed": "Thread is closed",
     "needLogin": "Need login",
     "replySuccess": "Reply success",
-    "replyFailed": "Failed to reply: $err"
+    "replyFailed": "Failed to reply: $err",
+    "draft": "Draft"
   },
   "noticePage": {
     "title": "Notifications",

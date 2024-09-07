@@ -339,6 +339,14 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             subject: subject,
           );
         }
+
+        final isDraft = threadDataNode
+            ?.querySelector('div#postlist h1.ts > span')
+            ?.nodes
+            .firstOrNull
+            ?.text
+            ?.contains('草稿');
+
         final threadState = ThreadState(
           tid: threadID,
           pid: state.pid,
@@ -357,6 +365,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           onlyVisibleUid:
               (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
           reverseOrder: state.reverseOrder,
+          isDraft: isDraft ?? false,
         );
 
         return threadState;

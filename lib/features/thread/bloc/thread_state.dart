@@ -36,6 +36,7 @@ class ThreadState with ThreadStateMappable {
     this.threadType,
     this.onlyVisibleUid,
     this.reverseOrder,
+    this.isDraft = false,
   });
 
   /// Status.
@@ -101,4 +102,7 @@ class ThreadState with ThreadStateMappable {
   /// * Force set to asc order if `false`.
   /// * Not force order if `null`.
   final bool? reverseOrder;
+
+  /// Indicating current thread is a draft or not.
+  final bool isDraft;
 }

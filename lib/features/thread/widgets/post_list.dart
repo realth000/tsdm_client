@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -22,6 +23,7 @@ class PostList extends StatefulWidget {
     required this.widgetBuilder,
     required this.canLoadMore,
     required this.scrollController,
+    required this.isDraft,
     this.title,
     this.pageNumber = 1,
     this.useDivider = false,
@@ -63,6 +65,9 @@ class PostList extends StatefulWidget {
   /// Scroll to this post once page built.
   /// Useful in some "find post" situation.
   final int? initialPostID;
+
+  /// Is thread in draft state.
+  final bool isDraft;
 
   @override
   State<PostList> createState() => _PostListState();
@@ -155,28 +160,31 @@ class _PostListState extends State<PostList> with LoggerMixin {
     double shrinkOffset,
     double expandHeight,
   ) {
+    final infoTextStyle = Theme.of(context)
+        .textTheme
+        .labelLarge
+        ?.copyWith(color: Theme.of(context).colorScheme.outline);
     if (_listScrollController.offset <= expandHeight) {
       return Padding(
         padding: edgeInsetsL12R12B12,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
-          children: [
+          children: <Widget>[
+            if (widget.isDraft)
+              Text(
+                '[${context.t.threadPage.draft}]',
+                style: infoTextStyle,
+              ),
             Text(
               '[${context.t.threadPage.title} ${widget.threadID ?? ""}]',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
+              style: infoTextStyle,
             ),
-            sizedBoxW4H4,
-            Text(
-              '[${_threadType ?? ""}]',
-              style: Theme.of(context)
-                  .textTheme
-                  .labelLarge
-                  ?.copyWith(color: Theme.of(context).colorScheme.outline),
-            ),
-          ],
+            if (_threadType != null && _threadType!.isNotEmpty)
+              Text(
+                '[${_threadType!}]',
+                style: infoTextStyle,
+              ),
+          ].insertBetween(sizedBoxW4H4),
         ),
       );
     }

@@ -299,7 +299,8 @@
     "closed": "貼文已關閉",
     "needLogin": "需要登入",
     "replySuccess": "回覆成功",
-    "replyFailed": "回覆失敗：$err"
+    "replyFailed": "回覆失敗：$err",
+    "draft": "草稿"
   },
   "noticePage": {
     "title": "通知",

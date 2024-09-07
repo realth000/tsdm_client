@@ -135,6 +135,7 @@ class _ThreadPageState extends State<ThreadPage>
             useDivider: true,
             postList: state.postList,
             canLoadMore: state.canLoadMore,
+            isDraft: state.isDraft,
           ),
         ),
         _buildReplyBar(context, state),
