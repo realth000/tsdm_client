@@ -276,7 +276,7 @@ extension ParseStringTo on String {
 extension ImageCacheFileName on String {
   /// Return a valid UUID-v5 format string of current string.
   String fileNameV5() {
-    return _uuid.v5(Namespace.URL, this);
+    return _uuid.v5(Namespace.url.value, this);
   }
 }
 
