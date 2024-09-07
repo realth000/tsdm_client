@@ -61,7 +61,7 @@
      <tr>
        <th>系统</th>
        <th>稳定版（0.14）</th>
-       <th>预览版（1.0.0-alpha.5）</th>
+       <th>预览版（1.0.0-alpha.6）</th>
      </tr>
     </thead>
   <tbody>
@@ -72,8 +72,8 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
       </td>
     </tr>
     <tr>
@@ -82,7 +82,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -91,7 +91,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
       </td>
     </tr>
     <tr>
@@ -100,7 +100,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -120,7 +120,7 @@
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br>
       </td>
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.5/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.6/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
       </td>
     </tr>
   </tbody>
@@ -134,7 +134,7 @@
 
 ## 功能
 
-<u>下划线功能目前只存在于预览版</u>
+*斜体字功能目前只存在于预览版*
 
 * [ ] 看贴
   * [x] 回复
@@ -172,22 +172,22 @@
   * [x] 修改纯文本内容
   * [x] 设置分类和标题
   * [x] 设置附加选项
-  * [ ] 设置阅读权限
+  * [x] *设置阅读权限*
   * [ ] 设置售价
   * [x] [富文本模式](#富文本支持)
 * [ ] 发帖
-  * [x] <u>纯文本内容</u>
-  * [x] <u>保存为草稿</u>
-  * [ ] 编辑草稿
+  * [x] *纯文本内容*
+  * [x] *保存为草稿*
+  * [x] *编辑草稿*
   * [ ] 本地自动保存
-  * [x] <u>设置分类和标题</u>
-  * [ ] 设置附加选项
-  * [ ] 设置阅读权限
+  * [x] *设置分类和标题*
+  * [x] *设置附加选项*
+  * [x] *设置阅读权限*
   * [ ] 设置售价
-  * [x] <u>[富文本模式](#富文本支持)</u>
+  * [x] *[富文本模式](#富文本支持)*
 * [x] 登录
   * [x] 用户名登录
-  * [x] <u>UID或邮箱登录</u>
+  * [x] *UID或邮箱登录*
   * [x] 带安全问题登录
   * [x] 登录一次后cookie自动登录
   * [x] 退出登录
@@ -206,7 +206,7 @@
 * [x] 深色模式
   * [x] 手动设置
   * [x] 跟随系统
-  * [x] <u>自动调整帖子内的颜色</u>
+  * [x] *自动调整帖子内的颜色*
 * [ ] 主题
   * [x] 更换主题色
   * [ ] 动态颜色（Android）
@@ -262,10 +262,10 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 
 **[BBCode编辑器](https://github.com/realth000/flutter_bbcode_editor)仍处于试验阶段**
 
+*斜体字功能目前只存在于预览版*
+
 * [x] 文本样式
-  * [ ] 字号（固定大小1-7）
-    * [x] 选择文字后设置
-    * [ ] 设置后对光标处生效
+  * [x] *字号（固定大小1-7）*
   * [x] 字体颜色
   * [x] 背景颜色
   * [x] 粗体
@@ -278,19 +278,21 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
   * [ ] 设置表情分组顺序
 * [ ] 网页链接
   * [x] 添加
-  * [ ] 修改
-* [ ] 外链图片
+  * [x] *修改*
+* [x] 外链图片
   * [x] 添加
   * [x] 设置大小
-  * [ ] 修改
-* [ ] 折叠卡片
+  * [x] *修改*
+* [x] *折叠卡片*
 * [ ] 隐藏内容
-* [ ] 代码块
-* [ ] 引用文字
+* [x] *代码块*
+* [x] *引用文字*
 * [ ] 分隔线
 * [x] 提醒用户（@）
-* [ ] 无序列表
-* [ ] 有序列表
+  * [x] *根据用户名搜索*
+  * [x] *随机推荐好友*
+* [x] *无序列表*
+* [x] *有序列表*
 * [ ] 表格
 * [ ] 上标
 * [x] 对齐（居左/居中/居右）
@@ -337,7 +339,7 @@ flutter build windows
 本程序不会收集或上传任何系统或设备或用户信息，访问主站时使用的凭据均只保存在设备本地。
 
 * 保存用户信息，包括用户名、UID、邮箱和cookie供登录和访问时使用。
-* 不会保存密码和安全问题*
+* 不会保存密码和安全问题
 
 ## 许可
 
