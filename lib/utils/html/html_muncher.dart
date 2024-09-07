@@ -43,7 +43,7 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
     constraints: const BoxConstraints(
       maxWidth: 712,
     ),
-    child: RichText(text: TextSpan(children: ret)),
+    child: Text.rich(TextSpan(children: ret)),
   );
 }
 
@@ -411,8 +411,8 @@ final class _Muncher with LoggerMixin {
           child: Row(
             children: [
               Expanded(
-                child: RichText(
-                  text: TextSpan(children: ret),
+                child: Text.rich(
+                  TextSpan(children: ret),
                   textAlign: align,
                 ),
               ),
@@ -859,7 +859,7 @@ final class _Muncher with LoggerMixin {
           borderRadius: BorderRadius.all(Radius.circular(5)),
         ),
         margin: EdgeInsets.zero,
-        child: RichText(text: TextSpan(children: ret)),
+        child: Text.rich(TextSpan(children: ret)),
       ),
     );
     state.elevation -= 1;

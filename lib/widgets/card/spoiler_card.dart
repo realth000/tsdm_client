@@ -42,7 +42,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            RichText(text: widget.title),
+            Text.rich(widget.title),
             SizedBox(
               width: sizeButtonInCardMinWidth,
               child: FilledButton.icon(
@@ -61,7 +61,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
                 },
               ),
             ),
-            if (_visible) RichText(text: widget.content),
+            if (_visible) Text.rich(widget.content),
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
