@@ -450,32 +450,31 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             );
           },
         ),
-        IconButton(
-          icon: const Icon(Icons.settings_outlined),
-          onPressed: additionalOptionsMap != null
-              ? () async => _showAdditionalOptionBottomSheet(context, state)
-              : null,
-        ),
-        IconButton(
-          icon: const Icon(Icons.lock_open_outlined),
-          selectedIcon: const Icon(Icons.lock_outline),
-          isSelected: perm != null && perm!.isNotEmpty,
-          onPressed: state.content?.permList?.isNotEmpty != true
-              ? null
-              : () async {
-                  final selectedPerm = await showSelectPermDialog(
-                    context,
-                    state.content!.permList!,
-                    perm,
-                  );
-                  if (selectedPerm == null || !context.mounted) {
-                    return;
-                  }
-                  setState(() {
-                    perm = selectedPerm;
-                  });
-                },
-        ),
+        if (additionalOptionsMap != null)
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () async =>
+                _showAdditionalOptionBottomSheet(context, state),
+          ),
+        if (state.content?.permList?.isNotEmpty ?? false)
+          IconButton(
+            icon: const Icon(Icons.lock_open_outlined),
+            selectedIcon: const Icon(Icons.lock_outline),
+            isSelected: perm != null && perm!.isNotEmpty,
+            onPressed: () async {
+              final selectedPerm = await showSelectPermDialog(
+                context,
+                state.content!.permList!,
+                perm,
+              );
+              if (selectedPerm == null || !context.mounted) {
+                return;
+              }
+              setState(() {
+                perm = selectedPerm;
+              });
+            },
+          ),
         const Spacer(),
         if (widget.editType.isEditingDraft) ...[
           FilledButton.tonal(
@@ -613,11 +612,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         context: context,
         message: state.errorText ?? context.t.general.failedToLoad,
       );
-    } else if (state.status == PostEditStatus.editing) {
-      setState(() {
-        perm =
-            state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
-      });
     } else if (state.status == PostEditStatus.success) {
       // Some action succeeded.
       if (widget.editType.isEditingPost) {
@@ -681,6 +675,11 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       });
 
       init = true;
+    } else if (state.status == PostEditStatus.editing) {
+      setState(() {
+        perm =
+            state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+      });
     }
   }
 
