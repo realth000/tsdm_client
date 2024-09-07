@@ -22,7 +22,7 @@ dependencies:
   cookie_jar: ^4.0.8
   dart_mappable: 4.2.2
   device_info_plus: ^10.1.2
-  dio: ^5.6.0
+  dio: ^5.7.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1
   drift: ^2.20.0
@@ -59,20 +59,17 @@ dependencies:
   slang: ^3.31.2
   slang_flutter: ^3.31.0
   # For drift
-  # Blocked by web < 1.0.0
   sqlite3: ^2.4.6
   # For drift
   sqlite3_flutter_libs: ^0.5.24
   stream_transform: ^2.1.0
   super_sliver_list: ^0.4.1
   surf_lint_rules: ^3.1.0
-  # Blocked by shared_plus > web < 1.0.0
   talker: ^4.4.1
   talker_flutter: ^4.4.1
   universal_html: ^2.2.4
   url_launcher: ^6.3.0
-  uuid: ^4.4.2
-  # Blocked by flutter_bbcode_editor > flutter_quill > super_clipboard > super_native_extensions
+  uuid: ^4.5.0
   web: ^1.0.0
   widget_zoom: ^0.0.4
 

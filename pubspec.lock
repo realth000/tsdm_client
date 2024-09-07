@@ -291,10 +291,10 @@ packages:
     dependency: transitive
     description:
       name: dart_quill_delta
-      sha256: "1654b14b6eb5cc82ee3c122f4912c7299d3c26782a094703cd8085099aadb938"
+      sha256: e001f64695c0830551f4ff5729625599d5e338fd5b3f4db42109d0ca37fc1252
       url: "https://pub.dev"
     source: hosted
-    version: "10.5.0"
+    version: "10.5.9"
   dart_style:
     dependency: transitive
     description:
@@ -331,10 +331,10 @@ packages:
     dependency: "direct main"
     description:
       name: dio
-      sha256: "0dfb6b6a1979dac1c1245e17cef824d7b452ea29bd33d3467269f9bef3715fb0"
+      sha256: "5598aa796bbf4699afd5c67c0f5f6e2ed542afc956884b9cd58c306966efc260"
       url: "https://pub.dev"
     source: hosted
-    version: "5.6.0"
+    version: "5.7.0"
   dio_brotli_transformer:
     dependency: "direct main"
     description:
@@ -663,7 +663,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "10.5.2"
+    version: "10.5.9"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -678,7 +678,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill/flutter_quill_extensions"
       relative: true
     source: path
-    version: "10.5.2"
+    version: "10.5.9"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -1634,10 +1634,10 @@ packages:
     dependency: "direct main"
     description:
       name: uuid
-      sha256: "83d37c7ad7aaf9aa8e275490669535c8080377cfa7a7004c24dfac53afffaa90"
+      sha256: f33d6bb662f0e4f79dcd7ada2e6170f3b3a2530c28fc41f49a411ddedd576a77
       url: "https://pub.dev"
     source: hosted
-    version: "4.4.2"
+    version: "4.5.0"
   vector_graphics:
     dependency: transitive
     description:
@@ -1690,10 +1690,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: "101028b643a3b43ced72107aacdbc4d30d55365487751de001a36cf0d86038d1"
+      sha256: "38d8fe136c427abdce68b5e8c3c08ea29d7a794b453c7a51b12ecfad4aad9437"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.2"
+    version: "2.7.3"
   video_player_avfoundation:
     dependency: transitive
     description:
