@@ -54,11 +54,8 @@ Future<bool?> showQuestionDialog({
       return AlertDialog(
         scrollable: true,
         title: Text(title),
-        content: message != null
-            ? SelectableText(message)
-            : RichText(
-                text: richMessage!,
-              ),
+        content:
+            message != null ? SelectableText(message) : Text.rich(richMessage!),
         actions: [
           TextButton(
             child: Text(context.t.general.cancel),
