@@ -41,6 +41,9 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
     for (final entry in options) {
       body[entry.name] = entry.checked ? '1' : '';
     }
+    if (perm != null) {
+      body['readperm'] = perm!;
+    }
 
     return body;
   }
