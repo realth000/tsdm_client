@@ -28,6 +28,7 @@ class Post with PostMappable {
     required this.lastEditTime,
     required this.shareLink,
     required this.page,
+    required this.isDraft,
     this.locked = const [],
     this.rate,
     this.packetUrl,
@@ -101,6 +102,12 @@ class Post with PostMappable {
 
   /// Current page number.
   final int page;
+
+  /// Flag indicating whether the post is in draft state.
+  ///
+  /// Draft post only can be a first floor, equivalent to editing a thread that
+  /// not published yet.
+  final bool isDraft;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element, int page) {
@@ -281,6 +288,8 @@ class Post with PostMappable {
       talker.error('post $postID: user profile node not found');
     }
 
+    final isDraft = element.querySelector('a.psave') != null;
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -298,6 +307,7 @@ class Post with PostMappable {
       userBriefProfile: userBriefProfile,
       shareLink: shareLink,
       page: page,
+      isDraft: isDraft,
     );
   }
 

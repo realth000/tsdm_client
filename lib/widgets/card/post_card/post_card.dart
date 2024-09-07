@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -325,7 +326,21 @@ class _PostCardState extends State<PostCard>
                 // not-null author uid.
                 context.read<ThreadBloc>().add(ThreadViewAllAuthorsRequested());
               case _PostCardActions.edit:
-                await context.dispatchAsUrl(widget.post.editUrl!);
+                final url = Uri.parse(widget.post.editUrl!);
+                final editType = widget.post.isDraft
+                    ? PostEditType.editDraft.index
+                    : PostEditType.editPost.index;
+                await context.pushNamed(
+                  ScreenPaths.editPost,
+                  pathParameters: {
+                    'editType': '$editType',
+                    'fid': '${url.queryParameters["fid"]}',
+                  },
+                  queryParameters: {
+                    'tid': '${url.queryParameters["tid"]}',
+                    'pid': '${url.queryParameters["pid"]}',
+                  },
+                );
               case _PostCardActions.share:
                 await copyToClipboard(context, widget.post.shareLink!);
             }

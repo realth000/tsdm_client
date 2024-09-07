@@ -111,14 +111,6 @@ class PostEditPage extends StatefulWidget {
   /// Post id of the post.
   final String? pid;
 
-  static String _formatDataUrl({
-    required String fid,
-    required String tid,
-    required String pid,
-  }) {
-    return '$baseUrl/forum.php?mod=post&action=edit&fid=$fid&tid=$tid&pid=$pid';
-  }
-
   @override
   State<PostEditPage> createState() => _PostEditPageState();
 }
@@ -184,12 +176,20 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// * Editing thread draft.
   _UploadMethod uploadMethod = _UploadMethod.notYet;
 
+  static String _formatDataUrl({
+    required String fid,
+    required String tid,
+    required String pid,
+  }) {
+    return '$baseUrl/forum.php?mod=post&action=edit&fid=$fid&tid=$tid&pid=$pid';
+  }
+
   Future<void> _onFinish(
     BuildContext context,
     PostEditState state, {
     bool saveDraft = false,
   }) async {
-    if (widget.editType.isDraftingNewThread) {
+    if (widget.editType.isEditingDraft) {
       final tr = context.t.postEditPage.threadPublish;
       final ret = await showQuestionDialog(
         context: context,
@@ -230,7 +230,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     }
 
     final event = switch (widget.editType) {
-      PostEditType.editPost => PostEditCompleteEditRequested(
+      PostEditType.editPost ||
+      PostEditType.editDraft =>
+        PostEditCompleteEditRequested(
           formHash: state.content!.formHash,
           postTime: state.content!.postTime,
           delattachop: state.content?.delattachop ?? '0',
@@ -245,6 +247,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           threadTitle: threadTitleController.text,
           data: bbcodeController.toBBCode(),
           options: additionalOptionsMap?.values.toList() ?? [],
+          save: saveDraft ? '1' : '',
         ),
       PostEditType.newThread => ThreadPubPostThread(
           ThreadPublishInfo(
@@ -441,7 +444,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               : null,
         ),
         const Spacer(),
-        if (widget.editType.isDraftingNewThread) ...[
+        if (widget.editType.isEditingDraft) ...[
           FilledButton.tonal(
             onPressed: state.status == PostEditStatus.uploading
                 ? null
@@ -491,8 +494,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             );
 
             final event = switch (widget.editType) {
-              PostEditType.editPost => PostEditLoadDataRequested(
-                  PostEditPage._formatDataUrl(
+              PostEditType.editPost ||
+              PostEditType.editDraft =>
+                PostEditLoadDataRequested(
+                  _formatDataUrl(
                     fid: widget.fid,
                     tid: widget.tid!,
                     pid: widget.pid!,
@@ -518,10 +523,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             if (state.status == PostEditStatus.failedToLoad) {
               return buildRetryButton(context, () {
                 switch (widget.editType) {
-                  case PostEditType.editPost:
+                  case PostEditType.editPost || PostEditType.editDraft:
                     context.read<PostEditBloc>().add(
                           PostEditLoadDataRequested(
-                            PostEditPage._formatDataUrl(
+                            _formatDataUrl(
                               fid: widget.fid,
                               // Not null when editing post
                               tid: widget.tid!,
@@ -585,7 +590,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         );
         context.pop();
         return;
-      } else if (widget.editType.isDraftingNewThread) {
+      } else if (widget.editType.isEditingDraft) {
         // Writing new post.
         //
         // Ask for a redirect to just published thread page.
@@ -658,7 +663,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   Widget build(BuildContext context) {
     final title = switch (widget.editType) {
       PostEditType.newThread => context.t.postEditPage.newThreadTitle,
-      PostEditType.editPost => context.t.postEditPage.editPostTitle,
+      PostEditType.editPost ||
+      PostEditType.editDraft =>
+        context.t.postEditPage.editPostTitle,
     };
     return PopScope(
       canPop: false,

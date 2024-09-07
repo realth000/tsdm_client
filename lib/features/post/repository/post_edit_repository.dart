@@ -57,6 +57,7 @@ final class PostEditRepository with LoggerMixin {
     required String? threadTitle,
     required String data,
     required Map<String, String> options,
+    required String save,
   }) =>
       AsyncVoidEither(() async {
         final body = <String, String>{
@@ -72,7 +73,7 @@ final class PostEditRepository with LoggerMixin {
           'subject': threadTitle ?? '',
           'message': data,
           'editsubmit': 'true',
-          'save': '',
+          'save': save,
         };
         if (threadType != null) {
           body['typeid'] = threadType;

@@ -36,6 +36,7 @@ final class PostEditCompleteEditRequested extends PostEditEvent
     required this.threadTitle,
     required this.data,
     required this.options,
+    required this.save,
   }) : super();
 
   /// Form hash.
@@ -81,6 +82,11 @@ final class PostEditCompleteEditRequested extends PostEditEvent
 
   /// Additional options provided by server.
   final List<PostEditContentOption> options;
+
+  /// Save post as draft or publish as new thread.
+  ///
+  /// Only set to "1" when editing thread in draft state.
+  final String save;
 }
 
 /// Fetch required info for publishing, including form hash, post time and more.
