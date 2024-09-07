@@ -71,6 +71,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - app：更新底部弹窗样式。
 - app：图片加载时显示占位图片的大小调整为80x80。
+- app：更新图片加载时的样式。
 - app：更新app描述和版权页样式。
 - app：去除各种卡片的高度，更符合Material 3。
 - app: 优化布局，除去一些空白。

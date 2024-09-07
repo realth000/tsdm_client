@@ -58,9 +58,9 @@ class CachedImage extends StatelessWidget with LoggerMixin {
           maxHeight: maxHeight ?? _defaultMaxHeight,
         ),
         child: Shimmer.fromColors(
-          baseColor: Theme.of(context).colorScheme.surfaceTint.withOpacity(0.8),
+          baseColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
           highlightColor:
-              Theme.of(context).colorScheme.surfaceTint.withOpacity(0.6),
+              Theme.of(context).colorScheme.primary.withOpacity(0.2),
           child: FallbackPicture(fit: fit),
         ),
       );
