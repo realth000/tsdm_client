@@ -49,15 +49,29 @@ typedef _Emit = Emitter<ImageCacheState>;
 /// the bloc can trigger image reloading.
 final class ImageCacheBloc extends Bloc<ImageCacheEvent, ImageCacheState> {
   /// Constructor.
-  ImageCacheBloc(this._imageUrl, this._imageCacheRepository)
-      : super(const ImageCacheInitial()) {
+  ImageCacheBloc(
+    this._imageUrl,
+    this._imageCacheRepository, {
+    Uint8List? initialImage,
+  }) : super(
+          initialImage != null
+              ? ImageCacheSuccess(initialImage)
+              : const ImageCacheInitial(),
+        ) {
     _streamSubscription = _imageCacheRepository.response
         .where((e) => e.imageId == _imageUrl)
         .listen(_handleImageResponse);
-    on<ImageCacheLoadRequested>(_onImageCacheLoadRequested);
-    on<_ImageCacheLoadPending>(_onImageCacheLoadPending);
-    on<_ImageCacheLoadSuccess>(_onImageCacheLoadSuccess);
-    on<_ImageCacheLoadFailed>(_onImageCacheLoadFailed);
+
+    on<ImageCacheEvent>(
+      (event, emit) => switch (event) {
+        ImageCacheLoadRequested(:final force) =>
+          _onImageCacheLoadRequested(force, emit),
+        _ImageCacheLoadSuccess(:final imageData) =>
+          _onImageCacheLoadSuccess(imageData, emit),
+        _ImageCacheLoadPending() => _onImageCacheLoadPending(emit),
+        _ImageCacheLoadFailed() => _onImageCacheLoadFailed(emit),
+      },
+    );
   }
 
   final ImageCacheRepository _imageCacheRepository;
@@ -91,28 +105,26 @@ final class ImageCacheBloc extends Bloc<ImageCacheEvent, ImageCacheState> {
   }
 
   FutureOr<void> _onImageCacheLoadRequested(
-    ImageCacheLoadRequested event,
+    bool force,
     _Emit emit,
   ) async {
-    await _imageCacheRepository.updateImageCache(_imageUrl, force: event.force);
+    await _imageCacheRepository.updateImageCache(_imageUrl, force: force);
   }
 
   FutureOr<void> _onImageCacheLoadPending(
-    _ImageCacheLoadPending event,
     _Emit emit,
   ) async {
     emit(const ImageCacheLoading());
   }
 
   FutureOr<void> _onImageCacheLoadSuccess(
-    _ImageCacheLoadSuccess event,
+    Uint8List imageData,
     _Emit emit,
   ) async {
-    emit(ImageCacheSuccess(event.imageData));
+    emit(ImageCacheSuccess(imageData));
   }
 
   FutureOr<void> _onImageCacheLoadFailed(
-    _ImageCacheLoadFailed event,
     _Emit emit,
   ) async {
     emit(const ImageCacheFailure());

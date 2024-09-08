@@ -4,8 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_bloc.dart';
-import 'package:tsdm_client/features/cache/models/models.dart';
-import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -65,7 +63,10 @@ class CachedImage extends StatelessWidget with LoggerMixin {
         ),
       );
 
-  Widget _buildImage(BuildContext context, Uint8List imageData) {
+  Widget _buildImage({
+    required BuildContext context,
+    required Uint8List imageData,
+  }) {
     return Image.memory(
       imageData,
       fit: fit,
@@ -83,7 +84,7 @@ class CachedImage extends StatelessWidget with LoggerMixin {
           return frame != null ? child : _buildPlaceholder(context);
         }
         return AnimatedSwitcher(
-          duration: duration200,
+          duration: duration100,
           // Use layoutBuilder to let child image "maximized".
           layoutBuilder: (currentChild, previousChildren) {
             return Stack(
@@ -91,31 +92,6 @@ class CachedImage extends StatelessWidget with LoggerMixin {
               children: <Widget>[
                 ...previousChildren,
                 if (currentChild != null) currentChild,
-                // FIXME: Forget why we have the following workaround that
-                // calculates constraints and wrap `child` in `SizedBox`.
-                //
-                // But using `LayoutBuilder` here may change the render object
-                // tree when computing layout which is forbidden in
-                // `IntrinsicHeight`, where we used to wrap the reply bar.
-                // This unsupported behavior forbid us to use `CachedImage` in
-                // reply bar. So temporarily remove this `LayoutBuilder`.
-                //
-                // TODO: Use convenient widget instead of layout builder.
-                // LayoutBuilder(
-                //   builder: (context, cons) {
-                //     // Sometimes max height is infinity and the comparison
-                //     // may be costly.
-                //     // FIXME: Remove compare.
-                //     if (cons.maxHeight == double.infinity) {
-                //       return currentChild;
-                //     }
-                //     return SizedBox(
-                //       width: cons.maxWidth,
-                //       height: cons.maxHeight,
-                //       child: currentChild,
-                //     );
-                //   },
-                // ),
               ],
             );
           },
@@ -161,57 +137,35 @@ class CachedImage extends StatelessWidget with LoggerMixin {
         // }
       }
     }
-    ImageCacheSuccessResponse? initialData;
-    if (initialImageData != null) {
-      initialData = ImageCacheSuccessResponse(
-        imageUrl,
-        initialImageData,
-      );
-    }
 
     return BlocProvider(
       create: (context) {
-        final bloc = ImageCacheBloc(imageUrl, RepositoryProvider.of(context));
-        if (initialData == null) {
-          bloc.add(const ImageCacheLoadRequested());
+        final ImageCacheBloc bloc;
+        if (initialImageData == null) {
+          bloc = ImageCacheBloc(imageUrl, RepositoryProvider.of(context))
+            ..add(const ImageCacheLoadRequested());
+        } else {
+          bloc = ImageCacheBloc(
+            imageUrl,
+            RepositoryProvider.of(context),
+            initialImage: initialImageData,
+          );
         }
         return bloc;
       },
       child: BlocBuilder<ImageCacheBloc, ImageCacheState>(
         builder: (context, state) {
-          return StreamBuilder(
-            initialData: initialData,
-            stream: RepositoryProvider.of<ImageCacheRepository>(context)
-                .response
-                .where((e) => e.imageId == imageUrl),
-            builder: (context, snapshot) {
-              if (!snapshot.hasData) {
-                return _buildPlaceholder(context);
-              }
-
-              final resp = snapshot.data!;
-
-              final content = switch (resp) {
-                ImageCacheLoadingResponse() => _buildPlaceholder(context),
-                ImageCacheSuccessResponse(:final imageData) =>
-                  _buildImage(context, imageData),
-                ImageCacheFailedResponse() => () {
-                    error('failed to load image from $imageUrl');
-                    return _buildErrorWidget(context);
-                  }(),
-                ImageCacheStatusResponse(:final status, :final imageData) =>
-                  switch (status) {
-                    ImageCacheStatus2.notCached ||
-                    ImageCacheStatus2.loading =>
-                      _buildPlaceholder(context),
-                    ImageCacheStatus2.cached =>
-                      _buildImage(context, imageData!),
-                  }
-              };
-
-              return content;
-            },
-          );
+          switch (state) {
+            case ImageCacheInitial() || ImageCacheLoading():
+              return _buildPlaceholder(context);
+            case ImageCacheSuccess(:final imageData):
+              return _buildImage(
+                context: context,
+                imageData: imageData,
+              );
+            case ImageCacheFailure():
+              return _buildErrorWidget(context);
+          }
         },
       ),
     );

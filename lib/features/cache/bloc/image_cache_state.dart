@@ -31,7 +31,7 @@ final class ImageCacheSuccess extends ImageCacheState
   const ImageCacheSuccess(this.imageData);
 
   /// Image data.
-  final Uint8List? imageData;
+  final Uint8List imageData;
 }
 
 /// Failed to load cache.
