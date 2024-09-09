@@ -70,15 +70,8 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
   /// Text controller to display head part of entered bbcode.
   final controller = TextEditingController();
 
-  /// Flag indicating currently popping up the editor or not.
-  ///
-  /// Use this flag to keep only one editor popup.
-  ///
-  /// So the text in editor is persistent.
-  bool _showingEditor = false;
-
   Future<void> showEditor() async {
-    if (_showingEditor) {
+    if (widget.controller._showingEditor) {
       // Now we already have an editor, not now override with another one.
       return;
     }
@@ -104,9 +97,9 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       ),
     );
 
-    _showingEditor = true;
+    widget.controller._showingEditor = true;
     await c.closed;
-    _showingEditor = false;
+    widget.controller._showingEditor = false;
   }
 
   @override
@@ -630,6 +623,16 @@ final class ReplyBarController with LoggerMixin {
   _ReplyBarState? _state;
 
   void Function()? _onSetHintTextCallback;
+
+  /// Flag indicating currently popping up the editor or not.
+  ///
+  /// Use this flag to keep only one editor popup.
+  ///
+  /// So the text in editor is persistent.
+  bool _showingEditor = false;
+
+  /// Flag indicating whe editor is expanded or not.
+  bool get showingEditor => _showingEditor;
 
   /// All values temporarily saved here MUST be cleared when [_unbind] called.
   ///

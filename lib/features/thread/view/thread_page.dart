@@ -257,6 +257,10 @@ class _ThreadPageState extends State<ThreadPage>
                   context: context,
                   message: context.t.threadPage.replySuccess,
                 );
+                // Close the reply bar when sent success.
+                if (_replyBarController.showingEditor) {
+                  context.pop();
+                }
               }
             },
           ),
