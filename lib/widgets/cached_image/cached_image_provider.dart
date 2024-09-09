@@ -4,12 +4,18 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
+
+Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
+  return rootBundle.loadBuffer(assetNoAvatarImagePath);
+}
 
 /// A provider that provides cached image.
 ///
@@ -134,17 +140,18 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       });
 
       if (bytes.lengthInBytes == 0) {
-        throw Exception('NetworkImage is an empty file: $imageUrl');
+        return decode(await _loadNoAvatarBytes());
       }
       return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
-      // Depending on where the exception was thrown, the image cache may not
-      // have had a chance to track the key in the cache at all.
-      // Schedule a microtask to give the cache a chance to add the key.
-      scheduleMicrotask(() {
-        PaintingBinding.instance.imageCache.evict(key);
-      });
-      rethrow;
+      // // Depending on where the exception was thrown, the image cache may not
+      // // have had a chance to track the key in the cache at all.
+      // // Schedule a microtask to give the cache a chance to add the key.
+      // scheduleMicrotask(() {
+      //   PaintingBinding.instance.imageCache.evict(key);
+      // });
+      error('CachedImageProvider caught error: $e');
+      return decode(await _loadNoAvatarBytes());
     } finally {
       await chunkEvents.close();
     }

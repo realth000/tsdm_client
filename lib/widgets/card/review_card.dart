@@ -37,6 +37,7 @@ class ReviewCard extends StatelessWidget {
             backgroundImage: CachedImageProvider(
               avatarUrl ?? noAvatarUrl,
               context,
+              fallbackImageUrl: noAvatarUrl,
             ),
           ),
           title: Text(name),

@@ -23,6 +23,9 @@ const assetExampleIndexAvatar = './assets/images/index_avatar.png';
 /// Image to show when error occurred.
 const assetErrorImagePath = './assets/images/error.jpg';
 
+/// Fallback avatar image.
+const assetNoAvatarImagePath = './assets/images/noavatar_middle.jpg';
+
 /// Changelog till publish.
 final changelogContent = () {
   final lines = changelog.split('\n');
