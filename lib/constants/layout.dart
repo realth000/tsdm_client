@@ -43,11 +43,20 @@ const sizedBoxPopupMenuItemIconSpacing = SizedBox(width: 12, height: 48);
 /// An [EdgeInsets] 4 at top and 4 at bottom.
 const edgeInsetsT4B4 = EdgeInsets.only(top: 4, bottom: 4);
 
+/// An [EdgeInsets] with 4 at top.
+const edgeInsetsT4 = EdgeInsets.only(top: 4);
+
 /// An [EdgeInsets] with 8 at top.
 const edgeInsetsT8 = EdgeInsets.only(top: 8);
 
+/// An [EdgeInsets] 4 at bottom.
+const edgeInsetsB4 = EdgeInsets.only(bottom: 4);
+
 /// An [EdgeInsets] with 8 at right.
 const edgeInsetsR8 = EdgeInsets.only(right: 8);
+
+/// An [EdgeInsets] with 4 at left and 4 at right.
+const edgeInsetsL4R4 = EdgeInsets.only(left: 4, right: 4);
 
 /// An [EdgeInsets] with 8 at left and 8 at right.
 const edgeInsetsL8R8 = EdgeInsets.only(left: 8, right: 8);

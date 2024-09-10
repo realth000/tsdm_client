@@ -588,11 +588,30 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                   ),
                 ),
                 sizedBoxW4H4,
-                EditorToolbar(
-                  bbcodeController: bbcodeController,
-                  disabledFeatures: defaultFullScreenDisabledEditorFeatures,
+                Row(
+                  children: [
+                    Expanded(
+                      child: ColoredBox(
+                        color: Theme.of(context).colorScheme.surfaceContainer,
+                        child: Padding(
+                          padding: edgeInsetsL4R4.add(edgeInsetsT4),
+                          child: EditorToolbar(
+                            bbcodeController: bbcodeController,
+                            disabledFeatures:
+                                defaultFullScreenDisabledEditorFeatures,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                _buildControlRow(context, state),
+                ColoredBox(
+                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  child: Padding(
+                    padding: edgeInsetsL4R4.add(edgeInsetsB4),
+                    child: _buildControlRow(context, state),
+                  ),
+                ),
               ],
             );
           },
@@ -720,10 +739,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       },
       child: Scaffold(
         appBar: AppBar(title: Text(title)),
-        body: Padding(
-          padding: edgeInsetsL16T16R16B16,
-          child: _buildBody(context),
-        ),
+        body: _buildBody(context),
       ),
     );
   }
