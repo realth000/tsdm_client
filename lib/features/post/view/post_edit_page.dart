@@ -583,9 +583,12 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 sizedBoxW8H8,
                 // Post data editor.
                 Expanded(
-                  child: RichEditor(
-                    controller: bbcodeController,
-                    initialText: state.content?.data,
+                  child: Padding(
+                    padding: edgeInsetsL4R4,
+                    child: RichEditor(
+                      controller: bbcodeController,
+                      initialText: state.content?.data,
+                    ),
                   ),
                 ),
                 sizedBoxW4H4,
