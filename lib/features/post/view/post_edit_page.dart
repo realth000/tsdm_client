@@ -21,6 +21,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -335,7 +336,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           .map(
             (e) => StatefulBuilder(
               builder: (context, setState) {
-                return SwitchListTile(
+                return SectionSwitchListTile(
                   title: Text(e.readableName),
                   value: additionalOptionsMap![e.name]!.checked,
                   onChanged: e.disabled

@@ -12,6 +12,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Show a picture dialog to add picture into editor.
 Future<BBCodeImageInfo?> showImagePicker(
@@ -211,7 +212,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
                 return null;
               },
             ),
-            SwitchListTile(
+            SectionSwitchListTile(
               title: Text(tr.autoFillSize),
               subtitle: Text(tr.autoFillSizeDetail),
               value: autoFillSize,

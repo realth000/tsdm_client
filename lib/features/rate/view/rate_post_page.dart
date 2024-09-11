@@ -10,6 +10,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Page to rate a post in thread.
 class RatePostPage extends StatefulWidget {
@@ -185,7 +186,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               suffixIcon: defaultReasonButton,
             ),
           ),
-          SwitchListTile(
+          SectionSwitchListTile(
             value: noticeAuthor,
             title: Text(context.t.ratePostPage.noticeAuthor),
             onChanged: (value) {
