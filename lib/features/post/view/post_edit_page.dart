@@ -431,7 +431,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     if (ret.isEmpty) {
       return Container();
     }
-    return Row(children: ret.insertBetween(sizedBoxW24H24));
+    return Padding(
+      padding: edgeInsetsL4R4.add(edgeInsetsT4),
+      child: Row(children: ret.insertBetween(sizedBoxW24H24)),
+    );
   }
 
   /// Build the row to control a
