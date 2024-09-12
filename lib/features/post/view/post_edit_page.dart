@@ -707,6 +707,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         // value.
         threadType ??= state.content?.threadTypeList?.firstOrNull;
         threadTypeController.text = threadType?.name ?? '';
+        perm =
+            state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
       });
 
       init = true;
