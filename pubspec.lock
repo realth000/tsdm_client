@@ -663,7 +663,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "10.5.9"
+    version: "10.5.16"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -678,7 +678,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill/flutter_quill_extensions"
       relative: true
     source: path
-    version: "10.5.9"
+    version: "10.5.16"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -1265,6 +1265,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  quill_native_bridge:
+    dependency: transitive
+    description:
+      name: quill_native_bridge
+      sha256: "80cc180a6e5cc625c5431b61e2fbc056d36654964337f497c5990e34925844fe"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.5.16"
   quiver:
     dependency: transitive
     description:
@@ -1831,5 +1839,5 @@ packages:
     source: hosted
     version: "9.0.3"
 sdks:
-  dart: ">=3.5.0 <4.0.0"
+  dart: ">=3.5.1 <4.0.0"
   flutter: ">=3.24.0"
