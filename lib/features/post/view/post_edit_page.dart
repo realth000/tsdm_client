@@ -441,45 +441,54 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   Widget _buildControlRow(BuildContext context, PostEditState state) {
     return Row(
       children: [
-        IconButton(
-          icon: Icon(
-            Icons.info_outline,
-            color: Theme.of(context).primaryColor,
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                IconButton(
+                  icon: Icon(
+                    Icons.info_outline,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  onPressed: () async {
+                    await showMessageSingleButtonDialog(
+                      context: context,
+                      title: context.t.bbcodeEditor.experimentalInfoTitle,
+                      message: context.t.bbcodeEditor.experimentalInfoDetail,
+                    );
+                  },
+                ),
+                if (additionalOptionsMap != null)
+                  IconButton(
+                    icon: const Icon(Icons.settings_outlined),
+                    onPressed: () async =>
+                        _showAdditionalOptionBottomSheet(context, state),
+                  ),
+                if (state.content?.permList?.isNotEmpty ?? false)
+                  IconButton(
+                    icon: const Icon(Icons.lock_open_outlined),
+                    selectedIcon: const Icon(Icons.lock_outline),
+                    isSelected: perm != null && perm!.isNotEmpty,
+                    onPressed: () async {
+                      final selectedPerm = await showSelectPermDialog(
+                        context,
+                        state.content!.permList!,
+                        perm,
+                      );
+                      if (selectedPerm == null || !context.mounted) {
+                        return;
+                      }
+                      setState(() {
+                        perm = selectedPerm;
+                      });
+                    },
+                  ),
+              ],
+            ),
           ),
-          onPressed: () async {
-            await showMessageSingleButtonDialog(
-              context: context,
-              title: context.t.bbcodeEditor.experimentalInfoTitle,
-              message: context.t.bbcodeEditor.experimentalInfoDetail,
-            );
-          },
         ),
-        if (additionalOptionsMap != null)
-          IconButton(
-            icon: const Icon(Icons.settings_outlined),
-            onPressed: () async =>
-                _showAdditionalOptionBottomSheet(context, state),
-          ),
-        if (state.content?.permList?.isNotEmpty ?? false)
-          IconButton(
-            icon: const Icon(Icons.lock_open_outlined),
-            selectedIcon: const Icon(Icons.lock_outline),
-            isSelected: perm != null && perm!.isNotEmpty,
-            onPressed: () async {
-              final selectedPerm = await showSelectPermDialog(
-                context,
-                state.content!.permList!,
-                perm,
-              );
-              if (selectedPerm == null || !context.mounted) {
-                return;
-              }
-              setState(() {
-                perm = selectedPerm;
-              });
-            },
-          ),
-        const Spacer(),
         if (widget.editType.isEditingDraft) ...[
           FilledButton.tonal(
             onPressed: state.status == PostEditStatus.uploading
