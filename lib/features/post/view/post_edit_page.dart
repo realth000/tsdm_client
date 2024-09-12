@@ -467,23 +467,28 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                         _showAdditionalOptionBottomSheet(context, state),
                   ),
                 if (state.content?.permList?.isNotEmpty ?? false)
-                  IconButton(
-                    icon: const Icon(Icons.lock_open_outlined),
-                    selectedIcon: const Icon(Icons.lock_outline),
-                    isSelected: perm != null && perm!.isNotEmpty,
-                    onPressed: () async {
-                      final selectedPerm = await showSelectPermDialog(
-                        context,
-                        state.content!.permList!,
-                        perm,
-                      );
-                      if (selectedPerm == null || !context.mounted) {
-                        return;
-                      }
-                      setState(() {
-                        perm = selectedPerm;
-                      });
-                    },
+                  Badge(
+                    label: Text('$perm'),
+                    offset: const Offset(-1, -1),
+                    isLabelVisible: perm != null && perm!.isNotEmpty,
+                    child: IconButton(
+                      icon: const Icon(Icons.lock_open_outlined),
+                      selectedIcon: const Icon(Icons.lock_outline),
+                      isSelected: perm != null && perm!.isNotEmpty,
+                      onPressed: () async {
+                        final selectedPerm = await showSelectPermDialog(
+                          context,
+                          state.content!.permList!,
+                          perm,
+                        );
+                        if (selectedPerm == null || !context.mounted) {
+                          return;
+                        }
+                        setState(() {
+                          perm = selectedPerm;
+                        });
+                      },
+                    ),
                   ),
               ],
             ),
