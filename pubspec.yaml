@@ -25,9 +25,9 @@ dependencies:
   dio: ^5.7.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1
-  drift: ^2.20.0
+  drift: ^2.20.2
   # For drift
-  drift_dev: ^2.20.1
+  drift_dev: ^2.20.3
   drift_flutter: ^0.2.0
   easy_refresh: ^3.4.0
   equatable: ^2.0.5
