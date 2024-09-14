@@ -19,6 +19,9 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:universal_html/html.dart' as uh;
 
+/// Use the same span to append line break.
+const emptySpan = TextSpan(text: '\n');
+
 /// Use an empty span.
 // final null = WidgetSpan(child: Container());
 
@@ -34,6 +37,10 @@ Widget munchElement(BuildContext context, uh.Element rootElement) {
   final ret = muncher._munch(rootElement);
   if (ret == null) {
     return const SizedBox.shrink();
+  }
+  // Remove trailing empty spaces.
+  while (ret.lastOrNull == emptySpan) {
+    ret.removeLast();
   }
 
   // Alignment in this page requires a fixed max width that equals to website
@@ -67,6 +74,11 @@ class _MunchState {
   /// Flag indicating current node's is inside a `<pre>` node or not.
   /// When in a `<pre>`, all text should be treated as raw text.
   bool inPre = false;
+
+  /// Flag indicate current node inside a div or not.
+  ///
+  /// Make sure one line break when (nested or not) div ended.
+  bool inDiv = false;
 
   /// If true, use [String.trim], if false, use [String.trimLeft].
   bool trimAll = false;
@@ -271,8 +283,7 @@ final class _Muncher with LoggerMixin {
           // Parse according to element types.
           final span = switch (localName) {
             'img' => _buildImg(node),
-            'br' =>
-              state.headingBrNodePassed ? [const TextSpan(text: '\n')] : null,
+            'br' => state.headingBrNodePassed ? [emptySpan] : null,
             'font' => _buildFont(node),
             'strong' => _buildStrong(node),
             'u' => _buildUnderline(node),
@@ -448,7 +459,7 @@ final class _Muncher with LoggerMixin {
       if (ret == null) {
         return null;
       }
-      return [...ret, const TextSpan(text: '\n')];
+      return [...ret, emptySpan];
     }
 
     final styleMap = Map.fromEntries(styleEntries);
@@ -469,7 +480,7 @@ final class _Muncher with LoggerMixin {
       return null;
     }
 
-    return [...ret, const TextSpan(text: '\n')];
+    return [...ret, emptySpan];
   }
 
   List<InlineSpan> _buildBlockQuote(uh.Element element) {
@@ -490,11 +501,12 @@ final class _Muncher with LoggerMixin {
       WidgetSpan(
         child: QuotedText.rich(TextSpan(children: ret)),
       ),
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
   List<InlineSpan>? _munchDiv(uh.Element element) {
+    final origInDiv = state.inDiv;
     _divMap ??= {
       'blockcode': _buildBlockCode,
       'locked': _buildLockedArea,
@@ -505,12 +517,18 @@ final class _Muncher with LoggerMixin {
       'rwdbst': _buildBountyBestAnswer,
     };
 
+    state.inDiv = true;
     // Find the first munch executor, use `_munch` if none found.
     final executor = _divMap!.entries
             .firstWhereOrNull((e) => element.classes.contains(e.key))
             ?.value ??
         _munch;
     final ret = executor(element);
+    state.inDiv = origInDiv;
+
+    if (ret != null && ret.isNotEmpty && ret.last != emptySpan) {
+      ret.add(emptySpan);
+    }
     return ret;
   }
 
@@ -546,7 +564,7 @@ final class _Muncher with LoggerMixin {
           elevation: state.elevation,
         ),
       ),
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
     state.elevation -= 1;
     return ret;
@@ -598,6 +616,9 @@ final class _Muncher with LoggerMixin {
     if (content == null) {
       return null;
     }
+    while (content.lastOrNull == emptySpan) {
+      content.removeLast();
+    }
     state.headingBrNodePassed = true;
     return [
       WidgetSpan(
@@ -607,7 +628,7 @@ final class _Muncher with LoggerMixin {
           elevation: elevation,
         ),
       ),
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -772,7 +793,7 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [...ret, const TextSpan(text: ' ')];
+    return [...ret, emptySpan];
   }
 
   List<InlineSpan>? _buildH1(uh.Element element) {
@@ -783,9 +804,9 @@ final class _Muncher with LoggerMixin {
       return null;
     }
     return [
-      const TextSpan(text: '\n'),
+      emptySpan,
       ...ret,
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -797,9 +818,9 @@ final class _Muncher with LoggerMixin {
       return null;
     }
     return [
-      const TextSpan(text: '\n'),
+      emptySpan,
       ...ret,
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -811,9 +832,9 @@ final class _Muncher with LoggerMixin {
       return null;
     }
     return [
-      const TextSpan(text: '\n'),
+      emptySpan,
       ...ret,
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -825,9 +846,9 @@ final class _Muncher with LoggerMixin {
       return null;
     }
     return [
-      const TextSpan(text: '\n'),
+      emptySpan,
       ...ret,
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -839,7 +860,7 @@ final class _Muncher with LoggerMixin {
     return [
       const TextSpan(text: '•  '),
       ...ret,
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
@@ -921,6 +942,17 @@ final class _Muncher with LoggerMixin {
       return null;
     }
 
+    // Trim all trailing whitespace in card.
+    final ch = dataSpanList.lastOrNull;
+    if (ch != null) {
+      while (ch.lastOrNull == emptySpan ||
+          ((ch.lastOrNull is TextSpan) &&
+              ((ch.last as TextSpan).text?.trim().isEmpty ?? false))) {
+        ch.removeLast();
+      }
+      dataSpanList.last = ch;
+    }
+
     return [
       WidgetSpan(
         child: SpoilerCard(
@@ -929,7 +961,7 @@ final class _Muncher with LoggerMixin {
           elevation: state.elevation,
         ),
       ),
-      const TextSpan(text: '\n'),
+      emptySpan,
     ];
   }
 
