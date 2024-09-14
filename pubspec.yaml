@@ -16,7 +16,6 @@ dependencies:
   ansicolor: any
   bbob_dart: ^0.2.1
   bloc: ^8.1.4
-  change_case: ^2.1.0
   # Blocked by flutter
   collection: any
   cookie_jar: ^4.0.8

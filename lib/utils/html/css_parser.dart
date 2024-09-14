@@ -80,13 +80,13 @@ extension StringToColorExt on String? {
     // Parse as color value.
     if (this != null && _colorRe.hasMatch(this!)) {
       if (this!.startsWith('#')) {
-        colorValue =
-            int.tryParse(this!.substring(1).padLeft(8, 'ff'), radix: 16);
+        colorValue = int.tryParse(this!.substring(1), radix: 16);
       } else {
-        colorValue = int.tryParse(this!.padLeft(8, 'ff'), radix: 16);
+        colorValue = int.tryParse(this!, radix: 16);
       }
     }
     if (colorValue != null) {
+      colorValue += 0xFF000000;
       return Color(colorValue);
     } else {
       // If color not in format #aabcc, try parse as color name.
