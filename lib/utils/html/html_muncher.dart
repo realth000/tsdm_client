@@ -369,23 +369,26 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildStrong(uh.Element element) {
+    final origBold = state.bold;
     state.bold = true;
     final ret = _munch(element);
-    state.bold = false;
+    state.bold = origBold;
     return ret;
   }
 
   List<InlineSpan>? _buildUnderline(uh.Element element) {
+    final origUnderline = state.underline;
     state.underline = true;
     final ret = _munch(element);
-    state.underline = false;
+    state.underline = origUnderline;
     return ret;
   }
 
   List<InlineSpan>? _buildLineThrough(uh.Element element) {
+    final origThrough = state.lineThrough;
     state.lineThrough = true;
     final ret = _munch(element);
-    state.lineThrough = false;
+    state.lineThrough = origThrough;
     return ret;
   }
 
