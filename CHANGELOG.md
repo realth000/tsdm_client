@@ -79,6 +79,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 网页：修复折叠卡片的尾部多余的空行。
 - 网页：修复粗体字样式丢失的问题。
 - 网页：修复某些情况下，嵌套的字体样式丢失的问题。
+- 网页：修复斜体字丢失的问题。
 
 ### Changed
 

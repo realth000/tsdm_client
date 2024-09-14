@@ -62,6 +62,9 @@ class _MunchState {
   /// Use bold font.
   bool bold = false;
 
+  /// Use italic font.
+  bool italic = false;
+
   /// User underline.
   bool underline = false;
 
@@ -244,6 +247,7 @@ final class _Muncher with LoggerMixin {
                   if (state.underline) TextDecoration.underline,
                   if (state.lineThrough) TextDecoration.lineThrough,
                 ]),
+                fontStyle: state.italic ? FontStyle.italic : null,
                 decorationThickness: 1.5,
               );
 
@@ -303,6 +307,7 @@ final class _Muncher with LoggerMixin {
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
             'b' => _buildB(node),
+            'i' => _buildI(node),
             'hr' => _buildHr(node),
             'pre' => _buildPre(node),
             'details' => _buildDetails(node),
@@ -906,6 +911,22 @@ final class _Muncher with LoggerMixin {
     state.bold = true;
     final ret = _munch(element);
     state.bold = origBold;
+    if (ret == null) {
+      return null;
+    }
+    return ret;
+  }
+
+  List<InlineSpan>? _buildI(uh.Element element) {
+    // Ignore thread last modified info element.
+    // This kind of node is specially handled.
+    if (element.classes.contains('pstatus')) {
+      return null;
+    }
+    final origItalic = state.italic;
+    state.italic = true;
+    final ret = _munch(element);
+    state.italic = origItalic;
     if (ret == null) {
       return null;
     }
