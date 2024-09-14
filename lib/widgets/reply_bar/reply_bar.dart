@@ -83,7 +83,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
     final c = showBottomSheet(
       context: context,
-      shape: const UnderlineInputBorder(), // Remove border
+      shape: InputBorder.none,
       builder: (_) => _ReplyBar(
         controller: widget.controller,
         outerTextController: controller,
