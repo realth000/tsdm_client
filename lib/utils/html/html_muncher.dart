@@ -88,7 +88,7 @@ class _MunchState {
   /// In some nested cards, elevation can be more than 1.
   ///
   /// Default is 0, increase when building in cards.
-  double elevation = 1;
+  double elevation = 0;
 
   /// Flag indicating whether we should wrap line in word.
   ///
