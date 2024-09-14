@@ -899,7 +899,10 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildB(uh.Element element) {
+    final origBold = state.bold;
+    state.bold = true;
     final ret = _munch(element);
+    state.bold = origBold;
     if (ret == null) {
       return null;
     }

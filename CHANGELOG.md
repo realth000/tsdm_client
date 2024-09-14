@@ -77,6 +77,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 网页：修复解析`div`时布局错误的问题。
   -初步处理， 现在某些情况下会多一些空行。
 - 网页：修复折叠卡片的尾部多余的空行。
+- 网页：修复粗体字样式丢失的问题。
 
 ### Changed
 
