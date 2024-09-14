@@ -90,6 +90,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 分区：某些情况下分区为空时显示登录按钮。
 - 帖子：现在帖子的当前页码只会显示在右上角，随页面滚动而刷新。
 - 首页：迁移至官方轮播图，以修复一些问题。
+- 网页：现在解析网页内容时，不再改变换行位置。
+  - 这会导致部分内容的换行位置与原始网页不同，但后续可以支持复制内容的功能。
 - internal: 提高flutter版本至 3.24（dart 3.5）。
 - internal: 最低要求macOS 11。
 - internal: 重构功能：
