@@ -96,6 +96,8 @@ class _MunchState {
   /// in some special case (e.g. url) we want to wrap the line inside words.
   ///
   /// Turn on this flag in such situation.
+  ///
+  /// THIS OPTION IS NOT IGNORED, prepare for copy content feature.
   bool wrapInWord = false;
 
   /// Url link to tap.
@@ -245,8 +247,9 @@ final class _Muncher with LoggerMixin {
             ..headingBrNodePassed = true
             ..inRepeatWrapLine = false;
 
-          final wrapText =
-              state.wrapInWord ? text?.split('').join('\u200B') : text;
+          final wrapText = text;
+          // Ignore wrap text;
+          // state.wrapInWord ? text?.split('').join('\u200B') : text;
 
           // TODO: Support text-shadow.
           return [
