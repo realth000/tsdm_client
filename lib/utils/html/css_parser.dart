@@ -80,7 +80,17 @@ extension StringToColorExt on String? {
     // Parse as color value.
     if (this != null && _colorRe.hasMatch(this!)) {
       if (this!.startsWith('#')) {
-        colorValue = int.tryParse(this!.substring(1), radix: 16);
+        if (this!.length == 4) {
+          // #abc format short hand for #aabbcc.
+          colorValue = int.tryParse(
+            '${this![1]}${this![1]}${this![2]}'
+            '${this![2]}${this![3]}${this![3]}',
+            radix: 16,
+          );
+        } else {
+          // Normal #aabbcc format.
+          colorValue = int.tryParse(this!.substring(1), radix: 16);
+        }
       } else {
         colorValue = int.tryParse(this!, radix: 16);
       }
