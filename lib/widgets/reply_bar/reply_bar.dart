@@ -526,6 +526,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
             }
         }
       },
+      panelBgColor: Theme.of(context).colorScheme.surface,
     );
   }
 
