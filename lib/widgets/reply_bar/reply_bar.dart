@@ -489,13 +489,6 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               disabledFeatures: fullScreen
                   ? widget.fullScreenDisabledEditorFeatures
                   : widget.disabledEditorFeatures,
-              afterButtonPressed: () {
-                if (fullScreen) {
-                  setState(() {
-                    fullScreen = false;
-                  });
-                }
-              },
             )
         };
       },
@@ -505,6 +498,21 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
             panelType = _BottomPanelType.none;
           case ChatBottomPanelType.keyboard:
             panelType = _BottomPanelType.keyboard;
+            // TODO: Remove the setState after tricky removed.
+            // Some button in editor that use a popup menu does not reset
+            // fullScreen flag as we are doing some tricky thing in toolbar.
+            //
+            // Font size button overridden with an empty font size button
+            // option is so:
+            //
+            // QuillToolbarFontSizeButtonOptions(afterButtonPressed: () {}),
+            //
+            // Manually set to false.
+            if (fullScreen) {
+              setState(() {
+                fullScreen = false;
+              });
+            }
           case ChatBottomPanelType.other:
             switch (data) {
               case null:
