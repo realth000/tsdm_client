@@ -17,6 +17,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
@@ -183,6 +184,7 @@ class _ThreadPageState extends State<ThreadPage>
     return ReplyBar(
       controller: _replyBarController,
       replyType: ReplyTypes.thread,
+      fullScreen: isDesktop,
       disabledEditorFeatures: defaultEditorDisabledFeatures,
       fullScreenDisabledEditorFeatures: defaultFullScreenDisabledEditorFeatures,
     );
@@ -296,6 +298,8 @@ class _ThreadPageState extends State<ThreadPage>
             }
 
             return Scaffold(
+              // Required by chat_bottom_container in the reply bar.
+              resizeToAvoidBottomInset: false,
               appBar: ListAppBar(
                 title: title,
                 showReverseOrderAction: true,

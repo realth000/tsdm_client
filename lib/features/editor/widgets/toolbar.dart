@@ -99,6 +99,7 @@ class EditorToolbar extends StatefulWidget {
   const EditorToolbar({
     required this.bbcodeController,
     this.disabledFeatures = const {},
+    this.afterButtonPressed,
     super.key,
   });
 
@@ -110,6 +111,9 @@ class EditorToolbar extends StatefulWidget {
   /// All [EditorFeatures] exist in this list will be disabled and the
   /// corresponding widget will NOT be invisible.
   final Set<EditorFeatures> disabledFeatures;
+
+  /// Callback when button pressed.
+  final VoidCallback? afterButtonPressed;
 
   @override
   State<EditorToolbar> createState() => _EditorToolbarState();
@@ -332,6 +336,7 @@ class _EditorToolbarState extends State<EditorToolbar> {
   @override
   Widget build(BuildContext context) {
     return BBCodeEditorToolbar(
+      afterButtonPressed: widget.afterButtonPressed,
       controller: widget.bbcodeController,
       config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiPicker(context),

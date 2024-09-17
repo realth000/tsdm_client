@@ -3,6 +3,8 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        // Requires by chat_bottom_container
+        maven { url 'https://jitpack.io' }
     }
 }
 

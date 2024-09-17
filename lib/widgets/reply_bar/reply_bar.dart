@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:chat_bottom_container/chat_bottom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,9 +13,16 @@ import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
+
+enum _BottomPanelType {
+  none,
+  keyboard,
+  toolbar,
+}
 
 /// Widget provide reply functionality.
 ///
@@ -202,6 +210,10 @@ class _ReplyBar extends StatefulWidget {
 }
 
 final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
+  final panelController =
+      ChatBottomPanelContainerController<_BottomPanelType>();
+  _BottomPanelType panelType = _BottomPanelType.none;
+
   /// Indicate current thread is closed.
   bool _closed = false;
 
@@ -256,7 +268,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   bool showTextAttributeButtons = false;
 
   /// Rich editor controller.
-  final _replyRichController = BBCodeEditorController();
+  late BBCodeEditorController _replyRichController;
 
   /// Method to update [_hintText].
   /// Use this method to update text and ui by calling [setState].
@@ -409,16 +421,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       isFocused: focusNode.hasFocus,
       decoration: const InputDecoration(),
       child: IntrinsicHeight(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxHeight: fullScreen ? double.infinity : 100,
-          ),
-          child: RichEditor(
-            // Initial text is the text passed from outside.
-            initialText: widget.outerTextController.text,
-            controller: _replyRichController,
-            focusNode: focusNode,
-          ),
+        child: RichEditor(
+          // Initial text is the text passed from outside.
+          initialText: widget.outerTextController.text,
+          controller: _replyRichController,
+          focusNode: focusNode,
         ),
       ),
     );
@@ -453,6 +460,67 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     );
   }
 
+  Widget _buildDesktopToolbar(BuildContext context, ReplyState state) {
+    if (isMobile) {
+      return sizedBoxEmpty;
+    }
+    return EditorToolbar(
+      bbcodeController: _replyRichController,
+      disabledFeatures: fullScreen
+          ? widget.fullScreenDisabledEditorFeatures
+          : widget.disabledEditorFeatures,
+    );
+  }
+
+  Widget _buildMobileToolbar(BuildContext context, ReplyState state) {
+    if (!isMobile) {
+      return sizedBoxEmpty;
+    }
+    return ChatBottomPanelContainer<_BottomPanelType>(
+      controller: panelController,
+      inputFocusNode: focusNode,
+      otherPanelWidget: (type) {
+        return switch (type) {
+          null => sizedBoxEmpty,
+          _BottomPanelType.none => sizedBoxEmpty,
+          _BottomPanelType.keyboard => sizedBoxEmpty,
+          _BottomPanelType.toolbar => EditorToolbar(
+              bbcodeController: _replyRichController,
+              disabledFeatures: fullScreen
+                  ? widget.fullScreenDisabledEditorFeatures
+                  : widget.disabledEditorFeatures,
+              afterButtonPressed: () {
+                if (fullScreen) {
+                  setState(() {
+                    fullScreen = false;
+                  });
+                }
+              },
+            )
+        };
+      },
+      onPanelTypeChange: (p, data) {
+        switch (p) {
+          case ChatBottomPanelType.none:
+            panelType = _BottomPanelType.none;
+          case ChatBottomPanelType.keyboard:
+            panelType = _BottomPanelType.keyboard;
+          case ChatBottomPanelType.other:
+            switch (data) {
+              case null:
+                panelType = _BottomPanelType.none;
+              case _BottomPanelType.none:
+                panelType = _BottomPanelType.none;
+              case _BottomPanelType.keyboard:
+                panelType = _BottomPanelType.keyboard;
+              case _BottomPanelType.toolbar:
+                panelType = _BottomPanelType.toolbar;
+            }
+        }
+      },
+    );
+  }
+
   Widget _buildContent(BuildContext context, ReplyState state) {
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -464,26 +532,22 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         Flexible(
           child: Padding(
             padding: edgeInsetsL12T12R12B12,
-            child: _buildRichEditor(context),
+            child: Listener(
+              onPointerUp:
+                  // Only collapse editor toolbar on mobile platforms.
+                  isMobile
+                      ? (_) {
+                          setState(() {
+                            fullScreen = false;
+                          });
+                        }
+                      : null,
+              child: _buildRichEditor(context),
+            ),
           ),
         ),
 
-        // Rich editor toolbar
-        Padding(
-          padding: edgeInsetsL12R12B12,
-          child: Row(
-            children: [
-              Expanded(
-                child: EditorToolbar(
-                  bbcodeController: _replyRichController,
-                  disabledFeatures: fullScreen
-                      ? widget.fullScreenDisabledEditorFeatures
-                      : widget.disabledEditorFeatures,
-                ),
-              ),
-            ],
-          ),
-        ),
+        _buildDesktopToolbar(context, state),
         Padding(
           padding: edgeInsetsL12R12B12,
           child: Row(
@@ -501,19 +565,31 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                   );
                 },
               ),
-              IconButton(
-                icon: const Icon(Icons.expand),
-                selectedIcon: Icon(
-                  Icons.expand_outlined,
-                  color: Theme.of(context).primaryColor,
+              // Only control expand or collapse on mobile platforms.
+              // For desktop, always expand the toolbar.
+              if (isMobile)
+                IconButton(
+                  icon: const Icon(Icons.expand),
+                  selectedIcon: Icon(
+                    Icons.expand_outlined,
+                    color: Theme.of(context).primaryColor,
+                  ),
+                  isSelected: fullScreen,
+                  onPressed: () {
+                    setState(() {
+                      fullScreen = !fullScreen;
+                    });
+                    if (fullScreen) {
+                      panelController.updatePanelType(
+                        ChatBottomPanelType.other,
+                        data: _BottomPanelType.toolbar,
+                      );
+                    } else {
+                      panelController
+                          .updatePanelType(ChatBottomPanelType.keyboard);
+                    }
+                  },
                 ),
-                isSelected: fullScreen,
-                onPressed: () {
-                  setState(() {
-                    fullScreen = !fullScreen;
-                  });
-                },
-              ),
               const Spacer(),
               FilledButton.tonal(
                 onPressed: isSendingReply ? null : () => context.pop(),
@@ -533,6 +609,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
             ],
           ),
         ),
+        _buildMobileToolbar(context, state),
       ],
     );
   }
@@ -543,6 +620,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
+    _replyRichController = BBCodeEditorController();
     _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen(
       (status) {
