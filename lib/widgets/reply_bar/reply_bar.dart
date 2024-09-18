@@ -14,7 +14,6 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 
@@ -561,19 +560,6 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           padding: edgeInsetsL12R12B12,
           child: Row(
             children: [
-              IconButton(
-                icon: Icon(
-                  Icons.info_outline,
-                  color: Theme.of(context).primaryColor,
-                ),
-                onPressed: () async {
-                  await showMessageSingleButtonDialog(
-                    context: context,
-                    title: context.t.bbcodeEditor.experimentalInfoTitle,
-                    message: context.t.bbcodeEditor.experimentalInfoDetail,
-                  );
-                },
-              ),
               // Only control expand or collapse on mobile platforms.
               // For desktop, always expand the toolbar.
               if (isMobile)
@@ -604,7 +590,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                 onPressed: isSendingReply ? null : () => context.pop(),
                 child: const Icon(Icons.close_outlined),
               ),
-              sizedBoxW12H12,
+              sizedBoxW8H8,
               // Send Button
               FilledButton(
                 onPressed:

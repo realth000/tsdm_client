@@ -520,19 +520,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.info_outline,
-                    color: Theme.of(context).primaryColor,
-                  ),
-                  onPressed: () async {
-                    await showMessageSingleButtonDialog(
-                      context: context,
-                      title: context.t.bbcodeEditor.experimentalInfoTitle,
-                      message: context.t.bbcodeEditor.experimentalInfoDetail,
-                    );
-                  },
-                ),
+                sizedBoxW4H4,
                 // Only control expand or collapse on mobile platforms.
                 // For desktop, always expand the toolbar.
                 if (isMobile)
@@ -600,15 +588,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             child: state.status == PostEditStatus.uploading &&
                     uploadMethod == _UploadMethod.saveDraft
                 ? sizedCircularProgressIndicator
-                : Row(
-                    children: [
-                      const Icon(Icons.save),
-                      sizedBoxW4H4,
-                      Text(context.t.postEditPage.saveAsDraft),
-                    ],
-                  ),
+                : Text(context.t.postEditPage.saveAsDraft),
           ),
-          sizedBoxW12H12,
+          sizedBoxW8H8,
         ],
         FilledButton(
           onPressed: state.status == PostEditStatus.uploading
@@ -729,7 +711,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 ColoredBox(
                   color: Theme.of(context).colorScheme.surface,
                   child: Padding(
-                    padding: edgeInsetsL4R4.add(edgeInsetsB4),
+                    padding: edgeInsetsR4.add(edgeInsetsB4),
                     child: _buildControlRow(context, state),
                   ),
                 ),

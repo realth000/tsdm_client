@@ -49,6 +49,9 @@ const edgeInsetsT4 = EdgeInsets.only(top: 4);
 /// An [EdgeInsets] with 8 at top.
 const edgeInsetsT8 = EdgeInsets.only(top: 8);
 
+/// An [EdgeInsets] 4 at right.
+const edgeInsetsR4 = EdgeInsets.only(right: 4);
+
 /// An [EdgeInsets] 4 at bottom.
 const edgeInsetsB4 = EdgeInsets.only(bottom: 4);
 
