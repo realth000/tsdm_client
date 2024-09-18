@@ -432,7 +432,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       return Container();
     }
     return Padding(
-      padding: edgeInsetsL4R4.add(edgeInsetsT4),
+      padding: edgeInsetsL8R8.add(edgeInsetsT8),
       child: Row(children: ret.insertBetween(sizedBoxW24H24)),
     );
   }
