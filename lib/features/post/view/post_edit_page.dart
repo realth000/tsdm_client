@@ -1,3 +1,4 @@
+import 'package:chat_bottom_container/chat_bottom_container.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,6 +18,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -50,6 +52,12 @@ enum _UploadMethod {
 
   /// Save thread in draft action triggered.
   saveDraft,
+}
+
+enum _BottomPanelType {
+  none,
+  keyboard,
+  toolbar,
 }
 
 /// Page lets the user to edit a post.
@@ -118,6 +126,15 @@ class PostEditPage extends StatefulWidget {
 }
 
 class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
+  final panelController =
+      ChatBottomPanelContainerController<_BottomPanelType>();
+  _BottomPanelType panelType = _BottomPanelType.none;
+
+  /// Allow reply bar full screen.
+  ///
+  /// Will not restrict reply bar height when set to true.
+  late bool fullScreen;
+
   /// Show text attribute control button or not.
   bool showTextAttributeButtons = false;
 
@@ -290,6 +307,62 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     return;
   }
 
+  // TODO: Fix duplicate with same logic in thread page.
+  Widget _buildMobileToolbar(BuildContext context, PostEditState state) {
+    return ChatBottomPanelContainer<_BottomPanelType>(
+      controller: panelController,
+      inputFocusNode: focusNode,
+      otherPanelWidget: (type) {
+        return switch (type) {
+          null => sizedBoxEmpty,
+          _BottomPanelType.none => sizedBoxEmpty,
+          _BottomPanelType.keyboard => sizedBoxEmpty,
+          _BottomPanelType.toolbar => EditorToolbar(
+              bbcodeController: bbcodeController,
+              disabledFeatures: fullScreen
+                  ? defaultFullScreenDisabledEditorFeatures
+                  : defaultEditorDisabledFeatures,
+            )
+        };
+      },
+      onPanelTypeChange: (p, data) {
+        switch (p) {
+          case ChatBottomPanelType.none:
+            panelType = _BottomPanelType.none;
+          case ChatBottomPanelType.keyboard:
+            panelType = _BottomPanelType.keyboard;
+            // TODO: Remove the setState after tricky removed.
+            // Some button in editor that use a popup menu does not reset
+            // fullScreen flag as we are doing some tricky thing in toolbar.
+            //
+            // Font size button overridden with an empty font size button
+            // option is so:
+            //
+            // QuillToolbarFontSizeButtonOptions(afterButtonPressed: () {}),
+            //
+            // Manually set to false.
+            if (fullScreen) {
+              setState(() {
+                fullScreen = false;
+              });
+            }
+          case ChatBottomPanelType.other:
+            switch (data) {
+              case null:
+                panelType = _BottomPanelType.none;
+              case _BottomPanelType.none:
+                panelType = _BottomPanelType.none;
+              case _BottomPanelType.keyboard:
+                panelType = _BottomPanelType.keyboard;
+              case _BottomPanelType.toolbar:
+                panelType = _BottomPanelType.toolbar;
+            }
+        }
+      },
+      panelBgColor: Theme.of(context).colorScheme.surface,
+    );
+  }
+
   /// Show a modal bottom sheet to let user select a thread type.
   ///
   /// Note that the content data [state.content.threadTypeList] MUST be
@@ -460,6 +533,31 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     );
                   },
                 ),
+                // Only control expand or collapse on mobile platforms.
+                // For desktop, always expand the toolbar.
+                if (isMobile)
+                  IconButton(
+                    icon: const Icon(Icons.expand),
+                    selectedIcon: Icon(
+                      Icons.expand_outlined,
+                      color: Theme.of(context).primaryColor,
+                    ),
+                    isSelected: fullScreen,
+                    onPressed: () {
+                      setState(() {
+                        fullScreen = !fullScreen;
+                      });
+                      if (fullScreen) {
+                        panelController.updatePanelType(
+                          ChatBottomPanelType.other,
+                          data: _BottomPanelType.toolbar,
+                        );
+                      } else {
+                        panelController
+                            .updatePanelType(ChatBottomPanelType.keyboard);
+                      }
+                    },
+                  ),
                 if (additionalOptionsMap != null)
                   IconButton(
                     icon: const Icon(Icons.settings_outlined),
@@ -609,30 +707,32 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                   ),
                 ),
                 sizedBoxW4H4,
-                Row(
-                  children: [
-                    Expanded(
-                      child: ColoredBox(
-                        color: Theme.of(context).colorScheme.surfaceContainer,
-                        child: Padding(
-                          padding: edgeInsetsL4R4.add(edgeInsetsT4),
-                          child: EditorToolbar(
-                            bbcodeController: bbcodeController,
-                            disabledFeatures:
-                                defaultFullScreenDisabledEditorFeatures,
+                if (isDesktop)
+                  Row(
+                    children: [
+                      Expanded(
+                        child: ColoredBox(
+                          color: Theme.of(context).colorScheme.surface,
+                          child: Padding(
+                            padding: edgeInsetsL4R4.add(edgeInsetsT4),
+                            child: EditorToolbar(
+                              bbcodeController: bbcodeController,
+                              disabledFeatures:
+                                  defaultFullScreenDisabledEditorFeatures,
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
+                    ],
+                  ),
                 ColoredBox(
-                  color: Theme.of(context).colorScheme.surfaceContainer,
+                  color: Theme.of(context).colorScheme.surface,
                   child: Padding(
                     padding: edgeInsetsL4R4.add(edgeInsetsB4),
                     child: _buildControlRow(context, state),
                   ),
                 ),
+                if (isMobile) _buildMobileToolbar(context, state),
               ],
             );
           },
@@ -730,6 +830,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     super.initState();
     debug('enter post edit page: '
         'editType=${widget.editType}, fid=${widget.fid}');
+    fullScreen = isDesktop;
   }
 
   @override
@@ -761,6 +862,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         context.pop();
       },
       child: Scaffold(
+        // Required by chat_bottom_container in the reply bar.
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text(title)),
         body: _buildBody(context),
       ),
