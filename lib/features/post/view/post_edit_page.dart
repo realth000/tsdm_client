@@ -703,6 +703,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     child: RichEditor(
                       controller: bbcodeController,
                       initialText: state.content?.data,
+                      focusNode: focusNode,
                     ),
                   ),
                 ),
