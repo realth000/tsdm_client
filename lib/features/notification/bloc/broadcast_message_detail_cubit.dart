@@ -31,9 +31,14 @@ final class BroadcastMessageDetailCubit
       final (document, _) = v;
       final infoNode = document.querySelector('div#pm_ul');
       final datetime = infoNode
-          ?.querySelector('dl > dd.ptm > span.xg1')
-          ?.innerText
-          .parseToDateTimeUtc8();
+              ?.querySelector('dl > dd.ptm > span.xg1')
+              ?.innerText
+              .parseToDateTimeUtc8() ??
+          // Recent messages.
+          infoNode
+              ?.querySelector('dl > dd.ptm > span.xg1 > span')
+              ?.title
+              ?.parseToDateTimeUtc8();
       final messageNode = infoNode?.querySelector('dl > dd > p.pm_smry');
       if (datetime == null || messageNode == null) {
         error('failed to build broadcast detail message page: '
