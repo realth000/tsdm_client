@@ -588,7 +588,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               const Spacer(),
               FilledButton.tonal(
                 onPressed: isSendingReply ? null : () => context.pop(),
-                child: const Icon(Icons.close_outlined),
+                child: const Icon(Icons.unfold_less),
               ),
               sizedBoxW8H8,
               // Send Button
@@ -599,7 +599,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                         : null,
                 child: isSendingReply
                     ? sizedCircularProgressIndicator
-                    : const Icon(Icons.send_outlined),
+                    : const Icon(Icons.send),
               ),
             ],
           ),
