@@ -65,7 +65,12 @@ dependencies:
   stream_transform: ^2.1.0
   super_sliver_list: ^0.4.1
   surf_lint_rules: ^3.1.0
-  system_theme: ^3.1.1
+  # system_theme: ^3.1.1
+  system_theme:
+    git:
+      url: https://github.com/realth000/system_theme
+      ref: 5f2c5b5a8aaf88be07e34dcbc8e53885edfef675
+      path: system_theme
   talker: ^4.4.1
   talker_flutter: ^4.4.1
   universal_html: ^2.2.4
