@@ -146,12 +146,15 @@ class _CardLayout extends StatelessWidget {
                       (e) => Expanded(
                         child: Row(
                           children: [
-                            Icon(e.$1, size: smallIconSize),
+                            Icon(e.$1, size: smallIconSize, color: infoColor),
                             sizedBoxW4H4,
                             Expanded(
                               child: Text(
                                 e.$2,
-                                style: const TextStyle(fontSize: smallTextSize),
+                                style: TextStyle(
+                                  fontSize: smallTextSize,
+                                  color: infoColor,
+                                ),
                                 maxLines: 1,
                                 overflow: TextOverflow.clip,
                               ),
