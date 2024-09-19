@@ -48,8 +48,13 @@
         "system": "Follow System",
         "dark": "Dark"
       },
+      "colorSchemeFollowSystem": {
+        "title": "Color Follow System",
+        "detail": "Use system color as app accent color"
+      },
       "colorScheme": {
-        "title": "Color Scheme"
+        "title": "Color Scheme",
+        "overrideWithSystem": "Using system theme"
       },
       "languages": {
         "title": "Languages",

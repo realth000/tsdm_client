@@ -48,8 +48,13 @@
         "system": "跟随系统",
         "dark": "深色"
       },
+      "colorSchemeFollowSystem": {
+        "title": "色调跟随系统颜色",
+        "detail": "使用系统颜色作为应用主色调"
+      },
       "colorScheme": {
-        "title": "色调"
+        "title": "色调",
+        "overrideWithSystem": "正在使用系统颜色"
       },
       "languages": {
         "title": "语言",

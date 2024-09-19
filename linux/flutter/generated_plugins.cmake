@@ -7,6 +7,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   irondash_engine_context
   sqlite3_flutter_libs
   super_native_extensions
+  system_theme
   url_launcher_linux
 )
 

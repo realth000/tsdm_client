@@ -10,6 +10,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   share_plus
   sqlite3_flutter_libs
   super_native_extensions
+  system_theme
   url_launcher_windows
 )
 

@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -96,6 +97,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
     // Accent color.
     final accentColor = state.settingsMap.accentColor;
+    final accentColorFollowSystem = state.settingsMap.accentColorFollowSystem;
 
     // Show badge or unread info count on logged user's unread messages;
     final showUnreadInfoHint = state.settingsMap.showUnreadInfoHint;
@@ -197,12 +199,50 @@ class _SettingsPageState extends State<SettingsPage> {
               );
         },
       ),
+
+      // Accent color follow system
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.border_color_outlined),
+        title: Text(tr.colorSchemeFollowSystem.title),
+        subtitle: Text(tr.colorSchemeFollowSystem.detail),
+        value: accentColorFollowSystem,
+        onChanged: (v) async {
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(SettingsKeys.accentColorFollowSystem, v),
+              );
+          if (v) {
+            // Switched to system color.
+            await SystemTheme.accentColor.load();
+            if (!context.mounted) {
+              return;
+            }
+            final systemColor = SystemTheme.accentColor.accent;
+            // Effect immediately, system color.
+            context.read<ThemeCubit>().setAccentColor(systemColor);
+          } else {
+            // Switched to user specified color.
+            context.read<ThemeCubit>().setAccentColor(
+                  Color(
+                    accentColor >= 0
+                        ? accentColor
+                        : SettingsKeys.accentColor.defaultValue,
+                  ),
+                );
+          }
+        },
+      ),
+
       // Accent color
       SectionListTile(
+        enabled: !accentColorFollowSystem,
         leading: const Icon(Icons.color_lens_outlined),
         title: Text(tr.colorScheme.title),
-        trailing:
-            accentColor < 0 ? null : ColorPalette(color: Color(accentColor)),
+        subtitle: accentColorFollowSystem
+            ? Text(tr.colorScheme.overrideWithSystem)
+            : null,
+        trailing: accentColor < 0 || accentColorFollowSystem
+            ? null
+            : ColorPalette(color: Color(accentColor)),
         onTap: () async {
           final color = await _showAccentColorPickerDialog(context);
           if (color == null) {

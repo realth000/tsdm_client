@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -25,7 +26,20 @@ Future<void> main() async {
     LocaleSettings.setLocale(locale);
   }
 
-  final color = await settings.getValue<int>(SettingsKeys.accentColor);
+  // System color.
+  // Use this color when following system color settings turned on.
+  //
+  // A not empty value represents currently is using system color and the color
+  // value is inside it.
+  final useSystemTheme =
+      await settings.getValue<bool>(SettingsKeys.accentColorFollowSystem);
+
+  final color = switch (useSystemTheme) {
+    true => await SystemTheme.accentColor
+        .load()
+        .then((_) => SystemTheme.accentColor.accent.value),
+    false => await settings.getValue<int>(SettingsKeys.accentColor),
+  };
   final themeModeIndex = await settings.getValue<int>(SettingsKeys.themeMode);
 
   runApp(

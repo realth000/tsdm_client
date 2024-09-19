@@ -147,6 +147,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     defaultValue: 4280391411, // PrimaryColors.blue
   ),
 
+  /// Using system color (usually wallpaper color) as app accent color.
+  accentColorFollowSystem<bool>(
+    name: 'accentColorFollowSystem',
+    type: bool,
+    defaultValue: false,
+  ),
+
   /// Show badge or unread notice count on notice button.
   showUnreadInfoHint<bool>(
     name: 'showUnreadInfoHint',

@@ -1558,6 +1558,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.1.0"
+  system_theme:
+    dependency: "direct main"
+    description:
+      name: system_theme
+      sha256: "9396b69e74cdd1524daf26c0c33f4968d5ada1ff948a31f031cf6398869b589f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.1"
+  system_theme_web:
+    dependency: transitive
+    description:
+      name: system_theme_web
+      sha256: "900c92c5c050ce58048f241ef9a17e5cd8629808325a05b473dc62a6e99bae77"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.3"
   talker:
     dependency: "direct main"
     description:

@@ -25,6 +25,7 @@ class SettingsMap with SettingsMapMappable {
     required this.checkinMessage,
     required this.showShortcutInForumCard,
     required this.accentColor,
+    required this.accentColorFollowSystem,
     required this.showUnreadInfoHint,
     required this.doublePressExit,
     required this.threadReverseOrder,
@@ -55,6 +56,7 @@ class SettingsMap with SettingsMapMappable {
   final String checkinMessage;
   final bool showShortcutInForumCard;
   final int accentColor;
+  final bool accentColorFollowSystem;
   final bool showUnreadInfoHint;
   final bool doublePressExit;
   final bool threadReverseOrder;
@@ -99,6 +101,8 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.showShortcutInForumCard =>
         copyWith(showShortcutInForumCard: value as bool?),
       SettingsKeys.accentColor => copyWith(accentColor: value as int?),
+      SettingsKeys.accentColorFollowSystem =>
+        copyWith(accentColorFollowSystem: value as bool?),
       SettingsKeys.showUnreadInfoHint =>
         copyWith(showUnreadInfoHint: value as bool?),
       SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool?),

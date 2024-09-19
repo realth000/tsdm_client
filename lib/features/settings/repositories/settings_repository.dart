@@ -90,6 +90,7 @@ final class SettingsRepository with LoggerMixin {
       checkinMessage: s.extract(_SK.checkinMessage),
       showShortcutInForumCard: s.extract(_SK.showShortcutInForumCard),
       accentColor: s.extract(_SK.accentColor),
+      accentColorFollowSystem: s.extract(_SK.accentColorFollowSystem),
       showUnreadInfoHint: s.extract(_SK.showUnreadInfoHint),
       doublePressExit: s.extract(_SK.doublePressExit),
       threadReverseOrder: s.extract(_SK.threadReverseOrder),
