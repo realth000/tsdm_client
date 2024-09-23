@@ -96,7 +96,13 @@ extension ParseUrl on String {
         queryParameters['pid'] != null) {
       return RecognizedRoute(
         ScreenPaths.thread,
-        queryParameters: {'pid': "${queryParameters['pid']}"},
+        queryParameters: {
+          'pid': "${queryParameters['pid']}",
+          // Disable reverse order when go with findpost.
+          // Find post will always return a non-reversed thread, so disable it
+          // to avoid incorrect page loaded when loading more pages.
+          'overrideReverseOrder': 'false',
+        },
       );
     }
 

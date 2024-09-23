@@ -114,11 +114,6 @@ class _ThreadPageState extends State<ThreadPage>
   }
 
   Widget _buildContent(BuildContext context, ThreadState state) {
-    final pageNumber =
-        RepositoryProvider.of<ThreadRepository>(context).pageNumber ??
-            int.tryParse(widget.pageNumber) ??
-            1;
-
     return Column(
       children: [
         Expanded(
@@ -126,7 +121,7 @@ class _ThreadPageState extends State<ThreadPage>
             threadID: widget.threadID,
             title: widget.title ?? state.title,
             threadType: widget.threadType,
-            pageNumber: pageNumber,
+            pageNumber: context.read<JumpPageCubit>().state.currentPage,
             initialPostID: widget.findPostID?.parseToInt(),
             scrollController: _listScrollController,
             widgetBuilder: (context, post) => PostCard(
