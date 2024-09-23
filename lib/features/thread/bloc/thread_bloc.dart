@@ -209,7 +209,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       state.copyWith(
         status: ThreadStatus.loading,
         postList: [],
-        reverseOrder: state.reverseOrder != null ? !state.reverseOrder! : null,
+        // Set to reverse order if is null.
+        // FIXME: Some threads may set reversed order, detect that in page
+        //  (though impossible if only one page).
+        reverseOrder: !(state.reverseOrder ?? false),
         currentPage: 1,
       ),
     );

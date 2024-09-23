@@ -102,7 +102,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
 
     final threadBloc = context.readOrNull<ThreadBloc>();
-    final reverseOrder = threadBloc?.state.reverseOrder;
+    // Default is not reversed.
+    // FIXME: Some threads may set reversed order, detect that in page
+    //  (though impossible if only one page).
+    final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
     return AppBar(
       title: title == null ? null : Text(title!),
@@ -161,7 +164,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ],
               ),
             ),
-            if (showReverseOrderAction && reverseOrder != null)
+            if (showReverseOrderAction)
               PopupMenuItem(
                 value: MenuActions.reverseOrder,
                 child: Row(
