@@ -44,7 +44,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   font_awesome_flutter: ^10.7.0
   fpdart: ^1.1.0
-  get_it: ^7.7.0
+  get_it: ^8.0.0
   gitsumu: ^0.5.1
   go_router: ^14.2.7
   html: ^0.15.4
@@ -86,7 +86,7 @@ dev_dependencies:
       url: https://github.com/schultek/dart_mappable.git
       path: "packages/dart_mappable_builder"
       ref: 4777e79cdc99e15730d18990e1d774edc0064b0a
-  flutter_launcher_icons: ^0.13.1
+  flutter_launcher_icons: ^0.14.1
   flutter_test:
     sdk: flutter
   json_serializable: ^6.8.0
