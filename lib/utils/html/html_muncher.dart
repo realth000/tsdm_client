@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -18,6 +19,7 @@ import 'package:tsdm_client/widgets/card/spoiler_card.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 import 'package:universal_html/html.dart' as uh;
+import 'package:url_launcher/url_launcher_string.dart';
 
 /// Use the same span to append line break.
 const emptySpan = TextSpan(text: '\n');
@@ -187,6 +189,10 @@ final class _Muncher with LoggerMixin {
   /// Map to store div classes and corresponding munch functions.
   Map<String, List<InlineSpan>? Function(uh.Element)>? _divMap;
 
+  /// Regex to match netease player iframe.
+  final _neteasePlayerRe =
+      RegExp(r'//music\.163\.com/outchain/player\?.+id=(?<id>\d+).*');
+
   List<InlineSpan>? _munch(uh.Element rootElement) {
     final spanList = <InlineSpan>[];
 
@@ -311,6 +317,7 @@ final class _Muncher with LoggerMixin {
             'hr' => _buildHr(node),
             'pre' => _buildPre(node),
             'details' => _buildDetails(node),
+            'iframe' => _buildIframe(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -990,6 +997,35 @@ final class _Muncher with LoggerMixin {
       ),
       emptySpan,
     ];
+  }
+
+  List<InlineSpan>? _buildIframe(uh.Element element) {
+    final neteasePlayerId = _neteasePlayerRe
+        .firstMatch(element.attributes['src'] ?? '')
+        ?.namedGroup('id');
+    if (neteasePlayerId != null) {
+      // Recognized netease player iframe.
+      // But only a song id here, nothing with song title/artist or other info.
+      // TODO: Check and get song info.
+      final url = 'https://music.163.com/#/song?id=$neteasePlayerId';
+      return [
+        WidgetSpan(
+          child: MouseRegion(
+            cursor: SystemMouseCursors.click,
+            child: GestureDetector(
+              onTap: () async => launchUrlString(url),
+              child: Card(
+                child: Padding(
+                  padding: edgeInsetsL12T12R12B12,
+                  child: Text('netease music here (id=$neteasePlayerId)'),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ];
+    }
+    return null;
   }
 
   /*                Setup Functions                      */
