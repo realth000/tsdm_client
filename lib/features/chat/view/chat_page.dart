@@ -174,6 +174,8 @@ final class _ChatPageState extends State<ChatPage> {
             };
 
             return Scaffold(
+              // Required by chat_bottom_container in reply bar.
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 title: Text(tr.title),
                 actions: [

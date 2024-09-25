@@ -197,6 +197,8 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             }
 
             return Scaffold(
+              // Required by chat_bottom_container in reply bar.
+              resizeToAvoidBottomInset: false,
               appBar: AppBar(
                 title: Text(tr.title),
                 bottom: bottom,
