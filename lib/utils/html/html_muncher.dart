@@ -7,6 +7,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/netease_card.dart';
+import 'package:tsdm_client/utils/html/newcomer_report_card.dart';
 import 'package:tsdm_client/utils/html/types.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
@@ -317,6 +318,8 @@ final class _Muncher with LoggerMixin {
             'pre' => _buildPre(node),
             'details' => _buildDetails(node),
             'iframe' => _buildIframe(node),
+            'table' when node.classes.contains('cgtl') =>
+              _buildNewcomerReport(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -1007,6 +1010,43 @@ final class _Muncher with LoggerMixin {
       return [WidgetSpan(child: NeteaseCard(neteasePlayerId))];
     }
     return null;
+  }
+
+  List<InlineSpan>? _buildNewcomerReport(uh.Element element) {
+    // <table cellspacing="0" cellpadding="0" class="cgtl mbm">
+    // <caption>报到详细信息</caption>
+    // <tbody>
+    //   <tr>
+    //     <th valign="top">昵称:</th>
+    //     <td> USER_NICKNAME</td>
+    //   </tr>
+    //
+    //   ...
+    //
+    // </tbody>
+    // </table>
+    final data = element
+        .querySelectorAll('tbody > tr')
+        .map(
+          (e) => (
+            e.querySelector('th')?.innerText.trim(),
+            e.querySelector('td')?.innerText.trim()
+          ),
+        )
+        .whereType<(String, String)>()
+        .map(
+          (e) => NewcomerReportInfo(
+            title: e.$1,
+            data: e.$2,
+          ),
+        )
+        .toList();
+
+    return [
+      WidgetSpan(
+        child: NewcomerReportCard(data),
+      ),
+    ];
   }
 
   /*                Setup Functions                      */

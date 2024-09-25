@@ -616,5 +616,10 @@
       "title": "Legacy data deleted",
       "detail": "Seems this app have just upgraded from version older than 1.0, user login data and preferences are deleted because they are not usable any more.\nYou may need to login and set preferences once more. Sorry for inconvenience."
     }
+  },
+  "html": {
+    "newcomerReportCard": {
+      "title": "Detail Info"
+    }
   }
 }
