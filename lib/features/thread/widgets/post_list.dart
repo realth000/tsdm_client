@@ -259,9 +259,11 @@ class _PostListState extends State<PostList> with LoggerMixin {
           _refreshController.finishLoad();
           return;
         }
-        context
-            .read<ThreadBloc>()
-            .add(ThreadLoadMoreRequested(widget.pageNumber + 1));
+        context.read<ThreadBloc>().add(
+              ThreadLoadMoreRequested(
+                context.read<JumpPageCubit>().state.currentPage + 1,
+              ),
+            );
       },
       childBuilder: (context, physics) {
         return CustomScrollView(
