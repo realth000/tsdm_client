@@ -218,13 +218,20 @@ final class UserBriefProfile with UserBriefProfileMappable {
         '注册时间:' => registrationDate = data,
         '来自:' => comeFrom = data,
         // Special attr that changes over time.
+        // 2023 春节
         '龙之印章:' => () {
             specialAttr = data;
             specialAttrName = '龙之印章';
           }(),
+        // 2024 夏日
         '西瓜:' => () {
             specialAttr = data;
             specialAttrName = '西瓜';
+          }(),
+        // 2024 坛庆
+        '爱心❤:' => () {
+            specialAttr = data;
+            specialAttrName = '爱心';
           }(),
         _ => '',
       };
