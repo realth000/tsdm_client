@@ -472,11 +472,11 @@
   "lockedCard": {
     "points": {
       "title": "Some content requires enough points to be visible",
-      "detail": "$requiredPoints points are required, but you only have $points points"
+      "detail(rich)": "$requiredPoints points are required, but you only have $points points"
     },
     "purchase": {
       "title": "Some content requires purchase",
-      "purchasedInfo": "$num people have purchased this article",
+      "purchasedInfo(rich)": "$num people have purchased this article",
       "failedPurchase": "Can not purchase",
       "failedParsingPurchase": "Failed when parsing purchase info",
       "failedParsingConfirmInfo": "Failed when parsing purchase confirm info",
@@ -488,10 +488,13 @@
     },
     "reply": {
       "title": "Some content requires reply",
-      "detail": "Reply to see contents here"
+      "detail(rich)": "$reply to see contents here",
+      "detailReply": "Reply"
     },
     "author": {
-      "title": "Only visible to the thread author"
+      "title": "Only visible to the thread author",
+      "detail(rich)": "This content only visible to $author",
+      "detailAuthor": "author"
     }
   },
   "rateCard": {

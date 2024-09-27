@@ -37,6 +37,21 @@ class _LockedCardState extends State<LockedCard> {
         );
   }
 
+  WidgetSpan _buildUnderlineText(BuildContext context, String text) {
+    return WidgetSpan(
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          border: Border(
+            bottom: BorderSide(
+              color: Theme.of(context).colorScheme.onSecondaryContainer,
+            ),
+          ),
+        ),
+        child: Text(text),
+      ),
+    );
+  }
+
   Widget _buildPurchaseBody(BuildContext context) {
     final tr = context.t.lockedCard.purchase;
     return MultiBlocProvider(
@@ -132,66 +147,86 @@ class _LockedCardState extends State<LockedCard> {
   Widget build(BuildContext context) {
     final tr = context.t.lockedCard;
     final widgets = <Widget>[];
+
+    final primaryStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
+          fontWeight: FontWeight.bold,
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+        );
+    final secondaryStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
+          color: Theme.of(context).colorScheme.onSecondaryContainer,
+        );
+
     if (widget.locked.lockedWithPoints) {
       widgets.addAll([
-        Text(
-          tr.points.title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        Text(
+        Text(tr.points.title, style: primaryStyle),
+        Text.rich(
           tr.points.detail(
-            requiredPoints: widget.locked.requiredPoints!,
-            points: widget.locked.points!,
+            requiredPoints: _buildUnderlineText(
+              context,
+              '${widget.locked.requiredPoints!}',
+            ),
+            points: _buildUnderlineText(
+              context,
+              '${widget.locked.points!}',
+            ),
           ),
-          style: Theme.of(context).textTheme.labelMedium,
+          style: secondaryStyle,
         ),
       ]);
     } else if (widget.locked.lockedWithPurchase) {
       widgets.addAll([
-        Text(
-          tr.purchase.title,
-          style: Theme.of(context).textTheme.titleMedium,
+        Text(tr.purchase.title, style: primaryStyle),
+        Text.rich(
+          tr.purchase.purchasedInfo(
+            num: _buildUnderlineText(
+              context,
+              '${widget.locked.purchasedCount!}',
+            ),
+          ),
+          style: secondaryStyle,
         ),
-        Text(
-          tr.purchase.purchasedInfo(num: widget.locked.purchasedCount!),
-          style: Theme.of(context).textTheme.labelMedium,
-        ),
+        sizedBoxW4H4,
         _buildPurchaseBody(context),
       ]);
     } else if (widget.locked.lockedWithReply) {
       widgets.addAll([
-        Text(
-          tr.reply.title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
-        Text(
-          tr.reply.detail,
-          style: Theme.of(context).textTheme.labelMedium,
+        Text(tr.reply.title, style: primaryStyle),
+        Text.rich(
+          tr.reply.detail(
+            reply: _buildUnderlineText(
+              context,
+              tr.reply.detailReply,
+            ),
+          ),
+          style: secondaryStyle,
         ),
       ]);
     } else if (widget.locked.lockedWithAuthor) {
-      widgets.add(
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const Icon(Icons.lock_outline),
-            sizedBoxW4H4,
-            Text(
-              tr.author.title,
-              style: Theme.of(context).textTheme.titleMedium,
+      widgets.addAll([
+        Text(tr.author.title, style: primaryStyle),
+        Text.rich(
+          tr.author.detail(
+            author: _buildUnderlineText(
+              context,
+              tr.author.detailAuthor,
             ),
-          ],
+          ),
+          style: secondaryStyle,
         ),
-      );
+      ]);
     }
 
     return Card(
       elevation: widget.elevation,
-      child: Padding(
-        padding: edgeInsetsL16T16R16B16,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: widgets.insertBetween(sizedBoxW4H4),
+      clipBehavior: Clip.antiAlias,
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.secondaryContainer,
+        child: Padding(
+          padding: edgeInsetsL16T16R16B16,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: widgets.insertBetween(sizedBoxW4H4),
+          ),
         ),
       ),
     );

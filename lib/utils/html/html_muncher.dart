@@ -31,9 +31,14 @@ const emptySpan = TextSpan(text: '\n');
 /// widget.
 ///
 /// Main entry of this package.
-Widget munchElement(BuildContext context, uh.Element rootElement) {
+Widget munchElement(
+  BuildContext context,
+  uh.Element rootElement, {
+  bool parseLockedWithPurchase = false,
+}) {
   final muncher = _Muncher(
     context,
+    parseLockedWithPurchase: parseLockedWithPurchase,
   );
 
   final ret = muncher._munch(rootElement);
@@ -178,10 +183,13 @@ class _MunchState {
 /// Munch html nodes into flutter widgets.
 final class _Muncher with LoggerMixin {
   /// Constructor.
-  _Muncher(this.context);
+  _Muncher(this.context, {required this.parseLockedWithPurchase});
 
   /// Context to build widget when munching.
   final BuildContext context;
+
+  //////// Configs ////////
+  bool parseLockedWithPurchase;
 
   /// Munch state to use when munching.
   final _MunchState state = _MunchState();
@@ -565,8 +573,10 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildLockedArea(uh.Element element) {
-    final lockedArea =
-        Locked.fromLockDivNode(element, allowWithPurchase: false);
+    final lockedArea = Locked.fromLockDivNode(
+      element,
+      allowWithPurchase: parseLockedWithPurchase,
+    );
     if (lockedArea.isNotValid()) {
       return null;
     }

@@ -8,6 +8,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
+import 'package:tsdm_client/features/settings/view/debug_showcase_page.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
@@ -440,6 +441,18 @@ class _SettingsPageState extends State<SettingsPage> {
     final tr = context.t.settingsPage.advancedSection;
     return [
       SectionTitleText(tr.title),
+      SectionListTile(
+        leading: const Icon(Icons.developer_mode_outlined),
+        title: const Text('DEBUG SHOWCASE'),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute<void>(
+              builder: (context) => const DebugShowcasePage(),
+            ),
+          );
+        },
+      ),
       SectionSwitchListTile(
         secondary: Icon(MdiIcons.networkOutline),
         title: Text(tr.useProxy),

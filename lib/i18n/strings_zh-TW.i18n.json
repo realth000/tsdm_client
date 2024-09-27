@@ -472,11 +472,11 @@
   "lockedCard": {
     "points": {
       "title": "部分內容要求積分足夠才可見",
-      "detail": "需要 $requiredPoints 積分，但你只有 $points 積分"
+      "detail(rich)": "需要 $requiredPoints 積分，但你只有 $points 積分"
     },
     "purchase": {
       "title": "部分內容需要購買才可瀏覽",
-      "purchasedInfo": "$num 人已購買此帖子",
+      "purchasedInfo(rich)": "$num 人已購買此帖子",
       "failedPurchase": "購買失敗",
       "failedParsingPurchase": "解析購買資訊時失敗",
       "failedPurchaseMessage": "購買失敗: $message",
@@ -488,10 +488,13 @@
     },
     "reply": {
       "title": "部分需要回覆才可瀏覽",
-      "detail": "回覆以查看該部分內容"
+      "detail(rich)": "$reply以查看該部分內容",
+      "detailReply": "回覆"
     },
     "author": {
-      "title": "僅對作者可見"
+      "title": "僅對作者可見",
+      "detail(rich)": "該部分內容僅對$author可見",
+      "detailAuthor": "作者"
     }
   },
   "rateCard": {
