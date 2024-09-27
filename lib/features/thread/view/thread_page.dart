@@ -267,6 +267,7 @@ class _ThreadPageState extends State<ThreadPage>
             // Update jump page state.
             context.read<JumpPageCubit>().setPageInfo(
                   totalPages: state.totalPages,
+                  currentPage: state.currentPage,
                 );
 
             String? title;
