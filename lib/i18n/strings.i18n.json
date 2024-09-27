@@ -555,7 +555,8 @@
     "share": "Copy share link"
   },
   "packetCard": {
-    "title": "You found a packet!",
+    "title": "Packet",
+    "detail": "You found a packet!",
     "open": "Open It",
     "failedToOpen": "Failed to open",
     "allTakenAway": "All packets were taken away"
@@ -627,5 +628,9 @@
     "newcomerReportCard": {
       "title": "Detail Info"
     }
+  },
+  "musicCard": {
+    "title": "Music",
+    "openLink": "Open link"
   }
 }

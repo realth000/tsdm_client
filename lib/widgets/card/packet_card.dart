@@ -9,21 +9,33 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 /// 红包
 class PacketCard extends StatelessWidget {
   /// Constructor.
-  const PacketCard(this.packetUrl, {super.key});
+  const PacketCard(
+    this.packetUrl, {
+    required this.allTaken,
+    super.key,
+  });
 
   /// Url to fetch/receive the packet.
   final String packetUrl;
 
+  /// Are all packet taken away.
+  final bool allTaken;
+
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final tr = context.t.packetCard;
+
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(
           create: (_) => PacketRepository(),
         ),
         BlocProvider<PacketCubit>(
-          create: (context) =>
-              PacketCubit(packetRepository: RepositoryProvider.of(context)),
+          create: (context) => PacketCubit(
+            packetRepository: RepositoryProvider.of(context),
+            allTaken: allTaken,
+          ),
         ),
       ],
       child: BlocListener<PacketCubit, PacketState>(
@@ -34,7 +46,7 @@ class PacketCard extends StatelessWidget {
                   .showSnackBar(SnackBar(content: Text(state.reason!)));
             } else {
               ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(context.t.packetCard.failedToOpen)),
+                SnackBar(content: Text(tr.failedToOpen)),
               );
             }
           } else if (state.status == PacketStatus.success) {
@@ -42,7 +54,7 @@ class PacketCard extends StatelessWidget {
                 .showSnackBar(SnackBar(content: Text(state.reason!)));
           } else if (state.status == PacketStatus.takenAway) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.t.packetCard.allTakenAway)),
+              SnackBar(content: Text(tr.allTakenAway)),
             );
           }
         },
@@ -62,9 +74,9 @@ class PacketCard extends StatelessWidget {
               PacketStatus.loading => const Text(''),
               PacketStatus.initial ||
               PacketStatus.success ||
-              PacketStatus.failed ||
-              PacketStatus.takenAway =>
-                Text(context.t.packetCard.open),
+              PacketStatus.failed =>
+                Text(tr.open),
+              PacketStatus.takenAway => Text(tr.allTakenAway),
             };
 
             final callback = switch (state.status) {
@@ -80,15 +92,28 @@ class PacketCard extends StatelessWidget {
               child: Padding(
                 padding: edgeInsetsL16T16R16B16,
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      context.t.packetCard.title,
-                      style: Theme.of(context).textTheme.titleMedium,
+                    Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(FontAwesomeIcons.coins, color: primaryColor),
+                        sizedBoxW8H8,
+                        Text(
+                          tr.title,
+                          style:
+                              Theme.of(context).textTheme.titleMedium?.copyWith(
+                                    color: primaryColor,
+                                  ),
+                        ),
+                      ],
                     ),
+                    sizedBoxW12H12,
+                    Text(tr.detail),
                     sizedBoxW12H12,
                     SizedBox(
                       width: sizeButtonInCardMinWidth,
-                      child: FilledButton.icon(
+                      child: OutlinedButton.icon(
                         icon: body,
                         label: label,
                         onPressed: callback,

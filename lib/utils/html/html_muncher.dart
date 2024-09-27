@@ -202,7 +202,7 @@ final class _Muncher with LoggerMixin {
 
   /// Regex to match netease player iframe.
   final _neteasePlayerRe =
-      RegExp(r'//music\.163\.com/outchain/player\?.+id=(?<id>\d+).*');
+      RegExp(r'//music\.163\.com/outchain/player\?.*id=(?<id>\d+).*');
 
   List<InlineSpan>? _munch(uh.Element rootElement) {
     final spanList = <InlineSpan>[];

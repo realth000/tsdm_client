@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -188,6 +189,9 @@ class _HtmlFragment extends StatelessWidget {
       </ol>
     </div>
   </div>
+  
+  <!-- Music iframe player -->
+  <iframe src="//music.163.com/outchain/player?id=1962823032"></iframe>
 </body>
 ''';
 
@@ -203,6 +207,8 @@ class _HtmlFragment extends StatelessWidget {
           parseLockedWithPurchase: true,
         ),
         RateCard(Rate.fromRateLogNode(parseHtmlDocument(rateBlockData).body)!),
+        const PacketCard('', allTaken: false),
+        const PacketCard('', allTaken: true),
       ],
     );
   }

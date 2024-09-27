@@ -9,9 +9,15 @@ part 'packet_state.dart';
 /// Cubit of read packets.
 class PacketCubit extends Cubit<PacketState> with LoggerMixin {
   /// Constructor.
-  PacketCubit({required PacketRepository packetRepository})
-      : _packetRepository = packetRepository,
-        super(const PacketState());
+  PacketCubit({
+    required PacketRepository packetRepository,
+    required bool allTaken,
+  })  : _packetRepository = packetRepository,
+        super(
+          allTaken
+              ? const PacketState(status: PacketStatus.takenAway)
+              : const PacketState(),
+        );
 
   final PacketRepository _packetRepository;
 

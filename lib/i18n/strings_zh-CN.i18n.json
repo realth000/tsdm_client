@@ -555,7 +555,8 @@
     "share": "复制分享链接"
   },
   "packetCard": {
-    "title": "你找到了一个红包！",
+    "title": "红包",
+    "detail": "你找到了一个红包！",
     "open": "打开",
     "failedToOpen": "打开失败",
     "allTakenAway": "红包都领完了"
@@ -627,5 +628,9 @@
     "newcomerReportCard": {
       "title": "详细信息"
     }
+  },
+  "musicCard": {
+    "title": "音乐",
+    "openLink": "打开链接"
   }
 }

@@ -1,5 +1,8 @@
 part of 'models.dart';
 
+/// Image url of empty packet.
+const _emptyPacketImageUrl = 'static/image/post/rp-2.svg';
+
 extension _ParseExtension on uh.Element {
   static final _rateActionRe = RegExp("'rate', '(?<url>forum.php[^']*)',");
 
@@ -29,6 +32,7 @@ class Post with PostMappable {
     required this.shareLink,
     required this.page,
     required this.isDraft,
+    required this.packetAllTaken,
     this.locked = const [],
     this.rate,
     this.packetUrl,
@@ -73,6 +77,9 @@ class Post with PostMappable {
   ///
   /// Optional.
   final String? packetUrl;
+
+  /// Is all packet taken away.
+  final bool packetAllTaken;
 
   /// Url to edit this post.
   ///
@@ -232,6 +239,10 @@ class Post with PostMappable {
         ?.querySelector('div.pct > div#ts_packet > a')
         ?.attributes['href']
         ?.prependHost();
+    final packetAllTaken = postDataNode
+            ?.querySelector('div.pct > div#ts_packet > a > img')
+            ?.attributes['src'] ==
+        _emptyPacketImageUrl;
 
     // Parse rate action:
     // * If current post is the first floor in thread, rate action node is in <div id="fj">...</div>.
@@ -301,6 +312,7 @@ class Post with PostMappable {
       rate: rate,
       rateAction: rateAction,
       packetUrl: packetUrl,
+      packetAllTaken: packetAllTaken,
       editUrl: editUrl,
       lastEditUsername: lastEditUsername,
       lastEditTime: lastEditTime,

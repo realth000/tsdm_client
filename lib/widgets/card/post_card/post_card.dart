@@ -373,7 +373,10 @@ class _PostCardState extends State<PostCard>
           ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
         if (widget.post.packetUrl != null) ...[
           sizedBoxW12H12,
-          PacketCard(widget.post.packetUrl!),
+          PacketCard(
+            widget.post.packetUrl!,
+            allTaken: widget.post.packetAllTaken,
+          ),
         ],
         // Rate status if any.
         if (widget.post.rate != null) ...[
