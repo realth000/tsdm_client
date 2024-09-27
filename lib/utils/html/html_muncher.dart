@@ -24,6 +24,9 @@ import 'package:universal_html/html.dart' as uh;
 /// Use the same span to append line break.
 const emptySpan = TextSpan(text: '\n');
 
+/// Step when elevation changes.
+const _elevationStep = 0.2;
+
 /// Use an empty span.
 // final null = WidgetSpan(child: Container());
 
@@ -110,7 +113,7 @@ class _MunchState {
   /// In some nested cards, elevation can be more than 1.
   ///
   /// Default is 0, increase when building in cards.
-  double elevation = 0;
+  double elevation = -_elevationStep;
 
   /// Flag indicating whether we should wrap line in word.
   ///
@@ -561,14 +564,14 @@ final class _Muncher with LoggerMixin {
     final text = element.querySelector('div')?.innerText.trim() ?? '';
     state
       ..headingBrNodePassed = true
-      ..elevation += 1;
+      ..elevation += _elevationStep;
     final ret = WidgetSpan(
       child: CodeCard(
         code: text,
         elevation: state.elevation,
       ),
     );
-    state.elevation -= 1;
+    state.elevation -= _elevationStep;
     return [ret];
   }
 
@@ -583,7 +586,7 @@ final class _Muncher with LoggerMixin {
 
     state
       ..headingBrNodePassed = true
-      ..elevation += 1;
+      ..elevation += _elevationStep;
     final ret = [
       WidgetSpan(
         child: LockedCard(
@@ -593,7 +596,7 @@ final class _Muncher with LoggerMixin {
       ),
       emptySpan,
     ];
-    state.elevation -= 1;
+    state.elevation -= _elevationStep;
     return ret;
   }
 
@@ -636,10 +639,10 @@ final class _Muncher with LoggerMixin {
       // Impossible.
       return null;
     }
-    state.elevation += 1;
+    state.elevation += _elevationStep;
     final elevation = state.elevation;
     final content = _munch(contentNode);
-    state.elevation -= 1;
+    state.elevation -= _elevationStep;
     if (content == null) {
       return null;
     }
@@ -647,14 +650,15 @@ final class _Muncher with LoggerMixin {
       content.removeLast();
     }
     state.headingBrNodePassed = true;
-    return [
-      WidgetSpan(
-        child: SpoilerCard(
-          title: TextSpan(text: title),
-          content: TextSpan(children: content),
-          elevation: elevation,
-        ),
+    final ret = WidgetSpan(
+      child: SpoilerCard(
+        title: TextSpan(text: title),
+        content: TextSpan(children: content),
+        elevation: elevation,
       ),
+    );
+    return [
+      ret,
       emptySpan,
     ];
   }
@@ -901,7 +905,7 @@ final class _Muncher with LoggerMixin {
     }
     state
       ..headingBrNodePassed = true
-      ..elevation += 1;
+      ..elevation += _elevationStep;
     final ret2 = WidgetSpan(
       child: Card(
         elevation: state.elevation,
@@ -913,7 +917,7 @@ final class _Muncher with LoggerMixin {
         child: Text.rich(TextSpan(children: ret)),
       ),
     );
-    state.elevation -= 1;
+    state.elevation -= _elevationStep;
     return [ret2];
   }
 
@@ -972,13 +976,13 @@ final class _Muncher with LoggerMixin {
   /// Build a detail card here.
   List<InlineSpan>? _buildDetails(uh.Element element) {
     final summary = element.children.elementAtOrNull(0);
-    state.elevation += 1;
+    state.elevation += _elevationStep;
     final dataSpanList = element.children
         .skip(1)
         .map(_munch)
         .whereType<List<InlineSpan>>()
         .toList();
-    state.elevation -= 1;
+    state.elevation -= _elevationStep;
     if (summary == null || dataSpanList.isEmpty) {
       return null;
     }
@@ -998,15 +1002,18 @@ final class _Muncher with LoggerMixin {
       }
       dataSpanList.last = ch;
     }
+    state.elevation += _elevationStep;
+    final ret = WidgetSpan(
+      child: SpoilerCard(
+        title: TextSpan(children: summarySpan),
+        content: TextSpan(children: dataSpanList.flattened.toList()),
+        elevation: state.elevation,
+      ),
+    );
+    state.elevation -= _elevationStep;
 
     return [
-      WidgetSpan(
-        child: SpoilerCard(
-          title: TextSpan(children: summarySpan),
-          content: TextSpan(children: dataSpanList.flattened.toList()),
-          elevation: state.elevation,
-        ),
-      ),
+      ret,
       emptySpan,
     ];
   }

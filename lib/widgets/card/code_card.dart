@@ -18,6 +18,7 @@ class CodeCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
     return Card(
       elevation: elevation,
       child: Padding(
@@ -27,19 +28,25 @@ class CodeCard extends StatelessWidget {
           children: [
             Row(
               children: [
+                Icon(Icons.code_outlined, color: primaryColor),
+                sizedBoxW8H8,
                 Text(
                   context.t.codeCard.title,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-                sizedBoxW4H4,
-                IconButton(
-                  icon: const Icon(Icons.copy_outlined),
-                  onPressed: () async => copyToClipboard(context, code),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: primaryColor),
                 ),
               ],
             ),
-            sizedBoxW4H4,
+            sizedBoxW16H16,
             Text(code),
+            sizedBoxW16H16,
+            OutlinedButton.icon(
+              icon: const Icon(Icons.copy_outlined),
+              label: Text(context.t.codeCard.copy),
+              onPressed: () async => copyToClipboard(context, code),
+            ),
           ],
         ),
       ),

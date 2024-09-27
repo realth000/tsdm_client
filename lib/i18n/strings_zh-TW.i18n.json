@@ -499,7 +499,8 @@
   },
   "rateCard": {
     "title": "評分記錄（$userCount）",
-    "total": "總計: $total"
+    "total": "總計: $total",
+    "user": "使用者"
   },
   "jumpDialog": {
     "title": "跳到頁面"
@@ -508,9 +509,11 @@
     "title": "點評"
   },
   "codeCard": {
-    "title": "程式碼區塊"
+    "title": "程式碼區塊",
+    "copy": "複製程式碼"
   },
   "spoilerCard": {
+    "title": "折疊區域",
     "expandMore": "展開",
     "expandLess": "折疊"
   },

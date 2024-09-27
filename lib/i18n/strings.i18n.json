@@ -499,7 +499,8 @@
   },
   "rateCard": {
     "title": "Rate log ($userCount)",
-    "total": "Total: $total"
+    "total": "Total: $total",
+    "user": "User"
   },
   "jumpDialog": {
     "title": "Jump to page ..."
@@ -508,9 +509,11 @@
     "title": "Review"
   },
   "codeCard": {
-    "title": "Code Block"
+    "title": "Code Block",
+    "copy": "Copy code"
   },
   "spoilerCard": {
+    "title": "Spoiler Block",
     "expandMore": "Expand More",
     "expandLess": "Expand Less"
   },

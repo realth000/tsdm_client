@@ -43,11 +43,14 @@ class _LockedCardState extends State<LockedCard> {
         decoration: BoxDecoration(
           border: Border(
             bottom: BorderSide(
-              color: Theme.of(context).colorScheme.onSecondaryContainer,
+              color: Theme.of(context).colorScheme.onSurface,
             ),
           ),
         ),
-        child: Text(text),
+        child: Text(
+          text,
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
       ),
     );
   }
@@ -124,7 +127,7 @@ class _LockedCardState extends State<LockedCard> {
 
             return SizedBox(
               width: sizeButtonInCardMinWidth,
-              child: FilledButton.icon(
+              child: OutlinedButton.icon(
                 icon: const Icon(FontAwesomeIcons.coins),
                 label: Text('${widget.locked.price}'),
                 onPressed: switch (state.status) {
@@ -148,17 +151,16 @@ class _LockedCardState extends State<LockedCard> {
     final tr = context.t.lockedCard;
     final widgets = <Widget>[];
 
-    final primaryStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
-          fontWeight: FontWeight.bold,
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
+    final primaryStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
+          color: Theme.of(context).colorScheme.primary,
         );
-    final secondaryStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(
-          color: Theme.of(context).colorScheme.onSecondaryContainer,
-        );
+    final secondaryStyle = Theme.of(context).textTheme.bodySmall;
+
+    final Text title;
 
     if (widget.locked.lockedWithPoints) {
+      title = Text(tr.points.title, style: primaryStyle);
       widgets.addAll([
-        Text(tr.points.title, style: primaryStyle),
         Text.rich(
           tr.points.detail(
             requiredPoints: _buildUnderlineText(
@@ -174,8 +176,8 @@ class _LockedCardState extends State<LockedCard> {
         ),
       ]);
     } else if (widget.locked.lockedWithPurchase) {
+      title = Text(tr.purchase.title, style: primaryStyle);
       widgets.addAll([
-        Text(tr.purchase.title, style: primaryStyle),
         Text.rich(
           tr.purchase.purchasedInfo(
             num: _buildUnderlineText(
@@ -189,8 +191,8 @@ class _LockedCardState extends State<LockedCard> {
         _buildPurchaseBody(context),
       ]);
     } else if (widget.locked.lockedWithReply) {
+      title = Text(tr.reply.title, style: primaryStyle);
       widgets.addAll([
-        Text(tr.reply.title, style: primaryStyle),
         Text.rich(
           tr.reply.detail(
             reply: _buildUnderlineText(
@@ -202,8 +204,8 @@ class _LockedCardState extends State<LockedCard> {
         ),
       ]);
     } else if (widget.locked.lockedWithAuthor) {
+      title = Text(tr.author.title, style: primaryStyle);
       widgets.addAll([
-        Text(tr.author.title, style: primaryStyle),
         Text.rich(
           tr.author.detail(
             author: _buildUnderlineText(
@@ -214,19 +216,34 @@ class _LockedCardState extends State<LockedCard> {
           style: secondaryStyle,
         ),
       ]);
+    } else {
+      throw UnimplementedError(
+        'Widget for card type of locked card not implemented',
+      );
     }
 
     return Card(
       elevation: widget.elevation,
       clipBehavior: Clip.antiAlias,
-      child: ColoredBox(
-        color: Theme.of(context).colorScheme.secondaryContainer,
-        child: Padding(
-          padding: edgeInsetsL16T16R16B16,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widgets.insertBetween(sizedBoxW4H4),
-          ),
+      child: Padding(
+        padding: edgeInsetsL16T16R16B16,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  Icons.lock_outlined,
+                  color: Theme.of(context).colorScheme.primary,
+                ),
+                sizedBoxW8H8,
+                title,
+              ],
+            ),
+            sizedBoxW8H8,
+            ...widgets.insertBetween(sizedBoxW8H8),
+          ],
         ),
       ),
     );

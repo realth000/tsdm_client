@@ -499,7 +499,8 @@
   },
   "rateCard": {
     "title": "评分记录（$userCount）",
-    "total": "总计: $total"
+    "total": "总计: $total",
+    "user": "用户"
   },
   "jumpDialog": {
     "title": "跳转到页面"
@@ -508,9 +509,11 @@
     "title": "点评"
   },
   "codeCard": {
-    "title": "代码块"
+    "title": "代码块",
+    "copy": "复制代码"
   },
   "spoilerCard": {
+    "title": "折叠区域",
     "expandMore": "展开",
     "expandLess": "折叠"
   },

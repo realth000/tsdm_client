@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -16,6 +17,9 @@ class RateCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+
     // Column width.
     // The first column is user info and last column is always "rate reason",
     // these two columns should have a flex column width.
@@ -27,17 +31,38 @@ class RateCard extends StatelessWidget {
     };
     columnWidths[0] = const FixedColumnWidth(150);
     columnWidths[rate.attrList.length + 1] = const FixedColumnWidth(200);
-    final tableHeaders = [
-      context.t.rateCard.title(userCount: '${rate.userCount}'),
-      ...rate.attrList,
-    ].map(Text.new).toList();
 
-    final bottom =
-        Text(context.t.rateCard.total(total: rate.rateStatus ?? '-'));
+    // ,
+    final tableHeaders = [
+      context.t.rateCard.user,
+      ...rate.attrList,
+    ]
+        .map<Widget>(
+          (e) => Text(
+            e,
+            style: Theme.of(context)
+                .textTheme
+                .titleSmall
+                ?.copyWith(color: secondaryColor),
+          ),
+        )
+        .toList();
+
+    final bottom = Text(
+      context.t.rateCard.total(total: rate.rateStatus ?? '-'),
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+            color: secondaryColor,
+          ),
+    );
 
     final tableContent = rate.records
-        .map(
-          (e) => TableRow(
+        .mapIndexed(
+          (idx, e) => TableRow(
+            decoration: BoxDecoration(
+              color: idx.isOdd
+                  ? Theme.of(context).colorScheme.surfaceContainerHigh
+                  : null,
+            ),
             children: [
               Row(
                 children: [
@@ -86,6 +111,21 @@ class RateCard extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.rate_review_outlined, color: primaryColor),
+                sizedBoxW8H8,
+                Text(
+                  context.t.rateCard.title(userCount: '${rate.userCount}'),
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: primaryColor),
+                ),
+              ],
+            ),
+            sizedBoxW12H12,
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Table(
@@ -98,6 +138,7 @@ class RateCard extends StatelessWidget {
                 ],
               ),
             ),
+            sizedBoxW12H12,
             bottom,
           ],
         ),

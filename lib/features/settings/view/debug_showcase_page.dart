@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Showcase page for debugging.
@@ -61,7 +63,7 @@ class _DebugShowcasePageState extends State<DebugShowcasePage>
       body: TabBarView(
         controller: tabController,
         children: const [
-          _HtmlFragment(),
+          SingleChildScrollView(child: _HtmlFragment()),
         ],
       ),
     );
@@ -70,6 +72,70 @@ class _DebugShowcasePageState extends State<DebugShowcasePage>
 
 class _HtmlFragment extends StatelessWidget {
   const _HtmlFragment();
+
+  static const rateBlockData = '''
+<dl id="ratelog_POST_ID" class="rate">
+  <dd style="margin:0">
+    <div id="post_rate_POST_ID"></div>
+    <table class="ratl">
+      <tbody>
+        <tr>
+        <th class="xw1"><a href="">已有 <span class="xi1">10</span> 人评分</a></th>
+        <th><i>威望</i></th>
+        <th><i>天使币</i></th>
+        <th><i>天然</i></th>
+        <th><i>腹黑</i></th>
+        <th>
+        <i>理由</i>
+        </th>
+        </tr>
+      </tbody>
+      <tbody class="ratl_l">
+        <tr id="rate_SOME_ID">
+          <td>
+            <a href=""><img src="uc_server/images/noavatar_middle.gif"/></a>
+            <a href="home.php?mod=space&amp;uid=0">USER 0</a>
+          </td>
+          <td class="xg1"></td>
+          <td class="xg1"></td>
+          <td class="xi1"> + 200</td>
+          <td class="xi1"> + 200</td>
+          <td class="xg1">REASON 1</td>
+        </tr>
+        <tr id="rate_SOME_ID">
+          <td>
+            <a href=""><img src="uc_server/images/noavatar_middle.gif"></a>
+            <a href="home.php?mod=space&amp;uid=0">USER 1</a>
+          </td>
+          <td class="xg1"></td>
+          <td class="xg1"> + 100</td>
+          <td class="xi1"> + 100</td>
+          <td class="xi1"></td>
+          <td class="xg1">REASON 1</td>
+        </tr>
+        <tr id="rate_SOME_ID">
+          <td>
+            <a href=""><img src="uc_server/images/noavatar_middle.gif"></a>
+            <a href="home.php?mod=space&amp;uid=0" target="_blank">USER 2</a>
+          </td>
+          <td class="xg1"></td>
+          <td class="xg1"></td>
+          <td class="xi1"> + 1</td>
+          <td class="xi1"> + 1</td>
+          <td class="xg1"></td>
+        </tr>
+      </tbody>
+    </table>
+    <p class="ratc">
+    总评分:&nbsp;<span class="xi1">威望 + 12321</span>&nbsp;
+    <span class="xi1">天使币 + 1234</span>&nbsp;
+    <span class="xi1">天然 + 56789</span>&nbsp;
+    <span class="xi1">腹黑 + 56789</span>&nbsp;
+    &nbsp;<a href="" class="xi2">查看全部评分</a>
+    </p>
+  </dd>
+</dl>
+''';
 
   static const htmlData = '''
 <body>
@@ -84,7 +150,7 @@ class _HtmlFragment extends StatelessWidget {
     </div>
     <div class="spoiler_content">
       <div class="showhide">
-        detail 1
+        detail 1detaildetaildetaildetaildetaildetaildetaildetaildetail
         <br/>
         detail 2
       </div>
@@ -113,15 +179,31 @@ class _HtmlFragment extends StatelessWidget {
   <div class="locked">
   USERNAME，如果您要查看本帖隐藏内容请<a href="forum.php?mod=post&amp;action=reply&amp;fid=0&amp;tid=0" onclick="showWindow('reply', this.href)">回复</a>
   </div>
+  
+  <!-- Code block -->
+  <div class="blockcode">
+    <div id="code_SOME_HASH">
+      <ol><li>code line 1
+</li><li>code line 2</li>
+      </ol>
+    </div>
+  </div>
 </body>
 ''';
 
   @override
   Widget build(BuildContext context) {
-    return munchElement(
-      context,
-      parseHtmlDocument(htmlData).body!,
-      parseLockedWithPurchase: true,
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        munchElement(
+          context,
+          parseHtmlDocument(htmlData).body!,
+          parseLockedWithPurchase: true,
+        ),
+        RateCard(Rate.fromRateLogNode(parseHtmlDocument(rateBlockData).body)!),
+      ],
     );
   }
 }

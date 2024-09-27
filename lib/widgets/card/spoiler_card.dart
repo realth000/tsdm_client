@@ -35,6 +35,9 @@ class _SpoilerCardState extends State<SpoilerCard> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.spoilerCard;
+    final primaryColor = Theme.of(context).colorScheme.primary;
+
     return Card(
       elevation: widget.elevation,
       child: Padding(
@@ -42,26 +45,40 @@ class _SpoilerCardState extends State<SpoilerCard> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text.rich(widget.title),
-            SizedBox(
-              width: sizeButtonInCardMinWidth,
-              child: FilledButton.icon(
-                icon: _visible
-                    ? const Icon(Icons.expand_less_outlined)
-                    : const Icon(Icons.expand_more_outlined),
-                label: Text(
-                  _visible
-                      ? context.t.spoilerCard.expandLess
-                      : context.t.spoilerCard.expandMore,
+            Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(Icons.expand_outlined, color: primaryColor),
+                sizedBoxW8H8,
+                Text(
+                  tr.title,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: primaryColor,
+                      ),
                 ),
-                onPressed: () {
-                  setState(() {
-                    _visible = !_visible;
-                  });
-                },
-              ),
+              ],
             ),
-            if (_visible) Text.rich(widget.content),
+            sizedBoxW8H8,
+            Text.rich(
+              widget.title,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
+            sizedBoxW8H8,
+            OutlinedButton.icon(
+              icon: _visible
+                  ? const Icon(Icons.expand_less_outlined)
+                  : const Icon(Icons.expand_more_outlined),
+              label: Text(_visible ? tr.expandLess : tr.expandMore),
+              onPressed: () {
+                setState(() {
+                  _visible = !_visible;
+                });
+              },
+            ),
+            if (_visible) ...[
+              sizedBoxW8H8,
+              Text.rich(widget.content),
+            ],
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
