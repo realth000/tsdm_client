@@ -80,8 +80,8 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
 
   @override
   void dispose() {
-    super.dispose();
     widget.controller._unbind();
+    super.dispose();
   }
 
   @override

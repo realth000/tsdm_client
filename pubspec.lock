@@ -190,6 +190,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
+  ci:
+    dependency: transitive
+    description:
+      name: ci
+      sha256: "145d095ce05cddac4d797a158bc4cf3b6016d1fe63d8c3d2fbd7212590adca13"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   cli_util:
     dependency: transitive
     description:
@@ -270,6 +278,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
+  custom_lint:
+    dependency: "direct dev"
+    description:
+      name: custom_lint
+      sha256: "6e1ec47427ca968f22bce734d00028ae7084361999b41673291138945c5baca0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.7"
+  custom_lint_builder:
+    dependency: transitive
+    description:
+      name: custom_lint_builder
+      sha256: ba2f90fff4eff71d202d097eb14b14f87087eaaef742e956208c0eb9d3a40a21
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.7"
+  custom_lint_core:
+    dependency: transitive
+    description:
+      name: custom_lint_core
+      sha256: "4ddbbdaa774265de44c97054dcec058a83d9081d071785ece601e348c18c267d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.6.5"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -291,10 +323,10 @@ packages:
     dependency: transitive
     description:
       name: dart_quill_delta
-      sha256: "051853d86d9e40b878d1eaddefa538c69e9177592b2a47bcf32e34165b2ee166"
+      sha256: a3552d7dfe4904ab344ccc7bf6453fd2d966b7ef64a945e364ae18dd486b9569
       url: "https://pub.dev"
     source: hosted
-    version: "10.7.5"
+    version: "10.8.1"
   dart_style:
     dependency: transitive
     description:
@@ -363,10 +395,10 @@ packages:
     dependency: "direct main"
     description:
       name: drift
-      sha256: "5b561ec76fff260e1e0593a29ca0d058a140a4b4dfb11dcc0c3813820cd20200"
+      sha256: d6ff1ec6a0f3fa097dda6b776cf601f1f3d88b53b287288e09c1306f394fb1b3
       url: "https://pub.dev"
     source: hosted
-    version: "2.20.2"
+    version: "2.20.3"
   drift_dev:
     dependency: "direct main"
     description:
@@ -527,19 +559,18 @@ packages:
     dependency: transitive
     description:
       name: flutter_inappwebview
-      sha256: bdfcf87dd49e1bd036781e308cfde61e258749852ba5e337c6128670b4428fda
+      sha256: "274edbb07196944e316722d9f6f641c77d0e71261200869887e10f59614c0458"
       url: "https://pub.dev"
     source: hosted
-    version: "6.1.0+1"
+    version: "6.1.3"
   flutter_inappwebview_android:
-    dependency: "direct overridden"
+    dependency: transitive
     description:
-      path: flutter_inappwebview_android
-      ref: d89b1d32638b49dfc58c4b7c84153be0c269d057
-      resolved-ref: d89b1d32638b49dfc58c4b7c84153be0c269d057
-      url: "https://github.com/holzgeist/flutter_inappwebview"
-    source: git
-    version: "1.0.13"
+      name: flutter_inappwebview_android
+      sha256: f48203a11c5eb0c23dd5a3cb3638ae678056b6ceae22819373e36c6cb4f1d46a
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_inappwebview_internal_annotations:
     dependency: transitive
     description:
@@ -552,42 +583,42 @@ packages:
     dependency: transitive
     description:
       name: flutter_inappwebview_ios
-      sha256: da9333a2f07ce7e54c7f573fb90974c347afd671c7f3d755179525615b07fcb8
+      sha256: f6f88d464b38f2fc1c5f2ae74024498115eb1470715bd8b40f902dd4ac99ccc8
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter_inappwebview_macos:
     dependency: transitive
     description:
       name: flutter_inappwebview_macos
-      sha256: "55b7254e90742bdb3fbab90dce0915a9d87079bbcc85aa4db2ce57f27bf67718"
+      sha256: "68e0c3785d8d789710cda7d7efe6effa337c91bf300dd28af7efc2d358fa1a98"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter_inappwebview_platform_interface:
     dependency: transitive
     description:
       name: flutter_inappwebview_platform_interface
-      sha256: "491281ff6c15b205f04e4c11df4af23245a5b2cb1aa70113f6f42a1296836559"
+      sha256: "97b4ab116d949ede20c90c7e3d15d24afaf1b706cc0af96b060770293cd6c49d"
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.2.0"
   flutter_inappwebview_web:
     dependency: transitive
     description:
       name: flutter_inappwebview_web
-      sha256: "926523a83e1a3318ef2798a5b2589b70d568ae1de53f9b011794ea90984859ad"
+      sha256: f7f97b6faa39416e4e86da1184edd4de6c27b271d036f0838ea3ff9a250a1de2
       url: "https://pub.dev"
     source: hosted
-    version: "1.1.0"
+    version: "1.1.1"
   flutter_inappwebview_windows:
     dependency: transitive
     description:
       name: flutter_inappwebview_windows
-      sha256: "2c1c13c32835c4a0afa49aabc207cd5cf80967c00bfdfe49259d082182d7c81f"
+      sha256: "86702d2109384311f8ea634855e90ee143b9bfabddd3858696d905a2c28808aa"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.4.0"
   flutter_keyboard_visibility:
     dependency: transitive
     description:
@@ -661,10 +692,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_markdown
-      sha256: a23c41ee57573e62fc2190a1f36a0480c4d90bde3a8a8d7126e5d5992fb53fb7
+      sha256: e17575ca576a34b46c58c91f9948891117a1bd97815d2e661813c7f90c647a78
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.3+1"
+    version: "0.7.3+2"
   flutter_plugin_android_lifecycle:
     dependency: transitive
     description:
@@ -757,10 +788,10 @@ packages:
     dependency: transitive
     description:
       name: gal_linux
-      sha256: cbff918888aaa7b86d5a992764ad94d217347d63912e008e8449605b1cc0b38a
+      sha256: "0040d61843134cc5a93e4597080a86f2ba073217957e28b2a684b4d8b050873c"
       url: "https://pub.dev"
     source: hosted
-    version: "0.1.0"
+    version: "0.1.2"
   get_it:
     dependency: "direct main"
     description:
@@ -789,10 +820,10 @@ packages:
     dependency: "direct main"
     description:
       name: go_router
-      sha256: "2ddb88e9ad56ae15ee144ed10e33886777eb5ca2509a914850a5faa7b52ff459"
+      sha256: "5cf5fdcf853b0629deb35891c7af643be900c3dcaed7489009f9e7dbcfe55ab6"
       url: "https://pub.dev"
     source: hosted
-    version: "14.2.7"
+    version: "14.2.8"
   graphs:
     dependency: transitive
     description:
@@ -809,6 +840,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.3.4"
+  hotreloader:
+    dependency: transitive
+    description:
+      name: hotreloader
+      sha256: ed56fdc1f3a8ac924e717257621d09e9ec20e308ab6352a73a50a1d7a4d9158e
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.0"
   html:
     dependency: "direct main"
     description:
@@ -1281,38 +1320,78 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  pyramid_lint:
+    dependency: "direct dev"
+    description:
+      name: pyramid_lint
+      sha256: bec4b9cfc1b4e188be8910d5fee6ffd921d76385b4291ce2233247d7b2f030d5
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
   quill_native_bridge:
     dependency: transitive
     description:
       name: quill_native_bridge
-      sha256: ba19b639c0fa5d4cadb58465cfdba439d8bffb5b2ccbbc76ff15af8124dcdd7e
+      sha256: b87a0964afb271b5403eec398606f9636bf455bcb1baac4a4104e7b3320d0292
       url: "https://pub.dev"
     source: hosted
-    version: "10.7.6"
+    version: "10.7.7"
+  quill_native_bridge_android:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_android
+      sha256: "5f7d24597f18e8114a7c056d220062cd7875027fd92dc3859657782c9c3eccd0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev.1"
+  quill_native_bridge_ios:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_ios
+      sha256: "09645e8ca7237aafd8a58be728abfbcc35086fd0ca3befc6905a0b57aa6e849d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev.1"
+  quill_native_bridge_linux:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_linux
+      sha256: "1a8f22c42c52d246a74ffc1a113f98cc342a0d815c1d40b6d4db1831ed857577"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev.1"
+  quill_native_bridge_macos:
+    dependency: transitive
+    description:
+      name: quill_native_bridge_macos
+      sha256: a62987b99dfdcb6a44e5b5d72ca06059175b10e0316660f5705c1640e27f7f5f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.1-dev.1"
   quill_native_bridge_platform_interface:
     dependency: transitive
     description:
       name: quill_native_bridge_platform_interface
-      sha256: f2219420890d51a260f6e71ef098428a07b4edc50148f66a0b137767a5b6fb7d
+      sha256: c3df728d35e40d6554af071f143be518f3db18d3fcb6e164d7e4f5c73eda9fc9
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.0"
+    version: "0.0.1-dev.2"
   quill_native_bridge_web:
     dependency: transitive
     description:
       name: quill_native_bridge_web
-      sha256: "2524e9f74a6ebb386776aa55d4d49a917610f6883a487fb433583d899699dfd4"
+      sha256: d3e3df489d349a085dbcb165352bd5e76f000a5a7844d05060a8b34af2c2a89e
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.1"
+    version: "0.0.1-dev.2"
   quill_native_bridge_windows:
     dependency: transitive
     description:
       name: quill_native_bridge_windows
-      sha256: "997daa116473b0f153ebb4e64478658f5020b80c2a4860ddf11c0117712155cf"
+      sha256: "27a66765fc10ea68cfc3e9fb91c3df4bfd6831c18246c955447b2e04d0fae629"
       url: "https://pub.dev"
     source: hosted
-    version: "0.0.1-dev.0"
+    version: "0.0.1-dev.1"
   quiver:
     dependency: transitive
     description:
@@ -1755,10 +1834,10 @@ packages:
     dependency: "direct main"
     description:
       name: uuid
-      sha256: f33d6bb662f0e4f79dcd7ada2e6170f3b3a2530c28fc41f49a411ddedd576a77
+      sha256: a5be9ef6618a7ac1e964353ef476418026db906c4facdedaa299b7a2e71690ff
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.0"
+    version: "4.5.1"
   vector_graphics:
     dependency: transitive
     description:
@@ -1811,10 +1890,10 @@ packages:
     dependency: transitive
     description:
       name: video_player_android
-      sha256: "38d8fe136c427abdce68b5e8c3c08ea29d7a794b453c7a51b12ecfad4aad9437"
+      sha256: "45d21bbba3d10b7182aa08ade5d4c68ed3367016d40f29732bb04a799b26842d"
       url: "https://pub.dev"
     source: hosted
-    version: "2.7.3"
+    version: "2.7.5"
   video_player_avfoundation:
     dependency: transitive
     description:
@@ -1867,10 +1946,10 @@ packages:
     dependency: "direct main"
     description:
       name: web
-      sha256: d43c1d6b787bf0afad444700ae7f4db8827f701bc61c255ac8d328c6f4d52062
+      sha256: cd3543bd5798f6ad290ea73d210f423502e71900302dde696f8bff84bf89a1cb
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.0"
+    version: "1.1.0"
   web_socket:
     dependency: transitive
     description:
@@ -1939,18 +2018,18 @@ packages:
     dependency: transitive
     description:
       name: youtube_explode_dart
-      sha256: "26c9671d638f3396a1bfb2666f586988ee7b0ba3469e478b22a4c1a168bcf6ee"
+      sha256: "133a65907e6cf839ac7643d92dc5c56b37fcebe4f0a8f0e67716dffa500c0ef0"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.1"
+    version: "2.2.2"
   youtube_player_flutter:
     dependency: transitive
     description:
       name: youtube_player_flutter
-      sha256: "77317d420c78a5de4819cd352d050b69542d60fea0b37e0cbf89ebf115076bb9"
+      sha256: "4d14aa47f9c84929b5400a87ade4dcfdab87a2ca2e0b18ecc2ef852b1440e123"
       url: "https://pub.dev"
     source: hosted
-    version: "9.1.0"
+    version: "9.1.1"
 sdks:
   dart: ">=3.5.0 <4.0.0"
   flutter: ">=3.24.0"

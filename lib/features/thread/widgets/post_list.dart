@@ -152,6 +152,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
     _listController
       ..removeListener(_updatePageNumber)
       ..dispose();
+    _listScrollController.dispose();
     super.dispose();
   }
 

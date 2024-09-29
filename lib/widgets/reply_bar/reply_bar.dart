@@ -642,6 +642,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       ..removeListener(_checkEditorContent)
       ..dispose();
     widget.controller._unbind(clearParameters: false);
+    focusNode.dispose();
     super.dispose();
   }
 

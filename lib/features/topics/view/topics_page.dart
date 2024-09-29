@@ -96,6 +96,7 @@ class _TopicsPageState extends State<TopicsPage>
         ..dispose();
     }
     _refreshController.dispose();
+    tabController?.dispose();
     super.dispose();
   }
 

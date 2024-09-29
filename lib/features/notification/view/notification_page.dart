@@ -232,6 +232,7 @@ class _NotificationPageState extends State<NotificationPage>
     _noticeRefreshController.dispose();
     _personalMessageRefreshController.dispose();
     _broadcastMessageRefreshController.dispose();
+    _tabController.dispose();
     super.dispose();
   }
 

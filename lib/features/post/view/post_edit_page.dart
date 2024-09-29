@@ -819,6 +819,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   @override
   void dispose() {
     bbcodeController.dispose();
+    focusNode.dispose();
+    threadTypeController.dispose();
+    threadTitleController.dispose();
+    dataController.dispose();
     super.dispose();
   }
 

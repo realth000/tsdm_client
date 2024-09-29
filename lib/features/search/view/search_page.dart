@@ -74,6 +74,15 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
     }
   }
 
+  @override
+  void dispose() {
+    keywordController.dispose();
+    authorUidController.dispose();
+    fidController.dispose();
+    scrollController.dispose();
+    super.dispose();
+  }
+
   /// Do the search action.
   ///
   /// This is the last internal action so there is no parameter checking.
