@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -26,6 +27,8 @@ const emptySpan = TextSpan(text: '\n');
 
 /// Step when elevation changes.
 const _elevationStep = 0.2;
+
+const _maxWidth = 712.0;
 
 /// Use an empty span.
 // final null = WidgetSpan(child: Container());
@@ -58,7 +61,7 @@ Widget munchElement(
   // Currently is 712.
   return ConstrainedBox(
     constraints: const BoxConstraints(
-      maxWidth: 712,
+      maxWidth: _maxWidth,
     ),
     child: Text.rich(TextSpan(children: ret)),
   );
@@ -331,6 +334,7 @@ final class _Muncher with LoggerMixin {
             'iframe' => _buildIframe(node),
             'table' when node.classes.contains('cgtl') =>
               _buildNewcomerReport(node),
+            'table' => _buildTable(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -1062,6 +1066,54 @@ final class _Muncher with LoggerMixin {
     return [
       WidgetSpan(
         child: NewcomerReportCard(data),
+      ),
+    ];
+  }
+
+  List<InlineSpan>? _buildTable(uh.Element element) {
+    final mark = 'z${DateTime.now().millisecondsSinceEpoch}';
+    // Helper attribute to locate selector start with root element.
+    element.attributes[mark] = mark;
+    final allTr = element.querySelectorAll('table[$mark="$mark"] > tbody > tr');
+    if (allTr.isEmpty) {
+      // Impossible
+      return null;
+    }
+    if (allTr.length == 1) {
+      // Not a regular table, only something wrapped.
+      return _munch(element.querySelectorAll('tbody').first);
+    }
+    final tableRows = <TableRow>[];
+    // final rowCount = allTr.length;
+    final columnCount = allTr.first.querySelectorAll('> td').length;
+
+    for (final tr in allTr) {
+      final tableRowContent = <Widget>[];
+      for (final td in tr.querySelectorAll('> td')) {
+        tableRowContent.add(Text.rich(TextSpan(children: _buildTd(td))));
+      }
+      if (tableRowContent.length < columnCount) {
+        tableRowContent.addAll(
+          List<Widget>.generate(
+            columnCount - tableRowContent.length,
+            (_) => sizedBoxEmpty,
+          ),
+        );
+      }
+      tableRows.add(TableRow(children: tableRowContent));
+    }
+
+    return [
+      WidgetSpan(
+        child: Table(
+          // defaultColumnWidth: FixedColumnWidth(_maxWidth / columnCount),
+          defaultColumnWidth: const IntrinsicColumnWidth(),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: tableRows,
+          border: TableBorder.all(
+            color: Theme.of(context).colorScheme.surfaceContainer,
+          ),
+        ),
       ),
     ];
   }
