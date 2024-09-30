@@ -88,7 +88,13 @@ class _PostListState extends State<PostList> with LoggerMixin {
 
   /// [ScrollController] comes from outside.
   ///
+  /// Note that this class does NOT own the scroll controller.
+  ///
+  /// FIXME: How to ensure controller lives longer than the class instance.
+  ///
   /// Do NOT dispose it here.
+  ///
+  // ignore: dispose_controllers
   late ScrollController _listScrollController;
 
   late ListController _listController;
@@ -152,7 +158,6 @@ class _PostListState extends State<PostList> with LoggerMixin {
     _listController
       ..removeListener(_updatePageNumber)
       ..dispose();
-    _listScrollController.dispose();
     super.dispose();
   }
 
