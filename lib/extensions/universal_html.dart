@@ -66,6 +66,18 @@ extension AccessExtension on Element {
   ///
   /// Return empty string if unavailable.
   String innerHtmlEx() => innerHtml ?? '';
+
+  /// Like [querySelectorAll] but only select start with current element,
+  /// as having a '^' in regular expression:
+  ///
+  /// this.querySelectorAll('^selector').
+  ElementList<Element> querySelectorRootAll(String selector) {
+    final mark = 'z${DateTime.now().millisecondsSinceEpoch}';
+    attributes[mark] = mark;
+    final result = this.querySelectorAll('$tagName[$mark="$mark"] > $selector');
+    attributes.remove(mark);
+    return result;
+  }
 }
 
 /// Grep extension for [Element] type.

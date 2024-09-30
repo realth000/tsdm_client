@@ -1047,7 +1047,7 @@ final class _Muncher with LoggerMixin {
     // </tbody>
     // </table>
     final data = element
-        .querySelectorAll('tbody > tr')
+        .querySelectorRootAll('tbody > tr')
         .map(
           (e) => (
             e.querySelector('th')?.innerText.trim(),
@@ -1071,37 +1071,49 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildTable(uh.Element element) {
-    final mark = 'z${DateTime.now().millisecondsSinceEpoch}';
-    // Helper attribute to locate selector start with root element.
-    element.attributes[mark] = mark;
-    final allTr = element.querySelectorAll('table[$mark="$mark"] > tbody > tr');
+    final allTr = element.querySelectorRootAll('tbody > tr');
     if (allTr.isEmpty) {
       // Impossible
       return null;
     }
     if (allTr.length == 1) {
       // Not a regular table, only something wrapped.
-      return _munch(element.querySelectorAll('tbody').first);
+      return _munch(element.querySelectorRootAll('tbody').first);
     }
     final tableRows = <TableRow>[];
-    // final rowCount = allTr.length;
-    final columnCount = allTr.first.querySelectorAll('> td').length;
-
+    final allTableRowContent = <List<Widget>>[];
+    var columnMaxCount = 0;
     for (final tr in allTr) {
       final tableRowContent = <Widget>[];
-      for (final td in tr.querySelectorAll('> td')) {
+      final tds = tr.querySelectorRootAll('td');
+      for (final td in tds) {
         tableRowContent.add(Text.rich(TextSpan(children: _buildTd(td))));
       }
-      if (tableRowContent.length < columnCount) {
-        tableRowContent.addAll(
+      if (tds.length > columnMaxCount) {
+        columnMaxCount = tds.length;
+      }
+      allTableRowContent.add(tableRowContent);
+    }
+
+    for (final row in allTableRowContent) {
+      if (row.length < columnMaxCount) {
+        row.addAll(
           List<Widget>.generate(
-            columnCount - tableRowContent.length,
+            columnMaxCount - row.length,
             (_) => sizedBoxEmpty,
           ),
         );
       }
-      tableRows.add(TableRow(children: tableRowContent));
     }
+
+    // Some tables do not have the same column width on each row.
+    // Fill them.
+    //
+    // Only a workaround on unbalanced tables.
+    //
+    // FIXME: Support rowspan and colspan attr.
+    tableRows
+        .addAll(allTableRowContent.map((e) => TableRow(children: e)).toList());
 
     return [
       WidgetSpan(
