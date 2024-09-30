@@ -829,7 +829,10 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [...ret, emptySpan];
+
+    // Removed trailing '\n' here to fix white space found in tables.
+    // Add it back or think in another way if caused other issues.
+    return ret;
   }
 
   List<InlineSpan>? _buildH1(uh.Element element) {
