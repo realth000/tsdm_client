@@ -9,6 +9,7 @@ import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/netease_card.dart';
 import 'package:tsdm_client/utils/html/newcomer_report_card.dart';
+import 'package:tsdm_client/utils/html/table_width.dart';
 import 'package:tsdm_client/utils/html/types.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
@@ -1117,13 +1118,17 @@ final class _Muncher with LoggerMixin {
 
     return [
       WidgetSpan(
-        child: Table(
-          // defaultColumnWidth: FixedColumnWidth(_maxWidth / columnCount),
-          defaultColumnWidth: const IntrinsicColumnWidth(),
-          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-          children: tableRows,
-          border: TableBorder.all(
-            color: Theme.of(context).colorScheme.surfaceContainer,
+        child: SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Table(
+            defaultColumnWidth: const MaxIntrinsicColumnWidth(
+              maxWidth: _maxWidth,
+            ),
+            defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+            children: tableRows,
+            border: TableBorder.all(
+              color: Theme.of(context).colorScheme.surfaceContainer,
+            ),
           ),
         ),
       ),
