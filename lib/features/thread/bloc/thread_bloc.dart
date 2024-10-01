@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -249,8 +250,9 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
   }) =>
       IO(() {
         // Reset the thread id from document.
-        final threadID =
+        final threadLink =
             document.querySelector('head > link')?.attributes['href'];
+        final tid = Uri.parse(threadLink ?? '').queryParameters['tid'];
 
         final threadClosed =
             document.querySelector('form#fastpostform') == null;
@@ -274,7 +276,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
                     ?.innerText
                     .trim();
         if (title?.isEmpty ?? true) {
-          // Some thread
+          // Some thread belongs to no type.
           title = document
               .querySelector('div#postlist h1.ts')
               ?.nodes
@@ -282,6 +284,11 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
               ?.text
               ?.trim();
         }
+
+        final allLinksInBreadCrumb = document.querySelectorAll('div#pt a');
+        final parentForumNode = allLinksInBreadCrumb
+            .elementAtOrNull(allLinksInBreadCrumb.length - 2);
+        final forumName = parentForumNode?.innerText.trim();
 
         final currentPage = document.currentPage() ?? pageNumber;
         final totalPages = document.totalPages() ?? pageNumber;
@@ -312,8 +319,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
 
         // Update reply parameters.
         // These reply parameters should be sent to [ReplyBar] later.
-        final fid =
-            document.querySelector('input[name="srhfid"]')?.attributes['value'];
+        final fid = document
+            .querySelector('input[name="srhfid"]')
+            ?.attributes['value']
+            ?.parseToInt();
         final postTime = document
             .querySelector('input[name="posttime"]')
             ?.attributes['value'];
@@ -335,8 +344,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           );
         } else {
           replyParameters = ReplyParameters(
-            fid: fid,
-            tid: threadID!,
+            fid: '$fid',
+            tid: tid!,
             postTime: postTime,
             formHash: formHash,
             subject: subject,
@@ -351,11 +360,13 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             ?.contains('草稿');
 
         final threadState = ThreadState(
-          tid: threadID,
+          tid: tid,
           pid: state.pid,
           replyParameters: replyParameters,
           status: ThreadStatus.success,
           title: title ?? state.title,
+          fid: fid,
+          forumName: forumName,
           canLoadMore: currentPage < totalPages,
           currentPage: currentPage,
           totalPages: totalPages,

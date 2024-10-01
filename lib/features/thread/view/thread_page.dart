@@ -5,18 +5,21 @@ import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/widgets/post_list.dart';
+import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -89,7 +92,7 @@ class ThreadPage extends StatefulWidget {
 }
 
 class _ThreadPageState extends State<ThreadPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, LoggerMixin {
   /// Controller of thread tab.
   final _listScrollController = ScrollController();
 
@@ -243,6 +246,42 @@ class _ThreadPageState extends State<ThreadPage>
               }
               if (state.status == ThreadStatus.failed) {
                 showFailedToLoadSnackBar(context);
+              } else if (state.status == ThreadStatus.success) {
+                // Record thread visit history.
+                final currentUser =
+                    context.read<AuthenticationRepository>().currentUser;
+                if (currentUser == null) {
+                  // Do nothing if not logged in.
+                  return;
+                }
+                final uid = currentUser.uid;
+                final username = currentUser.username;
+                if (uid == null || username == null) {
+                  unreachable('intend to record thread visit history but '
+                      'user info is incomplete: uid=$uid, username=$username');
+                  return;
+                }
+                if (state.tid == null ||
+                    state.title == null ||
+                    state.fid == null ||
+                    state.forumName == null) {
+                  info('not prepared to save visit history yet');
+                  return;
+                }
+                debug('save thread visit history tid=${state.tid}');
+                context.read<ThreadVisitHistoryBloc>().add(
+                      ThreadVisitHistoryUpdateRequested(
+                        ThreadVisitHistoryModel(
+                          uid: uid,
+                          threadId: int.parse(state.tid!),
+                          forumId: state.fid!,
+                          username: username,
+                          threadTitle: state.title!,
+                          forumName: state.forumName!,
+                          visitTime: DateTime.now(),
+                        ),
+                      ),
+                    );
               }
             },
           ),

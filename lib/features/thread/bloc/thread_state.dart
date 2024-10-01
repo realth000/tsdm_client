@@ -24,6 +24,8 @@ class ThreadState with ThreadStateMappable {
     this.pid,
     this.status = ThreadStatus.initial,
     this.title,
+    this.fid,
+    this.forumName,
     this.canLoadMore = false,
     this.currentPage = 1,
     this.totalPages = 1,
@@ -48,10 +50,28 @@ class ThreadState with ThreadStateMappable {
   /// Post id.
   ///
   /// Use this when "mod=redirect&goto=findpost&pid=[pid]".
+  ///
+  /// Necessary info that always be parsed in thread page.
+  /// May be null at the beginning of state but will be set shortly after it.
   final String? pid;
 
   /// Thread title.
+  ///
+  /// Necessary info that always be parsed in thread page.
+  /// May be null at the beginning of state but will be set shortly after it.
   final String? title;
+
+  /// Forum id.
+  ///
+  /// Necessary info that always be parsed in thread page.
+  /// May be null at the beginning of state but will be set shortly after it.
+  final int? fid;
+
+  /// Forum name.
+  ///
+  /// Necessary info that always be parsed in thread page.
+  /// May be null at the beginning of state but will be set shortly after it.
+  final String? forumName;
 
   /// Flag indicating can load more pages or not.
   final bool canLoadMore;

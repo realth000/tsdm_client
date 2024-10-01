@@ -206,7 +206,12 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                         ),
-                        Expanded(child: Container()),
+                        const Spacer(),
+                        IconButton(
+                          icon: const Icon(Icons.history_outlined),
+                          onPressed: () async =>
+                              context.pushNamed(ScreenPaths.threadVisitHistory),
+                        ),
                         IconButton(
                           icon: noticeIcon,
                           onPressed: () async {

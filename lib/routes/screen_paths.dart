@@ -168,6 +168,9 @@ class ScreenPaths {
 
   /// Page to show image in full page.
   static const String imageDetail = '/imageDetail/:imageUrl';
+
+  /// Page to view and thread visit history.
+  static const String threadVisitHistory = '/threadVisitHistory';
 }
 
 /// Route path for a screen.

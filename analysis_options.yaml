@@ -28,7 +28,8 @@ custom_lint:
     - avoid_empty_blocks
     - avoid_inverted_boolean_expressions
     - avoid_mutable_global_variables
-    - avoid_nested_if
+    # TODO: Enable it when we have time to refactor
+    # - avoid_nested_if
     - avoid_positional_fields_in_records
     - avoid_redundant_pattern_field_names
     - avoid_unused_parameters

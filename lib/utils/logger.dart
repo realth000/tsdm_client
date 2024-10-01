@@ -54,6 +54,19 @@ mixin LoggerMixin {
     talker.error('$runtimeType: $message', exception, stackTrace);
   }
 
+  /// Reached some unreachable code.
+  void unreachable(
+    dynamic message, [
+    Object? exception,
+    StackTrace? stackTrace,
+  ]) {
+    talker.error(
+      '$runtimeType: reached some unreachable branch $message',
+      exception,
+      stackTrace,
+    );
+  }
+
   /// Exception
   void handle(AppException exception) {
     talker.handle(

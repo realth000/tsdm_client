@@ -27,6 +27,7 @@ import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/view/thread_card_appearance.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
 import 'package:tsdm_client/features/thread/view/thread_page.dart';
+import 'package:tsdm_client/features/thread_visit_history/view/thread_visit_history_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
 import 'package:tsdm_client/features/upgrade/view/upgrade_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -321,6 +322,11 @@ final router = GoRouter(
         final imageUrl = state.pathParameters['imageUrl']!;
         return ImageDetailPage(imageUrl);
       },
+    ),
+    AppRoute(
+      path: ScreenPaths.threadVisitHistory,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const ThreadVisitHistoryPage(),
     ),
   ],
 );

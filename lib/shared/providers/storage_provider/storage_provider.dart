@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/dao/dao.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
@@ -266,4 +268,55 @@ class StorageProvider with LoggerMixin {
   Future<void> deleteKey(String key) async {
     await SettingsDao(_db).deleteByName(key);
   }
+
+  /*        thread visit history        */
+
+  /// Fetch all thread visit history for all users and all threads..
+  AsyncEither<List<ThreadVisitHistoryEntity>> fetchAllThreadVisitHistory() =>
+      AsyncEither(() async {
+        final history = await ThreadVisitHistoryDao(_db).selectAll();
+        return Right(history);
+      });
+
+  /// Fetch all thread visit history for user [uid].
+  Future<List<ThreadVisitHistoryEntity>> fetchThreadVisitHistoryByUid(
+    int uid,
+  ) async =>
+      ThreadVisitHistoryDao(_db).selectByUid(uid);
+
+  /// Save thread visit history.
+  Future<void> updateThreadVisitHistory({
+    required int uid,
+    required int tid,
+    required int fid,
+    required String username,
+    required String threadTitle,
+    required String forumName,
+    required DateTime visitTime,
+  }) async =>
+      ThreadVisitHistoryDao(_db).upsertVisitHistory(
+        ThreadVisitHistoryCompanion(
+          uid: Value(uid),
+          tid: Value(tid),
+          fid: Value(fid),
+          username: Value(username),
+          threadTitle: Value(threadTitle),
+          forumName: Value(forumName),
+          visitTime: Value(visitTime),
+        ),
+      );
+
+  /// Delete thread visit history with [uid] and [tid].
+  Future<void> deleteThreadVisitHistory({
+    int? uid,
+    int? tid,
+  }) async =>
+      ThreadVisitHistoryDao(_db).deleteByUidOrTid(
+        uid: uid,
+        tid: tid,
+      );
+
+  /// Delete all thread visit history.
+  Future<void> deleteAllThreadVisitHistory() async =>
+      ThreadVisitHistoryDao(_db).deleteAll();
 }

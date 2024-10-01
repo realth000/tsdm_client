@@ -10,12 +10,15 @@ import 'package:tsdm_client/features/profile/repository/profile_repository.dart'
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
+import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
+import 'package:tsdm_client/features/thread_visit_history/repository/thread_visit_history_repository.dart';
 import 'package:tsdm_client/features/upgrade/repository/upgrade_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
@@ -72,6 +75,14 @@ class App extends StatelessWidget {
                 RepositoryProvider.of<FragmentsRepository>(context),
             settingsRepository: getIt.get<SettingsRepository>(),
           ),
+        ),
+        RepositoryProvider<ThreadVisitHistoryRepo>(
+          create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>()),
+        ),
+        BlocProvider(
+          create: (context) =>
+              ThreadVisitHistoryBloc(RepositoryProvider.of(context))
+                ..add(const ThreadVisitHistoryFetchAllRequested()),
         ),
       ],
       child: BlocProvider(
