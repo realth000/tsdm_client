@@ -38,6 +38,26 @@ final class ThreadVisitHistoryUpdateRequested extends ThreadVisitHistoryEvent
   final ThreadVisitHistoryModel history;
 }
 
+/// Delete an unique thread visit history.
+///
+/// Find it by user's id [uid] and thread's id [tid].
+@MappableClass()
+final class ThreadVisitHistoryDeleteRecordRequested
+    extends ThreadVisitHistoryEvent
+    with ThreadVisitHistoryDeleteRecordRequestedMappable {
+  /// Constructor.
+  const ThreadVisitHistoryDeleteRecordRequested({
+    required this.uid,
+    required this.tid,
+  });
+
+  /// User id to locate the unique history item.
+  final int uid;
+
+  /// Thread id to locate the unique history item.
+  final int tid;
+}
+
 /// Delete all visit history.
 @MappableClass()
 final class ThreadVisitHistoryClearRequested extends ThreadVisitHistoryEvent

@@ -211,6 +211,8 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
                           icon: const Icon(Icons.history_outlined),
                           onPressed: () async =>
                               context.pushNamed(ScreenPaths.threadVisitHistory),
+                          tooltip:
+                              context.t.threadVisitHistoryPage.entryTooltip,
                         ),
                         IconButton(
                           icon: noticeIcon,

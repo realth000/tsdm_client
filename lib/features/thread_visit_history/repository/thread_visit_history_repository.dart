@@ -27,6 +27,24 @@ final class ThreadVisitHistoryRepo {
                 .toList(),
           );
 
+  /// Fetch all history on user [uid].
+  AsyncEither<List<ThreadVisitHistoryModel>> fetchHistoryByUid(int uid) =>
+      _storageProvider.fetchThreadVisitHistoryByUid(uid).map(
+            (e) => e
+                .map(
+                  (entity) => ThreadVisitHistoryModel(
+                    uid: entity.uid,
+                    threadId: entity.tid,
+                    forumId: entity.fid,
+                    username: entity.username,
+                    threadTitle: entity.threadTitle,
+                    forumName: entity.forumName,
+                    visitTime: entity.visitTime,
+                  ),
+                )
+                .toList(),
+          );
+
   /// Save history in [model] to storage.
   AsyncVoidEither saveHistory(ThreadVisitHistoryModel model) =>
       AsyncVoidEither(() async {
@@ -41,4 +59,13 @@ final class ThreadVisitHistoryRepo {
         );
         return rightVoid();
       });
+
+  /// Delete a unique history record located by given user id [uid] and
+  /// thread id [tid].
+  AsyncVoidEither deleteRecord({required int uid, required int tid}) =>
+      _storageProvider.deleteByUidAndTid(uid: uid, tid: tid);
+
+  /// Delete all thread visit history records in storage.
+  AsyncVoidEither deleteAllRecords() =>
+      _storageProvider.deleteAllThreadVisitHistory();
 }

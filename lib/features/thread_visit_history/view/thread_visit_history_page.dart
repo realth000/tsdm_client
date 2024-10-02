@@ -1,6 +1,11 @@
+import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
+import 'package:tsdm_client/features/thread_visit_history/widgets/thread_visit_history_card.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 
 /// Page of thread visit history.
@@ -15,6 +20,7 @@ class ThreadVisitHistoryPage extends StatefulWidget {
 class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.threadVisitHistoryPage;
     return BlocProvider(
       create: (context) =>
           ThreadVisitHistoryBloc(RepositoryProvider.of(context))
@@ -27,13 +33,7 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
               const CircularProgressIndicator(),
             ThreadVisitHistoryStatus.savingData ||
             ThreadVisitHistoryStatus.success =>
-              Column(
-                children: state.history
-                    .map(
-                      (e) => Text('${e.username} ${e.threadId} ${e.visitTime}'),
-                    )
-                    .toList(),
-              ),
+              _Body(state.history),
             ThreadVisitHistoryStatus.failure => buildRetryButton(
                 context,
                 () => context
@@ -44,12 +44,62 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
 
           return Scaffold(
             appBar: AppBar(
-              title: const Text('Thread Visit History'),
+              title: Text(tr.title),
             ),
             body: body,
           );
         },
       ),
+    );
+  }
+}
+
+class _Body extends StatefulWidget {
+  const _Body(this.models);
+
+  final List<ThreadVisitHistoryModel> models;
+
+  @override
+  State<_Body> createState() => _BodyState();
+}
+
+class _BodyState extends State<_Body> {
+  final _refreshController = EasyRefreshController(controlFinishRefresh: true);
+  late final ScrollController _scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return EasyRefresh.builder(
+      controller: _refreshController,
+      scrollController: _scrollController,
+      header: const MaterialHeader(),
+      onRefresh: () => context
+          .read<ThreadVisitHistoryBloc>()
+          .add(const ThreadVisitHistoryFetchAllRequested()),
+      childBuilder: (context, physics) {
+        return ListView.separated(
+          controller: _scrollController,
+          physics: physics,
+          padding: edgeInsetsL12R12,
+          itemCount: widget.models.length,
+          itemBuilder: (context, index) {
+            return ThreadVisitHistoryCard(widget.models[index]);
+          },
+          separatorBuilder: (_, __) => sizedBoxW4H4,
+        );
+      },
     );
   }
 }

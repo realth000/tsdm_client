@@ -279,10 +279,22 @@ class StorageProvider with LoggerMixin {
       });
 
   /// Fetch all thread visit history for user [uid].
-  Future<List<ThreadVisitHistoryEntity>> fetchThreadVisitHistoryByUid(
+  AsyncEither<List<ThreadVisitHistoryEntity>> fetchThreadVisitHistoryByUid(
     int uid,
-  ) async =>
-      ThreadVisitHistoryDao(_db).selectByUid(uid);
+  ) =>
+      AsyncEither(
+        () async => Right(await ThreadVisitHistoryDao(_db).selectByUid(uid)),
+      );
+
+  /// Delete a history record specified by [uid] and [tid].
+  AsyncVoidEither deleteByUidAndTid({
+    required int uid,
+    required int tid,
+  }) =>
+      AsyncVoidEither(() async {
+        await ThreadVisitHistoryDao(_db).deleteByUidOrTid(uid: uid, tid: tid);
+        return rightVoid();
+      });
 
   /// Save thread visit history.
   Future<void> updateThreadVisitHistory({
@@ -317,6 +329,8 @@ class StorageProvider with LoggerMixin {
       );
 
   /// Delete all thread visit history.
-  Future<void> deleteAllThreadVisitHistory() async =>
-      ThreadVisitHistoryDao(_db).deleteAll();
+  AsyncVoidEither deleteAllThreadVisitHistory() => AsyncVoidEither(() async {
+        await ThreadVisitHistoryDao(_db).deleteAll();
+        return rightVoid();
+      });
 }

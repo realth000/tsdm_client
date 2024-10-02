@@ -633,5 +633,9 @@
   "musicCard": {
     "title": "Music",
     "openLink": "Open link"
+  },
+  "threadVisitHistoryPage": {
+    "entryTooltip": "Thread browsing history",
+    "title": "Thread browsing history"
   }
 }

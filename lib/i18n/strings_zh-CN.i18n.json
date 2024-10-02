@@ -633,5 +633,9 @@
   "musicCard": {
     "title": "音乐",
     "openLink": "打开链接"
+  },
+  "threadVisitHistoryPage": {
+    "entryTooltip": "帖子浏览记录",
+    "title": "帖子浏览记录"
   }
 }

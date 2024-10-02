@@ -633,5 +633,9 @@
   "musicCard": {
     "title": "音樂",
     "openLink": "開啟連結"
+  },
+  "threadVisitHistoryPage": {
+    "entryTooltip": "貼文瀏覽紀錄",
+    "title": "貼文瀏覽紀錄"
   }
 }

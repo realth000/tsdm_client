@@ -9,21 +9,44 @@ final class ThreadVisitHistoryDao extends DatabaseAccessor<AppDatabase>
 
   /// Get all history, all users.
   Future<List<ThreadVisitHistoryEntity>> selectAll() async {
-    return select(threadVisitHistory).get();
+    return (select(threadVisitHistory)
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.visitTime,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
   }
 
   /// Get all history with the user specified with [uid].
   ///
   /// Only [uid]'s user's visit history will be returned.
   Future<List<ThreadVisitHistoryEntity>> selectByUid(int uid) async {
-    return (select(threadVisitHistory)..where((e) => e.uid.equals(uid))).get();
+    return (select(threadVisitHistory)
+          ..where((e) => e.uid.equals(uid))
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.visitTime,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
   }
 
   /// Get all history on thread with [tid].
   ///
   /// Only [tid]'s thread's visit history will be returned.
   Future<List<ThreadVisitHistoryEntity>> selectByTid(int tid) async {
-    return (select(threadVisitHistory)..where((e) => e.tid.equals(tid))).get();
+    return (select(threadVisitHistory)
+          ..where((e) => e.tid.equals(tid))
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.visitTime,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
+        .get();
   }
 
   /// Insert or update item [companion].

@@ -20,13 +20,13 @@ final class ThreadVisitHistoryBloc
     on<ThreadVisitHistoryEvent>(
       (event, emit) async => switch (event) {
         ThreadVisitHistoryFetchAllRequested() => _onFetchAllRequested(emit),
-        // TODO: Handle this case.
-        ThreadVisitHistoryFetchByUserRequested() => throw UnimplementedError(),
-        // TODO: Handle this case.
+        ThreadVisitHistoryFetchByUserRequested(:final uid) =>
+          _onFetchByUserRequested(uid, emit),
         ThreadVisitHistoryUpdateRequested(:final history) =>
           _onUpdateRequested(history, emit),
-        // TODO: Handle this case.
-        ThreadVisitHistoryClearRequested() => throw UnimplementedError(),
+        ThreadVisitHistoryDeleteRecordRequested(:final uid, :final tid) =>
+          _onDeleteRecordRequested(emit, uid: uid, tid: tid),
+        ThreadVisitHistoryClearRequested() => _onClearRequested(emit),
       },
     );
   }
@@ -40,7 +40,24 @@ final class ThreadVisitHistoryBloc
         debug('fetch all failed');
         emit(state.copyWith(status: ThreadVisitHistoryStatus.failure));
       case Right(:final value):
-        debug('fetch all succeeded, date count is ${value.length}');
+        debug('fetch all succeeded, data count is ${value.length}');
+        emit(
+          state.copyWith(
+            status: ThreadVisitHistoryStatus.success,
+            history: value,
+          ),
+        );
+    }
+  }
+
+  Future<void> _onFetchByUserRequested(int uid, _Emit emit) async {
+    emit(state.copyWith(status: ThreadVisitHistoryStatus.loadingData));
+    switch (await _repo.fetchHistoryByUid(uid).run()) {
+      case Left():
+        debug('fetch by uid $uid failed');
+        emit(state.copyWith(status: ThreadVisitHistoryStatus.failure));
+      case Right(:final value):
+        debug('fetch by uid $uid succeeded, data count is ${value.length}');
         emit(
           state.copyWith(
             status: ThreadVisitHistoryStatus.success,
@@ -57,6 +74,43 @@ final class ThreadVisitHistoryBloc
     emit(state.copyWith(status: ThreadVisitHistoryStatus.savingData));
     // TODO: Define the error here and handle it.
     await _repo.saveHistory(model).run();
+    for (final (i, item) in state.history.indexed) {
+      if (item.uid == model.uid && item.threadId == model.threadId) {
+        final h2 = state.history;
+        h2[i] = model;
+        emit(
+          state.copyWith(
+            status: ThreadVisitHistoryStatus.success,
+            history: h2,
+          ),
+        );
+        return;
+      }
+    }
+
     emit(state.copyWith(status: ThreadVisitHistoryStatus.success));
+  }
+
+  Future<void> _onDeleteRecordRequested(
+    _Emit emit, {
+    required int uid,
+    required int tid,
+  }) async {
+    emit(state.copyWith(status: ThreadVisitHistoryStatus.savingData));
+    await _repo.deleteRecord(uid: uid, tid: tid).run();
+    final history =
+        state.history.filter((e) => e.uid != uid || e.threadId != tid).toList();
+    emit(
+      state.copyWith(
+        status: ThreadVisitHistoryStatus.success,
+        history: history,
+      ),
+    );
+  }
+
+  Future<void> _onClearRequested(_Emit emit) async {
+    emit(state.copyWith(status: ThreadVisitHistoryStatus.savingData));
+    await _repo.deleteAllRecords().run();
+    emit(state.copyWith(status: ThreadVisitHistoryStatus.success, history: []));
   }
 }
