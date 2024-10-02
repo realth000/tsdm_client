@@ -204,7 +204,8 @@
       "username": "Username",
       "uid": "UID",
       "email": "Email"
-    }
+    },
+    "signUpHint": "Do not have an account? Sign up here"
   },
   "rootPage": {
     "initFailed": "Init failed: $err",

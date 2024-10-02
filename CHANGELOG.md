@@ -60,6 +60,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app：优化图片加载流程，加载更平滑。
 - app：现在在头像加载失败时会使用本地默认的头像，避免头像一直空白。
 - app：现在加载失败的头像更容易触发重新加载。
+- 登录：在登录界面显示注册账户的跳转链接。
 
 ### Fixed
 

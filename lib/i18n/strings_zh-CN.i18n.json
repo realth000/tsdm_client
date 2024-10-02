@@ -204,7 +204,8 @@
       "username": "用户名",
       "uid": "UID",
       "email": "邮箱"
-    }
+    },
+    "signUpHint": "没有账号？点此注册"
   },
   "rootPage": {
     "initFailed": "初始化失败: $err",

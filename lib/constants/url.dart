@@ -9,6 +9,9 @@ const baseUrl = 'https://www.tsdm39.com';
 /// Homepage of tsdm.
 const homePage = '$baseUrl/forum.php';
 
+/// Page to register new account
+const signUpPage = '$baseUrl/member.php?mod=register.php';
+
 /// User profile page for user with given uid.
 const uidProfilePage = '$baseUrl/home.php?mod=space&uid=';
 

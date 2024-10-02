@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/authentication/widgets/captcha_image.dart';
@@ -237,16 +239,23 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                     : tr.answerEmpty,
           ),
           sizedBoxW12H12,
-          Row(
-            children: [
-              Expanded(
-                child: DebounceFilledButton(
-                  shouldDebounce: pending,
-                  onPressed: () async => _login(context, loginField, state),
-                  child: Text(tr.login),
-                ),
+          DebounceFilledButton(
+            shouldDebounce: pending,
+            onPressed: () async => _login(context, loginField, state),
+            child: Text(tr.login),
+          ),
+          sizedBoxW12H12,
+          Center(
+            child: TextButton(
+              child: Text(
+                tr.signUpHint,
+                style: const TextStyle(decoration: TextDecoration.underline),
               ),
-            ],
+              onPressed: () async => context.dispatchAsUrl(
+                signUpPage,
+                external: true,
+              ),
+            ),
           ),
         ],
       ),
