@@ -27,6 +27,7 @@ import 'package:tsdm_client/widgets/color_palette.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
+import 'package:window_manager/window_manager.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
@@ -164,6 +165,10 @@ class _SettingsPageState extends State<SettingsPage> {
           if (localeGroup.$2) {
             // Use system language.
             LocaleSettings.useDeviceLocale();
+            if (isDesktop) {
+              await windowManager
+                  .setTitle(LocaleSettings.currentLocale.translations.appName);
+            }
             if (!context.mounted) {
               return;
             }
@@ -172,10 +177,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 .add(const SettingsValueChanged(SettingsKeys.locale, ''));
             return;
           }
+          LocaleSettings.setLocale(localeGroup.$1!);
+          if (isDesktop) {
+            await windowManager
+                .setTitle(LocaleSettings.currentLocale.translations.appName);
+          }
           if (!context.mounted) {
             return;
           }
-          LocaleSettings.setLocale(localeGroup.$1!);
           context.read<SettingsBloc>().add(
                 SettingsValueChanged(
                   SettingsKeys.locale,

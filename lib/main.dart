@@ -9,6 +9,8 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
+import 'package:tsdm_client/utils/platform.dart';
+import 'package:window_manager/window_manager.dart';
 
 Future<void> main() async {
   talker.debug('start app...');
@@ -24,6 +26,12 @@ Future<void> main() async {
     LocaleSettings.useDeviceLocale();
   } else {
     LocaleSettings.setLocale(locale);
+  }
+
+  if (isDesktop) {
+    await windowManager.ensureInitialized();
+    await windowManager
+        .setTitle(LocaleSettings.currentLocale.translations.appName);
   }
 
   // System color.
