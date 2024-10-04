@@ -30,7 +30,17 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
           final body = switch (state.status) {
             ThreadVisitHistoryStatus.initial ||
             ThreadVisitHistoryStatus.loadingData =>
-              const CircularProgressIndicator(),
+              Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.info_outline),
+                    title: Text(tr.localOnlyTip),
+                  ),
+                  const Expanded(
+                    child: Center(child: CircularProgressIndicator()),
+                  ),
+                ],
+              ),
             ThreadVisitHistoryStatus.savingData ||
             ThreadVisitHistoryStatus.success =>
               _Body(state.history),
@@ -46,7 +56,10 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
             appBar: AppBar(
               title: Text(tr.title),
             ),
-            body: body,
+            body: AnimatedSwitcher(
+              duration: duration200,
+              child: body,
+            ),
           );
         },
       ),
@@ -81,6 +94,7 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.threadVisitHistoryPage;
     return EasyRefresh.builder(
       controller: _refreshController,
       scrollController: _scrollController,
@@ -89,15 +103,25 @@ class _BodyState extends State<_Body> {
           .read<ThreadVisitHistoryBloc>()
           .add(const ThreadVisitHistoryFetchAllRequested()),
       childBuilder: (context, physics) {
-        return ListView.separated(
-          controller: _scrollController,
-          physics: physics,
-          padding: edgeInsetsL12R12,
-          itemCount: widget.models.length,
-          itemBuilder: (context, index) {
-            return ThreadVisitHistoryCard(widget.models[index]);
-          },
-          separatorBuilder: (_, __) => sizedBoxW4H4,
+        return Column(
+          children: [
+            ListTile(
+              leading: const Icon(Icons.info_outline),
+              title: Text(tr.localOnlyTip),
+            ),
+            Expanded(
+              child: ListView.separated(
+                controller: _scrollController,
+                physics: physics,
+                padding: edgeInsetsL12R12,
+                itemCount: widget.models.length,
+                itemBuilder: (context, index) {
+                  return ThreadVisitHistoryCard(widget.models[index]);
+                },
+                separatorBuilder: (_, __) => sizedBoxW4H4,
+              ),
+            ),
+          ],
         );
       },
     );

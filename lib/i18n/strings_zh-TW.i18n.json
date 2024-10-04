@@ -636,6 +636,7 @@
   },
   "threadVisitHistoryPage": {
     "entryTooltip": "貼文瀏覽紀錄",
-    "title": "貼文瀏覽紀錄"
+    "title": "貼文瀏覽紀錄",
+    "localOnlyTip": "僅記錄本機的瀏覽記錄，在網頁端或其他機器上可能會有所不同"
   }
 }

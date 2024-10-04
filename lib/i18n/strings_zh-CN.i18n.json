@@ -636,6 +636,7 @@
   },
   "threadVisitHistoryPage": {
     "entryTooltip": "帖子浏览记录",
-    "title": "帖子浏览记录"
+    "title": "帖子浏览记录",
+    "localOnlyTip": "仅记录本机的浏览记录，在网页端或其他机器上可能会有所不同"
   }
 }
