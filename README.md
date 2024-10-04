@@ -306,7 +306,9 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 * 暂不支持论坛的`璀璨星河`主题，请不要在设置中使用该主题。
 * 长时间使用至cookie过期时一些功能可能无法使用，例如签到，此时请重新登录。
 
-## 编译
+## 开发
+
+### 编译
 
 ``` shell
 # 1. All
@@ -334,6 +336,15 @@ flutter build web
 
 # 2. Windows
 flutter build windows
+```
+
+### 更新数据库schema
+
+```bash
+# Export schema
+dart run drift_dev schema dump lib/shared/providers/storage_provider/models/database/database.dart lib/shared/providers/storage_provider/models/database/schema/migration/
+# Generate migration
+dart run drift_dev schema steps lib/shared/providers/storage_provider/models/database/schema/migration/ lib/shared/providers/storage_provider/models/database/schema/schema_versions.dart
 ```
 
 ## 隐私
