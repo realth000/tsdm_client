@@ -7,6 +7,7 @@ import 'package:tsdm_client/features/thread_visit_history/widgets/thread_visit_h
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/widgets/tips.dart';
 
 /// Page of thread visit history.
 class ThreadVisitHistoryPage extends StatefulWidget {
@@ -30,17 +31,7 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
           final body = switch (state.status) {
             ThreadVisitHistoryStatus.initial ||
             ThreadVisitHistoryStatus.loadingData =>
-              Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.info_outline),
-                    title: Text(tr.localOnlyTip),
-                  ),
-                  const Expanded(
-                    child: Center(child: CircularProgressIndicator()),
-                  ),
-                ],
-              ),
+              const Center(child: CircularProgressIndicator()),
             ThreadVisitHistoryStatus.savingData ||
             ThreadVisitHistoryStatus.success =>
               _Body(state.history),
@@ -58,7 +49,15 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
             ),
             body: AnimatedSwitcher(
               duration: duration200,
-              child: body,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  sizedBoxW4H4,
+                  Tips(tr.localOnlyTip),
+                  sizedBoxW4H4,
+                  Expanded(child: body),
+                ],
+              ),
             ),
           );
         },
@@ -94,7 +93,6 @@ class _BodyState extends State<_Body> {
 
   @override
   Widget build(BuildContext context) {
-    final tr = context.t.threadVisitHistoryPage;
     return EasyRefresh.builder(
       controller: _refreshController,
       scrollController: _scrollController,
@@ -103,25 +101,15 @@ class _BodyState extends State<_Body> {
           .read<ThreadVisitHistoryBloc>()
           .add(const ThreadVisitHistoryFetchAllRequested()),
       childBuilder: (context, physics) {
-        return Column(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.info_outline),
-              title: Text(tr.localOnlyTip),
-            ),
-            Expanded(
-              child: ListView.separated(
-                controller: _scrollController,
-                physics: physics,
-                padding: edgeInsetsL12R12,
-                itemCount: widget.models.length,
-                itemBuilder: (context, index) {
-                  return ThreadVisitHistoryCard(widget.models[index]);
-                },
-                separatorBuilder: (_, __) => sizedBoxW4H4,
-              ),
-            ),
-          ],
+        return ListView.separated(
+          controller: _scrollController,
+          physics: physics,
+          padding: edgeInsetsL12R12,
+          itemCount: widget.models.length,
+          itemBuilder: (context, index) {
+            return ThreadVisitHistoryCard(widget.models[index]);
+          },
+          separatorBuilder: (_, __) => sizedBoxW4H4,
         );
       },
     );

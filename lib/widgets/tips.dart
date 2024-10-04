@@ -32,7 +32,6 @@ class Tips extends StatelessWidget {
           Text(
             text,
             style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  fontWeight: FontWeight.w100,
                   color: Theme.of(context).colorScheme.onSurfaceVariant,
                 ),
           ),
