@@ -9,7 +9,14 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// Widget provides ability to checkin.
 class CheckinButton extends StatelessWidget {
   /// Constructor.
-  const CheckinButton({super.key});
+  const CheckinButton({this.enableSnackBar = false, super.key});
+
+  /// Enable snack bar feedback after checkin action.
+  ///
+  /// This flag is added because after refactor, [CheckinButton] becomes a pure
+  /// bloc consumer, multiple snackbar may shown if nested pages are here..
+  /// Only a workaround.
+  final bool enableSnackBar;
 
   Future<void> _showCheckinFailedSnackBar(
     BuildContext context,
@@ -47,8 +54,8 @@ class CheckinButton extends StatelessWidget {
             message: tr.success(msg: state.message),
           );
         }
-        if (state is CheckinStateFailed) {
-          return _showCheckinFailedSnackBar(context, state.result);
+        if (state is CheckinStateFailed && enableSnackBar) {
+          await _showCheckinFailedSnackBar(context, state.result);
         }
       },
       child: BlocBuilder<CheckinBloc, CheckinState>(

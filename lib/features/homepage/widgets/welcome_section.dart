@@ -224,7 +224,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
                                 .read<AuthenticationRepository>()
                                 .currentUser !=
                             null)
-                          const CheckinButton(),
+                          const CheckinButton(enableSnackBar: true),
                       ],
                     ),
                   ),
