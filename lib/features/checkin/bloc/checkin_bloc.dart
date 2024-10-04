@@ -3,32 +3,31 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/checkin/models/models.dart';
+import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 
-part 'checkin_button_bloc.mapper.dart';
-part 'checkin_button_event.dart';
-part 'checkin_button_state.dart';
+part 'checkin_bloc.mapper.dart';
+part 'checkin_event.dart';
+part 'checkin_state.dart';
 
 /// Bloc of checkin.
-class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
+final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
   /// Constructor.
-  CheckinButtonBloc({
-    required CheckinProvider checkinProvider,
+  CheckinBloc({
+    required CheckinRepository checkinRepository,
     required AuthenticationRepository authenticationRepository,
     required SettingsRepository settingsRepository,
-  })  : _checkinProvider = checkinProvider,
+  })  : _checkinRepository = checkinRepository,
         _authenticationRepository = authenticationRepository,
         _settingsRepository = settingsRepository,
-        super(const CheckinButtonInitial()) {
-    on<CheckinButtonRequested>(_onCheckinButtonRequested);
-    on<CheckinButtonAuthChanged>(_onCheckinButtonAuthChanged);
+        super(const CheckinStateInitial()) {
+    on<CheckinRequested>(_onCheckinRequested);
+    on<CheckinAuthChanged>(_onCheckinAuthChanged);
     _authStreamSub = _authenticationRepository.status.listen(
       (status) => add(
-        CheckinButtonAuthChanged(
+        CheckinAuthChanged(
           authed: status == AuthenticationStatus.authenticated,
         ),
       ),
@@ -37,48 +36,48 @@ class CheckinButtonBloc extends Bloc<CheckinButtonEvent, CheckinButtonState> {
 
   late StreamSubscription<AuthenticationStatus> _authStreamSub;
 
-  final CheckinProvider _checkinProvider;
+  final CheckinRepository _checkinRepository;
   final AuthenticationRepository _authenticationRepository;
   final SettingsRepository _settingsRepository;
 
-  Future<void> _onCheckinButtonRequested(
-    CheckinButtonRequested event,
-    Emitter<CheckinButtonState> emit,
+  Future<void> _onCheckinRequested(
+    CheckinRequested event,
+    Emitter<CheckinState> emit,
   ) async {
     if (_authenticationRepository.currentUser == null) {
-      emit(const CheckinButtonNeedLogin());
+      emit(const CheckinStateNeedLogin());
       return;
     }
-    emit(const CheckinButtonLoading());
+    emit(const CheckinStateLoading());
     final checkinFeeling =
         await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
     final checkinMessage =
         await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
-    final result = await _checkinProvider.checkin(
+    final result = await _checkinRepository.checkin(
       CheckinFeeling.from(checkinFeeling),
       checkinMessage,
     );
-    if (result is CheckinButtonSuccess) {
-      emit(CheckinButtonSuccess((result as CheckinButtonSuccess).message));
+    if (result is CheckinStateSuccess) {
+      emit(CheckinStateSuccess((result as CheckinStateSuccess).message));
       return;
     }
-    emit(CheckinButtonFailed(result));
+    emit(CheckinStateFailed(result));
   }
 
-  void _onCheckinButtonAuthChanged(
-    CheckinButtonAuthChanged event,
-    Emitter<CheckinButtonState> emit,
+  void _onCheckinAuthChanged(
+    CheckinAuthChanged event,
+    Emitter<CheckinState> emit,
   ) {
     if (event.authed) {
-      if (state is CheckinButtonLoading) {
+      if (state is CheckinStateLoading) {
         return;
       }
-      emit(const CheckinButtonInitial());
+      emit(const CheckinStateInitial());
     } else {
-      if (state is CheckinButtonLoading) {
+      if (state is CheckinStateLoading) {
         return;
       }
-      emit(const CheckinButtonNeedLogin());
+      emit(const CheckinStateNeedLogin());
     }
   }
 

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
 
 /// Dialog to let user select a checkin feeling.
 class CheckinFeelingDialog extends StatelessWidget {

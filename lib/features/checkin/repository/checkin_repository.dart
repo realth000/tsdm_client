@@ -3,21 +3,22 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:collection/collection.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/fp.dart';
+import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/checkin_provider.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_feeling.dart';
-import 'package:tsdm_client/shared/providers/checkin_provider/models/checkin_result.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/parsing.dart';
 
-///
-final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
+/// Repository of checkin feature.
+final class CheckinRepository with LoggerMixin {
+  /// Constructor.
+  const CheckinRepository();
+
   static const _checkInPageUrl = '$baseUrl/plugin.php?id=dsu_paulsign:sign';
   static const _checkInRequestUrl =
       '$baseUrl/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
 
-  @override
+  /// Perform a checkin.
   Future<CheckinResult> checkin(
     CheckinFeeling feeling,
     String message,
@@ -27,7 +28,7 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
     final respEither = await netClient.get(_checkInPageUrl).run();
     if (respEither.isLeft()) {
       handle(respEither.unwrapErr());
-      return const CheckinWebRequestFailed(null);
+      return const CheckinResultWebRequestFailed(null);
     }
 
     final resp = respEither.unwrap();
@@ -36,7 +37,7 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
         'failed to check in: web request failed with status code '
         '${resp.statusCode}',
       );
-      return CheckinWebRequestFailed(resp.statusCode);
+      return CheckinResultWebRequestFailed(resp.statusCode);
     }
 
     final document = parseHtmlDocument(resp.data as String);
@@ -44,7 +45,7 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
     final formHashMatch = re.firstMatch(document.body?.innerHtml ?? '');
     final formHash = formHashMatch?.namedGroup('FormHash');
     if (formHash == null) {
-      return const CheckinFormHashNotFound();
+      return const CheckinResultFormHashNotFound();
     }
 
     final body = {
@@ -60,7 +61,7 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
         .postForm(_checkInRequestUrl, data: body)
         .run();
     if (checkInRespEither.isLeft()) {
-      return const CheckinWebRequestFailed(null);
+      return const CheckinResultWebRequestFailed(null);
     }
 
     final checkInResp = checkInRespEither.unwrap();
@@ -74,30 +75,30 @@ final class CheckInProviderImpl with LoggerMixin implements CheckinProvider {
     // Return results.
     if (checkInResult == null) {
       error('check in result in null: $checkInResult');
-      return CheckinOtherError(resp.data as String);
+      return CheckinResultOtherError(resp.data as String);
     }
 
     if (checkInResult.contains('签到成功')) {
       info('check in success: $checkInResult');
-      return CheckinSuccess(checkInResult);
+      return CheckinResultSuccess(checkInResult);
     }
 
     if (checkInResult.contains('已经签到')) {
       error('check in failed: already checked in today');
-      return const CheckinAlreadyChecked();
+      return const CheckinResultAlreadyChecked();
     }
 
     if (checkInResult.contains('已经过了签到时间')) {
       error('check in failed: late in time');
-      return const CheckinLateInTime();
+      return const CheckinResultLateInTime();
     }
 
     if (checkInResult.contains('签到时间还没有到')) {
       error('check in failed: early in time');
-      return const CheckinEarlyInTime();
+      return const CheckinResultEarlyInTime();
     }
 
     error('check in with other error: $checkInResult');
-    return CheckinOtherError(resp.data as String);
+    return CheckinResultOtherError(resp.data as String);
   }
 }

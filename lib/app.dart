@@ -6,6 +6,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
+import 'package:tsdm_client/features/checkin/bloc/checkin_bloc.dart';
+import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
@@ -125,6 +127,9 @@ class _AppState extends State<App> with WindowListener {
         RepositoryProvider<AuthenticationRepository>(
           create: (_) => AuthenticationRepository(),
         ),
+        RepositoryProvider<CheckinRepository>(
+          create: (_) => const CheckinRepository(),
+        ),
         RepositoryProvider<ForumHomeRepository>(
           create: (_) => ForumHomeRepository(),
         ),
@@ -153,27 +158,39 @@ class _AppState extends State<App> with WindowListener {
           create: (context) =>
               ImageCacheTriggerCubit(RepositoryProvider.of(context)),
         ),
-        BlocProvider(
-          create: (context) => SettingsBloc(
-            fragmentsRepository:
-                RepositoryProvider.of<FragmentsRepository>(context),
-            settingsRepository: getIt.get<SettingsRepository>(),
-          ),
-        ),
         RepositoryProvider<ThreadVisitHistoryRepo>(
           create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>()),
         ),
-        BlocProvider(
-          create: (context) =>
-              ThreadVisitHistoryBloc(RepositoryProvider.of(context))
-                ..add(const ThreadVisitHistoryFetchAllRequested()),
-        ),
       ],
-      child: BlocProvider(
-        create: (context) => ThemeCubit(
-          accentColor: widget.color >= 0 ? Color(widget.color) : null,
-          themeModeIndex: widget.themeModeIndex,
-        ),
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+            create: (context) => SettingsBloc(
+              fragmentsRepository:
+                  RepositoryProvider.of<FragmentsRepository>(context),
+              settingsRepository: getIt.get<SettingsRepository>(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) =>
+                ThreadVisitHistoryBloc(RepositoryProvider.of(context))
+                  ..add(const ThreadVisitHistoryFetchAllRequested()),
+          ),
+          // Become top-level because of background auto-checkin feature.
+          BlocProvider(
+            create: (context) => CheckinBloc(
+              checkinRepository: RepositoryProvider.of(context),
+              authenticationRepository: RepositoryProvider.of(context),
+              settingsRepository: getIt(),
+            ),
+          ),
+          BlocProvider(
+            create: (context) => ThemeCubit(
+              accentColor: widget.color >= 0 ? Color(widget.color) : null,
+              themeModeIndex: widget.themeModeIndex,
+            ),
+          ),
+        ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (prev, curr) => prev != curr,
           builder: (context, state) {
