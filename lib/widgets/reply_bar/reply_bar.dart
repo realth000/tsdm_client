@@ -151,6 +151,8 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
           controller: controller,
           readOnly: true,
           enabled: onTapCallback != null,
+          decoration:
+              InputDecoration(hintText: context.t.threadPage.sendReplyHint),
           onTap: onTapCallback,
         ),
       ),
@@ -635,9 +637,12 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     _replyFocusNode.dispose();
     _authStatusSub.cancel();
     final text = _replyRichController.toBBCode();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      widget.outerTextController.text = text;
-    });
+    if (text.trim().isNotEmpty) {
+      // Only save text that intend to reply when that text is not empty.
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        widget.outerTextController.text = text;
+      });
+    }
     _replyRichController
       ..removeListener(_checkEditorContent)
       ..dispose();
