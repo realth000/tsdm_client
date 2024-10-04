@@ -24,9 +24,13 @@ class Settings extends Table {
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
 
   /// Ui `Size` type value.
+  ///
+  /// Added in v3.
   TextColumn get sizeValue => text().map(const SizeConverter()).nullable()();
 
   /// Ui `Offset` type value.
+  ///
+  /// Added in v3.
   TextColumn get offsetValue =>
       text().map(const OffsetConverter()).nullable()();
 

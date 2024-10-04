@@ -41,6 +41,13 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
             await m.create(schema.threadVisitHistory);
             info('migrating database schema from 1 to 2... ok!');
           },
+          from2To3: (m, schema) async {
+            info('migrating database schema from 2 to 3...');
+            await m.addColumn(schema.settings, schema.settings.offsetValue);
+            await m.addColumn(schema.settings, schema.settings.sizeValue);
+            await m.addColumn(schema.cookie, schema.cookie.lastCheckin);
+            info('migrating database schema from 2 to 3... ok!');
+          },
         ),
       );
 }
