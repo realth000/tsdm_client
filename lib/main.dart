@@ -8,7 +8,6 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/window_configs.dart';
@@ -21,9 +20,9 @@ Future<void> main(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
   await initProviders();
 
-  final settings = getIt.get<SettingsRepository>();
+  final settings = getIt.get<SettingsRepository>().currentSettings;
 
-  final settingsLocale = await settings.getValue<String>(SettingsKeys.locale);
+  final settingsLocale = settings.locale;
   final locale =
       AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
   if (locale == null) {
@@ -32,10 +31,19 @@ Future<void> main(List<String> args) async {
     LocaleSettings.setLocale(locale);
   }
 
-  if (isDesktop) {
-    await windowManager.ensureInitialized();
+  await windowManager.ensureInitialized();
+
+  if (isDesktop && !cmdArgs.noWindowConfigs) {
     await desktopUpdateWindowTitle();
-    await windowManager.center();
+    if (settings.windowInCenter) {
+      await windowManager.center();
+    } else if (settings.windowRememberPosition &&
+        settings.windowPosition != Offset.zero) {
+      await windowManager.setPosition(settings.windowPosition);
+    }
+    if (settings.windowRememberSize && settings.windowSize != Size.zero) {
+      await windowManager.setSize(settings.windowSize);
+    }
   }
 
   // System color.
@@ -43,16 +51,15 @@ Future<void> main(List<String> args) async {
   //
   // A not empty value represents currently is using system color and the color
   // value is inside it.
-  final useSystemTheme =
-      await settings.getValue<bool>(SettingsKeys.accentColorFollowSystem);
+  final useSystemTheme = settings.accentColorFollowSystem;
 
   final color = switch (useSystemTheme) {
     true => await SystemTheme.accentColor
         .load()
         .then((_) => SystemTheme.accentColor.accent.value),
-    false => await settings.getValue<int>(SettingsKeys.accentColor),
+    false => settings.accentColor,
   };
-  final themeModeIndex = await settings.getValue<int>(SettingsKeys.themeMode);
+  final themeModeIndex = settings.themeMode;
 
   runApp(
     TranslationProvider(

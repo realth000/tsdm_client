@@ -29,6 +29,7 @@ import 'package:tsdm_client/widgets/color_palette.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
+import 'package:tsdm_client/widgets/tips.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
@@ -303,6 +304,51 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
+  /// App window related settings.
+  ///
+  /// Only available on desktop platforms.
+  List<Widget> _buildWindowSection(
+    BuildContext context,
+    SettingsState state,
+  ) {
+    final tr = context.t.settingsPage.windowSection;
+    final windowRememberSize = state.settingsMap.windowRememberSize;
+    final windowRememberPosition = state.settingsMap.windowRememberPosition;
+    final windowInCenter = state.settingsMap.windowInCenter;
+
+    return [
+      SectionTitleText(tr.title),
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.settings_overscan_outlined),
+        title: Text(tr.windowRememberSize.title),
+        subtitle: Text(tr.windowRememberSize.detail),
+        value: windowRememberSize,
+        onChanged: (v) => context
+            .read<SettingsBloc>()
+            .add(SettingsValueChanged(SettingsKeys.windowRememberSize, v)),
+      ),
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.open_with_outlined),
+        title: Text(tr.windowRememberPosition.title),
+        subtitle: Text(tr.windowRememberPosition.detail),
+        value: windowRememberPosition,
+        onChanged: (v) => context
+            .read<SettingsBloc>()
+            .add(SettingsValueChanged(SettingsKeys.windowRememberPosition, v)),
+      ),
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.filter_center_focus_outlined),
+        title: Text(tr.windowInCenter.title),
+        subtitle: Text(tr.windowInCenter.detail),
+        value: windowInCenter,
+        onChanged: (v) => context
+            .read<SettingsBloc>()
+            .add(SettingsValueChanged(SettingsKeys.windowInCenter, v)),
+      ),
+      Tips(tr.disableHint),
+    ];
+  }
+
   List<Widget> _buildBehaviorSection(
     BuildContext context,
     SettingsState state,
@@ -567,6 +613,7 @@ class _SettingsPageState extends State<SettingsPage> {
             controller: scrollController,
             children: [
               ..._buildAppearanceSection(context, state),
+              if (isDesktop) ..._buildWindowSection(context, state),
               ..._buildBehaviorSection(context, state),
               ..._buildCheckinSection(context, state),
               ..._buildStorageSection(context, state),

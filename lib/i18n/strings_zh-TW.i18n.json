@@ -89,6 +89,22 @@
         }
       }
     },
+    "windowSection": {
+      "title": "視窗",
+      "disableHint": "在啟動時增加參數\"--no-window-configs\"將會停用該部分設置，如果軟體開啟後看不到窗口，可以嘗試增加此參數",
+      "windowRememberSize": {
+        "title": "記住視窗大小",
+        "detail": "記錄視窗大小並在每次啟動時套用"
+      },
+      "windowRememberPosition": {
+        "title": "記住視窗位置",
+        "detail": "記住視窗位置並在每次啟動時套用"
+      },
+      "windowInCenter": {
+        "title": "視窗居中",
+        "detail": "強制視窗劇中，並在每次啟動時套用"
+      }
+    },
     "behaviorSection": {
       "title": "行為",
       "doublePressExit": {

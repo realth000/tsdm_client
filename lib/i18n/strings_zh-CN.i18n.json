@@ -89,6 +89,22 @@
         }
       }
     },
+    "windowSection": {
+      "title": "窗口",
+      "disableHint": "在启动时增加参数\"--no-window-configs\"将会禁用该部分设置。如果软件开启后看不到窗口，可以尝试增加此参数。",
+      "windowRememberSize": {
+        "title": "记住窗口大小",
+        "detail": "启动时还原上次的窗口大小"
+      },
+      "windowRememberPosition": {
+        "title": "记住窗口位置",
+        "detail": "启动时还原上次的窗口位置"
+      },
+      "windowInCenter": {
+        "title": "窗口居中",
+        "detail": "启动时强制窗口居中"
+      }
+    },
     "behaviorSection": {
       "title": "行为",
       "doublePressExit": {

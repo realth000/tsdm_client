@@ -40,35 +40,43 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
         'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
   ),
 
-  /// Window width config on desktop platforms.
-  windowWidth<double>(
-    name: 'windowWidth',
-    type: double,
-    defaultValue: 600,
+  /// Remember window size after window size changed on desktop platforms.
+  ///
+  /// Disable this config will never update [windowSize].
+  windowRememberSize<bool>(
+    name: 'windowRememberSize',
+    type: bool,
+    defaultValue: true,
   ),
 
-  /// Window height config on desktop platforms.
-  windowHeight<double>(
-    name: 'windowHeight',
-    type: double,
-    defaultValue: 800,
+  /// Window size config on desktop platforms.
+  windowSize<Size>(
+    name: 'windowSize',
+    type: Size,
+    defaultValue: Size(800, 600),
+  ),
+
+  /// Remember window position after window position changed on desktop
+  /// platforms.
+  ///
+  /// Disable this config will never update [windowPosition].
+  windowRememberPosition<bool>(
+    name: 'windowRememberPosition',
+    type: bool,
+    defaultValue: true,
   ),
 
   /// Window position config on desktop platforms.
-  windowPositionDx<double>(
-    name: 'windowPositionX',
-    type: double,
-    defaultValue: 0,
-  ),
-
-  /// Window position config on desktop platforms.
-  windowPositionDy<double>(
-    name: 'windowPositionY',
-    type: double,
-    defaultValue: 0,
+  windowPosition<Offset>(
+    name: 'windowPosition',
+    type: Offset,
+    defaultValue: Offset.zero,
   ),
 
   /// Window whether in the center of screen config on desktop platforms.
+  ///
+  /// Enable this config will disable [windowPosition] and
+  /// [windowRememberPosition].
   windowInCenter<bool>(
     name: 'windowInCenter',
     type: bool,
@@ -237,6 +245,9 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   final Type type;
   final T defaultValue;
 
+  /// Ignore dynamic generic type here because the function is used to compare
+  /// all types of [SettingsKeys].
   @override
+  // ignore: avoid_dynamic
   int compareTo(SettingsKeys<dynamic> other) => name.compareTo(other.name);
 }

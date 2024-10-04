@@ -89,6 +89,22 @@
         }
       }
     },
+    "windowSection": {
+      "title": "Window",
+      "disableHint": "Add cmdline args \"--no-window-configs\" will disable this settings section, which is useful when window is missing after startup.",
+      "windowRememberSize": {
+        "title": "Remember window size",
+        "detail": "Save window size and apply every time app starts"
+      },
+      "windowRememberPosition": {
+        "title": "Remember window position",
+        "detail": "Save window position and apply every time app starts"
+      },
+      "windowInCenter": {
+        "title": "Window in center",
+        "detail": "Force the window in the center of screen when app starts"
+      }
+    },
     "behaviorSection": {
       "title": "Behavior",
       "doublePressExit": {

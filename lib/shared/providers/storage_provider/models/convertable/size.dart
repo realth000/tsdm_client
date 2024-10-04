@@ -10,7 +10,10 @@ class SizeConverter extends TypeConverter<Size, String> {
 
   @override
   Size fromSql(String fromDb) {
-    final jsonMap = jsonDecode(fromDb) as Map<String, double>;
+    // ignore: avoid_dynamic
+    final jsonMap = Map.castFrom<String, dynamic, String, double>(
+      jsonDecode(fromDb) as Map<String, dynamic>,
+    );
     return Size(jsonMap[_keyWidth]!, jsonMap[_keyHeight]!);
   }
 

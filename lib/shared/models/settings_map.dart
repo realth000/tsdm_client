@@ -5,16 +5,16 @@ part of 'models.dart';
 /// All settings and their keys.
 @MappableClass()
 class SettingsMap with SettingsMapMappable {
-  /// Freezed constructor.
-  SettingsMap({
+  /// Constructor.
+  const SettingsMap({
     required this.netClientAccept,
     required this.netClientAcceptEncoding,
     required this.netClientAcceptLanguage,
     required this.netClientUserAgent,
-    required this.windowWidth,
-    required this.windowHeight,
-    required this.windowPositionDx,
-    required this.windowPositionDy,
+    required this.windowRememberSize,
+    required this.windowSize,
+    required this.windowRememberPosition,
+    required this.windowPosition,
     required this.windowInCenter,
     required this.loginUsername,
     required this.loginUid,
@@ -42,10 +42,10 @@ class SettingsMap with SettingsMapMappable {
   final String netClientAcceptEncoding;
   final String netClientAcceptLanguage;
   final String netClientUserAgent;
-  final double windowWidth;
-  final double windowHeight;
-  final double windowPositionDx;
-  final double windowPositionDy;
+  final bool windowRememberSize;
+  final Size windowSize;
+  final bool windowRememberPosition;
+  final Offset windowPosition;
   final bool windowInCenter;
   final String loginUsername;
   final int loginUid;
@@ -84,12 +84,12 @@ class SettingsMap with SettingsMapMappable {
         copyWith(netClientAcceptLanguage: value as String?),
       SettingsKeys.netClientUserAgent =>
         copyWith(netClientUserAgent: value as String?),
-      SettingsKeys.windowWidth => copyWith(windowWidth: value as double?),
-      SettingsKeys.windowHeight => copyWith(windowHeight: value as double?),
-      SettingsKeys.windowPositionDx =>
-        copyWith(windowPositionDx: value as double?),
-      SettingsKeys.windowPositionDy =>
-        copyWith(windowPositionDy: value as double?),
+      SettingsKeys.windowRememberSize =>
+        copyWith(windowRememberSize: value as bool?),
+      SettingsKeys.windowSize => copyWith(windowSize: value as Size?),
+      SettingsKeys.windowRememberPosition =>
+        copyWith(windowRememberPosition: value as bool?),
+      SettingsKeys.windowPosition => copyWith(windowPosition: value as Offset?),
       SettingsKeys.windowInCenter => copyWith(windowInCenter: value as bool?),
       SettingsKeys.loginUsername => copyWith(loginUsername: value as String?),
       SettingsKeys.loginUid => copyWith(loginUid: value as int?),
