@@ -11,10 +11,7 @@ import 'package:tsdm_client/utils/logger.dart';
 
 part 'settings_bloc.mapper.dart';
 part 'settings_event.dart';
-
 part 'settings_state.dart';
-
-const _scrollDebounceDuration = Duration(milliseconds: 300);
 
 /// Emitter.
 typedef _Emitter = Emitter<SettingsState>;
@@ -42,39 +39,21 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> with LoggerMixin {
     _settingsMapSub = _settingsRepository.settings
         .listen((settings) => add(SettingsMapChanged(settings)));
 
-    on<SettingsMapChanged>(_onSettingsMapChanged);
-    on<SettingsScrollOffsetChanged>(
-      _onSettingsScrollOffsetChanged,
-      transformer: debounce(_scrollDebounceDuration),
-    );
     on<SettingsEvent>(
       (event, emit) async => switch (event) {
         final SettingsMapChanged e => _onSettingsMapChanged(e, emit),
         final SettingsScrollOffsetChanged e =>
           _onSettingsScrollOffsetChanged(e, emit),
-        final SettingsValueChanged<int> e => _onSettingsValueChanged<int>(
-            e,
-            emit,
-          ),
-        final SettingsValueChanged<double> e => _onSettingsValueChanged<double>(
-            e,
-            emit,
-          ),
-        final SettingsValueChanged<bool> e => _onSettingsValueChanged<bool>(
-            e,
-            emit,
-          ),
-        final SettingsValueChanged<String> e => _onSettingsValueChanged<String>(
-            e,
-            emit,
-          ),
-        final SettingsValueChanged<DateTime> e =>
-          _onSettingsValueChanged<DateTime>(
-            e,
-            emit,
-          ),
-        final SettingsValueChanged<dynamic> _ =>
-          throw Exception('Unsupported settings change event type'),
+        final SettingsValueChanged<int> e => _onValueChanged<int>(e),
+        final SettingsValueChanged<double> e => _onValueChanged<double>(e),
+        final SettingsValueChanged<bool> e => _onValueChanged<bool>(e),
+        final SettingsValueChanged<String> e => _onValueChanged<String>(e),
+        final SettingsValueChanged<DateTime> e => _onValueChanged<DateTime>(e),
+        final SettingsValueChanged<Offset> e => _onValueChanged<Offset>(e),
+        final SettingsValueChanged<Size> e => _onValueChanged<Size>(e),
+        final SettingsValueChanged<dynamic> e =>
+          throw Exception('Unsupported settings change event '
+              'type(${e.runtimeType}): $e'),
       },
     );
   }
@@ -98,11 +77,10 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> with LoggerMixin {
     _fragmentsRepository.settingsPageScrollOffset = event.offset;
   }
 
-  Future<void> _onSettingsValueChanged<T>(
+  Future<void> _onValueChanged<T>(
     SettingsValueChanged<T> event,
-    _Emitter emit,
   ) async {
-    debug('settings value changed: ${event.settings.name}: ${event.value}');
+    debug('settings value changed: ${event.settings.name}<$T>: ${event.value}');
     await _settingsRepository.setValue<T>(event.settings, event.value);
   }
 

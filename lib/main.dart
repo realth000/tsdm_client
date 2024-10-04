@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/app.dart';
+import 'package:tsdm_client/cmd.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -10,9 +11,12 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/platform.dart';
+import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:window_manager/window_manager.dart';
 
-Future<void> main() async {
+Future<void> main(List<String> args) async {
+  parseCmdArgs(args);
+
   talker.debug('start app...');
   WidgetsFlutterBinding.ensureInitialized();
   await initProviders();
@@ -30,8 +34,8 @@ Future<void> main() async {
 
   if (isDesktop) {
     await windowManager.ensureInitialized();
-    await windowManager
-        .setTitle(LocaleSettings.currentLocale.translations.appName);
+    await desktopUpdateWindowTitle();
+    await windowManager.center();
   }
 
   // System color.

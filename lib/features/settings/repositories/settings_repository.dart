@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
@@ -28,6 +29,9 @@ extension _ExtractExt on List<SettingsEntity> {
           double => v.doubleValue,
           String => v.stringValue,
           bool => v.boolValue,
+          DateTime => v.dateTimeValue,
+          Offset => v.offsetValue,
+          Size => v.sizeValue,
           _ => null,
         } ??
         settings.defaultValue) as T;
@@ -127,6 +131,9 @@ final class SettingsRepository with LoggerMixin {
       double => _storage.getDouble(name),
       String => _storage.getString(name),
       bool => _storage.getBool(name),
+      DateTime => _storage.getDateTime(name),
+      Offset => _storage.getOffset(name),
+      Size => _storage.getSize(name),
       _ => () {
           error('failed to getValue for key $key: unsupported type $T');
           return null;
@@ -156,6 +163,9 @@ final class SettingsRepository with LoggerMixin {
       double => _storage.saveDouble(name, value as double),
       String => _storage.saveString(name, value as String),
       bool => _storage.saveBool(name, value: value as bool),
+      DateTime => _storage.saveDateTime(name, value as DateTime),
+      Offset => _storage.saveOffset(name, value as Offset),
+      Size => _storage.saveSize(name, value as Size),
       final t => () {
           error('failed to save settings for key $key:'
               ' unsupported type in storage: $t');

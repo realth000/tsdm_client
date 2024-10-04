@@ -1,4 +1,5 @@
 import 'package:collection/collection.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
@@ -23,11 +24,11 @@ import 'package:tsdm_client/shared/providers/checkin_provider/models/check_in_fe
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
-import 'package:window_manager/window_manager.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
@@ -165,10 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (localeGroup.$2) {
             // Use system language.
             LocaleSettings.useDeviceLocale();
-            if (isDesktop) {
-              await windowManager
-                  .setTitle(LocaleSettings.currentLocale.translations.appName);
-            }
+            await desktopUpdateWindowTitle();
             if (!context.mounted) {
               return;
             }
@@ -178,10 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
           LocaleSettings.setLocale(localeGroup.$1!);
-          if (isDesktop) {
-            await windowManager
-                .setTitle(LocaleSettings.currentLocale.translations.appName);
-          }
+          await desktopUpdateWindowTitle();
           if (!context.mounted) {
             return;
           }
@@ -450,18 +445,19 @@ class _SettingsPageState extends State<SettingsPage> {
     final tr = context.t.settingsPage.advancedSection;
     return [
       SectionTitleText(tr.title),
-      SectionListTile(
-        leading: const Icon(Icons.developer_mode_outlined),
-        title: const Text('DEBUG SHOWCASE'),
-        onTap: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute<void>(
-              builder: (context) => const DebugShowcasePage(),
-            ),
-          );
-        },
-      ),
+      if (!kReleaseMode)
+        SectionListTile(
+          leading: const Icon(Icons.developer_mode_outlined),
+          title: const Text('DEBUG SHOWCASE'),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute<void>(
+                builder: (context) => const DebugShowcasePage(),
+              ),
+            );
+          },
+        ),
       SectionSwitchListTile(
         secondary: Icon(MdiIcons.networkOutline),
         title: Text(tr.useProxy),

@@ -22,9 +22,10 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
+import 'package:window_manager/window_manager.dart';
 
 /// Main app for tsdm_client.
-class App extends StatelessWidget {
+class App extends StatefulWidget {
   /// Constructor.
   const App(this.color, this.themeModeIndex, {super.key});
 
@@ -33,6 +34,23 @@ class App extends StatelessWidget {
 
   /// Initial theme mode index.
   final int themeModeIndex;
+
+  @override
+  State<App> createState() => _AppState();
+}
+
+class _AppState extends State<App> with WindowListener {
+  @override
+  void initState() {
+    super.initState();
+    windowManager.addListener(this);
+  }
+
+  @override
+  void dispose() {
+    windowManager.removeListener(this);
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,8 +105,8 @@ class App extends StatelessWidget {
       ],
       child: BlocProvider(
         create: (context) => ThemeCubit(
-          accentColor: color >= 0 ? Color(color) : null,
-          themeModeIndex: themeModeIndex,
+          accentColor: widget.color >= 0 ? Color(widget.color) : null,
+          themeModeIndex: widget.themeModeIndex,
         ),
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (prev, curr) => prev != curr,
@@ -113,5 +131,19 @@ class App extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  @override
+  Future<void> onWindowMove() async {
+    super.onWindowMove();
+    final x = await windowManager.getPosition();
+    debugPrint('>>> window moved to $x');
+  }
+
+  @override
+  Future<void> onWindowResize() async {
+    super.onWindowResize();
+    final x = await windowManager.getSize();
+    debugPrint('>>> window size is $x');
   }
 }

@@ -23,6 +23,13 @@ class Settings extends Table {
   /// [DateTime] type value.
   DateTimeColumn get dateTimeValue => dateTime().nullable()();
 
+  /// Ui `Size` type value.
+  TextColumn get sizeValue => text().map(const SizeConverter()).nullable()();
+
+  /// Ui `Offset` type value.
+  TextColumn get offsetValue =>
+      text().map(const OffsetConverter()).nullable()();
+
   @override
-  Set<Column<Object>>? get primaryKey => {name};
+  Set<Column<Object>> get primaryKey => {name};
 }

@@ -25,7 +25,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
   AppDatabase() : super(conn.connect());
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(

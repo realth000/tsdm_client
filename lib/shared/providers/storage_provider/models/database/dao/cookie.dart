@@ -48,4 +48,11 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
   Future<int> deleteCookieByEmail(String email) async {
     return (delete(cookie)..where((e) => e.email.equals(email))).go();
   }
+
+  /// Update the last checkin time for user [uid].
+  Future<int> updateLastCheckinTime(int uid, DateTime datetime) async {
+    return (update(cookie)..where((e) => e.uid.equals(uid))).write(
+      CookieCompanion(lastCheckin: Value(datetime)),
+    );
+  }
 }

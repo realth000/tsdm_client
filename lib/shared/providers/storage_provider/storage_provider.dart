@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
@@ -263,6 +264,30 @@ class StorageProvider with LoggerMixin {
   Future<void> saveDouble(String key, double value) async {
     await SettingsDao(_db).setValue<double>(key, value);
   }
+
+  /// Get [DateTime] type value of specified key.
+  Future<DateTime?> getDateTime(String key) async =>
+      SettingsDao(_db).getValueByName(key);
+
+  /// Save [DateTime] type value of specified key.
+  Future<void> saveDateTime(String key, DateTime value) async =>
+      SettingsDao(_db).setValue<DateTime>(key, value);
+
+  /// Get [Offset] type value of specified key.
+  Future<Offset?> getOffset(String key) async =>
+      SettingsDao(_db).getValueByName(key);
+
+  /// Save [Offset] type value of specified key.
+  Future<void> saveOffset(String key, Offset value) async =>
+      SettingsDao(_db).setValue<Offset>(key, value);
+
+  /// Get [Size] type value of specified key.
+  Future<Size?> getSize(String key) async =>
+      SettingsDao(_db).getValueByName(key);
+
+  /// Save [Size] type value of specified key.
+  Future<void> saveSize(String key, Size value) async =>
+      SettingsDao(_db).setValue<Size>(key, value);
 
   /// Delete the given record from database.
   Future<void> deleteKey(String key) async {
