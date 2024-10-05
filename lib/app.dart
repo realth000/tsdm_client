@@ -219,7 +219,7 @@ class _AppState extends State<App> with WindowListener {
   @override
   Future<void> onWindowMove() async {
     super.onWindowMove();
-    if (isDesktop) {
+    if (isDesktop && !cmdArgs.noWindowChangeRecords) {
       _windowPosition = await windowManager.getPosition();
       setupWindowPositionTimer();
     }
@@ -228,7 +228,7 @@ class _AppState extends State<App> with WindowListener {
   @override
   Future<void> onWindowResize() async {
     super.onWindowResize();
-    if (isDesktop) {
+    if (isDesktop && !cmdArgs.noWindowChangeRecords) {
       _windowSize = await windowManager.getSize();
       setupWindowSizeTimer();
     }
