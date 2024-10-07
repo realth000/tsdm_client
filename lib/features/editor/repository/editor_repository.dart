@@ -231,39 +231,23 @@ final class EditorRepository with LoggerMixin {
     if (!force && cacheProvider.hasEmojiCacheFile(emojiGroup.id, emoji.id)) {
       return true;
     }
-    var retryMaxTimes = 3;
-    // Retry until success.
-    while (true) {
-      if (retryMaxTimes <= 0) {
-        error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
-            'exceed max retry times');
-        return false;
-      }
-      try {
-        final respEither = await netClient.getImage(emoji.url).run();
-        if (respEither.isLeft()) {
-          final err = respEither.unwrapErr();
-          handle(err);
-          throw err;
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          await Future.delayed(const Duration(milliseconds: 200), () {});
-          retryMaxTimes -= 1;
-          continue;
-        }
-        await cacheProvider.updateEmojiCache(
-          emojiGroup.id,
-          emoji.id,
-          resp.data as List<int>,
-        );
-        break;
-      } catch (e) {
-        await Future.delayed(const Duration(milliseconds: 200), () {});
-        retryMaxTimes -= 1;
-        continue;
-      }
+    // No more retry here.
+    final respEither = await netClient.getImage(emoji.url).run();
+    if (respEither.isLeft()) {
+      handle(respEither.unwrapErr());
+      error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
+          'exceed max retry times');
+      return false;
     }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return false;
+    }
+    await cacheProvider.updateEmojiCache(
+      emojiGroup.id,
+      emoji.id,
+      resp.data as List<int>,
+    );
     return true;
   }
 
@@ -299,6 +283,7 @@ final class EditorRepository with LoggerMixin {
             _generateDownloadEmojiTask(netClient, cacheProvider, emojiGroup, e),
       );
       debug('download for emoji group: ${emojiGroup.id}');
+      debug('emoji group ${emojiGroup.id} ${emojiGroup.emojiList.first.url}');
       await Future.wait(downloadList);
     }
     info('load emoji from server finished');
