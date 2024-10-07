@@ -52,12 +52,12 @@ final class EditorRepository with LoggerMixin {
   ///   Also formatted like "{:${GROUP_ID}_${EMOJI_ID}:}".
   /// * FILE_NAME: the final file name in url when we fetch the emoji image. We
   ///   don't name cache with this value.
-  static const _emojiInfoUrl = '$baseUrl/data/cache/common_smilies_var.js?y1Z';
+  static const _emojiInfoUrl = '$baseUrl/data/cache/common_smilies_var.js';
 
   /// Head of the image url.
   ///
   /// Full url: [_emojiFileUrlHead]/${ROUTE_NAME}/${FILE_NAME}
-  static const _emojiFileUrlHead = 'https://img.mikudm.net/img02/smilies/';
+  static const _emojiFileUrlHead = 'https://img.tsdm39.com/img02/smilies/';
 
   /// Expected to match data:
   ///
@@ -251,26 +251,33 @@ final class EditorRepository with LoggerMixin {
     if (!force && cacheProvider.hasEmojiCacheFile(emojiGroup.id, emoji.id)) {
       return true;
     }
-    // No more retry here.
-    final respEither = await netClient.getImage(emoji.url).run();
-    if (_disposed) {
-      return false;
+    var retryTimes = 2;
+    while (retryTimes >= 0) {
+      retryTimes -= 1;
+      // No more retry here.
+      final respEither = await netClient.getImage(emoji.url).run();
+      if (_disposed) {
+        return false;
+      }
+      if (respEither.isLeft()) {
+        if (retryTimes < 0) {
+          handle(respEither.unwrapErr());
+          error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
+              'exceed max retry times');
+          return false;
+        }
+        continue;
+      }
+      final resp = respEither.unwrap();
+      if (resp.statusCode != HttpStatus.ok) {
+        return false;
+      }
+      await cacheProvider.updateEmojiCache(
+        emojiGroup.id,
+        emoji.id,
+        resp.data as List<int>,
+      );
     }
-    if (respEither.isLeft()) {
-      handle(respEither.unwrapErr());
-      error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
-          'exceed max retry times');
-      return false;
-    }
-    final resp = respEither.unwrap();
-    if (resp.statusCode != HttpStatus.ok) {
-      return false;
-    }
-    await cacheProvider.updateEmojiCache(
-      emojiGroup.id,
-      emoji.id,
-      resp.data as List<int>,
-    );
     return true;
   }
 
