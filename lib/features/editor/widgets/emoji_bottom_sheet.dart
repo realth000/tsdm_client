@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
+import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
@@ -107,10 +108,17 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => EmojiBloc(
-        editRepository: RepositoryProvider.of(context),
-      )..add(EmojiFetchFromCacheEvent()),
+    return MultiBlocProvider(
+      providers: [
+        RepositoryProvider<EditorRepository>(
+          create: (_) => EditorRepository()..loadEmojiFromServer(),
+        ),
+        BlocProvider(
+          create: (context) => EmojiBloc(
+            editRepository: RepositoryProvider.of(context),
+          )..add(EmojiFetchFromCacheEvent()),
+        ),
+      ],
       child: BlocBuilder<EmojiBloc, EmojiState>(
         builder: (context, state) {
           final body = switch (state.status) {

@@ -90,6 +90,18 @@ final class EditorRepository with LoggerMixin {
   static const _searchUserByName = '$baseUrl/plugin.php?id=amucallme_dzx:js&'
       'sreach=1&callmesubmit=true&ajax=1&adds=fastpostmessage&inajax=1';
 
+  /// Flag used to indicate whether repository should be closed or not.
+  /// If so, stop all actions still runings.
+  var _disposed = false;
+
+  /// Call this function to notify the repository instance to stop all actions
+  /// still running.
+  ///
+  /// This can prevent further unstopped background jobs.
+  void dispose() {
+    _disposed = true;
+  }
+
   /// Parse username from document.
   ///
   /// For user search or friend recommendation.
@@ -170,6 +182,10 @@ final class EditorRepository with LoggerMixin {
     // Split into lines.
     final lines = info.split(';');
     for (final line in lines) {
+      if (_disposed) {
+        // Closed, it's ok to return nothing.
+        return [];
+      }
       // Try parse group info
       if (phase <= 1 && _emojiGroupInfoRe.hasMatch(line)) {
         if (phase < 0) {
@@ -227,12 +243,19 @@ final class EditorRepository with LoggerMixin {
     Emoji emoji, {
     bool force = false,
   }) async {
+    if (_disposed) {
+      // Terminate task generation if disposed.
+      return false;
+    }
     // Skip if have cache.
     if (!force && cacheProvider.hasEmojiCacheFile(emojiGroup.id, emoji.id)) {
       return true;
     }
     // No more retry here.
     final respEither = await netClient.getImage(emoji.url).run();
+    if (_disposed) {
+      return false;
+    }
     if (respEither.isLeft()) {
       handle(respEither.unwrapErr());
       error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
@@ -278,6 +301,10 @@ final class EditorRepository with LoggerMixin {
     // TODO: Download emoji in parallel.
     // Download emoji data.
     for (final emojiGroup in emojiGroupList!) {
+      if (_disposed) {
+        // Terminate job if disposed.
+        return false;
+      }
       final downloadList = emojiGroup.emojiList.map(
         (e) =>
             _generateDownloadEmojiTask(netClient, cacheProvider, emojiGroup, e),

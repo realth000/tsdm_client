@@ -68,4 +68,10 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
       emit(state.copyWith(status: EmojiStatus.failure));
     }
   }
+
+  @override
+  Future<void> close() async {
+    _editorRepository.dispose();
+    return super.close();
+  }
 }
