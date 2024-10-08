@@ -66,6 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app: 桌面平台支持窗口居中。
   - 默认关闭，可在设置 -> 窗口中开启。
 - app: 在linux上通过`XDG_CURRENT_DESKTOP`检查是否位于平铺窗管环境中，如果是，不再记录窗口大小和位置。
+- app: 更新应用图标（感谢@Qing-Novel）。
 - 登录：在登录界面显示注册账户的跳转链接。
 - 历史：新增帖子浏览记录。
   - 记录帖子名称、浏览的用户，帖子所在分区以及浏览时间。

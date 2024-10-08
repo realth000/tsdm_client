@@ -117,3 +117,4 @@ flutter_launcher_icons:
   web:
     generate: true
     image_path: "assets/images/tsdm_client-large-300x300.png"
+  android: "ic_launcher"
