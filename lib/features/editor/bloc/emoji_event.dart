@@ -13,3 +13,10 @@ final class EmojiFetchFromServerEvent extends EmojiEvent
 @MappableClass()
 final class EmojiFetchFromCacheEvent extends EmojiEvent
     with EmojiFetchFromCacheEventMappable {}
+
+/// Fetch emoji from app asset.
+///
+/// This is totally offline.
+@MappableClass()
+final class EmojiFetchFromAssetEvent extends EmojiEvent
+    with EmojiFetchFromAssetEventMappable {}

@@ -10,7 +10,7 @@ part 'emoji_event.dart';
 part 'emoji_state.dart';
 
 /// Emoji emitter.
-typedef EmojiEmitter = Emitter<EmojiState>;
+typedef _Emit = Emitter<EmojiState>;
 
 /// Bloc of emoji.
 ///
@@ -20,16 +20,18 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
   EmojiBloc({required EditorRepository editRepository})
       : _editorRepository = editRepository,
         super(const EmojiState(status: EmojiStatus.initial)) {
-    on<EmojiFetchFromCacheEvent>(_onEmojiFetchFromCacheEvent);
-    on<EmojiFetchFromServerEvent>(_onEmojiFetchFromServerEvent);
+    on<EmojiEvent>(
+      (event, emit) => switch (event) {
+        EmojiFetchFromServerEvent() => _onFetchFromServer(emit),
+        EmojiFetchFromCacheEvent() => _onFetchFromCache(emit),
+        EmojiFetchFromAssetEvent() => _onFetchFromAsset(emit),
+      },
+    );
   }
 
   final EditorRepository _editorRepository;
 
-  Future<void> _onEmojiFetchFromCacheEvent(
-    EmojiFetchFromCacheEvent event,
-    EmojiEmitter emit,
-  ) async {
+  Future<void> _onFetchFromCache(_Emit emit) async {
     emit(state.copyWith(status: EmojiStatus.loading));
     await _editorRepository.loadEmojiFromCacheOrServer().match(
       (e) {
@@ -45,10 +47,18 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
     ).run();
   }
 
-  Future<void> _onEmojiFetchFromServerEvent(
-    EmojiFetchFromServerEvent event,
-    EmojiEmitter emit,
-  ) async {
+  Future<void> _onFetchFromAsset(_Emit emit) async {
+    emit(state.copyWith(status: EmojiStatus.loading));
+    await _editorRepository.loadEmojiFromAsset().run();
+    emit(
+      state.copyWith(
+        status: EmojiStatus.success,
+        emojiGroupList: _editorRepository.emojiGroupList,
+      ),
+    );
+  }
+
+  Future<void> _onFetchFromServer(_Emit emit) async {
     emit(state.copyWith(status: EmojiStatus.loading));
     try {
       final result = await _editorRepository.loadEmojiFromServer();

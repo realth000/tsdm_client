@@ -26,6 +26,12 @@ const assetErrorImagePath = './assets/images/error.jpg';
 /// Fallback avatar image.
 const assetNoAvatarImagePath = './assets/images/noavatar_middle.jpg';
 
+/// Path of all emoji related asset.
+const assetEmojiDir = './assets/images/emoji/';
+
+/// Bundled emoji.
+const assetEmojiInfoPath = './assets/images/emoji/emoji.json';
+
 /// Changelog till publish.
 final changelogContent = () {
   final lines = changelog.split('\n');

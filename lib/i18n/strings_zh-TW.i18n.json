@@ -593,7 +593,8 @@
     "experimentalInfoDetail": "此bbcode編輯器支援所見即所得，可以方便地添加文字樣式和其他bbcode元件。\n但處於實驗階段：已經經過測試，但可能有bug。",
     "emoji": {
       "title": "表情",
-      "downloading": "正在下載表情（大約10MB內容），這可能需要一些時間。。"
+      "downloading": "正在下載表情（大約10MB內容），這可能需要一些時間。。",
+      "loadingAssets": "正在載入已打包的表情。。。"
     },
     "url": {
       "title": "插入連結",

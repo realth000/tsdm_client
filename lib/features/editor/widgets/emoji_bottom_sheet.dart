@@ -110,13 +110,11 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider<EditorRepository>(
-          create: (_) => EditorRepository()..loadEmojiFromServer(),
-        ),
+        RepositoryProvider<EditorRepository>(create: (_) => EditorRepository()),
         BlocProvider(
           create: (context) => EmojiBloc(
             editRepository: RepositoryProvider.of(context),
-          )..add(EmojiFetchFromCacheEvent()),
+          )..add(EmojiFetchFromAssetEvent()),
         ),
       ],
       child: BlocBuilder<EmojiBloc, EmojiState>(
@@ -140,7 +138,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
                 ),
               ),
             EmojiStatus.failure => buildRetryButton(context, () {
-                context.read<EmojiBloc>().add(EmojiFetchFromServerEvent());
+                context.read<EmojiBloc>().add(EmojiFetchFromAssetEvent());
               }),
             EmojiStatus.success => _buildEmojiTab(context, state),
           };

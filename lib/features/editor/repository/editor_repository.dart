@@ -355,6 +355,17 @@ final class EditorRepository with LoggerMixin {
         return rightVoid();
       });
 
+  /// Some should be because still developing.
+  AsyncVoidEither loadEmojiFromAsset() => AsyncVoidEither(() async {
+        final cacheProvider = getIt.get<ImageCacheProvider>();
+        if (await cacheProvider.validateEmojiCache()) {
+          emojiGroupList = await cacheProvider.loadEmojiInfo();
+        } else {
+          emojiGroupList = await cacheProvider.loadEmojiFromAsset();
+        }
+        return rightVoid();
+      });
+
   /// Search user by name.
   AsyncEither<List<String>> searchUserByName({
     required String keyword,

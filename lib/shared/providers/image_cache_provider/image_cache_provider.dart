@@ -1,8 +1,9 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:typed_data';
 
-import 'package:flutter/foundation.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:path_provider/path_provider.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/instance.dart';
@@ -203,6 +204,30 @@ final class ImageCacheProvider with LoggerMixin {
       error('failed to load emoji info when decoding json: $e');
       return null;
     }
+  }
+
+  /// Load emoji info and emoji images from assert.
+  ///
+  /// Copy to legacy emoji data dir so that existing emoji validation logic
+  /// does not need to change.
+  Future<List<EmojiGroup>?> loadEmojiFromAsset() async {
+    final infoBytes = await rootBundle.loadString(assetEmojiInfoPath);
+    final info = EmojiGroupListMapper.fromJson(infoBytes);
+    await _emojiCacheInfoFile.writeAsString(infoBytes);
+
+    for (final emojiGroup in info.emojiGroupList) {
+      for (final emoji in emojiGroup.emojiList) {
+        // All emoji are saved with ".jpg" suffix.
+        final emojiBytes = await rootBundle.load(
+          '$assetEmojiDir${emojiGroup.id}_${emoji.id}.jpg',
+        );
+        final cacheTarget =
+            '${_emojiCacheDirectory.path}/${emojiGroup.id}_${emoji.id}.jpg';
+        await File(cacheTarget).writeAsBytes(emojiBytes.buffer.asUint8List());
+      }
+    }
+
+    return info.emojiGroupList;
   }
 
   /// Emoji cache is save as jpg file no matter the real content.

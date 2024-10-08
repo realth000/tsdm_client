@@ -101,6 +101,7 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/
+    - assets/images/emoji/
     - assets/text/
 
 # To generate png from svg, run:
