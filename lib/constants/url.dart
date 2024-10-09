@@ -28,7 +28,7 @@ const noticeUrl = '$baseUrl/home.php?mod=space&do=notice';
 const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
 
 /// Private personal messages.
-const personalMessageUrl = '$baseUrl/home.php?mod=space&do=pm&filter=privatepm';
+const personalMessageUrl = '$baseUrl/home.php?mod=space&do=pm&private&H4652[!';
 
 /// Broadcast messages.
 const broadcastMessageUrl =
