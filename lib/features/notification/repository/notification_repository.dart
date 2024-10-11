@@ -166,7 +166,8 @@ final class NotificationRepository with LoggerMixin {
             final result = await getIt
                 .get<NetClientProvider>()
                 .get(
-                    '$personalMessageUrl${page != null ? "&page=$page" : null}')
+                  '$personalMessageUrl${page != null ? "&page=$page" : null}',
+                )
                 .run();
             if (result.isLeft()) {
               return Left(result.unwrapErr());
