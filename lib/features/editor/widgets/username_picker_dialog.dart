@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/editor/bloc/user_mention_cubit.dart';
+import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -202,9 +203,16 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog>
   @override
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.userMention;
-    return BlocProvider(
-      create: (context) =>
-          UserMentionCubit(RepositoryProvider.of(context))..recommendFriend(),
+    return MultiBlocProvider(
+      providers: [
+        RepositoryProvider(
+          create: (_) => EditorRepository(),
+        ),
+        BlocProvider(
+          create: (context) => UserMentionCubit(RepositoryProvider.of(context))
+            ..recommendFriend(),
+        ),
+      ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(
         builder: (context, state) => AlertDialog(
           title: Text(tr.title),
