@@ -79,6 +79,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
       data: event.data,
       save: event.save,
       perm: event.perm,
+      price: event.price,
       options: Map.fromEntries(
         event.options
             .where((e) => !e.disabled && e.checked)

@@ -37,6 +37,7 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
       'message': message,
       'save': save,
       'mastertid': '',
+      'price': '${price ?? ""}',
     };
     for (final entry in options) {
       body[entry.name] = entry.checked ? '1' : '';

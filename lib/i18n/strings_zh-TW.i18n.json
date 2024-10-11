@@ -442,6 +442,12 @@
     },
     "permDialog": {
       "title": "設定讀取權限"
+    },
+    "priceDialog": {
+      "title": "設定售價",
+      "entryTooltip": "設定貼文售價",
+      "maximum": "最高價65535",
+      "invalidPrice": "價格無效"
     }
   },
   "chatHistoryPage": {

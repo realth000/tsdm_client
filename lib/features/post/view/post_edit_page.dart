@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
+import 'package:tsdm_client/features/post/widgets/input_price_dialog.dart';
 import 'package:tsdm_client/features/post/widgets/select_perm_dialog.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -576,6 +577,28 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                       },
                     ),
                   ),
+                if (price != null)
+                  Badge(
+                    label: Text('$price'),
+                    offset: const Offset(-1, -1),
+                    isLabelVisible: price != null && price != 0,
+                    child: IconButton(
+                      icon: const Icon(Icons.money_off_outlined),
+                      tooltip: context.t.postEditPage.priceDialog.entryTooltip,
+                      selectedIcon: const Icon(Icons.attach_money_outlined),
+                      isSelected: price != null && price != 0,
+                      onPressed: () async {
+                        // TODO: show a dialog to set price.
+                        final inputPrice =
+                            await showInputPriceDialog(context, price);
+                        if (inputPrice != null) {
+                          setState(() {
+                            price = inputPrice;
+                          });
+                        }
+                      },
+                    ),
+                  ),
               ],
             ),
           ),
@@ -797,6 +820,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         threadTypeController.text = threadType?.name ?? '';
         perm =
             state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+        price = state.content?.price;
       });
 
       init = true;
@@ -804,6 +828,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       setState(() {
         perm =
             state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+        price = state.content?.price;
       });
     }
   }

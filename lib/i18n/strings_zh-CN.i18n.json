@@ -442,6 +442,12 @@
     },
     "permDialog": {
       "title": "设置阅读权限"
+    },
+    "priceDialog": {
+      "title": "设置售价",
+      "entryTooltip": "设置帖子售价",
+      "maximum": "最高价格65535",
+      "invalidPrice": "价格无效"
     }
   },
   "chatHistoryPage": {

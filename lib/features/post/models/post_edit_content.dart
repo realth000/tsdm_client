@@ -94,6 +94,7 @@ final class PostEditContent with PostEditContentMappable {
     required this.data,
     required this.options,
     required this.permList,
+    required this.price,
   });
 
   /// Build a instance of [PostEditContent] from [document].
@@ -238,6 +239,18 @@ final class PostEditContent with PostEditContentMappable {
       permList = ThreadPerm.buildListFromSelect(permListNode);
     }
 
+    // A `div class="extra_price_c"` is the row to set price on current thread
+    // if current post is an thread (the 1st floor).
+    final int? price;
+    final priceNode = rootNode?.querySelector('div#extra_price_c > input');
+    if (priceNode != null) {
+      // Price node exists means user can definitely set a price.
+      // the "value" attr may not have an value if is in an entire new thread.
+      price = priceNode.attributes['value']?.parseToInt() ?? 0;
+    } else {
+      price = null;
+    }
+
     return PostEditContent(
       threadType: threadType,
       threadTypeList: threadTypeList,
@@ -254,6 +267,7 @@ final class PostEditContent with PostEditContentMappable {
       data: data,
       options: options,
       permList: permList,
+      price: price,
     );
   }
 
@@ -327,4 +341,14 @@ final class PostEditContent with PostEditContentMappable {
   ///
   /// Only used in editing thread.
   final List<ThreadPerm>? permList;
+
+  /// Whether can set price in this edit.
+  ///
+  /// Only post in the first floor (exactly is a thread, not a post) can set
+  /// price, this field indicates can do that or not.
+  ///
+  /// A null value indicates this post is unable to set a price.
+  ///
+  /// A 0 value will be here if it can but not set yet.
+  final int? price;
 }

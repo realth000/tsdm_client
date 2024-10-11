@@ -442,6 +442,12 @@
     },
     "permDialog": {
       "title": "Set read perm"
+    },
+    "priceDialog": {
+      "title": "Set price",
+      "entryTooltip": "Set thread price",
+      "maximum": "Maximum value 65535",
+      "invalidPrice": "invalid price"
     }
   },
   "chatHistoryPage": {
