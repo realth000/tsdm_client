@@ -661,5 +661,13 @@
     "entryTooltip": "帖子浏览记录",
     "title": "帖子浏览记录",
     "localOnlyTip": "仅记录本机的浏览记录，在网页端或其他机器上可能会有所不同"
+  },
+  "parseUrlDialog": {
+    "title": "在应用中打开链接",
+    "detail": "输入一个本应用支持的论坛页面链接，在应用内打开它",
+    "entryTooltip": "在应用中打开链接",
+    "url": "链接",
+    "unsupportedUrl": "不支持的链接",
+    "open": "打开"
   }
 }

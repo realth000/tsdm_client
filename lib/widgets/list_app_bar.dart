@@ -148,7 +148,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               value: MenuActions.openInBrowser,
               child: Row(
                 children: [
-                  const Icon(Icons.launch_outlined),
+                  const Icon(Icons.open_in_browser),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.networkList.actionOpenInBrowser),
                 ],

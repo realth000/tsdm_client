@@ -661,5 +661,13 @@
     "entryTooltip": "貼文瀏覽紀錄",
     "title": "貼文瀏覽紀錄",
     "localOnlyTip": "僅記錄本機的瀏覽記錄，在網頁端或其他機器上可能會有所不同"
+  },
+  "parseUrlDialog": {
+    "title": "在應用程式中開啟連結",
+    "detail": "輸入一個本應用程式支援的論壇頁面鏈接，在應用程式內打開它",
+    "entryTooltip": "在應用程式中開啟連結",
+    "url": "連結",
+    "unsupportedUrl": "不支援的連結",
+    "open": "開啟"
   }
 }

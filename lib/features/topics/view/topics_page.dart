@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
+import 'package:tsdm_client/features/parse_url/widgets/parse_url_dialog.dart';
 import 'package:tsdm_client/features/topics/bloc/topics_bloc.dart';
 import 'package:tsdm_client/features/topics/widgets/topics_placeholder.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -155,6 +156,7 @@ class _TopicsPageState extends State<TopicsPage>
             appBar: AppBar(
               title: Text(context.t.navigation.topics),
               actions: [
+                const ParseUrlDialogButton(),
                 IconButton(
                   icon: const Icon(Icons.search_outlined),
                   onPressed: () async {

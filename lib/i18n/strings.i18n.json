@@ -661,5 +661,13 @@
     "entryTooltip": "Thread browsing history",
     "title": "Thread browsing history",
     "localOnlyTip": "Only local browsing history was recorded, may be different on web side or other machines"
+  },
+  "parseUrlDialog": {
+    "title": "Open url in app",
+    "detail": "Redirect to any forum urls that app supports",
+    "entryTooltip": "Open url in app",
+    "url": "Url",
+    "unsupportedUrl": "Unsupported url",
+    "open": "Open"
   }
 }

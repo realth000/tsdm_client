@@ -69,6 +69,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app: 在linux上通过`XDG_CURRENT_DESKTOP`检查是否位于平铺窗管环境中，如果是，不再记录窗口大小和位置。
 - app: 更新应用图标（感谢@Qing-Novel）。
 - app: 打包表情，现在应用安装包内自带所有表情。
+- app: 支持解析网页链接并在应用内打开。
+  - 在主页和分区右上角按钮打开相应入口。
 - 登录：在登录界面显示注册账户的跳转链接。
 - 历史：新增帖子浏览记录。
   - 记录帖子名称、浏览的用户，帖子所在分区以及浏览时间。
