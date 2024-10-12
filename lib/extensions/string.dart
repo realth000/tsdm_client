@@ -40,7 +40,10 @@ extension ParseUrl on String {
   /// Try parse string to [RecognizedRoute] with arguments.
   /// Return null if string is unsupported route.
   RecognizedRoute? parseUrlToRoute() {
-    final url = Uri.parse(this);
+    final url = Uri.tryParse(this);
+    if (url == null) {
+      return null;
+    }
     final queryParameters = url.queryParameters;
     final anchor = _anchorRe.firstMatch(this)?.namedGroup('anchor');
 
