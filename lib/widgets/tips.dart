@@ -11,32 +11,38 @@ import 'package:tsdm_client/themes/widget_themes.dart';
 /// Layout Reference: [ReadYou](https://github.com/Ashinch/ReadYou/blob/main/app/src/main/java/me/ash/reader/ui/component/base/Tips.kt)
 class Tips extends StatelessWidget {
   /// Constructor.
-  const Tips(this.text, {super.key});
+  const Tips(this.text, {this.enablePadding = true, super.key});
 
   /// Main text to display in tip.
   final String text;
 
+  /// Enable horizontal padding or not.
+  final bool enablePadding;
+
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: edgeInsetsL16R16,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.info_outline,
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-            size: smallIconSize,
-          ),
-          sizedBoxW8H8,
-          Text(
-            text,
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.onSurfaceVariant,
-                ),
-          ),
-        ],
-      ),
+    final body = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Icon(
+          Icons.info_outline,
+          color: Theme.of(context).colorScheme.onSurfaceVariant,
+          size: smallIconSize,
+        ),
+        sizedBoxW8H8,
+        Text(
+          text,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                color: Theme.of(context).colorScheme.onSurfaceVariant,
+              ),
+        ),
+      ],
     );
+    return enablePadding
+        ? Padding(
+            padding: edgeInsetsL16R16,
+            child: body,
+          )
+        : body;
   }
 }
