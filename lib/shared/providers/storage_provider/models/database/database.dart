@@ -18,6 +18,7 @@ part 'database.g.dart';
     ImageCache,
     Settings,
     ThreadVisitHistory,
+    UserAvatarCache,
   ],
 )
 final class AppDatabase extends _$AppDatabase with LoggerMixin {
@@ -50,6 +51,8 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           },
           from3To4: (m, schema) async {
             info('migrating database schema from 3 to 4...');
+            await m.create(schema.userAvatarCache);
+            await m.create(schema.imageCache);
             await m.addColumn(schema.imageCache, schema.imageCache.usage);
             info('migrating database schema from 3 to 4... ok!');
           },

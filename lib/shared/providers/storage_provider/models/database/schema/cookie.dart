@@ -16,9 +16,10 @@ class Cookie extends Table {
   TextColumn get cookie => text()();
 
   /// Last checkin time.
-  ///
-  /// Added in v3.
   DateTimeColumn get lastCheckin => dateTime().nullable()();
+
+  /// Timestamp of last notice fetch from server.
+  DateTimeColumn get lastFetchNotice => dateTime().nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {uid};

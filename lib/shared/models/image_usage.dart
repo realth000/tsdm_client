@@ -6,7 +6,7 @@ part of 'models.dart';
 ///
 /// # CAUTION
 ///
-/// This type is used in storage, do NOT change its fields order or delete
+/// This type is used in storage, do NOT change it's fields order or delete
 /// fields.
 enum ImageUsage {
   /// Shared in top level wide.

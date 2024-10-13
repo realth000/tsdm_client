@@ -348,8 +348,9 @@ final class Schema4 extends i0.VersionedSchema {
     imageCache,
     settings,
     threadVisitHistory,
+    userAvatarCache,
   ];
-  late final Shape4 cookie = Shape4(
+  late final Shape6 cookie = Shape6(
       source: i0.VersionedTable(
         entityName: 'cookie',
         withoutRowId: false,
@@ -363,11 +364,12 @@ final class Schema4 extends i0.VersionedSchema {
           _column_2,
           _column_3,
           _column_19,
+          _column_22,
         ],
         attachedDatabase: database,
       ),
       alias: null);
-  late final Shape6 imageCache = Shape6(
+  late final Shape7 imageCache = Shape7(
       source: i0.VersionedTable(
         entityName: 'image_cache',
         withoutRowId: false,
@@ -380,7 +382,7 @@ final class Schema4 extends i0.VersionedSchema {
           _column_5,
           _column_6,
           _column_7,
-          _column_22,
+          _column_23,
         ],
         attachedDatabase: database,
       ),
@@ -426,10 +428,45 @@ final class Schema4 extends i0.VersionedSchema {
         attachedDatabase: database,
       ),
       alias: null);
+  late final Shape8 userAvatarCache = Shape8(
+      source: i0.VersionedTable(
+        entityName: 'user_avatar_cache',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(username)',
+        ],
+        columns: [
+          _column_0,
+          _column_24,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
 }
 
 class Shape6 extends i0.VersionedTable {
   Shape6({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get username =>
+      columnsByName['username']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<int> get uid =>
+      columnsByName['uid']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<String> get email =>
+      columnsByName['email']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get cookie =>
+      columnsByName['cookie']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<DateTime> get lastCheckin =>
+      columnsByName['last_checkin']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<DateTime> get lastFetchNotice =>
+      columnsByName['last_fetch_notice']! as i1.GeneratedColumn<DateTime>;
+}
+
+i1.GeneratedColumn<DateTime> _column_22(String aliasedName) =>
+    i1.GeneratedColumn<DateTime>('last_fetch_notice', aliasedName, true,
+        type: i1.DriftSqlType.dateTime);
+
+class Shape7 extends i0.VersionedTable {
+  Shape7({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<String> get url =>
       columnsByName['url']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get fileName =>
@@ -442,9 +479,21 @@ class Shape6 extends i0.VersionedTable {
       columnsByName['usage']! as i1.GeneratedColumn<int>;
 }
 
-i1.GeneratedColumn<int> _column_22(String aliasedName) =>
+i1.GeneratedColumn<int> _column_23(String aliasedName) =>
     i1.GeneratedColumn<int>('usage', aliasedName, true,
         type: i1.DriftSqlType.int);
+
+class Shape8 extends i0.VersionedTable {
+  Shape8({required super.source, required super.alias}) : super.aliased();
+  i1.GeneratedColumn<String> get username =>
+      columnsByName['username']! as i1.GeneratedColumn<String>;
+  i1.GeneratedColumn<String> get cacheName =>
+      columnsByName['cache_name']! as i1.GeneratedColumn<String>;
+}
+
+i1.GeneratedColumn<String> _column_24(String aliasedName) =>
+    i1.GeneratedColumn<String>('cache_name', aliasedName, false,
+        type: i1.DriftSqlType.string);
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
