@@ -76,7 +76,6 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 登录：在登录界面显示注册账户的跳转链接。
 - 历史：新增帖子浏览记录。
   - 记录帖子名称、浏览的用户，帖子所在分区以及浏览时间。
-- 通知：支持下拉加载第二页以及后面的消息。
 
 ### Fixed
 

@@ -55,10 +55,7 @@ class _NotificationPageState extends State<NotificationPage>
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success ||
-      NotificationStatus.loadingNextPage ||
-      NotificationStatus.noMoreData =>
-        (BuildContext context, NoticeState state) {
+      NotificationStatus.success => (BuildContext context, NoticeState state) {
           final Widget content;
           if (state.noticeList.isEmpty) {
             content = _buildEmptyBody();
@@ -80,14 +77,13 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            footer: const MaterialFooter(),
             controller: _noticeRefreshController,
             onLoad: () async {
               if (!mounted) {
                 return;
               }
               if (!state.hasNextPage) {
-                _noticeRefreshController.finishLoad(
+                _broadcastMessageRefreshController.finishLoad(
                   IndicatorResult.noMore,
                 );
                 return;
@@ -118,9 +114,7 @@ class _NotificationPageState extends State<NotificationPage>
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success ||
-      NotificationStatus.loadingNextPage ||
-      NotificationStatus.noMoreData =>
+      NotificationStatus.success =>
         (BuildContext context, PersonalMessageState state) {
           final Widget content;
           if (state.noticeList.isEmpty) {
@@ -143,21 +137,20 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            footer: const MaterialFooter(),
             controller: _personalMessageRefreshController,
             onLoad: () async {
               if (!mounted) {
                 return;
               }
               if (!state.hasNextPage) {
-                _personalMessageRefreshController.finishLoad(
-                  IndicatorResult.noMore,
-                );
+                context
+                    .read<PersonalMessageBloc>()
+                    .add(NotificationLoadMoreRequested());
                 return;
               }
               context
                   .read<PersonalMessageBloc>()
-                  .add(NotificationLoadMoreRequested());
+                  .add(NotificationRefreshRequested());
             },
             onRefresh: () async {
               if (!mounted) {
@@ -187,9 +180,7 @@ class _NotificationPageState extends State<NotificationPage>
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success ||
-      NotificationStatus.loadingNextPage ||
-      NotificationStatus.noMoreData =>
+      NotificationStatus.success =>
         (BuildContext context, BroadcastMessageState state) {
           final Widget content;
           if (state.noticeList.isEmpty) {
@@ -215,7 +206,6 @@ class _NotificationPageState extends State<NotificationPage>
                   .copyWith(physics: physics, scrollbars: false);
             },
             header: const MaterialHeader(),
-            footer: const MaterialFooter(),
             controller: _broadcastMessageRefreshController,
             onLoad: () async {
               if (!mounted) {
@@ -305,40 +295,23 @@ class _NotificationPageState extends State<NotificationPage>
       child: MultiBlocListener(
         listeners: [
           BlocListener<NoticeBloc, NoticeState>(
-            listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == NotificationStatus.failure) {
                 showFailedToLoadSnackBar(context);
-              } else if (state.status == NotificationStatus.success) {
-                _noticeRefreshController.finishLoad();
-              } else if (state.status == NotificationStatus.noMoreData) {
-                _noticeRefreshController.finishLoad(IndicatorResult.noMore);
               }
             },
           ),
           BlocListener<PersonalMessageBloc, PersonalMessageState>(
-            listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == NotificationStatus.failure) {
                 showFailedToLoadSnackBar(context);
-              } else if (state.status == NotificationStatus.success) {
-                _personalMessageRefreshController.finishLoad();
-              } else if (state.status == NotificationStatus.noMoreData) {
-                _personalMessageRefreshController
-                    .finishLoad(IndicatorResult.noMore);
               }
             },
           ),
           BlocListener<BroadcastMessageBloc, BroadcastMessageState>(
-            listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == NotificationStatus.failure) {
                 showFailedToLoadSnackBar(context);
-              } else if (state.status == NotificationStatus.success) {
-                _broadcastMessageRefreshController.finishLoad();
-              } else if (state.status == NotificationStatus.noMoreData) {
-                _broadcastMessageRefreshController
-                    .finishLoad(IndicatorResult.noMore);
               }
             },
           ),

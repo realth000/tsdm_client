@@ -13,12 +13,6 @@ enum NotificationStatus {
 
   /// Failed.
   failure,
-
-  /// Load more data
-  loadingNextPage,
-
-  /// All data loaded.
-  noMoreData,
 }
 
 /// Basic notification.

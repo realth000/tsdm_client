@@ -98,14 +98,12 @@ class NotificationBaseBloc<M, T extends NotificationBaseState<M>>
 
   Future<void> _onLoadRequested(_Emit<M, T> emit) async {
     if (!state.hasNextPage) {
-      emit(state.copyWith(status: NotificationStatus.noMoreData) as T);
       return;
     }
-    emit(state.copyWith(status: NotificationStatus.loadingNextPage) as T);
+    emit(state.copyWith(status: NotificationStatus.loading) as T);
     switch (T) {
       case NoticeState:
-        await _notificationRepository.fetchNotice(state.pageNumber + 1).match(
-            (e) {
+        await _notificationRepository.fetchNotice().match((e) {
           handle(e);
           error('failed to fetch notice: $e');
           emit(state.copyWith(status: NotificationStatus.failure) as T);
@@ -114,36 +112,26 @@ class NotificationBaseBloc<M, T extends NotificationBaseState<M>>
           emit(
             state.copyWith(
               status: NotificationStatus.success,
-              noticeList: [state.noticeList as M, ...noticeList as List<M>],
+              noticeList: noticeList as List<M>,
             ) as T,
           );
         }).run();
       case PersonalMessageState:
-        await _notificationRepository
-            .fetchPersonalMessage(state.pageNumber + 1)
-            .match((e) {
+        await _notificationRepository.fetchPersonalMessage().match((e) {
           handle(e);
           error('failed to fetch notice: $e');
           emit(state.copyWith(status: NotificationStatus.failure) as T);
         }, (v) {
-          if (v.isLeft()) {
-            error('failed to fetch more notice, status code=${v.unwrapErr()}');
-            return;
-          }
+          final noticeList = v;
           emit(
             state.copyWith(
               status: NotificationStatus.success,
-              noticeList: [
-                ...state.noticeList,
-                ...v.unwrap().notificationList as List<M>,
-              ],
+              noticeList: noticeList as List<M>,
             ) as T,
           );
         }).run();
       case BroadcastMessageState:
-        await _notificationRepository
-            .fetchBroadMessage(state.pageNumber + 1)
-            .match((e) {
+        await _notificationRepository.fetchBroadMessage().match((e) {
           handle(e);
           error('failed to fetch notice: $e');
           emit(state.copyWith(status: NotificationStatus.failure) as T);
@@ -159,7 +147,7 @@ class NotificationBaseBloc<M, T extends NotificationBaseState<M>>
           emit(
             state.copyWith(
               status: NotificationStatus.success,
-              noticeList: [state.noticeList as M, ...noticeList as List<M>],
+              noticeList: noticeList as List<M>,
               pageNumber: pageNumber,
               hasNextPage: hasNextPage,
             ) as T,

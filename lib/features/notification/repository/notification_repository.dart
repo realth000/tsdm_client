@@ -88,7 +88,7 @@ final class NotificationRepository with LoggerMixin {
       );
 
   /// Fetch notice from web server, including unread notices and read notices.
-  AsyncEither<NoticeResult<Notice>> fetchNotice([int? page]) =>
+  AsyncEither<NoticeResult<Notice>> fetchNotice({int? page}) =>
       AsyncEither(() async {
         final netClient = getIt.get<NetClientProvider>();
 
@@ -159,9 +159,9 @@ final class NotificationRepository with LoggerMixin {
 
   /// Fetch all personal messages from server page.
   AsyncEither<Either<int?, NoticeResult<PersonalMessage>>>
-      fetchPersonalMessage([
+      fetchPersonalMessage({
     int? page,
-  ]) =>
+  }) =>
           AsyncEither(() async {
             final result = await getIt
                 .get<NetClientProvider>()
@@ -200,9 +200,9 @@ final class NotificationRepository with LoggerMixin {
           });
 
   /// Fetch all broadcast messages from server page.
-  AsyncEither<Either<int?, NoticeResult<BroadcastMessage>>> fetchBroadMessage([
+  AsyncEither<Either<int?, NoticeResult<BroadcastMessage>>> fetchBroadMessage({
     int? page,
-  ]) =>
+  }) =>
       getIt
           .get<NetClientProvider>()
           .get('$broadcastMessageUrl${page != null ? "&page=$page" : ""}')
