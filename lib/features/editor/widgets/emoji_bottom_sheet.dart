@@ -130,7 +130,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
                       sizedBoxW12H12,
                       Expanded(
                         child: Text(
-                          context.t.bbcodeEditor.emoji.downloading,
+                          context.t.bbcodeEditor.emoji.loadingAssets,
                         ),
                       ),
                     ],
