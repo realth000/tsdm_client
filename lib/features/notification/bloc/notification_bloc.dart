@@ -115,7 +115,6 @@ class NotificationBaseBloc<M, T extends NotificationBaseState<M>>
             state.copyWith(
               status: NotificationStatus.success,
               noticeList: [state.noticeList as M, ...noticeList as List<M>],
-              hasNextPage: v.hasNextPage,
             ) as T,
           );
         }).run();
@@ -131,16 +130,13 @@ class NotificationBaseBloc<M, T extends NotificationBaseState<M>>
             error('failed to fetch more notice, status code=${v.unwrapErr()}');
             return;
           }
-          final d = v.unwrap();
           emit(
             state.copyWith(
               status: NotificationStatus.success,
               noticeList: [
                 ...state.noticeList,
-                ...d.notificationList as List<M>,
+                ...v.unwrap().notificationList as List<M>,
               ],
-              pageNumber: d.pageNumber,
-              hasNextPage: d.hasNextPage,
             ) as T,
           );
         }).run();
