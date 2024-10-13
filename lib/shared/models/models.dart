@@ -13,6 +13,7 @@ part 'css_types.dart';
 part 'emoji.dart';
 part 'forum.dart';
 part 'forum_group.dart';
+part 'image_usage.dart';
 part 'locked.dart';
 part 'models.mapper.dart';
 part 'normal_thread.dart';

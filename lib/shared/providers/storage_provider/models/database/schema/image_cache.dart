@@ -17,6 +17,9 @@ class ImageCache extends Table {
   /// Last visited and used time.
   DateTimeColumn get lastUsedTime => dateTime()();
 
+  /// Usage of the image.
+  IntColumn get usage => intEnum<ImageUsage>().nullable()();
+
   @override
-  Set<Column<Object>>? get primaryKey => {url};
+  Set<Column<Object>> get primaryKey => {url};
 }
