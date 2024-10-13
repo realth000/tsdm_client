@@ -87,8 +87,9 @@ class _NotificationPageState extends State<NotificationPage>
                 return;
               }
               if (!state.hasNextPage) {
-                showNoMoreSnackBar(context);
-                _noticeRefreshController.finishLoad();
+                _noticeRefreshController.finishLoad(
+                  IndicatorResult.noMore,
+                );
                 return;
               }
               context.read<NoticeBloc>().add(NotificationLoadMoreRequested());
@@ -149,8 +150,9 @@ class _NotificationPageState extends State<NotificationPage>
                 return;
               }
               if (!state.hasNextPage) {
-                showNoMoreSnackBar(context);
-                _personalMessageRefreshController.finishLoad();
+                _personalMessageRefreshController.finishLoad(
+                  IndicatorResult.noMore,
+                );
                 return;
               }
               context
@@ -220,8 +222,9 @@ class _NotificationPageState extends State<NotificationPage>
                 return;
               }
               if (!state.hasNextPage) {
-                showNoMoreSnackBar(context);
-                _broadcastMessageRefreshController.finishLoad();
+                _broadcastMessageRefreshController.finishLoad(
+                  IndicatorResult.noMore,
+                );
                 return;
               }
               context
