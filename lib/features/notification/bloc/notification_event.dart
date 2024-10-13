@@ -6,12 +6,18 @@ sealed class NotificationEvent with NotificationEventMappable {
   const NotificationEvent();
 }
 
-/// Requested to refresh notification.
+/// User required to refresh the notification page.
 @MappableClass()
-final class NotificationRefreshRequested extends NotificationEvent
-    with NotificationRefreshRequestedMappable {}
+final class NotificationRefreshNoticeRequired extends NotificationEvent
+    with NotificationRefreshNoticeRequiredMappable {}
 
-/// Requested to load more notification from the next page.
+/// User required to refresh the private personal message tab.
 @MappableClass()
-final class NotificationLoadMoreRequested extends NotificationEvent
-    with NotificationLoadMoreRequestedMappable {}
+final class NotificationRefreshPersonalMessageRequired extends NotificationEvent
+    with NotificationRefreshPersonalMessageRequiredMappable {}
+
+/// User required to refresh the broadcast message tab.
+@MappableClass()
+final class NotificationRefreshBroadcastMessageRequired
+    extends NotificationEvent
+    with NotificationRefreshBroadcastMessageRequiredMappable {}

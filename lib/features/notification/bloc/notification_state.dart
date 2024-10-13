@@ -12,75 +12,37 @@ enum NotificationStatus {
   success,
 
   /// Failed.
-  failure,
+  failed,
 }
 
-/// Basic notification.
-///
-/// Common members of notification where T can be:
-///
-/// * [Notice]
-/// * [PersonalMessage].
-/// * [BroadcastMessage].
+/// State of notification.
 @MappableClass()
-sealed class NotificationBaseState<T> with NotificationBaseStateMappable<T> {
+class NotificationState with NotificationStateMappable {
   /// Constructor.
-  const NotificationBaseState({
-    this.status = NotificationStatus.initial,
-    this.pageNumber = 1,
-    this.hasNextPage = false,
+  const NotificationState({
+    this.noticeStatus = NotificationStatus.initial,
+    this.personalMessageStatus = NotificationStatus.initial,
+    this.broadcastMessageStatus = NotificationStatus.initial,
     this.noticeList = const [],
+    this.personalMessageList = const [],
+    this.broadcastMessageList = const [],
   });
 
-  /// Status.
-  final NotificationStatus status;
+  /// Notice tab status.
+  final NotificationStatus noticeStatus;
 
-  /// Current loaded page number.
-  final int pageNumber;
+  /// Personal message status.
+  final NotificationStatus personalMessageStatus;
 
-  /// Whether has next page to load more notification.
-  final bool hasNextPage;
+  /// Broadcast message status.
+  final NotificationStatus broadcastMessageStatus;
 
-  /// All fetched notice,
-  final List<T> noticeList;
-}
+  /// All fetched [Notice].
+  final List<Notice> noticeList;
 
-/// State of notice tab.
-@MappableClass()
-final class NoticeState extends NotificationBaseState<Notice>
-    with NoticeStateMappable {
-  /// Constructor.
-  const NoticeState({
-    super.status,
-    super.pageNumber,
-    super.hasNextPage,
-    super.noticeList,
-  }) : super();
-}
+  /// All fetched [PersonalMessage].
+  final List<PersonalMessage> personalMessageList;
 
-/// State of personal message tab.
-@MappableClass()
-final class PersonalMessageState extends NotificationBaseState<PersonalMessage>
-    with PersonalMessageStateMappable {
-  /// Constructor.
-  const PersonalMessageState({
-    super.status,
-    super.pageNumber,
-    super.hasNextPage,
-    super.noticeList,
-  }) : super();
-}
-
-/// State of personal message tab.
-@MappableClass()
-final class BroadcastMessageState
-    extends NotificationBaseState<BroadcastMessage>
-    with BroadcastMessageStateMappable {
-  /// Constructor.
-  const BroadcastMessageState({
-    super.status,
-    super.pageNumber,
-    super.hasNextPage,
-    super.noticeList,
-  }) : super();
+  /// All fetched [BroadcastMessage].
+  final List<BroadcastMessage> broadcastMessageList;
 }

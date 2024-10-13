@@ -26,46 +26,50 @@ class _NotificationPageState extends State<NotificationPage>
   late final EasyRefreshController _broadcastMessageRefreshController;
   late final TabController _tabController;
 
-  Widget _buildEmptyBody() {
-    return Center(
-      child: LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(
-              minWidth: MediaQuery.sizeOf(context).width,
-              minHeight: constraints.maxHeight,
-            ),
-            child: Center(
-              child: Text(
-                context.t.general.noData,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+  Widget _buildEmptyBody(BuildContext context) {
+    return Row(
+      children: [
+        LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            physics: const AlwaysScrollableScrollPhysics(),
+            child: ConstrainedBox(
+              constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width,
+                minHeight: constraints.maxHeight,
+              ),
+              child: Center(
+                child: Text(
+                  context.t.general.noData,
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.outline,
+                      ),
+                ),
               ),
             ),
           ),
         ),
-      ),
+      ],
     );
   }
 
-  Widget _buildNoticeTab(BuildContext context, NoticeState state) {
-    return switch (state.status) {
+  Widget _buildNoticeTab(BuildContext context, NotificationState state) {
+    return switch (state.noticeStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success => (BuildContext context, NoticeState state) {
+      NotificationStatus.success =>
+        (BuildContext context, NotificationState state) {
           final Widget content;
           if (state.noticeList.isEmpty) {
-            content = _buildEmptyBody();
+            content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
               padding: edgeInsetsL12T4R12B24,
               itemCount: state.noticeList.length,
-              itemBuilder: (_, index) =>
-                  NoticeCard(notice: state.noticeList[index]),
-              separatorBuilder: (_, __) => sizedBoxW4H4,
+              itemBuilder: (context, index) {
+                return NoticeCard(notice: state.noticeList[index]);
+              },
+              separatorBuilder: (context, index) => sizedBoxW4H4,
             );
           }
 
@@ -78,53 +82,45 @@ class _NotificationPageState extends State<NotificationPage>
             },
             header: const MaterialHeader(),
             controller: _noticeRefreshController,
-            onLoad: () async {
-              if (!mounted) {
-                return;
-              }
-              if (!state.hasNextPage) {
-                _broadcastMessageRefreshController.finishLoad(
-                  IndicatorResult.noMore,
-                );
-                return;
-              }
-              context.read<NoticeBloc>().add(NotificationLoadMoreRequested());
-            },
             onRefresh: () async {
               if (!mounted) {
                 return;
               }
-              context.read<NoticeBloc>().add(NotificationRefreshRequested());
+              context
+                  .read<NotificationBloc>()
+                  .add(NotificationRefreshNoticeRequired());
             },
             child: content,
           );
         }(context, state),
-      NotificationStatus.failure => buildRetryButton(
+      NotificationStatus.failed => buildRetryButton(
           context,
-          () => context.read<NoticeBloc>().add(NotificationRefreshRequested()),
+          () => context
+              .read<NotificationBloc>()
+              .add(NotificationRefreshNoticeRequired()),
         ),
     };
   }
 
-  Widget _buildPersonalMessageTab(
+  Widget _buildPrivateMessageTab(
     BuildContext context,
-    PersonalMessageState state,
+    NotificationState state,
   ) {
-    return switch (state.status) {
+    return switch (state.personalMessageStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
       NotificationStatus.success =>
-        (BuildContext context, PersonalMessageState state) {
+        (BuildContext context, NotificationState state) {
           final Widget content;
-          if (state.noticeList.isEmpty) {
-            content = _buildEmptyBody();
+          if (state.personalMessageList.isEmpty) {
+            content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
               padding: edgeInsetsL12T4R12B24,
-              itemCount: state.noticeList.length,
+              itemCount: state.personalMessageList.length,
               itemBuilder: (context, index) =>
-                  PrivateMessageCard(message: state.noticeList[index]),
+                  PrivateMessageCard(message: state.personalMessageList[index]),
               separatorBuilder: (context, index) => sizedBoxW4H4,
             );
           }
@@ -138,60 +134,46 @@ class _NotificationPageState extends State<NotificationPage>
             },
             header: const MaterialHeader(),
             controller: _personalMessageRefreshController,
-            onLoad: () async {
-              if (!mounted) {
-                return;
-              }
-              if (!state.hasNextPage) {
-                context
-                    .read<PersonalMessageBloc>()
-                    .add(NotificationLoadMoreRequested());
-                return;
-              }
-              context
-                  .read<PersonalMessageBloc>()
-                  .add(NotificationRefreshRequested());
-            },
             onRefresh: () async {
               if (!mounted) {
                 return;
               }
               context
-                  .read<PersonalMessageBloc>()
-                  .add(NotificationRefreshRequested());
+                  .read<NotificationBloc>()
+                  .add(NotificationRefreshPersonalMessageRequired());
             },
             child: content,
           );
         }(context, state),
-      NotificationStatus.failure => buildRetryButton(
+      NotificationStatus.failed => buildRetryButton(
           context,
           () => context
-              .read<PersonalMessageBloc>()
-              .add(NotificationRefreshRequested()),
+              .read<NotificationBloc>()
+              .add(NotificationRefreshPersonalMessageRequired()),
         ),
     };
   }
 
   Widget _buildBroadcastMessageTab(
     BuildContext context,
-    BroadcastMessageState state,
+    NotificationState state,
   ) {
-    return switch (state.status) {
+    return switch (state.broadcastMessageStatus) {
       NotificationStatus.initial ||
       NotificationStatus.loading =>
         const Center(child: CircularProgressIndicator()),
       NotificationStatus.success =>
-        (BuildContext context, BroadcastMessageState state) {
+        (BuildContext context, NotificationState state) {
           final Widget content;
-          if (state.noticeList.isEmpty) {
-            content = _buildEmptyBody();
+          if (state.broadcastMessageList.isEmpty) {
+            content = _buildEmptyBody(context);
           } else {
             content = ListView.separated(
               padding: edgeInsetsL12T4R12B24,
-              itemCount: state.noticeList.length,
+              itemCount: state.broadcastMessageList.length,
               itemBuilder: (context, index) {
                 return BroadcastMessageCard(
-                  message: state.noticeList[index],
+                  message: state.broadcastMessageList[index],
                 );
               },
               separatorBuilder: (context, index) => sizedBoxW4H4,
@@ -207,36 +189,22 @@ class _NotificationPageState extends State<NotificationPage>
             },
             header: const MaterialHeader(),
             controller: _broadcastMessageRefreshController,
-            onLoad: () async {
-              if (!mounted) {
-                return;
-              }
-              if (!state.hasNextPage) {
-                _broadcastMessageRefreshController.finishLoad(
-                  IndicatorResult.noMore,
-                );
-                return;
-              }
-              context
-                  .read<BroadcastMessageBloc>()
-                  .add(NotificationLoadMoreRequested());
-            },
             onRefresh: () async {
               if (!mounted) {
                 return;
               }
               context
-                  .read<BroadcastMessageBloc>()
-                  .add(NotificationRefreshRequested());
+                  .read<NotificationBloc>()
+                  .add(NotificationRefreshBroadcastMessageRequired());
             },
             child: content,
           );
         }(context, state),
-      NotificationStatus.failure => buildRetryButton(
+      NotificationStatus.failed => buildRetryButton(
           context,
           () => context
-              .read<BroadcastMessageBloc>()
-              .add(NotificationRefreshRequested()),
+              .read<NotificationBloc>()
+              .add(NotificationRefreshBroadcastMessageRequired()),
         ),
     };
   }
@@ -277,53 +245,22 @@ class _NotificationPageState extends State<NotificationPage>
           create: (_) => NotificationRepository(),
         ),
         BlocProvider(
-          create: (context) => NoticeBloc(
+          create: (context) => NotificationBloc(
             notificationRepository: RepositoryProvider.of(context),
-          )..add(NotificationRefreshRequested()),
-        ),
-        BlocProvider(
-          create: (context) => PersonalMessageBloc(
-            notificationRepository: RepositoryProvider.of(context),
-          )..add(NotificationRefreshRequested()),
-        ),
-        BlocProvider(
-          create: (context) => BroadcastMessageBloc(
-            notificationRepository: RepositoryProvider.of(context),
-          )..add(NotificationRefreshRequested()),
+          )
+            ..add(NotificationRefreshNoticeRequired())
+            ..add(NotificationRefreshPersonalMessageRequired())
+            ..add(NotificationRefreshBroadcastMessageRequired()),
         ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<NoticeBloc, NoticeState>(
-            listener: (context, state) {
-              if (state.status == NotificationStatus.failure) {
-                showFailedToLoadSnackBar(context);
-              }
-            },
-          ),
-          BlocListener<PersonalMessageBloc, PersonalMessageState>(
-            listener: (context, state) {
-              if (state.status == NotificationStatus.failure) {
-                showFailedToLoadSnackBar(context);
-              }
-            },
-          ),
-          BlocListener<BroadcastMessageBloc, BroadcastMessageState>(
-            listener: (context, state) {
-              if (state.status == NotificationStatus.failure) {
-                showFailedToLoadSnackBar(context);
-              }
-            },
-          ),
-        ],
-        child: Builder(
-          builder: (context) {
-            final noticeState = context.watch<NoticeBloc>().state;
-            final personalMessageState =
-                context.watch<PersonalMessageBloc>().state;
-            final broadcastMessageState =
-                context.watch<BroadcastMessageBloc>().state;
-
+      child: BlocListener<NotificationBloc, NotificationState>(
+        listener: (context, state) {
+          if (state.noticeStatus == NotificationStatus.failed) {
+            showFailedToLoadSnackBar(context);
+          }
+        },
+        child: BlocBuilder<NotificationBloc, NotificationState>(
+          builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
                 title: Text(tr.title),
@@ -339,9 +276,9 @@ class _NotificationPageState extends State<NotificationPage>
               body: TabBarView(
                 controller: _tabController,
                 children: [
-                  _buildNoticeTab(context, noticeState),
-                  _buildPersonalMessageTab(context, personalMessageState),
-                  _buildBroadcastMessageTab(context, broadcastMessageState),
+                  _buildNoticeTab(context, state),
+                  _buildPrivateMessageTab(context, state),
+                  _buildBroadcastMessageTab(context, state),
                 ],
               ),
             );
