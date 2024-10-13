@@ -102,6 +102,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.1"
+  build_cli_annotations:
+    dependency: transitive
+    description:
+      name: build_cli_annotations
+      sha256: b59d2769769efd6c9ff6d4c4cede0be115a566afc591705c2040b707534b1172
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   build_config:
     dependency: transitive
     description:
@@ -431,6 +439,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+  exif:
+    dependency: transitive
+    description:
+      name: exif
+      sha256: a7980fdb3b7ffcd0b035e5b8a5e1eef7cadfe90ea6a4e85ebb62f87b96c7a172
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.3.0"
   extended_nested_scroll_view:
     dependency: "direct main"
     description:
@@ -532,6 +548,70 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_avif:
+    dependency: "direct main"
+    description:
+      name: flutter_avif
+      sha256: e42b9c114890180b225ec74307698c099881bc6fe0edd5eb2e577d2e559a5c1c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_android:
+    dependency: transitive
+    description:
+      name: flutter_avif_android
+      sha256: "6ffa49d90739a443fff169c4913dee6db4262360a027d7de402de18dd25040ff"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_ios:
+    dependency: transitive
+    description:
+      name: flutter_avif_ios
+      sha256: "79e456038230bfbbcdad8047db27adc3c8541645ab5e0f1a38c4819bcdebc9cf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_linux:
+    dependency: transitive
+    description:
+      name: flutter_avif_linux
+      sha256: a038d7542851f225227c9dcf6cd1c70b30df9b6b98e9f14b438b71d5d29a72fe
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_macos:
+    dependency: transitive
+    description:
+      name: flutter_avif_macos
+      sha256: e27444f3a00875cf336547317329b701a9c5190ab1d232bebc2a21155822be0e
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_platform_interface:
+    dependency: transitive
+    description:
+      name: flutter_avif_platform_interface
+      sha256: "8d12f0efa7aad88c825cafe16bb63bcccd89ac297dfff2f69f9a3c5f87928457"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_web:
+    dependency: transitive
+    description:
+      name: flutter_avif_web
+      sha256: b56ff53c6fd1e2030f62909c44e560700127fd92b222d1a8d73c7ec392d88cc6
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
+  flutter_avif_windows:
+    dependency: transitive
+    description:
+      name: flutter_avif_windows
+      sha256: "43a8da46865bd12e10fcdc1b2aa1e87687092dcc6b9091861b4e6e84c6132d08"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.4.1"
   flutter_bbcode_editor:
     dependency: "direct main"
     description:
@@ -726,6 +806,14 @@ packages:
       relative: true
     source: path
     version: "10.5.16"
+  flutter_rust_bridge:
+    dependency: transitive
+    description:
+      name: flutter_rust_bridge
+      sha256: "2d31289a022f8b0a97e952d553686c50dff2ed5b58ac03628a13bc8cdf5f8ece"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.82.3"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -988,10 +1076,10 @@ packages:
     dependency: transitive
     description:
       name: js
-      sha256: c1b2e9b5ea78c45e1a0788d29606ba27dc5f71f019f32ca5140f61ef071838cf
+      sha256: f2c445dce49627136094980615a031419f7f3eb393237e4ecd97ac15dea343f3
       url: "https://pub.dev"
     source: hosted
-    version: "0.7.1"
+    version: "0.6.7"
   json2yaml:
     dependency: transitive
     description:
@@ -1320,6 +1408,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  puppeteer:
+    dependency: transitive
+    description:
+      name: puppeteer
+      sha256: fc33b2a12731e0b9e16c40cd91ea2b6886bcc24037a435fceb59b786d4074f2b
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.15.0"
   pyramid_lint:
     dependency: "direct dev"
     description:
@@ -1512,14 +1608,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.4.1"
+  shelf_static:
+    dependency: transitive
+    description:
+      name: shelf_static
+      sha256: c87c3875f91262785dade62d135760c2c69cb217ac759485334c5857ad89f6e3
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.3"
   shelf_web_socket:
     dependency: transitive
     description:
       name: shelf_web_socket
-      sha256: "073c147238594ecd0d193f3456a5fe91c4b0abbcc68bf5cd95b36c4e194ac611"
+      sha256: "9ca081be41c60190ebcb4766b2486a7d50261db7bd0f5d9615f2d653637a84c1"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.0"
+    version: "1.0.4"
   shimmer:
     dependency: "direct main"
     description:
@@ -1742,6 +1846,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  tuple:
+    dependency: transitive
+    description:
+      name: tuple
+      sha256: a97ce2013f240b2f3807bcbaf218765b6f301c3eff91092bcfa23a039e7dd151
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
   type_plus:
     dependency: transitive
     description:
@@ -1958,22 +2070,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
-  web_socket:
-    dependency: transitive
-    description:
-      name: web_socket
-      sha256: "3c12d96c0c9a4eec095246debcea7b86c0324f22df69893d538fcc6f1b8cce83"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.6"
   web_socket_channel:
     dependency: transitive
     description:
       name: web_socket_channel
-      sha256: "9f187088ed104edd8662ca07af4b124465893caf063ba29758f97af57e61da8f"
+      sha256: d88238e5eac9a42bb43ca4e721edba3c08c6354d4a53063afaa568516217621b
       url: "https://pub.dev"
     source: hosted
-    version: "3.0.1"
+    version: "2.4.0"
   widget_zoom:
     dependency: "direct main"
     description:

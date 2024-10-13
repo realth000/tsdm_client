@@ -7,6 +7,7 @@
 #include "generated_plugin_registrant.h"
 
 #include <file_selector_linux/file_selector_plugin.h>
+#include <flutter_avif_linux/flutter_avif_linux_plugin.h>
 #include <irondash_engine_context/irondash_engine_context_plugin.h>
 #include <screen_retriever/screen_retriever_plugin.h>
 #include <sqlite3_flutter_libs/sqlite3_flutter_libs_plugin.h>
@@ -19,6 +20,9 @@ void fl_register_plugins(FlPluginRegistry* registry) {
   g_autoptr(FlPluginRegistrar) file_selector_linux_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "FileSelectorPlugin");
   file_selector_plugin_register_with_registrar(file_selector_linux_registrar);
+  g_autoptr(FlPluginRegistrar) flutter_avif_linux_registrar =
+      fl_plugin_registry_get_registrar_for_plugin(registry, "FlutterAvifLinuxPlugin");
+  flutter_avif_linux_plugin_register_with_registrar(flutter_avif_linux_registrar);
   g_autoptr(FlPluginRegistrar) irondash_engine_context_registrar =
       fl_plugin_registry_get_registrar_for_plugin(registry, "IrondashEngineContextPlugin");
   irondash_engine_context_plugin_register_with_registrar(irondash_engine_context_registrar);

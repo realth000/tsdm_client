@@ -4,6 +4,7 @@
 
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
+  flutter_avif_linux
   irondash_engine_context
   screen_retriever
   sqlite3_flutter_libs

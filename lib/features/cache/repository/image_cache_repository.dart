@@ -1,12 +1,17 @@
 import 'dart:async';
 import 'dart:typed_data';
+import 'dart:ui';
 
+import 'package:dio/dio.dart';
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+
+const _contentTypeImageAvif = 'image/avif';
 
 /// Repository of global image cache.
 final class ImageCacheRepository with LoggerMixin {
@@ -74,14 +79,50 @@ final class ImageCacheRepository with LoggerMixin {
         handle(err);
         throw err;
       }
-      final imageData = respEither.unwrap().data as Uint8List;
-      await _imageCacheProvider.updateCache(url, Uint8List.fromList(imageData));
+      final resp = respEither.unwrap();
+      final Uint8List imageData;
+      if (resp.headers.map[Headers.contentTypeHeader]?.firstOrNull ==
+          _contentTypeImageAvif) {
+        // Avif format is not supported by dart image, parse and convert to
+        // normal png ones, so image data is saved in png format that dart image
+        // support.
+        //
+        // Currently only the very first frame is reserved, all other frames
+        // are discard during conversion.
+        final avifFrames = await decodeAvif(resp.data as Uint8List);
+        if (avifFrames.isEmpty) {
+          imageData = Uint8List(0);
+          warning('image from url is in avif format has no frame, url: $url');
+        } else {
+          if (avifFrames.length != 1) {
+            warning('image from url is in avif format has multiple frames, '
+                'only reserve the first frame and discarding other frames: '
+                'url: $url');
+          }
+          final byteData = await avifFrames.first.image
+              .toByteData(format: ImageByteFormat.png);
+          if (byteData == null) {
+            warning('image from url is in avif format has one invalid frame '
+                'url: $url');
+            imageData = Uint8List(0);
+          } else {
+            imageData = byteData.buffer.asUint8List();
+          }
+        }
+      } else {
+        imageData = resp.data as Uint8List;
+      }
+
+      await _imageCacheProvider.updateCache(url, imageData);
       _controller.add(ImageCacheSuccessResponse(url, imageData));
     } catch (e) {
+      error('exception thrown when trying to update image cache: $e, '
+          'for url: $url');
       _controller.add(ImageCacheFailedResponse(url));
+    } finally {
+      // Leave loading state.
+      _loadingImages.remove(url);
     }
-    // Leave loading state.
-    _loadingImages.remove(url);
   }
 
   /// Get the cached file of emoji with specified [groupId] and [id].
