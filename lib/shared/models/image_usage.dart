@@ -40,4 +40,7 @@ enum ImageUsage {
   /// May contains large size/mount of pictures.
   /// Recommend to persists in a short time.
   threadLevel,
+
+  /// Other unclassified types.
+  otherLevel,
 }

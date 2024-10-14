@@ -38,7 +38,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
         handle(e);
         emit(state.copyWith(status: EmojiStatus.failure));
       },
-      (v) => emit(
+      (_) => emit(
         state.copyWith(
           status: EmojiStatus.success,
           emojiGroupList: _editorRepository.emojiGroupList,

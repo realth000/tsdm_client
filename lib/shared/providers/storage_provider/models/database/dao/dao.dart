@@ -11,3 +11,4 @@ part 'image_cache.dart';
 part 'settings.dart';
 part 'thread_visit_history.dart';
 part 'user_avatar_cache.dart';
+part 'notification.dart';

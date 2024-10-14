@@ -14,8 +14,11 @@ part 'database.g.dart';
 /// 数据库定义
 @DriftDatabase(
   tables: [
+    BroadcastMessage,
     Cookie,
     ImageCache,
+    Notice,
+    PersonalMessage,
     Settings,
     ThreadVisitHistory,
     UserAvatarCache,
