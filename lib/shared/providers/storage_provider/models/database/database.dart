@@ -3,8 +3,6 @@ import 'dart:ui';
 import 'package:drift/drift.dart';
 import 'package:tsdm_client/shared/models/models.dart' hide Cookie;
 import 'package:tsdm_client/shared/providers/storage_provider/models/convertable/convertable.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/connection.dart'
-    as conn;
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/schema/schema.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/schema/schema_versions.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -27,10 +25,7 @@ part 'database.g.dart';
 )
 final class AppDatabase extends _$AppDatabase with LoggerMixin {
   /// Constructor.
-  ///
-  /// Dart analyzer does not work on conditional export.
-  // ignore: undefined_function
-  AppDatabase() : super(conn.connect());
+  AppDatabase(super.executor);
 
   @override
   int get schemaVersion => 4;
@@ -56,7 +51,8 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           from3To4: (m, schema) async {
             info('migrating database schema from 3 to 4...');
             await m.createAll();
-            await m.addColumn(schema.image, schema.image.usage);
+            await m.addColumn(schema.cookie, schema.cookie.lastFetchNotice);
+            await m.addColumn(schema.imageCache, schema.imageCache.usage);
             info('migrating database schema from 3 to 4... ok!');
           },
         ),

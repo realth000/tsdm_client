@@ -346,7 +346,7 @@ final class Schema4 extends i0.VersionedSchema {
   late final List<i1.DatabaseSchemaEntity> entities = [
     broadcastMessage,
     cookie,
-    image,
+    imageCache,
     notice,
     personalMessage,
     settings,
@@ -389,9 +389,9 @@ final class Schema4 extends i0.VersionedSchema {
         attachedDatabase: database,
       ),
       alias: null);
-  late final Shape8 image = Shape8(
+  late final Shape8 imageCache = Shape8(
       source: i0.VersionedTable(
-        entityName: 'image',
+        entityName: 'image_cache',
         withoutRowId: false,
         isStrict: false,
         tableConstraints: [

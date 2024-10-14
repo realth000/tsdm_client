@@ -346,6 +346,8 @@ flutter build windows
 dart run drift_dev schema dump lib/shared/providers/storage_provider/models/database/database.dart lib/shared/providers/storage_provider/models/database/schema/migration/
 # Generate migration
 dart run drift_dev schema steps lib/shared/providers/storage_provider/models/database/schema/migration/ lib/shared/providers/storage_provider/models/database/schema/schema_versions.dart
+# Update schema for test
+dart run drift_dev schema generate lib/shared/providers/storage_provider/models/database/schema/migration/ test/data/generated_migrations/
 ```
 
 ## 隐私

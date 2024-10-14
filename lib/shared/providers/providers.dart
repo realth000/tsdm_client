@@ -4,6 +4,8 @@ import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dar
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/connection.dart'
+    as conn;
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -25,7 +27,9 @@ Future<void> initProviders() async {
 
   // TODO: These separated init steps make it not testable.
 
-  final db = AppDatabase();
+  /// Dart analyzer does not work on conditional export.
+  // ignore: undefined_function
+  final db = AppDatabase(conn.connect());
   final preloadedCookie = await preloadCookie(db);
   final preloadedImageCache = await preloadImageCache(db);
 

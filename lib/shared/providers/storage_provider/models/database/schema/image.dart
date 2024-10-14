@@ -22,4 +22,8 @@ class Image extends Table {
 
   @override
   Set<Column<Object>> get primaryKey => {url};
+
+  /// Fix the rename table issue.
+  @override
+  String get tableName => 'image_cache';
 }
