@@ -20,7 +20,7 @@ final class UserLoginInfo with UserLoginInfoMappable {
   const UserLoginInfo({
     required this.username,
     required this.uid,
-    required this.email,
+    // required this.email,
   });
 
   /// Username.
@@ -29,23 +29,23 @@ final class UserLoginInfo with UserLoginInfoMappable {
   /// User id.
   final int? uid;
 
-  /// User email.
-  final String? email;
+  // /// User email.
+  // final String? email;
 
   /// Check if info is completed.
-  bool get isComplete => username != null && uid != null && email != null;
+  bool get isComplete => username != null && uid != null /* && email != null*/;
 
   /// Check if all fields in user info is empty.
   ///
   /// Usually in some wrong state where we lost user info.
-  bool get isEmpty => username == null && uid == null && email == null;
+  bool get isEmpty => username == null && uid == null /* && email == null*/;
 
   @override
   String toString() {
     // Do NOT print detail.
     return 'UserLoginInfo{ '
         'username=${username?.obscured()}, '
-        'uid=${uid == null ? "null" : "<uid>"}, '
-        'email=${email?.obscured()}}';
+        'uid=${uid == null ? "null" : "<uid>"}, ';
+    //'email=${email?.obscured()}}';
   }
 }

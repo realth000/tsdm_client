@@ -381,7 +381,6 @@ final class Schema4 extends i0.VersionedSchema {
         columns: [
           _column_0,
           _column_1,
-          _column_2,
           _column_3,
           _column_19,
           _column_25,
@@ -529,8 +528,6 @@ class Shape7 extends i0.VersionedTable {
       columnsByName['username']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<int> get uid =>
       columnsByName['uid']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<String> get email =>
-      columnsByName['email']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<String> get cookie =>
       columnsByName['cookie']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<DateTime> get lastCheckin =>

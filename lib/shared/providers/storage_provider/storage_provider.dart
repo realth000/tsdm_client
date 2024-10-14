@@ -21,7 +21,7 @@ Future<Map<UserLoginInfo, Cookie>> preloadCookie(AppDatabase db) async {
       UserLoginInfo(
         username: e.username,
         uid: e.uid,
-        email: e.email,
+        // email: e.email,
       ),
       jsonDecode(e.cookie) as Map<String, dynamic>,
     ),
@@ -94,10 +94,12 @@ class StorageProvider with LoggerMixin {
   ///
   /// Generally the cookie cache is synced with database cookie values.
   /// So may not need to use the async version API to retry to read.
+  @Deprecated('email APIs are deprecated when migrate to v1')
   Cookie? getCookieByEmailSync(String email) {
-    return _cookieCache.entries
-        .firstWhereOrNull((e) => e.key.email == email)
-        ?.value;
+    return null;
+    // return _cookieCache.entries
+    //     .firstWhereOrNull((e) => e.key.email == email)
+    //     ?.value;
   }
 
   /// Save cookie with completed user info.
@@ -107,7 +109,6 @@ class StorageProvider with LoggerMixin {
   Future<void> saveCookie({
     required String username,
     required int uid,
-    required String email,
     required Cookie cookie,
   }) async {
     final allCookie = getCookieByUidSync(uid) ?? <String, dynamic>{};
@@ -117,7 +118,8 @@ class StorageProvider with LoggerMixin {
     allCookie.addAll(Map.castFrom<String, dynamic, String, String>(cookie));
 
     // Update cookie cache.
-    final userInfo = UserLoginInfo(username: username, uid: uid, email: email);
+    final userInfo =
+        UserLoginInfo(username: username, uid: uid /*, email: email*/);
     _cookieCache[userInfo] = allCookie;
 
     if (!allCookie.toString().contains('s_gkr8_682f_auth')) {
@@ -130,7 +132,7 @@ class StorageProvider with LoggerMixin {
       CookieCompanion(
         username: Value(username),
         uid: Value(uid),
-        email: Value(email),
+        // email: Value(email),
         cookie: Value(jsonEncode(allCookie)),
       ),
     );
@@ -150,7 +152,7 @@ class StorageProvider with LoggerMixin {
   Future<bool> deleteCookieByUserInfo(UserLoginInfo userInfo) async {
     final username = userInfo.username;
     final uid = userInfo.uid;
-    final email = userInfo.email;
+    // final email = userInfo.email;
     final int affectedRows;
     if (uid != null) {
       _cookieCache.removeWhere((e, _) => e.uid == uid);
@@ -158,9 +160,9 @@ class StorageProvider with LoggerMixin {
     } else if (username != null) {
       _cookieCache.removeWhere((e, _) => e.username == username);
       affectedRows = await CookieDao(_db).deleteCookieByUsername(username);
-    } else if (email != null) {
-      _cookieCache.removeWhere((e, _) => e.email == email);
-      affectedRows = await CookieDao(_db).deleteCookieByEmail(email);
+      // } else if (email != null) {
+      //   _cookieCache.removeWhere((e, _) => e.email == email);
+      //   affectedRows = await CookieDao(_db).deleteCookieByEmail(email);
     } else {
       error('intend to delete cookie with empty user info');
       affectedRows = 0;

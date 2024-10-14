@@ -23,11 +23,11 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
     return (select(cookie)..where((e) => e.uid.equals(uid))).getSingleOrNull();
   }
 
-  /// Get cookie by [email].
-  Future<CookieEntity?> selectCookieByEmail(String email) async {
-    return (select(cookie)..where((e) => e.email.equals(email)))
-        .getSingleOrNull();
-  }
+  // /// Get cookie by [email].
+  // Future<CookieEntity?> selectCookieByEmail(String email) async {
+  //   return (select(cookie)..where((e) => e.email.equals(email)))
+  //       .getSingleOrNull();
+  // }
 
   /// Insert or update cookie from [cookieCompanion].
   Future<int> upsertCookie(CookieCompanion cookieCompanion) async {
@@ -44,10 +44,10 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
     return (delete(cookie)..where((e) => e.uid.equals(uid))).go();
   }
 
-  /// Delete cookie by user's [email].
-  Future<int> deleteCookieByEmail(String email) async {
-    return (delete(cookie)..where((e) => e.email.equals(email))).go();
-  }
+  // /// Delete cookie by user's [email].
+  // Future<int> deleteCookieByEmail(String email) async {
+  //   return (delete(cookie)..where((e) => e.email.equals(email))).go();
+  // }
 
   /// Update the last checkin time for user [uid].
   Future<int> updateLastCheckinTime(int uid, DateTime datetime) async {

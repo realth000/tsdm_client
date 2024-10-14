@@ -8,7 +8,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
-import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
+// import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
@@ -44,8 +44,10 @@ class AuthenticationRepository with LoggerMixin {
   AuthenticationRepository({UserLoginInfo? user}) : _authedUser = user;
 
   static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
+
+  // FIXME: Refactor login base url.
   static const _loginBaseUrl =
-      '$baseUrl/member.php?mod=logging&action=login&handlekey=ls&loginsubmit=yes&loginhash=';
+      '$baseUrl/member.php?mobile=yes&tsdmapp=1&mod=logging&action=login&loginsubmit=yes';
   static const _logoutBaseUrl =
       '$baseUrl/member.php?mod=logging&action=logout&formhash=';
   static const _fakeFormUrl =
@@ -55,9 +57,9 @@ class AuthenticationRepository with LoggerMixin {
   static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
   static final _formHashRe = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 
-  static String _buildLoginUrl(String formHash) {
-    return '$_loginBaseUrl$formHash';
-  }
+  // static String _buildLoginUrl(String formHash) {
+  //   return '$_loginBaseUrl$formHash';
+  // }
 
   static String _buildLogoutUrl(String formHash) {
     return '$_logoutBaseUrl$formHash';
@@ -116,33 +118,33 @@ class AuthenticationRepository with LoggerMixin {
   /// Will not change authentication status if failed to login.
   AsyncVoidEither loginWithPassword(UserCredential credential) =>
       AsyncVoidEither(() async {
-        final target = _buildLoginUrl(credential.formHash);
-        final userLoginInfo = switch (credential.loginField) {
-          LoginField.username => UserLoginInfo(
-              username: credential.loginFieldValue,
-              uid: null,
-              email: null,
-            ),
-          LoginField.uid => UserLoginInfo(
-              username: null,
-              uid: credential.loginFieldValue.parseToInt(),
-              email: null,
-            ),
-          LoginField.email => UserLoginInfo(
-              username: null,
-              uid: null,
-              email: credential.loginFieldValue,
-            ),
-        };
+        const target = _loginBaseUrl; // _buildLoginUrl(credential.formHash);
+        // final userLoginInfo = switch (credential.loginField) {
+        //   LoginField.username => UserLoginInfo(
+        //       username: credential.loginFieldValue,
+        //       uid: null,
+        //       // email: null,
+        //     ),
+        //   LoginField.uid => UserLoginInfo(
+        //       username: null,
+        //       uid: credential.loginFieldValue.parseToInt(),
+        //       // email: null,
+        //     ),
+        //   LoginField.email => UserLoginInfo(
+        //       username: null,
+        //       uid: null,
+        //       email: credential.loginFieldValue,
+        //     ),
+        // };
 
-        debug('login with user info: $userLoginInfo');
+        // debug('login with user info: $userLoginInfo');
         // Here the userLoginInfo is incomplete:
         //
         // Only contains one login field: Username, uid or email.
         final netClient = NetClientProvider.build(
-          userLoginInfo: userLoginInfo,
-          startLogin: true,
-        );
+            // userLoginInfo: userLoginInfo,
+            // startLogin: true,
+            );
 
         final respEither =
             await netClient.postForm(target, data: credential.toJson()).run();
@@ -154,50 +156,59 @@ class AuthenticationRepository with LoggerMixin {
         if (resp.statusCode != HttpStatus.ok) {
           return left(HttpRequestFailedException(resp.statusCode));
         }
-        final document = parseHtmlDocument(resp.data as String);
-        final messageNode = document.getElementById('messagetext');
-        if (messageNode == null) {
-          error('failed to check login result: result node not found');
-          return left(LoginMessageNotFoundException());
+        final loginResult = LoginResultMapper.fromJson(resp.data as String);
+        if (loginResult.status != 0) {
+          error('failed to login: $loginResult}');
+          return left(LoginOtherErrorException('login failed'));
         }
 
-        final loginResult = LoginResult.fromLoginMessageNode(messageNode);
-        if (loginResult == LoginResult.success) {
-          // Get complete user info from page.
-          final fullInfoRespEither =
-              await netClient.get(_passwordSettingsUrl).run();
-          if (fullInfoRespEither.isLeft()) {
-            return left(fullInfoRespEither.unwrapErr());
-          }
+        final userInfo = UserLoginInfo(
+          username: loginResult.values!.username,
+          uid: int.parse(loginResult.values!.uid!),
+        );
+        await CookieData.endLogin(userInfo);
 
-          final fullInfoResp = fullInfoRespEither.unwrap();
-          if (fullInfoResp.statusCode != HttpStatus.ok) {
-            error('failed to fetch complete user info: '
-                'code=${fullInfoResp.statusCode}');
-            return left(LoginUserInfoNotFoundException());
-          }
-          final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
-          final fullUserInfo =
-              _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
-          if (fullUserInfo == null || !fullUserInfo.isComplete) {
-            error('failed to check login result: user info is null');
-            return left(LoginUserInfoNotFoundException());
-          }
+        // final document = parseHtmlDocument(resp.data as String);
+        // final messageNode = document.getElementById('messagetext');
+        // if (messageNode == null) {
+        //   error('failed to check login result: result node not found');
+        //   return left(LoginMessageNotFoundException());
+        // }
 
-          // Mark login progress has ended.
-          await CookieData.endLogin(fullUserInfo);
+        // final loginResult = LoginResult.fromLoginMessageNode(messageNode);
+        // if (loginResult == LoginResult.success) {
+        //   // Get complete user info from page.
+        //   final fullInfoRespEither =
+        //       await netClient.get(_passwordSettingsUrl).run();
+        //   if (fullInfoRespEither.isLeft()) {
+        //     return left(fullInfoRespEither.unwrapErr());
+        //   }
 
-          // Here we get complete user info.
-          await _saveLoggedUserInfo(fullUserInfo);
+        //   final fullInfoResp = fullInfoRespEither.unwrap();
+        //   if (fullInfoResp.statusCode != HttpStatus.ok) {
+        //     error('failed to fetch complete user info: '
+        //         'code=${fullInfoResp.statusCode}');
+        //     return left(LoginUserInfoNotFoundException());
+        //   }
+        //   final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
+        //   final fullUserInfo =
+        //       _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
+        //   if (fullUserInfo == null || !fullUserInfo.isComplete) {
+        //     error('failed to check login result: user info is null');
+        //     return left(LoginUserInfoNotFoundException());
+        //   }
 
-          debug('login finished');
+        //   // Mark login progress has ended.
+        //   await CookieData.endLogin(fullUserInfo);
 
-          _controller.add(AuthenticationStatus.authenticated);
+        // Here we get complete user info.
+        await _saveLoggedUserInfo(userInfo);
 
-          return rightVoid();
-        }
+        debug('login finished');
 
-        return _mapLoginResult(loginResult);
+        _controller.add(AuthenticationStatus.authenticated);
+
+        return rightVoid();
       });
 
   /// Parse logged user info from html [document].
@@ -252,7 +263,7 @@ class AuthenticationRepository with LoggerMixin {
           userLoginInfo: UserLoginInfo(
             username: _authedUser!.username,
             uid: _authedUser!.uid,
-            email: _authedUser!.email,
+            // email: _authedUser!.email,
           ),
           logout: true,
         );
@@ -342,28 +353,31 @@ class AuthenticationRepository with LoggerMixin {
       return null;
     }
 
-    String? email;
-    if (parseEmail) {
-      email = document.querySelector('input#emailnew')?.attributes['value'];
-    }
-    return UserLoginInfo(uid: uid, username: username, email: email);
+    // String? email;
+    // if (parseEmail) {
+    //   email = document.querySelector('input#emailnew')?.attributes['value'];
+    // }
+    return UserLoginInfo(
+      uid: uid,
+      username: username, /*email: email*/
+    );
   }
 
   /// Parse the login result.
   ///
   /// Do nothing if login succeed.
-  SyncVoidEither _mapLoginResult(LoginResult loginResult) =>
-      switch (loginResult) {
-        LoginResult.success => rightVoid(),
-        LoginResult.incorrectCaptcha => left(LoginIncorrectCaptchaException()),
-        LoginResult.invalidUsernamePassword =>
-          left(LoginInvalidCredentialException()),
-        LoginResult.incorrectQuestionOrAnswer =>
-          left(LoginIncorrectSecurityQuestionException()),
-        LoginResult.attemptLimit => left(LoginAttemptLimitException()),
-        LoginResult.otherError => left(LoginOtherErrorException('other error')),
-        LoginResult.unknown => left(LoginOtherErrorException('unknown result')),
-      };
+// SyncVoidEither _mapLoginResult(LoginResult loginResult) =>
+//     switch (loginResult) {
+//       LoginResult.success => rightVoid(),
+//       LoginResult.incorrectCaptcha => left(LoginIncorrectCaptchaException()),
+//       LoginResult.invalidUsernamePassword =>
+//         left(LoginInvalidCredentialException()),
+//       LoginResult.incorrectQuestionOrAnswer =>
+//         left(LoginIncorrectSecurityQuestionException()),
+//       LoginResult.attemptLimit => left(LoginAttemptLimitException()),
+//     LoginResult.otherError => left(LoginOtherErrorException('other error')),
+//     LoginResult.unknown => left(LoginOtherErrorException('unknown result')),
+//     };
 
   Future<void> _saveLoggedUserInfo(UserLoginInfo userInfo) async {
     debug('save logged user info: $userInfo');
@@ -377,10 +391,10 @@ class AuthenticationRepository with LoggerMixin {
       SettingsKeys.loginUid,
       userInfo.uid!,
     );
-    await settings.setValue<String>(
-      SettingsKeys.loginEmail,
-      userInfo.email!,
-    );
+    // await settings.setValue<String>(
+    //   SettingsKeys.loginEmail,
+    //   userInfo.email!,
+    // );
 
     _authedUser = userInfo;
   }

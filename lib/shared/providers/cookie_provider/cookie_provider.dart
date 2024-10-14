@@ -63,7 +63,7 @@ class CookieProvider with LoggerMixin {
 
       final username = userLoginInfo.username;
       final uid = userLoginInfo.uid;
-      final email = userLoginInfo.email;
+      // final email = userLoginInfo.email;
 
       Map<String, dynamic>? databaseCookie;
 
@@ -73,8 +73,8 @@ class CookieProvider with LoggerMixin {
         databaseCookie = storage.getCookieByUidSync(uid);
       } else if (username != null) {
         databaseCookie = storage.getCookieByUsernameSync(username);
-      } else if (email != null) {
-        databaseCookie = storage.getCookieByEmailSync(email);
+        // } else if (email != null) {
+        //   databaseCookie = storage.getCookieByEmailSync(email);
       }
 
       var cookie = <String, String>{};
@@ -105,7 +105,7 @@ class CookieProvider with LoggerMixin {
     final userInfo = UserLoginInfo(
       username: settings.loginUsername,
       uid: loggedUid,
-      email: settings.loginEmail,
+      // email: settings.loginEmail,
     );
     // Valid uid > 0.
     if (loggedUid <= 0) {

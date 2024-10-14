@@ -75,7 +75,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
       loginField: loginField,
       loginFieldValue: usernameController.text,
       password: passwordController.text,
-      formHash: state.loginHash!.formHash,
+      // formHash: state.loginHash!.formHash,
       tsdmVerify: verifyCodeController.text,
       securityQuestion: _question == _loginQuestions.first
           ? null

@@ -23,7 +23,7 @@ final class _CurrentUserCookie {
         userLoginInfo: this.userLoginInfo?.copyWith(
                   username: userLoginInfo?.username,
                   uid: userLoginInfo?.uid,
-                  email: userLoginInfo?.email,
+                  // email: userLoginInfo?.email,
                 ) ??
             this.userLoginInfo,
         cookie: cookie ?? this.cookie,

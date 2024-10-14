@@ -92,7 +92,7 @@ class CookieData with LoggerMixin implements Storage {
     await getIt.get<StorageProvider>().saveCookie(
           username: userLoginInfo.username!,
           uid: userLoginInfo.uid!,
-          email: userLoginInfo.email!,
+          // email: userLoginInfo.email!,
           cookie: _currentUserCookie.cookie!,
         );
   }
@@ -150,19 +150,17 @@ class CookieData with LoggerMixin implements Storage {
     // This shall not happen.
     if (!_isUserInfoComplete()) {
       info('only save cookie in memory: user info incomplete: $_userLoginInfo');
-      if (_cookieMap.toString().contains('s_gkr8_682f_auth')) {
-        // Only save cookie when cookie is authed.
-        _currentUserCookie = _currentUserCookie.copyWith(cookie: _cookieMap);
-      }
+      _currentUserCookie = _currentUserCookie.copyWith(cookie: _cookieMap);
       return false;
     }
     debug('save complete cookie in memory:'
         ' user info incomplete: $_userLoginInfo');
+    _currentUserCookie = _currentUserCookie.copyWith(cookie: _cookieMap);
 
     await getIt.get<StorageProvider>().saveCookie(
           username: _userLoginInfo!.username!,
           uid: _userLoginInfo.uid!,
-          email: _userLoginInfo.email!,
+          // email: _userLoginInfo.email!,
           cookie: _cookieMap,
         );
 

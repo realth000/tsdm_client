@@ -51,9 +51,6 @@ class Cookie extends Table with TableInfo {
   late final GeneratedColumn<int> uid = GeneratedColumn<int>(
       'uid', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-      'email', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> cookie = GeneratedColumn<String>(
       'cookie', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -65,7 +62,7 @@ class Cookie extends Table with TableInfo {
           type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [username, uid, email, cookie, lastCheckin, lastFetchNotice];
+      [username, uid, cookie, lastCheckin, lastFetchNotice];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override

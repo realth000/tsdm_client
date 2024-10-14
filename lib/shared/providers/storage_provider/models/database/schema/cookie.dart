@@ -9,9 +9,6 @@ class Cookie extends Table {
   /// User id.
   IntColumn get uid => integer()();
 
-  /// Email address.
-  TextColumn get email => text()();
-
   /// Cookie value.
   TextColumn get cookie => text()();
 

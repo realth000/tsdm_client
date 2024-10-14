@@ -48,12 +48,12 @@ class UserCredential with UserCredentialMappable {
     required this.loginField,
     required this.loginFieldValue,
     required this.password,
-    required this.formHash,
+    // required this.formHash,
     required this.tsdmVerify,
-    this.referer = homePage,
-    this.cookieTime = defaultCookieTime,
+    // this.referer = homePage,
+    // this.cookieTime = defaultCookieTime,
     this.securityQuestion,
-    this.loginSubmit = true,
+    // this.loginSubmit = true,
   });
 
   /// Which name field stands for.
@@ -65,26 +65,26 @@ class UserCredential with UserCredentialMappable {
   /// Password.
   final String password;
 
-  /// Form hash.
-  final String formHash;
+  // /// Form hash.
+  // final String formHash;
 
   /// Verify code.
   final String tsdmVerify;
 
-  /// Referer in request.
-  ///
-  /// Default is [homePage].
-  final String referer;
+  // /// Referer in request.
+  // ///
+  // /// Default is [homePage].
+  // final String referer;
 
-  /// Cookie persistent time.
-  ///
-  /// Default is [defaultCookieTime].
-  final int cookieTime;
+  // /// Cookie persistent time.
+  // ///
+  // /// Default is [defaultCookieTime].
+  // final int cookieTime;
 
-  /// Login submit in web request.
-  ///
-  /// Default is true.
-  final bool loginSubmit;
+  // /// Login submit in web request.
+  // ///
+  // /// Default is true.
+  // final bool loginSubmit;
 
   /// Security question in web request.
   ///
@@ -94,14 +94,14 @@ class UserCredential with UserCredentialMappable {
   /// Method to convert to json.
   Map<String, dynamic> toJson() {
     final m = {
-      'loginfield': loginField.toString(),
+      'fastloginfield': loginField.toString(),
       'username': loginFieldValue,
       'password': password,
-      'formhash': formHash,
+      // 'formhash': formHash,
       'tsdm_verify': tsdmVerify,
-      'referer': referer,
-      'cookietime': cookieTime,
-      'loginsubmit': loginSubmit,
+      // 'referer': referer,
+      // 'cookietime': cookieTime,
+      // 'loginsubmit': loginSubmit,
     };
 
     if (securityQuestion != null) {

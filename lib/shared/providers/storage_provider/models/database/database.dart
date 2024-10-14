@@ -52,6 +52,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
             info('migrating database schema from 3 to 4...');
             await m.createAll();
             await m.addColumn(schema.cookie, schema.cookie.lastFetchNotice);
+            await m.dropColumn(schema.cookie, 'email');
             await m.addColumn(schema.imageCache, schema.imageCache.usage);
             info('migrating database schema from 3 to 4... ok!');
           },
