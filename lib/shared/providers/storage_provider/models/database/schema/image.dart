@@ -3,8 +3,8 @@ part of 'schema.dart';
 /// Table for image cache.
 ///
 /// Store cached image's info including url and cache file location.
-@DataClassName('ImageCacheEntity')
-class ImageCache extends Table {
+@DataClassName('ImageEntity')
+class Image extends Table {
   /// Image url.
   TextColumn get url => text()();
 

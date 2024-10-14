@@ -34,8 +34,8 @@ Future<Map<UserLoginInfo, Cookie>> preloadCookie(AppDatabase db) async {
 ///
 /// Only use this function to preload cookie before initializing
 /// [StorageProvider].
-Future<Map<String, ImageCacheEntity>> preloadImageCache(AppDatabase db) async {
-  final allImageCache = await ImageCacheDao(db).selectAll();
+Future<Map<String, ImageEntity>> preloadImageCache(AppDatabase db) async {
+  final allImageCache = await ImageDao(db).selectAll();
   final mappedImageCache = allImageCache.map((e) => MapEntry(e.url, e));
   return Map.fromEntries(mappedImageCache);
 }
@@ -60,7 +60,7 @@ class StorageProvider with LoggerMixin {
   /// Access this field to avoid disk IO and make it synchronous.
   ///
   /// MUST update during image cache setter calls.
-  final Map<String, ImageCacheEntity> _imageCache;
+  final Map<String, ImageEntity> _imageCache;
 
   /*             cookie             */
 
@@ -171,7 +171,7 @@ class StorageProvider with LoggerMixin {
   /*            image cache           */
 
   /// Get the image cache for image from [url].
-  ImageCacheEntity? getImageCacheSync(String url) =>
+  ImageEntity? getImageCacheSync(String url) =>
       _imageCache.entries.firstWhereOrNull((e) => e.key == url)?.value;
 
   /// Insert or update cache info, update all info.
@@ -182,14 +182,14 @@ class StorageProvider with LoggerMixin {
     DateTime? lastUsedTime,
   }) async {
     final now = DateTime.now();
-    _imageCache[url] = ImageCacheEntity(
+    _imageCache[url] = ImageEntity(
       url: url,
       fileName: fileName,
       lastCachedTime: lastCacheTime ?? now,
       lastUsedTime: lastUsedTime ?? now,
     );
-    await ImageCacheDao(_db).upsertImageCache(
-      ImageCacheCompanion(
+    await ImageDao(_db).upsertImageCache(
+      ImageCompanion(
         url: Value(url),
         fileName: Value(fileName),
         lastCachedTime:
@@ -205,15 +205,15 @@ class StorageProvider with LoggerMixin {
     if (_imageCache.containsKey(url)) {
       _imageCache[url] = _imageCache[url]!.copyWith(lastUsedTime: now);
     }
-    await ImageCacheDao(_db).upsertImageCache(
-      ImageCacheCompanion(url: Value(url), lastUsedTime: Value(now)),
+    await ImageDao(_db).upsertImageCache(
+      ImageCompanion(url: Value(url), lastUsedTime: Value(now)),
     );
   }
 
   /// Clear all image cache in database.
   Future<void> clearImageCache() async {
     _imageCache.clear();
-    await ImageCacheDao(_db).deleteAll();
+    await ImageDao(_db).deleteAll();
   }
 
   /*             settings             */

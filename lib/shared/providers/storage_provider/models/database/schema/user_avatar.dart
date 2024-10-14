@@ -13,8 +13,8 @@ part of 'schema.dart';
 /// Remember that this table does not control or determine user avatar cache's
 /// lifetime, only record the relationship. And of course multiple users may
 /// share one avatar.
-@DataClassName('UserAvatarCacheEntity')
-class UserAvatarCache extends Table {
+@DataClassName('UserAvatarEntity')
+class UserAvatar extends Table {
   /// Username of the user using this avatar.
   TextColumn get username => text()();
 

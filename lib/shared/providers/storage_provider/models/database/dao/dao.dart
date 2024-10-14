@@ -7,8 +7,8 @@ import 'package:tsdm_client/utils/logger.dart';
 
 part 'cookie.dart';
 part 'dao.g.dart';
-part 'image_cache.dart';
+part 'image.dart';
+part 'notification.dart';
 part 'settings.dart';
 part 'thread_visit_history.dart';
-part 'user_avatar_cache.dart';
-part 'notification.dart';
+part 'user_avatar.dart';

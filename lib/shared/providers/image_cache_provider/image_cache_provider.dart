@@ -68,7 +68,7 @@ final class ImageCacheProvider with LoggerMixin {
   static final _emojiCodeRe = RegExp(r'{:(?<groupId>\d+)_(?<id>\d+):}');
 
   /// Get the cache info related to [imageUrl].
-  ImageCacheEntity? getCacheInfo(String imageUrl) =>
+  ImageEntity? getCacheInfo(String imageUrl) =>
       getIt.get<StorageProvider>().getImageCacheSync(imageUrl);
 
   /// Get the cache image data related to [imageUrl].
