@@ -50,9 +50,10 @@ final class ProfileRepository with LoggerMixin {
           final settings = getIt.get<SettingsRepository>().currentSettings;
           final loginUsername = settings.loginUsername;
           final loginUid = settings.loginUid;
-          final loginEmail = settings.loginEmail;
           // TODO: Check if this condition check works during login progress.
-          if (loginUsername.isEmpty || loginUid == 0 || loginEmail.isEmpty) {
+          if (loginUsername.isEmpty || loginUid == 0) {
+            warning('fetch profile: not login, unsatisfied fields: '
+                'name(${loginUsername.isEmpty}), uid(${loginUid == 0})');
             // Not logged in.
             return left(ProfileNeedLoginException());
           }

@@ -142,9 +142,10 @@ class AuthenticationRepository with LoggerMixin {
         //
         // Only contains one login field: Username, uid or email.
         final netClient = NetClientProvider.build(
-            // userLoginInfo: userLoginInfo,
-            // startLogin: true,
-            );
+          // userLoginInfo: userLoginInfo,
+          // startLogin: true,
+          forceDesktop: false,
+        );
 
         final respEither =
             await netClient.postForm(target, data: credential.toJson()).run();

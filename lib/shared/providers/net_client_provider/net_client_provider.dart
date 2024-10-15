@@ -58,11 +58,17 @@ final class NetClientProvider with LoggerMixin {
   NetClientProvider._(Dio dio) : _dio = dio;
 
   /// Build a [NetClientProvider] instance.
+  ///
+  /// ## Parameters
+  ///
+  /// * Set [forceDesktop] to false when desire server response with a mobile
+  ///   layout page.
   factory NetClientProvider.build({
     Dio? dio,
     UserLoginInfo? userLoginInfo,
     bool startLogin = false,
     bool logout = false,
+    bool forceDesktop = true,
   }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     if (!isWeb) {
@@ -77,6 +83,9 @@ final class NetClientProvider with LoggerMixin {
         storage: cookie,
       );
       d.interceptors.add(CookieManager(cookieJar));
+      if (forceDesktop) {
+        d.interceptors.add(_ForceDesktopLayoutInterceptor());
+      }
 
       // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
       // certificate" error.
@@ -296,5 +305,18 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
 
     // Do not block error handling.
     handler.next(err);
+  }
+}
+
+/// Force request url with desktop, only for server site.
+///
+/// Works by append query parameter "mobile=no".
+///
+/// Only use this class when sending request to forum server.
+class _ForceDesktopLayoutInterceptor extends Interceptor with LoggerMixin {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    options.queryParameters['mobile'] = 'no';
+    handler.next(options);
   }
 }
