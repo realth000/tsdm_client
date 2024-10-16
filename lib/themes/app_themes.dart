@@ -110,33 +110,23 @@ class AppTheme {
       );
     }
     return FlexThemeData.dark(
-      primary: seedScheme?.primary,
-      onPrimary: seedScheme?.onPrimary,
-      primaryContainer: seedScheme?.primaryContainer,
-      onPrimaryContainer: seedScheme?.onPrimaryContainer,
-      secondary: seedScheme?.secondary,
-      onSecondary: seedScheme?.onSecondary,
-      secondaryContainer: seedScheme?.secondaryContainer,
-      onSecondaryContainer: seedScheme?.onSecondaryContainer,
-      tertiary: seedScheme?.tertiary,
-      onTertiary: seedScheme?.onTertiary,
-      tertiaryContainer: seedScheme?.tertiaryContainer,
-      onTertiaryContainer: seedScheme?.onTertiaryContainer,
-      error: seedScheme?.error,
-      onError: seedScheme?.onError,
-      surface: seedScheme?.surface,
-      onSurface: seedScheme?.onSurface,
-      surfaceTint: seedScheme?.surfaceTint,
+      colors: seedScheme != null
+          ? FlexSchemeColor(
+              primary: seedScheme.primary,
+              primaryContainer: seedScheme.primaryContainer,
+              secondary: seedScheme.secondary,
+              secondaryContainer: seedScheme.secondaryContainer,
+              tertiary: seedScheme.tertiary,
+              tertiaryContainer: seedScheme.tertiaryContainer,
+              error: seedScheme.error,
+            )
+          : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
       surfaceMode: FlexSurfaceMode.level,
       subThemesData: _subThemesData,
-      keyColors: const FlexKeyColors(
-        useKeyColors: false,
-        useSecondary: true,
-        useTertiary: true,
-      ),
+      keyColors: const FlexKeyColors(),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
     ).copyWith(
       colorScheme: seedScheme,
