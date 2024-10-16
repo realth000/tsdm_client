@@ -3,6 +3,36 @@ import 'package:flutter/material.dart';
 
 /// App themes.
 class AppTheme {
+  static const FlexSubThemesData _subThemesData = FlexSubThemesData(
+    interactionEffects: true,
+    tintedDisabledControls: true,
+    blendOnLevel: 10,
+    outlinedButtonPressedBorderWidth: 1.5,
+    sliderValueTinted: true,
+    sliderTrackHeight: 5,
+    inputDecoratorFocusedBorderWidth: 2,
+    inputDecoratorBorderType: FlexInputBorderType.outline,
+    fabUseShape: true,
+    bottomNavigationBarShowUnselectedLabels: false,
+    alignedDropdown: true,
+
+    // Navigation bar
+    navigationBarSelectedLabelSchemeColor: SchemeColor.primary,
+    navigationBarSelectedIconSchemeColor: SchemeColor.primary,
+    navigationBarMutedUnselectedLabel: false,
+    navigationBarMutedUnselectedIcon: false,
+    navigationBarLabelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
+
+    // Navigation rail
+    navigationRailSelectedLabelSchemeColor: SchemeColor.primary,
+    navigationRailSelectedIconSchemeColor: SchemeColor.primary,
+    navigationRailUseIndicator: true,
+    navigationRailMutedUnselectedLabel: false,
+    navigationRailMutedUnselectedIcon: false,
+    navigationRailLabelType: NavigationRailLabelType.all,
+    drawerRadius: 0,
+  );
+
   static CardTheme _buildCardTheme() => const CardTheme(
         elevation: 0,
       );
@@ -43,47 +73,24 @@ class AppTheme {
       seedScheme = ColorScheme.fromSeed(seedColor: seedColor);
     }
     return FlexThemeData.light(
-      primary: seedScheme?.primary,
-      onPrimary: seedScheme?.onPrimary,
-      primaryContainer: seedScheme?.primaryContainer,
-      onPrimaryContainer: seedScheme?.onPrimaryContainer,
-      secondary: seedScheme?.secondary,
-      onSecondary: seedScheme?.onSecondary,
-      secondaryContainer: seedScheme?.secondaryContainer,
-      onSecondaryContainer: seedScheme?.onSecondaryContainer,
-      tertiary: seedScheme?.tertiary,
-      onTertiary: seedScheme?.onTertiary,
-      tertiaryContainer: seedScheme?.tertiaryContainer,
-      onTertiaryContainer: seedScheme?.onTertiaryContainer,
-      error: seedScheme?.error,
-      onError: seedScheme?.onError,
-      surface: seedScheme?.surface,
-      onSurface: seedScheme?.onSurface,
-      background: seedScheme?.surface,
-      onBackground: seedScheme?.onSurface,
-      surfaceTint: seedScheme?.surfaceTint,
+      colors: seedScheme != null
+          ? FlexSchemeColor(
+              primary: seedScheme.primary,
+              primaryContainer: seedScheme.primaryContainer,
+              secondary: seedScheme.secondary,
+              secondaryContainer: seedScheme.secondaryContainer,
+              tertiary: seedScheme.tertiary,
+              tertiaryContainer: seedScheme.tertiaryContainer,
+              error: seedScheme.error,
+            )
+          : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
-      subThemesData: const FlexSubThemesData(
-        outlinedButtonPressedBorderWidth: 1.5,
-        sliderValueTinted: true,
-        sliderTrackHeight: 5,
-        inputDecoratorFocusedBorderWidth: 2,
-        fabUseShape: true,
-        bottomNavigationBarShowUnselectedLabels: false,
-        navigationBarLabelBehavior:
-            NavigationDestinationLabelBehavior.alwaysShow,
-        navigationRailLabelType: NavigationRailLabelType.all,
-        drawerRadius: 0,
-      ),
-      keyColors: const FlexKeyColors(
-        useKeyColors: false,
-        useSecondary: true,
-        useTertiary: true,
-      ),
+      surfaceMode: FlexSurfaceMode.level,
+      subThemesData: _subThemesData,
+      keyColors: const FlexKeyColors(),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
       cardTheme: _buildCardTheme(),
@@ -119,31 +126,18 @@ class AppTheme {
       onError: seedScheme?.onError,
       surface: seedScheme?.surface,
       onSurface: seedScheme?.onSurface,
-      background: seedScheme?.surface,
-      onBackground: seedScheme?.onSurface,
       surfaceTint: seedScheme?.surfaceTint,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
-      subThemesData: const FlexSubThemesData(
-        outlinedButtonPressedBorderWidth: 1.5,
-        sliderValueTinted: true,
-        sliderTrackHeight: 5,
-        inputDecoratorFocusedBorderWidth: 2,
-        fabUseShape: true,
-        bottomNavigationBarShowUnselectedLabels: false,
-        navigationBarLabelBehavior:
-            NavigationDestinationLabelBehavior.alwaysShow,
-        navigationRailLabelType: NavigationRailLabelType.all,
-        drawerRadius: 0,
-      ),
+      surfaceMode: FlexSurfaceMode.level,
+      subThemesData: _subThemesData,
       keyColors: const FlexKeyColors(
         useKeyColors: false,
         useSecondary: true,
         useTertiary: true,
       ),
       visualDensity: FlexColorScheme.comfortablePlatformDensity,
-      useMaterial3: true,
     ).copyWith(
       colorScheme: seedScheme,
       cardTheme: _buildCardTheme(),
