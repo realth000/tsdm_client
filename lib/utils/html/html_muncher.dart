@@ -3,6 +3,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/adaptive_color.dart';
@@ -364,6 +365,8 @@ final class _Muncher with LoggerMixin {
     }
     state.headingBrNodePassed = true;
     final hrefUrl = state.tapUrl;
+    final imgWidth = element.attributes['width']?.parseToInt()?.toDouble();
+    final imgHeight = element.attributes['height']?.parseToInt()?.toDouble();
     return [
       WidgetSpan(
         child: GestureDetector(
@@ -372,7 +375,11 @@ final class _Muncher with LoggerMixin {
             imageUrl: url,
             hrefUrl: hrefUrl,
           ),
-          child: NetworkIndicatorImage(url),
+          child: SizedBox(
+            width: imgWidth,
+            height: imgHeight,
+            child: NetworkIndicatorImage(url),
+          ),
         ),
       ),
     ];
