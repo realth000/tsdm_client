@@ -119,6 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 网页：修复斜体字丢失的问题。
 - 统计：修复统计页面的积分中数据没有对齐的问题。
 - 通知：修复无法现实某些类型的提醒的问题，现在能够显示所有类型的提醒。
+- html：修复解析图片时图片大小不生效的问题。
 
 ### Changed
 
