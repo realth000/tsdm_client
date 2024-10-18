@@ -5,10 +5,11 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/card/message_card.dart';
-import 'package:tsdm_client/widgets/card/notice_card.dart';
+import 'package:tsdm_client/widgets/card/notice_card_v2.dart';
 
 /// Notice page, shows Notice and PrivateMessage of current user.
 class NotificationPage extends StatefulWidget {
@@ -20,193 +21,34 @@ class NotificationPage extends StatefulWidget {
 }
 
 class _NotificationPageState extends State<NotificationPage>
-    with SingleTickerProviderStateMixin {
+    with SingleTickerProviderStateMixin, LoggerMixin {
   late final EasyRefreshController _noticeRefreshController;
   late final EasyRefreshController _personalMessageRefreshController;
   late final EasyRefreshController _broadcastMessageRefreshController;
   late final TabController _tabController;
 
   Widget _buildEmptyBody(BuildContext context) {
-    return Row(
-      children: [
-        LayoutBuilder(
-          builder: (context, constraints) => SingleChildScrollView(
-            physics: const AlwaysScrollableScrollPhysics(),
-            child: ConstrainedBox(
-              constraints: BoxConstraints(
-                minWidth: MediaQuery.of(context).size.width,
-                minHeight: constraints.maxHeight,
-              ),
-              child: Center(
-                child: Text(
-                  context.t.general.noData,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
-                ),
+    return Align(
+      child: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              minWidth: MediaQuery.sizeOf(context).width,
+              minHeight: constraints.maxHeight,
+            ),
+            child: Center(
+              child: Text(
+                context.t.general.noData,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.outline,
+                    ),
               ),
             ),
           ),
         ),
-      ],
+      ),
     );
-  }
-
-  Widget _buildNoticeTab(BuildContext context, NotificationState state) {
-    return switch (state.noticeStatus) {
-      NotificationStatus.initial ||
-      NotificationStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success =>
-        (BuildContext context, NotificationState state) {
-          final Widget content;
-          if (state.noticeList.isEmpty) {
-            content = _buildEmptyBody(context);
-          } else {
-            content = ListView.separated(
-              padding: edgeInsetsL12T4R12B24,
-              itemCount: state.noticeList.length,
-              itemBuilder: (context, index) {
-                return NoticeCard(notice: state.noticeList[index]);
-              },
-              separatorBuilder: (context, index) => sizedBoxW4H4,
-            );
-          }
-
-          return EasyRefresh(
-            scrollBehaviorBuilder: (physics) {
-              // Should use ERScrollBehavior instead of
-              // ScrollConfiguration.of(context)
-              return ERScrollBehavior(physics)
-                  .copyWith(physics: physics, scrollbars: false);
-            },
-            header: const MaterialHeader(),
-            controller: _noticeRefreshController,
-            onRefresh: () async {
-              if (!mounted) {
-                return;
-              }
-              context
-                  .read<NotificationBloc>()
-                  .add(NotificationRefreshNoticeRequired());
-            },
-            child: content,
-          );
-        }(context, state),
-      NotificationStatus.failed => buildRetryButton(
-          context,
-          () => context
-              .read<NotificationBloc>()
-              .add(NotificationRefreshNoticeRequired()),
-        ),
-    };
-  }
-
-  Widget _buildPrivateMessageTab(
-    BuildContext context,
-    NotificationState state,
-  ) {
-    return switch (state.personalMessageStatus) {
-      NotificationStatus.initial ||
-      NotificationStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success =>
-        (BuildContext context, NotificationState state) {
-          final Widget content;
-          if (state.personalMessageList.isEmpty) {
-            content = _buildEmptyBody(context);
-          } else {
-            content = ListView.separated(
-              padding: edgeInsetsL12T4R12B24,
-              itemCount: state.personalMessageList.length,
-              itemBuilder: (context, index) =>
-                  PrivateMessageCard(message: state.personalMessageList[index]),
-              separatorBuilder: (context, index) => sizedBoxW4H4,
-            );
-          }
-
-          return EasyRefresh(
-            scrollBehaviorBuilder: (physics) {
-              // Should use ERScrollBehavior instead of
-              // ScrollConfiguration.of(context)
-              return ERScrollBehavior(physics)
-                  .copyWith(physics: physics, scrollbars: false);
-            },
-            header: const MaterialHeader(),
-            controller: _personalMessageRefreshController,
-            onRefresh: () async {
-              if (!mounted) {
-                return;
-              }
-              context
-                  .read<NotificationBloc>()
-                  .add(NotificationRefreshPersonalMessageRequired());
-            },
-            child: content,
-          );
-        }(context, state),
-      NotificationStatus.failed => buildRetryButton(
-          context,
-          () => context
-              .read<NotificationBloc>()
-              .add(NotificationRefreshPersonalMessageRequired()),
-        ),
-    };
-  }
-
-  Widget _buildBroadcastMessageTab(
-    BuildContext context,
-    NotificationState state,
-  ) {
-    return switch (state.broadcastMessageStatus) {
-      NotificationStatus.initial ||
-      NotificationStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
-      NotificationStatus.success =>
-        (BuildContext context, NotificationState state) {
-          final Widget content;
-          if (state.broadcastMessageList.isEmpty) {
-            content = _buildEmptyBody(context);
-          } else {
-            content = ListView.separated(
-              padding: edgeInsetsL12T4R12B24,
-              itemCount: state.broadcastMessageList.length,
-              itemBuilder: (context, index) {
-                return BroadcastMessageCard(
-                  message: state.broadcastMessageList[index],
-                );
-              },
-              separatorBuilder: (context, index) => sizedBoxW4H4,
-            );
-          }
-
-          return EasyRefresh(
-            scrollBehaviorBuilder: (physics) {
-              // Should use ERScrollBehavior instead of
-              // ScrollConfiguration.of(context)
-              return ERScrollBehavior(physics)
-                  .copyWith(physics: physics, scrollbars: false);
-            },
-            header: const MaterialHeader(),
-            controller: _broadcastMessageRefreshController,
-            onRefresh: () async {
-              if (!mounted) {
-                return;
-              }
-              context
-                  .read<NotificationBloc>()
-                  .add(NotificationRefreshBroadcastMessageRequired());
-            },
-            child: content,
-          );
-        }(context, state),
-      NotificationStatus.failed => buildRetryButton(
-          context,
-          () => context
-              .read<NotificationBloc>()
-              .add(NotificationRefreshBroadcastMessageRequired()),
-        ),
-    };
   }
 
   @override
@@ -247,20 +89,93 @@ class _NotificationPageState extends State<NotificationPage>
         BlocProvider(
           create: (context) => NotificationBloc(
             notificationRepository: RepositoryProvider.of(context),
-          )
-            ..add(NotificationRefreshNoticeRequired())
-            ..add(NotificationRefreshPersonalMessageRequired())
-            ..add(NotificationRefreshBroadcastMessageRequired()),
+            authRepo: RepositoryProvider.of(context),
+            storageProvider: getIt(),
+          )..add(NotificationUpdateAllRequested()),
         ),
       ],
       child: BlocListener<NotificationBloc, NotificationState>(
+        listenWhen: (prev, curr) => prev.status != curr.status,
         listener: (context, state) {
-          if (state.noticeStatus == NotificationStatus.failed) {
+          if (state.status == NotificationStatus.failure) {
             showFailedToLoadSnackBar(context);
+          } else if (state.status == NotificationStatus.success) {
+            // Update last fetch notification time.
+            context
+                .read<NotificationBloc>()
+                .add(NotificationRecordFetchTimeRequested());
           }
         },
         child: BlocBuilder<NotificationBloc, NotificationState>(
           builder: (context, state) {
+            final body = switch (state.status) {
+              NotificationStatus.initial ||
+              NotificationStatus.loading =>
+                const Center(
+                  child: CircularProgressIndicator(),
+                ),
+              NotificationStatus.success => TabBarView(
+                  controller: _tabController,
+                  children: [
+                    EasyRefresh(
+                      controller: _noticeRefreshController,
+                      header: const MaterialHeader(),
+                      onRefresh: () => context
+                          .read<NotificationBloc>()
+                          .add(NotificationUpdateAllRequested()),
+                      child: state.noticeList.isEmpty
+                          ? _buildEmptyBody(context)
+                          : ListView.separated(
+                              padding: edgeInsetsL12T4R12B4,
+                              itemCount: state.noticeList.length,
+                              itemBuilder: (_, idx) =>
+                                  NoticeCardV2(state.noticeList[idx]),
+                              separatorBuilder: (_, __) => sizedBoxW4H4,
+                            ),
+                    ),
+                    EasyRefresh(
+                      controller: _personalMessageRefreshController,
+                      header: const MaterialHeader(),
+                      onRefresh: () => context
+                          .read<NotificationBloc>()
+                          .add(NotificationUpdateAllRequested()),
+                      child: state.personalMessageList.isEmpty
+                          ? _buildEmptyBody(context)
+                          : ListView.separated(
+                              padding: edgeInsetsL12T4R12B4,
+                              itemCount: state.personalMessageList.length,
+                              itemBuilder: (_, idx) => PersonalMessageCardV2(
+                                state.personalMessageList[idx],
+                              ),
+                              separatorBuilder: (_, __) => sizedBoxW4H4,
+                            ),
+                    ),
+                    EasyRefresh(
+                      controller: _broadcastMessageRefreshController,
+                      header: const MaterialHeader(),
+                      onRefresh: () => context
+                          .read<NotificationBloc>()
+                          .add(NotificationUpdateAllRequested()),
+                      child: state.broadcastMessageList.isEmpty
+                          ? _buildEmptyBody(context)
+                          : ListView.separated(
+                              padding: edgeInsetsL12T4R12B4,
+                              itemCount: state.broadcastMessageList.length,
+                              itemBuilder: (_, idx) => BroadcastMessageCardV2(
+                                state.broadcastMessageList[idx],
+                              ),
+                              separatorBuilder: (_, __) => sizedBoxW4H4,
+                            ),
+                    ),
+                  ],
+                ),
+              NotificationStatus.failure => buildRetryButton(
+                  context,
+                  () => context
+                      .read<NotificationBloc>()
+                      .add(NotificationUpdateAllRequested()),
+                ),
+            };
             return Scaffold(
               appBar: AppBar(
                 title: Text(tr.title),
@@ -273,14 +188,7 @@ class _NotificationPageState extends State<NotificationPage>
                   ],
                 ),
               ),
-              body: TabBarView(
-                controller: _tabController,
-                children: [
-                  _buildNoticeTab(context, state),
-                  _buildPrivateMessageTab(context, state),
-                  _buildBroadcastMessageTab(context, state),
-                ],
-              ),
+              body: body,
             );
           },
         ),

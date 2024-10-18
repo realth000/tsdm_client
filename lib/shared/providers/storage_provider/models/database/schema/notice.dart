@@ -8,8 +8,13 @@ class Notice extends Table {
   /// Uid of the user who owns the notice.
   IntColumn get uid => integer()();
 
-  /// Notice timestamp.
-  DateTimeColumn get timestamp => dateTime()();
+  /// Notice id.
+  ///
+  /// A field in server response, not the id of table.
+  IntColumn get nid => integer()();
+
+  /// Notice timestamp in seconds.
+  IntColumn get timestamp => integer()();
 
   /// Notice body in html format.
   TextColumn get data => text()();

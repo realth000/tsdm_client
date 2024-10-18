@@ -10,6 +10,28 @@ import 'package:tsdm_client/shared/providers/storage_provider/models/database/da
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
+/// A time to fetch notice or save notice.
+///
+/// Use this model to gather different types of notice, so that makes calling
+/// APIs less times.
+final class NotificationGroup {
+  /// Constructor.
+  const NotificationGroup({
+    required this.noticeList,
+    required this.personalMessageList,
+    required this.broadcastMessageList,
+  });
+
+  /// All fetched notice.
+  final List<NoticeEntity> noticeList;
+
+  /// All fetched personal message.
+  final List<PersonalMessageEntity> personalMessageList;
+
+  /// All fetched broadcast message.
+  final List<BroadcastMessageEntity> broadcastMessageList;
+}
+
 /// Load all cookie info from database without any dependency except [db].
 ///
 /// Only use this function to preload cookie before initializing
@@ -359,5 +381,96 @@ class StorageProvider with LoggerMixin {
   AsyncVoidEither deleteAllThreadVisitHistory() => AsyncVoidEither(() async {
         await ThreadVisitHistoryDao(_db).deleteAll();
         return rightVoid();
+      });
+
+  /// Fetch the timestamp for user [uid] when fetch notification last time.
+  AsyncEither<DateTime?> fetchLastFetchNoticeTime(int uid) =>
+      AsyncEither(() async {
+        final user = await CookieDao(_db).selectCookieByUid(uid);
+        if (user == null) {
+          // User record not found.
+          return left(NotificationUserNotFound());
+        }
+        return right(user.lastFetchNotice);
+      });
+
+  /// Update the last fetch notification datetime in storage for user [uid].
+  VoidTask updateLastFetchNoticeTime(int uid, DateTime datetime) =>
+      VoidTask(() async {
+        await CookieDao(_db).updateLastFetchNoticeTime(uid, datetime);
+        return;
+      });
+
+  /// Fetch all notification for user [uid] since time [timestamp].
+  ///
+  /// Return a instance of [NotificationGroup] that contains all types of
+  /// fetched notice.
+  Task<NotificationGroup> fetchNotificationSince({
+    required int uid,
+    required int timestamp,
+  }) =>
+      Task(() async {
+        final dao = NotificationDao(_db);
+        // final
+        final noticeList =
+            await dao.selectNoticeSince(uid: uid, timestamp: timestamp);
+
+        final personalMessageList = await dao.selectPersonalMessageSince(
+          uid: uid,
+          timestamp: timestamp,
+        );
+        final broadcastMessageList = await dao.selectBroadcastMessageSince(
+          uid: uid,
+          timestamp: timestamp,
+        );
+
+        return NotificationGroup(
+          noticeList: noticeList,
+          personalMessageList: personalMessageList,
+          broadcastMessageList: broadcastMessageList,
+        );
+      });
+
+  /// Save a group of notice for user [uid] into storage.
+  VoidTask saveNotification({
+    required int uid,
+    required NotificationGroup notificationGroup,
+  }) =>
+      VoidTask(() async {
+        await NotificationDao(_db).insertManyNotice(
+          noticeList: notificationGroup.noticeList
+              .map(
+                (e) => NoticeCompanion(
+                  uid: Value(uid),
+                  timestamp: Value(e.timestamp),
+                  data: Value(e.data),
+                  nid: Value(e.nid),
+                ),
+              )
+              .toList(),
+          personalMessageList: notificationGroup.personalMessageList
+              .map(
+                (e) => PersonalMessageCompanion(
+                  uid: Value(uid),
+                  timestamp: Value(e.timestamp),
+                  data: Value(e.data),
+                  peerUid: Value(e.peerUid),
+                  peerUsername: Value(e.peerUsername),
+                  sender: Value(e.sender),
+                  alreadyRead: Value(e.alreadyRead),
+                ),
+              )
+              .toList(),
+          broadcastMessageList: notificationGroup.broadcastMessageList
+              .map(
+                (e) => BroadcastMessageCompanion(
+                  uid: Value(uid),
+                  timestamp: Value(e.timestamp),
+                  data: Value(e.data),
+                  pmid: Value(e.pmid),
+                ),
+              )
+              .toList(),
+        );
       });
 }

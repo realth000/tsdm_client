@@ -259,11 +259,16 @@ final class _Muncher with LoggerMixin {
           }
 
           // Base text style.
+          final color = state.colorStack.lastOrNull ??
+              (state.tapUrl != null
+                  ? Theme.of(context).colorScheme.primary
+                  : null);
           final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: state.colorStack.lastOrNull,
+                color: color,
                 fontWeight: state.bold ? FontWeight.w600 : null,
                 fontSize: state.fontSizeStack.lastOrNull,
                 backgroundColor: state.backgroundColorStack.lastOrNull,
+                decorationColor: color,
                 decoration: TextDecoration.combine([
                   if (state.underline) TextDecoration.underline,
                   if (state.lineThrough) TextDecoration.lineThrough,
@@ -792,23 +797,32 @@ final class _Muncher with LoggerMixin {
     }
 
     return [
-      WidgetSpan(
-        child: MouseRegion(
-          cursor: SystemMouseCursors.click,
-          child: GestureDetector(
-            onTap: () async => context.dispatchAsUrl(url),
-            child: const Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(Icons.link),
-                SizedBox(width: 2),
-              ],
+      TextSpan(
+        children: [
+          WidgetSpan(
+            child: MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () async => context.dispatchAsUrl(url),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      url.contains('mod=space')
+                          ? Icons.alternate_email_outlined
+                          : Icons.link,
+                      size: state.fontSizeStack.lastOrNull ?? 18,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                    const SizedBox(width: 2),
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
+          ...ret,
+        ],
       ),
-      ...ret,
-      const WidgetSpan(child: SizedBox(width: 2, height: 5)),
     ];
   }
 

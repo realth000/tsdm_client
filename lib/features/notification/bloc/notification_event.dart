@@ -6,18 +6,13 @@ sealed class NotificationEvent with NotificationEventMappable {
   const NotificationEvent();
 }
 
-/// User required to refresh the notification page.
+/// Required to refresh all kinds of notification.
 @MappableClass()
-final class NotificationRefreshNoticeRequired extends NotificationEvent
-    with NotificationRefreshNoticeRequiredMappable {}
+final class NotificationUpdateAllRequested extends NotificationEvent
+    with NotificationUpdateAllRequestedMappable {}
 
-/// User required to refresh the private personal message tab.
+/// Need to update the last fetch notification timestamp for current user in
+/// storage.
 @MappableClass()
-final class NotificationRefreshPersonalMessageRequired extends NotificationEvent
-    with NotificationRefreshPersonalMessageRequiredMappable {}
-
-/// User required to refresh the broadcast message tab.
-@MappableClass()
-final class NotificationRefreshBroadcastMessageRequired
-    extends NotificationEvent
-    with NotificationRefreshBroadcastMessageRequiredMappable {}
+final class NotificationRecordFetchTimeRequested extends NotificationEvent
+    with NotificationRecordFetchTimeRequestedMappable {}

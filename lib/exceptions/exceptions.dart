@@ -19,6 +19,9 @@ typedef SyncVoidEither = Either<AppException, void>;
 /// App wide wrapped exception for future with void as value.
 typedef AsyncVoidEither = TaskEither<AppException, void>;
 
+/// App wide wrapped async result that never fails.
+typedef VoidTask = Task<void>;
+
 /// App wide wrapped left builder for [TaskEither].
 TaskEither<L, R> taskLeft<L, R>(L l) => TaskEither<L, R>.left(l);
 
@@ -343,3 +346,8 @@ final class ThreadPublishFailedException extends AppException
 @MappableClass()
 final class ThreadPublishLocationNotFoundException extends AppException
     with ThreadPublishLocationNotFoundExceptionMappable {}
+
+/// User not found when trying to operate on that user's notification.
+@MappableClass()
+final class NotificationUserNotFound extends AppException
+    with NotificationUserNotFoundMappable {}

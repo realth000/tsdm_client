@@ -13,6 +13,28 @@ import 'package:universal_html/parsing.dart';
 
 /// Repository of notification.
 final class NotificationRepository with LoggerMixin {
+  /// Build the url for notification v2 API.
+  ///
+  /// [timestamp] is optional timestamp of last call on this API.
+  String _buildNotificationV2Url({int? timestamp}) {
+    final now = DateTime.now();
+    final int? argTimestamp;
+    // The input [timestamp] is in seconds.
+    final time = timestamp != null
+        ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000)
+        : now;
+    if (timestamp != null &&
+        0 <= now.difference(time).inDays &&
+        now.difference(time).inDays <= 3) {
+      argTimestamp = timestamp;
+    } else {
+      argTimestamp =
+          now.add(const Duration(days: -3)).millisecondsSinceEpoch ~/ 1000;
+    }
+
+    return '$baseUrl/plugin.php?mobile=yes&tsdmapp=1&id=Kahrpba:usernotify&last_updated=$argTimestamp';
+  }
+
   /// Get and parse a list of [Notice] from the given [url].
   ///
   /// * Return (List<Notice>, null) if success.
@@ -132,4 +154,12 @@ final class NotificationRepository with LoggerMixin {
                 .whereType<BroadcastMessage>()
                 .toList(),
           );
+
+  /// Fetch all kinds of notification using API v2.
+  ///
+  /// [timestamp] is the last time call this api (in seconds).
+  AsyncEither<NotificationV2> fetchNotificationV2({int? timestamp}) => getIt
+      .get<NetClientProvider>()
+      .get(_buildNotificationV2Url(timestamp: timestamp))
+      .mapHttp((v) => NotificationV2Mapper.fromJson(v.data as String));
 }

@@ -416,6 +416,7 @@ final class Schema4 extends i0.VersionedSchema {
         ],
         columns: [
           _column_1,
+          _column_27,
           _column_22,
           _column_23,
         ],
@@ -434,10 +435,10 @@ final class Schema4 extends i0.VersionedSchema {
           _column_1,
           _column_22,
           _column_23,
-          _column_27,
           _column_28,
           _column_29,
           _column_30,
+          _column_31,
         ],
         attachedDatabase: database,
       ),
@@ -493,7 +494,7 @@ final class Schema4 extends i0.VersionedSchema {
         ],
         columns: [
           _column_0,
-          _column_31,
+          _column_32,
         ],
         attachedDatabase: database,
       ),
@@ -504,17 +505,17 @@ class Shape6 extends i0.VersionedTable {
   Shape6({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get uid =>
       columnsByName['uid']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<DateTime> get timestamp =>
-      columnsByName['timestamp']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<int> get timestamp =>
+      columnsByName['timestamp']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get data =>
       columnsByName['data']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<int> get pmid =>
       columnsByName['pmid']! as i1.GeneratedColumn<int>;
 }
 
-i1.GeneratedColumn<DateTime> _column_22(String aliasedName) =>
-    i1.GeneratedColumn<DateTime>('timestamp', aliasedName, false,
-        type: i1.DriftSqlType.dateTime);
+i1.GeneratedColumn<int> _column_22(String aliasedName) =>
+    i1.GeneratedColumn<int>('timestamp', aliasedName, false,
+        type: i1.DriftSqlType.int);
 i1.GeneratedColumn<String> _column_23(String aliasedName) =>
     i1.GeneratedColumn<String>('data', aliasedName, false,
         type: i1.DriftSqlType.string);
@@ -562,18 +563,24 @@ class Shape9 extends i0.VersionedTable {
   Shape9({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get uid =>
       columnsByName['uid']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<DateTime> get timestamp =>
-      columnsByName['timestamp']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<int> get nid =>
+      columnsByName['nid']! as i1.GeneratedColumn<int>;
+  i1.GeneratedColumn<int> get timestamp =>
+      columnsByName['timestamp']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get data =>
       columnsByName['data']! as i1.GeneratedColumn<String>;
 }
+
+i1.GeneratedColumn<int> _column_27(String aliasedName) =>
+    i1.GeneratedColumn<int>('nid', aliasedName, false,
+        type: i1.DriftSqlType.int);
 
 class Shape10 extends i0.VersionedTable {
   Shape10({required super.source, required super.alias}) : super.aliased();
   i1.GeneratedColumn<int> get uid =>
       columnsByName['uid']! as i1.GeneratedColumn<int>;
-  i1.GeneratedColumn<DateTime> get timestamp =>
-      columnsByName['timestamp']! as i1.GeneratedColumn<DateTime>;
+  i1.GeneratedColumn<int> get timestamp =>
+      columnsByName['timestamp']! as i1.GeneratedColumn<int>;
   i1.GeneratedColumn<String> get data =>
       columnsByName['data']! as i1.GeneratedColumn<String>;
   i1.GeneratedColumn<int> get peerUid =>
@@ -586,18 +593,18 @@ class Shape10 extends i0.VersionedTable {
       columnsByName['already_read']! as i1.GeneratedColumn<bool>;
 }
 
-i1.GeneratedColumn<int> _column_27(String aliasedName) =>
+i1.GeneratedColumn<int> _column_28(String aliasedName) =>
     i1.GeneratedColumn<int>('peer_uid', aliasedName, false,
         type: i1.DriftSqlType.int);
-i1.GeneratedColumn<String> _column_28(String aliasedName) =>
+i1.GeneratedColumn<String> _column_29(String aliasedName) =>
     i1.GeneratedColumn<String>('peer_username', aliasedName, false,
         type: i1.DriftSqlType.string);
-i1.GeneratedColumn<bool> _column_29(String aliasedName) =>
+i1.GeneratedColumn<bool> _column_30(String aliasedName) =>
     i1.GeneratedColumn<bool>('sender', aliasedName, false,
         type: i1.DriftSqlType.bool,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
             ' CHECK ("sender" IN (0, 1))'));
-i1.GeneratedColumn<bool> _column_30(String aliasedName) =>
+i1.GeneratedColumn<bool> _column_31(String aliasedName) =>
     i1.GeneratedColumn<bool>('already_read', aliasedName, false,
         type: i1.DriftSqlType.bool,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
@@ -611,7 +618,7 @@ class Shape11 extends i0.VersionedTable {
       columnsByName['cache_name']! as i1.GeneratedColumn<String>;
 }
 
-i1.GeneratedColumn<String> _column_31(String aliasedName) =>
+i1.GeneratedColumn<String> _column_32(String aliasedName) =>
     i1.GeneratedColumn<String>('cache_name', aliasedName, false,
         type: i1.DriftSqlType.string);
 i0.MigrationStepWithVersion migrationSteps({

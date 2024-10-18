@@ -55,4 +55,13 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
       CookieCompanion(lastCheckin: Value(datetime)),
     );
   }
+
+  /// Update the last fetch notification timestamp for user [uid].
+  Future<int> updateLastFetchNoticeTime(int uid, DateTime datetime) async {
+    return (update(cookie)..where((e) => e.uid.equals(uid))).write(
+      CookieCompanion(
+        lastFetchNotice: Value(datetime),
+      ),
+    );
+  }
 }

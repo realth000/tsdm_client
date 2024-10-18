@@ -8,8 +8,8 @@ class PersonalMessage extends Table {
   /// Uid of the user who owns the notice.
   IntColumn get uid => integer()();
 
-  /// Notice timestamp.
-  DateTimeColumn get timestamp => dateTime()();
+  /// Notice timestamp in seconds.
+  IntColumn get timestamp => integer()();
 
   /// Message body in plain text.
   TextColumn get data => text()();

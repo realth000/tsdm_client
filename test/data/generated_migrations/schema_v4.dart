@@ -11,9 +11,9 @@ class BroadcastMessage extends Table with TableInfo {
   late final GeneratedColumn<int> uid = GeneratedColumn<int>(
       'uid', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
       'timestamp', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> data = GeneratedColumn<String>(
       'data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
@@ -130,14 +130,17 @@ class Notice extends Table with TableInfo {
   late final GeneratedColumn<int> uid = GeneratedColumn<int>(
       'uid', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> nid = GeneratedColumn<int>(
+      'nid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
       'timestamp', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> data = GeneratedColumn<String>(
       'data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   @override
-  List<GeneratedColumn> get $columns => [uid, timestamp, data];
+  List<GeneratedColumn> get $columns => [uid, nid, timestamp, data];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -164,9 +167,9 @@ class PersonalMessage extends Table with TableInfo {
   late final GeneratedColumn<int> uid = GeneratedColumn<int>(
       'uid', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: true);
-  late final GeneratedColumn<DateTime> timestamp = GeneratedColumn<DateTime>(
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
       'timestamp', aliasedName, false,
-      type: DriftSqlType.dateTime, requiredDuringInsert: true);
+      type: DriftSqlType.int, requiredDuringInsert: true);
   late final GeneratedColumn<String> data = GeneratedColumn<String>(
       'data', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);

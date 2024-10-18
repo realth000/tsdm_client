@@ -11,8 +11,8 @@ enum NotificationStatus {
   /// Success.
   success,
 
-  /// Failed.
-  failed,
+  /// Failure.
+  failure,
 }
 
 /// State of notification.
@@ -20,29 +20,21 @@ enum NotificationStatus {
 class NotificationState with NotificationStateMappable {
   /// Constructor.
   const NotificationState({
-    this.noticeStatus = NotificationStatus.initial,
-    this.personalMessageStatus = NotificationStatus.initial,
-    this.broadcastMessageStatus = NotificationStatus.initial,
+    this.status = NotificationStatus.initial,
     this.noticeList = const [],
     this.personalMessageList = const [],
     this.broadcastMessageList = const [],
   });
 
   /// Notice tab status.
-  final NotificationStatus noticeStatus;
+  final NotificationStatus status;
 
-  /// Personal message status.
-  final NotificationStatus personalMessageStatus;
+  /// All fetched [NoticeV2].
+  final List<NoticeV2> noticeList;
 
-  /// Broadcast message status.
-  final NotificationStatus broadcastMessageStatus;
+  /// All fetched [PersonalMessageV2].
+  final List<PersonalMessageV2> personalMessageList;
 
-  /// All fetched [Notice].
-  final List<Notice> noticeList;
-
-  /// All fetched [PersonalMessage].
-  final List<PersonalMessage> personalMessageList;
-
-  /// All fetched [BroadcastMessage].
-  final List<BroadcastMessage> broadcastMessageList;
+  /// All fetched [BroadcastMessageV2].
+  final List<BroadcastMessageV2> broadcastMessageList;
 }
