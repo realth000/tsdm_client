@@ -119,6 +119,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 网页：修复斜体字丢失的问题。
 - 统计：修复统计页面的积分中数据没有对齐的问题。
 - 通知：修复无法现实某些类型的提醒的问题，现在能够显示所有类型的提醒。
+- html：修复部分帖子元素解析后在末尾有多余空行的问题。
 - html：修复解析图片时图片大小不生效的问题。
 
 ### Changed
@@ -144,6 +145,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - 这会导致部分内容的换行位置与原始网页不同，但后续可以支持复制内容的功能。
 - 通知：由于通知功能的实现方式发生了变更，更改了通知页的布局。
 - internal：提高flutter版本至 3.24（dart 3.5）。
+- internal：gradle的参数mx增加到4608。
 - internal：最低要求macOS 11。
 - BREAKING：internal：重构功能：
   - 大部分设置项配置和读写逻辑。
