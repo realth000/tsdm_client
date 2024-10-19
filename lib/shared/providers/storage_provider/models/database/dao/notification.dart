@@ -24,7 +24,13 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
           ..where(
             (e) =>
                 e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          ))
+          )
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.timestamp,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
         .get();
   }
 
@@ -39,7 +45,13 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
           ..where(
             (e) =>
                 e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          ))
+          )
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.timestamp,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
         .get();
   }
 
@@ -54,7 +66,13 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
           ..where(
             (e) =>
                 e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          ))
+          )
+          ..orderBy([
+            (e) => OrderingTerm(
+                  expression: e.timestamp,
+                  mode: OrderingMode.desc,
+                ),
+          ]))
         .get();
   }
 
