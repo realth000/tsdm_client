@@ -63,9 +63,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     emit(
       state.copyWith(
         status: ForumStatus.loading,
-        stickThreadList: [],
         normalThreadList: [],
-        subredditList: [],
       ),
     );
 
@@ -241,13 +239,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
         )
         .toList();
 
-    return state.copyWith(
+    var anotherState = state.copyWith(
       status: ForumStatus.success,
       title: title,
-      rulesElement: rulesElement,
-      stickThreadList: stickThreadList,
       normalThreadList: allNormalThread,
-      subredditList: subredditList,
       canLoadMore: canLoadMore,
       needLogin: needLogin,
       havePermission: havePermission,
@@ -259,6 +254,18 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
       filterOrderList: filterOrderList,
       filterDatelineList: filterDatelineList,
     );
+
+    if (rulesElement != null) {
+      anotherState = anotherState.copyWith(rulesElement: rulesElement);
+    }
+    if (stickThreadList != null) {
+      anotherState = anotherState.copyWith(stickThreadList: stickThreadList);
+    }
+    if (subredditList != null) {
+      anotherState = anotherState.copyWith(subredditList: subredditList);
+    }
+
+    return anotherState;
   }
 
   /// Build a list of thread from given html [document].
