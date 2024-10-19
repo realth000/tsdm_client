@@ -550,12 +550,11 @@ final class _Muncher with LoggerMixin {
     // and restore munch state to avoid potential issued about "styles inside
     // quoted blocks  affects outside main content".
     state.save();
-    final ret = _munch(element);
+    final span =
+        element.innerText.isEmpty ? null : TextSpan(children: _munch(element));
     state.restore();
     return [
-      WidgetSpan(
-        child: QuotedText.rich(TextSpan(children: ret)),
-      ),
+      WidgetSpan(child: QuotedText.rich(span)),
       emptySpan,
     ];
   }
