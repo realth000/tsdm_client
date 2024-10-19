@@ -489,6 +489,17 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     final tr = context.t.settingsPage.advancedSection;
+    Text? proxyOptionHint;
+    if (!netClientUseProxy) {
+      proxyOptionHint = Text(tr.proxySettings.disabled);
+    } else if (host == null && port == null) {
+      proxyOptionHint = Text(
+        tr.proxySettings.notSet,
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.error,
+        ),
+      );
+    }
     return [
       SectionTitleText(tr.title),
       if (!kReleaseMode)
@@ -525,7 +536,7 @@ class _SettingsPageState extends State<SettingsPage> {
         enabled: netClientUseProxy,
         leading: const Icon(Icons.network_locked_outlined),
         title: Text(tr.proxySettings.title),
-        subtitle: netClientUseProxy ? null : Text(tr.proxySettings.disabled),
+        subtitle: proxyOptionHint,
         onTap: () async => showDialog<void>(
           context: context,
           builder: (context) => ProxySettingsDialog(

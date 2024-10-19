@@ -139,6 +139,7 @@
         "host": "位址",
         "port": "連接埠",
         "disabled": "已停用代理",
+        "notSet": "未設定代理位址",
         "invalidHostOrIp": "無效的host或IP",
         "invalidPort": "無效的連接埠",
         "testConnection": {

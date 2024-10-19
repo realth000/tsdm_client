@@ -139,6 +139,7 @@
         "host": "Host",
         "port": "Port",
         "disabled": "Proxy is disabled",
+        "notSet": "Proxy address not set",
         "invalidHostOrIp": "Invalid host or IP",
         "invalidPort": "Invalid port",
         "testConnection": {
