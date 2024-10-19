@@ -52,7 +52,7 @@ class _PointsPageState extends State<PointsPage>
       child: SingleChildScrollView(
         controller: _statisticsScrollController,
         child: Padding(
-          padding: edgeInsetsL12T4R12B24,
+          padding: edgeInsetsL12T4R12B4,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -74,7 +74,7 @@ class _PointsPageState extends State<PointsPage>
                 children: [
                   SingleLineText(
                     context.t.pointsPage.statisticsTab.recentChangelog,
-                    style: Theme.of(context).textTheme.titleSmall,
+                    style: Theme.of(context).textTheme.titleMedium,
                   ),
                   const Spacer(),
                   TextButton(
@@ -130,12 +130,11 @@ class _PointsPageState extends State<PointsPage>
         },
         child: ListView.separated(
           shrinkWrap: true,
-          padding: edgeInsetsL12T4R12B24,
+          padding: edgeInsetsL12T4R12B4,
           itemCount: state.fullChangelog.length,
-          itemBuilder: (context, index) {
-            return PointsChangeCard(state.fullChangelog[index]);
-          },
-          separatorBuilder: (context, index) => sizedBoxW4H4,
+          itemBuilder: (_, index) =>
+              PointsChangeCard(state.fullChangelog[index]),
+          separatorBuilder: (_, __) => sizedBoxW4H4,
         ),
       );
 
@@ -148,12 +147,11 @@ class _PointsPageState extends State<PointsPage>
 
     return Column(
       children: [
-        sizedBoxW4H4,
         Padding(
           padding: edgeInsetsL12T4R12,
           child: PointsQueryForm(state.allParameters),
         ),
-        sizedBoxW12H12,
+        sizedBoxW4H4,
         body,
       ],
     );
@@ -186,6 +184,7 @@ class _PointsPageState extends State<PointsPage>
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.pointsPage;
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(
@@ -202,36 +201,27 @@ class _PointsPageState extends State<PointsPage>
           )..add(PointsChangelogRefreshRequested()),
         ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<PointsStatisticsBloc, PointsStatisticsState>(
-            listener: (context, state) {
-              //
-            },
-          ),
-        ],
-        child: Scaffold(
-          appBar: AppBar(
-            title: Text(context.t.pointsPage.title),
-            bottom: TabBar(
-              controller: _tabController,
-              tabs: [
-                Tab(text: context.t.pointsPage.statisticsTab.title),
-                Tab(text: context.t.pointsPage.changelogTab.title),
-              ],
-            ),
-          ),
-          body: TabBarView(
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text(tr.title),
+          bottom: TabBar(
             controller: _tabController,
-            children: [
-              BlocBuilder<PointsStatisticsBloc, PointsStatisticsState>(
-                builder: _buildStatisticsTab,
-              ),
-              BlocBuilder<PointsChangelogBloc, PointsChangelogState>(
-                builder: _buildChangelogTab,
-              ),
+            tabs: [
+              Tab(text: tr.statisticsTab.title),
+              Tab(text: tr.changelogTab.title),
             ],
           ),
+        ),
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            BlocBuilder<PointsStatisticsBloc, PointsStatisticsState>(
+              builder: _buildStatisticsTab,
+            ),
+            BlocBuilder<PointsChangelogBloc, PointsChangelogState>(
+              builder: _buildChangelogTab,
+            ),
+          ],
         ),
       ),
     );

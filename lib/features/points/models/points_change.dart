@@ -139,7 +139,7 @@ class PointsChange with PointsChangeMappable {
       changeMap[attrNameList[i]] = attrValueList[i];
     }
 
-    final detail = tdList[2].innerText.trim();
+    final detail = tdList[2].outerHtml ?? tdList[2].innerText.trim();
     final redirectUrl =
         tdList[2].querySelector('a')?.attributes['href']?.prependHost();
     final changedTime = tdList[3].innerText.trim().parseToDateTimeUtc8();

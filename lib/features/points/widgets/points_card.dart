@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/points/models/models.dart';
+import 'package:tsdm_client/utils/html/html_muncher.dart';
+import 'package:tsdm_client/utils/html/munch_options.dart';
+import 'package:universal_html/parsing.dart';
 
 /// A card to a change event of user's points.
 class PointsChangeCard extends StatelessWidget {
@@ -41,10 +45,26 @@ class PointsChangeCard extends StatelessWidget {
                   PointsChangeType.unlimited =>
                     const Icon(Icons.trending_flat_outlined),
                 },
-                title: Text(pointsChange.operation),
-                subtitle: Text(pointsChange.changeMapString),
+                title: Text(
+                  pointsChange.operation,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+                subtitle: Text(pointsChange.time.yyyyMMDDHHMMSS()),
               ),
-              Text(pointsChange.detail),
+              munchElement(
+                context,
+                parseHtmlDocument(pointsChange.detail).body!,
+                options: const MunchOptions(renderUrl: false),
+              ),
+              sizedBoxW4H4,
+              Text(
+                pointsChange.changeMapString,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+              ),
             ],
           ),
         ),

@@ -245,7 +245,10 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
           children: [
             Row(
               children: [
-                Text(context.t.pointsPage.changelogTab.query),
+                Text(
+                  context.t.pointsPage.changelogTab.query,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const Spacer(),
                 IconButton(
                   icon: showQueryFilter

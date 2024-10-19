@@ -8,6 +8,7 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
+import 'package:tsdm_client/utils/html/munch_options.dart';
 import 'package:tsdm_client/utils/html/netease_card.dart';
 import 'package:tsdm_client/utils/html/newcomer_report_card.dart';
 import 'package:tsdm_client/utils/html/table_width.dart';
@@ -43,10 +44,12 @@ Widget munchElement(
   BuildContext context,
   uh.Element rootElement, {
   bool parseLockedWithPurchase = false,
+  MunchOptions options = const MunchOptions(),
 }) {
   final muncher = _Muncher(
     context,
     parseLockedWithPurchase: parseLockedWithPurchase,
+    options: options,
   );
 
   final ret = muncher._munch(rootElement);
@@ -191,7 +194,11 @@ class _MunchState {
 /// Munch html nodes into flutter widgets.
 final class _Muncher with LoggerMixin {
   /// Constructor.
-  _Muncher(this.context, {required this.parseLockedWithPurchase});
+  _Muncher(
+    this.context, {
+    required this.parseLockedWithPurchase,
+    required this.options,
+  });
 
   /// Context to build widget when munching.
   final BuildContext context;
@@ -201,6 +208,9 @@ final class _Muncher with LoggerMixin {
 
   /// Munch state to use when munching.
   final _MunchState state = _MunchState();
+
+  /// Additional options control injected by caller.
+  final MunchOptions options;
 
   /// Map to store div classes and corresponding munch functions.
   Map<String, List<InlineSpan>? Function(uh.Element)>? _divMap;
@@ -776,7 +786,7 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildA(uh.Element element) {
-    if (!element.attributes.containsKey('href')) {
+    if (!element.attributes.containsKey('href') || !options.renderUrl) {
       return _munch(element);
     }
 
