@@ -49,16 +49,7 @@ class QuotedText extends StatelessWidget {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text.rich(
-            WidgetSpan(
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  iconHead,
-                ],
-              ),
-            ),
-          ),
+          Text.rich(WidgetSpan(child: Align(child: iconHead))),
           sizedBoxW4H4,
           Expanded(
             child: Text.rich(
@@ -66,15 +57,8 @@ class QuotedText extends StatelessWidget {
                 children: [
                   // Add a line feed to ensure the child content is lower than
                   // start quote icon in vertical direction.
-                  TextSpan(text: '\n', style: quotedStyle, children: [span!]),
-                  WidgetSpan(
-                    child: Row(
-                      children: [
-                        const Spacer(),
-                        iconTail,
-                      ],
-                    ),
-                  ),
+                  TextSpan(style: quotedStyle, children: [span!]),
+                  WidgetSpan(child: iconTail),
                 ],
               ),
             ),
