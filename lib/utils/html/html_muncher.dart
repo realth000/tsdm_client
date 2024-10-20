@@ -385,9 +385,11 @@ final class _Muncher with LoggerMixin {
             imageUrl: url,
             hrefUrl: hrefUrl,
           ),
-          child: SizedBox(
-            width: imgWidth,
-            height: imgHeight,
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: imgWidth ?? double.infinity,
+              maxHeight: imgHeight ?? double.infinity,
+            ),
             child: NetworkIndicatorImage(url),
           ),
         ),
