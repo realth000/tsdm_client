@@ -10,7 +10,8 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'notification_bloc.mapper.dart';
-part 'notification_event.dart';
+part 'notification_event.dart';event.dart';
+
 part 'notification_state.dart';
 
 /// Emitter
