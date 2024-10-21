@@ -166,7 +166,7 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           if (localeGroup.$2) {
             // Use system language.
-            LocaleSettings.useDeviceLocale();
+            await LocaleSettings.useDeviceLocale();
             await desktopUpdateWindowTitle();
             if (!context.mounted) {
               return;
@@ -176,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 .add(const SettingsValueChanged(SettingsKeys.locale, ''));
             return;
           }
-          LocaleSettings.setLocale(localeGroup.$1!);
+          await LocaleSettings.setLocale(localeGroup.$1!);
           await desktopUpdateWindowTitle();
           if (!context.mounted) {
             return;

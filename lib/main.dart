@@ -26,9 +26,9 @@ Future<void> main(List<String> args) async {
   final locale =
       AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
   if (locale == null) {
-    LocaleSettings.useDeviceLocale();
+    await LocaleSettings.useDeviceLocale();
   } else {
-    LocaleSettings.setLocale(locale);
+    await LocaleSettings.setLocale(locale);
   }
 
   if (isDesktop) {
