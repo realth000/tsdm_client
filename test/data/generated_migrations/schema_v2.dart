@@ -99,8 +99,8 @@ class Settings extends Table with TableInfo {
       'bool_value', aliasedName, true,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          ' CHECK ("bool_value" IN (0, 1))'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("bool_value" IN (0, 1))'));
   late final GeneratedColumn<DateTime> dateTimeValue =
       GeneratedColumn<DateTime>('date_time_value', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);

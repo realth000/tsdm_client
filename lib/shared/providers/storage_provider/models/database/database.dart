@@ -28,7 +28,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -55,6 +55,21 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
             await m.dropColumn(schema.cookie, 'email');
             await m.addColumn(schema.imageCache, schema.imageCache.usage);
             info('migrating database schema from 3 to 4... ok!');
+          },
+          from4To5: (m, schema) async {
+            info('migrating database schema from 4 to 5...');
+            // Migrate notice table
+            final noticeData = await m.database.select(schema.notice).get();
+            final noticeEntity =
+                noticeData.map((e) => NoticeEntity.fromJson(e.data));
+            await m.drop(schema.notice);
+            await m.create(schema.notice);
+            await transaction(() async {
+              for (final n in noticeEntity) {
+                await m.database.into(notice).insertOnConflictUpdate(n);
+              }
+            });
+            info('migrating database schema from 4 to 5... ok!');
           },
         ),
       );

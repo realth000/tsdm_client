@@ -3,6 +3,43 @@
 //@dart=2.12
 import 'package:drift/drift.dart';
 
+class BroadcastMessage extends Table with TableInfo {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  BroadcastMessage(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<int> uid = GeneratedColumn<int>(
+      'uid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<int> pmid = GeneratedColumn<int>(
+      'pmid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [uid, timestamp, data, pmid];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'broadcast_message';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid, timestamp};
+  @override
+  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
+    throw UnsupportedError('TableInfo.map in schema verification code');
+  }
+
+  @override
+  BroadcastMessage createAlias(String alias) {
+    return BroadcastMessage(attachedDatabase, alias);
+  }
+}
+
 class Cookie extends Table with TableInfo {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -14,18 +51,18 @@ class Cookie extends Table with TableInfo {
   late final GeneratedColumn<int> uid = GeneratedColumn<int>(
       'uid', aliasedName, false,
       type: DriftSqlType.int, requiredDuringInsert: false);
-  late final GeneratedColumn<String> email = GeneratedColumn<String>(
-      'email', aliasedName, false,
-      type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<String> cookie = GeneratedColumn<String>(
       'cookie', aliasedName, false,
       type: DriftSqlType.string, requiredDuringInsert: true);
   late final GeneratedColumn<DateTime> lastCheckin = GeneratedColumn<DateTime>(
       'last_checkin', aliasedName, true,
       type: DriftSqlType.dateTime, requiredDuringInsert: false);
+  late final GeneratedColumn<DateTime> lastFetchNotice =
+      GeneratedColumn<DateTime>('last_fetch_notice', aliasedName, true,
+          type: DriftSqlType.dateTime, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [username, uid, email, cookie, lastCheckin];
+      [username, uid, cookie, lastCheckin, lastFetchNotice];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -61,9 +98,12 @@ class ImageCache extends Table with TableInfo {
   late final GeneratedColumn<DateTime> lastUsedTime = GeneratedColumn<DateTime>(
       'last_used_time', aliasedName, false,
       type: DriftSqlType.dateTime, requiredDuringInsert: true);
+  late final GeneratedColumn<int> usage = GeneratedColumn<int>(
+      'usage', aliasedName, true,
+      type: DriftSqlType.int, requiredDuringInsert: false);
   @override
   List<GeneratedColumn> get $columns =>
-      [url, fileName, lastCachedTime, lastUsedTime];
+      [url, fileName, lastCachedTime, lastUsedTime, usage];
   @override
   String get aliasedName => _alias ?? actualTableName;
   @override
@@ -79,6 +119,96 @@ class ImageCache extends Table with TableInfo {
   @override
   ImageCache createAlias(String alias) {
     return ImageCache(attachedDatabase, alias);
+  }
+}
+
+class Notice extends Table with TableInfo {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  Notice(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<int> uid = GeneratedColumn<int>(
+      'uid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> nid = GeneratedColumn<int>(
+      'nid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [uid, nid, timestamp, data];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'notice';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid, nid};
+  @override
+  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
+    throw UnsupportedError('TableInfo.map in schema verification code');
+  }
+
+  @override
+  Notice createAlias(String alias) {
+    return Notice(attachedDatabase, alias);
+  }
+}
+
+class PersonalMessage extends Table with TableInfo {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  PersonalMessage(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<int> uid = GeneratedColumn<int>(
+      'uid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<int> timestamp = GeneratedColumn<int>(
+      'timestamp', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> data = GeneratedColumn<String>(
+      'data', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<int> peerUid = GeneratedColumn<int>(
+      'peer_uid', aliasedName, false,
+      type: DriftSqlType.int, requiredDuringInsert: true);
+  late final GeneratedColumn<String> peerUsername = GeneratedColumn<String>(
+      'peer_username', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<bool> sender = GeneratedColumn<bool>(
+      'sender', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("sender" IN (0, 1))'));
+  late final GeneratedColumn<bool> alreadyRead = GeneratedColumn<bool>(
+      'already_read', aliasedName, false,
+      type: DriftSqlType.bool,
+      requiredDuringInsert: true,
+      defaultConstraints: GeneratedColumn.constraintIsAlways(
+          'CHECK ("already_read" IN (0, 1))'));
+  @override
+  List<GeneratedColumn> get $columns =>
+      [uid, timestamp, data, peerUid, peerUsername, sender, alreadyRead];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'personal_message';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {uid, timestamp};
+  @override
+  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
+    throw UnsupportedError('TableInfo.map in schema verification code');
+  }
+
+  @override
+  PersonalMessage createAlias(String alias) {
+    return PersonalMessage(attachedDatabase, alias);
   }
 }
 
@@ -190,18 +320,61 @@ class ThreadVisitHistory extends Table with TableInfo {
   }
 }
 
-class DatabaseAtV3 extends GeneratedDatabase {
-  DatabaseAtV3(QueryExecutor e) : super(e);
+class UserAvatar extends Table with TableInfo {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  UserAvatar(this.attachedDatabase, [this._alias]);
+  late final GeneratedColumn<String> username = GeneratedColumn<String>(
+      'username', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  late final GeneratedColumn<String> cacheName = GeneratedColumn<String>(
+      'cache_name', aliasedName, false,
+      type: DriftSqlType.string, requiredDuringInsert: true);
+  @override
+  List<GeneratedColumn> get $columns => [username, cacheName];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'user_avatar';
+  @override
+  Set<GeneratedColumn> get $primaryKey => {username};
+  @override
+  Never map(Map<String, dynamic> data, {String? tablePrefix}) {
+    throw UnsupportedError('TableInfo.map in schema verification code');
+  }
+
+  @override
+  UserAvatar createAlias(String alias) {
+    return UserAvatar(attachedDatabase, alias);
+  }
+}
+
+class DatabaseAtV5 extends GeneratedDatabase {
+  DatabaseAtV5(QueryExecutor e) : super(e);
+  late final BroadcastMessage broadcastMessage = BroadcastMessage(this);
   late final Cookie cookie = Cookie(this);
   late final ImageCache imageCache = ImageCache(this);
+  late final Notice notice = Notice(this);
+  late final PersonalMessage personalMessage = PersonalMessage(this);
   late final Settings settings = Settings(this);
   late final ThreadVisitHistory threadVisitHistory = ThreadVisitHistory(this);
+  late final UserAvatar userAvatar = UserAvatar(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
   @override
-  List<DatabaseSchemaEntity> get allSchemaEntities =>
-      [cookie, imageCache, settings, threadVisitHistory];
+  List<DatabaseSchemaEntity> get allSchemaEntities => [
+        broadcastMessage,
+        cookie,
+        imageCache,
+        notice,
+        personalMessage,
+        settings,
+        threadVisitHistory,
+        userAvatar
+      ];
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 5;
 }

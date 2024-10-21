@@ -20,5 +20,5 @@ class Notice extends Table {
   TextColumn get data => text()();
 
   @override
-  Set<Column<Object>> get primaryKey => {uid, timestamp};
+  Set<Column<Object>> get primaryKey => {uid, nid};
 }

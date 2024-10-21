@@ -184,13 +184,13 @@ class PersonalMessage extends Table with TableInfo {
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints:
-          GeneratedColumn.constraintIsAlways(' CHECK ("sender" IN (0, 1))'));
+          GeneratedColumn.constraintIsAlways('CHECK ("sender" IN (0, 1))'));
   late final GeneratedColumn<bool> alreadyRead = GeneratedColumn<bool>(
       'already_read', aliasedName, false,
       type: DriftSqlType.bool,
       requiredDuringInsert: true,
       defaultConstraints: GeneratedColumn.constraintIsAlways(
-          ' CHECK ("already_read" IN (0, 1))'));
+          'CHECK ("already_read" IN (0, 1))'));
   @override
   List<GeneratedColumn> get $columns =>
       [uid, timestamp, data, peerUid, peerUsername, sender, alreadyRead];
@@ -233,8 +233,8 @@ class Settings extends Table with TableInfo {
       'bool_value', aliasedName, true,
       type: DriftSqlType.bool,
       requiredDuringInsert: false,
-      defaultConstraints: GeneratedColumn.constraintIsAlways(
-          ' CHECK ("bool_value" IN (0, 1))'));
+      defaultConstraints:
+          GeneratedColumn.constraintIsAlways('CHECK ("bool_value" IN (0, 1))'));
   late final GeneratedColumn<DateTime> dateTimeValue =
       GeneratedColumn<DateTime>('date_time_value', aliasedName, true,
           type: DriftSqlType.dateTime, requiredDuringInsert: false);

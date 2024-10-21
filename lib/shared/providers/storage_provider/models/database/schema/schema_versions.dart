@@ -169,7 +169,7 @@ i1.GeneratedColumn<bool> _column_12(String aliasedName) =>
     i1.GeneratedColumn<bool>('bool_value', aliasedName, true,
         type: i1.DriftSqlType.bool,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-            ' CHECK ("bool_value" IN (0, 1))'));
+            'CHECK ("bool_value" IN (0, 1))'));
 i1.GeneratedColumn<DateTime> _column_13(String aliasedName) =>
     i1.GeneratedColumn<DateTime>('date_time_value', aliasedName, true,
         type: i1.DriftSqlType.dateTime);
@@ -603,12 +603,12 @@ i1.GeneratedColumn<bool> _column_30(String aliasedName) =>
     i1.GeneratedColumn<bool>('sender', aliasedName, false,
         type: i1.DriftSqlType.bool,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-            ' CHECK ("sender" IN (0, 1))'));
+            'CHECK ("sender" IN (0, 1))'));
 i1.GeneratedColumn<bool> _column_31(String aliasedName) =>
     i1.GeneratedColumn<bool>('already_read', aliasedName, false,
         type: i1.DriftSqlType.bool,
         defaultConstraints: i1.GeneratedColumn.constraintIsAlways(
-            ' CHECK ("already_read" IN (0, 1))'));
+            'CHECK ("already_read" IN (0, 1))'));
 
 class Shape11 extends i0.VersionedTable {
   Shape11({required super.source, required super.alias}) : super.aliased();
@@ -621,10 +621,173 @@ class Shape11 extends i0.VersionedTable {
 i1.GeneratedColumn<String> _column_32(String aliasedName) =>
     i1.GeneratedColumn<String>('cache_name', aliasedName, false,
         type: i1.DriftSqlType.string);
+
+final class Schema5 extends i0.VersionedSchema {
+  Schema5({required super.database}) : super(version: 5);
+  @override
+  late final List<i1.DatabaseSchemaEntity> entities = [
+    broadcastMessage,
+    cookie,
+    imageCache,
+    notice,
+    personalMessage,
+    settings,
+    threadVisitHistory,
+    userAvatar,
+  ];
+  late final Shape6 broadcastMessage = Shape6(
+      source: i0.VersionedTable(
+        entityName: 'broadcast_message',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(uid, timestamp)',
+        ],
+        columns: [
+          _column_1,
+          _column_22,
+          _column_23,
+          _column_24,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape7 cookie = Shape7(
+      source: i0.VersionedTable(
+        entityName: 'cookie',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(uid)',
+        ],
+        columns: [
+          _column_0,
+          _column_1,
+          _column_3,
+          _column_19,
+          _column_25,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape8 imageCache = Shape8(
+      source: i0.VersionedTable(
+        entityName: 'image_cache',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(url)',
+        ],
+        columns: [
+          _column_4,
+          _column_5,
+          _column_6,
+          _column_7,
+          _column_26,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape9 notice = Shape9(
+      source: i0.VersionedTable(
+        entityName: 'notice',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(uid, nid)',
+        ],
+        columns: [
+          _column_1,
+          _column_27,
+          _column_22,
+          _column_23,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape10 personalMessage = Shape10(
+      source: i0.VersionedTable(
+        entityName: 'personal_message',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(uid, timestamp)',
+        ],
+        columns: [
+          _column_1,
+          _column_22,
+          _column_23,
+          _column_28,
+          _column_29,
+          _column_30,
+          _column_31,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape5 settings = Shape5(
+      source: i0.VersionedTable(
+        entityName: 'settings',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(name)',
+        ],
+        columns: [
+          _column_8,
+          _column_9,
+          _column_10,
+          _column_11,
+          _column_12,
+          _column_13,
+          _column_20,
+          _column_21,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape3 threadVisitHistory = Shape3(
+      source: i0.VersionedTable(
+        entityName: 'thread_visit_history',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(uid, tid)',
+        ],
+        columns: [
+          _column_1,
+          _column_14,
+          _column_0,
+          _column_15,
+          _column_16,
+          _column_17,
+          _column_18,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+  late final Shape11 userAvatar = Shape11(
+      source: i0.VersionedTable(
+        entityName: 'user_avatar',
+        withoutRowId: false,
+        isStrict: false,
+        tableConstraints: [
+          'PRIMARY KEY(username)',
+        ],
+        columns: [
+          _column_0,
+          _column_32,
+        ],
+        attachedDatabase: database,
+      ),
+      alias: null);
+}
+
 i0.MigrationStepWithVersion migrationSteps({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) {
   return (currentVersion, database) async {
     switch (currentVersion) {
@@ -643,6 +806,11 @@ i0.MigrationStepWithVersion migrationSteps({
         final migrator = i1.Migrator(database, schema);
         await from3To4(migrator, schema);
         return 4;
+      case 4:
+        final schema = Schema5(database: database);
+        final migrator = i1.Migrator(database, schema);
+        await from4To5(migrator, schema);
+        return 5;
       default:
         throw ArgumentError.value('Unknown migration from $currentVersion');
     }
@@ -653,10 +821,12 @@ i1.OnUpgrade stepByStep({
   required Future<void> Function(i1.Migrator m, Schema2 schema) from1To2,
   required Future<void> Function(i1.Migrator m, Schema3 schema) from2To3,
   required Future<void> Function(i1.Migrator m, Schema4 schema) from3To4,
+  required Future<void> Function(i1.Migrator m, Schema5 schema) from4To5,
 }) =>
     i0.VersionedSchema.stepByStepHelper(
         step: migrationSteps(
       from1To2: from1To2,
       from2To3: from2To3,
       from3To4: from3To4,
+      from4To5: from4To5,
     ));
