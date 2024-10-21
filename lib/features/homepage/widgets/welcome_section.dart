@@ -192,6 +192,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
                         username: username,
                         avatarUrl: avatarUrl,
                         heroTag: username,
+                        disableHero: true,
                       ),
                     ),
                     title: Row(
