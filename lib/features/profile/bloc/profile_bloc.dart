@@ -35,7 +35,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       (event, emit) => switch (event) {
         ProfileLoadRequested(:final username, :final uid) =>
           _onLoadRequested(emit, username: username, uid: uid),
-        ProfileRefreshRequested() => _onRefreshRequested(emit),
+        ProfileRefreshRequested(:final uid, :final username) =>
+          _onRefreshRequested(emit, uid: uid, username: username),
         ProfileLogoutRequested() => _onLogoutRequested(emit),
       },
     );
@@ -102,10 +103,15 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     );
   }
 
-  Future<void> _onRefreshRequested(_Emitter emit) async {
+  Future<void> _onRefreshRequested(
+    _Emitter emit, {
+    required String? uid,
+    required String? username,
+  }) async {
     emit(state.copyWith(status: ProfileStatus.loading));
-    final documentEither =
-        await _profileRepository.fetchProfile(force: true).run();
+    final documentEither = await _profileRepository
+        .fetchProfile(uid: uid, username: username, force: true)
+        .run();
     if (documentEither.isLeft()) {
       final err = documentEither.unwrapErr();
       handle(err);

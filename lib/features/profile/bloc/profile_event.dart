@@ -26,7 +26,19 @@ final class ProfileLoadRequested extends ProfileEvent
 /// User required to refresh the profile page.
 @MappableClass()
 final class ProfileRefreshRequested extends ProfileEvent
-    with ProfileRefreshRequestedMappable {}
+    with ProfileRefreshRequestedMappable {
+  /// Constructor.
+  const ProfileRefreshRequested({
+    required this.username,
+    required this.uid,
+  });
+
+  /// Other user username.
+  final String? username;
+
+  /// Other user uid.
+  final String? uid;
+}
 
 /// User required to logout.
 ///

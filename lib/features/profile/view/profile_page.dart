@@ -742,8 +742,12 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: _refreshController,
       scrollController: _scrollController,
       header: const MaterialHeader(),
-      onRefresh: () =>
-          context.read<ProfileBloc>().add(ProfileRefreshRequested()),
+      onRefresh: () => context.read<ProfileBloc>().add(
+            ProfileRefreshRequested(
+              uid: widget.uid,
+              username: widget.username,
+            ),
+          ),
       childBuilder: (context, physics) => CustomScrollView(
         controller: _scrollController,
         physics: physics,
@@ -815,7 +819,12 @@ class _ProfilePageState extends State<ProfilePage> {
                 backUri: GoRouterState.of(context).uri,
                 needPop: true,
                 popCallback: (context) {
-                  context.read<ProfileBloc>().add(ProfileRefreshRequested());
+                  context.read<ProfileBloc>().add(
+                        ProfileRefreshRequested(
+                          uid: widget.uid,
+                          username: widget.username,
+                        ),
+                      );
                 },
               ),
             ProfileStatus.failure => buildRetryButton(context, () {

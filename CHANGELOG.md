@@ -123,6 +123,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 通知：修复无法现实某些类型的提醒的问题，现在能够显示所有类型的提醒。
 - html：修复部分帖子元素解析后在末尾有多余空行的问题。
 - html：修复解析图片时图片大小不生效的问题。
+- 用户：修复其他用户资料页刷新变成当前登录用户资料的问题。
 
 ### Changed
 
