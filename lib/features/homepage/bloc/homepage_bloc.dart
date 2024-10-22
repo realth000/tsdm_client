@@ -12,7 +12,9 @@ import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -281,13 +283,24 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     HomepageAuthChanged event,
     Emitter<HomepageState> emit,
   ) async {
-    if (!event.isLogged) {
+    if (!event.isLogged &&
+        state.status != HomepageStatus.loading &&
+        state.status != HomepageStatus.needLogin) {
       emit(state.copyWith(status: HomepageStatus.needLogin));
       return;
     }
     if (state.status == HomepageStatus.needLogin ||
         state.status == HomepageStatus.failure) {
-      add(HomepageRefreshRequested());
+      // FIXME: anti-pattern
+      final settings = getIt.get<SettingsRepository>().currentSettings;
+      add(
+        HomepageRefreshRequested(
+          userLoginInfo: UserLoginInfo(
+            username: settings.loginUsername,
+            uid: settings.loginUid,
+          ),
+        ),
+      );
     }
   }
 

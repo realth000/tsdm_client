@@ -45,7 +45,7 @@ final class UserLoginInfo with UserLoginInfoMappable {
     // Do NOT print detail.
     return 'UserLoginInfo{ '
         'username=${username?.obscured()}, '
-        'uid=${uid == null ? "null" : "<uid>"}, ';
+        'uid=${uid == null ? "null" : "$uid".obscured(4)}, ';
     //'email=${email?.obscured()}}';
   }
 }

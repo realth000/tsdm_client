@@ -40,6 +40,14 @@
   },
   "settingsPage": {
     "title": "Settings",
+    "accountSection": {
+      "title": "Account",
+      "mgmt": "Account management",
+      "switchAccount": "Switch account",
+      "loginAnother": "Login another account",
+      "logout": "Logout",
+      "online": "Online"
+    },
     "appearanceSection": {
       "title": "Appearance",
       "themeMode": {

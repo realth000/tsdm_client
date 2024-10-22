@@ -18,7 +18,13 @@ final class HomepageLoadRequested extends HomepageEvent
 /// Directly load homepage from server.
 @MappableClass()
 final class HomepageRefreshRequested extends HomepageEvent
-    with HomepageRefreshRequestedMappable {}
+    with HomepageRefreshRequestedMappable {
+  /// Constructor.
+  HomepageRefreshRequested({this.userLoginInfo});
+
+  /// Optional user login info to specify who's homepage to refresh.
+  UserLoginInfo? userLoginInfo;
+}
 
 /// User requests to login.
 @MappableClass()

@@ -40,6 +40,14 @@
   },
   "settingsPage": {
     "title": "设置",
+    "accountSection": {
+      "title": "账号",
+      "mgmt": "账号管理",
+      "switchAccount": "切换账号",
+      "loginAnother": "登录其他账号",
+      "logout": "退出登录",
+      "online": "在线"
+    },
     "appearanceSection": {
       "title": "外观",
       "themeMode": {

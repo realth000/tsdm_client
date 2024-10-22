@@ -117,9 +117,20 @@ final class NetClientProvider with LoggerMixin {
   }
 
   /// Build a [NetClientProvider] instance that does NOT load cookie.
-  factory NetClientProvider.buildNoCookie({Dio? dio}) {
+  ///
+  /// ## Parameters
+  ///
+  /// * Set [forceDesktop] to false when desire server response with a mobile
+  ///   layout page.
+  factory NetClientProvider.buildNoCookie({
+    Dio? dio,
+    bool forceDesktop = true,
+  }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
+    if (forceDesktop) {
+      d.interceptors.add(_ForceDesktopLayoutInterceptor());
+    }
     // decode br content-type.
     d.transformer = DioBrotliTransformer();
     return NetClientProvider._(d);

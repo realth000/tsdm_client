@@ -40,6 +40,14 @@
   },
   "settingsPage": {
     "title": "設定",
+    "accountSection": {
+      "title": "帳號",
+      "mgmt": "帳號管理",
+      "switchAccount": "切換帳號",
+      "loginAnother": "登入其他帳號",
+      "logout": "退出登入",
+      "online": "線上"
+    },
     "appearanceSection": {
       "title": "外觀",
       "themeMode": {

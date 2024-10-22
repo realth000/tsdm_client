@@ -16,6 +16,7 @@ import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.d
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/switch_account_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -79,6 +80,24 @@ class _SettingsPageState extends State<SettingsPage> {
         blocContext: context,
       ),
     );
+  }
+
+  List<Widget> _buildAccountSection(
+    BuildContext context,
+    SettingsState state,
+  ) {
+    final tr = context.t.settingsPage.accountSection;
+    return [
+      SectionTitleText(tr.title),
+      SectionListTile(
+        leading: const Icon(Icons.account_circle_outlined),
+        title: Text(tr.mgmt),
+        onTap: () async => showDialog<void>(
+          context: context,
+          builder: (_) => const SwitchAccountDialog(),
+        ),
+      ),
+    ];
   }
 
   List<Widget> _buildAppearanceSection(
@@ -623,6 +642,7 @@ class _SettingsPageState extends State<SettingsPage> {
           body: ListView(
             controller: scrollController,
             children: [
+              ..._buildAccountSection(context, state),
               ..._buildAppearanceSection(context, state),
               if (isDesktop) ..._buildWindowSection(context, state),
               ..._buildBehaviorSection(context, state),

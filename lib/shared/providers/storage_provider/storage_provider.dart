@@ -84,6 +84,24 @@ class StorageProvider with LoggerMixin {
   /// MUST update during image cache setter calls.
   final Map<String, ImageEntity> _imageCache;
 
+  /*             User             */
+
+  /// Get all recorded login user.
+  ///
+  /// Those users are the ones ever login before.
+  Future<List<UserLoginInfo>> getAllUsers() async {
+    final cookies = await CookieDao(_db).selectAll();
+
+    return cookies
+        .map(
+          (e) => UserLoginInfo(
+            username: e.username,
+            uid: e.uid,
+          ),
+        )
+        .toList();
+  }
+
   /*             cookie             */
 
   /// Get [Cookie] with [uid] from cookie cached saved in memory.

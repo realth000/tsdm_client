@@ -15,6 +15,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -82,8 +83,10 @@ class AuthenticationRepository with LoggerMixin {
   }
 
   /// Fetch login hash and form hash for logging in.
-  AsyncEither<LoginHash> fetchHash() =>
-      getIt.get<NetClientProvider>().get(_fakeFormUrl).flatMap((v) {
+  AsyncEither<LoginHash> fetchHash() => getIt
+          .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+          .get(_fakeFormUrl)
+          .flatMap((v) {
         // TODO: Parse CDATA.
         // 返回的data是xml：
         //
@@ -118,6 +121,9 @@ class AuthenticationRepository with LoggerMixin {
   /// Will not change authentication status if failed to login.
   AsyncVoidEither loginWithPassword(UserCredential credential) =>
       AsyncVoidEither(() async {
+        debug('login with passwd: $credential');
+        _controller.add(AuthenticationStatus.unauthenticated);
+        _authedUser = null;
         const target = _loginBaseUrl; // _buildLoginUrl(credential.formHash);
         // final userLoginInfo = switch (credential.loginField) {
         //   LoginField.username => UserLoginInfo(
@@ -141,11 +147,12 @@ class AuthenticationRepository with LoggerMixin {
         // Here the userLoginInfo is incomplete:
         //
         // Only contains one login field: Username, uid or email.
-        final netClient = NetClientProvider.build(
+        final netClient = NetClientProvider.buildNoCookie(
           // userLoginInfo: userLoginInfo,
           // startLogin: true,
           forceDesktop: false,
         );
+        // instanceName: ServiceKeys.noCookie
 
         final respEither =
             await netClient.postForm(target, data: credential.toJson()).run();
@@ -168,6 +175,7 @@ class AuthenticationRepository with LoggerMixin {
           uid: int.parse(loginResult.values!.uid!),
         );
         await CookieData.endLogin(userInfo);
+        debug('end login with: $credential');
 
         // final document = parseHtmlDocument(resp.data as String);
         // final messageNode = document.getElementById('messagetext');
@@ -205,7 +213,7 @@ class AuthenticationRepository with LoggerMixin {
         // Here we get complete user info.
         await _saveLoggedUserInfo(userInfo);
 
-        debug('login finished');
+        debug('login finished: $userInfo');
 
         _controller.add(AuthenticationStatus.authenticated);
 
@@ -215,12 +223,13 @@ class AuthenticationRepository with LoggerMixin {
   /// Parse logged user info from html [document].
   AsyncVoidEither loginWithDocument(uh.Document document) =>
       AsyncVoidEither(() async {
+        _controller.add(AuthenticationStatus.unauthenticated);
+        _authedUser = null;
         final userInfo = _parseUserInfoFromDocument(document);
         if (userInfo == null) {
           debug('failed to login with document: user info not found');
           return left(LoginUserInfoNotFoundException());
         }
-
         // Second check for email.
         // Get complete user info from page.
         final fullInfoRespEither =
