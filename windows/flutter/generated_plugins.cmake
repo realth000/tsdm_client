@@ -5,7 +5,6 @@
 list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_avif_windows
-  flutter_inappwebview_windows
   gal
   irondash_engine_context
   permission_handler_windows
