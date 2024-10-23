@@ -10,7 +10,6 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
-import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -46,9 +45,7 @@ extension _WithFormExt<T> on Dio {
       );
 }
 
-/// A http client to do web request.
-///
-/// With optional [CookieData] use in requests.
+/// Http client acts on web request.
 ///
 /// Also a wrapper of [Dio] instance.
 ///
@@ -66,18 +63,12 @@ final class NetClientProvider with LoggerMixin {
   factory NetClientProvider.build({
     Dio? dio,
     UserLoginInfo? userLoginInfo,
-    bool startLogin = false,
-    bool logout = false,
     bool forceDesktop = true,
   }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     if (!isWeb) {
       talker.debug('build cookie with user info: $userLoginInfo');
-      final cookie = getIt.get<CookieProvider>().build(
-            userLoginInfo: userLoginInfo,
-            startLogin: startLogin,
-            logout: logout,
-          );
+      final cookie = getIt.get<CookieProvider>();
       final cookieJar = PersistCookieJar(
         ignoreExpires: true,
         storage: cookie,
@@ -128,6 +119,12 @@ final class NetClientProvider with LoggerMixin {
   }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
+    final cookie = getIt.get<CookieProvider>()..clearUserInfoAndCookie();
+    final cookieJar = PersistCookieJar(
+      ignoreExpires: true,
+      storage: cookie,
+    );
+    d.interceptors.add(CookieManager(cookieJar));
     if (forceDesktop) {
       d.interceptors.add(_ForceDesktopLayoutInterceptor());
     }

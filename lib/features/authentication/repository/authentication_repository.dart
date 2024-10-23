@@ -13,7 +13,7 @@ import 'package:tsdm_client/features/authentication/repository/models/models.dar
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
+import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
@@ -121,41 +121,16 @@ class AuthenticationRepository with LoggerMixin {
   /// Will not change authentication status if failed to login.
   AsyncVoidEither loginWithPassword(UserCredential credential) =>
       AsyncVoidEither(() async {
-        debug('login with passwd: $credential');
-        _controller.add(AuthenticationStatus.unauthenticated);
-        _authedUser = null;
-        const target = _loginBaseUrl; // _buildLoginUrl(credential.formHash);
-        // final userLoginInfo = switch (credential.loginField) {
-        //   LoginField.username => UserLoginInfo(
-        //       username: credential.loginFieldValue,
-        //       uid: null,
-        //       // email: null,
-        //     ),
-        //   LoginField.uid => UserLoginInfo(
-        //       username: null,
-        //       uid: credential.loginFieldValue.parseToInt(),
-        //       // email: null,
-        //     ),
-        //   LoginField.email => UserLoginInfo(
-        //       username: null,
-        //       uid: null,
-        //       email: credential.loginFieldValue,
-        //     ),
-        // };
-
-        // debug('login with user info: $userLoginInfo');
+        debug('login with passwd');
+        await _markUnauthenticated();
         // Here the userLoginInfo is incomplete:
         //
         // Only contains one login field: Username, uid or email.
-        final netClient = NetClientProvider.buildNoCookie(
-          // userLoginInfo: userLoginInfo,
-          // startLogin: true,
-          forceDesktop: false,
-        );
-        // instanceName: ServiceKeys.noCookie
+        final netClient = NetClientProvider.buildNoCookie(forceDesktop: false);
 
-        final respEither =
-            await netClient.postForm(target, data: credential.toJson()).run();
+        final respEither = await netClient
+            .postForm(_loginBaseUrl, data: credential.toJson())
+            .run();
         if (respEither.isLeft()) {
           return left(respEither.unwrapErr());
         }
@@ -174,8 +149,7 @@ class AuthenticationRepository with LoggerMixin {
           username: loginResult.values!.username,
           uid: int.parse(loginResult.values!.uid!),
         );
-        await CookieData.endLogin(userInfo);
-        debug('end login with: $credential');
+        debug('end login with success');
 
         // final document = parseHtmlDocument(resp.data as String);
         // final messageNode = document.getElementById('messagetext');
@@ -211,11 +185,7 @@ class AuthenticationRepository with LoggerMixin {
         //   await CookieData.endLogin(fullUserInfo);
 
         // Here we get complete user info.
-        await _saveLoggedUserInfo(userInfo);
-
-        debug('login finished: $userInfo');
-
-        _controller.add(AuthenticationStatus.authenticated);
+        await _markAuthenticated(userInfo);
 
         return rightVoid();
       });
@@ -223,8 +193,7 @@ class AuthenticationRepository with LoggerMixin {
   /// Parse logged user info from html [document].
   AsyncVoidEither loginWithDocument(uh.Document document) =>
       AsyncVoidEither(() async {
-        _controller.add(AuthenticationStatus.unauthenticated);
-        _authedUser = null;
+        await _markUnauthenticated();
         final userInfo = _parseUserInfoFromDocument(document);
         if (userInfo == null) {
           debug('failed to login with document: user info not found');
@@ -254,8 +223,7 @@ class AuthenticationRepository with LoggerMixin {
         }
 
         // Here we get complete user info.
-        await _saveLoggedUserInfo(fullUserInfo);
-        _controller.add(AuthenticationStatus.authenticated);
+        await _markAuthenticated(fullUserInfo);
 
         debug('login with document: user $userInfo');
         return rightVoid();
@@ -273,9 +241,7 @@ class AuthenticationRepository with LoggerMixin {
           userLoginInfo: UserLoginInfo(
             username: _authedUser!.username,
             uid: _authedUser!.uid,
-            // email: _authedUser!.email,
           ),
-          logout: true,
         );
         final respEither = await netClient.get(_checkAuthUrl).run();
         if (respEither.isLeft()) {
@@ -289,9 +255,7 @@ class AuthenticationRepository with LoggerMixin {
         final userInfo = _parseUserInfoFromDocument(document);
         if (userInfo == null) {
           // Not logged in.
-
-          _authedUser = null;
-          _controller.add(AuthenticationStatus.unauthenticated);
+          await _markUnauthenticated();
           return rightVoid();
         }
         final formHash = _formHashRe
@@ -318,16 +282,30 @@ class AuthenticationRepository with LoggerMixin {
           return left(LogoutFailedException());
         }
 
+        getIt.get<CookieProvider>().clearUserInfoAndCookie();
         await getIt.get<StorageProvider>().deleteCookieByUid(_authedUser!.uid!);
+        await _markUnauthenticated();
+        return rightVoid();
+      });
 
-        final settings = getIt.get<SettingsRepository>();
-        await settings.deleteValue(SettingsKeys.loginUsername);
-        await settings.deleteValue(SettingsKeys.loginUid);
-        await settings.deleteValue(SettingsKeys.loginEmail);
-
-        _authedUser = null;
-        _controller.add(AuthenticationStatus.unauthenticated);
-
+  /// Switch to another user described in [userInfo].
+  AsyncVoidEither switchUser(UserLoginInfo userInfo) =>
+      AsyncVoidEither(() async {
+        if (!await getIt
+            .get<CookieProvider>()
+            .loadCookieFromStorage(userInfo)) {
+          return left(LoginInvalidCredentialException());
+        }
+        final resp = await getIt
+            .get<NetClientProvider>()
+            .get(homePage)
+            .flatMap(
+              (e) => loginWithDocument(parseHtmlDocument(e.data as String)),
+            )
+            .run();
+        if (resp.isLeft()) {
+          return left(resp.unwrapErr());
+        }
         return rightVoid();
       });
 
@@ -407,5 +385,39 @@ class AuthenticationRepository with LoggerMixin {
     // );
 
     _authedUser = userInfo;
+  }
+
+  /// All steps need to execute when state should change to authed.
+  ///
+  /// This function does something that need to be completed before auth state
+  /// changes so that all auth stream subscribers are using the correct data in
+  /// authed state.
+  Future<void> _markAuthenticated(UserLoginInfo userInfo) async {
+    // Save user info to memory and storage.
+    await _saveLoggedUserInfo(userInfo);
+    // Clear cookie.
+    await getIt<CookieProvider>().updateUserInfo(
+      UserLoginInfo(
+        username: userInfo.username,
+        uid: userInfo.uid,
+      ),
+    );
+    await getIt<CookieProvider>().saveCookieToStorage();
+    // Finally change state to authed.
+    _controller.add(AuthenticationStatus.authenticated);
+  }
+
+  /// All actions need to execute when state should change to unauthenticated.
+  ///
+  /// This function does something that need to be completed before auth state
+  /// changes so that all auth stream subscribers are using the correct data in
+  /// unauthenticated state.
+  Future<void> _markUnauthenticated() async {
+    final settings = getIt.get<SettingsRepository>();
+    await settings.deleteValue(SettingsKeys.loginUsername);
+    await settings.deleteValue(SettingsKeys.loginUid);
+    await settings.deleteValue(SettingsKeys.loginEmail);
+    _authedUser = null;
+    _controller.add(AuthenticationStatus.unauthenticated);
   }
 }

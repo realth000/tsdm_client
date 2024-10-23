@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:universal_html/parsing.dart';
 
 /// Dialog to switch user account.
 class SwitchAccountDialog extends StatelessWidget with LoggerMixin {
@@ -68,19 +65,9 @@ class SwitchAccountDialog extends StatelessWidget with LoggerMixin {
                             : null,
                         onTap: () async {
                           info('switch user to uid ${"${e.uid}".obscured(4)}');
-                          final netClient = NetClientProvider.build(
-                            userLoginInfo: e,
-                            startLogin: true,
-                          );
-                          final ret = await netClient
-                              .get('$uidProfilePage${e.uid}')
-                              .flatMap(
-                                (x) => context
-                                    .read<AuthenticationRepository>()
-                                    .loginWithDocument(
-                                      parseHtmlDocument(x.data as String),
-                                    ),
-                              )
+                          final ret = await context
+                              .read<AuthenticationRepository>()
+                              .switchUser(e)
                               .run();
 
                           if (ret.isLeft()) {

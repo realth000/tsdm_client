@@ -1,105 +1,23 @@
+import 'package:cookie_jar/cookie_jar.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/cookie_provider/models/cookie_data.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-/// Provides a [CookieData] that implement `Storage` class so can be used in
-/// `NetClient`.
+/// Manage cookie in http requests.
 ///
-/// [CookieProvider] has an unique `username` representing an unique user.
-///
-/// Because we can use only one set of cookies in each web request, we use
-/// only one cookie at the same time (in web client).
-///
-/// When switch to another user:
-/// * Create a new cookie from database if the new user has cookie
-///   used before and replace the cookie currently used in web request.
-/// * Create a new cookie from web request if the user does not have
-///   any cookie. This step is ran by CookieManager inside web client.
-///   After that, save the new cookie in database.
-///
-/// When cookie updated during web request:
-/// 1. Save cookies in memory.
-/// 2. Use [CookieProvider] to fill current user info.
-/// Cookie manager.
-/// Managing all cookies used in app.
-///
-/// Receive user information (e.g. username) from outside (e.g. web client),
-/// fill those info into [CookieData];
-///
-/// Load cookies from database and save them in memory. When required cookie to
-/// use in web requests, build a [CookieData] with current user info.
-class CookieProvider with LoggerMixin {
+/// Provides ability to read/write cookie in storage, also keeps the current
+/// user's info and cookie in memory.
+final class CookieProvider with LoggerMixin implements Storage {
   /// Constructor.
-  factory CookieProvider() => CookieProvider._();
+  CookieProvider(this._userLoginInfo, this._cookieMap);
 
-  CookieProvider._();
-
-  /// Build a [CookieData] with [userLoginInfo].
+  /// Build a [CookieProvider].
   ///
-  /// * First look in storage and find the cached cookie related to
-  ///   [userLoginInfo].
-  /// * Return empty cookie if not found in cache.
-  CookieData build({
-    UserLoginInfo? userLoginInfo,
-    bool startLogin = false,
-    bool logout = false,
-  }) {
-    assert(
-      !(startLogin && logout),
-      'startLogin and logout can NOT be true at the same time',
-    );
-
-    if (userLoginInfo != null) {
-      if (startLogin) {
-        assert(
-          !userLoginInfo.isEmpty,
-          'A UserLoginInfo intend to start login can NOT be empty',
-        );
-        return CookieData.startLogin(userLoginInfo);
-      }
-
-      final username = userLoginInfo.username;
-      final uid = userLoginInfo.uid;
-      // final email = userLoginInfo.email;
-
-      Map<String, dynamic>? databaseCookie;
-
-      final storage = getIt.get<StorageProvider>();
-
-      if (uid != null) {
-        databaseCookie = storage.getCookieByUidSync(uid);
-      } else if (username != null) {
-        databaseCookie = storage.getCookieByUsernameSync(username);
-        // } else if (email != null) {
-        //   databaseCookie = storage.getCookieByEmailSync(email);
-      }
-
-      var cookie = <String, String>{};
-      if (databaseCookie != null) {
-        cookie = Map.castFrom(databaseCookie);
-      }
-
-      if (logout) {
-        assert(
-          userLoginInfo.isComplete,
-          'A UserLoginInfo intend to start login can MUST be complete',
-        );
-        return CookieData.logout(
-          userLoginInfo: userLoginInfo,
-          cookie: cookie,
-        );
-      }
-
-      debug('load cookie with user info : $userLoginInfo');
-      return CookieData.withUserInfo(
-        userLoginInfo: userLoginInfo,
-        cookie: cookie,
-      );
-    }
-
+  /// Load current user's info and cookie from settings and storage.
+  factory CookieProvider.build() {
     final settings = getIt.get<SettingsRepository>().currentSettings;
     final loggedUid = settings.loginUid;
     final userInfo = UserLoginInfo(
@@ -109,25 +27,189 @@ class CookieProvider with LoggerMixin {
     );
     // Valid uid > 0.
     if (loggedUid <= 0) {
-      info('load empty cookie');
-      return CookieData.withUserInfo(userLoginInfo: userInfo, cookie: {});
+      talker.warning('load empty cookie');
+      return CookieProvider(userInfo, {});
     }
 
+    talker.debug('load cookie from database with login user '
+        'uid: ${"$loggedUid".obscured(4)}');
     // Has user login before, load cookie.
     final databaseCookie =
         getIt.get<StorageProvider>().getCookieByUidSync(loggedUid);
     if (databaseCookie == null) {
-      error(
+      talker.error(
         'failed to init cookie: current login user '
         'id not found in database',
       );
-      return CookieData.withUserInfo(userLoginInfo: userInfo, cookie: {});
+      return CookieProvider(userInfo, {});
     }
 
-    debug('load cookie from last logged user');
-    return CookieData.withUserInfo(
-      userLoginInfo: userInfo,
-      cookie: databaseCookie,
-    );
+    return CookieProvider(userInfo, Map.castFrom(databaseCookie));
+  }
+
+  /// Cookie data.
+  Map<String, String> _cookieMap;
+
+  /// Info of the user currently login.
+  UserLoginInfo _userLoginInfo;
+
+  /// Update current recorded user info.
+  Future<void> updateUserInfo(UserLoginInfo userInfo) async {
+    debug('update user info: $userInfo');
+    _userLoginInfo = userInfo;
+    if (_userLoginInfo.isComplete) {
+      await _syncCookie();
+    }
+  }
+
+  /// Load cookie of [userInfo] from storage.
+  ///
+  /// Return false if any error occurred.
+  Future<bool> loadCookieFromStorage(UserLoginInfo userInfo) async {
+    final username = userInfo.username;
+    final uid = userInfo.uid;
+    if (username == null && uid == null) {
+      error('failed to switch cookie: invalid user info');
+      return false;
+    }
+
+    Map<String, dynamic>? databaseCookie;
+
+    final storage = getIt.get<StorageProvider>();
+
+    if (uid != null) {
+      info('load cookie from database with given '
+          'uid: ${"$uid".obscured(4)}');
+      databaseCookie = storage.getCookieByUidSync(uid);
+    } else if (username != null) {
+      info('load cookie from database with given '
+          'username: ${username.obscured()}');
+      databaseCookie = storage.getCookieByUsernameSync(username);
+      // } else if (email != null) {
+      //   databaseCookie = storage.getCookieByEmailSync(email);
+    }
+
+    if (databaseCookie == null) {
+      error('failed to switch cookie: cookie not found in database');
+      return false;
+    }
+    debug('cookie switch to user $userInfo');
+    _userLoginInfo = UserLoginInfo(username: username, uid: uid);
+    _cookieMap = Map.castFrom(databaseCookie);
+    return true;
+  }
+
+  /// Save current user's info and cookie to storage.
+  Future<void> saveCookieToStorage() async {
+    if (!_userLoginInfo.isComplete) {
+      warning('can not save user info incomplete cookie to storage');
+      return;
+    }
+    debug('save authed cookie to storage');
+    await getIt.get<StorageProvider>().saveCookie(
+          username: _userLoginInfo.username!,
+          uid: _userLoginInfo.uid!,
+          cookie: _cookieMap,
+        );
+  }
+
+  /// Delete current login user info and cookie from memory and database.
+  void clearUserInfoAndCookie() {
+    debug('clear user info and cookie');
+    _userLoginInfo = const UserLoginInfo(username: null, uid: null);
+    _cookieMap = {};
+  }
+
+  /// Save cookie in database.
+  ///
+  /// This function is private because saving a cookie should only be triggered
+  /// by web request update.
+  /// This function should be called every time after cookie value updated.
+  /// If user info still incomplete, do not save to database, which shall not
+  /// happen.
+  ///
+  /// Return false if user info is incomplete.
+  Future<bool> _syncCookie() async {
+    // Do not save cookie if we don't know which user it belongs to.
+    // This shall not happen.
+    if (!_userLoginInfo.isComplete) {
+      info('only save cookie in memory: user info incomplete: $_userLoginInfo');
+      return false;
+    }
+
+    await getIt.get<StorageProvider>().saveCookie(
+          username: _userLoginInfo.username!,
+          uid: _userLoginInfo.uid!,
+          cookie: _cookieMap,
+        );
+
+    return true;
+  }
+
+  /// Delete current user [_userLoginInfo]'s cookie from database.
+  ///
+  /// Return false if delete failed (maybe user not found in database) or
+  /// missing
+  /// user info.
+  /// Return true is success.
+  Future<bool> _deleteUserCookie() async {
+    if (!_userLoginInfo.isComplete) {
+      info(
+        'refuse to delete single user cookie from database: '
+        'user info incomplete',
+      );
+      return false;
+    }
+
+    debug('CookieData $hashCode: delete cookie for uid: $_userLoginInfo');
+    await getIt.get<StorageProvider>().deleteCookieByUserInfo(_userLoginInfo);
+    return true;
+  }
+
+  // TODO: Try set webpage style in cookie.
+  /// To parse web page correctly, set a certain web page style id here.
+  ///
+  /// The main difference between web page styles are homepage layout.
+  ///
+  /// name    id     avatar   forum-info-layout
+  /// 水晶     4    no avatar  <dd> <em> <font>主题</font> <font>123</font> </em> </dd>
+  /// 爱丽丝   5       avatar  <dd> <em>主题</em> , <em>123></em> </dd>
+  /// 羽翼     6    no avatar  Same with style 4
+  /// 旅行者   13      avatar  Same with style 5
+  /// 自由之翼 12      avatar  Same with style 5
+  void _setupWebPageStyle() {}
+
+  @override
+  Future<void> delete(String key) async {
+    _cookieMap.remove(key);
+    // If user cookie is empty, delete that item from database.
+    if (_cookieMap.isEmpty) {
+      debug('delete user ($_userLoginInfo) cookie from database '
+          'because cookie value is empty');
+      await _deleteUserCookie();
+    } else {
+      await _syncCookie();
+    }
+  }
+
+  @override
+  Future<void> deleteAll(List<String> keys) async {
+    _cookieMap.clear();
+    await _deleteUserCookie();
+  }
+
+  @override
+  Future<void> init(bool persistSession, bool ignoreExpires) async {}
+
+  @override
+  Future<String?> read(String key) async {
+    _setupWebPageStyle();
+    return _cookieMap[key];
+  }
+
+  @override
+  Future<void> write(String key, String value) async {
+    _cookieMap[key] = value;
+    await _syncCookie();
   }
 }

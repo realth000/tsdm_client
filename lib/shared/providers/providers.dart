@@ -42,8 +42,8 @@ Future<void> initProviders() async {
   getIt
     ..registerSingleton(db)
     ..registerSingleton(storageProvider)
-    ..registerFactory(CookieProvider.new)
     ..registerSingleton(settingsRepo)
+    ..registerSingleton(CookieProvider.build())
     ..registerSingleton(ImageCacheProvider.new)
     ..registerFactory(NetClientProvider.build)
     ..registerFactory(
