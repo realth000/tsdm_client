@@ -156,7 +156,6 @@ class StorageProvider with LoggerMixin {
     // Combine two map together, do not directly use [cookie].
     // ignore: cascade_invocations
     allCookie.addAll(Map.castFrom<String, dynamic, String, String>(cookie));
-
     // Update cookie cache.
     final userInfo =
         UserLoginInfo(username: username, uid: uid /*, email: email*/);

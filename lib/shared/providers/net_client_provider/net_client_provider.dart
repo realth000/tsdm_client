@@ -11,6 +11,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
+import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 
@@ -111,18 +112,21 @@ final class NetClientProvider with LoggerMixin {
   ///
   /// ## Parameters
   ///
+  /// * [cookie] is an optional parameters used to inject cookie. Sometimes
+  ///   some actions are required to apply on [cookie] at a specified time.
   /// * Set [forceDesktop] to false when desire server response with a mobile
   ///   layout page.
   factory NetClientProvider.buildNoCookie({
     Dio? dio,
     bool forceDesktop = true,
+    CookieProvider? cookie,
   }) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
-    final cookie = getIt.get<CookieProvider>()..clearUserInfoAndCookie();
     final cookieJar = PersistCookieJar(
       ignoreExpires: true,
-      storage: cookie,
+      storage:
+          cookie ?? getIt.get<CookieProvider>(instanceName: ServiceKeys.empty),
     );
     d.interceptors.add(CookieManager(cookieJar));
     if (forceDesktop) {

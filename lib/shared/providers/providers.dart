@@ -14,6 +14,9 @@ import 'package:tsdm_client/utils/platform.dart';
 abstract final class ServiceKeys {
   /// Net client without cookie.
   static const noCookie = 'normal';
+
+  /// Cookie provider empty user info and cookie.
+  static const empty = 'empty';
 }
 
 /// 3. All providers **MUST NOT** be directly used by blocs or elsewhere.
@@ -44,6 +47,10 @@ Future<void> initProviders() async {
     ..registerSingleton(storageProvider)
     ..registerSingleton(settingsRepo)
     ..registerSingleton(CookieProvider.build())
+    ..registerFactory(
+      CookieProvider.buildEmpty,
+      instanceName: ServiceKeys.empty,
+    )
     ..registerSingleton(ImageCacheProvider.new)
     ..registerFactory(NetClientProvider.build)
     ..registerFactory(

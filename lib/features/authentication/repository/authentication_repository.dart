@@ -21,20 +21,6 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
-/// Status of authentication.
-enum AuthenticationStatus {
-  /// Unknown state.
-  ///
-  /// Same with [unauthenticated].
-  unknown,
-
-  /// Have user logged.
-  authenticated,
-
-  /// No one logged.
-  unauthenticated,
-}
-
 /// Repository of authentication.
 ///
 /// Provides login, logout.
@@ -66,8 +52,10 @@ class AuthenticationRepository with LoggerMixin {
     return '$_logoutBaseUrl$formHash';
   }
 
-  /// Provide a stream of [AuthenticationStatus].
-  final _controller = BehaviorSubject<AuthenticationStatus>();
+  /// Provide a stream of [AuthStatus].
+  ///
+  /// Be aware that the data contained in stream is not the state in auth bloc.
+  final _controller = BehaviorSubject<AuthStatus>();
 
   UserLoginInfo? _authedUser;
 
@@ -75,7 +63,7 @@ class AuthenticationRepository with LoggerMixin {
   UserLoginInfo? get currentUser => _authedUser;
 
   /// Authentication status stream.
-  Stream<AuthenticationStatus> get status => _controller.asBroadcastStream();
+  Stream<AuthStatus> get status => _controller.asBroadcastStream();
 
   /// Dispose the resources.
   void dispose() {
@@ -123,10 +111,20 @@ class AuthenticationRepository with LoggerMixin {
       AsyncVoidEither(() async {
         debug('login with passwd');
         await _markUnauthenticated();
-        // Here the userLoginInfo is incomplete:
+        // When login with password, use an empty and injected cookie when
+        // performing login request. Because :
         //
-        // Only contains one login field: Username, uid or email.
-        final netClient = NetClientProvider.buildNoCookie(forceDesktop: false);
+        // * Want to use a pure and clean cookie when start login, to avoid
+        //   using current authed user's cookie.
+        // * Control when and what user info to save with the cookie stored in
+        //   it, so that the token is successfully saved in storage.
+        final cookie =
+            getIt.get<CookieProvider>(instanceName: ServiceKeys.empty);
+        // Inject cookie provider.
+        final netClient = NetClientProvider.buildNoCookie(
+          cookie: cookie,
+          forceDesktop: false,
+        );
 
         final respEither = await netClient
             .postForm(_loginBaseUrl, data: credential.toJson())
@@ -145,47 +143,21 @@ class AuthenticationRepository with LoggerMixin {
           return left(LoginOtherErrorException('login failed'));
         }
 
+        // Here we get complete user info.
         final userInfo = UserLoginInfo(
           username: loginResult.values!.username,
           uid: int.parse(loginResult.values!.uid!),
         );
-        debug('end login with success');
-
-        // final document = parseHtmlDocument(resp.data as String);
-        // final messageNode = document.getElementById('messagetext');
-        // if (messageNode == null) {
-        //   error('failed to check login result: result node not found');
-        //   return left(LoginMessageNotFoundException());
-        // }
-
-        // final loginResult = LoginResult.fromLoginMessageNode(messageNode);
-        // if (loginResult == LoginResult.success) {
-        //   // Get complete user info from page.
-        //   final fullInfoRespEither =
-        //       await netClient.get(_passwordSettingsUrl).run();
-        //   if (fullInfoRespEither.isLeft()) {
-        //     return left(fullInfoRespEither.unwrapErr());
-        //   }
-
-        //   final fullInfoResp = fullInfoRespEither.unwrap();
-        //   if (fullInfoResp.statusCode != HttpStatus.ok) {
-        //     error('failed to fetch complete user info: '
-        //         'code=${fullInfoResp.statusCode}');
-        //     return left(LoginUserInfoNotFoundException());
-        //   }
-        //   final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
-        //   final fullUserInfo =
-        //       _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
-        //   if (fullUserInfo == null || !fullUserInfo.isComplete) {
-        //     error('failed to check login result: user info is null');
-        //     return left(LoginUserInfoNotFoundException());
-        //   }
-
-        //   // Mark login progress has ended.
-        //   await CookieData.endLogin(fullUserInfo);
-
-        // Here we get complete user info.
+        // First combine user info and cookie together.
+        await cookie.updateUserInfo(userInfo);
+        // Second, save credential in storage.
+        await cookie.saveCookieToStorage();
+        // Refresh the cookie in global cookie provider.
+        await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo);
+        // Finally save authed user info and update authentication status to
+        // let auth stream subscribers update their status.
         await _markAuthenticated(userInfo);
+        debug('end login with success');
 
         return rightVoid();
       });
@@ -193,7 +165,9 @@ class AuthenticationRepository with LoggerMixin {
   /// Parse logged user info from html [document].
   AsyncVoidEither loginWithDocument(uh.Document document) =>
       AsyncVoidEither(() async {
-        await _markUnauthenticated();
+        // Do NOT mark as unauthenticated here because auth with document is
+        // only used as a verification of a token that intend to be valid. It's
+        // outside the regular login progress.
         final userInfo = _parseUserInfoFromDocument(document);
         if (userInfo == null) {
           debug('failed to login with document: user info not found');
@@ -215,14 +189,14 @@ class AuthenticationRepository with LoggerMixin {
           return left(HttpRequestFailedException(fullInfoResp.statusCode));
         }
         final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
-        final fullUserInfo =
-            _parseUserInfoFromDocument(fullInfoDoc, parseEmail: true);
+        final fullUserInfo = _parseUserInfoFromDocument(fullInfoDoc);
         if (fullUserInfo == null || !fullUserInfo.isComplete) {
           error('failed to: parse login result: email not found');
           return left(LoginUserInfoIncompleteException());
         }
 
         // Here we get complete user info.
+        await getIt.get<CookieProvider>().saveCookieToStorage();
         await _markAuthenticated(fullUserInfo);
 
         debug('login with document: user $userInfo');
@@ -310,13 +284,7 @@ class AuthenticationRepository with LoggerMixin {
       });
 
   /// Parse html [document], find current logged in user uid in it.
-  ///
-  /// Set [parseEmail] to true if [document] predicted to contain user email.
-  /// Now only support parsing email from password settings page.
-  UserLoginInfo? _parseUserInfoFromDocument(
-    uh.Document document, {
-    bool parseEmail = false,
-  }) {
+  UserLoginInfo? _parseUserInfoFromDocument(uh.Document document) {
     final userNode =
         // Style 1: With avatar.
         document.querySelector(
@@ -387,7 +355,9 @@ class AuthenticationRepository with LoggerMixin {
     _authedUser = userInfo;
   }
 
-  /// All steps need to execute when state should change to authed.
+  /// All steps need to execute when state should change to authed except saving
+  /// cookies because sometimes the cookie provider holding latest authed cookie
+  /// is not the one global wide.
   ///
   /// This function does something that need to be completed before auth state
   /// changes so that all auth stream subscribers are using the correct data in
@@ -402,9 +372,13 @@ class AuthenticationRepository with LoggerMixin {
         uid: userInfo.uid,
       ),
     );
-    await getIt<CookieProvider>().saveCookieToStorage();
+    // Do NOT save cookie to storage here, because it's not always the normal
+    // global cookie provider doing the auth work, maybe another local cookie in
+    // some scope.
+    // Instead, save cookie outside this function when necessary.
+    // await getIt<CookieProvider>().saveCookieToStorage();
     // Finally change state to authed.
-    _controller.add(AuthenticationStatus.authenticated);
+    _controller.add(AuthStatusAuthed(userInfo));
   }
 
   /// All actions need to execute when state should change to unauthenticated.
@@ -418,6 +392,6 @@ class AuthenticationRepository with LoggerMixin {
     await settings.deleteValue(SettingsKeys.loginUid);
     await settings.deleteValue(SettingsKeys.loginEmail);
     _authedUser = null;
-    _controller.add(AuthenticationStatus.unauthenticated);
+    _controller.add(const AuthStatusNotAuthed());
   }
 }

@@ -23,6 +23,12 @@ final class UserLoginInfo with UserLoginInfoMappable {
     // required this.email,
   });
 
+  /// Build a empty instance, all fields are null or default.
+  factory UserLoginInfo.empty() => const UserLoginInfo(
+        username: null,
+        uid: null,
+      );
+
   /// Username.
   final String? username;
 

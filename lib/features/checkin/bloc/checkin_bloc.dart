@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -28,13 +29,13 @@ final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
     _authStreamSub = _authenticationRepository.status.listen(
       (status) => add(
         CheckinAuthChanged(
-          authed: status == AuthenticationStatus.authenticated,
+          authed: status is AuthStatusAuthed,
         ),
       ),
     );
   }
 
-  late StreamSubscription<AuthenticationStatus> _authStreamSub;
+  late StreamSubscription<AuthStatus> _authStreamSub;
 
   final CheckinRepository _checkinRepository;
   final AuthenticationRepository _authenticationRepository;

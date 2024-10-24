@@ -38,10 +38,13 @@ final class HomepageLoginRequested extends HomepageEvent
 final class HomepageAuthChanged extends HomepageEvent
     with HomepageAuthChangedMappable {
   /// Constructor.
-  const HomepageAuthChanged({required this.isLogged}) : super();
+  const HomepageAuthChanged({required this.prev, required this.curr}) : super();
 
-  /// Flag indicating logged in or not.
-  final bool isLogged;
+  /// Previous status.
+  final AuthStatus? prev;
+
+  /// Current status.
+  final AuthStatus curr;
 }
 
 /// Pause the swiper scrolling.

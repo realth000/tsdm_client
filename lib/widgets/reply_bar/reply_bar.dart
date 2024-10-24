@@ -7,6 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
@@ -223,7 +224,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   /// Will not restrict reply bar height when set to true.
   late bool fullScreen;
 
-  late final StreamSubscription<AuthenticationStatus> _authStatusSub;
+  late final StreamSubscription<AuthStatus> _authStatusSub;
 
   /// Indicate whether have current login user.
   ///
@@ -622,9 +623,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     _authStatusSub = authRepo.status.listen(
       (status) {
         setState(() {
-          status == AuthenticationStatus.authenticated
-              ? _hasLogin = true
-              : _hasLogin = false;
+          status is AuthStatusAuthed ? _hasLogin = true : _hasLogin = false;
         });
       },
     );

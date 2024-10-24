@@ -47,6 +47,10 @@ final class CookieProvider with LoggerMixin implements Storage {
     return CookieProvider(userInfo, Map.castFrom(databaseCookie));
   }
 
+  /// Construct a instance with no preload cookie or user info
+  factory CookieProvider.buildEmpty() =>
+      CookieProvider(UserLoginInfo.empty(), {});
+
   /// Cookie data.
   Map<String, String> _cookieMap;
 
@@ -58,6 +62,7 @@ final class CookieProvider with LoggerMixin implements Storage {
     debug('update user info: $userInfo');
     _userLoginInfo = userInfo;
     if (_userLoginInfo.isComplete) {
+      debug('complete user info updated, sync cookie');
       await _syncCookie();
     }
   }
@@ -137,6 +142,11 @@ final class CookieProvider with LoggerMixin implements Storage {
       return false;
     }
 
+    // Only save authed cookie into storage.
+    if (!_cookieMap.values.any((e) => e.contains('s_gkr8_682f_auth'))) {
+      return false;
+    }
+
     await getIt.get<StorageProvider>().saveCookie(
           username: _userLoginInfo.username!,
           uid: _userLoginInfo.uid!,
@@ -209,6 +219,11 @@ final class CookieProvider with LoggerMixin implements Storage {
 
   @override
   Future<void> write(String key, String value) async {
+    // Do not update authed cookie with not authed one.
+    if ((_cookieMap[key]?.contains('s_gkr8_682f_auth') ?? false) &&
+        !value.contains('s_gkr8_682f_auth')) {
+      return;
+    }
     _cookieMap[key] = value;
     await _syncCookie();
   }

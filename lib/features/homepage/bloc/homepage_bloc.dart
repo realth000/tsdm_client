@@ -5,11 +5,13 @@ import 'package:collection/collection.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/homepage/models/models.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -57,13 +59,17 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     on<HomepagePauseSwiper>(_onHomepagePauseSwiper);
     on<HomepageResumeSwiper>(_onHomepageResumeSwiper);
 
-    _authStatusSub = _authenticationRepository.status.listen(
-      (status) => add(
-        HomepageAuthChanged(
-          isLogged: status == AuthenticationStatus.authenticated,
-        ),
-      ),
-    );
+    // Pair wise the latest two auth status so that we can check if only its
+    // inner data changed. For example switch user from one to anther keeps an
+    // authed state but the user is changed.
+    _authStatusSub = _authenticationRepository.status.pairwise().listen(
+          (statusList) => add(
+            HomepageAuthChanged(
+              prev: statusList.elementAtOrNull(statusList.length - 2),
+              curr: statusList.last,
+            ),
+          ),
+        );
   }
 
   final ForumHomeRepository _forumHomeRepository;
@@ -71,7 +77,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
 
   /// Do not dispose this repo because it is not the owner.
   final AuthenticationRepository _authenticationRepository;
-  late final StreamSubscription<AuthenticationStatus> _authStatusSub;
+  late final StreamSubscription<List<AuthStatus>> _authStatusSub;
 
   static List<String?> _buildKahrpbaPicUrlList(uh.Element? styleNode) {
     if (styleNode == null) {
@@ -249,7 +255,6 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
             .loginWithDocument(value)
             .mapLeft((e) {
               handle(e);
-              error('failed to login with document: $e');
               emit(state.copyWith(status: HomepageStatus.failure));
             })
             .map((v) => v)
@@ -283,14 +288,18 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     HomepageAuthChanged event,
     Emitter<HomepageState> emit,
   ) async {
-    if (!event.isLogged &&
+    if (event.curr is AuthStatusNotAuthed &&
         state.status != HomepageStatus.loading &&
         state.status != HomepageStatus.needLogin) {
       emit(state.copyWith(status: HomepageStatus.needLogin));
       return;
     }
-    if (state.status == HomepageStatus.needLogin ||
-        state.status == HomepageStatus.failure) {
+    if (event.curr is AuthStatusAuthed &&
+        // Bloc state changes from not authed to authed.
+        (state.status == HomepageStatus.needLogin ||
+            state.status == HomepageStatus.failure ||
+            // Still authed, now and then, but user changed.
+            event.prev != event.curr)) {
       // FIXME: anti-pattern
       final settings = getIt.get<SettingsRepository>().currentSettings;
       add(
