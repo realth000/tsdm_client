@@ -44,6 +44,7 @@
       "title": "帳號",
       "mgmt": "帳號管理",
       "switchAccount": "切換帳號",
+      "switchSuccess": "切換成功",
       "loginAnother": "登入其他帳號",
       "logout": "退出登入",
       "online": "線上"

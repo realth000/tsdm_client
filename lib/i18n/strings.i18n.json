@@ -44,6 +44,7 @@
       "title": "Account",
       "mgmt": "Account management",
       "switchAccount": "Switch account",
+      "switchSuccess": "Switch success",
       "loginAnother": "Login another account",
       "logout": "Logout",
       "online": "Online"

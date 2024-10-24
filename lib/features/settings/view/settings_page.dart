@@ -91,10 +91,11 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionTitleText(tr.title),
       SectionListTile(
         leading: const Icon(Icons.account_circle_outlined),
-        title: Text(tr.mgmt),
+        title: Text(tr.switchAccount),
         onTap: () async => showDialog<void>(
           context: context,
           builder: (_) => const SwitchAccountDialog(),
+          barrierDismissible: false,
         ),
       ),
     ];
