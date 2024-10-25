@@ -133,7 +133,7 @@ final class PostEditContent with PostEditContentMappable {
     // </div>
     // ```
     final threadTypeList = postBoxNode
-        ?.querySelector('div select')
+        ?.querySelector('div select#typeid')
         ?.querySelectorAll('option')
         .where(
           (e) => e.attributes['value'] != null && e.innerText.trim().isNotEmpty,
