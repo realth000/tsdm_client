@@ -679,5 +679,21 @@
     "url": "Url",
     "unsupportedUrl": "Unsupported url",
     "open": "Open"
+  },
+  "globalStatePage": {
+    "autoCheckinRunning": "Running auto checkin...",
+    "autoCheckinFinished": "Auto checkin finished",
+    "viewDetail": "View detail"
+  },
+  "autoCheckinPage": {
+    "title": "Auto checkin",
+    "detail": "Automatically checkin for all accounts recorded",
+    "running": "Running progress...",
+    "user": {
+      "running": "Pending",
+      "success": "Success",
+      "failure": "Failure",
+      "notAuthed": "Need login"
+    }
   }
 }

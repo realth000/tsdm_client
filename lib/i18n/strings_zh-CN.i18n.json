@@ -679,5 +679,21 @@
     "url": "链接",
     "unsupportedUrl": "不支持的链接",
     "open": "打开"
+  },
+  "globalStatePage": {
+    "autoCheckinRunning": "正在自动签到",
+    "autoCheckinFinished": "自动签到已完成",
+    "viewDetail": "查看详细"
+  },
+  "autoCheckinPage": {
+    "title": "自动签到",
+    "detail": "为所有登记过的用户自动签到",
+    "running": "进行中",
+    "user": {
+      "running": "进行中",
+      "success": "成功",
+      "failure": "失败",
+      "notAuthed": "需要登录"
+    }
   }
 }

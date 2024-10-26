@@ -7,7 +7,9 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
+import 'package:tsdm_client/features/checkin/bloc/auto_checkin_bloc.dart';
 import 'package:tsdm_client/features/checkin/bloc/checkin_bloc.dart';
+import 'package:tsdm_client/features/checkin/repository/auto_checkin_repository.dart';
 import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
@@ -128,7 +130,7 @@ class _AppState extends State<App> with WindowListener {
           create: (_) => AuthenticationRepository(),
         ),
         RepositoryProvider<CheckinRepository>(
-          create: (_) => const CheckinRepository(),
+          create: (_) => CheckinRepository(storageProvider: getIt()),
         ),
         RepositoryProvider<ForumHomeRepository>(
           create: (_) => ForumHomeRepository(),
@@ -157,6 +159,9 @@ class _AppState extends State<App> with WindowListener {
         RepositoryProvider<ThreadVisitHistoryRepo>(
           create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>()),
         ),
+        RepositoryProvider<AutoCheckinRepository>(
+          create: (_) => AutoCheckinRepository(storageProvider: getIt()),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -177,6 +182,13 @@ class _AppState extends State<App> with WindowListener {
               authenticationRepository: context.repo(),
               settingsRepository: getIt(),
             ),
+          ),
+          BlocProvider(
+            create: (context) => AutoCheckinBloc(
+              autoCheckinRepository: context.repo(),
+              settingsRepository: getIt(),
+              storageProvider: getIt(),
+            )..add(const AutoCheckinStartRequested()),
           ),
           BlocProvider(
             create: (context) => ThemeCubit(

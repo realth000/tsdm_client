@@ -4,6 +4,7 @@ import 'dart:io' if (dart.library.js) 'package:web/web.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:dio/dio.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 
 part 'exceptions.mapper.dart';
 
@@ -351,3 +352,16 @@ final class ThreadPublishLocationNotFoundException extends AppException
 @MappableClass()
 final class NotificationUserNotFound extends AppException
     with NotificationUserNotFoundMappable {}
+
+/// Cookie not found in storage when doing auto checkin for user [userInfo].
+///
+/// Means a checkin failure.
+@MappableClass()
+final class AutoCheckinCookieNotFound extends AppException
+    with AutoCheckinCookieNotFoundMappable {
+  /// Constructor.
+  AutoCheckinCookieNotFound(this.userInfo);
+
+  /// Whos cookie not found.
+  final UserLoginInfo userInfo;
+}

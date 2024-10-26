@@ -102,6 +102,25 @@ class StorageProvider with LoggerMixin {
         .toList();
   }
 
+  /// Get all recorded login user with datetime of last checkin.
+  ///
+  /// Last checkin time is in milliseconds level.
+  Future<List<(UserLoginInfo, DateTime?)>> getAllUsersWithTime() async {
+    final cookies = await CookieDao(_db).selectAll();
+
+    return cookies
+        .map(
+          (e) => (
+            UserLoginInfo(
+              username: e.username,
+              uid: e.uid,
+            ),
+            e.lastCheckin,
+          ),
+        )
+        .toList();
+  }
+
   /*             cookie             */
 
   /// Get [Cookie] with [uid] from cookie cached saved in memory.
@@ -415,6 +434,13 @@ class StorageProvider with LoggerMixin {
   VoidTask updateLastFetchNoticeTime(int uid, DateTime datetime) =>
       VoidTask(() async {
         await CookieDao(_db).updateLastFetchNoticeTime(uid, datetime);
+        return;
+      });
+
+  /// Update the last checkin success datetime in storage for user [uid].
+  VoidTask updateLastCheckinTime(int uid, DateTime datetime) =>
+      VoidTask(() async {
+        await CookieDao(_db).updateLastCheckinTime(uid, datetime);
         return;
       });
 

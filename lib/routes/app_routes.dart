@@ -21,6 +21,7 @@ import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
@@ -347,7 +348,7 @@ class AppRoute extends GoRoute {
           pageBuilder: (context, state) => MaterialPage<void>(
             name: path,
             arguments: state.pathParameters,
-            child: builder(state),
+            child: RootPage(builder(state)),
           ),
         );
 }

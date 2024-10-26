@@ -55,6 +55,7 @@ final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
     final checkinMessage =
         await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
     final result = await _checkinRepository.checkin(
+      _authenticationRepository.currentUser!.uid!,
       CheckinFeeling.from(checkinFeeling),
       checkinMessage,
     );

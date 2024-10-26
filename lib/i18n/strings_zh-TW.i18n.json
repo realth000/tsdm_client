@@ -679,5 +679,21 @@
     "url": "連結",
     "unsupportedUrl": "不支援的連結",
     "open": "開啟"
+  },
+  "globalStatePage": {
+    "autoCheckinRunning": "正在自動簽到",
+    "autoCheckinFinished": "自動簽到已完成",
+    "viewDetail": "查看詳細"
+  },
+  "autoCheckinPage": {
+    "title": "自動簽到",
+    "detail": "為所有已登記的使用者自動簽到",
+    "running": "進行中。。。",
+    "user": {
+      "running": "進行中",
+      "success": "成功",
+      "failure": "失敗",
+      "notAuthed": "需要登入"
+    }
   }
 }

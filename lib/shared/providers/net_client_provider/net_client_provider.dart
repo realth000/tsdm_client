@@ -121,6 +121,7 @@ final class NetClientProvider with LoggerMixin {
     bool forceDesktop = true,
     CookieProvider? cookie,
   }) {
+    talker.debug('build no-cookie with cookie: $cookie');
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
     final cookieJar = PersistCookieJar(

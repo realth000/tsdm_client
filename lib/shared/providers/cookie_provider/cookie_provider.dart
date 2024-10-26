@@ -99,7 +99,7 @@ final class CookieProvider with LoggerMixin implements Storage {
       return false;
     }
     debug('cookie switch to user $userInfo');
-    _userLoginInfo = UserLoginInfo(username: username, uid: uid);
+    _userLoginInfo = userInfo;
     _cookieMap = Map.castFrom(databaseCookie);
     return true;
   }
@@ -226,5 +226,10 @@ final class CookieProvider with LoggerMixin implements Storage {
     }
     _cookieMap[key] = value;
     await _syncCookie();
+  }
+
+  @override
+  String toString() {
+    return 'CookieProvider{ userInfo=$_userLoginInfo, cookie=*** }';
   }
 }
