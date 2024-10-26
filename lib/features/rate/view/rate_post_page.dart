@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
@@ -229,14 +230,13 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
           create: (_) => RateRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              RateBloc(rateRepository: RepositoryProvider.of(context))
-                ..add(
-                  RateFetchInfoRequested(
-                    pid: widget.pid,
-                    rateAction: widget.rateAction,
-                  ),
-                ),
+          create: (context) => RateBloc(rateRepository: context.repo())
+            ..add(
+              RateFetchInfoRequested(
+                pid: widget.pid,
+                rateAction: widget.rateAction,
+              ),
+            ),
         ),
       ],
       child: BlocListener<RateBloc, RateState>(

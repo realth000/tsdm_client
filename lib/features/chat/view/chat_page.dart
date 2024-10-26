@@ -124,11 +124,10 @@ final class _ChatPageState extends State<ChatPage> {
           create: (context) => const ReplyRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              ReplyBloc(replyRepository: RepositoryProvider.of(context)),
+          create: (context) => ReplyBloc(replyRepository: context.repo()),
         ),
         BlocProvider(
-          create: (context) => ChatBloc(RepositoryProvider.of(context))
+          create: (context) => ChatBloc(context.repo())
             ..add(ChatFetchHistoryRequested(widget.uid)),
         ),
       ],

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/purchase/bloc/purchase_bloc.dart';
 import 'package:tsdm_client/features/purchase/repository/purchase_repository.dart';
@@ -63,8 +64,7 @@ class _LockedCardState extends State<LockedCard> {
           create: (_) => PurchaseRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              PurchaseBloc(purchaseRepository: RepositoryProvider.of(context)),
+          create: (context) => PurchaseBloc(purchaseRepository: context.repo()),
         ),
       ],
       child: BlocListener<PurchaseBloc, PurchaseState>(

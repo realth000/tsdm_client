@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
@@ -642,9 +643,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         ),
         BlocProvider(
           create: (context) {
-            final bloc = PostEditBloc(
-              postEditRepository: RepositoryProvider.of(context),
-            );
+            final bloc = PostEditBloc(postEditRepository: context.repo());
 
             final event = switch (widget.editType) {
               PostEditType.editPost ||

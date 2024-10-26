@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/editor/bloc/user_mention_cubit.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
@@ -209,8 +210,8 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog>
           create: (_) => EditorRepository(),
         ),
         BlocProvider(
-          create: (context) => UserMentionCubit(RepositoryProvider.of(context))
-            ..recommendFriend(),
+          create: (context) =>
+              UserMentionCubit(context.repo())..recommendFriend(),
         ),
       ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(

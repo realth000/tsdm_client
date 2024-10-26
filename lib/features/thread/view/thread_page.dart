@@ -211,15 +211,13 @@ class _ThreadPageState extends State<ThreadPage>
           create: (context) => ThreadBloc(
             tid: widget.threadID,
             pid: widget.findPostID,
-            threadRepository: RepositoryProvider.of(context),
+            threadRepository: context.repo(),
             reverseOrder:
                 widget.overrideReverseOrder ? threadReverseOrder : null,
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(
-          create: (context) => ReplyBloc(
-            replyRepository: RepositoryProvider.of(context),
-          ),
+          create: (context) => ReplyBloc(replyRepository: context.repo()),
         ),
         BlocProvider(
           create: (context) => JumpPageCubit(),

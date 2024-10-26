@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/features/editor/bloc/emoji_bloc.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
@@ -113,7 +114,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
         RepositoryProvider<EditorRepository>(create: (_) => EditorRepository()),
         BlocProvider(
           create: (context) => EmojiBloc(
-            editRepository: RepositoryProvider.of(context),
+            editRepository: context.repo(),
           )..add(EmojiFetchFromAssetEvent()),
         ),
       ],

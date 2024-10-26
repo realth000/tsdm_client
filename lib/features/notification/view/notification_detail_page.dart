@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_detail_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
@@ -103,12 +104,11 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           create: (_) => const ReplyRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              ReplyBloc(replyRepository: RepositoryProvider.of(context)),
+          create: (context) => ReplyBloc(replyRepository: context.repo()),
         ),
         BlocProvider(
           create: (context) => NotificationDetailCubit(
-            notificationRepository: RepositoryProvider.of(context),
+            notificationRepository: context.repo(),
           )..fetchDetail(widget.url),
         ),
       ],

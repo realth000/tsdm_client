@@ -54,8 +54,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
         ),
         BlocProvider(
           create: (context) =>
-              BroadcastMessageDetailCubit(RepositoryProvider.of(context))
-                ..fetchDetail(pmid),
+              BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid),
         ),
       ],
       child: BlocListener<BroadcastMessageDetailCubit,

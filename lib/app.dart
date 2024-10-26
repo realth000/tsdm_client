@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
@@ -151,8 +152,7 @@ class _AppState extends State<App> with WindowListener {
           ),
         ),
         RepositoryProvider<ImageCacheTriggerCubit>(
-          create: (context) =>
-              ImageCacheTriggerCubit(RepositoryProvider.of(context)),
+          create: (context) => ImageCacheTriggerCubit(context.repo()),
         ),
         RepositoryProvider<ThreadVisitHistoryRepo>(
           create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>()),
@@ -162,21 +162,19 @@ class _AppState extends State<App> with WindowListener {
         providers: [
           BlocProvider(
             create: (context) => SettingsBloc(
-              fragmentsRepository:
-                  RepositoryProvider.of<FragmentsRepository>(context),
+              fragmentsRepository: context.repo(),
               settingsRepository: getIt.get<SettingsRepository>(),
             ),
           ),
           BlocProvider(
-            create: (context) =>
-                ThreadVisitHistoryBloc(RepositoryProvider.of(context))
-                  ..add(const ThreadVisitHistoryFetchAllRequested()),
+            create: (context) => ThreadVisitHistoryBloc(context.repo())
+              ..add(const ThreadVisitHistoryFetchAllRequested()),
           ),
           // Become top-level because of background auto-checkin feature.
           BlocProvider(
             create: (context) => CheckinBloc(
-              checkinRepository: RepositoryProvider.of(context),
-              authenticationRepository: RepositoryProvider.of(context),
+              checkinRepository: context.repo(),
+              authenticationRepository: context.repo(),
               settingsRepository: getIt(),
             ),
           ),

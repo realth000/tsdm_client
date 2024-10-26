@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -88,8 +89,8 @@ class _NotificationPageState extends State<NotificationPage>
         ),
         BlocProvider(
           create: (context) => NotificationBloc(
-            notificationRepository: RepositoryProvider.of(context),
-            authRepo: RepositoryProvider.of(context),
+            notificationRepository: context.repo(),
+            authRepo: context.repo(),
             storageProvider: getIt(),
           )..add(NotificationUpdateAllRequested()),
         ),

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_bloc.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -142,12 +143,12 @@ class CachedImage extends StatelessWidget with LoggerMixin {
       create: (context) {
         final ImageCacheBloc bloc;
         if (initialImageData == null) {
-          bloc = ImageCacheBloc(imageUrl, RepositoryProvider.of(context))
+          bloc = ImageCacheBloc(imageUrl, context.repo())
             ..add(const ImageCacheLoadRequested());
         } else {
           bloc = ImageCacheBloc(
             imageUrl,
-            RepositoryProvider.of(context),
+            context.repo(),
             initialImage: initialImageData,
           );
         }

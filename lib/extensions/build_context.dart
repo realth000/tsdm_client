@@ -64,4 +64,7 @@ extension AccessContext on BuildContext {
       return null;
     }
   }
+
+  /// Get the repository on current context.
+  T repo<T>() => RepositoryProvider.of<T>(this);
 }

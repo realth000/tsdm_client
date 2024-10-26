@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/points/bloc/points_bloc.dart';
 import 'package:tsdm_client/features/points/repository/points_repository.dart';
@@ -192,12 +193,12 @@ class _PointsPageState extends State<PointsPage>
         ),
         BlocProvider(
           create: (context) => PointsStatisticsBloc(
-            pointsRepository: RepositoryProvider.of(context),
+            pointsRepository: context.repo(),
           )..add(PointsStatisticsRefreshRequested()),
         ),
         BlocProvider(
           create: (context) => PointsChangelogBloc(
-            pointsRepository: RepositoryProvider.of(context),
+            pointsRepository: context.repo(),
           )..add(PointsChangelogRefreshRequested()),
         ),
       ],

@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/my_thread/bloc/my_thread_bloc.dart';
 import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -123,9 +124,8 @@ class _MyThreadPageState extends State<MyThreadPage>
           create: (_) => MyThreadRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              MyThreadBloc(myThreadRepository: RepositoryProvider.of(context))
-                ..add(MyThreadLoadInitialDataRequested()),
+          create: (context) => MyThreadBloc(myThreadRepository: context.repo())
+            ..add(MyThreadLoadInitialDataRequested()),
         ),
       ],
       child: BlocBuilder<MyThreadBloc, MyThreadState>(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tsdm_client/features/authentication/widgets/login_form.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -28,7 +29,7 @@ class _LoginPageState extends State<LoginPage> {
       ),
       body: BlocProvider(
         create: (context) => AuthenticationBloc(
-          authenticationRepository: RepositoryProvider.of(context),
+          authenticationRepository: context.repo(),
         )..add(AuthenticationFetchLoginHashRequested()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {

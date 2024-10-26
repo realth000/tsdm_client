@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -50,7 +51,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
         RepositoryProvider(create: (context) => SettingsCacheRepository()),
         BlocProvider(
           create: (context) => SettingsCacheBloc(
-            cacheRepository: RepositoryProvider.of(context),
+            cacheRepository: context.repo(),
           )..add(SettingsCacheCalculateRequested()),
         ),
       ],

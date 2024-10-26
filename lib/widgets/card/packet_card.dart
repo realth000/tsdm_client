@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/packet/cubit/packet_cubit.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -33,7 +34,7 @@ class PacketCard extends StatelessWidget {
         ),
         BlocProvider<PacketCubit>(
           create: (context) => PacketCubit(
-            packetRepository: RepositoryProvider.of(context),
+            packetRepository: context.repo(),
             allTaken: allTaken,
           ),
         ),

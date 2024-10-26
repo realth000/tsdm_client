@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/latest_thread/bloc/latest_thread_bloc.dart';
 import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -82,7 +83,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
         ),
         BlocProvider(
           create: (context) => LatestThreadBloc(
-            latestThreadRepository: RepositoryProvider.of(context),
+            latestThreadRepository: context.repo(),
           )..add(LatestThreadRefreshRequested(widget.url)),
         ),
       ],

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/features/search/bloc/search_bloc.dart';
@@ -425,8 +426,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       providers: [
         RepositoryProvider(create: (_) => SearchRepository()),
         BlocProvider(
-          create: (context) =>
-              SearchBloc(searchRepository: RepositoryProvider.of(context)),
+          create: (context) => SearchBloc(searchRepository: context.repo()),
         ),
       ],
       child: BlocBuilder<SearchBloc, SearchState>(

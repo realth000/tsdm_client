@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
 import 'package:tsdm_client/features/thread_visit_history/widgets/thread_visit_history_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -23,9 +24,8 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
   Widget build(BuildContext context) {
     final tr = context.t.threadVisitHistoryPage;
     return BlocProvider(
-      create: (context) =>
-          ThreadVisitHistoryBloc(RepositoryProvider.of(context))
-            ..add(const ThreadVisitHistoryFetchAllRequested()),
+      create: (context) => ThreadVisitHistoryBloc(context.repo())
+        ..add(const ThreadVisitHistoryFetchAllRequested()),
       child: BlocBuilder<ThreadVisitHistoryBloc, ThreadVisitHistoryState>(
         builder: (context, state) {
           final body = switch (state.status) {

@@ -2,6 +2,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_history_bloc.dart';
 import 'package:tsdm_client/features/chat/models/editor_features.dart';
 import 'package:tsdm_client/features/chat/repository/chat_repository.dart';
@@ -121,11 +122,10 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           create: (context) => const ReplyRepository(),
         ),
         BlocProvider(
-          create: (context) =>
-              ReplyBloc(replyRepository: RepositoryProvider.of(context)),
+          create: (context) => ReplyBloc(replyRepository: context.repo()),
         ),
         BlocProvider(
-          create: (context) => ChatHistoryBloc(RepositoryProvider.of(context))
+          create: (context) => ChatHistoryBloc(context.repo())
             ..add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: null)),
         ),
       ],
