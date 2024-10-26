@@ -85,7 +85,6 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
                             (e) => _UserInfoListTile(
                               userInfo: e,
                               currentUserInfo: currentUser,
-                              enabled: !loggingIn,
                             ),
                           )
                           .toList(),
@@ -124,7 +123,6 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
 class _UserInfoListTile extends StatelessWidget with LoggerMixin {
   const _UserInfoListTile({
     required this.userInfo,
-    required this.enabled,
     required this.currentUserInfo,
   });
 
@@ -133,9 +131,6 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
 
   /// Current login user.
   final UserLoginInfo? currentUserInfo;
-
-  /// Enabled user switch or not;
-  final bool enabled;
 
   Future<void> _callback(BuildContext context) async {
     info('switch user to uid ${"${userInfo.uid}".obscured(4)}');
@@ -177,6 +172,7 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
     return BlocBuilder<_LoggingInCubit, bool>(
       builder: (context, state) {
         return ListTile(
+          enabled: !state,
           // TODO: Update user avatar.
           leading: CircleAvatar(child: Text(userInfo.username![0])),
           title: Text(userInfo.username!),
