@@ -128,7 +128,11 @@
     "checkinSection": {
       "title": "Check In",
       "feeling": "Feeling",
-      "anythingToSay": "Anything to say?"
+      "anythingToSay": "Anything to say?",
+      "autoCheckin": {
+        "title": "Automatic checkin",
+        "detail": "Automatically checkin for all accounts when app startup"
+      }
     },
     "storageSection": {
       "title": "Storage",

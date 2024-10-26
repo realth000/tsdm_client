@@ -128,7 +128,11 @@
     "checkinSection": {
       "title": "簽到",
       "feeling": "心情",
-      "anythingToSay": "有什麼想說的嗎？"
+      "anythingToSay": "有什麼想說的嗎？",
+      "autoCheckin": {
+        "title": "自動簽到",
+        "detail": "應用程式啟動時會自動為所有使用者簽到"
+      }
     },
     "storageSection": {
       "title": "儲存",
@@ -683,7 +687,7 @@
   "globalStatePage": {
     "autoCheckinRunning": "正在自動簽到",
     "autoCheckinFinished": "自動簽到已完成",
-    "viewDetail": "查看詳細"
+    "viewDetail": "查看詳情"
   },
   "autoCheckinPage": {
     "title": "自動簽到",

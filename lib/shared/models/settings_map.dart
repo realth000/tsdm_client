@@ -36,6 +36,7 @@ class SettingsMap with SettingsMapMappable {
     required this.threadCardHighlightInfoRow,
     required this.netClientProxy,
     required this.netClientUseProxy,
+    required this.autoCheckin,
   });
 
   final String netClientAccept;
@@ -67,6 +68,7 @@ class SettingsMap with SettingsMapMappable {
   final bool threadCardHighlightInfoRow;
   final String netClientProxy;
   final bool netClientUseProxy;
+  final bool autoCheckin;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -121,6 +123,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.netClientProxy => copyWith(netClientProxy: value as String?),
       SettingsKeys.netClientUseProxy =>
         copyWith(netClientUseProxy: value as bool?),
+      SettingsKeys.autoCheckin => copyWith(autoCheckin: value as bool?),
     };
   }
 }

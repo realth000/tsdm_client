@@ -128,7 +128,11 @@
     "checkinSection": {
       "title": "签到",
       "feeling": "心情",
-      "anythingToSay": "有什么想说的吗？"
+      "anythingToSay": "有什么想说的吗？",
+      "autoCheckin": {
+        "title": "自动签到",
+        "detail": "应用启动时自动为所有用户签到"
+      }
     },
     "storageSection": {
       "title": "存储",
@@ -683,7 +687,7 @@
   "globalStatePage": {
     "autoCheckinRunning": "正在自动签到",
     "autoCheckinFinished": "自动签到已完成",
-    "viewDetail": "查看详细"
+    "viewDetail": "查看详情"
   },
   "autoCheckinPage": {
     "title": "自动签到",

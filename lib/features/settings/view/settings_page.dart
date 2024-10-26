@@ -427,15 +427,18 @@ class _SettingsPageState extends State<SettingsPage> {
     BuildContext context,
     SettingsState state,
   ) {
+    final tr = context.t.settingsPage.checkinSection;
+
     final checkinFeeling = state.settingsMap.checkinFeeling;
     final checkinMessage = state.settingsMap.checkinMessage;
+    final autoCheckin = state.settingsMap.autoCheckin;
 
     return [
-      SectionTitleText(context.t.settingsPage.checkinSection.title),
+      SectionTitleText(tr.title),
       // Feeling
       SectionListTile(
         leading: const Icon(Icons.emoji_emotions_outlined),
-        title: Text(context.t.settingsPage.checkinSection.feeling),
+        title: Text(tr.feeling),
         subtitle: Text(CheckinFeeling.from(checkinFeeling).translate(context)),
         onTap: () async {
           final result =
@@ -458,7 +461,7 @@ class _SettingsPageState extends State<SettingsPage> {
       // Message
       SectionListTile(
         leading: const Icon(Icons.textsms_outlined),
-        title: Text(context.t.settingsPage.checkinSection.anythingToSay),
+        title: Text(tr.anythingToSay),
         subtitle: Text(checkinMessage),
         onTap: () async {
           final result =
@@ -473,6 +476,15 @@ class _SettingsPageState extends State<SettingsPage> {
               .read<SettingsBloc>()
               .add(SettingsValueChanged(SettingsKeys.checkinMessage, result));
         },
+      ),
+      SectionSwitchListTile(
+        secondary: Icon(MdiIcons.autoFix),
+        title: Text(tr.autoCheckin.title),
+        subtitle: Text(tr.autoCheckin.detail),
+        value: autoCheckin,
+        onChanged: (v) async => context
+            .read<SettingsBloc>()
+            .add(SettingsValueChanged(SettingsKeys.autoCheckin, v)),
       ),
     ];
   }

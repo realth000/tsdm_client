@@ -35,13 +35,21 @@ import 'package:window_manager/window_manager.dart';
 /// Main app for tsdm_client.
 class App extends StatefulWidget {
   /// Constructor.
-  const App(this.color, this.themeModeIndex, {super.key});
+  const App(
+    this.color,
+    this.themeModeIndex, {
+    required this.autoCheckin,
+    super.key,
+  });
 
   /// Initial color value.
   final int color;
 
   /// Initial theme mode index.
   final int themeModeIndex;
+
+  /// Run auto checkin at startup or not.
+  final bool autoCheckin;
 
   @override
   State<App> createState() => _AppState();
@@ -184,11 +192,17 @@ class _AppState extends State<App> with WindowListener {
             ),
           ),
           BlocProvider(
-            create: (context) => AutoCheckinBloc(
-              autoCheckinRepository: context.repo(),
-              settingsRepository: getIt(),
-              storageProvider: getIt(),
-            )..add(const AutoCheckinStartRequested()),
+            create: (context) {
+              final bloc = AutoCheckinBloc(
+                autoCheckinRepository: context.repo(),
+                settingsRepository: getIt(),
+                storageProvider: getIt(),
+              );
+              if (widget.autoCheckin) {
+                bloc.add(const AutoCheckinStartRequested());
+              }
+              return bloc;
+            },
           ),
           BlocProvider(
             create: (context) => ThemeCubit(

@@ -109,6 +109,7 @@ final class SettingsRepository with LoggerMixin {
           s.extract(SettingsKeys.threadCardHighlightInfoRow),
       netClientUseProxy: s.extract(SettingsKeys.netClientUseProxy),
       netClientProxy: s.extract(SettingsKeys.netClientProxy),
+      autoCheckin: s.extract(SettingsKeys.autoCheckin),
     );
   }
 

@@ -62,13 +62,15 @@ Future<void> main(List<String> args) async {
   };
   final themeModeIndex = settings.themeMode;
 
+  final autoCheckin = settings.autoCheckin;
+
   runApp(
     TranslationProvider(
       child: ResponsiveBreakpoints.builder(
         breakpoints: WindowSize.values
             .map((e) => Breakpoint(start: e.start, end: e.end, name: e.name))
             .toList(),
-        child: App(color, themeModeIndex),
+        child: App(color, themeModeIndex, autoCheckin: autoCheckin),
       ),
     ),
   );

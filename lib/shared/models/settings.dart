@@ -233,6 +233,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'netClientProxy',
     type: String,
     defaultValue: '',
+  ),
+
+  /// Enable auto checkin for all users when app startup.
+  autoCheckin<bool>(
+    name: 'autoCheckin',
+    type: bool,
+    defaultValue: true,
   );
 
   const SettingsKeys({
