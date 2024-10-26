@@ -51,7 +51,6 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
 
   /// Update the last checkin time for user [uid].
   Future<int> updateLastCheckinTime(int uid, DateTime datetime) async {
-    print('>>> update last checki time uid=$uid, datetime=$datetime');
     return (update(cookie)..where((e) => e.uid.equals(uid))).write(
       CookieCompanion(lastCheckin: Value(datetime)),
     );

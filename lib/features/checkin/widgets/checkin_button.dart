@@ -25,21 +25,9 @@ class CheckinButton extends StatelessWidget {
     if (!context.mounted) {
       return;
     }
-    final tr = context.t.profilePage.checkin;
-    final message = switch (result) {
-      CheckinResultSuccess() => tr.success(msg: result.message),
-      CheckinResultNotAuthorized() => tr.failedNotAuthorized,
-      CheckinResultWebRequestFailed() => tr.failedNotAuthorized,
-      CheckinResultFormHashNotFound() => tr.failedFormHashNotFound,
-      CheckinResultAlreadyChecked() => tr.failedAlreadyCheckedIn,
-      CheckinResultEarlyInTime() => tr.failedEarlyInTime,
-      CheckinResultLateInTime() => tr.failedLateInTime,
-      CheckinResultOtherError() => tr.failedOtherError(err: result.message),
-    };
-
     return showSnackBar(
       context: context,
-      message: message,
+      message: CheckinResult.message(context, result),
     );
   }
 

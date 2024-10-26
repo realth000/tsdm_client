@@ -79,7 +79,7 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
         skippedList.add(user);
       }
     }
-    if (waitingList.isEmpty && skippedList.isEmpty) {
+    if (waitingList.isEmpty) {
       // No users to auto checkin, skip.
       emit(const AutoCheckinStateInitial());
       return;
@@ -104,7 +104,8 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
     AutoCheckinInfo checkinInfo,
     _Emit emit,
   ) async {
-    if (checkinInfo.running.isEmpty) {
+    if (checkinInfo.running.isEmpty &&
+        (checkinInfo.succeeded.isNotEmpty || checkinInfo.failed.isNotEmpty)) {
       final now = DateTime.now();
       for (final (user, _) in checkinInfo.succeeded) {
         await _storageProvider.updateLastCheckinTime(user.uid!, now).run();

@@ -171,6 +171,9 @@ class ScreenPaths {
 
   /// Page to view and thread visit history.
   static const String threadVisitHistory = '/threadVisitHistory';
+
+  /// Page  to show auto checkin detail information.
+  static const String autoCheckinDetail = '/autoCheckinDetail';
 }
 
 /// Route path for a screen.

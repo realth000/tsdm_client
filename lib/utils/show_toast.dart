@@ -32,11 +32,13 @@ void showSnackBar({
   required BuildContext context,
   required String message,
   bool floating = true,
+  SnackBarAction? action,
 }) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       behavior: floating ? SnackBarBehavior.floating : null,
       content: Text(message),
+      action: action,
     ),
   );
 }

@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/view/login_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_page.dart';
+import 'package:tsdm_client/features/checkin/view/auto_checkin_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
@@ -328,6 +329,11 @@ final router = GoRouter(
       path: ScreenPaths.threadVisitHistory,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const ThreadVisitHistoryPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.autoCheckinDetail,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const AutoCheckinPage(),
     ),
   ],
 );

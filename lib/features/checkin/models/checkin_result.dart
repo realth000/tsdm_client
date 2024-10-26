@@ -5,6 +5,21 @@ part of 'models.dart';
 sealed class CheckinResult with CheckinResultMappable {
   /// Constructor.
   const CheckinResult();
+
+  /// Parse to text message.
+  static String message(BuildContext context, CheckinResult result) {
+    final tr = context.t.profilePage.checkin;
+    return switch (result) {
+      CheckinResultSuccess() => tr.success(msg: result.message),
+      CheckinResultNotAuthorized() => tr.failedNotAuthorized,
+      CheckinResultWebRequestFailed() => tr.failedNotAuthorized,
+      CheckinResultFormHashNotFound() => tr.failedFormHashNotFound,
+      CheckinResultAlreadyChecked() => tr.failedAlreadyCheckedIn,
+      CheckinResultEarlyInTime() => tr.failedEarlyInTime,
+      CheckinResultLateInTime() => tr.failedLateInTime,
+      CheckinResultOtherError() => tr.failedOtherError(err: result.message),
+    };
+  }
 }
 
 /// Succeed.

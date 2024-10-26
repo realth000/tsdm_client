@@ -26,7 +26,8 @@ final class CheckinRepository with LoggerMixin {
     // If any login-user related operation acted, for example logout or switch
     // to another user, the current user below is unexpected behavior.
     // So it's better to make a lock when doing checkin.
-    if (checkinResult is CheckinResultSuccess) {
+    if (checkinResult is CheckinResultSuccess ||
+        checkinResult is CheckinResultAlreadyChecked) {
       await _storageProvider.updateLastCheckinTime(uid, DateTime.now()).run();
     }
     return checkinResult;

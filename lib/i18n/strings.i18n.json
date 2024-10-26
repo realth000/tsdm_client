@@ -690,6 +690,7 @@
     "detail": "Automatically checkin for all accounts recorded",
     "running": "Running progress...",
     "user": {
+      "waiting": "Waiting",
       "running": "Pending",
       "success": "Success",
       "failure": "Failure",
