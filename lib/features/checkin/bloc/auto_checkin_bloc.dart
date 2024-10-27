@@ -55,8 +55,7 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
     // First trap into preparing state.
     emit(const AutoCheckinStatePreparing());
 
-    final currentDays =
-        DateTime.now().millisecondsSinceEpoch ~/ (1000 * 3600 * 24);
+    final now = DateTime.now();
     final users = await _storageProvider.getAllUsersWithTime();
 
     final skippedList = <UserLoginInfo>[];
@@ -70,10 +69,9 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
       // By default, only run checkin on those users who has a last checkin time
       // passed 1 day or more.
       if (lastCheckinTime == null ||
-          currentDays -
-                  (lastCheckinTime.millisecondsSinceEpoch ~/
-                      (1000 * 3600 * 24)) >=
-              1) {
+          now.year > lastCheckinTime.year ||
+          now.month > lastCheckinTime.month ||
+          now.day > lastCheckinTime.day) {
         waitingList.add(user);
       } else {
         skippedList.add(user);
