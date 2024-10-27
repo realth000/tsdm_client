@@ -175,7 +175,7 @@ extension ParseUrl on String {
         queryParameters.containsKey('handlekey') &&
         queryParameters.containsKey('touid') &&
         queryParameters.containsKey('pmid') &&
-        queryParameters.containsKey('datarange')) {
+        queryParameters.containsKey('daterange')) {
       return RecognizedRoute(
         ScreenPaths.chat,
         pathParameters: {
