@@ -6,7 +6,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_linux
   flutter_avif_linux
   irondash_engine_context
-  screen_retriever
+  screen_retriever_linux
   sqlite3_flutter_libs
   super_native_extensions
   system_theme

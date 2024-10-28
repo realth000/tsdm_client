@@ -8,7 +8,7 @@ list(APPEND FLUTTER_PLUGIN_LIST
   gal
   irondash_engine_context
   permission_handler_windows
-  screen_retriever
+  screen_retriever_windows
   share_plus
   sqlite3_flutter_libs
   super_native_extensions
