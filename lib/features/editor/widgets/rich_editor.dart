@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
+import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Wrapped bbcode editor.
 class RichEditor extends StatelessWidget {
@@ -46,7 +46,17 @@ class RichEditor extends StatelessWidget {
       autoFocus: autoFocus,
       initialText: initialText,
       scrollController: scrollController,
-      imageProvider: (context, url) => CachedImage(url),
+      imageProvider: (context, url, width, height) => ConstrainedBox(
+        constraints: BoxConstraints(
+          maxWidth: width?.toDouble() ?? double.infinity,
+          maxHeight: height?.toDouble() ?? double.infinity,
+        ),
+        child: NetworkIndicatorImage(url),
+      ),
+      // Enable this constraints if needed.
+      // imageConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
+      imagePicker: (context, url, width, height) =>
+          showImagePicker(context, url: url, width: width, height: height),
       emojiProvider: (context, code) {
         // code is supposed in
         // {:${group_id}_${emoji_id}:}
@@ -69,9 +79,6 @@ class RichEditor extends StatelessWidget {
       userMentionHandler: (username) => context.dispatchAsUrl(
         '$usernameProfilePage$username',
       ),
-      imageConstraints: const BoxConstraints(maxWidth: 100, maxHeight: 100),
-      imagePicker: (context, url, width, height) =>
-          showImagePicker(context, url: url, width: width, height: height),
     );
   }
 }
