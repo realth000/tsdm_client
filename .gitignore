@@ -1,6 +1,6 @@
 # Ignore drift generated files
 schema_versions.dart
-/test/data/generated_migrations/*
+/test/data/generated_migrations/*.dart
 
 # Not bundle drift web artifacts
 /web/drift_worker.dart.js
