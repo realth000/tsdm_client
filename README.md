@@ -313,7 +313,7 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 # 1. All
 git clone --recursive https://github.com/realth000/tsdm_client
 cd tsdm_client
-dart run build_runner build
+dart ./Makefile.dart
 
 # 2. Android
 flutter build apk
@@ -346,6 +346,9 @@ dart run drift_dev schema dump lib/shared/providers/storage_provider/models/data
 dart run drift_dev schema steps lib/shared/providers/storage_provider/models/database/schema/migration/ lib/shared/providers/storage_provider/models/database/schema/schema_versions.dart
 # Update schema for test
 dart run drift_dev schema generate lib/shared/providers/storage_provider/models/database/schema/migration/ test/data/generated_migrations/
+
+# Or in one step
+dart ./Makefile.dart
 ```
 
 ## 隐私

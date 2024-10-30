@@ -1,3 +1,7 @@
+# Ignore drift generated files
+schema_versions.dart
+/test/data/generated_migrations/*
+
 # Not bundle drift web artifacts
 /web/drift_worker.dart.js
 /web/sqlite3.debug.wasm
