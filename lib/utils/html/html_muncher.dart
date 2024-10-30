@@ -813,6 +813,27 @@ final class _Muncher with LoggerMixin {
       // Do NOT show url prefix.
       return ret;
     }
+    final Widget content;
+    if (url.contains('mod=space') && !element.innerText.contains('@')) {
+      content = Text(
+        '@',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.primary,
+        ),
+      );
+    } else {
+      content = Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.link,
+            size: state.fontSizeStack.lastOrNull ?? 18,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 2),
+        ],
+      );
+    }
 
     return [
       TextSpan(
@@ -822,19 +843,7 @@ final class _Muncher with LoggerMixin {
               cursor: SystemMouseCursors.click,
               child: GestureDetector(
                 onTap: () async => context.dispatchAsUrl(url),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Icon(
-                      url.contains('mod=space')
-                          ? Icons.alternate_email_outlined
-                          : Icons.link,
-                      size: state.fontSizeStack.lastOrNull ?? 18,
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
-                    const SizedBox(width: 2),
-                  ],
-                ),
+                child: content,
               ),
             ),
           ),
