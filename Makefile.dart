@@ -83,6 +83,8 @@ Future<int> runDrift() async {
     'lib/shared/providers/storage_provider/models/database/schema/schema_versions.dart',
   ]);
   final ret2 = p2.exitCode;
+  stdout.write(p2.stdout);
+  stderr.write(p2.stderr);
   if (ret2 != 0) {
     stderr.writeln('failed to step drift migration, ret=$ret2');
     return 1;
@@ -97,6 +99,8 @@ Future<int> runDrift() async {
     'test/data/generated_migrations/',
   ]);
   final ret3 = p3.exitCode;
+  stdout.write(p3.stdout);
+  stderr.write(p3.stderr);
   if (ret3 != 0) {
     stderr.writeln('failed to generate drift test data, ret=$ret3');
     return 1;
