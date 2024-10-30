@@ -94,6 +94,7 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog>
             Expanded(
               child: TextFormField(
                 controller: controller,
+                autofocus: true,
                 decoration: InputDecoration(
                   labelText: tr.username,
                   suffixIcon: userNameNotEmpty
