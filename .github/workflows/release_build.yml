@@ -38,7 +38,7 @@ jobs:
 
   build-linux-android:
     name: Build Linux and Android
-    needs: [release]
+    needs: [ release ]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -61,7 +61,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build Linux
         run: flutter build linux --release
       - name: Pre Packing
@@ -108,7 +108,7 @@ jobs:
 
   build-windows:
     name: Build Windows
-    needs: [release]
+    needs: [ release ]
     runs-on: windows-latest
     permissions:
       contents: write
@@ -123,7 +123,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build Windows
         run: flutter build windows --release
       - name: Pre Packing
@@ -149,7 +149,7 @@ jobs:
           artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
   build-macos-and-ios:
     name: Build MacOS and iOS
-    needs: [release]
+    needs: [ release ]
     runs-on: macos-latest
     permissions:
       contents: write
@@ -163,7 +163,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build MacOS
         run: |
           flutter build macos --release

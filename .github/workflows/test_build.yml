@@ -64,7 +64,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build Linux
         if: ${{ github.event_name == 'push' || inputs.build_linux }}
         run: flutter build linux --release
@@ -126,7 +126,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build Windows
         run: flutter build windows --release
       - name: Pre Packing
@@ -164,7 +164,7 @@ jobs:
         run: |
           git submodule update --init --recursive --force
           flutter pub get
-          dart run build_runner build
+          dart ./Makefile.dart
       - name: Build MacOS
         if: ${{ github.event_name == 'push' || inputs.build_macos }}
         run: |
