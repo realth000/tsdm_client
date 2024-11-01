@@ -6,7 +6,7 @@ import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 
 /// Wrapped bbcode editor.
 class RichEditor extends StatelessWidget {
@@ -38,6 +38,21 @@ class RichEditor extends StatelessWidget {
   static const _defaultEmojiWidth = 50.0;
   static const _defaultEmojiHeight = 50.0;
 
+  /// The maximum height of image.
+  ///
+  /// As noted somewhere else before:
+  ///
+  /// On the web side, images are rendered under a limit of maximum width,
+  /// currently is 550.
+  ///
+  /// If the width of image:
+  ///
+  /// * larger than this limit, images are scalded down to the maximum width
+  ///   while keeping the same width/height ratio.
+  /// * smaller than this limit, images are rendered in the original width, no
+  ///   matter the height of image.
+  static const _imageMaxWidth = 550.0;
+
   @override
   Widget build(BuildContext context) {
     return BBCodeEditor(
@@ -46,13 +61,21 @@ class RichEditor extends StatelessWidget {
       autoFocus: autoFocus,
       initialText: initialText,
       scrollController: scrollController,
-      imageProvider: (context, url, width, height) => ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: width?.toDouble() ?? double.infinity,
-          maxHeight: height?.toDouble() ?? double.infinity,
-        ),
-        child: NetworkIndicatorImage(url),
-      ),
+      imageProvider: (context, url, width, height) {
+        final w = width?.toDouble();
+        final h = height?.toDouble();
+        double? maxHeight;
+        if (w != null && h != null && w > _imageMaxWidth) {
+          maxHeight = h * (_imageMaxWidth / w);
+        }
+        return CachedImage(
+          url,
+          width: w,
+          height: maxHeight == null ? h : null,
+          maxWidth: _imageMaxWidth,
+          maxHeight: maxHeight,
+        );
+      },
       // Enable this constraints if needed.
       // imageConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
       imagePicker: (context, url, width, height) =>

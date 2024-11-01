@@ -18,8 +18,12 @@ class CachedImage extends StatelessWidget with LoggerMixin {
   /// Constructor.
   const CachedImage(
     this.imageUrl, {
+    this.width,
+    this.height,
     this.maxWidth,
     this.maxHeight,
+    this.minWidth,
+    this.minHeight,
     this.fit,
     this.tag,
     this.enableAnimation = true,
@@ -31,11 +35,23 @@ class CachedImage extends StatelessWidget with LoggerMixin {
   /// Also the key to find cached image data.
   final String imageUrl;
 
+  /// Fixed image width.
+  final double? width;
+
+  /// Fixed image height.
+  final double? height;
+
   /// Max image width.
   final double? maxWidth;
 
   /// Max image height.
   final double? maxHeight;
+
+  /// Min image width.
+  final double? minWidth;
+
+  /// Min image height.
+  final double? minHeight;
 
   /// Fit type.
   final BoxFit? fit;
@@ -48,20 +64,10 @@ class CachedImage extends StatelessWidget with LoggerMixin {
   /// Default is true.
   final bool enableAnimation;
 
-  static const _defaultMaxWidth = 80.0;
-  static const _defaultMaxHeight = 80.0;
-
-  Widget _buildPlaceholder(BuildContext context) => ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? _defaultMaxWidth,
-          maxHeight: maxHeight ?? _defaultMaxHeight,
-        ),
-        child: Shimmer.fromColors(
-          baseColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-          highlightColor:
-              Theme.of(context).colorScheme.primary.withOpacity(0.2),
-          child: FallbackPicture(fit: fit),
-        ),
+  Widget _buildPlaceholder(BuildContext context) => Shimmer.fromColors(
+        baseColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+        highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        child: FallbackPicture(fit: fit),
       );
 
   Widget _buildImage({
@@ -71,6 +77,8 @@ class CachedImage extends StatelessWidget with LoggerMixin {
     return Image.memory(
       imageData,
       fit: fit,
+      width: width,
+      height: height,
       errorBuilder: (context, e, st) {
         error('failed to load image from $imageUrl: $e');
         return FallbackPicture(fit: fit);
@@ -104,71 +112,69 @@ class CachedImage extends StatelessWidget with LoggerMixin {
     );
   }
 
-  Widget _buildErrorWidget(BuildContext context) => ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? _defaultMaxWidth,
-          maxHeight: maxHeight ?? _defaultMaxHeight,
-        ),
-        child: FallbackPicture(fit: fit),
-      );
-
   @override
   Widget build(BuildContext context) {
+    final Widget body;
+
     if (imageUrl.isEmpty) {
-      return ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: maxWidth ?? _defaultMaxWidth,
-          maxHeight: maxHeight ?? _defaultMaxHeight,
+      body = FallbackPicture(fit: fit);
+    } else {
+      Uint8List? initialImageData;
+      final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
+      if (cache != null) {
+        final fileCache =
+            getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
+        if (fileCache.existsSync()) {
+          initialImageData = fileCache.readAsBytesSync();
+          // if (tag != null) {
+          //   return Hero(tag: tag!, child: image);
+          // } else {
+          //   return image;
+          // }
+        }
+      }
+
+      body = BlocProvider(
+        create: (context) {
+          final ImageCacheBloc bloc;
+          if (initialImageData == null) {
+            bloc = ImageCacheBloc(imageUrl, context.repo())
+              ..add(const ImageCacheLoadRequested());
+          } else {
+            bloc = ImageCacheBloc(
+              imageUrl,
+              context.repo(),
+              initialImage: initialImageData,
+            );
+          }
+          return bloc;
+        },
+        child: BlocBuilder<ImageCacheBloc, ImageCacheState>(
+          builder: (context, state) {
+            switch (state) {
+              case ImageCacheInitial() || ImageCacheLoading():
+                return _buildPlaceholder(context);
+              case ImageCacheSuccess(:final imageData):
+                return _buildImage(
+                  context: context,
+                  imageData: imageData,
+                );
+              case ImageCacheFailure():
+                return FallbackPicture(fit: fit);
+            }
+          },
         ),
-        child: FallbackPicture(fit: fit),
       );
     }
 
-    Uint8List? initialImageData;
-    final cache = getIt.get<ImageCacheProvider>().getCacheInfo(imageUrl);
-    if (cache != null) {
-      final fileCache =
-          getIt.get<ImageCacheProvider>().getCacheFile(cache.fileName);
-      if (fileCache.existsSync()) {
-        initialImageData = fileCache.readAsBytesSync();
-        // if (tag != null) {
-        //   return Hero(tag: tag!, child: image);
-        // } else {
-        //   return image;
-        // }
-      }
-    }
-
-    return BlocProvider(
-      create: (context) {
-        final ImageCacheBloc bloc;
-        if (initialImageData == null) {
-          bloc = ImageCacheBloc(imageUrl, context.repo())
-            ..add(const ImageCacheLoadRequested());
-        } else {
-          bloc = ImageCacheBloc(
-            imageUrl,
-            context.repo(),
-            initialImage: initialImageData,
-          );
-        }
-        return bloc;
-      },
-      child: BlocBuilder<ImageCacheBloc, ImageCacheState>(
-        builder: (context, state) {
-          switch (state) {
-            case ImageCacheInitial() || ImageCacheLoading():
-              return _buildPlaceholder(context);
-            case ImageCacheSuccess(:final imageData):
-              return _buildImage(
-                context: context,
-                imageData: imageData,
-              );
-            case ImageCacheFailure():
-              return _buildErrorWidget(context);
-          }
-        },
+    return ConstrainedBox(
+      constraints: BoxConstraints(
+        maxWidth: maxWidth ?? double.infinity,
+        maxHeight: maxHeight ?? double.infinity,
+        minWidth: minWidth ?? 0,
+        minHeight: minHeight ?? 0,
       ),
+      child: body,
     );
   }
 }
