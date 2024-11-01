@@ -319,11 +319,13 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           null => sizedBoxEmpty,
           _BottomPanelType.none => sizedBoxEmpty,
           _BottomPanelType.keyboard => sizedBoxEmpty,
-          _BottomPanelType.toolbar => EditorToolbar(
-              bbcodeController: bbcodeController,
-              disabledFeatures: fullScreen
-                  ? defaultFullScreenDisabledEditorFeatures
-                  : defaultEditorDisabledFeatures,
+          _BottomPanelType.toolbar => Align(
+              child: EditorToolbar(
+                bbcodeController: bbcodeController,
+                disabledFeatures: fullScreen
+                    ? defaultFullScreenDisabledEditorFeatures
+                    : defaultEditorDisabledFeatures,
+              ),
             )
         };
       },
