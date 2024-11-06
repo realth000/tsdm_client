@@ -4,7 +4,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
-import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -82,19 +81,12 @@ class _NotificationPageState extends State<NotificationPage>
   @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage;
-    return MultiBlocProvider(
-      providers: [
-        RepositoryProvider(
-          create: (_) => NotificationRepository(),
-        ),
-        BlocProvider(
-          create: (context) => NotificationBloc(
-            notificationRepository: context.repo(),
-            authRepo: context.repo(),
-            storageProvider: getIt(),
-          )..add(NotificationUpdateAllRequested()),
-        ),
-      ],
+    return BlocProvider(
+      create: (context) => NotificationBloc(
+        notificationRepository: context.repo(),
+        authRepo: context.repo(),
+        storageProvider: getIt(),
+      )..add(NotificationUpdateAllRequested()),
       child: BlocListener<NotificationBloc, NotificationState>(
         listenWhen: (prev, curr) => prev.status != curr.status,
         listener: (context, state) {

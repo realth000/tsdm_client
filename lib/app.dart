@@ -12,6 +12,8 @@ import 'package:tsdm_client/features/checkin/bloc/checkin_bloc.dart';
 import 'package:tsdm_client/features/checkin/repository/auto_checkin_repository.dart';
 import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
+import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -134,6 +136,9 @@ class _AppState extends State<App> with WindowListener {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<NotificationRepository>(
+          create: (_) => NotificationRepository(),
+        ),
         RepositoryProvider<AuthenticationRepository>(
           create: (_) => AuthenticationRepository(),
         ),
@@ -173,6 +178,15 @@ class _AppState extends State<App> with WindowListener {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) => AutoNotificationCubit(
+              authenticationRepository: context.repo(),
+              notificationRepository: context.repo(),
+              storageProvider: getIt(),
+            )
+              // TODO: replace with duration in settings
+              ..start(const Duration(seconds: 20)),
+          ),
           BlocProvider(
             create: (context) => SettingsBloc(
               fragmentsRepository: context.repo(),

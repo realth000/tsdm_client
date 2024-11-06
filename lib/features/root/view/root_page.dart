@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/features/checkin/bloc/auto_checkin_bloc.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
 /// A top-level wrapper page for showing messages or provide functionalities to
@@ -19,26 +21,45 @@ class RootPage extends StatefulWidget {
   State<RootPage> createState() => _RootPageState();
 }
 
-class _RootPageState extends State<RootPage> {
+class _RootPageState extends State<RootPage> with LoggerMixin {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.globalStatePage;
-    return BlocListener<AutoCheckinBloc, AutoCheckinState>(
-      listenWhen: (prev, curr) =>
-          prev is! AutoCheckinStateFinished && curr is AutoCheckinStateFinished,
-      listener: (context, state) {
-        if (state is AutoCheckinStateFinished) {
-          showSnackBar(
-            context: context,
-            message: tr.autoCheckinFinished,
-            action: SnackBarAction(
-              label: tr.viewDetail,
-              onPressed: () async =>
-                  context.pushNamed(ScreenPaths.autoCheckinDetail),
-            ),
-          );
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<AutoCheckinBloc, AutoCheckinState>(
+          listenWhen: (prev, curr) =>
+              prev is! AutoCheckinStateFinished &&
+              curr is AutoCheckinStateFinished,
+          listener: (context, state) {
+            if (state is AutoCheckinStateFinished) {
+              showSnackBar(
+                context: context,
+                message: tr.autoCheckinFinished,
+                action: SnackBarAction(
+                  label: tr.viewDetail,
+                  onPressed: () async =>
+                      context.pushNamed(ScreenPaths.autoCheckinDetail),
+                ),
+              );
+            }
+          },
+        ),
+        BlocListener<AutoNotificationCubit, AutoNoticeState>(
+          listenWhen: (prev, curr) =>
+              curr is AutoNoticeStatePending &&
+              curr.notice != null &&
+              prev != curr,
+          listener: (context, state) {
+            // Add this check to make dart-analyzer happy.
+            if (state is! AutoNoticeStatePending) {
+              return;
+            }
+            final notice = state.notice;
+            debug('auto fetch got notice: $notice');
+          },
+        ),
+      ],
       child: widget.child,
     );
   }
