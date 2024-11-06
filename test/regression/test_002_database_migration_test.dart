@@ -34,4 +34,11 @@ void main() {
     final db = AppDatabase(connection);
     await verifier.migrateAndValidate(db, 5);
   });
+
+  test('upgrade from 5 to 6', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(5);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 6);
+  });
 }
