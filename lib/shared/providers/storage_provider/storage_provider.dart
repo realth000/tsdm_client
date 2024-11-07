@@ -516,4 +516,43 @@ class StorageProvider with LoggerMixin {
               .toList(),
         );
       });
+
+  /// Mark a notice as [read].
+  AsyncVoidEither markNoticeAsRead({
+    required int uid,
+    required int nid,
+    required bool read,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db)
+            .markNoticeAsRead(uid: uid, nid: nid, read: read);
+        return rightVoid();
+      });
+
+  /// Mark a personal message as [read].
+  AsyncVoidEither markPersonalMessageAsRead({
+    required int uid,
+    required int peerUid,
+    required bool read,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db)
+            .markPersonalMessageAsRead(uid: uid, peerUid: peerUid, read: read);
+        return rightVoid();
+      });
+
+  /// Mark a broadcast message as [read].
+  AsyncVoidEither markBroadcastMessageAsRead({
+    required int uid,
+    required int timestamp,
+    required bool read,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db).markBroadcastMessageAsRead(
+          uid: uid,
+          timestamp: timestamp,
+          read: read,
+        );
+        return rightVoid();
+      });
 }

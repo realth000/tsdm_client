@@ -12,3 +12,4 @@ part 'notice.dart';
 part 'notice_v2.dart';
 part 'notification_v2.dart';
 part 'personal_message_v2.dart';
+part 'record_mark.dart';

@@ -10,7 +10,7 @@ final class PersonalMessageV2 with PersonalMessageV2Mappable {
     required this.peerUid,
     required this.peerUsername,
     required this.sender,
-    required this.read,
+    required this.alreadyRead,
   });
 
   /// Timestamp in seconds.
@@ -34,5 +34,5 @@ final class PersonalMessageV2 with PersonalMessageV2Mappable {
   final bool sender;
 
   /// Flag indicating whether the message is read or not.
-  final bool read;
+  final bool alreadyRead;
 }

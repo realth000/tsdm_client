@@ -1,4 +1,5 @@
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:flutter/foundation.dart';
 
 part 'munch_options.mapper.dart';
 
@@ -9,6 +10,7 @@ final class MunchOptions with MunchOptionsMappable {
   /// Constructor.
   const MunchOptions({
     this.renderUrl = true,
+    this.onUrlLaunched,
   });
 
   /// Render <a> tags when munching html document.
@@ -19,4 +21,7 @@ final class MunchOptions with MunchOptionsMappable {
   ///
   /// Default is true.
   final bool renderUrl;
+
+  /// Callback on url launched.
+  final VoidCallback? onUrlLaunched;
 }

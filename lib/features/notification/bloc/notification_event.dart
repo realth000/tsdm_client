@@ -16,3 +16,14 @@ final class NotificationUpdateAllRequested extends NotificationEvent
 @MappableClass()
 final class NotificationRecordFetchTimeRequested extends NotificationEvent
     with NotificationRecordFetchTimeRequestedMappable {}
+
+/// Mark a message as read.
+@MappableClass()
+final class NotificationMarkReadRequested extends NotificationEvent
+    with NotificationMarkReadRequestedMappable {
+  /// Constructor.
+  const NotificationMarkReadRequested(this.recordMark);
+
+  /// Purpose of this event.
+  final RecordMark recordMark;
+}

@@ -32,6 +32,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
       (e, emit) => switch (e) {
         NotificationUpdateAllRequested() => _onRefreshAllRequested(emit),
         NotificationRecordFetchTimeRequested() => _onRecordFetchTimeRequested(),
+        NotificationMarkReadRequested(:final recordMark) =>
+          _onMarkReadRequested(recordMark),
       },
     );
   }
@@ -108,7 +110,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
                     peerUid: e.peerUid,
                     peerUsername: e.peerUsername,
                     sender: e.sender,
-                    alreadyRead: e.read,
+                    alreadyRead: e.alreadyRead,
                   ),
                 )
                 .toList(),
@@ -156,6 +158,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
               id: e.nid,
               timestamp: e.timestamp,
               data: e.data,
+              alreadyRead: e.alreadyRead ?? false,
             ),
           ),
         ],
@@ -168,7 +171,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
               peerUid: e.peerUid,
               peerUsername: e.peerUsername,
               sender: e.sender,
-              read: e.alreadyRead,
+              alreadyRead: e.alreadyRead,
             ),
           ),
         ],
@@ -179,6 +182,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
               timestamp: e.timestamp,
               data: e.data,
               pmid: e.pmid,
+              alreadyRead: e.alreadyRead ?? false,
             ),
           ),
         ],
@@ -195,5 +199,40 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     final now = DateTime.now();
     debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
     await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+  }
+
+  /// The event handler of marking some kind of notice as read or unread.
+  ///
+  /// This function does not update state because it only changes the
+  /// read/unread status in local storage and it's the presentation layer first
+  /// know the notice has been read so do not need to give the mark solution
+  /// back to the presentation layer, it handles by itself.
+  Future<void> _onMarkReadRequested(RecordMark recordMark) async {
+    debug('mark notice: $recordMark');
+    final task = switch (recordMark) {
+      RecordMarkNotice(:final uid, :final nid, alreadyRead: final read) =>
+        _storageProvider.markNoticeAsRead(uid: uid, nid: nid, read: read),
+      RecordMarkPersonalMessage(
+        :final uid,
+        :final peerUid,
+        alreadyRead: final read
+      ) =>
+        _storageProvider.markPersonalMessageAsRead(
+          uid: uid,
+          peerUid: peerUid,
+          read: read,
+        ),
+      RecordMarkBroadcastMessage(
+        :final uid,
+        :final timestamp,
+        alreadyRead: final read
+      ) =>
+        _storageProvider.markBroadcastMessageAsRead(
+          uid: uid,
+          timestamp: timestamp,
+          read: read,
+        ),
+    };
+    await task.mapLeft((e) => error('failed to mark read: $e')).run();
   }
 }
