@@ -59,16 +59,17 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           from4To5: (m, schema) async {
             info('migrating database schema from 4 to 5...');
             // Migrate notice table
-            final noticeData = await m.database.select(schema.notice).get();
-            final noticeEntity =
-                noticeData.map((e) => NoticeEntity.fromJson(e.data));
-            await m.drop(schema.notice);
-            await m.create(schema.notice);
-            await transaction(() async {
-              for (final n in noticeEntity) {
-                await m.database.into(notice).insertOnConflictUpdate(n);
-              }
-            });
+            await customUpdate(
+              'DELETE FROM notice '
+              'WHERE (uid, nid) NOT IN ( '
+              '    SELECT uid, max(nid) '
+              '    FROM notice '
+              '    GROUP BY uid '
+              ');',
+              updates: {schema.notice},
+              updateKind: UpdateKind.delete,
+            );
+            await m.alterTable(TableMigration(schema.notice));
             info('migrating database schema from 4 to 5... ok!');
           },
           from5To6: (m, schema) async {
