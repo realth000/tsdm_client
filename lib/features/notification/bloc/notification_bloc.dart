@@ -126,6 +126,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
         )
         .run();
 
+    // Filter all outdated messages.
+    localNoticeData.personalMessageList.removeWhere(
+      (x) =>
+          x.uid == uid &&
+          noticeData.personalMessageList.any((y) => y.peerUid == x.peerUid),
+    );
+
     // Here simply prepend fetching notification a front of all current
     // messages.
     //
