@@ -32,5 +32,5 @@ class PersonalMessage extends Table {
   BoolColumn get alreadyRead => boolean()();
 
   @override
-  Set<Column<Object>> get primaryKey => {uid, timestamp};
+  Set<Column<Object>> get primaryKey => {uid, peerUid};
 }

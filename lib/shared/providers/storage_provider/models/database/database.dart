@@ -73,6 +73,25 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           },
           from5To6: (m, schema) async {
             info('migrating database schema from 5 to 6...');
+            // Migrate broadcast message table.
+            //
+            // This raw sql statement only reserves the latest message in each
+            // pair of (uid, peer_uid), which means deleting all duplicate
+            // `{uid, peer_uid}` pair while keeping the latest message.
+            // So it's safe to change the primary key from `{uid, timestamp}` to
+            // `{uid, peer_uid}`.
+            await customUpdate(
+              'DELETE FROM personal_message '
+              'WHERE (uid, peer_uid, timestamp) NOT IN ( '
+              '    SELECT uid, peer_uid, max(timestamp) '
+              '    FROM personal_message '
+              '    GROUP BY uid, peer_uid '
+              ');',
+              updates: {schema.personalMessage},
+              updateKind: UpdateKind.delete,
+            );
+            await m.alterTable(TableMigration(schema.personalMessage));
+            // Migrate personal message table.
             await m.addColumn(
               schema.broadcastMessage,
               schema.broadcastMessage.alreadyRead,
