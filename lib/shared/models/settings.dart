@@ -240,6 +240,33 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'autoCheckin',
     type: bool,
     defaultValue: true,
+  ),
+
+  /// Show unread badge on notice card.
+  ///
+  /// Disabled by default because the read/unread flag is offline.
+  showUnreadNoticeBadge<bool>(
+    name: 'showUnreadNoticeBadge',
+    type: bool,
+    defaultValue: false,
+  ),
+
+  /// Show unread badge on personal message card.
+  ///
+  /// Enabled by default because the read/unread flag is provided by server.
+  showUnreadPersonalMessageBadge<bool>(
+    name: 'showUnreadPersonalMessageBadge',
+    type: bool,
+    defaultValue: true,
+  ),
+
+  /// Show unread badge on broadcast message card.
+  ///
+  /// Disabled by default because the read/unread flag is offline.
+  showUnreadBroadcastMessageBadge<bool>(
+    name: 'showUnreadBroadcastMessageBadge',
+    type: bool,
+    defaultValue: false,
   );
 
   const SettingsKeys({

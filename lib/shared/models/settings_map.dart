@@ -37,6 +37,9 @@ class SettingsMap with SettingsMapMappable {
     required this.netClientProxy,
     required this.netClientUseProxy,
     required this.autoCheckin,
+    required this.showUnreadNoticeBadge,
+    required this.showUnreadPersonalMessageBadge,
+    required this.showUnreadBroadcastMessageBadge,
   });
 
   final String netClientAccept;
@@ -69,6 +72,9 @@ class SettingsMap with SettingsMapMappable {
   final String netClientProxy;
   final bool netClientUseProxy;
   final bool autoCheckin;
+  final bool showUnreadNoticeBadge;
+  final bool showUnreadPersonalMessageBadge;
+  final bool showUnreadBroadcastMessageBadge;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -124,6 +130,12 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.netClientUseProxy =>
         copyWith(netClientUseProxy: value as bool?),
       SettingsKeys.autoCheckin => copyWith(autoCheckin: value as bool?),
+      SettingsKeys.showUnreadNoticeBadge =>
+        copyWith(showUnreadNoticeBadge: value as bool?),
+      SettingsKeys.showUnreadPersonalMessageBadge =>
+        copyWith(showUnreadPersonalMessageBadge: value as bool?),
+      SettingsKeys.showUnreadBroadcastMessageBadge =>
+        copyWith(showUnreadBroadcastMessageBadge: value as bool?),
     };
   }
 }

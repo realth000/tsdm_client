@@ -8,7 +8,9 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/html/munch_options.dart';
@@ -71,6 +73,8 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
 
   @override
   Widget build(BuildContext context) {
+    final showBadge =
+        getIt.get<SettingsRepository>().currentSettings.showUnreadNoticeBadge;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -79,7 +83,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
         children: [
           ListTile(
             leading: Badge(
-              isLabelVisible: !alreadyRead,
+              isLabelVisible: showBadge && !alreadyRead,
               child: const CircleAvatar(
                 child: Icon(Icons.notifications_outlined),
               ),
@@ -156,6 +160,10 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
 
   @override
   Widget build(BuildContext context) {
+    final showBadge = getIt
+        .get<SettingsRepository>()
+        .currentSettings
+        .showUnreadPersonalMessageBadge;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -166,7 +174,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: !alreadyRead,
+                isLabelVisible: showBadge && !alreadyRead,
                 child: const CircleAvatar(
                   child: Icon(Icons.message_outlined),
                 ),
@@ -244,6 +252,10 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
 
   @override
   Widget build(BuildContext context) {
+    final showBadge = getIt
+        .get<SettingsRepository>()
+        .currentSettings
+        .showUnreadBroadcastMessageBadge;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -254,7 +266,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: !alreadyRead,
+                isLabelVisible: showBadge && !alreadyRead,
                 child: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
               ),
               title: Text(context.t.noticePage.broadcastMessageTab.system),

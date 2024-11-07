@@ -185,7 +185,7 @@ class _AppState extends State<App> with WindowListener {
               storageProvider: getIt(),
             )
               // TODO: replace with duration in settings
-              ..start(const Duration(seconds: 20)),
+              ..start(const Duration(seconds: 20000)),
           ),
           BlocProvider(
             create: (context) => SettingsBloc(

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -125,6 +126,13 @@ class _SettingsPageState extends State<SettingsPage> {
 
     // Show badge or unread info count on logged user's unread messages;
     final showUnreadInfoHint = state.settingsMap.showUnreadInfoHint;
+
+    // Unread message on state.
+    final showUnreadNoticeBadge = state.settingsMap.showUnreadNoticeBadge;
+    final showUnreadPersonalMessageBadge =
+        state.settingsMap.showUnreadPersonalMessageBadge;
+    final showUnreadBroadcastMessageBadge =
+        state.settingsMap.showUnreadBroadcastMessageBadge;
 
     return [
       SectionTitleText(tr.title),
@@ -308,6 +316,48 @@ class _SettingsPageState extends State<SettingsPage> {
               .add(SettingsValueChanged(SettingsKeys.showUnreadInfoHint, v));
         },
       ),
+
+      // Unread notice badge.
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.notifications_paused_outlined),
+        title: Text(tr.unreadNoticeBadge),
+        value: showUnreadNoticeBadge,
+        onChanged: (v) => context
+            .read<SettingsBloc>()
+            .add(SettingsValueChanged(SettingsKeys.showUnreadNoticeBadge, v)),
+      ),
+
+      // Unread personal message badge.
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.notifications_active_outlined),
+        title: Text(tr.unreadPersonalMessageBadge),
+        value: showUnreadPersonalMessageBadge,
+        onChanged: (v) => context.read<SettingsBloc>().add(
+              SettingsValueChanged(
+                SettingsKeys.showUnreadPersonalMessageBadge,
+                v,
+              ),
+            ),
+      ),
+
+      // Unread broadcast message badge.
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.notification_important_outlined),
+        title: Text(tr.unreadBroadcastMessageBadge),
+        value: showUnreadBroadcastMessageBadge,
+        onChanged: (v) => context.read<SettingsBloc>().add(
+              SettingsValueChanged(
+                SettingsKeys.showUnreadBroadcastMessageBadge,
+                v,
+              ),
+            ),
+      ),
+
+      Padding(
+        padding: edgeInsetsT4B4,
+        child: Tips(tr.unreadBadgeLimitation),
+      ),
+
       SectionListTile(
         leading: const Icon(Icons.article_outlined),
         title: Text(tr.threadCard.title),

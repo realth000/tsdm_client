@@ -110,6 +110,11 @@ final class SettingsRepository with LoggerMixin {
       netClientUseProxy: s.extract(SettingsKeys.netClientUseProxy),
       netClientProxy: s.extract(SettingsKeys.netClientProxy),
       autoCheckin: s.extract(SettingsKeys.autoCheckin),
+      showUnreadNoticeBadge: s.extract(SettingsKeys.showUnreadNoticeBadge),
+      showUnreadPersonalMessageBadge:
+          s.extract(SettingsKeys.showUnreadPersonalMessageBadge),
+      showUnreadBroadcastMessageBadge:
+          s.extract(SettingsKeys.showUnreadBroadcastMessageBadge),
     );
   }
 

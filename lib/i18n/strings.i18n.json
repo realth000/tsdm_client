@@ -96,7 +96,11 @@
           "lastReplyAuthor": "桐ヶ谷和人",
           "threadType": "Daydream"
         }
-      }
+      },
+      "unreadNoticeBadge": "Unread notice badge",
+      "unreadPersonalMessageBadge": "Unread personal message badge",
+      "unreadBroadcastMessageBadge": "Unread broadcast message badge",
+      "unreadBadgeLimitation": "Show badge unread notice on card in notification, read/unread status only valid on current machine"
     },
     "windowSection": {
       "title": "Window",

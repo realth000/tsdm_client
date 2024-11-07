@@ -96,7 +96,11 @@
           "lastReplyAuthor": "桐ヶ谷和人",
           "threadType": "白日梦"
         }
-      }
+      },
+      "unreadNoticeBadge": "未读提醒小圆点",
+      "unreadPersonalMessageBadge": "未读私人消息小圆点",
+      "unreadBroadcastMessageBadge": "未读公共消息小圆点",
+      "unreadBadgeLimitation": "上述三项打开后将在消息页卡片上显示未读小圆点，提醒和公共消息的已读/未读状态仅本机有效"
     },
     "windowSection": {
       "title": "窗口",

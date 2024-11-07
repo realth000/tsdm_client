@@ -34,5 +34,6 @@ final class PersonalMessageV2 with PersonalMessageV2Mappable {
   final bool sender;
 
   /// Flag indicating whether the message is read or not.
+  @MappableField(key: 'read')
   final bool alreadyRead;
 }
