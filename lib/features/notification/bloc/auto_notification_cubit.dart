@@ -6,6 +6,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -36,11 +37,23 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   })  : _authenticationRepository = authenticationRepository,
         _notificationRepository = notificationRepository,
         _storageProvider = storageProvider,
-        super(const AutoNoticeStateStopped(Duration.zero));
+        super(const AutoNoticeStateStopped(Duration.zero)) {
+    _authSub = _authenticationRepository.status.listen(
+      (e) => switch (e) {
+        AuthStatusUnknown() ||
+        AuthStatusLoading() ||
+        AuthStatusNotAuthed() =>
+          stop(),
+        AuthStatusAuthed() => start(null),
+      },
+    );
+  }
 
   final AuthenticationRepository _authenticationRepository;
   final NotificationRepository _notificationRepository;
   final StorageProvider _storageProvider;
+
+  late final StreamSubscription<AuthStatus> _authSub;
 
   /// Duration between auto fetch actions.
   Duration duration;
@@ -143,6 +156,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   @override
   Future<void> close() async {
     _timer?.cancel();
+    await _authSub.cancel();
     await super.close();
   }
 }
