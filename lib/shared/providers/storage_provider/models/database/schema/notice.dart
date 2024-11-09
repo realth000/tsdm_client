@@ -21,7 +21,8 @@ class Notice extends Table {
 
   /// User already read this notice or not.
   // ignore: unnecessary_nullable_return_type
-  BoolColumn? get alreadyRead => boolean().nullable()();
+  BoolColumn? get alreadyRead =>
+      boolean().nullable().withDefault(const Constant(true))();
 
   @override
   Set<Column<Object>> get primaryKey => {uid, nid};

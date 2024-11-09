@@ -18,7 +18,8 @@ class BroadcastMessage extends Table {
   IntColumn get pmid => integer()();
 
   /// User already read this message or not.
-  BoolColumn get alreadyRead => boolean().nullable()();
+  BoolColumn get alreadyRead =>
+      boolean().nullable().withDefault(const Constant(true))();
 
   @override
   Set<Column<Object>> get primaryKey => {uid, timestamp};

@@ -136,6 +136,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
                     nid: e.id,
                     timestamp: e.timestamp,
                     data: e.data,
+                    alreadyRead: false,
                   ),
                 )
                 .toList(),
@@ -159,6 +160,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
                     timestamp: e.timestamp,
                     data: e.data,
                     pmid: e.pmid,
+                    alreadyRead: false,
                   ),
                 )
                 .toList(),
