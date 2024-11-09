@@ -31,6 +31,26 @@ class _MyThreadPageState extends State<MyThreadPage>
     _threadRefreshController
       ..finishRefresh()
       ..finishLoad();
+    final Widget child;
+    if (state.threadList.isEmpty) {
+      child = Center(
+        child: Text(
+          context.t.general.noData,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+        ),
+      );
+    } else {
+      child = ListView.separated(
+        padding: edgeInsetsL12T4R12,
+        itemCount: state.threadList.length,
+        itemBuilder: (context, index) {
+          return MyThreadCard(state.threadList[index]);
+        },
+        separatorBuilder: (context, index) => sizedBoxW4H4,
+      );
+    }
     return EasyRefresh(
       controller: _threadRefreshController,
       header: const MaterialHeader(),
@@ -47,14 +67,7 @@ class _MyThreadPageState extends State<MyThreadPage>
             .read<MyThreadBloc>()
             .add(const MyThreadLoadMoreThreadRequested());
       },
-      child: ListView.separated(
-        padding: edgeInsetsL12T4R12,
-        itemCount: state.threadList.length,
-        itemBuilder: (context, index) {
-          return MyThreadCard(state.threadList[index]);
-        },
-        separatorBuilder: (context, index) => sizedBoxW4H4,
-      ),
+      child: child,
     );
   }
 
@@ -65,6 +78,26 @@ class _MyThreadPageState extends State<MyThreadPage>
     _replyRefreshController
       ..finishRefresh()
       ..finishLoad();
+    final Widget child;
+    if (state.replyList.isEmpty) {
+      child = Center(
+        child: Text(
+          context.t.general.noData,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                color: Theme.of(context).colorScheme.outline,
+              ),
+        ),
+      );
+    } else {
+      child = ListView.separated(
+        itemCount: state.replyList.length,
+        itemBuilder: (context, index) {
+          return MyThreadCard(state.replyList[index]);
+        },
+        separatorBuilder: (context, index) => sizedBoxW4H4,
+      );
+    }
+
     return Padding(
       padding: edgeInsetsL12T4R12B24,
       child: EasyRefresh(
@@ -83,13 +116,7 @@ class _MyThreadPageState extends State<MyThreadPage>
               .read<MyThreadBloc>()
               .add(const MyThreadLoadMoreReplyRequested());
         },
-        child: ListView.separated(
-          itemCount: state.replyList.length,
-          itemBuilder: (context, index) {
-            return MyThreadCard(state.replyList[index]);
-          },
-          separatorBuilder: (context, index) => sizedBoxW4H4,
-        ),
+        child: child,
       ),
     );
   }
