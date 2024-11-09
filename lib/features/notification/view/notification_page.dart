@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -92,6 +93,16 @@ class _NotificationPageState extends State<NotificationPage>
         if (state.status == NotificationStatus.failure) {
           showFailedToLoadSnackBar(context);
         } else if (state.status == NotificationStatus.success) {
+          final n = state.noticeList.where((e) => !e.alreadyRead).length;
+          final pm =
+              state.personalMessageList.where((e) => !e.alreadyRead).length;
+          final bm =
+              state.broadcastMessageList.where((e) => !e.alreadyRead).length;
+          context.read<NotificationStateCubit>().setAll(
+                noticeCount: n,
+                personalMessageCount: pm,
+                broadcastMessageCount: bm,
+              );
           // Update last fetch notification time.
           context
               .read<NotificationBloc>()
