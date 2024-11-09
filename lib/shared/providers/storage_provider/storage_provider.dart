@@ -6,6 +6,7 @@ import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/dao/dao.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -555,6 +556,22 @@ class StorageProvider with LoggerMixin {
           timestamp: timestamp,
           read: read,
         );
+        return rightVoid();
+      });
+
+  /// Mark all message of a [notificationType] as [alreadyRead].
+  AsyncVoidEither markTypeAsRead({
+    required NotificationType notificationType,
+    required bool alreadyRead,
+    required int uid,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db).markTypeAsRead(
+          notificationType: notificationType,
+          uid: uid,
+          alreadyRead: alreadyRead,
+        );
+
         return rightVoid();
       });
 }

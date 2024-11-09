@@ -4,10 +4,17 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/notice_card_v2.dart';
+
+enum _Actions {
+  markAllNoticeAsRead,
+  markAllPersonalMessageAsRead,
+  markAllBroadcastMessaegAsRead,
+}
 
 /// Notice page, shows Notice and PrivateMessage of current user.
 class NotificationPage extends StatefulWidget {
@@ -164,6 +171,58 @@ class _NotificationPageState extends State<NotificationPage>
           return Scaffold(
             appBar: AppBar(
               title: Text(tr.title),
+              actions: [
+                PopupMenuButton<_Actions>(
+                  itemBuilder: (_) => [
+                    PopupMenuItem(
+                      value: _Actions.markAllNoticeAsRead,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.notifications_paused_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.cardMenu.markAllNoticeAsRead),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: _Actions.markAllPersonalMessageAsRead,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.notifications_active_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.cardMenu.markAllPersonalMessageAsRead),
+                        ],
+                      ),
+                    ),
+                    PopupMenuItem(
+                      value: _Actions.markAllBroadcastMessaegAsRead,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.notification_important_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.cardMenu.markAllBroadcastMessageAsRead),
+                        ],
+                      ),
+                    ),
+                  ],
+                  onSelected: (value) async {
+                    final noticeType = switch (value) {
+                      _Actions.markAllNoticeAsRead => NotificationType.notice,
+                      _Actions.markAllPersonalMessageAsRead =>
+                        NotificationType.personalMessage,
+                      _Actions.markAllBroadcastMessaegAsRead =>
+                        NotificationType.broadcastMessage,
+                    };
+
+                    context.read<NotificationBloc>().add(
+                          NotificationMarkTypeReadRequested(
+                            markType: noticeType,
+                            markAsRead: true,
+                          ),
+                        );
+                  },
+                ),
+              ],
               bottom: TabBar(
                 controller: _tabController,
                 tabs: [

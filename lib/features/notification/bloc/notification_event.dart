@@ -28,6 +28,23 @@ final class NotificationMarkReadRequested extends NotificationEvent
   final RecordMark recordMark;
 }
 
+/// Mark all message of type as read.
+@MappableClass()
+final class NotificationMarkTypeReadRequested extends NotificationEvent
+    with NotificationMarkReadRequestedMappable {
+  /// Constructor.
+  const NotificationMarkTypeReadRequested({
+    required this.markType,
+    required this.markAsRead,
+  });
+
+  /// Purpose of this event.
+  final NotificationType markType;
+
+  /// Flag indicating mark as read or unread.
+  final bool markAsRead;
+}
+
 /// Internal event.
 ///
 /// Repository has fetched new info from server.

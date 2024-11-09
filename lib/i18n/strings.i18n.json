@@ -378,7 +378,10 @@
     },
     "cardMenu": {
       "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread"
+      "markAsUnread": "Mark as unread",
+      "markAllNoticeAsRead": "Mark all notice as read",
+      "markAllPersonalMessageAsRead": "Mark all PM as read",
+      "markAllBroadcastMessageAsRead": "Mark all BM as read"
     }
   },
   "searchPage": {

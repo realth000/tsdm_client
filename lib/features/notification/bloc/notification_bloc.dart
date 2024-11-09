@@ -7,6 +7,7 @@ import 'package:tsdm_client/features/authentication/repository/models/models.dar
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_info_repository.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
+import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -40,6 +41,12 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           _onMarkReadRequested(emit, recordMark),
         NotificationInfoFetched(:final info) =>
           _onNoticeInfoFetched(emit, info),
+        NotificationMarkTypeReadRequested(:final markAsRead, :final markType) =>
+          _onMarkTypeReadRequested(
+            emit,
+            markType,
+            markAsRead: markAsRead,
+          ),
       },
     );
 
@@ -242,6 +249,61 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
         broadcastMessageList: allBroadcastMessage,
       ),
     );
+  }
+
+  Future<void> _onMarkTypeReadRequested(
+    _Emit emit,
+    NotificationType markType, {
+    required bool markAsRead,
+  }) async {
+    final uid = _authRepo.currentUser?.uid;
+    if (uid == null) {
+      error('intend to mark all notice for user but uid not found');
+      return;
+    }
+
+    emit(state.copyWith(status: NotificationStatus.loading));
+
+    await _storageProvider
+        .markTypeAsRead(
+          notificationType: markType,
+          uid: uid,
+          alreadyRead: markAsRead,
+        )
+        .run();
+
+    switch (markType) {
+      case NotificationType.notice:
+        final list = state.noticeList
+            .map((e) => e.copyWith(alreadyRead: markAsRead))
+            .toList();
+        emit(
+          state.copyWith(
+            status: NotificationStatus.success,
+            noticeList: list,
+          ),
+        );
+      case NotificationType.personalMessage:
+        final list = state.personalMessageList
+            .map((e) => e.copyWith(alreadyRead: markAsRead))
+            .toList();
+        emit(
+          state.copyWith(
+            status: NotificationStatus.success,
+            personalMessageList: list,
+          ),
+        );
+      case NotificationType.broadcastMessage:
+        final list = state.broadcastMessageList
+            .map((e) => e.copyWith(alreadyRead: markAsRead))
+            .toList();
+        emit(
+          state.copyWith(
+            status: NotificationStatus.success,
+            broadcastMessageList: list,
+          ),
+        );
+    }
   }
 
   Future<void> _onRecordFetchTimeRequested() async {

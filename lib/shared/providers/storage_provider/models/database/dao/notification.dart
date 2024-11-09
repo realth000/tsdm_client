@@ -165,4 +165,36 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
           ..where((e) => e.uid.equals(uid) & e.timestamp.equals(timestamp)))
         .write(BroadcastMessageCompanion(alreadyRead: Value(read)));
   }
+
+  /// Mark all messages of [notificationType] as [alreadyRead].
+  Future<void> markTypeAsRead({
+    required NotificationType notificationType,
+    required bool alreadyRead,
+    required int uid,
+  }) async {
+    await transaction(() async {
+      switch (notificationType) {
+        case NotificationType.notice:
+          await (update(notice)..where((e) => e.uid.equals(uid))).write(
+            NoticeCompanion(
+              alreadyRead: Value(alreadyRead),
+            ),
+          );
+        case NotificationType.personalMessage:
+          await (update(personalMessage)..where((e) => e.uid.equals(uid)))
+              .write(
+            PersonalMessageCompanion(
+              alreadyRead: Value(alreadyRead),
+            ),
+          );
+        case NotificationType.broadcastMessage:
+          await (update(broadcastMessage)..where((e) => e.uid.equals(uid)))
+              .write(
+            BroadcastMessageCompanion(
+              alreadyRead: Value(alreadyRead),
+            ),
+          );
+      }
+    });
+  }
 }

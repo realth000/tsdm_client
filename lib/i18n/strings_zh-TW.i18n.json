@@ -378,7 +378,10 @@
     },
     "cardMenu": {
       "markAsRead": "標為已讀",
-      "markAsUnread": "標為未讀"
+      "markAsUnread": "標為未讀",
+      "markAllNoticeAsRead": "標記所有提醒為已讀",
+      "markAllPersonalMessageAsRead": "標記所有私人訊息為已讀",
+      "markAllBroadcastMessageAsRead": "標記所有公用訊息為已讀"
     }
   },
   "searchPage": {
