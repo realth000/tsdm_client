@@ -65,7 +65,7 @@
      <tr>
        <th>系统</th>
        <!-- <th>稳定版（0.14）</th> -->
-       <th>预览版（1.0.0-alpha.11）</th>
+       <th>预览版（1.0.0-alpha.12）</th>
      </tr>
     </thead>
   <tbody>
@@ -76,8 +76,8 @@
         <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br> -->
       <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
       </td>
     </tr>
     <tr>
@@ -86,7 +86,7 @@
         <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br> -->
       <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -95,7 +95,7 @@
         <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br> -->
       <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
       </td>
     </tr>
     <tr>
@@ -104,7 +104,7 @@
         <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br> -->
       <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
       </td>
     </tr>
     <tr>
@@ -124,7 +124,7 @@
         <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br> -->
       <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.11/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.12/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
       </td>
     </tr>
   </tbody>
@@ -230,6 +230,8 @@
   * [x] 回复私信
   * [x] 发送私信
   * [x] 发送富文本私信
+  * [x] *自动拉取通知*
+  * [x] *自动拉取到新通知时发送系统通知（安卓）*
 * [ ] 好友
   * [ ] 加好友
   * [ ] 查看好友
@@ -340,15 +342,16 @@ flutter build windows
 ### 更新数据库schema
 
 ```bash
+# One step
+dart ./Makefile.dart
+
+# Or manually
 # Export schema
 dart run drift_dev schema dump lib/shared/providers/storage_provider/models/database/database.dart lib/shared/providers/storage_provider/models/database/schema/migration/
 # Generate migration
 dart run drift_dev schema steps lib/shared/providers/storage_provider/models/database/schema/migration/ lib/shared/providers/storage_provider/models/database/schema/schema_versions.dart
 # Update schema for test
 dart run drift_dev schema generate lib/shared/providers/storage_provider/models/database/schema/migration/ test/data/generated_migrations/
-
-# Or in one step
-dart ./Makefile.dart
 ```
 
 ## 隐私
