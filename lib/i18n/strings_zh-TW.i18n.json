@@ -367,6 +367,10 @@
       "titleRate": "評分詳情",
       "titleMention": "回覆提及",
       "postNotFound": "找不到內容"
+    },
+    "cardMenu": {
+      "markAsRead": "標為已讀",
+      "markAsUnread": "標為未讀"
     }
   },
   "searchPage": {

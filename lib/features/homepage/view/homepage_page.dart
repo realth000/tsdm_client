@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
 import 'package:tsdm_client/features/homepage/widgets/widgets.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/parse_url/widgets/parse_url_dialog.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -112,14 +113,29 @@ class _HomepagePageState extends State<HomepagePage> {
             RepositoryProvider.of<ForumHomeRepository>(context),
         profileRepository: RepositoryProvider.of<ProfileRepository>(context),
       )..add(HomepageLoadRequested()),
-      child: BlocListener<HomeCubit, HomeState>(
-        listener: (context, state) {
-          if (state.inHome ?? false) {
-            context.read<HomepageBloc>().add(const HomepageResumeSwiper());
-          } else if (state.inHome == false) {
-            context.read<HomepageBloc>().add(const HomepagePauseSwiper());
-          }
-        },
+      child: MultiBlocListener(
+        listeners: [
+          BlocListener<HomeCubit, HomeState>(
+            listener: (context, state) {
+              if (state.inHome ?? false) {
+                context.read<HomepageBloc>().add(const HomepageResumeSwiper());
+              } else if (state.inHome == false) {
+                context.read<HomepageBloc>().add(const HomepagePauseSwiper());
+              }
+            },
+          ),
+          BlocListener<HomepageBloc, HomepageState>(
+            listenWhen: (prev, curr) =>
+                prev.status == HomepageStatus.loading &&
+                curr.status == HomepageStatus.success,
+            listener: (context, _) {
+              // From loading state to success state, refresh notice.
+              context
+                  .read<NotificationBloc>()
+                  .add(NotificationUpdateAllRequested());
+            },
+          ),
+        ],
         child: BlocConsumer<HomepageBloc, HomepageState>(
           listener: (context, state) {
             if (state.status == HomepageStatus.failure) {

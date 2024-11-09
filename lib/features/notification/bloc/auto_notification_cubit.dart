@@ -6,7 +6,6 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -18,6 +17,14 @@ part 'auto_notification_state.dart';
 ///
 /// This cubit takes control of automatically fetching notice from server,
 /// update notice state.
+///
+/// This cubit only triggers automatic update of notification by calling global
+/// [NotificationRepository], never handles the returned data .
+/// For process on saving notice data in storage and merging fetched data with
+/// current ones, see `NotificationBloc`. This is by design because here the
+/// cubit SHOULD only be ca optional trigger of notification state update, all
+/// data handling logic and presentation state update logic are implemented in
+/// `NotificationBloc`.
 final class AutoNotificationCubit extends Cubit<AutoNoticeState>
     with LoggerMixin {
   /// Constructor.
@@ -41,18 +48,21 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   /// Timer calculating fetch actions.
   Timer? _timer;
 
-  Future<void> _emitDataState(int uid, NotificationV2 data) async {
-    debug('auto fetch finished with data');
-    emit(AutoNoticeStatePending(data, duration));
+  AsyncVoidEither _emitDataState(int uid) {
+    return AsyncVoidEither(() async {
+      debug('auto fetch finished with data');
+      emit(AutoNoticeStatePending(duration));
 
-    // Code below is synced from _onRecordFetchTimeRequested in
-    // NotificationBloc.
-    //
-    // NotificationBloc only exists in notice page so can not trigger actions
-    // below by adding events to it.
-    final now = DateTime.now();
-    debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
-    await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+      // Code below is synced from _onRecordFetchTimeRequested in
+      // NotificationBloc.
+      //
+      // NotificationBloc only exists in notice page so can not trigger actions
+      // below by adding events to it.
+      final now = DateTime.now();
+      debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
+      await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+      return rightVoid();
+    });
   }
 
   void _emitErrorState(AppException e) {
@@ -72,7 +82,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
     debug('running auto fetch...');
 
     // Mark as pending data.
-    emit(AutoNoticeStatePending(null, duration));
+    emit(AutoNoticeStatePending(duration));
 
     final uid = _authenticationRepository.currentUser?.uid;
     if (uid == null) {
@@ -91,8 +101,8 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
       }
     }
     await _notificationRepository
-        .fetchNotificationV2(timestamp: lastFetchTime)
-        .map((v) => _emitDataState(uid, v))
+        .fetchNotificationV2(uid: uid, timestamp: lastFetchTime)
+        .andThen(() => _emitDataState(uid))
         .mapLeft(_emitErrorState)
         .run();
   }

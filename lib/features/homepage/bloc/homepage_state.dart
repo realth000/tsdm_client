@@ -45,8 +45,6 @@ final class HomepageState with HomepageStateMappable {
     this.loggedUserInfo,
     this.pinnedThreadGroupList = const [],
     this.swiperUrlList = const [],
-    this.unreadNoticeCount = 0,
-    this.hasUnreadMessage = false,
     this.scrollSwiper = true,
   });
 
@@ -66,12 +64,6 @@ final class HomepageState with HomepageStateMappable {
 
   /// Swiper urls in the homepage.
   final List<SwiperUrl> swiperUrlList;
-
-  /// The count of unread notices.
-  final int unreadNoticeCount;
-
-  /// Flag indicating has unread messages or not.
-  final bool hasUnreadMessage;
 
   /// Flag indicating should let swiper scrolls or not.
   ///

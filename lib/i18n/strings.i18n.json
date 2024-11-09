@@ -367,6 +367,10 @@
       "titleRate": "Rate info",
       "titleMention": "Reply mention",
       "postNotFound": "Content not found"
+    },
+    "cardMenu": {
+      "markAsRead": "Mark as read",
+      "markAsUnread": "Mark as unread"
     }
   },
   "searchPage": {

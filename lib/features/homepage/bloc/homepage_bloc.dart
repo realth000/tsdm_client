@@ -8,7 +8,6 @@ import 'package:fpdart/fpdart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
-import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
@@ -350,21 +349,6 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
             // Style 2: With welcome text
             document.querySelector('div#chart > script');
 
-    var hasUnreadNotice = 0;
-    final noticeNode = document.querySelector('a#myprompt');
-    if (noticeNode?.classes.contains('new') ?? false) {
-      hasUnreadNotice = noticeNode?.innerText
-              .split('(')
-              .lastOrNull
-              ?.split(')')
-              .firstOrNull
-              ?.parseToInt() ??
-          0;
-    }
-
-    final hasUnreadMessage =
-        document.querySelector('a#pm_ntc')?.classes.contains('new') ?? false;
-
     final picUrlList =
         _buildKahrpbaPicUrlList(styleNode).whereType<String>().toList();
     final picHrefList =
@@ -462,8 +446,6 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       loggedUserInfo: loggedUserInfo,
       pinnedThreadGroupList: pinnedThreadGroupList,
       swiperUrlList: swiperUrlList,
-      unreadNoticeCount: hasUnreadNotice,
-      hasUnreadMessage: hasUnreadMessage,
     );
   }
 

@@ -13,6 +13,9 @@ import 'package:tsdm_client/features/checkin/repository/auto_checkin_repository.
 import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
+import 'package:tsdm_client/features/notification/repository/notification_info_repository.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
@@ -136,6 +139,9 @@ class _AppState extends State<App> with WindowListener {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
+        RepositoryProvider<NotificationInfoRepository>(
+          create: (_) => NotificationInfoRepository(),
+        ),
         RepositoryProvider<NotificationRepository>(
           create: (_) => NotificationRepository(),
         ),
@@ -179,6 +185,9 @@ class _AppState extends State<App> with WindowListener {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
+            create: (context) => NotificationStateCubit(context.repo()),
+          ),
+          BlocProvider(
             create: (context) => AutoNotificationCubit(
               authenticationRepository: context.repo(),
               notificationRepository: context.repo(),
@@ -186,6 +195,14 @@ class _AppState extends State<App> with WindowListener {
             )
               // TODO: replace with duration in settings
               ..start(const Duration(seconds: 20000)),
+          ),
+          BlocProvider(
+            create: (context) => NotificationBloc(
+              notificationRepository: context.repo(),
+              infoRepository: context.repo(),
+              authRepo: context.repo(),
+              storageProvider: getIt(),
+            ),
           ),
           BlocProvider(
             create: (context) => SettingsBloc(

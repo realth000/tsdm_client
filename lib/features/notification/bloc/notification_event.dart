@@ -27,3 +27,16 @@ final class NotificationMarkReadRequested extends NotificationEvent
   /// Purpose of this event.
   final RecordMark recordMark;
 }
+
+/// Internal event.
+///
+/// Repository has fetched new info from server.
+@MappableClass()
+final class NotificationInfoFetched extends NotificationEvent
+    with NotificationInfoFetchedMappable {
+  /// Constructor.
+  const NotificationInfoFetched(this.info);
+
+  /// Latest fetched info.
+  final NotificationInfoState info;
+}

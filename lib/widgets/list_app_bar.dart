@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// App bar actions.
 enum MenuActions {
@@ -111,6 +112,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
       title: title == null ? null : Text(title!),
       bottom: bottom,
       actions: [
+        const NoticeButton(),
         IconButton(
           icon: const Icon(Icons.search_outlined),
           onPressed: onSearch,

@@ -141,28 +141,6 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     final needExpand = ResponsiveBreakpoints.of(context)
         .largerOrEqualTo(WindowSize.expanded.name);
 
-    final homePageState = context.read<HomepageBloc>().state;
-    final unreadNoticeCount = homePageState.unreadNoticeCount;
-    final hasUnreadMessage = homePageState.hasUnreadMessage;
-
-    late final Widget noticeIcon;
-    final showUnreadHint =
-        getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
-    if (showUnreadHint) {
-      if (unreadNoticeCount > 0) {
-        noticeIcon = Badge(
-          label: Text('$unreadNoticeCount'),
-          child: const Icon(Icons.notifications_outlined),
-        );
-      } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
-      } else {
-        noticeIcon = const Icon(Icons.notifications_outlined);
-      }
-    } else {
-      noticeIcon = const Icon(Icons.notifications_outlined);
-    }
-
     if (!context.mounted) {
       return sizedBoxEmpty;
     }
@@ -215,12 +193,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
                           tooltip:
                               context.t.threadVisitHistoryPage.entryTooltip,
                         ),
-                        IconButton(
-                          icon: noticeIcon,
-                          onPressed: () async {
-                            await context.pushNamed(ScreenPaths.notice);
-                          },
-                        ),
+                        const NoticeButton(),
                         if (context
                                 .read<AuthenticationRepository>()
                                 .currentUser !=

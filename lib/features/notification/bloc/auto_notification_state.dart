@@ -34,10 +34,5 @@ final class AutoNoticeStateWaiting extends AutoNoticeState
 final class AutoNoticeStatePending extends AutoNoticeState
     with AutoNoticeStatePendingMappable {
   /// Constructor.
-  const AutoNoticeStatePending(this.notice, super.duration);
-
-  /// Notice fetch result.
-  ///
-  /// Set to now when waiting for server response.
-  final NotificationV2? notice;
+  const AutoNoticeStatePending(super.duration);
 }
