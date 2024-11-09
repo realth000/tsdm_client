@@ -267,6 +267,15 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'showUnreadBroadcastMessageBadge',
     type: bool,
     defaultValue: false,
+  ),
+
+  /// Duration of automatically fetch notice from server, in seconds.
+  ///
+  /// Default is 600 seconds.
+  autoSyncNoticeSeconds<int>(
+    name: 'autoSyncNoticeSeconds',
+    type: int,
+    defaultValue: 600,
   );
 
   const SettingsKeys({

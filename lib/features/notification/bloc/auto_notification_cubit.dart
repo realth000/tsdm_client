@@ -113,7 +113,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   ///
   /// Override the auto fetch action duration with parameter [duration].
   void start(Duration? duration) {
-    debug('start auto fetch with duration $duration');
+    info('start auto fetch with duration $duration');
     // Note that here is no check on whether already running a auto fetch action
     // because it's the callback to do the actual fetch job so changing duration
     // or timer here breaks nothing.
@@ -134,6 +134,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
 
   /// Stop the auto fetch scheduler.
   void stop() {
+    info('stop auto fetch with duration $duration');
     _timer?.cancel();
     _timer = null;
     emit(AutoNoticeStateStopped(duration));

@@ -488,6 +488,7 @@ class StorageProvider with LoggerMixin {
                   timestamp: Value(e.timestamp),
                   data: Value(e.data),
                   nid: Value(e.nid),
+                  alreadyRead: Value(e.alreadyRead),
                 ),
               )
               .toList(),
@@ -511,6 +512,7 @@ class StorageProvider with LoggerMixin {
                   timestamp: Value(e.timestamp),
                   data: Value(e.data),
                   pmid: Value(e.pmid),
+                  alreadyRead: Value(e.alreadyRead),
                 ),
               )
               .toList(),

@@ -16,7 +16,11 @@
     "more": "更多",
     "pageIndex": "第 $index 页",
     "copiedToClipboard": "已复制到剪切板",
-    "affectAfterRestart": "变更将在应用重启后生效"
+    "affectAfterRestart": "变更将在应用重启后生效",
+    "never": "从不",
+    "seconds(rich)": "$value 秒",
+    "minutes(rich)": "$value 分钟",
+    "hours(rich)": "$value 小时"
   },
   "navigation": {
     "homepage": "主页",
@@ -127,6 +131,10 @@
       "threadReverseOrder": {
         "title": "倒序浏览帖子",
         "detail": "帖子里优先查看最新发布的楼层"
+      },
+      "autoSyncNotice": {
+        "title": "自动同步消息",
+        "detail": "每隔一段时间，自动从服务器同步消息和提醒"
       }
     },
     "checkinSection": {

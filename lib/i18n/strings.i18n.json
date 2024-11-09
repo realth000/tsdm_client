@@ -16,7 +16,11 @@
     "more": "More",
     "pageIndex": "Page $index",
     "copiedToClipboard": "Copied to clipboard",
-    "affectAfterRestart": "Changes will take effect after the app restarted"
+    "affectAfterRestart": "Changes will take effect after the app restarted",
+    "never": "Never",
+    "seconds(rich)": "$value seconds",
+    "minutes(rich)": "$value minutes",
+    "hours(rich)": "$value hours"
   },
   "navigation": {
     "homepage": "Home",
@@ -127,6 +131,10 @@
       "threadReverseOrder": {
         "title": "View posts in reverse order",
         "detail": "In thread, view latest posts first"
+      },
+      "autoSyncNotice": {
+        "title": "Auto sync notice",
+        "detail": "Duration of auto sync notice from server"
       }
     },
     "checkinSection": {

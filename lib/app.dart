@@ -44,6 +44,7 @@ class App extends StatefulWidget {
     this.color,
     this.themeModeIndex, {
     required this.autoCheckin,
+    required this.autoSyncNoticeSeconds,
     super.key,
   });
 
@@ -55,6 +56,9 @@ class App extends StatefulWidget {
 
   /// Run auto checkin at startup or not.
   final bool autoCheckin;
+
+  /// Duration to sync notice from server.
+  final int autoSyncNoticeSeconds;
 
   @override
   State<App> createState() => _AppState();
@@ -188,13 +192,17 @@ class _AppState extends State<App> with WindowListener {
             create: (context) => NotificationStateCubit(context.repo()),
           ),
           BlocProvider(
-            create: (context) => AutoNotificationCubit(
-              authenticationRepository: context.repo(),
-              notificationRepository: context.repo(),
-              storageProvider: getIt(),
-            )
-              // TODO: replace with duration in settings
-              ..start(const Duration(seconds: 20000)),
+            create: (context) {
+              final bloc = AutoNotificationCubit(
+                authenticationRepository: context.repo(),
+                notificationRepository: context.repo(),
+                storageProvider: getIt(),
+              );
+              if (widget.autoSyncNoticeSeconds > 0) {
+                bloc.start(Duration(seconds: widget.autoSyncNoticeSeconds));
+              }
+              return bloc;
+            },
           ),
           BlocProvider(
             create: (context) => NotificationBloc(

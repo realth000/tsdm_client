@@ -16,7 +16,11 @@
     "more": "更多",
     "pageIndex": "第 $index 頁",
     "copiedToClipboard": "已複製到剪切板",
-    "affectAfterRestart": "變更將在應用程式重新啟動後生效"
+    "affectAfterRestart": "變更將在應用程式重新啟動後生效",
+    "never": "從不",
+    "seconds(rich)": "$value 秒",
+    "minutes(rich)": "$value 分鐘",
+    "hours(rich)": "$value 小時"
   },
   "navigation": {
     "homepage": "首頁",
@@ -127,6 +131,10 @@
       "threadReverseOrder": {
         "title": "倒序瀏覽貼文",
         "detail": "貼文裡優先看到最新發布的樓層"
+      },
+      "autoSyncNotice": {
+        "title": "自動同步訊息",
+        "detail": "每隔一段時間，自動從伺服器同步訊息和提醒"
       }
     },
     "checkinSection": {

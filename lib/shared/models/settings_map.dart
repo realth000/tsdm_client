@@ -40,6 +40,7 @@ class SettingsMap with SettingsMapMappable {
     required this.showUnreadNoticeBadge,
     required this.showUnreadPersonalMessageBadge,
     required this.showUnreadBroadcastMessageBadge,
+    required this.autoSyncNoticeSeconds,
   });
 
   final String netClientAccept;
@@ -75,6 +76,7 @@ class SettingsMap with SettingsMapMappable {
   final bool showUnreadNoticeBadge;
   final bool showUnreadPersonalMessageBadge;
   final bool showUnreadBroadcastMessageBadge;
+  final int autoSyncNoticeSeconds;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -136,6 +138,8 @@ class SettingsMap with SettingsMapMappable {
         copyWith(showUnreadPersonalMessageBadge: value as bool?),
       SettingsKeys.showUnreadBroadcastMessageBadge =>
         copyWith(showUnreadBroadcastMessageBadge: value as bool?),
+      SettingsKeys.autoSyncNoticeSeconds =>
+        copyWith(autoSyncNoticeSeconds: value as int?),
     };
   }
 }

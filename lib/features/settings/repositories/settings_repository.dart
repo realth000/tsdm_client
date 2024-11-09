@@ -100,21 +100,21 @@ final class SettingsRepository with LoggerMixin {
       threadReverseOrder: s.extract(_SK.threadReverseOrder),
       threadCardInfoRowAlignCenter: s.extract(_SK.threadCardInfoRowAlignCenter),
       threadCardShowLastReplyAuthor:
-          s.extract(SettingsKeys.threadCardShowLastReplyAuthor),
+          s.extract(_SK.threadCardShowLastReplyAuthor),
       threadCardHighlightRecentThread:
-          s.extract(SettingsKeys.threadCardHighlightRecentThread),
+          s.extract(_SK.threadCardHighlightRecentThread),
       threadCardHighlightAuthorName:
-          s.extract(SettingsKeys.threadCardHighlightAuthorName),
-      threadCardHighlightInfoRow:
-          s.extract(SettingsKeys.threadCardHighlightInfoRow),
-      netClientUseProxy: s.extract(SettingsKeys.netClientUseProxy),
-      netClientProxy: s.extract(SettingsKeys.netClientProxy),
-      autoCheckin: s.extract(SettingsKeys.autoCheckin),
-      showUnreadNoticeBadge: s.extract(SettingsKeys.showUnreadNoticeBadge),
+          s.extract(_SK.threadCardHighlightAuthorName),
+      threadCardHighlightInfoRow: s.extract(_SK.threadCardHighlightInfoRow),
+      netClientUseProxy: s.extract(_SK.netClientUseProxy),
+      netClientProxy: s.extract(_SK.netClientProxy),
+      autoCheckin: s.extract(_SK.autoCheckin),
+      showUnreadNoticeBadge: s.extract(_SK.showUnreadNoticeBadge),
       showUnreadPersonalMessageBadge:
-          s.extract(SettingsKeys.showUnreadPersonalMessageBadge),
+          s.extract(_SK.showUnreadPersonalMessageBadge),
       showUnreadBroadcastMessageBadge:
-          s.extract(SettingsKeys.showUnreadBroadcastMessageBadge),
+          s.extract(_SK.showUnreadBroadcastMessageBadge),
+      autoSyncNoticeSeconds: s.extract(_SK.autoSyncNoticeSeconds),
     );
   }
 
