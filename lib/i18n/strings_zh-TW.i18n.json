@@ -719,5 +719,18 @@
       "failure": "失敗",
       "notAuthed": "需要登入"
     }
+  },
+  "localNotification": {
+    "channelName": "新提醒",
+    "channelDesc": "自動同步訊息時收到新提醒",
+    "ticker": "新提醒",
+    "notice": {
+      "title": "新訊息",
+      "detail": {
+        "notice": "收到了${noticeCount: int}條提醒，${pmCount: int}條私信，${bmCount: int}條公用訊息\n[提醒]${msg: String}",
+        "pm": "收到了${noticeCount: int}條提醒，${pmCount: int}條私信，${bmCount: int}條公用訊息\n[私訊]${user: String}：${msg: String}",
+        "bm": "收到了${noticeCount: int}條提醒，${pmCount: int}條私信，${bmCount: int}條公用訊息\n[公用訊息]${msg: String}"
+      }
+    }
   }
 }

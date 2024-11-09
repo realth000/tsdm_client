@@ -31,7 +31,7 @@ final class NotificationMarkReadRequested extends NotificationEvent
 /// Mark all message of type as read.
 @MappableClass()
 final class NotificationMarkTypeReadRequested extends NotificationEvent
-    with NotificationMarkReadRequestedMappable {
+    with NotificationMarkTypeReadRequestedMappable {
   /// Constructor.
   const NotificationMarkTypeReadRequested({
     required this.markType,

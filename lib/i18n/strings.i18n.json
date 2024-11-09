@@ -719,5 +719,18 @@
       "failure": "Failure",
       "notAuthed": "Need login"
     }
+  },
+  "localNotification": {
+    "channelName": "New auto sync notice",
+    "channelDesc": "Received new notice when auto sync",
+    "ticker": "New notice",
+    "notice": {
+      "title": "New notice",
+      "detail": {
+        "notice": "You received ${noticeCount: int} notice, ${pmCount: int} PMs, ${bmCount: int} BMs\n[Notice]${msg: String}",
+        "pm": "You received ${noticeCount: int} notice, ${pmCount: int} PMs, ${bmCount: int} BMs\n[PM]${user: String}: ${msg: String}",
+        "bm": "You received ${noticeCount: int} notice, ${pmCount: int} PMs, ${bmCount: int} BMs\n[BM]${msg: String}"
+      }
+    }
   }
 }

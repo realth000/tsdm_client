@@ -1,10 +1,12 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/cmd.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/local_notice/callback.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -64,6 +66,23 @@ Future<void> main(List<String> args) async {
 
   final autoCheckin = settings.autoCheckin;
   final autoSyncNoticeSeconds = settings.autoSyncNoticeSeconds;
+
+  // Initialize flutter_local_notification.
+  flnp = FlutterLocalNotificationsPlugin();
+  if (isAndroid) {
+    await flnp.initialize(
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
+      ),
+      onDidReceiveNotificationResponse: onLocalNotificationOpened,
+    );
+    if (autoSyncNoticeSeconds > 0) {
+      await flnp
+          .resolvePlatformSpecificImplementation<
+              AndroidFlutterLocalNotificationsPlugin>()
+          ?.requestNotificationsPermission();
+    }
+  }
 
   runApp(
     TranslationProvider(

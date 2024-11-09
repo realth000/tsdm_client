@@ -14,10 +14,12 @@ import 'package:tsdm_client/features/checkin/repository/checkin_repository.dart'
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_state_auto_sync_cubit.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
 import 'package:tsdm_client/features/notification/repository/notification_info_repository.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
+import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
@@ -188,6 +190,14 @@ class _AppState extends State<App> with WindowListener {
       ],
       child: MultiBlocProvider(
         providers: [
+          BlocProvider(
+            create: (context) => NotificationStateAutoSyncCubit(context.repo()),
+          ),
+          BlocProvider(
+            create: (_) => RootLocationCubit(),
+            // Set lazy to false to react on first location change.
+            lazy: false,
+          ),
           BlocProvider(
             create: (context) => NotificationStateCubit(context.repo()),
           ),

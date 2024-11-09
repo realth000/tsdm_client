@@ -5,6 +5,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/html.dart' as uh;
 
+part 'auto_sync_info.dart';
 part 'broadcast_message_v2.dart';
 part 'message.dart';
 part 'models.mapper.dart';

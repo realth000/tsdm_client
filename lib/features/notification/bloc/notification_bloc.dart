@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
@@ -11,6 +12,7 @@ import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:universal_html/parsing.dart';
 
 part 'notification_bloc.mapper.dart';
 part 'notification_event.dart';
@@ -240,6 +242,47 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
       unreadBroadcastMessageCount:
           allBroadcastMessage.where((e) => !e.alreadyRead).length,
     );
+
+    // Post the latest sync result in the action to global auto sync info state
+    // cubit.
+    //
+    // Here the state posted only including ones received from server in this
+    // sync action, not former ones or local storage ones.
+    //
+    // MARK: flnp
+    if (info.personalMessageList.isNotEmpty) {
+      _infoRepository.updateAutoSyncInfo(
+        NotificationAutoSyncInfoPm(
+          user: info.personalMessageList.last.peerUsername,
+          msg: info.personalMessageList.last.data.truncate(40, ellipsis: true),
+          notice: info.noticeList.length,
+          personalMessage: info.personalMessageList.length,
+          broadcastMessage: info.broadcastMessageList.length,
+        ),
+      );
+    } else if (info.broadcastMessageList.isNotEmpty) {
+      _infoRepository.updateAutoSyncInfo(
+        NotificationAutoSyncInfoBm(
+          msg: info.broadcastMessageList.last.data.truncate(40, ellipsis: true),
+          notice: info.noticeList.length,
+          personalMessage: info.personalMessageList.length,
+          broadcastMessage: info.broadcastMessageList.length,
+        ),
+      );
+    } else if (info.noticeList.isNotEmpty) {
+      _infoRepository.updateAutoSyncInfo(
+        NotificationAutoSyncInfoNotice(
+          msg: parseHtmlDocument(info.noticeList.last.data)
+                  .body
+                  ?.innerText
+                  .truncate(40, ellipsis: true) ??
+              '<null>',
+          notice: info.noticeList.length,
+          personalMessage: info.personalMessageList.length,
+          broadcastMessage: info.broadcastMessageList.length,
+        ),
+      );
+    }
 
     emit(
       state.copyWith(

@@ -41,6 +41,7 @@ dependencies:
   flutter_bbcode_editor:
     path: ./packages/flutter_bbcode_editor
   flutter_bloc: ^8.1.6
+  flutter_local_notifications: ^18.0.0
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.4+1

@@ -354,7 +354,7 @@ class AppRoute extends GoRoute {
           pageBuilder: (context, state) => MaterialPage<void>(
             name: path,
             arguments: state.pathParameters,
-            child: RootPage(builder(state)),
+            child: RootPage(path, builder(state)),
           ),
         );
 }
