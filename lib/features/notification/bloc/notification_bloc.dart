@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -368,6 +369,8 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
   /// back to the presentation layer, it handles by itself.
   Future<void> _onMarkReadRequested(_Emit emit, RecordMark recordMark) async {
     debug('mark notice: $recordMark');
+    final now = DateTime.now();
+    late final int currentUid;
     final task = switch (recordMark) {
       RecordMarkNotice(:final uid, :final nid, alreadyRead: final read) => () {
           final targetIndex = state.noticeList.indexWhere((e) => e.id == nid);
@@ -375,6 +378,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           final list = state.noticeList.toList();
           list[targetIndex] = target.copyWith(alreadyRead: read);
           emit(state.copyWith(noticeList: list));
+          currentUid = uid;
           return _storageProvider.markNoticeAsRead(
             uid: uid,
             nid: nid,
@@ -393,6 +397,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           final list = state.personalMessageList.toList();
           list[targetIndex] = target.copyWith(alreadyRead: read);
           emit(state.copyWith(personalMessageList: list));
+          currentUid = uid;
           return _storageProvider.markPersonalMessageAsRead(
             uid: uid,
             peerUid: peerUid,
@@ -411,6 +416,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           final list = state.broadcastMessageList.toList();
           list[targetIndex] = target.copyWith(alreadyRead: read);
           emit(state.copyWith(broadcastMessageList: list));
+          currentUid = uid;
           return _storageProvider.markBroadcastMessageAsRead(
             uid: uid,
             timestamp: timestamp,
@@ -418,7 +424,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           );
         }(),
     };
-    await task.mapLeft((e) => error('failed to mark read: $e')).run();
+    await task
+        .andThen(
+          () => TaskEither.fromTask(
+            _storageProvider.updateLastFetchNoticeTime(currentUid, now),
+          ),
+        )
+        .mapLeft((e) => error('failed to mark read: $e'))
+        .run();
   }
 
   /// Do NOT dispose [_infoRepository] here because the state cubit owns it.
