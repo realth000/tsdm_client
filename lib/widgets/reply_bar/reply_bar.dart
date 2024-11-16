@@ -433,13 +433,17 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     );
   }
 
+  /// A row above the reply text area to display some info if needed.
+  ///
+  /// Currently showing the floor user is replying to (if any), and a button to
+  /// set to reply to thread (not any floor).
   Widget _buildHintTextRow(BuildContext context) {
     if (_hintText == null || _closed || !_hasLogin) {
       return const SizedBox.shrink();
     }
     final outlineColor = Theme.of(context).colorScheme.outline;
     return Padding(
-      padding: edgeInsetsL12T12R12,
+      padding: edgeInsetsL12T4R12,
       child: Row(
         children: [
           Text(
