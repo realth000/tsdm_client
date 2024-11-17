@@ -126,6 +126,10 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   ///
   /// Override the auto fetch action duration with parameter [duration].
   void start(Duration? duration) {
+    // Do NOT start auto sync if duration is invalid.
+    if (duration == null && this.duration.inSeconds < 30) {
+      return;
+    }
     info('start auto fetch with duration $duration');
     // Note that here is no check on whether already running a auto fetch action
     // because it's the callback to do the actual fetch job so changing duration
