@@ -118,6 +118,9 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
   @override
   void dispose() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      widget.controller.dispose();
+    });
     controller.dispose();
     super.dispose();
   }
@@ -178,6 +181,9 @@ class _ReplyBar extends StatefulWidget {
   /// Controller passed from outside.
   final ReplyBarController controller;
 
+  // FIXME: Bad practise. widget controller injected from outside and may
+  // dispose earlier than the inner widget is anti-pattern and unstable.
+  // Try another implementation to achieve syncing text to outside field.
   /// Text controller in the wrapper widget to show current entered text.
   final TextEditingController outerTextController;
 
@@ -272,6 +278,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   /// Rich editor controller.
   late BBCodeEditorController _replyRichController;
 
+  /// Flag indicating whether can send the converted bbcode in reply bar to
+  /// the outside controller.
+  bool _canSyncBBCodeOnDispose = true;
+
   /// Method to update [_hintText].
   /// Use this method to update text and ui by calling [setState].
   void _setHintText(String hintText) {
@@ -281,6 +291,31 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     // User set hint text means want to reply to something, then the editor pop
     // up, here should also request focus.
     focusNode.requestFocus();
+  }
+
+  // FIXME: Bad practise.
+  /// Manually dispose the reply bar widget.
+  ///
+  /// This function is called when user rebuilt the outer page including:
+  ///
+  /// * Refresh thread page.
+  /// * Change the thread page index.
+  ///
+  /// In the situations above, the `_ReplyBar` which placed as a bottom sheet
+  /// did not auto-disposed somehow so the only way to close it is calling
+  /// [ReplyBarController.dispose], which triggered an incorrect but worked
+  /// dispose order:
+  ///
+  /// 1. The outer page (thread page) disposed.
+  /// 2. In the `dispose` method of outer page, called `dispose` of
+  ///  `ReplyBarController` finally triggered a manual dispose.
+  ///
+  /// So here everything inside the outer page is disposed, especially the
+  /// outer text controller. Here set [_canSyncBBCodeOnDispose] to false to
+  /// avoid using the outer text controller after it disposed.
+  void _manuallyDispose() {
+    _canSyncBBCodeOnDispose = false;
+    context.pop();
   }
 
   void _clearTextAndHint() {
@@ -640,8 +675,13 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     _replyFocusNode.dispose();
     _authStatusSub.cancel();
     final text = _replyRichController.toBBCode();
-    if (text.trim().isNotEmpty) {
+    if (text.trim().isNotEmpty && _canSyncBBCodeOnDispose) {
       // Only save text that intend to reply when that text is not empty.
+      //
+      // Only send text to outside controller if could do so: In some situation
+      // the `widget.outerTextController` may already disposed if the
+      // `_ReplyBar` is manually disposed (by calling _manuallyDispose()).
+      // Use the [_canSyncBBCodeOnDispose] to avoid that.
       WidgetsBinding.instance.addPostFrameCallback((_) {
         widget.outerTextController.text = text;
       });
@@ -814,4 +854,11 @@ final class ReplyBarController with LoggerMixin {
       _state?._replyFocusNode.requestFocus();
     }
   }
+
+  // FIXME: Bad practise/anti-pattern. This method here only proves that current
+  // implementation of syncing text through reply bar and the dispose process is
+  // broken and need refactor. Currently the dispose order is complex and does
+  // not following a correct child-to-parent order.
+  /// Close the bound reply bar.
+  void dispose() => _state?._manuallyDispose();
 }
