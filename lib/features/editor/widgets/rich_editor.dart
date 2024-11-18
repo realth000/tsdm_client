@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
+import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 import 'package:tsdm_client/instance.dart';
@@ -102,6 +104,8 @@ class RichEditor extends StatelessWidget {
       userMentionHandler: (username) => context.dispatchAsUrl(
         '$usernameProfilePage$username',
       ),
+      emojiPicker: (context) async => showEmojiPicker(context),
+      colorPicker: (context) async => showColorPicker(context),
     );
   }
 }
