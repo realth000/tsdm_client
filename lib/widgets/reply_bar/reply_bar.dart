@@ -457,14 +457,20 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     return InputDecorator(
       isFocused: focusNode.hasFocus,
       decoration: const InputDecoration(),
-      child: IntrinsicHeight(
-        child: RichEditor(
-          // Initial text is the text passed from outside.
-          initialText: widget.outerTextController.text,
-          controller: _replyRichController,
-          focusNode: focusNode,
-        ),
+      child: RichEditor(
+        // Initial text is the text passed from outside.
+        initialText: widget.outerTextController.text,
+        controller: _replyRichController,
+        focusNode: focusNode,
       ),
+      // child: IntrinsicHeight(
+      //   child: RichEditor(
+      //     // Initial text is the text passed from outside.
+      //     initialText: widget.outerTextController.text,
+      //     controller: _replyRichController,
+      //     focusNode: focusNode,
+      //   ),
+      // ),
     );
   }
 
