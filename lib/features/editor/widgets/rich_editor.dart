@@ -106,6 +106,7 @@ class RichEditor extends StatelessWidget {
       ),
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context) async => showColorPicker(context),
+      backgroundColorPicker: (context) async => showColorPicker(context),
     );
   }
 }
