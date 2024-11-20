@@ -59,16 +59,11 @@ class _SpoilerCardState extends State<SpoilerCard> {
               ],
             ),
             sizedBoxW8H8,
-            Text.rich(
-              widget.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            sizedBoxW8H8,
             OutlinedButton.icon(
               icon: _visible
                   ? const Icon(Icons.expand_less_outlined)
                   : const Icon(Icons.expand_more_outlined),
-              label: Text(_visible ? tr.expandLess : tr.expandMore),
+              label: Text.rich(widget.title),
               onPressed: () {
                 setState(() {
                   _visible = !_visible;
