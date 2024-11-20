@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
+import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -107,6 +108,11 @@ class RichEditor extends StatelessWidget {
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context) async => showColorPicker(context),
       backgroundColorPicker: (context) async => showColorPicker(context),
+      urlPicker: (context, url, description) async => showUrlPicker(
+        context,
+        url: url,
+        description: description,
+      ),
     );
   }
 }
