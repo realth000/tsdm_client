@@ -46,7 +46,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
 
   /// Custom nickname.
   ///
-  /// 自定义头衔
+  /// 昵称
   final String? nickname;
 
   /// Name of user group.
@@ -56,7 +56,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
 
   /// Custom user title.
   ///
-  /// 称号
+  /// 自定义头衔
   final String? title;
 
   /// Recommended thread count.

@@ -183,7 +183,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
     var needLogin = false;
-    final documentList = (await Future.wait(
+    final respList = (await Future.wait(
       [
         _forumHomeRepository.fetchHomePage().mapLeft((e) {
           if (e case HttpHandshakeFailedException(:final statusCode)) {
@@ -196,7 +196,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
             handle(e);
           }
         }).run(),
-        _profileRepository.fetchProfile().mapLeft((e) {
+        _profileRepository.fetchAvatarUrl().mapLeft((e) {
           switch (e) {
             case LoginUserInfoNotFoundException() ||
                   ProfileNeedLoginException():
@@ -209,9 +209,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     ))
         .where((e) => e.isRight())
         .map((e) => e.unwrap())
-        .whereType<uh.Document>()
         .toList();
-    if (documentList.length != 2) {
+    if (respList.length != 2) {
       if (_authenticationRepository.currentUser == null && needLogin) {
         emit(state.copyWith(status: HomepageStatus.needLogin));
         return;
@@ -220,10 +219,8 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
         return;
       }
     }
-    final document = documentList[0];
-    final avatarUrl = documentList[1]
-        .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-        ?.imageUrl();
+    final document = respList[0] as uh.Document;
+    final avatarUrl = respList[1] as String;
     await _authenticationRepository
         .loginWithDocument(document)
         .mapLeft(handle)
