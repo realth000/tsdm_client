@@ -39,8 +39,6 @@ class AuthenticationRepository with LoggerMixin {
       '$baseUrl/member.php?mod=logging&action=logout&formhash=';
   static const _fakeFormUrl =
       '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
-  static const _passwordSettingsUrl =
-      '$baseUrl/home.php?mod=spacecp&ac=profile&op=password';
   static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
   static final _formHashRe = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 
@@ -173,31 +171,10 @@ class AuthenticationRepository with LoggerMixin {
           debug('failed to login with document: user info not found');
           return left(LoginUserInfoNotFoundException());
         }
-        // Second check for email.
-        // Get complete user info from page.
-        final fullInfoRespEither =
-            await NetClientProvider.build(userLoginInfo: userInfo)
-                .get(_passwordSettingsUrl)
-                .run();
-        if (fullInfoRespEither.isLeft()) {
-          return left(fullInfoRespEither.unwrapErr());
-        }
-        final fullInfoResp = fullInfoRespEither.unwrap();
-        if (fullInfoResp.statusCode != HttpStatus.ok) {
-          error('failed to fetch complete user info: '
-              'code=${fullInfoResp.statusCode}');
-          return left(HttpRequestFailedException(fullInfoResp.statusCode));
-        }
-        final fullInfoDoc = parseHtmlDocument(fullInfoResp.data as String);
-        final fullUserInfo = _parseUserInfoFromDocument(fullInfoDoc);
-        if (fullUserInfo == null || !fullUserInfo.isComplete) {
-          error('failed to: parse login result: email not found');
-          return left(LoginUserInfoIncompleteException());
-        }
 
         // Here we get complete user info.
         await getIt.get<CookieProvider>().saveCookieToStorage();
-        await _markAuthenticated(fullUserInfo);
+        await _markAuthenticated(userInfo);
 
         debug('login with document: user $userInfo');
         return rightVoid();
