@@ -76,6 +76,15 @@ mixin LoggerMixin {
     );
   }
 
+  /// Raw [exception] and [stackTrace].
+  void handleRaw(Object exception, StackTrace? stackTrace) {
+    talker.handle(
+      exception,
+      stackTrace,
+      '$runtimeType: handle raw error: ',
+    );
+  }
+
   /// Handle [exception] then run [callback].
   void handleThen(AppException exception, VoidCallback callback) {
     handle(exception);
