@@ -552,6 +552,7 @@ final class _Muncher with LoggerMixin {
     final hasColor = _tryPushColor(element, colorString: color);
     final fontSize = styleMap['font-size'];
     final hasFontSize = _tryPushFontSize(element, fontSizeString: fontSize);
+    final hasBackgroundColor = _tryPushBackgroundColor(element);
 
     final ret = _munch(element);
 
@@ -560,6 +561,9 @@ final class _Muncher with LoggerMixin {
     }
     if (hasFontSize) {
       state.fontSizeStack.removeLast();
+    }
+    if (hasBackgroundColor) {
+      state.backgroundColorStack.removeLast();
     }
     if (ret == null) {
       return null;
