@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
@@ -36,7 +35,7 @@ import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
-const _appBarBackgroundImageHeight = 100.0;
+const _appBarBackgroundImageHeight = 80.0;
 const _appBarAvatarHeight = 80.0;
 const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight;
 
@@ -227,17 +226,6 @@ class _ProfilePageState extends State<ProfilePage> {
         // Disable clip, let profile avatar show outside the stack.
         clipBehavior: Clip.none,
         children: [
-          // Background blurred image.
-          Positioned.fill(
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-              child: CachedImage(
-                userProfile.avatarUrl!,
-                fit: BoxFit.cover,
-                enableAnimation: false,
-              ),
-            ),
-          ),
           // Background color under avatar, height is half of avatar height.
           Positioned(
             bottom: 0,
@@ -259,7 +247,6 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       );
     }
-    //
 
     return SliverAppBar(
       title: _showAppBarTitle ? Text(state.userProfile?.username ?? '') : null,
