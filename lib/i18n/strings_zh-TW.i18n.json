@@ -18,9 +18,11 @@
     "copiedToClipboard": "已複製到剪切板",
     "affectAfterRestart": "變更將在應用程式重新啟動後生效",
     "never": "從不",
-    "seconds(rich)": "$value 秒",
-    "minutes(rich)": "$value 分鐘",
-    "hours(rich)": "$value 小時"
+    "seconds": "${value: int} 秒",
+    "minutes": "${value: int} 分鐘",
+    "hours": "${value: int} 小時",
+    "days": "${value: int} 天",
+    "now": "剛剛"
   },
   "navigation": {
     "homepage": "首頁",

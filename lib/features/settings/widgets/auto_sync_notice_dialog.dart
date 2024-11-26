@@ -28,7 +28,7 @@ class AutoSyncNoticeDialog extends StatelessWidget {
               3600,
             ].map(
               (e) => RadioListTile(
-                title: Duration(seconds: e).readable(context),
+                title: Text(Duration(seconds: e).readable(context)),
                 value: e,
                 groupValue: currentSeconds,
                 onChanged: (v) {
