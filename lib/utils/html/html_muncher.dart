@@ -33,6 +33,21 @@ const _elevationStep = 0.2;
 
 const _maxWidth = 712.0;
 
+/// List type composes `<ol>` and `<ul>`
+sealed class _ListType {}
+
+/// `<ul>` ordered list tag.
+final class _ListUnordered extends _ListType {}
+
+/// `<ol>` ordered list tag.
+final class _ListOrdered extends _ListType {
+  /// Constructor.
+  _ListOrdered(this.number);
+
+  /// Number in order.
+  final int number;
+}
+
 /// Use an empty span.
 // final null = WidgetSpan(child: Container());
 
@@ -154,6 +169,12 @@ class _MunchState {
   ///
   /// Use as a stack because only the latest size works on font.
   final fontSizeStack = <double>[];
+
+  // TODO: Handle indent level when list type nested.
+  /// All munching state of list types.
+  ///
+  /// Can be nested.
+  final listStack = <_ListType>[];
 
   /// An internal field to save field current values.
   _MunchState? _reservedState;
@@ -343,6 +364,8 @@ final class _Muncher with LoggerMixin {
             'h2' => _buildH2(node),
             'h3' => _buildH3(node),
             'h4' => _buildH4(node),
+            'ul' => _buildUl(node),
+            'ol' => _buildOl(node),
             'li' => _buildLi(node),
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
@@ -358,10 +381,11 @@ final class _Muncher with LoggerMixin {
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
-            'ul' ||
             'dd' ||
             'marquee' ||
             'center' ||
+            'nav' ||
+            'section' ||
             'pre' =>
               _munch(node),
             String() => null,
@@ -528,6 +552,7 @@ final class _Muncher with LoggerMixin {
     final hasColor = _tryPushColor(element, colorString: color);
     final fontSize = styleMap['font-size'];
     final hasFontSize = _tryPushFontSize(element, fontSizeString: fontSize);
+    final hasBackgroundColor = _tryPushBackgroundColor(element);
 
     final ret = _munch(element);
 
@@ -536,6 +561,9 @@ final class _Muncher with LoggerMixin {
     }
     if (hasFontSize) {
       state.fontSizeStack.removeLast();
+    }
+    if (hasBackgroundColor) {
+      state.backgroundColorStack.removeLast();
     }
     if (ret == null) {
       return null;
@@ -936,13 +964,46 @@ final class _Muncher with LoggerMixin {
     ];
   }
 
+  /// Build `<ul>` tag.
+  List<InlineSpan>? _buildUl(uh.Element element) {
+    state.listStack.add(_ListUnordered());
+    final ret = _munch(element);
+    state.listStack.removeLast();
+    return ret;
+  }
+
+  /// Build `<ol>` tag.
+  List<InlineSpan>? _buildOl(uh.Element element) {
+    state.listStack.add(_ListOrdered(0));
+    final ret = _munch(element);
+    state.listStack.removeLast();
+    return ret;
+  }
+
+  /// Build `<li>` tag.
   List<InlineSpan>? _buildLi(uh.Element element) {
     final ret = _munch(element);
     if (ret == null) {
       return null;
     }
+
+    // final String leading
+    final leading = switch (state.listStack.lastOrNull) {
+      _ListUnordered() => '•  ',
+      _ListOrdered(:final number) => () {
+          // Pop and push a larger number.
+          state.listStack.removeLast();
+          state.listStack.add(_ListOrdered(number + 1));
+          return '$number. ';
+        }(),
+      null => () {
+          error('failed to detect html list leading type: empty list stack');
+          return '•  ';
+        }(), // Unreachable but handle it.
+    };
+
     return [
-      const TextSpan(text: '•  '),
+      TextSpan(text: leading),
       ...ret,
       emptySpan,
     ];
