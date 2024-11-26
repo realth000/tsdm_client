@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
@@ -12,6 +15,8 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
+
+const _contentTypeImageAvif = 'image/avif';
 
 Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
   return rootBundle.loadBuffer(assetNoAvatarImagePath);
@@ -111,6 +116,8 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
           // If we have [fallbackImageUrl], use it.
           if (fallbackImageUrl == null) {
             // Rethrow if can not fallback.
+            handleRaw(e ?? '<no exception>', st);
+            return Uint8List(0);
           }
           final cacheRet = await getIt
               .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
@@ -132,7 +139,39 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
           error('failed to get image from $imageUrl, code=${resp.statusCode}');
           return Uint8List(0);
         }
-        final imageData = resp.data as Uint8List;
+        final Uint8List imageData;
+
+        if (resp.headers.map[Headers.contentTypeHeader]?.firstOrNull ==
+            _contentTypeImageAvif) {
+          // Avif format is not supported by dart image, parse and convert to
+          // normal png ones, so image data is saved in png format that dart
+          // image support.
+          //
+          // Currently only the very first frame is reserved, all other frames
+          // are discard during conversion.
+          final avifFrames = await decodeAvif(resp.data as Uint8List);
+          if (avifFrames.isEmpty) {
+            imageData = Uint8List(0);
+            warning('image from url is in avif format has no frame, url: $url');
+          } else {
+            if (avifFrames.length != 1) {
+              warning('image from url is in avif format has multiple frames, '
+                  'only reserve the first frame and discarding other frames: '
+                  'url: $url');
+            }
+            final byteData = await avifFrames.first.image
+                .toByteData(format: ImageByteFormat.png);
+            if (byteData == null) {
+              warning('image from url is in avif format has one invalid frame '
+                  'url: $url');
+              imageData = Uint8List(0);
+            } else {
+              imageData = byteData.buffer.asUint8List();
+            }
+          }
+        } else {
+          imageData = resp.data as Uint8List;
+        }
 
         // Make cache.
         await getIt.get<ImageCacheProvider>().updateCache(imageUrl, imageData);
