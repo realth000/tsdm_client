@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -160,7 +159,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
                   'url: $url');
             }
             final byteData = await avifFrames.first.image
-                .toByteData(format: ImageByteFormat.png);
+                .toByteData(format: ui.ImageByteFormat.png);
             if (byteData == null) {
               warning('image from url is in avif format has one invalid frame '
                   'url: $url');
