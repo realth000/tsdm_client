@@ -89,6 +89,22 @@ final class ImageCacheProvider with LoggerMixin {
     return cacheFile.readAsBytes();
   }
 
+  /// Get the cached user avatar data of user [username].
+  Future<Uint8List> getUserAvatarCache(String username) async {
+    final cacheInfo =
+        await getIt.get<StorageProvider>().getUserAvatarEntityCache(username);
+    if (cacheInfo == null) {
+      return Future.error('$username user avatar cache file not found');
+    }
+
+    final cacheFile = getCacheFile(cacheInfo.cacheName);
+    if (!cacheFile.existsSync()) {
+      return Future.error('$username user avatar cache file not exists');
+    }
+
+    return cacheFile.readAsBytes();
+  }
+
   /// Get the cached file with [fileName] synchronously.
   ///
   /// **WARNING**: Make sure the [fileName] exists and safe to read before
@@ -100,7 +116,11 @@ final class ImageCacheProvider with LoggerMixin {
   /// Update image cached file.
   ///
   /// Update cache file and info in database.
-  Future<void> updateCache(String imageUrl, Uint8List imageData) async {
+  Future<void> updateCache(
+    String imageUrl,
+    Uint8List imageData, {
+    ImageUsageInfo usage = const ImageUsageInfoOther(),
+  }) async {
     final fileName = imageUrl.fileNameV5();
 
     // Update image cache info to database.
@@ -111,6 +131,22 @@ final class ImageCacheProvider with LoggerMixin {
     // Make cache.
     final cache = File('${_imageCacheDirectory.path}/$fileName');
     await cache.writeAsBytes(imageData);
+
+    // Update other cache ref tables, if necessary.
+    switch (usage) {
+      case ImageUsageInfoOther():
+        // Do nothing.
+        break;
+      case ImageUsageInfoUserAvatar(:final username):
+        // Update user avatar cache.
+        await getIt
+            .get<StorageProvider>()
+            .updateUserAvatarCacheInfo(
+              username: username,
+              cacheName: fileName,
+            )
+            .run();
+    }
   }
 
   /// Update image last used time.

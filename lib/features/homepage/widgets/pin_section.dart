@@ -30,7 +30,11 @@ class PinSection extends StatelessWidget with LoggerMixin {
       // Set this value to make every group of section has the same height.
       minTileHeight: 72,
       leading: GestureDetector(
-        child: CircleAvatar(child: Text(username[0])),
+        child: HeroUserAvatar(
+          username: username,
+          avatarUrl: null,
+          disableHero: true,
+        ),
         onTap: () async => context.pushNamed(
           ScreenPaths.profile,
           queryParameters: {'username': username},

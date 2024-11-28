@@ -5,11 +5,10 @@ import 'dart:ui' as ui;
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_avif/flutter_avif.dart';
-import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
@@ -17,9 +16,9 @@ import 'package:tsdm_client/utils/logger.dart';
 
 const _contentTypeImageAvif = 'image/avif';
 
-Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
-  return rootBundle.loadBuffer(assetNoAvatarImagePath);
-}
+// Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
+//  return rootBundle.loadBuffer(assetNoAvatarImagePath);
+// }
 
 /// A provider that provides cached image.
 ///
@@ -37,6 +36,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
     this.maxWidth,
     this.maxHeight,
     this.fallbackImageUrl,
+    this.usage = const ImageUsageInfoOther(),
   });
 
   /// Url of image.
@@ -58,6 +58,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
 
   /// Use this image if [imageUrl] is unavailable.
   final String? fallbackImageUrl;
+
+  /// Usage of the image.
+  final ImageUsageInfo usage;
 
   /// Get the image url.
   String get url => imageUrl;
@@ -94,14 +97,19 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
     StreamController<ImageChunkEvent> chunkEvents, {
     required ImageDecoderCallback decode,
   }) async {
+    var bytes = Uint8List(0);
     try {
       assert(key == this, 'check instance in load async');
 
-      final bytes = await getIt
-          .get<ImageCacheProvider>()
-          .getCache(imageUrl)
-          .onError((e, st) async {
-        if (!context.mounted) {
+      final f = switch (usage) {
+        ImageUsageInfoOther() =>
+          getIt.get<ImageCacheProvider>().getCache(imageUrl),
+        ImageUsageInfoUserAvatar(:final username) =>
+          getIt.get<ImageCacheProvider>().getUserAvatarCache(username),
+      };
+
+      bytes = await f.onError((e, st) async {
+        if (!context.mounted || imageUrl.isEmpty) {
           return Uint8List(0);
         }
         // When error occurred in `getCache`, it means the image is not
@@ -173,12 +181,16 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
         }
 
         // Make cache.
-        await getIt.get<ImageCacheProvider>().updateCache(imageUrl, imageData);
+        await getIt.get<ImageCacheProvider>().updateCache(
+              imageUrl,
+              imageData,
+              usage: usage,
+            );
         return Uint8List.fromList(imageData);
       });
 
       if (bytes.lengthInBytes == 0) {
-        return decode(await _loadNoAvatarBytes());
+        throw Exception('zero bytes');
       }
       return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
@@ -188,8 +200,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       // scheduleMicrotask(() {
       //   PaintingBinding.instance.imageCache.evict(key);
       // });
-      error('CachedImageProvider caught error: $e');
-      return decode(await _loadNoAvatarBytes());
+      // FIXME: Handle all exceptions.
+      // error('CachedImageProvider caught error: $e');
+      return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } finally {
       await chunkEvents.close();
     }
@@ -206,9 +219,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
   }
 
   @override
-  int get hashCode => Object.hash(url, scale);
+  int get hashCode => Object.hash(url, scale, usage, context);
 
   @override
   String toString() => '${objectRuntimeType(this, 'CachedImageProvider')}'
-      '("$url", scale: $scale)';
+      '("$url", scale: $scale, usage: $usage)';
 }

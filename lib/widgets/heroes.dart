@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 ////////////////////////////////////////////////////////////////////////
@@ -9,7 +9,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 ////////////////////////////////////////////////////////////////////////
 
 /// Like [CircleAvatar], display user avatar but with hero animation support.
-final class HeroUserAvatar extends StatelessWidget {
+final class HeroUserAvatar extends StatefulWidget {
   /// Constructor.
   const HeroUserAvatar({
     required this.username,
@@ -42,30 +42,38 @@ final class HeroUserAvatar extends StatelessWidget {
   final bool disableHero;
 
   @override
+  State<HeroUserAvatar> createState() => _HeroUserAvatarState();
+}
+
+class _HeroUserAvatarState extends State<HeroUserAvatar> {
+  bool hasError = false;
+
+  @override
   Widget build(BuildContext context) {
     final Widget avatar;
-    if (avatarUrl == null) {
-      avatar = CircleAvatar(
-        maxRadius: maxRadius,
-        minRadius: minRadius,
-        child: Text(username.isEmpty ? '' : username[0]),
-      );
-    } else {
-      avatar = CircleAvatar(
-        backgroundImage: CachedImageProvider(
-          avatarUrl!,
-          context,
-          fallbackImageUrl: noAvatarUrl,
-        ),
-        maxRadius: maxRadius,
-        minRadius: minRadius,
-      );
-    }
-    if (disableHero) {
+    avatar = CircleAvatar(
+      backgroundImage: CachedImageProvider(
+        // FIXME: Fix nullable arg.
+        widget.avatarUrl ?? '',
+        context,
+        usage: ImageUsageInfoUserAvatar(widget.username),
+      ),
+      maxRadius: widget.maxRadius,
+      minRadius: widget.minRadius,
+      child: hasError
+          ? Text(widget.username.isEmpty ? ' ' : widget.username[0])
+          : null,
+      onBackgroundImageError: (_, __) {
+        setState(() {
+          hasError = true;
+        });
+      },
+    );
+    if (widget.disableHero) {
       return avatar;
     }
     return Hero(
-      tag: heroTag ?? 'UserAvatar_$username',
+      tag: widget.heroTag ?? 'UserAvatar_${widget.username}',
       flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
           DefaultTextStyle(
         style: DefaultTextStyle.of(toHeroContext).style,
