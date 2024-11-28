@@ -15,6 +15,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/html/munch_options.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
 enum _Actions {
@@ -241,8 +242,10 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
             ListTile(
               leading: Badge(
                 isLabelVisible: showBadge && !alreadyRead,
-                child: const CircleAvatar(
-                  child: Icon(Icons.message_outlined),
+                child: HeroUserAvatar(
+                  username: widget.data.peerUsername,
+                  avatarUrl: null,
+                  disableHero: true,
                 ),
               ),
               title: Text(widget.data.peerUsername),
