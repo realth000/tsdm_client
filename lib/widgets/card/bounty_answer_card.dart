@@ -59,7 +59,6 @@ class BountyAnswerCard extends StatelessWidget {
                   backgroundImage: CachedImageProvider(
                     userAvatarUrl,
                     fallbackImageUrl: noAvatarUrl,
-                    context,
                   ),
                 ),
               ),

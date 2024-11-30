@@ -36,7 +36,6 @@ class ReviewCard extends StatelessWidget {
           leading: CircleAvatar(
             backgroundImage: CachedImageProvider(
               avatarUrl ?? noAvatarUrl,
-              context,
               fallbackImageUrl: noAvatarUrl,
             ),
           ),

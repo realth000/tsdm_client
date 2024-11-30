@@ -57,7 +57,13 @@ Future<void> initProviders() async {
       NetClientProvider.buildNoCookie,
       instanceName: ServiceKeys.noCookie,
     )
-    ..registerFactory(ImageCacheProvider.new)
     ..registerSingleton(NetErrorSaver());
+  await getIt.allReady();
+
+  getIt.registerSingleton(
+    ImageCacheProvider(
+      getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie),
+    ),
+  );
   await getIt.allReady();
 }

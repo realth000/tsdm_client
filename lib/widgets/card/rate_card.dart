@@ -76,7 +76,6 @@ class RateCard extends StatelessWidget {
                           backgroundImage: CachedImageProvider(
                             e.user.avatarUrl ?? noAvatarUrl,
                             fallbackImageUrl: noAvatarUrl,
-                            context,
                           ),
                         ),
                       ),

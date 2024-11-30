@@ -598,4 +598,9 @@ class StorageProvider with LoggerMixin {
 
         return rightVoid();
       });
+
+  /// Clear all user avatar cache info.
+  Future<void> clearUserAvatarInfo() async {
+    await UserAvatarDao(_db).deleteAll();
+  }
 }

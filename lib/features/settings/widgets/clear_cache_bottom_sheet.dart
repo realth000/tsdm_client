@@ -48,7 +48,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
     // Default clear options.
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(create: (context) => SettingsCacheRepository()),
+        RepositoryProvider(create: (_) => const SettingsCacheRepository()),
         BlocProvider(
           create: (context) => SettingsCacheBloc(
             cacheRepository: context.repo(),

@@ -80,10 +80,8 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 tag: avatarHeroTag,
                 child: CircleAvatar(
                   radius: 30,
-                  backgroundImage: CachedImageProvider(
-                    profile.avatarUrl ?? noAvatarUrl,
-                    context,
-                  ),
+                  backgroundImage:
+                      CachedImageProvider(profile.avatarUrl ?? noAvatarUrl),
                 ),
               ),
               const Spacer(),

@@ -1,6 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/cache/models/models.dart';
+import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/fallback_picture.dart';
@@ -9,9 +14,9 @@ import 'package:tsdm_client/widgets/fallback_picture.dart';
 ///
 /// * First try to read from cache.
 /// * If no cache available, fetch image from [imageUrl].
-class CachedImage extends StatelessWidget with LoggerMixin {
+class CachedImage extends StatefulWidget {
   /// Constructor.
-  const CachedImage(
+  CachedImage(
     this.imageUrl, {
     this.width,
     this.height,
@@ -23,7 +28,7 @@ class CachedImage extends StatelessWidget with LoggerMixin {
     this.tag,
     this.enableAnimation = true,
     super.key,
-  });
+  }) : _imageProvider = CachedImageProvider(imageUrl);
 
   /// Image to fetch url.
   ///
@@ -59,32 +64,68 @@ class CachedImage extends StatelessWidget with LoggerMixin {
   /// Default is true.
   final bool enableAnimation;
 
+  /// Image provider to render the content.
+  final CachedImageProvider _imageProvider;
+
+  @override
+  State<CachedImage> createState() => _CachedImageState();
+}
+
+class _CachedImageState extends State<CachedImage> with LoggerMixin {
   Widget _buildPlaceholder(BuildContext context) => Shimmer.fromColors(
         baseColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
         highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
-        child: FallbackPicture(fit: fit),
+        child: FallbackPicture(fit: widget.fit),
       );
+
+  StreamSubscription<ImageCacheResponse>? imageSub;
+
+  Future<void> onImageResponse(ImageCacheResponse resp) async {
+    if (mounted && resp is ImageCacheLoadingResponse) {
+      await widget._imageProvider.evict();
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    imageSub = getIt
+        .get<ImageCacheProvider>()
+        .response
+        .where(
+          (e) =>
+              e.respType == ImageCacheResponseType.general &&
+              e.imageId == widget.imageUrl,
+        )
+        .listen((resp) async => onImageResponse(resp));
+  }
+
+  @override
+  void dispose() {
+    imageSub?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final Widget body;
-    if (imageUrl.isEmpty) {
-      body = FallbackPicture(fit: fit);
+    if (widget.imageUrl.isEmpty) {
+      body = FallbackPicture(fit: widget.fit);
     } else {
       body = Image(
-        image: CachedImageProvider(imageUrl, context),
-        fit: fit,
-        width: width,
-        height: height,
+        image: widget._imageProvider,
+        fit: widget.fit,
+        width: widget.width,
+        height: widget.height,
         errorBuilder: (context, e, st) {
           handleRaw(e, st);
-          return FallbackPicture(fit: fit);
+          return FallbackPicture(fit: widget.fit);
         },
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) {
             return child;
           }
-          if (!enableAnimation) {
+          if (!widget.enableAnimation) {
             return frame != null ? child : _buildPlaceholder(context);
           }
           return AnimatedSwitcher(
@@ -109,10 +150,10 @@ class CachedImage extends StatelessWidget with LoggerMixin {
 
     return ConstrainedBox(
       constraints: BoxConstraints(
-        maxWidth: maxWidth ?? double.infinity,
-        maxHeight: maxHeight ?? double.infinity,
-        minWidth: minWidth ?? 0,
-        minHeight: minHeight ?? 0,
+        maxWidth: widget.maxWidth ?? double.infinity,
+        maxHeight: widget.maxHeight ?? double.infinity,
+        minWidth: widget.minWidth ?? 0,
+        minHeight: widget.minHeight ?? 0,
       ),
       child: body,
     );
