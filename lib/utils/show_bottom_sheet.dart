@@ -86,21 +86,17 @@ Future<void> showImageActionBottomSheet({
         ),
         body: Column(
           children: [
-            Row(
-              children: [
-                Expanded(
-                  child: ColoredBox(
-                    color: Theme.of(context).colorScheme.surfaceContainerLow,
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxHeight: 100),
-                      child: Padding(
-                        padding: edgeInsetsT4B4,
-                        child: NetworkIndicatorImage(imageUrl),
-                      ),
-                    ),
+            Align(
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 100),
+                  child: Padding(
+                    padding: edgeInsetsT4B4,
+                    child: NetworkIndicatorImage(imageUrl),
                   ),
                 ),
-              ],
+              ),
             ),
             Expanded(
               child: SingleChildScrollView(
@@ -122,6 +118,7 @@ Future<void> showImageActionBottomSheet({
                     ListTile(
                       leading: const Icon(Icons.copy_outlined),
                       title: Text(tr.copyImageUrl),
+                      subtitle: Text(imageUrl),
                       onTap: () async {
                         await copyToClipboard(context, imageUrl);
                         if (context.mounted) {
@@ -140,6 +137,7 @@ Future<void> showImageActionBottomSheet({
                       ListTile(
                         leading: const Icon(Icons.link_outlined),
                         title: Text(tr.openLink),
+                        subtitle: Text(hrefUrl),
                         onTap: () async {
                           await context.dispatchAsUrl(hrefUrl);
                           if (context.mounted) {
