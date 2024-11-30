@@ -52,6 +52,7 @@ dependencies:
   gitsumu: ^0.5.2
   go_router: ^14.6.1
   html: ^0.15.5
+  image_picker: ^1.1.2
   json_annotation: ^4.9.0
   material_design_icons_flutter: ^7.0.7296
   path: any

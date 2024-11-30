@@ -47,13 +47,19 @@ class _ImageDialog extends StatefulWidget {
   State<_ImageDialog> createState() => _ImageDialogState();
 }
 
-class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
-  final formKey = GlobalKey<FormState>();
+class _ImageDialogState extends State<_ImageDialog>
+    with LoggerMixin, SingleTickerProviderStateMixin {
+  final urlForm = GlobalKey<FormState>();
   final urlFieldKey = GlobalKey<FormFieldState<String>>();
+  final smmsFieldKey = GlobalKey<FormFieldState<String>>();
 
-  late final TextEditingController urlController;
-  late final TextEditingController widthController;
-  late final TextEditingController heightController;
+  late TextEditingController urlController;
+  late TextEditingController widthController;
+  late TextEditingController heightController;
+  late TextEditingController pathController;
+
+  late TabController tabController;
+  late Uint8List imageData;
 
   /// Flag indicating automatically fill image size.
   ///
@@ -83,6 +89,9 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
   /// Flag indicating in auto-fill-size progress.
   bool fillingSize = false;
 
+  /// Current tab index.
+  int index = 0;
+
   Future<void> _fillImageSize(BuildContext context, String url) async {
     try {
       final cacheInfo = getIt.get<ImageCacheProvider>().getCacheInfo(url);
@@ -111,12 +120,135 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
     }
   }
 
+  Widget _buildUrlField(BuildContext context) {
+    final tr = context.t.bbcodeEditor.image;
+    return TextFormField(
+      key: urlFieldKey,
+      controller: urlController,
+      autofocus: true,
+      decoration: InputDecoration(
+        prefixIcon: const Icon(Icons.image_outlined),
+        labelText: tr.link,
+      ),
+      validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
+      onChanged: (v) async {
+        // Try fill image size from image file.
+        if (!autoFillSize) {
+          return;
+        }
+        final cs = urlFieldKey.currentState;
+        if (cs == null || !cs.validate()) {
+          return;
+        }
+        // Try get image size when image url changes.
+        setState(() {
+          fillingSize = true;
+        });
+        await _fillImageSize(context, v);
+        if (!mounted) {
+          return;
+        }
+        setState(() {
+          fillingSize = false;
+        });
+      },
+    );
+  }
+
+  // Widget _buildSmmsField(BuildContext context) {
+  //   final tr = context.t.bbcodeEditor.image;
+  //   return Column(
+  //     children: [
+  //       TextFormField(
+  //         readOnly: true,
+  //         key: smmsFieldKey,
+  //         controller: urlController,
+  //         autofocus: true,
+  //         decoration: InputDecoration(
+  //           prefixIcon: const Icon(Icons.add_outlined),
+  //           labelText: tr.link,
+  //         ),
+  //         validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
+  //         onChanged: (v) async {
+  //           // Try fill image size from image file.
+  //           if (!autoFillSize) {
+  //             return;
+  //           }
+  //           final cs = smmsFieldKey.currentState;
+  //           if (cs == null || !cs.validate()) {
+  //             return;
+  //           }
+  //           // Try get image size when image url changes.
+  //           setState(() {
+  //             fillingSize = true;
+  //           });
+  //           await _fillImageSize(context, v);
+  //           if (!mounted) {
+  //             return;
+  //           }
+  //           setState(() {
+  //             fillingSize = false;
+  //           });
+  //         },
+  //       ),
+  //       sizedBoxW8H8,
+  //       Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+  //         children: [
+  //           FilledButton.tonal(
+  //             onPressed: () async {
+  //               final result =
+  //                   await ImagePicker().pickImage
+  //                   (source: ImageSource.gallery);
+  //               if (result == null) {
+  //                 return;
+  //               }
+
+  //               pathController.text = result.path;
+  //               imageData = await result.readAsBytes();
+  //             },
+  //             child: Text('select'),
+  //           ),
+  //           FilledButton(
+  //             onPressed: () async {
+  //               final repo = ImageUploadRepository(getIt());
+  //               final r = await repo
+  //                   .uploadToSmms(
+  //                     SmmsRequest(
+  //                       token: 'FVVlXkfKtSSNDMfqTfMAMwT8fo6lmMxW',
+  //                       data: imageData,
+  //                     ),
+  //                   )
+  //                   .run();
+
+  //               if (!context.mounted) {
+  //                 return;
+  //               }
+  //               if (r.isLeft()) {
+  //                 showSnackBar(
+  //                     context: context, message: 'Failed to upload image');
+  //                 return;
+  //               }
+  //               final url = r.unwrap();
+  //               print('>>> url is $url');
+  //               await _fillImageSize(context, url);
+  //             },
+  //             child: Text('upload'),
+  //           ),
+  //         ],
+  //       ),
+  //     ],
+  //   );
+  // }
+
   @override
   void initState() {
     super.initState();
     urlController = TextEditingController(text: widget.url);
     widthController = TextEditingController(text: '${widget.width ?? ""}');
     heightController = TextEditingController(text: '${widget.height ?? ""}');
+    pathController = TextEditingController();
+    tabController = TabController(vsync: this, length: 2);
   }
 
   @override
@@ -124,50 +256,49 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
     urlController.dispose();
     widthController.dispose();
     heightController.dispose();
+    pathController.dispose();
+    tabController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.image;
+
     return AlertDialog(
       clipBehavior: Clip.hardEdge,
-      title: Text(tr.title),
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(tr.title),
+          // TabBar(
+          //   controller: tabController,
+          //   tabs: [
+          //     Tab(text: 'url'),
+          //     Tab(text: 'smms'),
+          //   ],
+          //   onTap: (v) {
+          //     if (v == index) {
+          //       return;
+          //     }
+          //     setState(() {
+          //       index = v;
+          //     });
+          //   },
+          // ),
+        ],
+      ),
       content: Form(
-        key: formKey,
+        key: urlForm,
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextFormField(
-              key: urlFieldKey,
-              controller: urlController,
-              autofocus: true,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.image_outlined),
-                labelText: tr.link,
-              ),
-              validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
-              onChanged: (v) async {
-                // Try fill image size from image file.
-                if (!autoFillSize) {
-                  return;
-                }
-                final cs = urlFieldKey.currentState;
-                if (cs == null || !cs.validate()) {
-                  return;
-                }
-                // Try get image size when image url changes.
-                setState(() {
-                  fillingSize = true;
-                });
-                await _fillImageSize(context, v);
-                if (!mounted) {
-                  return;
-                }
-                setState(() {
-                  fillingSize = false;
-                });
-              },
+            IndexedStack(
+              index: index,
+              children: [
+                _buildUrlField(context),
+                // _buildSmmsField(context),
+              ],
             ),
             TextFormField(
               controller: widthController,
@@ -237,8 +368,8 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin {
         TextButton(
           child: Text(context.t.general.ok),
           onPressed: () async {
-            if (formKey.currentState == null ||
-                !(formKey.currentState!).validate()) {
+            if (urlForm.currentState == null ||
+                !(urlForm.currentState!).validate()) {
               return;
             }
 

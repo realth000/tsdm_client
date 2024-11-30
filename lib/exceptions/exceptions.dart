@@ -384,3 +384,21 @@ final class AutoCheckinCookieNotFound extends AppException
   /// Whos cookie not found.
   final UserLoginInfo userInfo;
 }
+
+/// Invalid response in an image upload action.
+///
+/// The response data can not be parsed as known data.
+@MappableClass()
+final class ImageUploadInvalidResponse extends AppException
+    with ImageUploadInvalidResponseMappable {}
+
+/// Failed to upload image.
+///
+/// Unlike [ImageUploadInvalidResponse], the response data is successfully
+/// parsed to known format, but the message carried indicates an error.
+@MappableClass()
+final class ImageUploadFailed extends AppException
+    with ImageUploadFailedMappable {
+  /// Constructor.
+  ImageUploadFailed(String message) : super(message: message);
+}
