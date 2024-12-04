@@ -137,6 +137,34 @@ final class ImageCacheProvider with LoggerMixin {
               imageData,
             ),
           );
+
+          // Here the cache update progress is for some special situation:
+          //
+          // Assume an user's avatar is already cached ever before where was
+          // recognized as general image (not specialized as user avatar), here
+          // the cache reusing logic just loaded the image and leave the cache
+          // info, which is between user avatar cache file, in empty state.
+          // This made all same-user avatar cache loading logic in future end
+          // with failure because the image is cached while the relationship
+          // not.
+          //
+          // So add a check and update the reference if necessary.
+          if (req case ImageCacheUserAvatarRequest()) {
+            final cache =
+                await getIt.get<StorageProvider>().getUserAvatarEntityCache(
+                      username: req.username,
+                      imageUrl: req.imageUrl,
+                    );
+            if (cache == null) {
+              debug('save unrecorded user avatar for user ${req.username}');
+              await updateCache(
+                imageUrl,
+                imageData,
+                usage: ImageUsageInfoUserAvatar(req.username),
+              );
+            }
+          }
+
           return imageData;
         }
       }
