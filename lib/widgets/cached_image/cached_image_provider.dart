@@ -106,8 +106,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
         ImageUsageInfoOther() => getIt
             .get<ImageCacheProvider>()
             .getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
-        ImageUsageInfoUserAvatar(:final username) =>
-          getIt.get<ImageCacheProvider>().getUserAvatarCache(username),
+        ImageUsageInfoUserAvatar(:final username) => getIt
+            .get<ImageCacheProvider>()
+            .getUserAvatarCache(username: username, imageUrl: imageUrl),
       };
 
       final bytes = await f.onError((_, __) => _onImageError());

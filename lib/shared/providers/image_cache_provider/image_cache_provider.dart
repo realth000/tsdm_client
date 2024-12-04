@@ -227,9 +227,14 @@ final class ImageCacheProvider with LoggerMixin {
   }
 
   /// Get the cached user avatar data of user [username].
-  Future<Uint8List> getUserAvatarCache(String username) async {
-    final cacheInfo =
-        await getIt.get<StorageProvider>().getUserAvatarEntityCache(username);
+  Future<Uint8List> getUserAvatarCache({
+    required String username,
+    required String? imageUrl,
+  }) async {
+    final url = imageUrl == null || imageUrl.isEmpty ? null : imageUrl;
+    final cacheInfo = await getIt
+        .get<StorageProvider>()
+        .getUserAvatarEntityCache(username: username, imageUrl: url);
     if (cacheInfo == null) {
       return Future.error('$username user avatar cache file not found');
     }
@@ -281,6 +286,7 @@ final class ImageCacheProvider with LoggerMixin {
             .updateUserAvatarCacheInfo(
               username: username,
               cacheName: fileName,
+              imageUrl: imageUrl,
             )
             .run();
     }

@@ -12,9 +12,23 @@ final class UserAvatarDao extends DatabaseAccessor<AppDatabase>
     return select(userAvatar).get();
   }
 
-  /// Select the unique avatar cache for user [username].
-  Future<UserAvatarEntity?> selectAvatarByUsername(String username) async {
-    return (select(userAvatar)..where((e) => e.username.equals(username)))
+  /// Select the unique avatar cache for user [username] if its cache is stored
+  /// for url [imageUrl].
+  Future<UserAvatarEntity?> selectAvatar({
+    required String username,
+    required String? imageUrl,
+  }) async {
+    if (imageUrl == null) {
+      return (select(userAvatar)..where((e) => e.username.equals(username)))
+          .getSingleOrNull();
+    }
+
+    return (select(userAvatar)
+          ..where(
+            (e) =>
+                e.username.equals(username) &
+                (e.imageUrl.equals(imageUrl) | e.imageUrl.isNull()),
+          ))
         .getSingleOrNull();
   }
 

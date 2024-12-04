@@ -28,7 +28,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -99,6 +99,12 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
             );
             await m.addColumn(schema.notice, schema.notice.alreadyRead);
             info('migrating database schema from 5 to 6... ok!');
+          },
+          from6To7: (m, schema) async {
+            await m.addColumn(
+              schema.userAvatar,
+              schema.userAvatar.imageUrl,
+            );
           },
         ),
       );

@@ -65,7 +65,7 @@ class CachedImage extends StatefulWidget {
   final bool enableAnimation;
 
   /// Image provider to render the content.
-  final CachedImageProvider _imageProvider;
+  late final CachedImageProvider _imageProvider;
 
   @override
   State<CachedImage> createState() => _CachedImageState();
