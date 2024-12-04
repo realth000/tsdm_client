@@ -82,7 +82,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                   radius: 30,
                   backgroundImage: CachedImageProvider(
                     profile.avatarUrl ?? noAvatarUrl,
-                    context,
+                    usage: ImageUsageInfoUserAvatar(profile.username),
                   ),
                 ),
               ),

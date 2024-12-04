@@ -1,17 +1,26 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:typed_data';
+import 'dart:ui';
 
+import 'package:dio/dio.dart';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_avif/flutter_avif.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
+import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+
+const _contentTypeImageAvif = 'image/avif';
 
 /// Directory to save common image cache.
 late final Directory _imageCacheDirectory;
@@ -62,28 +71,205 @@ Future<void> initCache() async {
 
 /// Provider of cached images.
 final class ImageCacheProvider with LoggerMixin {
+  // ignore: prefer_const_constructor_declarations
+  /// Constructor.
+  ImageCacheProvider(this._netClientProvider);
+
+  final NetClientProvider _netClientProvider;
+
   /// Regexp that matches emoji bbcode.
   ///
   /// {:10_200:} format.
   static final _emojiCodeRe = RegExp(r'{:(?<groupId>\d+)_(?<id>\d+):}');
 
+  /// Provide a stream of [ImageCacheResponse].
+  final _controller = BehaviorSubject<ImageCacheResponse>();
+
+  /// [ImageCacheResponse] stream.
+  ///
+  /// Contains a series of responses to image caching requests.
+  ///
+  /// Latest image cache state also is here.
+  Stream<ImageCacheResponse> get response => _controller.asBroadcastStream();
+
+  /// Record all currently loading images.
+  ///
+  /// Use this list to avoid duplicate requests.
+  final List<String> _loadingImages = [];
+
+  /// Dispose the repository.
+  void dispose() {
+    _controller.close();
+  }
+
   /// Get the cache info related to [imageUrl].
   ImageEntity? getCacheInfo(String imageUrl) =>
       getIt.get<StorageProvider>().getImageCacheSync(imageUrl);
 
-  /// Get the cache image data related to [imageUrl].
+  /// Get the cache image data related to [req].
   ///
   /// Only return the image data.
-  Future<Uint8List> getCache(String imageUrl) async {
-    final cacheInfo = getCacheInfo(imageUrl);
-    if (cacheInfo == null) {
-      return Future.error('$imageUrl not cached');
+  Future<Uint8List> getOrMakeCache(
+    ImageCacheRequest req, {
+    bool force = false,
+  }) async {
+    final respType = switch (req) {
+      ImageCacheGeneralRequest() => ImageCacheResponseType.general,
+      ImageCacheUserAvatarRequest() => ImageCacheResponseType.userAvatar,
+    };
+    final imageId = req.imageId;
+    final imageUrl = req.imageUrl;
+
+    if (!force) {
+      final cacheInfo = getCacheInfo(req.imageUrl);
+      if (cacheInfo != null) {
+        final cacheFile =
+            File('${_imageCacheDirectory.path}/${cacheInfo.fileName}');
+        if (cacheFile.existsSync()) {
+          final imageData = await cacheFile.readAsBytes();
+
+          // Cache file may be deleted by external operations.
+          // Only reply a success response when cache is valid.
+          _controller.add(
+            ImageCacheSuccessResponse(
+              imageId,
+              respType,
+              imageData,
+            ),
+          );
+
+          // Here the cache update progress is for some special situation:
+          //
+          // Assume an user's avatar is already cached ever before where was
+          // recognized as general image (not specialized as user avatar), here
+          // the cache reusing logic just loaded the image and leave the cache
+          // info, which is between user avatar cache file, in empty state.
+          // This made all same-user avatar cache loading logic in future end
+          // with failure because the image is cached while the relationship
+          // not.
+          //
+          // So add a check and update the reference if necessary.
+          if (req case ImageCacheUserAvatarRequest()) {
+            final cache =
+                await getIt.get<StorageProvider>().getUserAvatarEntityCache(
+                      username: req.username,
+                      imageUrl: req.imageUrl,
+                    );
+            if (cache == null) {
+              debug('save unrecorded user avatar for user ${req.username}');
+              await updateCache(
+                imageUrl,
+                imageData,
+                usage: ImageUsageInfoUserAvatar(req.username),
+              );
+            }
+          }
+
+          return imageData;
+        }
+      }
+    }
+    if (imageUrl.isEmpty) {
+      return Future.error('failed to load image for $req: empty image url');
     }
 
-    final cacheFile =
-        File('${_imageCacheDirectory.path}/${cacheInfo.fileName}');
+    if (_loadingImages.contains(imageUrl)) {
+      // If already loading, do nothing.
+      final x = await response.firstWhere(
+        (e) =>
+            e.imageId == imageUrl &&
+            (e is ImageCacheSuccessResponse || e is ImageCacheFailedResponse),
+      );
+      return switch (x) {
+        ImageCacheSuccessResponse(:final imageData) => imageData,
+        ImageCacheFailedResponse() => Future.error('failed to load image'),
+        final v => throw Exception('impossible image response type $v'),
+      };
+    }
+
+    // Enter loading state.
+    _loadingImages.add(imageUrl);
+    _controller.add(ImageCacheLoadingResponse(imageId, respType));
+
+    try {
+      final respEither = await _netClientProvider.getImage(imageUrl).run();
+      if (respEither.isLeft()) {
+        final err = respEither.unwrapErr();
+        handle(err);
+        throw err;
+      }
+      final resp = respEither.unwrap();
+      final Uint8List imageData;
+      if (resp.headers.map[Headers.contentTypeHeader]?.firstOrNull ==
+          _contentTypeImageAvif) {
+        // Avif format is not supported by dart image, parse and convert to
+        // normal png ones, so image data is saved in png format that dart image
+        // support.
+        //
+        // Currently only the very first frame is reserved, all other frames
+        // are discard during conversion.
+        final avifFrames = await decodeAvif(resp.data as Uint8List);
+        if (avifFrames.isEmpty) {
+          imageData = Uint8List(0);
+          warning('image from url is in avif format has no frame, '
+              'url: $imageUrl');
+        } else {
+          if (avifFrames.length != 1) {
+            warning('image from url is in avif format has multiple frames, '
+                'only reserve the first frame and discarding other frames: '
+                'url: $imageUrl');
+          }
+          final byteData = await avifFrames.first.image
+              .toByteData(format: ImageByteFormat.png);
+          if (byteData == null) {
+            warning('image from url is in avif format has one invalid frame '
+                'url: $imageUrl');
+            imageData = Uint8List(0);
+          } else {
+            imageData = byteData.buffer.asUint8List();
+          }
+        }
+      } else {
+        imageData = resp.data as Uint8List;
+      }
+
+      final usage = switch (req) {
+        ImageCacheGeneralRequest() => const ImageUsageInfoOther(),
+        // TODO: Handle this case.
+        ImageCacheUserAvatarRequest(:final username) =>
+          ImageUsageInfoUserAvatar(username),
+      };
+
+      await updateCache(imageUrl, imageData, usage: usage);
+      _controller.add(ImageCacheSuccessResponse(imageId, respType, imageData));
+      return imageData;
+    } catch (e) {
+      warning('exception thrown when trying to update image cache: $e, '
+          'for url: $imageUrl');
+      _controller.add(ImageCacheFailedResponse(imageId, respType));
+      return Future.error('failed to load image $imageUrl: $e');
+    } finally {
+      // Leave loading state.
+      _loadingImages.remove(imageUrl);
+    }
+  }
+
+  /// Get the cached user avatar data of user [username].
+  Future<Uint8List> getUserAvatarCache({
+    required String username,
+    required String? imageUrl,
+  }) async {
+    final url = imageUrl == null || imageUrl.isEmpty ? null : imageUrl;
+    final cacheInfo = await getIt
+        .get<StorageProvider>()
+        .getUserAvatarEntityCache(username: username, imageUrl: url);
+    if (cacheInfo == null) {
+      return Future.error('$username user avatar cache file not found');
+    }
+
+    final cacheFile = getCacheFile(cacheInfo.cacheName);
     if (!cacheFile.existsSync()) {
-      return Future.error('$imageUrl cache file not exists');
+      return Future.error('$username user avatar cache file not exists');
     }
 
     return cacheFile.readAsBytes();
@@ -100,7 +286,11 @@ final class ImageCacheProvider with LoggerMixin {
   /// Update image cached file.
   ///
   /// Update cache file and info in database.
-  Future<void> updateCache(String imageUrl, Uint8List imageData) async {
+  Future<void> updateCache(
+    String imageUrl,
+    Uint8List imageData, {
+    ImageUsageInfo usage = const ImageUsageInfoOther(),
+  }) async {
     final fileName = imageUrl.fileNameV5();
 
     // Update image cache info to database.
@@ -111,6 +301,23 @@ final class ImageCacheProvider with LoggerMixin {
     // Make cache.
     final cache = File('${_imageCacheDirectory.path}/$fileName');
     await cache.writeAsBytes(imageData);
+
+    // Update other cache ref tables, if necessary.
+    switch (usage) {
+      case ImageUsageInfoOther():
+        // Do nothing.
+        break;
+      case ImageUsageInfoUserAvatar(:final username):
+        // Update user avatar cache.
+        await getIt
+            .get<StorageProvider>()
+            .updateUserAvatarCacheInfo(
+              username: username,
+              cacheName: fileName,
+              imageUrl: imageUrl,
+            )
+            .run();
+    }
   }
 
   /// Update image last used time.
@@ -174,7 +381,7 @@ final class ImageCacheProvider with LoggerMixin {
       final validateResult = info.validateCache(_emojiCacheDirectory.path);
       return validateResult;
     } catch (e) {
-      error('validate emoji cache failed: invalid emoji info: $e');
+      warning('validate emoji cache failed: invalid emoji info: $e');
       return false;
     }
   }
@@ -201,7 +408,7 @@ final class ImageCacheProvider with LoggerMixin {
           EmojiGroupListMapper.fromJson(_emojiCacheInfoFile.readAsStringSync());
       return info.emojiGroupList;
     } catch (e) {
-      error('failed to load emoji info when decoding json: $e');
+      warning('failed to load emoji info when decoding json: $e');
       return null;
     }
   }
@@ -270,7 +477,7 @@ final class ImageCacheProvider with LoggerMixin {
   Future<Uint8List?> getEmojiCache(String groupId, String id) async {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     if (!cacheFile.existsSync()) {
-      error('$cacheFile cache file not exists');
+      warning('$cacheFile cache file not exists');
       return null;
     }
     return cacheFile.readAsBytes();
@@ -280,7 +487,7 @@ final class ImageCacheProvider with LoggerMixin {
   Uint8List? getEmojiCacheSync(String groupId, String id) {
     final cacheFile = File(_formatEmojiCachePath(groupId, id));
     if (!cacheFile.existsSync()) {
-      error('$cacheFile cache file not exists');
+      warning('$cacheFile cache file not exists');
       return null;
     }
     return cacheFile.readAsBytesSync();

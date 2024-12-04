@@ -60,4 +60,12 @@ void main() {
     },
     skip: true,
   );
+
+  test('upgrade from 6 to 7', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(6);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 7);
+    await db.close();
+  });
 }

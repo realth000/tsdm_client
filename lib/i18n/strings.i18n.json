@@ -18,9 +18,11 @@
     "copiedToClipboard": "Copied to clipboard",
     "affectAfterRestart": "Changes will take effect after the app restarted",
     "never": "Never",
-    "seconds(rich)": "$value seconds",
-    "minutes(rich)": "$value minutes",
-    "hours(rich)": "$value hours"
+    "seconds": "${value: int} seconds",
+    "minutes": "${value: int} minutes",
+    "hours": "${value: int} hours",
+    "days": "${value: int} days",
+    "now": "Now"
   },
   "navigation": {
     "homepage": "Home",

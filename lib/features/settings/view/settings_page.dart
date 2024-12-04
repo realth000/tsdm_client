@@ -463,14 +463,13 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const Icon(Icons.sync_outlined),
         title: Text(tr.autoSyncNotice.title),
         subtitle: Text(tr.autoSyncNotice.detail),
-        trailing: autoSyncNoticeDuration?.readable(
-              context,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelMedium
-                  ?.copyWith(color: Theme.of(context).colorScheme.secondary),
-            ) ??
-            Text(context.t.general.never),
+        trailing: Text(
+          autoSyncNoticeDuration?.readable(context) ?? context.t.general.never,
+          style: Theme.of(context)
+              .textTheme
+              .labelMedium
+              ?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
         onTap: () async {
           final seconds = await showDialog<int>(
             context: context,

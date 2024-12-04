@@ -1,3 +1,6 @@
+import 'package:flutter/cupertino.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
+
 /// Extension of [DateTime] that provides some transformation and calculation.
 extension DateTimeExtension on DateTime {
   /// Format [DateTime] to format yyyy-MM-DD.
@@ -17,14 +20,30 @@ extension DateTimeExtension on DateTime {
   /// Calculate the duration to current date time.
   ///
   /// May be less than zero if current time is older than the given `this` time.
-  String elapsedTillNow() {
+  String elapsedTillNow(BuildContext context) {
     final duration = DateTime.now().difference(this);
-    return duration.inDays > 0
-        ? '${duration.inDays}天'
-        : duration.inHours > 0
-            ? '${duration.inHours}小时'
-            : duration.inMinutes > 0
-                ? '${duration.inMinutes}分钟'
-                : '${duration.inSeconds}秒';
+    final tr = context.t.general;
+
+    final days = duration.inDays;
+    if (days > 0) {
+      return tr.days(value: duration.inDays);
+    }
+
+    final hours = duration.inHours;
+    if (hours > 0) {
+      return tr.hours(value: hours);
+    }
+
+    final minutes = duration.inMinutes;
+    if (minutes > 0) {
+      return tr.minutes(value: minutes);
+    }
+
+    final seconds = duration.inSeconds;
+    if (seconds > 0) {
+      return tr.seconds(value: seconds);
+    }
+
+    return tr.now;
   }
 }

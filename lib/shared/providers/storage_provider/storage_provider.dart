@@ -235,6 +235,13 @@ class StorageProvider with LoggerMixin {
   ImageEntity? getImageCacheSync(String url) =>
       _imageCache.entries.firstWhereOrNull((e) => e.key == url)?.value;
 
+  /// Get user avatar cache info on [username].
+  Future<UserAvatarEntity?> getUserAvatarEntityCache({
+    required String username,
+    required String? imageUrl,
+  }) async =>
+      UserAvatarDao(_db).selectAvatar(username: username, imageUrl: imageUrl);
+
   /// Insert or update cache info, update all info.
   Future<void> updateImageCache(
     String url, {
@@ -574,4 +581,29 @@ class StorageProvider with LoggerMixin {
 
         return rightVoid();
       });
+
+  /*        user avatar        */
+
+  /// Update recorded user avatar info for [username] with [cacheName].
+  AsyncVoidEither updateUserAvatarCacheInfo({
+    required String username,
+    required String cacheName,
+    required String imageUrl,
+  }) =>
+      AsyncVoidEither(() async {
+        await UserAvatarDao(_db).upsertAvatar(
+          UserAvatarCompanion(
+            username: Value(username),
+            cacheName: Value(cacheName),
+            imageUrl: Value(imageUrl),
+          ),
+        );
+
+        return rightVoid();
+      });
+
+  /// Clear all user avatar cache info.
+  Future<void> clearUserAvatarInfo() async {
+    await UserAvatarDao(_db).deleteAll();
+  }
 }

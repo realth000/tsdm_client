@@ -6,6 +6,7 @@ import 'package:dio/io.dart';
 import 'package:dio_brotli_transformer/dio_brotli_transformer.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -238,7 +239,8 @@ final class NetClientProvider with LoggerMixin {
   /// Automatically set `Content-Type` to `multipart/form-data`.
   AsyncEither<Response<dynamic>> postMultipartForm(
     String path, {
-    required Map<String, String> data,
+    required Map<String, dynamic> data,
+    Map<String, String>? header,
   }) =>
       AsyncEither.tryCatch(
         () async => _dio.post<dynamic>(
@@ -247,7 +249,7 @@ final class NetClientProvider with LoggerMixin {
             headers: <String, String>{
               HttpHeaders.contentTypeHeader:
                   Headers.multipartFormDataContentType,
-            },
+            }.copyWith(header ?? {}),
             validateStatus: (code) {
               if (code == 301 || code == 200) {
                 return true;

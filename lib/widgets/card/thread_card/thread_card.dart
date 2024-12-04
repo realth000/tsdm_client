@@ -82,23 +82,11 @@ class _CardLayout extends StatelessWidget {
 
   /// [author] MUST not be null.
   Widget _buildAvatar(BuildContext context) {
-    final avatar = author!.avatarUrl;
-    if (avatar != null) {
-      if (avatar.isEmpty) {
-        return CircleAvatar(child: Text(author!.name[0]));
-      }
-
-      if (avatar.startsWith('http://') || avatar.startsWith('https://')) {
-        return HeroUserAvatar(
-          username: author!.name,
-          avatarUrl: author!.avatarUrl,
-          disableHero: true,
-        );
-      }
-      return CircleAvatar(backgroundImage: AssetImage(avatar));
-    }
-
-    return CircleAvatar(child: Text(author!.name[0]));
+    return HeroUserAvatar(
+      username: author!.name,
+      avatarUrl: author!.avatarUrl,
+      disableHero: true,
+    );
   }
 
   /// Mainly for test.
@@ -123,7 +111,7 @@ class _CardLayout extends StatelessWidget {
       if (latestReplyTime != null)
         (
           Icons.timelapse_outlined,
-          latestReplyTime!.elapsedTillNow(),
+          latestReplyTime!.elapsedTillNow(context),
         ),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
       if ((privilege ?? 0) > 0) (Icons.feedback_outlined, '$privilege'),

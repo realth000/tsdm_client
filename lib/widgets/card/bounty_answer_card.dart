@@ -3,6 +3,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 /// Widget to show the answer of a bounty in thread.
@@ -59,7 +60,7 @@ class BountyAnswerCard extends StatelessWidget {
                   backgroundImage: CachedImageProvider(
                     userAvatarUrl,
                     fallbackImageUrl: noAvatarUrl,
-                    context,
+                    usage: ImageUsageInfoUserAvatar(username),
                   ),
                 ),
               ),

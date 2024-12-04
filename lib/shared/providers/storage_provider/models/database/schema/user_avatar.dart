@@ -23,6 +23,9 @@ class UserAvatar extends Table {
   /// Only the name part.
   TextColumn get cacheName => text()();
 
+  /// Avatar image url
+  TextColumn get imageUrl => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => {username};
 }

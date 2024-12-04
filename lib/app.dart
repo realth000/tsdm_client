@@ -30,8 +30,6 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
@@ -173,10 +171,7 @@ class _AppState extends State<App> with WindowListener {
           create: (_) => ForumRepository(),
         ),
         RepositoryProvider<ImageCacheRepository>(
-          create: (_) => ImageCacheRepository(
-            getIt(),
-            getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie),
-          ),
+          create: (_) => ImageCacheRepository(getIt()),
         ),
         RepositoryProvider<ImageCacheTriggerCubit>(
           create: (context) => ImageCacheTriggerCubit(context.repo()),

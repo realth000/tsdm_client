@@ -14,6 +14,16 @@ enum ImageCacheStatus2 {
   cached,
 }
 
+/// All types of image cached response, corresponding to
+/// `ImageCacheGeneralRequest`.
+enum ImageCacheResponseType {
+  /// General purpose.
+  general,
+
+  /// User avatar.
+  userAvatar,
+}
+
 /// Response of image cache request.
 ///
 /// Each instance contains an event related to a image specified with its url.
@@ -32,7 +42,7 @@ enum ImageCacheStatus2 {
 @MappableClass()
 sealed class ImageCacheResponse with ImageCacheResponseMappable {
   /// Constructor.
-  const ImageCacheResponse(this.imageId);
+  const ImageCacheResponse(this.imageId, this.respType);
 
   /// Image's unique id.
   ///
@@ -40,6 +50,9 @@ sealed class ImageCacheResponse with ImageCacheResponseMappable {
   ///
   /// Usually us the image's url as id.
   final String imageId;
+
+  /// Response type.
+  final ImageCacheResponseType respType;
 }
 
 /// Represents successfully cached a data.
@@ -49,7 +62,11 @@ sealed class ImageCacheResponse with ImageCacheResponseMappable {
 final class ImageCacheSuccessResponse extends ImageCacheResponse
     with ImageCacheSuccessResponseMappable {
   /// Constructor.
-  const ImageCacheSuccessResponse(super.imageId, this.imageData);
+  const ImageCacheSuccessResponse(
+    super.imageId,
+    super.respType,
+    this.imageData,
+  );
 
   /// Binary image data.
   final Uint8List imageData;
@@ -63,7 +80,7 @@ final class ImageCacheSuccessResponse extends ImageCacheResponse
 final class ImageCacheLoadingResponse extends ImageCacheResponse
     with ImageCacheLoadingResponseMappable {
   /// Constructor.
-  const ImageCacheLoadingResponse(super.imageId);
+  const ImageCacheLoadingResponse(super.imageId, super.respType);
 }
 
 /// Represents failed to cache image.
@@ -75,7 +92,7 @@ final class ImageCacheLoadingResponse extends ImageCacheResponse
 final class ImageCacheFailedResponse extends ImageCacheResponse
     with ImageCacheFailedResponseMappable {
   /// Constructor.
-  const ImageCacheFailedResponse(super.imageId);
+  const ImageCacheFailedResponse(super.imageId, super.respType);
 }
 
 /// A reply to a new state.
@@ -88,7 +105,12 @@ final class ImageCacheFailedResponse extends ImageCacheResponse
 final class ImageCacheStatusResponse extends ImageCacheResponse
     with ImageCacheStatusResponseMappable {
   /// Constructor.
-  const ImageCacheStatusResponse(super.imageId, this.status, this.imageData);
+  const ImageCacheStatusResponse(
+    super.imageId,
+    super.respType,
+    this.status,
+    this.imageData,
+  );
 
   /// Status of cache.
   final ImageCacheStatus2 status;

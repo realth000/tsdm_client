@@ -15,41 +15,45 @@ class PinSection extends StatelessWidget with LoggerMixin {
     PinnedThread pinnedThread, {
     bool isRank = false,
   }) {
-    final String title;
-    final String subtitle;
+    final String username;
+    final String threadTitle;
     if (isRank) {
-      title = pinnedThread.threadTitle;
-      subtitle = pinnedThread.authorName;
+      username = pinnedThread.threadTitle;
+      threadTitle = pinnedThread.authorName;
     } else {
-      title = pinnedThread.authorName;
-      subtitle = pinnedThread.threadTitle;
+      username = pinnedThread.authorName;
+      threadTitle = pinnedThread.threadTitle;
     }
 
     return ListTile(
-      // 72 is the height when subtitle is not null.
+      // 72 is the height when thread title is not null.
       // Set this value to make every group of section has the same height.
       minTileHeight: 72,
       leading: GestureDetector(
-        child: CircleAvatar(child: Text(title[0])),
+        child: HeroUserAvatar(
+          username: username,
+          avatarUrl: null,
+          disableHero: true,
+        ),
         onTap: () async => context.pushNamed(
           ScreenPaths.profile,
-          queryParameters: {'username': title},
+          queryParameters: {'username': username},
         ),
       ),
       title: GestureDetector(
-        child: Row(children: [SingleLineText(title)]),
+        child: Row(children: [SingleLineText(username)]),
         onTap: () async => context.pushNamed(
           ScreenPaths.profile,
-          queryParameters: {'username': title},
+          queryParameters: {'username': username},
         ),
       ),
       subtitle: isRank
           ? null
           : SingleLineText(
-              subtitle,
+              threadTitle,
               overflow: TextOverflow.ellipsis,
             ),
-      trailing: isRank ? SingleLineText(subtitle) : null,
+      trailing: isRank ? SingleLineText(threadTitle) : null,
       onTap: () {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
         if (target == null) {

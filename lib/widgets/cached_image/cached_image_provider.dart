@@ -1,21 +1,17 @@
 import 'dart:async';
-import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
-import 'package:tsdm_client/constants/constants.dart';
-import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
-import 'package:tsdm_client/shared/providers/providers.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
-Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
-  return rootBundle.loadBuffer(assetNoAvatarImagePath);
-}
+// Future<ui.ImmutableBuffer> _loadNoAvatarBytes() async {
+//  return rootBundle.loadBuffer(assetNoAvatarImagePath);
+// }
 
 /// A provider that provides cached image.
 ///
@@ -27,21 +23,16 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
     with LoggerMixin {
   /// Constructor.
   const CachedImageProvider(
-    this.imageUrl,
-    this.context, {
+    this.imageUrl, {
     this.scale = 1.0,
     this.maxWidth,
     this.maxHeight,
     this.fallbackImageUrl,
+    this.usage = const ImageUsageInfoOther(),
   });
 
   /// Url of image.
   final String imageUrl;
-
-  /// Use check widget mounted.
-  ///
-  /// Workaround to fix "ref used after widget dispose" exception.
-  final BuildContext context;
 
   /// Max image width.
   final double? maxWidth;
@@ -55,8 +46,24 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
   /// Use this image if [imageUrl] is unavailable.
   final String? fallbackImageUrl;
 
+  /// Usage of the image.
+  final ImageUsageInfo usage;
+
   /// Get the image url.
   String get url => imageUrl;
+
+  Future<Uint8List> _onImageError() async {
+    final req = switch (usage) {
+      ImageUsageInfoOther() => ImageCacheGeneralRequest(imageUrl),
+      ImageUsageInfoUserAvatar(:final username) => ImageCacheUserAvatarRequest(
+          username: username,
+          imageUrl: imageUrl,
+        ),
+    };
+
+    final bytes = await getIt.get<ImageCacheProvider>().getOrMakeCache(req);
+    return bytes;
+  }
 
   @override
   Future<CachedImageProvider> obtainKey(ImageConfiguration configuration) {
@@ -79,8 +86,8 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       scale: key.scale,
       debugLabel: key.url,
       informationCollector: () => <DiagnosticsNode>[
-        DiagnosticsProperty<ImageProvider>('Image provider', this),
-        DiagnosticsProperty<CachedImageProvider>('Image key', key),
+        DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
+        DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
       ],
     );
   }
@@ -92,55 +99,21 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
   }) async {
     try {
       assert(key == this, 'check instance in load async');
+      if (usage is! ImageUsageInfoUserAvatar && imageUrl.isEmpty) {
+        return Future.error('failed to make $usage: empty url');
+      }
+      final f = switch (usage) {
+        ImageUsageInfoOther() => getIt
+            .get<ImageCacheProvider>()
+            .getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
+        ImageUsageInfoUserAvatar(:final username) => getIt
+            .get<ImageCacheProvider>()
+            .getUserAvatarCache(username: username, imageUrl: imageUrl),
+      };
 
-      final bytes = await getIt
-          .get<ImageCacheProvider>()
-          .getCache(imageUrl)
-          .onError((e, st) async {
-        if (!context.mounted) {
-          return Uint8List(0);
-        }
-        // When error occurred in `getCache`, it means the image is not
-        // correctly cached, fetch from network.
-        final respEither = await getIt
-            .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-            .getImage(imageUrl)
-            .run();
-        if (respEither.isLeft()) {
-          // Error occurred when fetching this image.
-          // If we have [fallbackImageUrl], use it.
-          if (fallbackImageUrl == null) {
-            // Rethrow if can not fallback.
-          }
-          final cacheRet = await getIt
-              .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-              .getImage(fallbackImageUrl!)
-              .run();
-          if (cacheRet.isLeft()) {
-            handle(cacheRet.unwrapErr());
-            return Uint8List(0);
-          }
-          handle(respEither.unwrapErr());
-          return Uint8List(0);
-        }
-
-        if (!context.mounted) {
-          return Uint8List(0);
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          error('failed to get image from $imageUrl, code=${resp.statusCode}');
-          return Uint8List(0);
-        }
-        final imageData = resp.data as Uint8List;
-
-        // Make cache.
-        await getIt.get<ImageCacheProvider>().updateCache(imageUrl, imageData);
-        return Uint8List.fromList(imageData);
-      });
-
+      final bytes = await f.onError((_, __) => _onImageError());
       if (bytes.lengthInBytes == 0) {
-        return decode(await _loadNoAvatarBytes());
+        return Future.error('zero bytes');
       }
       return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
@@ -150,8 +123,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       // scheduleMicrotask(() {
       //   PaintingBinding.instance.imageCache.evict(key);
       // });
-      error('CachedImageProvider caught error: $e');
-      return decode(await _loadNoAvatarBytes());
+      // FIXME: Handle all exceptions.
+      // error('CachedImageProvider caught error: $e');
+      return Future.error('failed to render image: $e');
     } finally {
       await chunkEvents.close();
     }
@@ -163,14 +137,15 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       return false;
     }
     return other is CachedImageProvider &&
-        other.url == url &&
+        other.imageUrl == imageUrl &&
+        other.usage == usage &&
         other.scale == scale;
   }
 
   @override
-  int get hashCode => Object.hash(url, scale);
+  int get hashCode => Object.hash(imageUrl, usage, scale);
 
   @override
   String toString() => '${objectRuntimeType(this, 'CachedImageProvider')}'
-      '("$url", scale: $scale)';
+      '("$url", scale: $scale, usage: $usage)';
 }

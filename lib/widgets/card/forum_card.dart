@@ -204,7 +204,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
               ),
               subtitle: widget.forum.latestThreadTime != null
                   ? Text(
-                      widget.forum.latestThreadTime!.elapsedTillNow(),
+                      widget.forum.latestThreadTime!.elapsedTillNow(context),
                       style: TextStyle(
                         color: Theme.of(context).colorScheme.secondary,
                       ),
