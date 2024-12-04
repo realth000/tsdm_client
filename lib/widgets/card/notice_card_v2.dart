@@ -47,12 +47,9 @@ class NoticeCardV2 extends StatefulWidget {
 }
 
 class _NoticeCardV2State extends State<NoticeCardV2> {
-  bool alreadyRead = false;
-
   void _onUrlLaunched({required bool markAsRead}) {
     // Update state to read if any link in rendered html launched.
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
 
@@ -61,9 +58,6 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
     } else {
       context.read<NotificationStateCubit>().increaseNotice();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
 
     final uid = context.read<AuthenticationRepository>().currentUser?.uid;
     if (uid == null) {
@@ -81,12 +75,6 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    alreadyRead = widget.data.alreadyRead;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.cardMenu;
     final showBadge =
@@ -99,7 +87,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
         children: [
           ListTile(
             leading: Badge(
-              isLabelVisible: showBadge && !alreadyRead,
+              isLabelVisible: showBadge && !widget.data.alreadyRead,
               child: const CircleAvatar(
                 child: Icon(Icons.notifications_outlined),
               ),
@@ -112,7 +100,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
             ),
             trailing: PopupMenuButton(
               itemBuilder: (_) => [
-                if (!alreadyRead)
+                if (!widget.data.alreadyRead)
                   PopupMenuItem(
                     value: _Actions.markAsRead,
                     child: Row(
@@ -123,7 +111,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                       ],
                     ),
                   ),
-                if (alreadyRead)
+                if (widget.data.alreadyRead)
                   PopupMenuItem(
                     value: _Actions.markAsUnread,
                     child: Row(
@@ -176,8 +164,6 @@ class PersonalMessageCardV2 extends StatefulWidget {
 }
 
 class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
-  bool alreadyRead = false;
-
   Future<void> _onTap(
     BuildContext context, {
     required bool markAsRead,
@@ -192,8 +178,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
       );
     }
 
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
     if (markAsRead) {
@@ -201,9 +186,6 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
     } else {
       context.read<NotificationStateCubit>().increasePersonalMessage();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
     if (uid == null) {
       return;
     }
@@ -221,7 +203,6 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
   @override
   void initState() {
     super.initState();
-    alreadyRead = widget.data.alreadyRead;
   }
 
   @override
@@ -231,6 +212,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
         .get<SettingsRepository>()
         .currentSettings
         .showUnreadPersonalMessageBadge;
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -241,7 +223,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: showBadge && !alreadyRead,
+                isLabelVisible: showBadge && !widget.data.alreadyRead,
                 child: HeroUserAvatar(
                   username: widget.data.peerUsername,
                   avatarUrl: null,
@@ -257,7 +239,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
               ),
               trailing: PopupMenuButton(
                 itemBuilder: (_) => [
-                  if (!alreadyRead)
+                  if (!widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsRead,
                       child: Row(
@@ -268,7 +250,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                         ],
                       ),
                     ),
-                  if (alreadyRead)
+                  if (widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsUnread,
                       child: Row(
@@ -320,8 +302,6 @@ class BroadcastMessageCardV2 extends StatefulWidget {
 }
 
 class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
-  bool alreadyRead = false;
-
   Future<void> _onTap(
     BuildContext context, {
     required bool markAsRead,
@@ -335,8 +315,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
       );
     }
 
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
 
@@ -345,9 +324,6 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
     } else {
       context.read<NotificationStateCubit>().increaseBroadcastMessage();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
     if (uid == null) {
       return;
     }
@@ -360,12 +336,6 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
             ),
           ),
         );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    alreadyRead = widget.data.alreadyRead;
   }
 
   @override
@@ -385,7 +355,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: showBadge && !alreadyRead,
+                isLabelVisible: showBadge && !widget.data.alreadyRead,
                 child: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
               ),
               title: Text(context.t.noticePage.broadcastMessageTab.system),
@@ -397,7 +367,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
               ),
               trailing: PopupMenuButton(
                 itemBuilder: (_) => [
-                  if (!alreadyRead)
+                  if (!widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsRead,
                       child: Row(
@@ -408,7 +378,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                         ],
                       ),
                     ),
-                  if (alreadyRead)
+                  if (widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsUnread,
                       child: Row(

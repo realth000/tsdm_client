@@ -354,6 +354,10 @@
   },
   "noticePage": {
     "title": "Notifications",
+    "appBar": {
+      "unread": "unread",
+      "unreadDetail": "Only show unread"
+    },
     "noticeTab": {
       "title": "Notice",
       "replyBody(rich)": "replied in $threadTitle",

@@ -33,6 +33,9 @@ class _NotificationPageState extends State<NotificationPage>
   late final EasyRefreshController _broadcastMessageRefreshController;
   late final TabController _tabController;
 
+  /// Flag indicating only show unread messages or not
+  bool onlyShowUnread = false;
+
   Widget _buildEmptyBody(BuildContext context) {
     return Align(
       child: LayoutBuilder(
@@ -111,6 +114,19 @@ class _NotificationPageState extends State<NotificationPage>
       },
       child: BlocBuilder<NotificationBloc, NotificationState>(
         builder: (context, state) {
+          final (n, pm, bm) = switch (onlyShowUnread) {
+            true => (
+                state.noticeList.where((e) => !e.alreadyRead),
+                state.personalMessageList.where((e) => !e.alreadyRead),
+                state.broadcastMessageList.where((e) => !e.alreadyRead),
+              ),
+            false => (
+                state.noticeList,
+                state.personalMessageList,
+                state.broadcastMessageList
+              ),
+          };
+
           final body = switch (state.status) {
             NotificationStatus.initial ||
             NotificationStatus.loading =>
@@ -126,13 +142,13 @@ class _NotificationPageState extends State<NotificationPage>
                     onRefresh: () => context
                         .read<NotificationBloc>()
                         .add(NotificationUpdateAllRequested()),
-                    child: state.noticeList.isEmpty
+                    child: n.isEmpty
                         ? _buildEmptyBody(context)
                         : ListView.separated(
                             padding: edgeInsetsL12T4R12B4,
-                            itemCount: state.noticeList.length,
+                            itemCount: n.length,
                             itemBuilder: (_, idx) =>
-                                NoticeCardV2(state.noticeList[idx]),
+                                NoticeCardV2(n.elementAt(idx)),
                             separatorBuilder: (_, __) => sizedBoxW4H4,
                           ),
                   ),
@@ -142,14 +158,13 @@ class _NotificationPageState extends State<NotificationPage>
                     onRefresh: () => context
                         .read<NotificationBloc>()
                         .add(NotificationUpdateAllRequested()),
-                    child: state.personalMessageList.isEmpty
+                    child: pm.isEmpty
                         ? _buildEmptyBody(context)
                         : ListView.separated(
                             padding: edgeInsetsL12T4R12B4,
-                            itemCount: state.personalMessageList.length,
-                            itemBuilder: (_, idx) => PersonalMessageCardV2(
-                              state.personalMessageList[idx],
-                            ),
+                            itemCount: pm.length,
+                            itemBuilder: (_, idx) =>
+                                PersonalMessageCardV2(pm.elementAt(idx)),
                             separatorBuilder: (_, __) => sizedBoxW4H4,
                           ),
                   ),
@@ -159,14 +174,13 @@ class _NotificationPageState extends State<NotificationPage>
                     onRefresh: () => context
                         .read<NotificationBloc>()
                         .add(NotificationUpdateAllRequested()),
-                    child: state.broadcastMessageList.isEmpty
+                    child: bm.isEmpty
                         ? _buildEmptyBody(context)
                         : ListView.separated(
                             padding: edgeInsetsL12T4R12B4,
-                            itemCount: state.broadcastMessageList.length,
-                            itemBuilder: (_, idx) => BroadcastMessageCardV2(
-                              state.broadcastMessageList[idx],
-                            ),
+                            itemCount: bm.length,
+                            itemBuilder: (_, idx) =>
+                                BroadcastMessageCardV2(bm.elementAt(idx)),
                             separatorBuilder: (_, __) => sizedBoxW4H4,
                           ),
                   ),
@@ -183,6 +197,14 @@ class _NotificationPageState extends State<NotificationPage>
             appBar: AppBar(
               title: Text(tr.title),
               actions: [
+                FilterChip(
+                  label: Text(tr.appBar.unread),
+                  tooltip: tr.appBar.unreadDetail,
+                  selected: onlyShowUnread,
+                  onSelected: (_) {
+                    setState(() => onlyShowUnread = !onlyShowUnread);
+                  },
+                ),
                 PopupMenuButton<_Actions>(
                   itemBuilder: (_) => [
                     PopupMenuItem(

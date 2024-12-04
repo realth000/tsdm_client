@@ -354,6 +354,10 @@
   },
   "noticePage": {
     "title": "通知",
+    "appBar": {
+      "unread": "未讀",
+      "unreadDetail": "只顯示未讀"
+    },
     "noticeTab": {
       "title": "提醒",
       "replyBody(rich)": "在 $threadTitle 中回覆了",
