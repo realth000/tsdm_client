@@ -286,9 +286,13 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         }
 
         final allLinksInBreadCrumb = document.querySelectorAll('div#pt a');
-        final parentForumNode = allLinksInBreadCrumb
-            .elementAtOrNull(allLinksInBreadCrumb.length - 2);
-        final forumName = parentForumNode?.innerText.trim();
+        final forumName = switch (allLinksInBreadCrumb.length < 2) {
+          true => null,
+          false => allLinksInBreadCrumb
+              .elementAtOrNull(allLinksInBreadCrumb.length - 2)
+              ?.innerText
+              .trim()
+        };
 
         final currentPage = document.currentPage() ?? pageNumber;
         final totalPages = document.totalPages() ?? pageNumber;
