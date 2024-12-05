@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "Home",
-    "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2"
+    "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2",
+    "welcome": {
+      "history": "History",
+      "notice": "Notification",
+      "checkin": "Checkin",
+      "myThread": "My thread",
+      "latestThread": "Latest thread"
+    }
   },
   "topicPage": {
     "title": "Topics",

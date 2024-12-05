@@ -14,7 +14,10 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// Only available when user login.
 class NoticeButton extends StatefulWidget {
   /// Constructor.
-  const NoticeButton({super.key});
+  const NoticeButton({this.useIcon = false, super.key});
+
+  /// Build [Icon] instead of [IconButton].
+  final bool useIcon;
 
   @override
   State<NoticeButton> createState() => _NoticeButtonState();
@@ -46,6 +49,10 @@ class _NoticeButtonState extends State<NoticeButton> {
       noticeIcon = Badge(label: Text('$unreadNoticeCount'), child: iconData);
     } else {
       noticeIcon = iconData;
+    }
+
+    if (widget.useIcon) {
+      return noticeIcon;
     }
 
     return IconButton(

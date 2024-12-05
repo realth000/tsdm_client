@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "主页",
-    "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2"
+    "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2",
+    "welcome": {
+      "history": "历史",
+      "notice": "消息",
+      "checkin": "签到",
+      "myThread": "我的帖子",
+      "latestThread": "最新帖子"
+    }
   },
   "topicPage": {
     "title": "分区",

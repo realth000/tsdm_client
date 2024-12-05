@@ -77,49 +77,68 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       return [];
     }
 
-    // TODO: Handle link page route.
-    return linkList
-        .map(
-          (e) => ListTile(
-            title: SingleLineText(e.$1),
-            trailing: const Icon(Icons.navigate_next),
-            shape: const BorderDirectional(),
-            onTap: () {
-              final target = e.$2.parseUrlToRoute();
-              if (target == null) {
-                error('invalid kahrpba link: ${e.$2}');
-                return;
-              }
-              context.pushNamed(
-                target.screenPath,
-                pathParameters: target.pathParameters,
-                queryParameters: target.queryParameters,
-              );
-            },
-          ),
-        )
-        .toList();
+    final tr = context.t.homepage.welcome;
+
+    return [
+      ListTile(
+        leading: const Icon(Icons.history_outlined),
+        title: Text(tr.history),
+        onTap: () async => context.pushNamed(ScreenPaths.threadVisitHistory),
+      ),
+      ListTile(
+        leading: const NoticeButton(useIcon: true),
+        title: Text(tr.notice),
+        onTap: () async => context.pushNamed(ScreenPaths.notice),
+      ),
+      BlocBuilder<CheckinBloc, CheckinState>(
+        builder: (context, state) {
+          final onTap = switch (state) {
+            CheckinStateLoading() || CheckinStateNeedLogin() => null,
+            CheckinStateInitial() ||
+            CheckinStateFailed() ||
+            CheckinStateSuccess() =>
+              () async =>
+                  context.read<CheckinBloc>().add(const CheckinRequested()),
+          };
+
+          return ListTile(
+            leading: const CheckinButton(
+              enableSnackBar: true,
+              useIcon: true,
+            ),
+            title: Text(tr.checkin),
+            onTap: onTap,
+          );
+        },
+      ),
+      ListTile(
+        leading: const Icon(Icons.article_outlined),
+        title: Text(tr.myThread),
+        onTap: () async => context.pushNamed(ScreenPaths.myThread),
+      ),
+      ListTile(
+        leading: const Icon(Icons.newspaper_outlined),
+        title: Text(tr.latestThread),
+        onTap: () async => context.pushNamed(ScreenPaths.latestThread),
+      ),
+    ];
   }
 
   Widget _buildForumStatusRow(BuildContext context, ForumStatus forumStatus) {
-    return Expanded(
-      child: Padding(
-        padding: edgeInsetsL12T12R12,
-        child: SingleLineText(
-          '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
-          '帖子:${forumStatus.threadCount}',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.secondary,
-          ),
-          textAlign: TextAlign.center,
+    return Padding(
+      padding: edgeInsetsL12T12R12,
+      child: SingleLineText(
+        '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
+        '帖子:${forumStatus.threadCount}',
+        style: TextStyle(
+          color: Theme.of(context).colorScheme.secondary,
         ),
+        textAlign: TextAlign.center,
       ),
     );
   }
 
   Widget _buildSection(BuildContext context) {
-    final linkTileList = <Widget>[];
-
     // username is plain text inside welcomeNode div.
     // Only using [nodes] method can capture it.
     final username = widget.loggedUserInfo?.username ?? '';
@@ -129,86 +148,54 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     // In fact we can use the one in  profile page directly.
     final avatarUrl = widget.loggedUserInfo?.avatarUrl;
 
-    linkTileList
-      ..addAll(
-        _buildKahrpbaLinkTileList(
-          context,
-          widget.loggedUserInfo?.relatedLinkPairList,
-        ),
-      )
-      ..add(_buildForumStatusRow(context, widget.forumStatus));
-
-    final needExpand = ResponsiveBreakpoints.of(context)
-        .largerOrEqualTo(WindowSize.expanded.name);
-
     if (!context.mounted) {
       return sizedBoxEmpty;
     }
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(
-        maxHeight: needExpand ? _kahrpbaPicHeight : _kahrpbaPicHeight * 2 + 20,
-      ),
-      child: Flex(
-        direction: needExpand ? Axis.horizontal : Axis.vertical,
-        children: [
-          Expanded(child: _buildKahrpbaSwiper(context, widget.swiperUrlList)),
-          sizedBoxW4H4,
-          Expanded(
-            child: Card(
-              margin: EdgeInsets.zero,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ListTile(
-                    leading: GestureDetector(
-                      onTap: () async => context.pushNamed(
-                        ScreenPaths.loggedUserProfile,
-                        queryParameters: {'hero': username},
-                      ),
-                      child: HeroUserAvatar(
-                        username: username,
-                        avatarUrl: avatarUrl,
-                        heroTag: username,
-                        disableHero: true,
-                      ),
-                    ),
-                    title: Row(
-                      children: [
-                        GestureDetector(
-                          onTap: () async => context.pushNamed(
-                            ScreenPaths.loggedUserProfile,
-                            queryParameters: {'hero': username},
-                          ),
-                          child: Text(
-                            username,
-                            style: Theme.of(context).textTheme.titleLarge,
-                          ),
-                        ),
-                        const Spacer(),
-                        IconButton(
-                          icon: const Icon(Icons.history_outlined),
-                          onPressed: () async =>
-                              context.pushNamed(ScreenPaths.threadVisitHistory),
-                          tooltip:
-                              context.t.threadVisitHistoryPage.entryTooltip,
-                        ),
-                        const NoticeButton(),
-                        if (context
-                                .read<AuthenticationRepository>()
-                                .currentUser !=
-                            null)
-                          const CheckinButton(enableSnackBar: true),
-                      ],
-                    ),
+    return Column(
+      children: [
+        _buildKahrpbaSwiper(context, widget.swiperUrlList),
+        sizedBoxW4H4,
+        Card(
+          margin: EdgeInsets.zero,
+          clipBehavior: Clip.hardEdge,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ListTile(
+                leading: GestureDetector(
+                  onTap: () async => context.pushNamed(
+                    ScreenPaths.loggedUserProfile,
+                    queryParameters: {'hero': username},
                   ),
-                  ...linkTileList,
-                ],
+                  child: HeroUserAvatar(
+                    username: username,
+                    avatarUrl: avatarUrl,
+                    heroTag: username,
+                    disableHero: true,
+                  ),
+                ),
+                title: GestureDetector(
+                  onTap: () async => context.pushNamed(
+                    ScreenPaths.loggedUserProfile,
+                    queryParameters: {'hero': username},
+                  ),
+                  child: Text(
+                    username,
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                ),
               ),
-            ),
+              ..._buildKahrpbaLinkTileList(
+                context,
+                widget.loggedUserInfo?.relatedLinkPairList,
+              ),
+              _buildForumStatusRow(context, widget.forumStatus),
+              sizedBoxW8H8,
+            ],
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 

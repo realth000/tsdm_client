@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "首頁",
-    "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2"
+    "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2",
+    "welcome": {
+      "history": "歷史",
+      "notice": "訊息",
+      "checkin": "簽到",
+      "myThread": "我的貼文",
+      "latestThread": "最新貼文"
+    }
   },
   "topicPage": {
     "title": "分割區",
