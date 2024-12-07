@@ -19,7 +19,6 @@ class RichEditor extends StatelessWidget {
     this.scrollController,
     this.focusNode,
     this.autoFocus = false,
-    this.initialText,
     super.key,
   });
 
@@ -34,9 +33,6 @@ class RichEditor extends StatelessWidget {
 
   /// Automatically focus the editor.
   final bool autoFocus;
-
-  /// Optional initial text.
-  final String? initialText;
 
   static const _defaultEmojiWidth = 50.0;
   static const _defaultEmojiHeight = 50.0;
@@ -62,7 +58,6 @@ class RichEditor extends StatelessWidget {
       controller: controller,
       focusNode: focusNode,
       autoFocus: autoFocus,
-      initialText: initialText,
       scrollController: scrollController,
       imageProvider: (context, url, width, height) {
         final w = width?.toDouble();

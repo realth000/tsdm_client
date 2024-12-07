@@ -459,18 +459,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       decoration: const InputDecoration(),
       child: RichEditor(
         // Initial text is the text passed from outside.
-        initialText: widget.outerTextController.text,
         controller: _replyRichController,
         focusNode: focusNode,
       ),
-      // child: IntrinsicHeight(
-      //   child: RichEditor(
-      //     // Initial text is the text passed from outside.
-      //     initialText: widget.outerTextController.text,
-      //     controller: _replyRichController,
-      //     focusNode: focusNode,
-      //   ),
-      // ),
     );
   }
 
@@ -663,7 +654,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
-    _replyRichController = BBCodeEditorController();
+    _replyRichController = buildBBCodeEditorController(
+      initialText: widget.outerTextController.text,
+    );
     _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen(
       (status) {
