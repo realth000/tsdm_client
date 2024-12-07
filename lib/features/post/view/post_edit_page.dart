@@ -194,6 +194,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
 
   late BBCodeEditorController bbcodeController;
 
+  bool initialized = false;
+
   // BBCode text attribute status.
   Color? foregroundColor;
   Color? backgroundColor;
@@ -697,9 +699,12 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               });
             }
 
-            final data = state.content?.data;
-            if (data != null) {
-              bbcodeController.setDocumentFromRawText(data);
+            if (!initialized) {
+              final data = state.content?.data;
+              if (data != null) {
+                bbcodeController.setDocumentFromRawText(data);
+              }
+              initialized = true;
             }
 
             return Column(
