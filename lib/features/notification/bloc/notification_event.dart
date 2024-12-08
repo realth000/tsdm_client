@@ -57,3 +57,55 @@ final class NotificationInfoFetched extends NotificationEvent
   /// Latest fetched info.
   final NotificationInfoState info;
 }
+
+/// Delete notice.
+@MappableClass()
+final class NotificationDeleteNoticeRequested extends NotificationEvent
+    with NotificationDeleteNoticeRequestedMappable {
+  /// Constructor.
+  const NotificationDeleteNoticeRequested({
+    required this.uid,
+    required this.nid,
+  });
+
+  /// Uid of the notice.
+  final int uid;
+
+  /// Notice id.
+  final int nid;
+}
+
+/// Delete personal message.
+@MappableClass()
+final class NotificationDeletePersonalMessageRequested extends NotificationEvent
+    with NotificationDeletePersonalMessageRequestedMappable {
+  /// Constructor.
+  const NotificationDeletePersonalMessageRequested({
+    required this.uid,
+    required this.peerUid,
+  });
+
+  /// Uid of current user.
+  final int uid;
+
+  /// Uid of user chat with.
+  final int peerUid;
+}
+
+/// Delete broadcast message.
+@MappableClass()
+final class NotificationDeleteBroadcastMessageRequested
+    extends NotificationEvent
+    with NotificationDeleteBroadcastMessageRequestedMappable {
+  /// Constructor.
+  const NotificationDeleteBroadcastMessageRequested({
+    required this.uid,
+    required this.pmid,
+  });
+
+  /// Uid of current user.
+  final int uid;
+
+  /// Id of broadcast message.
+  final int pmid;
+}

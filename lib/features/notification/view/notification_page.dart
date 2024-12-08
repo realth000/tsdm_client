@@ -14,7 +14,7 @@ import 'package:tsdm_client/widgets/card/notice_card_v2.dart';
 enum _Actions {
   markAllNoticeAsRead,
   markAllPersonalMessageAsRead,
-  markAllBroadcastMessaegAsRead,
+  markAllBroadcastMessageAsRead,
 }
 
 /// Notice page, shows Notice and PrivateMessage of current user.
@@ -228,7 +228,7 @@ class _NotificationPageState extends State<NotificationPage>
                       ),
                     ),
                     PopupMenuItem(
-                      value: _Actions.markAllBroadcastMessaegAsRead,
+                      value: _Actions.markAllBroadcastMessageAsRead,
                       child: Row(
                         children: [
                           const Icon(Icons.notification_important_outlined),
@@ -243,7 +243,7 @@ class _NotificationPageState extends State<NotificationPage>
                       _Actions.markAllNoticeAsRead => NotificationType.notice,
                       _Actions.markAllPersonalMessageAsRead =>
                         NotificationType.personalMessage,
-                      _Actions.markAllBroadcastMessaegAsRead =>
+                      _Actions.markAllBroadcastMessageAsRead =>
                         NotificationType.broadcastMessage,
                     };
 

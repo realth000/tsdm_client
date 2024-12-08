@@ -50,6 +50,19 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
             markType,
             markAsRead: markAsRead,
           ),
+        NotificationDeleteNoticeRequested(:final uid, :final nid) =>
+          _onDeleteNotice(
+            emit,
+            uid: uid,
+            nid: nid,
+          ),
+        NotificationDeletePersonalMessageRequested(
+          :final uid,
+          :final peerUid
+        ) =>
+          _onDeletePersonalMessage(emit, uid: uid, peerUid: peerUid),
+        NotificationDeleteBroadcastMessageRequested(:final uid, :final pmid) =>
+          _onDeleteBroadcastMessage(emit, uid: uid, pmid: pmid),
       },
     );
 
@@ -444,6 +457,49 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
         )
         .mapLeft((e) => error('failed to mark read: $e'))
         .run();
+  }
+
+  Future<void> _onDeleteNotice(
+    _Emit emit, {
+    required int uid,
+    required int nid,
+  }) async {
+    emit(
+      state.copyWith(
+        noticeList: state.noticeList.toList()..removeWhere((e) => e.id == nid),
+      ),
+    );
+    await _storageProvider.deleteNotice(uid: uid, nid: nid).run();
+  }
+
+  Future<void> _onDeletePersonalMessage(
+    _Emit emit, {
+    required int uid,
+    required int peerUid,
+  }) async {
+    emit(
+      state.copyWith(
+        personalMessageList: state.personalMessageList.toList()
+          ..removeWhere((e) => e.peerUid == peerUid),
+      ),
+    );
+    await _storageProvider
+        .deletePersonalMessage(uid: uid, peerUid: peerUid)
+        .run();
+  }
+
+  Future<void> _onDeleteBroadcastMessage(
+    _Emit emit, {
+    required int uid,
+    required int pmid,
+  }) async {
+    emit(
+      state.copyWith(
+        broadcastMessageList: state.broadcastMessageList.toList()
+          ..removeWhere((e) => e.pmid == pmid),
+      ),
+    );
+    await _storageProvider.deleteBroadcastMessage(uid: uid, pmid: pmid).run();
   }
 
   /// Do NOT dispose [_infoRepository] here because the state cubit owns it.

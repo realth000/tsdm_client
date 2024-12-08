@@ -427,6 +427,8 @@ class StorageProvider with LoggerMixin {
         return rightVoid();
       });
 
+  /*        notification        */
+
   /// Fetch the timestamp for user [uid] when fetch notification last time.
   AsyncEither<DateTime?> fetchLastFetchNoticeTime(int uid) =>
       AsyncEither(() async {
@@ -579,6 +581,43 @@ class StorageProvider with LoggerMixin {
           alreadyRead: alreadyRead,
         );
 
+        return rightVoid();
+      });
+
+  /// Delete located notice by given [uid] and [nid].
+  ///
+  /// At most delete one item.
+  AsyncVoidEither deleteNotice({
+    required int uid,
+    required int nid,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db).deleteNotice(uid: uid, nid: nid);
+        return rightVoid();
+      });
+
+  /// Delete located personal message by [uid] and [peerUid].
+  ///
+  /// At most delete one item.
+  AsyncVoidEither deletePersonalMessage({
+    required int uid,
+    required int peerUid,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db)
+            .deletePersonalMessage(uid: uid, peerUid: peerUid);
+        return rightVoid();
+      });
+
+  /// Delete located broadcast message by [uid] and [pmid].
+  ///
+  /// At most delete one item.
+  AsyncVoidEither deleteBroadcastMessage({
+    required int uid,
+    required int pmid,
+  }) =>
+      AsyncVoidEither(() async {
+        await NotificationDao(_db).deleteBroadcastMessage(uid: uid, pmid: pmid);
         return rightVoid();
       });
 

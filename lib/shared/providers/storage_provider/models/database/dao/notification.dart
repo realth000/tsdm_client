@@ -134,6 +134,35 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
     return (delete(broadcastMessage)..where((e) => e.uid.equals(uid))).go();
   }
 
+  /// Delete all [notice] for user [uid].
+  Future<int> deleteNotice({
+    required int uid,
+    required int nid,
+  }) async {
+    return (delete(notice)..where((e) => e.uid.equals(uid) & e.nid.equals(nid)))
+        .go();
+  }
+
+  /// Delete all [personalMessage] for user [uid].
+  Future<int> deletePersonalMessage({
+    required int uid,
+    required int peerUid,
+  }) async {
+    return (delete(personalMessage)
+          ..where((e) => e.uid.equals(uid) & e.peerUid.equals(peerUid)))
+        .go();
+  }
+
+  /// Delete all [broadcastMessage] for user [uid].
+  Future<int> deleteBroadcastMessage({
+    required int uid,
+    required int pmid,
+  }) async {
+    return (delete(broadcastMessage)
+          ..where((e) => e.uid.equals(uid) & e.pmid.equals(pmid)))
+        .go();
+  }
+
   /// Mark a given notice as [read].
   Future<int> markNoticeAsRead({
     required int uid,

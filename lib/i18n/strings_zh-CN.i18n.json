@@ -394,7 +394,11 @@
       "markAsUnread": "标为未读",
       "markAllNoticeAsRead": "标记所有提醒为已读",
       "markAllPersonalMessageAsRead": "标记所有私人消息为已读",
-      "markAllBroadcastMessageAsRead": "标记所有公共消息为已读"
+      "markAllBroadcastMessageAsRead": "标记所有公共消息为已读",
+      "delete": {
+        "title": "删除消息",
+        "detail": "确定要删除这条消息？操作无法撤销"
+      }
     }
   },
   "searchPage": {
