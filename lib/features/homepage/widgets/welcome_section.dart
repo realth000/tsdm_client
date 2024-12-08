@@ -73,7 +73,11 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     BuildContext context,
     List<(String, String)>? linkList,
   ) {
-    if (linkList == null) {
+    // Expected containing two pairs of nodes:
+    //
+    // 1. My thread.
+    // 2. Latest thread.
+    if (linkList == null || linkList.length != 2) {
       return [];
     }
 
@@ -119,7 +123,19 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       ListTile(
         leading: const Icon(Icons.newspaper_outlined),
         title: Text(tr.latestThread),
-        onTap: () async => context.pushNamed(ScreenPaths.latestThread),
+        onTap: () async {
+          final link = linkList.elementAtOrNull(1)?.$2;
+          final target = link?.parseUrlToRoute();
+          if (target == null) {
+            error('invalid kahrpba link: $link');
+            return;
+          }
+          await context.pushNamed(
+            target.screenPath,
+            pathParameters: target.pathParameters,
+            queryParameters: target.queryParameters,
+          );
+        },
       ),
     ];
   }
