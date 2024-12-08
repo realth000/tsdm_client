@@ -122,7 +122,7 @@ class _ThreadPageState extends State<ThreadPage>
         Expanded(
           child: PostList(
             threadID: widget.threadID,
-            title: widget.title ?? state.title,
+            title: state.title ?? widget.title,
             threadType: widget.threadType,
             pageNumber: context.read<JumpPageCubit>().state.currentPage,
             initialPostID: widget.findPostID?.parseToInt(),
