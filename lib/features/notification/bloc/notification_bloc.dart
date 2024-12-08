@@ -185,6 +185,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           info.personalMessageList.any((y) => y.peerUid == x.peerUid),
     );
 
+    // Filter all duplicate messages.
+    info.noticeList.removeWhere(
+      (x) => localNoticeData.noticeList.any(
+        (y) => y.uid == uid && y.nid == x.id,
+      ),
+    );
+    info.broadcastMessageList.removeWhere(
+      (x) => localNoticeData.broadcastMessageList.any(
+        (y) => y.uid == uid && y.pmid == x.pmid,
+      ),
+    );
+
     // Here simply prepend fetching notification a front of all current
     // messages.
     //
