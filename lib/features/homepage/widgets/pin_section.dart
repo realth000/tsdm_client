@@ -105,18 +105,26 @@ class PinSection extends StatelessWidget with LoggerMixin {
         reverseTitle: i == 6,
       );
       ret.add(
-        Padding(
-          padding: edgeInsetsT8,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                sectionName,
-                style: Theme.of(context).textTheme.titleLarge,
-              ),
-              sizedBoxW12H12,
-              threadWidgetList,
-            ],
+        Card(
+          margin: EdgeInsets.zero,
+          child: Padding(
+            padding: edgeInsetsT8,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    sizedBoxW12H12,
+                    Text(
+                      sectionName,
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                  ],
+                ),
+                sizedBoxW12H12,
+                threadWidgetList,
+              ],
+            ),
           ),
         ),
       );
@@ -127,6 +135,8 @@ class PinSection extends StatelessWidget with LoggerMixin {
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: 600,
         mainAxisExtent: 700,
+        mainAxisSpacing: 12,
+        crossAxisSpacing: 12,
       ),
       shrinkWrap: true,
       children: ret,

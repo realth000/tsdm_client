@@ -115,6 +115,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
         const NoticeButton(),
         IconButton(
           icon: const Icon(Icons.search_outlined),
+          tooltip: context.t.searchPage.title,
           onPressed: onSearch,
         ),
         if (onJumpPage != null)

@@ -10,6 +10,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 
 /// Show a dialog to display user brief profile.
 ///
@@ -23,28 +24,13 @@ Future<void> showUserBriefProfileDialog(
   // Hero tag for user name.
   required String nameHeroTag,
 }) async {
-  await Navigator.push<void>(
+  await showHeroDialog<void>(
     context,
-    PageRouteBuilder(
-      opaque: false,
-      // Fix barrier color.
-      // ref: flutter/lib/src/material/dialog.dart: showDialog()
-      barrierColor:
-          Theme.of(context).dialogTheme.barrierColor ?? Colors.black54,
-      barrierDismissible: true,
-      pageBuilder: (context, _, __) => _UserBriefProfileDialog(
-        userBriefProfile,
-        userSpaceUrl,
-        avatarHeroTag,
-        nameHeroTag,
-      ),
-      // fullscreenDialog: true,
-      transitionsBuilder: (context, ani1, ani2, child) {
-        return FadeTransition(
-          opacity: CurveTween(curve: Curves.easeIn).animate(ani1),
-          child: child,
-        );
-      },
+    (context, _, __) => _UserBriefProfileDialog(
+      userBriefProfile,
+      userSpaceUrl,
+      avatarHeroTag,
+      nameHeroTag,
     ),
   );
 }

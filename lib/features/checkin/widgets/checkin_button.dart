@@ -11,7 +11,6 @@ class CheckinButton extends StatelessWidget {
   /// Constructor.
   const CheckinButton({
     this.enableSnackBar = false,
-    this.useIcon = false,
     super.key,
   });
 
@@ -21,9 +20,6 @@ class CheckinButton extends StatelessWidget {
   /// bloc consumer, multiple snackbar may shown if nested pages are here..
   /// Only a workaround.
   final bool enableSnackBar;
-
-  /// Build [Icon] instead of [IconButton].
-  final bool useIcon;
 
   Future<void> _showCheckinFailedSnackBar(
     BuildContext context,
@@ -56,31 +52,27 @@ class CheckinButton extends StatelessWidget {
       child: BlocBuilder<CheckinBloc, CheckinState>(
         buildWhen: (prev, curr) => prev != curr,
         builder: (context, state) {
+          final tooltip = context.t.homepage.welcome.checkin;
+
           if (state is CheckinStateLoading) {
-            if (useIcon) {
-              return sizedCircularProgressIndicator;
-            }
-            return const IconButton(
+            return IconButton(
               icon: sizedCircularProgressIndicator,
+              tooltip: tooltip,
               onPressed: null,
             );
           }
 
           if (state is CheckinStateNeedLogin) {
-            if (useIcon) {
-              return const Icon(Icons.domain_verification_outlined);
-            }
-            return const IconButton(
-              icon: Icon(Icons.domain_verification_outlined),
+            return IconButton(
+              icon: const Icon(Icons.domain_verification_outlined),
+              tooltip: tooltip,
               onPressed: null,
             );
           }
 
-          if (useIcon) {
-            return const Icon(Icons.domain_verification_outlined);
-          }
           return IconButton(
             icon: const Icon(Icons.domain_verification_outlined),
+            tooltip: tooltip,
             onPressed: () {
               context.read<CheckinBloc>().add(const CheckinRequested());
             },

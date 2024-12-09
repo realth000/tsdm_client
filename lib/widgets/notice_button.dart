@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/authentication/repository/authentication_re
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
@@ -14,10 +15,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// Only available when user login.
 class NoticeButton extends StatefulWidget {
   /// Constructor.
-  const NoticeButton({this.useIcon = false, super.key});
-
-  /// Build [Icon] instead of [IconButton].
-  final bool useIcon;
+  const NoticeButton({super.key});
 
   @override
   State<NoticeButton> createState() => _NoticeButtonState();
@@ -51,12 +49,9 @@ class _NoticeButtonState extends State<NoticeButton> {
       noticeIcon = iconData;
     }
 
-    if (widget.useIcon) {
-      return noticeIcon;
-    }
-
     return IconButton(
       icon: noticeIcon,
+      tooltip: context.t.noticePage.title,
       onPressed: () async => context.pushNamed(ScreenPaths.notice),
     );
   }
