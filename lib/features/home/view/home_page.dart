@@ -6,6 +6,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/cubit/init_cubit.dart';
 import 'package:tsdm_client/features/home/widgets/widgets.dart';
@@ -76,6 +77,11 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
   Future<void> _onLocalNoticeStreamEvent(String? payload) async {
     switch (payload) {
       case LocalNoticeKeys.openNotification:
+        if (context.read<AuthenticationRepository>().currentUser == null) {
+          debug('refuse to push to unavailable notification page: need login');
+          return;
+        }
+
         if (context.read<RootLocationCubit>().isIn(ScreenPaths.notice)) {
           debug('do not push to notice page already in it');
         } else {

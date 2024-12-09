@@ -192,7 +192,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// Only used when editing thread, not other floors' posts.
   int? price;
 
-  final bbcodeController = BBCodeEditorController();
+  late BBCodeEditorController bbcodeController;
+
+  bool initialized = false;
 
   // BBCode text attribute status.
   Color? foregroundColor;
@@ -697,6 +699,14 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               });
             }
 
+            if (!initialized) {
+              final data = state.content?.data;
+              if (data != null) {
+                bbcodeController.setDocumentFromRawText(data);
+              }
+              initialized = true;
+            }
+
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -708,7 +718,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     padding: edgeInsetsL4R4,
                     child: RichEditor(
                       controller: bbcodeController,
-                      initialText: state.content?.data,
                       focusNode: focusNode,
                     ),
                   ),
@@ -839,6 +848,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     super.initState();
     debug('enter post edit page: '
         'editType=${widget.editType}, fid=${widget.fid}');
+    bbcodeController = buildBBCodeEditorController();
     fullScreen = isDesktop;
   }
 

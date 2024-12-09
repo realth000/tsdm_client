@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "主页",
-    "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2"
+    "failedToBuildPinSection": "无法处理主页的制定帖子: 数量不一致: $length1!=$length2",
+    "welcome": {
+      "history": "历史",
+      "notice": "消息",
+      "checkin": "签到",
+      "myThread": "我的帖子",
+      "latestThread": "最新帖子"
+    }
   },
   "topicPage": {
     "title": "分区",
@@ -354,6 +361,10 @@
   },
   "noticePage": {
     "title": "通知",
+    "appBar": {
+      "unread": "未读",
+      "unreadDetail": "只显示未读"
+    },
     "noticeTab": {
       "title": "提醒",
       "replyBody(rich)": "在 $threadTitle 中回复了",
@@ -383,7 +394,11 @@
       "markAsUnread": "标为未读",
       "markAllNoticeAsRead": "标记所有提醒为已读",
       "markAllPersonalMessageAsRead": "标记所有私人消息为已读",
-      "markAllBroadcastMessageAsRead": "标记所有公共消息为已读"
+      "markAllBroadcastMessageAsRead": "标记所有公共消息为已读",
+      "delete": {
+        "title": "删除消息",
+        "detail": "确定要删除这条消息？操作无法撤销"
+      }
     }
   },
   "searchPage": {

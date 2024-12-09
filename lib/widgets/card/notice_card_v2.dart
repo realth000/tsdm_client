@@ -15,12 +15,14 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/html/munch_options.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
 enum _Actions {
   markAsRead,
   markAsUnread,
+  deleteItem,
 }
 
 /// Widgets in this file are for models fetched through notification APIs.
@@ -47,12 +49,9 @@ class NoticeCardV2 extends StatefulWidget {
 }
 
 class _NoticeCardV2State extends State<NoticeCardV2> {
-  bool alreadyRead = false;
-
   void _onUrlLaunched({required bool markAsRead}) {
     // Update state to read if any link in rendered html launched.
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
 
@@ -61,9 +60,6 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
     } else {
       context.read<NotificationStateCubit>().increaseNotice();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
 
     final uid = context.read<AuthenticationRepository>().currentUser?.uid;
     if (uid == null) {
@@ -81,12 +77,6 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    alreadyRead = widget.data.alreadyRead;
-  }
-
-  @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.cardMenu;
     final showBadge =
@@ -99,7 +89,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
         children: [
           ListTile(
             leading: Badge(
-              isLabelVisible: showBadge && !alreadyRead,
+              isLabelVisible: showBadge && !widget.data.alreadyRead,
               child: const CircleAvatar(
                 child: Icon(Icons.notifications_outlined),
               ),
@@ -112,7 +102,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
             ),
             trailing: PopupMenuButton(
               itemBuilder: (_) => [
-                if (!alreadyRead)
+                if (!widget.data.alreadyRead)
                   PopupMenuItem(
                     value: _Actions.markAsRead,
                     child: Row(
@@ -123,7 +113,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                       ],
                     ),
                   ),
-                if (alreadyRead)
+                if (widget.data.alreadyRead)
                   PopupMenuItem(
                     value: _Actions.markAsUnread,
                     child: Row(
@@ -134,6 +124,16 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                       ],
                     ),
                   ),
+                PopupMenuItem(
+                  value: _Actions.deleteItem,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.delete_forever_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.delete.title),
+                    ],
+                  ),
+                ),
               ],
               onSelected: (value) async {
                 switch (value) {
@@ -141,6 +141,29 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                     _onUrlLaunched(markAsRead: true);
                   case _Actions.markAsUnread:
                     _onUrlLaunched(markAsRead: false);
+                  case _Actions.deleteItem:
+                    final tr = context.t.noticePage.cardMenu.delete;
+                    final result = await showQuestionDialog(
+                      context: context,
+                      title: tr.title,
+                      message: tr.detail,
+                    );
+                    if (!context.mounted || result == null || !result) {
+                      return;
+                    }
+
+                    if (!widget.data.alreadyRead) {
+                      context.read<NotificationStateCubit>().decreaseNotice();
+                    }
+                    context.read<NotificationBloc>().add(
+                          NotificationDeleteNoticeRequested(
+                            uid: context
+                                .read<AuthenticationRepository>()
+                                .currentUser!
+                                .uid!,
+                            nid: widget.data.id,
+                          ),
+                        );
                 }
               },
             ),
@@ -176,8 +199,6 @@ class PersonalMessageCardV2 extends StatefulWidget {
 }
 
 class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
-  bool alreadyRead = false;
-
   Future<void> _onTap(
     BuildContext context, {
     required bool markAsRead,
@@ -192,8 +213,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
       );
     }
 
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
     if (markAsRead) {
@@ -201,9 +221,6 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
     } else {
       context.read<NotificationStateCubit>().increasePersonalMessage();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
     if (uid == null) {
       return;
     }
@@ -221,7 +238,6 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
   @override
   void initState() {
     super.initState();
-    alreadyRead = widget.data.alreadyRead;
   }
 
   @override
@@ -231,6 +247,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
         .get<SettingsRepository>()
         .currentSettings
         .showUnreadPersonalMessageBadge;
+
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -241,7 +258,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: showBadge && !alreadyRead,
+                isLabelVisible: showBadge && !widget.data.alreadyRead,
                 child: HeroUserAvatar(
                   username: widget.data.peerUsername,
                   avatarUrl: null,
@@ -257,7 +274,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
               ),
               trailing: PopupMenuButton(
                 itemBuilder: (_) => [
-                  if (!alreadyRead)
+                  if (!widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsRead,
                       child: Row(
@@ -268,7 +285,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                         ],
                       ),
                     ),
-                  if (alreadyRead)
+                  if (widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsUnread,
                       child: Row(
@@ -279,6 +296,16 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                         ],
                       ),
                     ),
+                  PopupMenuItem(
+                    value: _Actions.deleteItem,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.delete_forever_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.delete.title),
+                      ],
+                    ),
+                  ),
                 ],
                 onSelected: (value) async {
                   switch (value) {
@@ -286,6 +313,31 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                       await _onTap(context, markAsRead: true, launch: false);
                     case _Actions.markAsUnread:
                       await _onTap(context, markAsRead: false, launch: false);
+                    case _Actions.deleteItem:
+                      final tr = context.t.noticePage.cardMenu.delete;
+                      final result = await showQuestionDialog(
+                        context: context,
+                        title: tr.title,
+                        message: tr.detail,
+                      );
+                      if (!context.mounted || result == null || !result) {
+                        return;
+                      }
+
+                      if (!widget.data.alreadyRead) {
+                        context
+                            .read<NotificationStateCubit>()
+                            .decreasePersonalMessage();
+                      }
+                      context.read<NotificationBloc>().add(
+                            NotificationDeletePersonalMessageRequested(
+                              uid: context
+                                  .read<AuthenticationRepository>()
+                                  .currentUser!
+                                  .uid!,
+                              peerUid: widget.data.peerUid,
+                            ),
+                          );
                   }
                 },
               ),
@@ -320,8 +372,6 @@ class BroadcastMessageCardV2 extends StatefulWidget {
 }
 
 class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
-  bool alreadyRead = false;
-
   Future<void> _onTap(
     BuildContext context, {
     required bool markAsRead,
@@ -335,8 +385,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
       );
     }
 
-    if (((alreadyRead && markAsRead) || (!alreadyRead && !markAsRead)) ||
-        !context.mounted) {
+    if (!context.mounted) {
       return;
     }
 
@@ -345,9 +394,6 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
     } else {
       context.read<NotificationStateCubit>().increaseBroadcastMessage();
     }
-    setState(() {
-      alreadyRead = markAsRead;
-    });
     if (uid == null) {
       return;
     }
@@ -360,12 +406,6 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
             ),
           ),
         );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    alreadyRead = widget.data.alreadyRead;
   }
 
   @override
@@ -385,7 +425,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
           children: [
             ListTile(
               leading: Badge(
-                isLabelVisible: showBadge && !alreadyRead,
+                isLabelVisible: showBadge && !widget.data.alreadyRead,
                 child: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
               ),
               title: Text(context.t.noticePage.broadcastMessageTab.system),
@@ -397,7 +437,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
               ),
               trailing: PopupMenuButton(
                 itemBuilder: (_) => [
-                  if (!alreadyRead)
+                  if (!widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsRead,
                       child: Row(
@@ -408,7 +448,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                         ],
                       ),
                     ),
-                  if (alreadyRead)
+                  if (widget.data.alreadyRead)
                     PopupMenuItem(
                       value: _Actions.markAsUnread,
                       child: Row(
@@ -419,6 +459,16 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                         ],
                       ),
                     ),
+                  PopupMenuItem(
+                    value: _Actions.deleteItem,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.delete_forever_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.delete.title),
+                      ],
+                    ),
+                  ),
                 ],
                 onSelected: (value) async {
                   switch (value) {
@@ -426,6 +476,31 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                       await _onTap(context, markAsRead: true, launch: false);
                     case _Actions.markAsUnread:
                       await _onTap(context, markAsRead: false, launch: false);
+                    case _Actions.deleteItem:
+                      final tr = context.t.noticePage.cardMenu.delete;
+                      final result = await showQuestionDialog(
+                        context: context,
+                        title: tr.title,
+                        message: tr.detail,
+                      );
+                      if (!context.mounted || result == null || !result) {
+                        return;
+                      }
+
+                      if (!widget.data.alreadyRead) {
+                        context
+                            .read<NotificationStateCubit>()
+                            .decreaseBroadcastMessage();
+                      }
+                      context.read<NotificationBloc>().add(
+                            NotificationDeleteBroadcastMessageRequested(
+                              uid: context
+                                  .read<AuthenticationRepository>()
+                                  .currentUser!
+                                  .uid!,
+                              pmid: widget.data.pmid,
+                            ),
+                          );
                   }
                 },
               ),

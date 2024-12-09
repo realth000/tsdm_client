@@ -57,8 +57,6 @@ const defaultEditorDisabledFeatures = {
   EditorFeatures.superscript,
   EditorFeatures.backgroundColor,
   EditorFeatures.clearFormat,
-  EditorFeatures.undo,
-  EditorFeatures.redo,
   EditorFeatures.alignLeft,
   EditorFeatures.alignCenter,
   EditorFeatures.alignRight,

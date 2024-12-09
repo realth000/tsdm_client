@@ -31,7 +31,18 @@ class LanguageDialog extends StatelessWidget {
             ),
             ...AppLocale.values.map(
               (e) => RadioListTile(
-                title: Text(e.translations.locale),
+                // TODO: Check if is caused by lazy loading.
+                // Traditional Chinese language tag is displayed as "English".
+                title: // Text(e.translations.locale),
+                    Text(
+                  switch (e.languageTag) {
+                    'en' => 'English',
+                    'zh-CN' => '简体中文',
+                    'zh-TW' => '繁體中文',
+                    final v => throw UnimplementedError('unsupported '
+                        'language tag $v'),
+                  },
+                ),
                 value: e.languageTag,
                 groupValue: currentLocale,
                 onChanged: (value) async {

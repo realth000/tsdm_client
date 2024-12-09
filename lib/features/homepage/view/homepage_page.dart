@@ -168,7 +168,7 @@ class _HomepagePageState extends State<HomepagePage> {
               HomepageStatus.failure => buildRetryButton(context, () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 }),
-              HomepageStatus.success => EasyRefresh(
+              HomepageStatus.success => EasyRefresh.builder(
                   key: const ValueKey('success'),
                   scrollController: _scrollController,
                   controller: _refreshController,
@@ -178,7 +178,8 @@ class _HomepagePageState extends State<HomepagePage> {
                         .read<HomepageBloc>()
                         .add(HomepageRefreshRequested());
                   },
-                  child: ListView(
+                  childBuilder: (context, physics) => ListView(
+                    physics: physics,
                     controller: _scrollController,
                     padding: edgeInsetsL12T4R12B24,
                     children: [

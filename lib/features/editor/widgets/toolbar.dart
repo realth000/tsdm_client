@@ -94,7 +94,7 @@ enum EditorFeatures {
 }
 
 /// Toolbar for the bbcode editor.
-class EditorToolbar extends StatefulWidget {
+class EditorToolbar extends StatelessWidget {
   /// Constructor.
   const EditorToolbar({
     required this.bbcodeController,
@@ -115,229 +115,14 @@ class EditorToolbar extends StatefulWidget {
   /// Callback when button pressed.
   final VoidCallback? afterButtonPressed;
 
-  @override
-  State<EditorToolbar> createState() => _EditorToolbarState();
-}
-
-class _EditorToolbarState extends State<EditorToolbar> {
-  /// Enable using testing bbcode editor.
-  ///
-  /// This flag is for testing only and SHOULD remove before next release.
-  bool useExperimentalEditor = false;
-
-  /// Show text attribute control button or not.
-  bool showTextAttributeButtons = false;
-
-  // BBCode text attribute status.
-  Color? foregroundColor;
-  Color? backgroundColor;
-  int? fontSizeLevel;
-
-  // Widget _buildEditorTextControlRow(BuildContext context) {
-  //   final textItems = [
-  //     // Font size.
-  //     if (!_disabledFeatures.contains(EditorFeatures.fontSize))
-  //       Badge(
-  //         isLabelVisible: fontSizeLevel != null,
-  //         backgroundColor: Theme.of(context).colorScheme.primaryContainer,
-  //         label: Text(
-  //           '$fontSizeLevel',
-  //           style: TextStyle(color: Theme.of(context).primaryColor),
-  //         ),
-  //         child: GestureDetector(
-  //           onDoubleTap: () async {
-  //             // Double click to clear font size style.
-  //             await widget.bbcodeController.clearFontSize();
-  //             setState(() {});
-  //           },
-  //           child: IconButton(
-  //             icon: const Icon(Icons.format_size_outlined),
-  //             isSelected: fontSizeLevel != null,
-  //             onPressed: widget.bbcodeController.collapsed
-  //                 ? null
-  //                 : () async {
-  //                     await widget.bbcodeController.setNextFontSizeLevel();
-  //                     setState(() {});
-  //                   },
-  //           ),
-  //         ),
-  //       ),
-  //     // Foreground color.
-  //     if (!_disabledFeatures.contains(EditorFeatures.foregroundColor))
-  //       Badge(
-  //         isLabelVisible: foregroundColor != null,
-  //         backgroundColor: foregroundColor,
-  //         child: IconButton(
-  //           icon: const Icon(Icons.format_color_text_outlined),
-  //           isSelected: foregroundColor != null,
-  //           onPressed: () async => showForegroundColorBottomSheet(
-  //             context,
-  //             widget.bbcodeController,
-  //           ),
-  //         ),
-  //       ),
-  //     // Background color.
-  //     if (!_disabledFeatures.contains(EditorFeatures.backgroundColor))
-  //       Badge(
-  //         isLabelVisible: backgroundColor != null,
-  //         backgroundColor: backgroundColor,
-  //         child: IconButton(
-  //           icon: const Icon(Icons.format_color_fill_outlined),
-  //           isSelected: backgroundColor != null,
-  //           onPressed: () async => showBackgroundColorBottomSheet(
-  //             context,
-  //             widget.bbcodeController,
-  //           ),
-  //         ),
-  //       ),
-  //     // Bold
-  //     if (!_disabledFeatures.contains(EditorFeatures.bold))
-  //       IconButton(
-  //         icon: const Icon(Icons.format_bold_outlined),
-  //         isSelected: widget.bbcodeController.bold,
-  //         onPressed: () {
-  //           // ignore:unnecessary_lambdas
-  //           setState(() {
-  //             widget.bbcodeController.triggerBold();
-  //           });
-  //         },
-  //       ),
-  //     // Italic
-  //     if (!_disabledFeatures.contains(EditorFeatures.italic))
-  //       IconButton(
-  //         icon: const Icon(Icons.format_italic_outlined),
-  //         isSelected: widget.bbcodeController.italic,
-  //         onPressed: () {
-  //           // ignore:unnecessary_lambdas
-  //           setState(() {
-  //             widget.bbcodeController.triggerItalic();
-  //           });
-  //         },
-  //       ),
-  //     // Underline
-  //     if (!_disabledFeatures.contains(EditorFeatures.underline))
-  //       IconButton(
-  //         icon: const Icon(Icons.format_underline_outlined),
-  //         isSelected: widget.bbcodeController.underline,
-  //         onPressed: () {
-  //           // ignore:unnecessary_lambdas
-  //           setState(() {
-  //             widget.bbcodeController.triggerUnderline();
-  //           });
-  //         },
-  //       ),
-  //     // Strikethrough
-  //     if (!_disabledFeatures.contains(EditorFeatures.strikethrough))
-  //       IconButton(
-  //         icon: const Icon(Icons.format_strikethrough_outlined),
-  //         isSelected: widget.bbcodeController.strikethrough,
-  //         onPressed: () {
-  //           // ignore:unnecessary_lambdas
-  //           setState(() {
-  //             widget.bbcodeController.triggerStrikethrough();
-  //           });
-  //         },
-  //       ),
-  //   ];
-
-  //   return ScrollConfiguration(
-  //     behavior: AllDraggableScrollBehavior(),
-  //     child: SingleChildScrollView(
-  //       primary: false,
-  //       scrollDirection: Axis.horizontal,
-  //       child: Row(children: textItems),
-  //     ),
-  //   );
-  // }
-
-  // void updateBBCodeStatus() {
-  //   // Only update text style attributes here.
-  //   if (!showTextAttributeButtons) {
-  //     return;
-  //   }
-
-  //   setState(() {
-  //     foregroundColor = widget.bbcodeController.foregroundColor;
-  //     backgroundColor = widget.bbcodeController.backgroundColor;
-  //     fontSizeLevel = widget.bbcodeController.fontSizeLevel;
-  //   });
-  // }
-
-  // Widget _buildEditorControlRow(BuildContext context) {
-  //   final otherItems = [
-  //     // Text style
-  //     if (!_disabledFeatures.contains(EditorFeatures.textStyle))
-  //       IconButton(
-  //         icon: const Icon(Icons.text_format_outlined),
-  //         isSelected: showTextAttributeButtons,
-  //         onPressed: () {
-  //           // ignore:unnecessary_lambdas
-  //           setState(() {
-  //             showTextAttributeButtons = !showTextAttributeButtons;
-  //           });
-  //         },
-  //       ),
-  //     // Emoji
-  //     if (!_disabledFeatures.contains(EditorFeatures.emoji))
-  //       IconButton(
-  //         icon: const Icon(Icons.emoji_emotions_outlined),
-  //         onPressed: () async {
-  //           await showEmojiBottomSheet(context, widget.bbcodeController);
-  //         },
-  //       ),
-  //     // Url link
-  //     if (!_disabledFeatures.contains(EditorFeatures.link))
-  //       IconButton(
-  //         icon: const Icon(Icons.link_outlined),
-  //         onPressed: () async =>
-  //             showUrlDialog(context, widget.bbcodeController),
-  //       ),
-  //     // Url of online pictures.
-  //     if (!_disabledFeatures.contains(EditorFeatures.picture))
-  //       IconButton(
-  //         icon: Icon(
-  //           Icons.image_outlined,
-  //           color: widget.bbcodeController.strikethrough
-  //               ? Theme.of(context).primaryColor
-  //               : null,
-  //         ),
-  //         onPressed: () async =>
-  //             showImageDialog(context, widget.bbcodeController),
-  //       ),
-  //     // User mention
-  //     if (!_disabledFeatures.contains(EditorFeatures.userMention))
-  //       IconButton(
-  //         icon: const Icon(Icons.alternate_email_outlined),
-  //         onPressed: () async => showMentionUserDialog(
-  //           context,
-  //           widget.bbcodeController,
-  //         ),
-  //       ),
-  //   ];
-  //   return ScrollConfiguration(
-  //     behavior: AllDraggableScrollBehavior(),
-  //     child: SingleChildScrollView(
-  //       primary: false,
-  //       scrollDirection: Axis.horizontal,
-  //       child: Row(children: otherItems),
-  //     ),
-  //   );
-  // }
-
-  bool hasFeature(EditorFeatures feature) =>
-      !widget.disabledFeatures.contains(feature);
-
-  @override
-  void dispose() {
-    // widget.bbcodeController.removeListener(updateBBCodeStatus);
-    super.dispose();
-  }
+  bool _hasFeature(EditorFeatures feature) =>
+      !disabledFeatures.contains(feature);
 
   @override
   Widget build(BuildContext context) {
     return BBCodeEditorToolbar(
-      afterButtonPressed: widget.afterButtonPressed,
-      controller: widget.bbcodeController,
+      afterButtonPressed: afterButtonPressed,
+      controller: bbcodeController,
       config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context) async => showColorPicker(context),
@@ -348,32 +133,32 @@ class _EditorToolbarState extends State<EditorToolbar> {
           showImagePicker(context, url: url, width: width, height: height),
       usernamePicker: showUsernamePickerDialog,
       // Features.
-      showUndo: hasFeature(EditorFeatures.undo),
-      showRedo: hasFeature(EditorFeatures.redo),
-      showFontFamily: hasFeature(EditorFeatures.fontFamily),
-      showFontSize: hasFeature(EditorFeatures.fontSize),
-      showBoldButton: hasFeature(EditorFeatures.bold),
-      showItalicButton: hasFeature(EditorFeatures.italic),
-      showUnderlineButton: hasFeature(EditorFeatures.underline),
-      showStrikethroughButton: hasFeature(EditorFeatures.strikethrough),
-      showSuperscriptButton: hasFeature(EditorFeatures.superscript),
-      showColorButton: hasFeature(EditorFeatures.color),
-      showBackgroundColorButton: hasFeature(EditorFeatures.backgroundColor),
-      showClearFormatButton: hasFeature(EditorFeatures.clearFormat),
-      showImageButton: hasFeature(EditorFeatures.image),
-      showEmojiButton: hasFeature(EditorFeatures.emoji),
-      showLeftAlignButton: hasFeature(EditorFeatures.alignLeft),
-      showCenterAlignButton: hasFeature(EditorFeatures.alignCenter),
-      showRightAlignButton: hasFeature(EditorFeatures.alignRight),
-      showOrderedListButton: hasFeature(EditorFeatures.orderedList),
-      showBulletListButton: hasFeature(EditorFeatures.bulletList),
-      showUrlButton: hasFeature(EditorFeatures.url),
-      showCodeBlockButton: hasFeature(EditorFeatures.codeBlock),
-      showQuoteBlockButton: hasFeature(EditorFeatures.quoteBlock),
-      showClipboardCutButton: hasFeature(EditorFeatures.cut),
-      showClipboardCopyButton: hasFeature(EditorFeatures.copy),
-      showClipboardPasteButton: hasFeature(EditorFeatures.paste),
-      showUserMentionButton: hasFeature(EditorFeatures.userMention),
+      showUndo: _hasFeature(EditorFeatures.undo),
+      showRedo: _hasFeature(EditorFeatures.redo),
+      showFontFamily: _hasFeature(EditorFeatures.fontFamily),
+      showFontSize: _hasFeature(EditorFeatures.fontSize),
+      showBoldButton: _hasFeature(EditorFeatures.bold),
+      showItalicButton: _hasFeature(EditorFeatures.italic),
+      showUnderlineButton: _hasFeature(EditorFeatures.underline),
+      showStrikethroughButton: _hasFeature(EditorFeatures.strikethrough),
+      showSuperscriptButton: _hasFeature(EditorFeatures.superscript),
+      showColorButton: _hasFeature(EditorFeatures.color),
+      showBackgroundColorButton: _hasFeature(EditorFeatures.backgroundColor),
+      showClearFormatButton: _hasFeature(EditorFeatures.clearFormat),
+      showImageButton: _hasFeature(EditorFeatures.image),
+      showEmojiButton: _hasFeature(EditorFeatures.emoji),
+      showLeftAlignButton: _hasFeature(EditorFeatures.alignLeft),
+      showCenterAlignButton: _hasFeature(EditorFeatures.alignCenter),
+      showRightAlignButton: _hasFeature(EditorFeatures.alignRight),
+      showOrderedListButton: _hasFeature(EditorFeatures.orderedList),
+      showBulletListButton: _hasFeature(EditorFeatures.bulletList),
+      showUrlButton: _hasFeature(EditorFeatures.url),
+      showCodeBlockButton: _hasFeature(EditorFeatures.codeBlock),
+      showQuoteBlockButton: _hasFeature(EditorFeatures.quoteBlock),
+      showClipboardCutButton: _hasFeature(EditorFeatures.cut),
+      showClipboardCopyButton: _hasFeature(EditorFeatures.copy),
+      showClipboardPasteButton: _hasFeature(EditorFeatures.paste),
+      showUserMentionButton: _hasFeature(EditorFeatures.userMention),
     );
   }
 }

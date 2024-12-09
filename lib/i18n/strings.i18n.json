@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "Home",
-    "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2"
+    "failedToBuildPinSection": "Failed to build homepage pin section: list length not equal: $length1, $length2",
+    "welcome": {
+      "history": "History",
+      "notice": "Notification",
+      "checkin": "Checkin",
+      "myThread": "My thread",
+      "latestThread": "Latest thread"
+    }
   },
   "topicPage": {
     "title": "Topics",
@@ -354,6 +361,10 @@
   },
   "noticePage": {
     "title": "Notifications",
+    "appBar": {
+      "unread": "unread",
+      "unreadDetail": "Only show unread"
+    },
     "noticeTab": {
       "title": "Notice",
       "replyBody(rich)": "replied in $threadTitle",
@@ -383,7 +394,11 @@
       "markAsUnread": "Mark as unread",
       "markAllNoticeAsRead": "Mark all notice as read",
       "markAllPersonalMessageAsRead": "Mark all PM as read",
-      "markAllBroadcastMessageAsRead": "Mark all BM as read"
+      "markAllBroadcastMessageAsRead": "Mark all BM as read",
+      "delete": {
+        "title": "Delete message",
+        "detail": "Are you sure to delete this message? this action can not be undone"
+      }
     }
   },
   "searchPage": {

@@ -11,8 +11,6 @@ const chatPagesDisabledFeatures = {
   EditorFeatures.backgroundColor,
   EditorFeatures.clearFormat,
   EditorFeatures.userMention,
-  EditorFeatures.undo,
-  EditorFeatures.redo,
   EditorFeatures.alignLeft,
   EditorFeatures.alignCenter,
   EditorFeatures.alignRight,

@@ -35,7 +35,14 @@
   },
   "homepage": {
     "title": "首頁",
-    "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2"
+    "failedToBuildPinSection": "無法處理首頁的製定貼文: 數量不一致: $length1!=$length2",
+    "welcome": {
+      "history": "歷史",
+      "notice": "訊息",
+      "checkin": "簽到",
+      "myThread": "我的貼文",
+      "latestThread": "最新貼文"
+    }
   },
   "topicPage": {
     "title": "分割區",
@@ -354,6 +361,10 @@
   },
   "noticePage": {
     "title": "通知",
+    "appBar": {
+      "unread": "未讀",
+      "unreadDetail": "只顯示未讀"
+    },
     "noticeTab": {
       "title": "提醒",
       "replyBody(rich)": "在 $threadTitle 中回覆了",
@@ -383,7 +394,11 @@
       "markAsUnread": "標為未讀",
       "markAllNoticeAsRead": "標記所有提醒為已讀",
       "markAllPersonalMessageAsRead": "標記所有私人訊息為已讀",
-      "markAllBroadcastMessageAsRead": "標記所有公用訊息為已讀"
+      "markAllBroadcastMessageAsRead": "標記所有公用訊息為已讀",
+      "delete": {
+        "title": "刪除訊息",
+        "detail": "確定要刪除這則訊息？操作無法撤銷"
+      }
     }
   },
   "searchPage": {
