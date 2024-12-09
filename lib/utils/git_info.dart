@@ -20,6 +20,8 @@ const readCurrentChangelog = ['cat', './CHANGELOG.md'];
   },
 )
 const readCurrentChangelogWindows = [
-  'dart',
-  'scripts/read_changelog.dart',
+  'Get-Content',
+  '-Encoding',
+  'utf8',
+  './CHANGELOG.md',
 ];
