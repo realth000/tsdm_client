@@ -200,8 +200,10 @@ final class ReplyRepository with LoggerMixin {
         if (data.contains('errorhandle_pmsend')) {
           final errorMessage =
               _messageErrorRe.firstMatch(data)?.namedGroup('err');
-          throw ReplyPersonalMessageFailedException(
-            errorMessage ?? 'unknown error',
+          return left(
+            ReplyPersonalMessageFailedException(
+              errorMessage ?? 'unknown error',
+            ),
           );
         }
         return rightVoid();

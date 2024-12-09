@@ -63,7 +63,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
         .run();
     if (ret.isLeft()) {
       handle(ret.unwrapErr());
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failure));
       return;
     }
     emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
@@ -82,10 +82,10 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
       error('failed to reply to thread: http failed with $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failure));
     } on ReplyToThreadResultFailedException catch (e) {
       error('failed to reply to thread: failed result: $e');
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failure));
     }
   }
 
@@ -115,14 +115,14 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
         error('failed to reply chat history');
         emit(
           state.copyWith(
-            status: ReplyStatus.failed,
+            status: ReplyStatus.failure,
             failedReason: err.message,
           ),
         );
         return;
       }
       handle(err);
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failure));
       return;
     }
     emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
@@ -142,14 +142,14 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
       if (err case ReplyPersonalMessageFailedException()) {
         emit(
           state.copyWith(
-            status: ReplyStatus.failed,
+            status: ReplyStatus.failure,
             failedReason: err.message,
           ),
         );
         return;
       }
       handle(err);
-      emit(state.copyWith(status: ReplyStatus.failed));
+      emit(state.copyWith(status: ReplyStatus.failure));
       return;
     }
     emit(state.copyWith(status: ReplyStatus.success, needClearText: true));

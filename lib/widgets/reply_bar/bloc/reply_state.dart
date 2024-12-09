@@ -12,7 +12,7 @@ enum ReplyStatus {
   success,
 
   /// Reply failed.
-  failed,
+  failure,
 }
 
 /// State of reply.
