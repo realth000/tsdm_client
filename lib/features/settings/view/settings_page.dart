@@ -704,18 +704,32 @@ class _SettingsPageState extends State<SettingsPage> {
           await showDialog<void>(
             context: context,
             builder: (context) {
-              final size = MediaQuery.of(context).size;
+              final size = MediaQuery.sizeOf(context);
               return AlertDialog(
                 scrollable: true,
                 title: Text(tr.changelog),
-                content: SizedBox(
-                  width: size.width * 0.7,
-                  height: size.height * 0.7,
-                  child: ScrollConfiguration(
-                    behavior: ScrollConfiguration.of(context)
-                        .copyWith(scrollbars: false),
-                    child: Markdown(data: changelogContent),
-                  ),
+                content: FutureBuilder(
+                  future: compute(readChangelogContent, ''),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      // Unreachable.
+                      return Text('error: ${snapshot.error}');
+                    }
+
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+
+                    return SizedBox(
+                      width: size.width * 0.7,
+                      height: size.height * 0.7,
+                      child: ScrollConfiguration(
+                        behavior: ScrollConfiguration.of(context)
+                            .copyWith(scrollbars: false),
+                        child: Markdown(data: snapshot.data!),
+                      ),
+                    );
+                  },
                 ),
                 actions: [
                   TextButton(

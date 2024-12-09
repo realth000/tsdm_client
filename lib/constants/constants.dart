@@ -35,7 +35,11 @@ const assetEmojiDir = './assets/images/emoji/';
 const assetEmojiInfoPath = './assets/images/emoji/emoji.json';
 
 /// Changelog till publish.
-final changelogContent = () {
+///
+/// Add argument to make `compute` happy.
+///
+// ignore: avoid_unused_parameters
+Future<String> readChangelogContent(String _) async {
   // Changelog is encoded in base64 due to encoding issue on github CI Windows
   // platform, see 'scripts/read_changelog.dart' for details.
   final changelog = utf8.decode(base64Decode(encodedChangelog));
@@ -47,7 +51,7 @@ final changelogContent = () {
     }
     return beforeContent;
   }).join('\n');
-}();
+}
 
 /// All features disabled by default.
 ///
