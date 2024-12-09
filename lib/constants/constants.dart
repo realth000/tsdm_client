@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 
@@ -34,6 +36,9 @@ const assetEmojiInfoPath = './assets/images/emoji/emoji.json';
 
 /// Changelog till publish.
 final changelogContent = () {
+  // Changelog is encoded in base64 due to encoding issue on github CI Windows
+  // platform, see 'scripts/read_changelog.dart' for details.
+  final changelog = utf8.decode(base64Decode(encodedChangelog));
   final lines = changelog.split('\n');
   var beforeContent = true;
   return lines.skipWhile((e) {
