@@ -1,7 +1,6 @@
-import 'dart:math';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
-import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -21,23 +20,22 @@ class ErrorCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final windowWidth = MediaQuery.sizeOf(context).width;
+    final cardWidth = math.min<double>(windowWidth * 2 / 3, 500);
     return Center(
       child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxWidth: min(
-            MediaQuery.of(context).size.width * 2 / 3,
-            500,
-          ),
-        ),
+        constraints: BoxConstraints(maxWidth: cardWidth),
         child: Card(
+          margin: EdgeInsets.zero,
           child: Padding(
             padding: edgeInsetsL12T12R12B12,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                ClipRRect(
-                  borderRadius: const BorderRadius.all(Radius.circular(10)),
-                  child: Image.asset(assetErrorImagePath),
+                Icon(
+                  Icons.error_outline_outlined,
+                  size: math.min(cardWidth - 12 - 12, 80),
+                  color: Theme.of(context).colorScheme.error,
                 ),
                 Text(
                   message ??
@@ -47,13 +45,7 @@ class ErrorCard extends StatelessWidget {
                         color: Theme.of(context).colorScheme.outline,
                       ),
                 ),
-                Row(
-                  children: [
-                    sizedBoxW24H24,
-                    Expanded(child: child),
-                    sizedBoxW24H24,
-                  ],
-                ),
+                Center(child: child),
               ].insertBetween(sizedBoxW24H24),
             ),
           ),
