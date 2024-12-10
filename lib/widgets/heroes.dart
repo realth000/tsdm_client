@@ -141,3 +141,32 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
     );
   }
 }
+
+/// Show a dialog with hero animation support.
+///
+/// The dialog content is built by the parameter [builder].
+Future<T?> showHeroDialog<T>(
+  BuildContext context,
+  RoutePageBuilder builder,
+) async {
+  return Navigator.push<T>(
+    context,
+    PageRouteBuilder(
+      opaque: false,
+      // Fix barrier color.
+      // ref: flutter/lib/src/material/dialog.dart: showDialog()
+      barrierColor:
+          Theme.of(context).dialogTheme.barrierColor ?? Colors.black54,
+      barrierDismissible: true,
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          builder(context, animation, secondaryAnimation),
+      // fullscreenDialog: true,
+      transitionsBuilder: (context, ani1, ani2, child) {
+        return FadeTransition(
+          opacity: CurveTween(curve: Curves.easeIn).animate(ani1),
+          child: child,
+        );
+      },
+    ),
+  );
+}

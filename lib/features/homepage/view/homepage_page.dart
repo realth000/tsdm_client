@@ -5,19 +5,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/checkin/widgets/checkin_button.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/homepage/bloc/homepage_bloc.dart';
+import 'package:tsdm_client/features/homepage/widgets/user_operation_dialog.dart';
 import 'package:tsdm_client/features/homepage/widgets/widgets.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
-import 'package:tsdm_client/features/parse_url/widgets/parse_url_dialog.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/loading_shimmer.dart';
+import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// Show [FloatingActionButton] when offset is larger than this value.
 const _showFabOffset = 100;
@@ -188,7 +191,7 @@ class _HomepagePageState extends State<HomepagePage> {
                         loggedUserInfo: state.loggedUserInfo,
                         swiperUrlList: state.swiperUrlList,
                       ),
-                      sizedBoxW4H4,
+                      sizedBoxW12H12,
                       PinSection(state.pinnedThreadGroupList),
                     ],
                   ),
@@ -197,13 +200,44 @@ class _HomepagePageState extends State<HomepagePage> {
 
             _refreshController.finishRefresh();
 
+            final username = state.loggedUserInfo?.username;
+            final avatarUrl = state.loggedUserInfo?.avatarUrl;
+
             return Scaffold(
               appBar: AppBar(
                 title: Text(context.t.homepage.title),
                 actions: [
-                  const ParseUrlDialogButton(),
+                  if (username != null)
+                    MouseRegion(
+                      cursor: SystemMouseCursors.click,
+                      child: GestureDetector(
+                        onTap: () async => showHeroDialog(
+                          context,
+                          (context, _, __) => UserOperationDialog(
+                            username: username,
+                            avatarUrl: avatarUrl,
+                            heroTag: username,
+                            // ignore: avoid_positional_fields_in_records
+                            latestThreadUrl: state.loggedUserInfo
+                                ?.relatedLinkPairList.lastOrNull?.$2,
+                          ),
+                        ),
+                        child: SizedBox(
+                          width: 32,
+                          height: 32,
+                          child: HeroUserAvatar(
+                            username: username,
+                            avatarUrl: avatarUrl,
+                            heroTag: username,
+                          ),
+                        ),
+                      ),
+                    ),
+                  const NoticeButton(),
+                  const CheckinButton(enableSnackBar: true),
                   IconButton(
                     icon: const Icon(Icons.search_outlined),
+                    tooltip: context.t.searchPage.title,
                     onPressed: () async {
                       await context.pushNamed(ScreenPaths.search);
                     },

@@ -257,15 +257,30 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ListTile(
-              leading: Badge(
-                isLabelVisible: showBadge && !widget.data.alreadyRead,
-                child: HeroUserAvatar(
-                  username: widget.data.peerUsername,
-                  avatarUrl: null,
-                  disableHero: true,
+              leading: GestureDetector(
+                onTap: () async => context.pushNamed(
+                  ScreenPaths.profile,
+                  queryParameters: {'uid': '${widget.data.peerUid}'},
+                ),
+                child: Badge(
+                  isLabelVisible: showBadge && !widget.data.alreadyRead,
+                  child: HeroUserAvatar(
+                    username: widget.data.peerUsername,
+                    avatarUrl: null,
+                    disableHero: true,
+                  ),
                 ),
               ),
-              title: Text(widget.data.peerUsername),
+              title: GestureDetector(
+                onTap: () async => context.pushNamed(
+                  ScreenPaths.profile,
+                  queryParameters: {'uid': '${widget.data.peerUid}'},
+                ),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(widget.data.peerUsername),
+                ),
+              ),
               subtitle: Text(
                 // Timestamp in second.
                 DateTime.fromMillisecondsSinceEpoch(

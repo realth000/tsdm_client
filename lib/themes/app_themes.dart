@@ -12,6 +12,7 @@ class AppTheme {
     sliderTrackHeight: 5,
     inputDecoratorFocusedBorderWidth: 2,
     inputDecoratorBorderType: FlexInputBorderType.outline,
+    inputDecoratorIsFilled: true,
     fabUseShape: true,
     bottomNavigationBarShowUnselectedLabels: false,
     alignedDropdown: true,

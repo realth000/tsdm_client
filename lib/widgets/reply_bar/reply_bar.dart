@@ -714,7 +714,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           } else if (state.status == ReplyStatus.success) {
             // Last reply is succeed, clear reply message.
             isSendingReply = false;
-          } else if (state.status == ReplyStatus.failed) {
+          } else if (state.status == ReplyStatus.failure) {
             // Last reply action is failed, only clear pending state.
             isSendingReply = false;
             // When failed to reply, we did NOT clear any text so is ready for

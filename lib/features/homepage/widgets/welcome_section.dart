@@ -69,150 +69,27 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
     );
   }
 
-  List<Widget> _buildKahrpbaLinkTileList(
-    BuildContext context,
-    List<(String, String)>? linkList,
-  ) {
-    // Expected containing two pairs of nodes:
-    //
-    // 1. My thread.
-    // 2. Latest thread.
-    if (linkList == null || linkList.length != 2) {
-      return [];
-    }
-
-    final tr = context.t.homepage.welcome;
-
-    return [
-      ListTile(
-        leading: const Icon(Icons.history_outlined),
-        title: Text(tr.history),
-        onTap: () async => context.pushNamed(ScreenPaths.threadVisitHistory),
-      ),
-      ListTile(
-        leading: const NoticeButton(useIcon: true),
-        title: Text(tr.notice),
-        onTap: () async => context.pushNamed(ScreenPaths.notice),
-      ),
-      BlocBuilder<CheckinBloc, CheckinState>(
-        builder: (context, state) {
-          final onTap = switch (state) {
-            CheckinStateLoading() || CheckinStateNeedLogin() => null,
-            CheckinStateInitial() ||
-            CheckinStateFailed() ||
-            CheckinStateSuccess() =>
-              () async =>
-                  context.read<CheckinBloc>().add(const CheckinRequested()),
-          };
-
-          return ListTile(
-            leading: const CheckinButton(
-              enableSnackBar: true,
-              useIcon: true,
-            ),
-            title: Text(tr.checkin),
-            onTap: onTap,
-          );
-        },
-      ),
-      ListTile(
-        leading: const Icon(Icons.article_outlined),
-        title: Text(tr.myThread),
-        onTap: () async => context.pushNamed(ScreenPaths.myThread),
-      ),
-      ListTile(
-        leading: const Icon(Icons.newspaper_outlined),
-        title: Text(tr.latestThread),
-        onTap: () async {
-          final link = linkList.elementAtOrNull(1)?.$2;
-          final target = link?.parseUrlToRoute();
-          if (target == null) {
-            error('invalid kahrpba link: $link');
-            return;
-          }
-          await context.pushNamed(
-            target.screenPath,
-            pathParameters: target.pathParameters,
-            queryParameters: target.queryParameters,
-          );
-        },
-      ),
-    ];
-  }
-
-  Widget _buildForumStatusRow(BuildContext context, ForumStatus forumStatus) {
-    return Padding(
-      padding: edgeInsetsL12T12R12,
-      child: SingleLineText(
-        '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
-        '帖子:${forumStatus.threadCount}',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.secondary,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
+  // Widget _buildForumStatusRow(BuildContext context, ForumStatus forumStatus)
+  // {
+  //   return Padding(
+  //     padding: edgeInsetsL12T12R12,
+  //     child: SingleLineText(
+  //       '今日:${forumStatus.todayCount} 昨日:${forumStatus.yesterdayCount} '
+  //       '帖子:${forumStatus.threadCount}',
+  //       style: TextStyle(
+  //         color: Theme.of(context).colorScheme.secondary,
+  //       ),
+  //       textAlign: TextAlign.center,
+  //     ),
+  //   );
+  // }
 
   Widget _buildSection(BuildContext context) {
-    // username is plain text inside welcomeNode div.
-    // Only using [nodes] method can capture it.
-    final username = widget.loggedUserInfo?.username ?? '';
-    // First use avatar url in homepage, null means current webpage layout does
-    // not provide one.
-    // Then use avatar url in profile page.
-    // In fact we can use the one in  profile page directly.
-    final avatarUrl = widget.loggedUserInfo?.avatarUrl;
-
     if (!context.mounted) {
       return sizedBoxEmpty;
     }
 
-    return Column(
-      children: [
-        _buildKahrpbaSwiper(context, widget.swiperUrlList),
-        sizedBoxW4H4,
-        Card(
-          margin: EdgeInsets.zero,
-          clipBehavior: Clip.hardEdge,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ListTile(
-                leading: GestureDetector(
-                  onTap: () async => context.pushNamed(
-                    ScreenPaths.loggedUserProfile,
-                    queryParameters: {'hero': username},
-                  ),
-                  child: HeroUserAvatar(
-                    username: username,
-                    avatarUrl: avatarUrl,
-                    heroTag: username,
-                    disableHero: true,
-                  ),
-                ),
-                title: GestureDetector(
-                  onTap: () async => context.pushNamed(
-                    ScreenPaths.loggedUserProfile,
-                    queryParameters: {'hero': username},
-                  ),
-                  child: Text(
-                    username,
-                    style: Theme.of(context).textTheme.titleLarge,
-                  ),
-                ),
-              ),
-              ..._buildKahrpbaLinkTileList(
-                context,
-                widget.loggedUserInfo?.relatedLinkPairList,
-              ),
-              _buildForumStatusRow(context, widget.forumStatus),
-              sizedBoxW8H8,
-            ],
-          ),
-        ),
-      ],
-    );
+    return _buildKahrpbaSwiper(context, widget.swiperUrlList);
   }
 
   void setupSwiperTimer(int itemCount) {

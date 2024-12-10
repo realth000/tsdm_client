@@ -123,6 +123,7 @@ jobs:
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
       - name: Precompile
+        shell: pwsh
         run: |
           git submodule update --init --recursive --force
           flutter pub get

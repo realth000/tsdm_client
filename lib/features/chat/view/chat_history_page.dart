@@ -143,7 +143,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
                 showSnackBar(context: context, message: tr.success);
-              } else if (state.status == ReplyStatus.failed &&
+              } else if (state.status == ReplyStatus.failure &&
                   state.failedReason != null) {
                 showSnackBar(
                   context: context,
