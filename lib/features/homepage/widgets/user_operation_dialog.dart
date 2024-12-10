@@ -6,6 +6,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Dialog for user operations.
 class UserOperationDialog extends StatelessWidget with LoggerMixin {
@@ -53,9 +54,11 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
             minRadius: 30,
           ),
           sizedBoxW12H12,
-          Text(
-            username,
-            style: Theme.of(context).textTheme.titleLarge,
+          Expanded(
+            child: SingleLineText(
+              username,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
           ),
         ],
       ),
