@@ -326,6 +326,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     // Clear saved hint text in controller so text not restore
     // when next time opens.
     widget.controller._hintText = null;
+    // Clear reply action to prevent the action applied again when user reopened
+    // reply bar without any reply target.
+    widget.controller._replyAction = null;
   }
 
   void _checkEditorContent() {
@@ -809,8 +812,26 @@ final class ReplyBarController with LoggerMixin {
   ///
   // ignore: avoid_setters_without_getters
   set replyAction(String? replyAction) {
+    // Save the reply action no matter state already constructed or not.
+    //
+    // Since the reply bar became more stateless in pre-release of v1, here the
+    // reply action assignment will override with an outdated value if user
+    // changed the post to reply when reply bar is in expanded state:
+    //
+    // 1. User clicked a floor #1, reply bar expanded and _state?._replyAction
+    //   set to #1.
+    // 2. User clicked another floor #2, reply bar still in expand state and
+    //   _state._replyAction set to #2.
+    // 3. User closed reply bar and state disposed.
+    // 4. User reopened the reply bar without clicking any floor, from here it
+    //   is expected to keep the same reply action which is held the last time
+    //   which is #2 in this case, but the setter of _replyAction set it back
+    //   to #2.
+    //
+    // save the reply action value no matter state is contructed or not, because
+    // the controller class is a value storage lives longer than state itself.
+    _replyAction = replyAction;
     if (_state == null) {
-      _replyAction = replyAction;
       return;
     }
     _state!._replyAction = replyAction;
@@ -831,8 +852,10 @@ final class ReplyBarController with LoggerMixin {
   /// Set the hint text.
   void setHintText(String hintText) {
     _onSetHintTextCallback?.call();
+    // Save the hint text no matter state already constructed or not.
+    // See setter `replyAction` for the reason.
+    _hintText = hintText;
     if (_state == null) {
-      _hintText = hintText;
       return;
     }
     _state!._setHintText(hintText);
