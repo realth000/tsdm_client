@@ -207,7 +207,7 @@ class _HomepagePageState extends State<HomepagePage> {
               appBar: AppBar(
                 title: Text(context.t.homepage.title),
                 actions: [
-                  if (username != null)
+                  if (username != null) ...[
                     MouseRegion(
                       cursor: SystemMouseCursors.click,
                       child: GestureDetector(
@@ -233,8 +233,9 @@ class _HomepagePageState extends State<HomepagePage> {
                         ),
                       ),
                     ),
-                  const NoticeButton(),
-                  const CheckinButton(enableSnackBar: true),
+                    const NoticeButton(),
+                    const CheckinButton(enableSnackBar: true),
+                  ],
                   IconButton(
                     icon: const Icon(Icons.search_outlined),
                     tooltip: context.t.searchPage.title,
