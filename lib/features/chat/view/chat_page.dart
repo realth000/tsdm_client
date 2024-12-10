@@ -144,14 +144,17 @@ final class _ChatPageState extends State<ChatPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(context: context, message: tr.success);
+                showSnackBar(
+                  context: context,
+                  message: tr.success,
+                  avoidKeyboard: true,
+                );
               } else if (state.status == ReplyStatus.failure &&
                   state.failedReason != null) {
                 showSnackBar(
                   context: context,
-                  message: tr.failed(
-                    message: state.failedReason!,
-                  ),
+                  message: tr.failed(message: state.failedReason!),
+                  avoidKeyboard: true,
                 );
               }
             },
