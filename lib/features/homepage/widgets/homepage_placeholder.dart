@@ -11,38 +11,15 @@ class HomepagePlaceholder extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       padding: edgeInsetsL12T4R12,
       children: <Widget>[
-        Row(
-          children: [
-            Expanded(
-              child: Card(
-                margin: EdgeInsets.zero,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(
-                    maxWidth: _kahrpbaPicWidth,
-                    maxHeight: _kahrpbaPicHeight,
-                  ),
-                  child: Container(),
-                ),
-              ),
+        Align(
+          child: Card(
+            margin: EdgeInsets.zero,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
+              child: Container(),
             ),
-          ],
+          ),
         ),
-        sizedBoxW4H4,
-        const Row(
-          children: [
-            Expanded(
-              child: Row(
-                children: [
-                  CircleAvatar(),
-                  sizedBoxW12H12,
-                  Expanded(child: sizedH24Shimmer),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
         sizedBoxW4H4,
         const Row(
           children: [
@@ -50,10 +27,10 @@ class HomepagePlaceholder extends StatelessWidget {
             Flexible(flex: 3, child: SizedBox.shrink()),
           ],
         ),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
         sizedBoxW4H4,
         const Row(
           children: [
@@ -61,10 +38,10 @@ class HomepagePlaceholder extends StatelessWidget {
             Flexible(flex: 3, child: SizedBox.shrink()),
           ],
         ),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
-        const Row(children: [Expanded(child: sizedH40Shimmer)]),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
+        const Align(child: sizedH40Shimmer),
       ].insertBetween(sizedBoxW4H4),
     );
   }
