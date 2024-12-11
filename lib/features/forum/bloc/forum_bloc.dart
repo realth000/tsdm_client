@@ -41,6 +41,10 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     ForumLoadMoreRequested event,
     ForumEmitter emit,
   ) async {
+    if (state.status == ForumStatus.failure) {
+      // Restoring from failure state.
+      emit(state.copyWith(status: ForumStatus.loading));
+    }
     await await _forumRepository
         .fetchForum(
       fid: state.fid,

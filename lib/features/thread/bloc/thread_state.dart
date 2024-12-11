@@ -12,7 +12,7 @@ enum ThreadStatus {
   success,
 
   /// Load failed.
-  failed,
+  failure,
 }
 
 /// State of thread.

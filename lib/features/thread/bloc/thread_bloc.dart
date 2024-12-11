@@ -46,6 +46,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     ThreadLoadMoreRequested event,
     ThreadEmitter emit,
   ) async {
+    if (state.status == ThreadStatus.failure) {
+      // Restoring from failure.
+      emit(state.copyWith(status: ThreadStatus.loading));
+    }
     await _threadRepository
         .fetchThread(
       tid: state.tid,
@@ -57,7 +61,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         .match(
       (e) {
         handle(e);
-        emit(state.copyWith(status: ThreadStatus.failed));
+        emit(state.copyWith(status: ThreadStatus.failure));
       },
       (v) => _parseFromDocument(v, event.pageNumber).map((v) => emit(v)).run(),
     ).run();
@@ -83,7 +87,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         .match(
       (e) {
         handle(e);
-        emit(state.copyWith(status: ThreadStatus.failed));
+        emit(state.copyWith(status: ThreadStatus.failure));
       },
       (v) => _parseFromDocument(v, 1).map((v) => emit(v)).run(),
     ).run();
@@ -113,7 +117,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         )
         .mapLeft((e) {
       handle(e);
-      emit(state.copyWith(status: ThreadStatus.failed));
+      emit(state.copyWith(status: ThreadStatus.failure));
     }).run();
   }
 
@@ -149,7 +153,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             'fid=${state.tid}, pageNumber=1 : $e');
         emit(
           state.copyWith(
-            status: ThreadStatus.failed,
+            status: ThreadStatus.failure,
             onlyVisibleUid: event.uid,
           ),
         );
@@ -186,7 +190,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
         handle(e);
         error('failed to load thread page:'
             ' fid=${state.tid}, pageNumber=1 : $e');
-        emit(state.copyWith(status: ThreadStatus.failed));
+        emit(state.copyWith(status: ThreadStatus.failure));
       },
       (v) => _parseFromDocument(
         v,
@@ -231,7 +235,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             'fid=${state.tid}, pageNumber=1 : $e');
         emit(
           state.copyWith(
-            status: ThreadStatus.failed,
+            status: ThreadStatus.failure,
             reverseOrder: state.reverseOrder,
           ),
         );

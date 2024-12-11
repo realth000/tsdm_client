@@ -166,7 +166,7 @@ class _ThreadPageState extends State<ThreadPage>
       ThreadStatus.initial ||
       ThreadStatus.loading =>
         const Center(child: CircularProgressIndicator()),
-      ThreadStatus.failed => buildRetryButton(context, () {
+      ThreadStatus.failure => buildRetryButton(context, () {
           context
               .read<ThreadBloc>()
               .add(ThreadLoadMoreRequested(state.currentPage));
@@ -242,7 +242,7 @@ class _ThreadPageState extends State<ThreadPage>
                     .read<ReplyBloc>()
                     .add(const ReplyThreadClosed(closed: false));
               }
-              if (state.status == ThreadStatus.failed) {
+              if (state.status == ThreadStatus.failure) {
                 showFailedToLoadSnackBar(context);
               } else if (state.status == ThreadStatus.success) {
                 // Record thread visit history.
