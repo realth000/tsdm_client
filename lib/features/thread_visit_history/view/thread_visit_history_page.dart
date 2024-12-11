@@ -46,6 +46,7 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(tr.title),
+              bottom: Tips(tr.localOnlyTip, sizePreferred: true),
             ),
             body: AnimatedSwitcher(
               duration: duration200,
@@ -53,7 +54,6 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   sizedBoxW4H4,
-                  Tips(tr.localOnlyTip),
                   sizedBoxW4H4,
                   Expanded(child: body),
                 ],

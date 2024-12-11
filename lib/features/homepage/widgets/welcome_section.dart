@@ -41,7 +41,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight + 20),
+        constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
         child: CarouselView(
           reverse: _reverseSwiper,
           controller: _swiperController,
@@ -59,11 +59,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
               queryParameters: parseResult.queryParameters,
             );
           },
-          children: swiperUrlList
-              .mapIndexed(
-                (index, e) => CachedImage(swiperUrlList[index].coverUrl),
-              )
-              .toList(),
+          children: swiperUrlList.map((e) => CachedImage(e.coverUrl)).toList(),
         ),
       ),
     );

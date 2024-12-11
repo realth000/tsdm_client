@@ -189,25 +189,29 @@ class _ForumPageState extends State<ForumPage>
   }
 
   Widget _buildNormalThreadFilterRow(BuildContext context, ForumState state) {
-    return Padding(
-      padding: edgeInsetsT4B4,
-      child: SizedBox(
-        height: 40,
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              const ThreadTypeChip(),
-              const ThreadSpecialTypeChip(),
-              const ThreadDatelineChip(),
-              const ThreadOrderChip(),
-              const ThreadDigestChip(),
-              const ThreadRecommendedChip(),
-            ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            color: Theme.of(context).colorScheme.surface,
+            height: 40,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  const ThreadTypeChip(),
+                  const ThreadSpecialTypeChip(),
+                  const ThreadDatelineChip(),
+                  const ThreadOrderChip(),
+                  const ThreadDigestChip(),
+                  const ThreadRecommendedChip(),
+                ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
+              ),
+            ),
           ),
         ),
-      ),
+      ],
     );
   }
 

@@ -12,7 +12,6 @@ class AppTheme {
     sliderTrackHeight: 5,
     inputDecoratorFocusedBorderWidth: 2,
     inputDecoratorBorderType: FlexInputBorderType.outline,
-    inputDecoratorIsFilled: true,
     fabUseShape: true,
     bottomNavigationBarShowUnselectedLabels: false,
     alignedDropdown: true,
@@ -47,6 +46,11 @@ class AppTheme {
         visualDensity: VisualDensity.standard,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         horizontalTitleGap: 10,
+      );
+
+  /// Global theme for [TabBar].
+  static TabBarTheme _buildTabBarTheme() => const TabBarTheme(
+        dividerHeight: 0,
       );
 
   static NavigationDrawerThemeData _buildNavigationDrawerTheme(
@@ -98,6 +102,7 @@ class AppTheme {
       chipTheme: _buildChipTheme(),
       listTileTheme: _buildListTileTheme(),
       navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
+      tabBarTheme: _buildTabBarTheme(),
     );
   }
 
@@ -135,6 +140,7 @@ class AppTheme {
       chipTheme: _buildChipTheme(),
       listTileTheme: _buildListTileTheme(),
       navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
+      tabBarTheme: _buildTabBarTheme(),
     );
   }
 }

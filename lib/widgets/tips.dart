@@ -9,9 +9,14 @@ import 'package:tsdm_client/themes/widget_themes.dart';
 /// but I don't know its name.
 ///
 /// Layout Reference: [ReadYou](https://github.com/Ashinch/ReadYou/blob/main/app/src/main/java/me/ash/reader/ui/component/base/Tips.kt)
-class Tips extends StatelessWidget {
+class Tips extends StatelessWidget implements PreferredSizeWidget {
   /// Constructor.
-  const Tips(this.text, {this.enablePadding = true, super.key});
+  const Tips(
+    this.text, {
+    this.enablePadding = true,
+    this.sizePreferred = false,
+    super.key,
+  });
 
   /// Main text to display in tip.
   final String text;
@@ -19,9 +24,15 @@ class Tips extends StatelessWidget {
   /// Enable horizontal padding or not.
   final bool enablePadding;
 
+  /// Indicating if using as [PreferredSizeWidget].
+  ///
+  /// Set to true if used as bottom of [AppBar].
+  final bool sizePreferred;
+
   @override
   Widget build(BuildContext context) {
-    final body = Column(
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Icon(
@@ -36,8 +47,12 @@ class Tips extends StatelessWidget {
                 color: Theme.of(context).colorScheme.onSurfaceVariant,
               ),
         ),
+        if (sizePreferred) sizedBoxW4H4,
       ],
     );
+    final body =
+        sizePreferred ? Row(children: [Expanded(child: content)]) : content;
+
     return enablePadding
         ? Padding(
             padding: edgeInsetsL16R16,
@@ -45,4 +60,7 @@ class Tips extends StatelessWidget {
           )
         : body;
   }
+
+  @override
+  Size get preferredSize => const Size(40, 40);
 }

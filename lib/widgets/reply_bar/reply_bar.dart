@@ -148,7 +148,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
     }
 
     return ColoredBox(
-      color: Theme.of(context).colorScheme.surface,
+      color: Theme.of(context).colorScheme.surfaceContainerLow,
       child: Padding(
         padding: edgeInsetsL12T12R12B12,
         child: TextField(
@@ -567,7 +567,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
             }
         }
       },
-      panelBgColor: Theme.of(context).colorScheme.surface,
+      panelBgColor: Theme.of(context).colorScheme.surfaceContainerLow,
     );
   }
 

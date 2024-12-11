@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
-import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
@@ -61,7 +61,13 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       decoration: InputDecoration(
         labelText: score.name,
         helperText: tr.scoreTodayRemaining(score: score.remaining),
+        helperStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
+              color: Theme.of(context).colorScheme.secondary,
+            ),
         suffixText: '${score.allowedRangeDescription} ',
+        suffixStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
+              color: Theme.of(context).colorScheme.outline,
+            ),
       ),
       validator: (v) {
         if (v?.contains('.') ?? true) {
@@ -116,6 +122,8 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
   }
 
   Widget _buildBody(BuildContext context, RateState state) {
+    final tr = context.t.ratePostPage;
+
     if (state.status == RateStatus.gotInfo) {
       scoreMap ??= Map.fromEntries(
         state.info!.scoreList
@@ -141,67 +149,111 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       defaultReasonButton = Focus(
         canRequestFocus: false,
         descendantsAreFocusable: false,
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String?>(
-            padding: edgeInsetsR8,
-            onChanged: (v) {
-              if (v == null) {
-                return;
-              }
-              setState(() {
-                reasonController.text = v;
-              });
-            },
-            items: state.info?.defaultReasonList
-                .map(
-                  (e) => DropdownMenuItem<String>(
-                    value: e,
-                    child: Text(e),
-                  ),
-                )
-                .toList(),
+        child: IconButton(
+          icon: const Icon(Icons.arrow_drop_down_outlined),
+          onPressed: () async => showDialog(
+            context: context,
+            builder: (_) => AlertDialog(
+              title: Text(tr.reason),
+              scrollable: true,
+              content: Column(
+                children: state.info!.defaultReasonList
+                    .map(
+                      (e) => ListTile(
+                        title: Text(e),
+                        onTap: () {
+                          context.pop();
+                          setState(() {
+                            reasonController.text = e;
+                          });
+                        },
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
           ),
-          // icon: const Icon(Icons.expand_more_outlined),
         ),
       );
     }
 
     return Form(
       key: formKey,
-      child: ListView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            context.t.ratePostPage.description(
-              username: widget.username,
-              floor: widget.floor,
-            ),
-            style: Theme.of(context).textTheme.titleMedium,
+          sizedBoxW12H12,
+          // Body title.
+          Row(
+            children: [
+              sizedBoxW12H12,
+              Expanded(
+                child: Text(
+                  tr.description(
+                    username: widget.username,
+                    floor: widget.floor,
+                  ),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        color: Theme.of(context).colorScheme.secondary,
+                      ),
+                ),
+              ),
+              sizedBoxW12H12,
+            ],
           ),
-          sizedBoxW4H4,
-          ...scoreWidgetList.insertBetween(sizedBoxW4H4),
-          if (scoreWidgetList.isNotEmpty) sizedBoxW4H4,
-          TextFormField(
-            controller: reasonController,
-            decoration: InputDecoration(
-              labelText: context.t.ratePostPage.reason,
-              suffixIcon: defaultReasonButton,
+          sizedBoxW12H12,
+          Expanded(
+            child: GridView(
+              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+                maxCrossAxisExtent: 240,
+                mainAxisExtent: 80,
+                crossAxisSpacing: 12,
+                mainAxisSpacing: 12,
+              ),
+              padding: edgeInsetsL12T8R12,
+              children: scoreWidgetList,
             ),
+          ),
+          Row(
+            children: [
+              sizedBoxW12H12,
+              Expanded(
+                child: TextFormField(
+                  controller: reasonController,
+                  decoration: InputDecoration(
+                    labelText: tr.reason,
+                    suffixIcon: defaultReasonButton,
+                  ),
+                ),
+              ),
+              sizedBoxW12H12,
+            ],
           ),
           SectionSwitchListTile(
             value: noticeAuthor,
-            title: Text(context.t.ratePostPage.noticeAuthor),
+            title: Text(tr.noticeAuthor),
             onChanged: (value) {
               setState(() {
                 noticeAuthor = value;
               });
             },
           ),
-          DebounceFilledButton(
-            shouldDebounce: state.status.isLoading(),
-            onPressed: () async => _rate(context, state.info!),
-            child: Text(context.t.ratePostPage.title),
+          sizedBoxW12H12,
+          Row(
+            children: [
+              sizedBoxW12H12,
+              Expanded(
+                child: DebounceFilledButton(
+                  shouldDebounce: state.status.isLoading(),
+                  onPressed: () async => _rate(context, state.info!),
+                  child: Text(tr.title),
+                ),
+              ),
+              sizedBoxW12H12,
+            ],
           ),
-        ].insertBetween(sizedBoxW12H12),
+          sizedBoxW12H12,
+        ],
       ),
     );
   }
@@ -224,6 +276,8 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
 
   @override
   Widget build(BuildContext context) {
+    final tr = context.t.ratePostPage;
+
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(
@@ -245,8 +299,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
             // Show reason and pop back if we should not retry.
             showSnackBar(
               context: context,
-              message:
-                  state.failedReason ?? context.t.ratePostPage.failedToRate,
+              message: state.failedReason ?? tr.failedToRate,
             );
             if (state.shouldRetry == false) {
               Navigator.of(context).pop();
@@ -261,7 +314,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
           } else if (state.status == RateStatus.success) {
             showSnackBar(
               context: context,
-              message: context.t.ratePostPage.success,
+              message: tr.success,
             );
             Navigator.of(context).pop();
           }
@@ -270,12 +323,9 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
           builder: (context, state) {
             return Scaffold(
               appBar: AppBar(
-                title: Text(context.t.ratePostPage.title),
+                title: Text(tr.title),
               ),
-              body: Padding(
-                padding: edgeInsetsL16T16R16B16,
-                child: _buildBody(context, state),
-              ),
+              body: _buildBody(context, state),
             );
           },
         ),

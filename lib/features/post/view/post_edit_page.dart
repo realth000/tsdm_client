@@ -365,7 +365,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             }
         }
       },
-      panelBgColor: Theme.of(context).colorScheme.surface,
+      panelBgColor: Theme.of(context).colorScheme.surfaceContainerLow,
     );
   }
 
@@ -711,7 +711,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
-                sizedBoxW8H8,
                 // Post data editor.
                 Expanded(
                   child: Padding(
@@ -722,13 +721,14 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     ),
                   ),
                 ),
-                sizedBoxW4H4,
                 if (isDesktop)
+                  // Expand and can not replace with Align.
                   Row(
                     children: [
                       Expanded(
                         child: ColoredBox(
-                          color: Theme.of(context).colorScheme.surface,
+                          color:
+                              Theme.of(context).colorScheme.surfaceContainerLow,
                           child: Padding(
                             padding: edgeInsetsL4R4.add(edgeInsetsT4),
                             child: EditorToolbar(
@@ -742,7 +742,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     ],
                   ),
                 ColoredBox(
-                  color: Theme.of(context).colorScheme.surface,
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   child: Padding(
                     padding: edgeInsetsR4.add(edgeInsetsB4),
                     child: _buildControlRow(context, state),
