@@ -208,28 +208,25 @@ class _HomepagePageState extends State<HomepagePage> {
                 title: Text(context.t.homepage.title),
                 actions: [
                   if (username != null) ...[
-                    MouseRegion(
-                      cursor: SystemMouseCursors.click,
-                      child: GestureDetector(
-                        onTap: () async => showHeroDialog(
-                          context,
-                          (context, _, __) => UserOperationDialog(
-                            username: username,
-                            avatarUrl: avatarUrl,
-                            heroTag: username,
-                            // ignore: avoid_positional_fields_in_records
-                            latestThreadUrl: state.loggedUserInfo
-                                ?.relatedLinkPairList.lastOrNull?.$2,
-                          ),
+                    IconButton(
+                      icon: SizedBox(
+                        width: 32,
+                        height: 32,
+                        child: HeroUserAvatar(
+                          username: username,
+                          avatarUrl: avatarUrl,
+                          heroTag: username,
                         ),
-                        child: SizedBox(
-                          width: 32,
-                          height: 32,
-                          child: HeroUserAvatar(
-                            username: username,
-                            avatarUrl: avatarUrl,
-                            heroTag: username,
-                          ),
+                      ),
+                      onPressed: () async => showHeroDialog(
+                        context,
+                        (context, _, __) => UserOperationDialog(
+                          username: username,
+                          avatarUrl: avatarUrl,
+                          heroTag: username,
+                          // ignore: avoid_positional_fields_in_records
+                          latestThreadUrl: state.loggedUserInfo
+                              ?.relatedLinkPairList.lastOrNull?.$2,
                         ),
                       ),
                     ),
