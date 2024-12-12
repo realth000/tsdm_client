@@ -237,7 +237,11 @@ class _ForumPageState extends State<ForumPage>
         itemBuilder: (context, index) {
           // TODO: Do NOT add leading rules card by checking index value.
           if (index == 0) {
-            return Card(child: munchElement(context, state.rulesElement!));
+            return Card(
+              margin: EdgeInsets.zero,
+              clipBehavior: Clip.antiAlias,
+              child: munchElement(context, state.rulesElement!),
+            );
           } else {
             return NormalThreadCard(state.stickThreadList[index - 1]);
           }
@@ -325,7 +329,7 @@ class _ForumPageState extends State<ForumPage>
           _buildNormalThreadFilterRow(context, state),
           Expanded(
             child: Padding(
-              padding: edgeInsetsL12R12,
+              padding: edgeInsetsL12T4R12,
               child: CustomScrollView(
                 controller: _threadScrollController,
                 physics: physics,
