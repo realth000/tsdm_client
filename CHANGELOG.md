@@ -87,6 +87,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - 默认开启私信的小圆点标识，可在设置 -> 外观中调整。
 - 通知：现在消息按钮角标显示的是所有类型的未读消息的数量总和。
 - 通知：新增筛选未读通知的按钮。
+- 通知：支持删除单个通知。
+  - 卡片右上角菜单 -> 删除消息。
 - app：支持设置和使用代理。
   - 默认关闭，可在设置 -> 高级 -> 启用代理中打开。
   - 在设置 -> 高级 -> 代理设置中设置代理的参数，可测试代理是否连通。
@@ -172,6 +174,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 通知：修复无法现实某些类型的提醒的问题，现在能够显示所有类型的提醒。
 - 用户：修复其他用户资料页刷新后显示当前登录用户资料的问题。
 - 编辑：修复转换出的BBCode在某些情况下图片的大小为null的问题。
+- 设置：修复Windows上自动构建编译出的版本中本地更新日志乱码的问题。
 
 ### Changed
 
@@ -187,6 +190,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - app：更新设置界面颜色选择和开关的样式。
 - app：现在将表情打包到软件中，不需要也不再通过网络下载。
   - 导致软件大小增加约12MB。
+- app：重构主页和论坛页布局。
 - app：安卓平台上启动时使用透明色的状态栏。
 - app：更新引用文字的外观样式，现在更紧凑。
 - app：现在不会显示内容为空白的引用文字。
@@ -206,7 +210,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - internal：提高flutter版本至 3.24（dart 3.5）。
 - internal：gradle的参数mx增加到4608。
 - internal：最低要求macOS 11。
-- BREAKING：internal：重构功能：
+- internal：重构功能：
   - 大部分设置项配置和读写逻辑。
   - 使用`talker`代替默认的`printer`做日志审计。
   - 数据库从isar迁移到drift。

@@ -12,8 +12,7 @@
 
 <p align="center">
   <a href="https://github.com/realth000/tsdm_client/actions"><img src="https://img.shields.io/github/actions/workflow/status/realth000/tsdm_client/test.yml?label=test" alt="test_ci"/></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=stable" alt="stable_version"></a>
-  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=preview&include_prereleases" alt="preview_version"></a>
+  <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=release" alt="release"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_macOS_%7C_Windows-19A6E6" alt="platforms"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total" alt="download_total"></a>
   <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.24-19A6E6?logo=flutter" alt="flutter_version"></a>
@@ -46,85 +45,57 @@
         <img width="100%" src="./doc/pic/screenshot_04.png" alt="screenshot_04">
       </td>
     </tr>
+    <tr>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_05.png" alt="screenshot_05">
+      </td>
+      <td align="center">
+        <img width="100%" src="./doc/pic/screenshot_06.png" alt="screenshot_06">
+      </td>
+    </tr>
   </table>
 </div>
 
 ## 下载
-
-**从v0.x版本升级到v1.x版本会失去登录状态并重置设置**
-
-有关v1.0.0版本的功能计划，详见[#3](https://github.com/realth000/tsdm_client/issues/3)
-
-**v1.0预览版引入了很多特性并修复了非常多的问题，建议直接使用预览版**
-
-**v1.0预览版的变更可在更新日志的[UNRELEASED](https://github.com/realth000/tsdm_client/blob/master/CHANGELOG.md#unreleased)小节中查看**
 
 <div align="left">
   <table>
     <thead align="left">
      <tr>
        <th>系统</th>
-       <!-- <th>稳定版（0.14）</th> -->
-       <th>预览版（1.0.0-alpha.15）</th>
+       <th>版本</th>
      </tr>
     </thead>
   <tbody>
     <tr>
       <td>Android</td>
-      <!-- <td> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br> -->
-      <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv8"/></a><br>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-orange.svg?logo=android&logoColor=white" alt="preview_apk_armv7"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
       </td>
     </tr>
     <tr>
       <td>iOS</td>
-      <!-- <td> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br> -->
-      <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-orange.svg?logo=ios&logoColor=white" alt="preview_ipa_universal"/></a>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client.ipa"><img src="https://img.shields.io/badge/ipa-universal-blue.svg?logo=ios&logoColor=white" alt="stable_ipa_universal"/></a><br>
       </td>
     </tr>
     <tr>
       <td>Linux</td>
-      <!-- <td> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br> -->
-      <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-orange.svg?logo=linux&logoColor=white" alt="preview_targz_x64"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-linux.tar.gz"><img src="https://img.shields.io/badge/tar.gz-x86__64-blue.svg?logo=linux&logoColor=white" alt="stable_targz_x64"/></a><br>
       </td>
     </tr>
     <tr>
       <td>macOS</td>
-      <!-- <td> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br> -->
-      <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-orange.svg?logo=apple&logoColor=white" alt="preview_dmg_universal"/></a>
-      </td>
-    </tr>
-    <tr>
-      <td>Web</td>
-      <!-- <td> -->
-        <!-- <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white" alt="stable_zip_wasm"/><br> -->
-        <!-- <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=javascript&logoColor=white" alt="stable_zip_js"/> -->
-      <!-- </td> -->
-      <td>
-        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=webassembly&logoColor=white" alt="preview_zip_wasm"/><br>
-        <img src="https://img.shields.io/badge/zip-coming%20soon-c0c0c0.svg?logo=javascript&logoColor=white" alt="preview_zip_js"/>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-universal.dmg"><img src="https://img.shields.io/badge/dmg-universal-blue.svg?logo=apple&logoColor=white&logoColor=white" alt="stable_dmg_universal"/></a><br>
       </td>
     </tr>
     <tr>
       <td>Windows</td>
-      <!-- <td> -->
-        <!-- <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br> -->
-      <!-- </td> -->
       <td>
-        <a href="https://github.com/realth000/tsdm_client/releases/download/v1.0.0-alpha.15/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-orange.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="preview_zip_win"/></a><br>
+        <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br>
       </td>
     </tr>
   </tbody>
@@ -137,8 +108,6 @@
 > * iOS和macOS平台产物并未签名，ipa签名请自行寻找方法。
 
 ## 功能
-
-*斜体字功能目前只存在于预览版*
 
 * [ ] 看贴
   * [x] 回复
@@ -176,22 +145,22 @@
   * [x] 修改纯文本内容
   * [x] 设置分类和标题
   * [x] 设置附加选项
-  * [x] *设置阅读权限*
-  * [x] *设置售价*
+  * [x] 设置阅读权限
+  * [x] 设置售价
   * [x] [富文本模式](#富文本支持)
 * [x] 发帖
-  * [x] *纯文本内容*
-  * [x] *保存为草稿*
-  * [x] *编辑草稿*
+  * [x] 纯文本内容
+  * [x] 保存为草稿
+  * [x] 编辑草稿
   * [ ] 本地自动保存
-  * [x] *设置分类和标题*
-  * [x] *设置附加选项*
-  * [x] *设置阅读权限*
-  * [x] *设置售价*
-  * [x] *[富文本模式](#富文本支持)*
+  * [x] 设置分类和标题
+  * [x] 设置附加选项
+  * [x] 设置阅读权限
+  * [x] 设置售价
+  * [x] [富文本模式](#富文本支持)
 * [x] 登录
   * [x] 用户名登录
-  * [x] *UID或邮箱登录*
+  * [x] UID或邮箱登录
   * [x] 带安全问题登录
   * [x] 登录一次后cookie自动登录
   * [x] 退出登录
@@ -207,14 +176,14 @@
   * [ ] 购买记录
 * [x] 签到
   * [x] 手动签到
-  * [x] *自动签到（为所有用户）*
+  * [x] 自动签到（为所有用户）
 * [x] 深色模式
   * [x] 手动设置
   * [x] 跟随系统
-  * [x] *自动调整帖子内的颜色*
+  * [x] 自动调整帖子内的颜色
 * [x] 主题
   * [x] 更换主题色
-  * [x] *动态颜色*
+  * [x] 动态颜色
 * [ ] 用户信息
   * [x] 查看用户信息
   * [x] 积分信息
@@ -230,8 +199,8 @@
   * [x] 回复私信
   * [x] 发送私信
   * [x] 发送富文本私信
-  * [x] *自动拉取通知*
-  * [x] *自动拉取到新通知时发送系统通知（安卓）*
+  * [x] 自动拉取通知
+  * [x] 自动拉取到新通知时发送系统通知（安卓）
 * [ ] 好友
   * [ ] 加好友
   * [ ] 查看好友
@@ -241,7 +210,7 @@
 * [ ] 收藏
   * [ ] 收藏帖子或分区
   * [ ] RSS订阅
-* [x] *多用户*
+* [x] 多用户
 * [ ] 多语言
   * [x] 软件界面
   * [ ] 浏览内容翻译为繁体中文
