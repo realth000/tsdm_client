@@ -71,6 +71,9 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
 
     switch (resp) {
       case ImageCacheSuccessResponse():
+        if (hasError) {
+          setState(() => hasError = false);
+        }
         await widget._imageProvider.evict();
       case ImageCacheLoadingResponse() ||
             ImageCacheStatusResponse(status: ImageCacheStatus2.loading):
@@ -83,6 +86,9 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
           setState(() => hasError = true);
         }
       case ImageCacheStatusResponse(status: ImageCacheStatus2.cached):
+        if (hasError) {
+          setState(() => hasError = false);
+        }
         await widget._imageProvider.evict();
     }
   }
