@@ -122,7 +122,7 @@ jobs:
           echo "${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
       - name: Prepare flutter_avif
         run: |
-          sudo apt install -y make meson
+          sudo apt install -y make meson nasm
           cargo install cargo-ndk
           ./scripts/build-flutter_avif-android.sh
       - name: Precompile
