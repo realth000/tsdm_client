@@ -114,8 +114,12 @@ jobs:
           toolchain: ${{env.CI_RUST_VERSION}}
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
       - uses: nttld/setup-ndk@v1
+        id: setup-ndk
         with:
-          ndk-version: r21e
+          ndk-version: r27c
+      - name: Update NDK path
+        run: |
+          export PATH=$PATH:${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
       - name: Prepare flutter_avif
         run: |
           sudo apt install -y make meson
