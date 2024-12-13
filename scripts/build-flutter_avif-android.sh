@@ -3,7 +3,7 @@
 set -ex
 
 AVIF_ROOT="packages/flutter_avif"
-AVIF_ANDROID_JNILIBS_DIR="${AVIF_ROOT}/flutter_avif_android/src/main/jniLibs"
+AVIF_ANDROID_JNILIBS_DIR="${AVIF_ROOT}/flutter_avif_android/android/src/main/jniLibs"
 
 find "${AVIF_ANDROID_JNILIBS_DIR}" -type f -name "*.so" -delete
 ls -R "${AVIF_ANDROID_JNILIBS_DIR}"
