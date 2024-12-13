@@ -119,7 +119,7 @@ jobs:
           ndk-version: r27c
       - name: Update NDK path
         run: |
-          export PATH=$PATH:${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin
+          echo "${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
       - name: Prepare flutter_avif
         run: |
           sudo apt install -y make meson
