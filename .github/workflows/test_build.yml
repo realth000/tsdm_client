@@ -113,6 +113,9 @@ jobs:
         with:
           toolchain: ${{env.CI_RUST_VERSION}}
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+      - uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26c
       - name: Prepare flutter_avif
         run: |
           sudo apt install -y make meson
