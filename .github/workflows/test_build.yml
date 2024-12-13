@@ -38,7 +38,7 @@ on:
         default: true
 
 env:
-  CI_FLUTTER_VERSION: '3.24.x'
+  CI_FLUTTER_VERSION: '3.27.0'
 
 jobs:
   build-linux-android:

@@ -6,12 +6,10 @@ list(APPEND FLUTTER_PLUGIN_LIST
   file_selector_windows
   flutter_avif_windows
   gal
-  irondash_engine_context
   permission_handler_windows
   screen_retriever_windows
   share_plus
   sqlite3_flutter_libs
-  super_native_extensions
   system_theme
   url_launcher_windows
   window_manager

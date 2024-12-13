@@ -6,7 +6,8 @@ on:
       - 'v*'
 
 env:
-  CI_FLUTTER_VERSION: '3.24.x'
+  CI_FLUTTER_VERSION: '3.27.0'
+  # Do NOT remove or rename the variable above, otherwise will break FDroid workflows.
 
 jobs:
   release:
