@@ -1,3 +1,6 @@
 [submodule "packages/flutter_bbcode_editor"]
 	path = packages/flutter_bbcode_editor
 	url = https://github.com/realth000/flutter_bbcode_editor
+[submodule "packages/flutter_avif"]
+	path = packages/flutter_avif
+	url = https://github.com/realth000/flutter_avif.git

@@ -37,7 +37,8 @@ dependencies:
   flex_color_scheme: ^8.0.2
   flutter:
     sdk: flutter
-  flutter_avif: ^2.5.0
+  flutter_avif:
+    path: ./packages/flutter_avif/flutter_avif
   flutter_bbcode_editor:
     path: ./packages/flutter_bbcode_editor
   flutter_bloc: ^8.1.6
