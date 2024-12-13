@@ -48,9 +48,9 @@ _Matrix5 _multiplyMatrix(_Matrix5 m1, _Matrix5 m2) {
 
 List<num> _applyColorMatrix(Color color, _Matrix5 m) {
   final m5x1 = [
-    [color.red / 255],
-    [color.green / 255],
-    [color.blue / 255],
+    [color.r / 255],
+    [color.g / 255],
+    [color.b / 255],
     [1],
     [1],
   ];

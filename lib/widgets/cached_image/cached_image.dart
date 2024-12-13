@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -73,8 +74,8 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> with LoggerMixin {
   Widget _buildPlaceholder(BuildContext context) => Shimmer.fromColors(
-        baseColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
-        highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+        baseColor: Theme.of(context).colorScheme.primary.withOpacityA(0.3),
+        highlightColor: Theme.of(context).colorScheme.primary.withOpacityA(0.2),
         child: FallbackPicture(fit: widget.fit),
       );
 

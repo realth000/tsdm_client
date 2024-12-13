@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
 
@@ -38,10 +39,10 @@ final class ColorPickerDialog extends StatelessWidget {
             ),
             itemBuilder: (context, index) => GestureDetector(
               onTap: () async =>
-                  context.pop((Color(items[index].value), false)),
+                  context.pop((Color(items[index].valueA), false)),
               child: ColorPalette(
                 color: items[index],
-                selected: items[index].value == currentColorValue,
+                selected: items[index].valueA == currentColorValue,
               ),
             ),
             itemCount: items.length,

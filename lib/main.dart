@@ -6,6 +6,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/cmd.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/features/local_notice/callback.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -59,7 +60,7 @@ Future<void> main(List<String> args) async {
   final color = switch (useSystemTheme) {
     true => await SystemTheme.accentColor
         .load()
-        .then((_) => SystemTheme.accentColor.accent.value),
+        .then((_) => SystemTheme.accentColor.accent.valueA),
     false => settings.accentColor,
   };
   final themeModeIndex = settings.themeMode;

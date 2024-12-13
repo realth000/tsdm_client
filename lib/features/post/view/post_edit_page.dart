@@ -371,7 +371,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
 
   /// Show a modal bottom sheet to let user select a thread type.
   ///
-  /// Note that the content data [state.content.threadTypeList] MUST be
+  /// Note that the content data `state.content.threadTypeList` MUST be
   /// guaranteed to have values before calling this function.
   Future<void> _showSelectThreadTypeBottomSheet(
     BuildContext context,

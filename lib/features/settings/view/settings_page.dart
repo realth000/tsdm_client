@@ -8,6 +8,7 @@ import 'package:material_design_icons_flutter/material_design_icons_flutter.dart
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/extensions/duration.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
@@ -304,7 +305,10 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           context.read<ThemeCubit>().setAccentColor(color.$1!);
           context.read<SettingsBloc>().add(
-                SettingsValueChanged(SettingsKeys.accentColor, color.$1!.value),
+                SettingsValueChanged(
+                  SettingsKeys.accentColor,
+                  color.$1!.valueA,
+                ),
               );
         },
       ),
