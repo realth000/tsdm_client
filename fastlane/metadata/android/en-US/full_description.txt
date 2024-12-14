@@ -1,0 +1,21 @@
+<h3>Features</h3>
+<ul>
+<li>View posts</li>
+<li>Reply to posts</li>
+<li>Edit posts</li>
+<li>Create posts</li>
+<li>Login</li>
+<li>Search</li>
+<li>Points</li>
+<li>Purchase</li>
+<li>Sign in</li>
+<li>Dark mode</li>
+<li>Theme</li>
+<li>User info</li>
+<li>Notification</li>
+<li>Friends</li>
+<li>In-app update</li>
+<li>Favorite</li>
+<li>Multi-user</li>
+<li>Multilingual</li>
+</ul>
