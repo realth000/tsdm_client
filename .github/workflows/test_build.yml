@@ -123,7 +123,7 @@ jobs:
       - name: Prepare flutter_avif
         run: |
           sudo apt install -y make meson nasm
-          cargo install cargo-ndk
+          cargo install cargo-ndk@3.5.4 --locked
           ./scripts/build-flutter_avif-android.sh
       - name: Precompile
         run: |
