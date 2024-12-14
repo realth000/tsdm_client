@@ -48,6 +48,6 @@ extension Accessor327Ext on Color {
   /// ```
   Color withOpacityA(double opacity) {
     assert(opacity >= 0.0 && opacity <= 1.0, 'invalid opacity value');
-    return withValues(alpha: 255.0 * 0.3);
+    return withAlpha((255.0 * 0.3).round());
   }
 }
