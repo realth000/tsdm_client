@@ -711,6 +711,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildTitleRow(context, state),
+                sizedBoxW4H4,
                 // Post data editor.
                 Expanded(
                   child: Padding(
