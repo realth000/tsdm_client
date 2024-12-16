@@ -323,26 +323,21 @@ class _ForumPageState extends State<ForumPage>
             .add(ForumLoadMoreRequested(state.currentPage + 1));
         // _refreshController.finishLoad();
       },
-      childBuilder: (context, physics) => Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildNormalThreadFilterRow(context, state),
-          Expanded(
-            child: Padding(
-              padding: edgeInsetsL12T4R12,
-              child: CustomScrollView(
-                controller: _threadScrollController,
-                physics: physics,
-                slivers: [
-                  SliverList.separated(
-                    itemCount: normalThreadList.length,
-                    itemBuilder: (context, index) =>
-                        NormalThreadCard(normalThreadList[index]),
-                    separatorBuilder: (context, index) => sizedBoxW4H4,
-                  ),
-                ],
-              ),
+      childBuilder: (context, physics) => CustomScrollView(
+        controller: _threadScrollController,
+        physics: physics,
+        slivers: [
+          PinnedHeaderSliver(
+            child: _buildNormalThreadFilterRow(context, state),
+          ),
+          const SliverPadding(padding: edgeInsetsL12T4R12),
+          SliverList.separated(
+            itemCount: normalThreadList.length,
+            itemBuilder: (context, index) => Padding(
+              padding: edgeInsetsL12R12,
+              child: NormalThreadCard(normalThreadList[index]),
             ),
+            separatorBuilder: (context, index) => sizedBoxW4H4,
           ),
         ],
       ),

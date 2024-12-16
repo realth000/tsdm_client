@@ -50,14 +50,7 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
             ),
             body: AnimatedSwitcher(
               duration: duration200,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  sizedBoxW4H4,
-                  sizedBoxW4H4,
-                  Expanded(child: body),
-                ],
-              ),
+              child: body,
             ),
           );
         },
@@ -104,7 +97,7 @@ class _BodyState extends State<_Body> {
         return ListView.separated(
           controller: _scrollController,
           physics: physics,
-          padding: edgeInsetsL12R12,
+          padding: edgeInsetsL12T4R12,
           itemCount: widget.models.length,
           itemBuilder: (context, index) {
             return ThreadVisitHistoryCard(widget.models[index]);
