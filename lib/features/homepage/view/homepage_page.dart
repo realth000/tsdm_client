@@ -19,7 +19,6 @@ import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
-import 'package:tsdm_client/widgets/loading_shimmer.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// Show [FloatingActionButton] when offset is larger than this value.
@@ -157,7 +156,7 @@ class _HomepagePageState extends State<HomepagePage> {
                         .read<HomepageBloc>()
                         .add(HomepageRefreshRequested());
                   },
-                  child: const LoadingShimmer(child: HomepagePlaceholder()),
+                  child: const Center(child: CircularProgressIndicator()),
                 ),
               HomepageStatus.needLogin => NeedLoginPage(
                   backUri: GoRouterState.of(context).uri,

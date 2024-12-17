@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/topics/bloc/topics_bloc.dart';
-import 'package:tsdm_client/features/topics/widgets/topics_placeholder.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
@@ -13,7 +12,6 @@ import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_r
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
-import 'package:tsdm_client/widgets/loading_shimmer.dart';
 
 /// App topic page.
 ///
@@ -119,7 +117,7 @@ class _TopicsPageState extends State<TopicsPage>
                 key: const ValueKey('loading'),
                 controller: _refreshController,
                 header: const MaterialHeader(),
-                child: const LoadingShimmer(child: TopicsPlaceholder()),
+                child: const Center(child: CircularProgressIndicator()),
               ),
             TopicsStatus.failed => buildRetryButton(context, () {
                 context.read<TopicsBloc>().add(TopicsRefreshRequested());
