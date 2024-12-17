@@ -199,14 +199,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     );
 
     // Filter all duplicate messages.
-    info.noticeList.removeWhere(
-      (x) => localNoticeData.noticeList.any(
-        (y) => y.uid == uid && y.nid == x.id,
+    localNoticeData.noticeList.removeWhere(
+      (x) => info.noticeList.any(
+        (y) => x.uid == uid && x.nid == y.id,
       ),
     );
-    info.broadcastMessageList.removeWhere(
-      (x) => localNoticeData.broadcastMessageList.any(
-        (y) => y.uid == uid && y.pmid == x.pmid,
+    localNoticeData.broadcastMessageList.removeWhere(
+      (x) => info.broadcastMessageList.any(
+        (y) => x.uid == uid && x.pmid == y.pmid,
       ),
     );
 
