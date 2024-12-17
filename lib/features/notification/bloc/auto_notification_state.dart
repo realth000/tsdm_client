@@ -4,10 +4,7 @@ part of 'auto_notification_cubit.dart';
 @MappableClass()
 sealed class AutoNoticeState with AutoNoticeStateMappable {
   /// Constructor.
-  const AutoNoticeState(this.duration);
-
-  /// Duration to fetch notice.
-  final Duration duration;
+  const AutoNoticeState();
 }
 
 /// Initial state.
@@ -15,15 +12,27 @@ sealed class AutoNoticeState with AutoNoticeStateMappable {
 final class AutoNoticeStateStopped extends AutoNoticeState
     with AutoNoticeStateStoppedMappable {
   /// Constructor.
-  const AutoNoticeStateStopped(super.duration);
+  const AutoNoticeStateStopped();
 }
 
-/// Waiting for next scheduled time to do refresh notice.
+/// Ticking time to do refresh notice.
+///
+/// This state indicates a waiting for next fetch state, may be triggered
+/// frequently.
 @MappableClass()
-final class AutoNoticeStateWaiting extends AutoNoticeState
-    with AutoNoticeStateWaitingMappable {
+final class AutoNoticeStateTicking extends AutoNoticeState
+    with AutoNoticeStateTickingMappable {
   /// Constructor.
-  const AutoNoticeStateWaiting(super.duration);
+  const AutoNoticeStateTicking({
+    required this.total,
+    required this.remain,
+  });
+
+  /// Total scheduled time.
+  final Duration total;
+
+  /// Remaining time till next fetch.
+  final Duration remain;
 }
 
 /// Pending latest notice state.
@@ -34,5 +43,5 @@ final class AutoNoticeStateWaiting extends AutoNoticeState
 final class AutoNoticeStatePending extends AutoNoticeState
     with AutoNoticeStatePendingMappable {
   /// Constructor.
-  const AutoNoticeStatePending(super.duration);
+  const AutoNoticeStatePending();
 }

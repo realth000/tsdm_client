@@ -1,7 +1,10 @@
+import 'dart:math' as math;
+
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -256,14 +259,7 @@ class _NotificationPageState extends State<NotificationPage>
                   },
                 ),
               ],
-              bottom: TabBar(
-                controller: _tabController,
-                tabs: [
-                  Tab(child: Text(tr.noticeTab.title)),
-                  Tab(child: Text(tr.privateMessageTab.title)),
-                  Tab(child: Text(tr.broadcastMessageTab.title)),
-                ],
-              ),
+              bottom: _PreferredSizeComponentBottom(_tabController),
             ),
             body: body,
           );
@@ -271,4 +267,49 @@ class _NotificationPageState extends State<NotificationPage>
       ),
     );
   }
+}
+
+/// Composition of [TabBar] and [LinearProgressIndicator].
+class _PreferredSizeComponentBottom extends StatelessWidget
+    implements PreferredSizeWidget {
+  const _PreferredSizeComponentBottom(this.tabController);
+
+  final TabController tabController;
+
+  @override
+  Widget build(BuildContext context) {
+    final tr = context.t.noticePage;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        BlocBuilder<AutoNotificationCubit, AutoNoticeState>(
+          builder: (context, state) {
+            return switch (state) {
+              AutoNoticeStateStopped() => sizedBoxW2H2,
+              AutoNoticeStateTicking(:final total, :final remain) =>
+                LinearProgressIndicator(
+                  value: math.max(1 - remain.inSeconds / total.inSeconds, 0),
+                  minHeight: 2,
+                ),
+              AutoNoticeStatePending() => const LinearProgressIndicator(
+                  minHeight: 2,
+                ),
+            };
+          },
+        ),
+        TabBar(
+          controller: tabController,
+          tabs: [
+            Tab(child: Text(tr.noticeTab.title)),
+            Tab(child: Text(tr.privateMessageTab.title)),
+            Tab(child: Text(tr.broadcastMessageTab.title)),
+          ],
+        ),
+      ],
+    );
+  }
+
+  /// Composed of [TabBar] height and [LinearProgressIndicator] height.
+  @override
+  Size get preferredSize => const Size.fromHeight(46 + 2);
 }

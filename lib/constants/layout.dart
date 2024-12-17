@@ -17,6 +17,9 @@ const sizeButtonInCardMinWidth = 200.0;
 /// Zero size [SizedBox] represents no widget.
 const sizedBoxEmpty = SizedBox.shrink();
 
+/// A [SizedBox] with 2 width and 2 height.
+const sizedBoxW2H2 = SizedBox(width: 2, height: 2);
+
 /// A [SizedBox] with 4 width and 4 height.
 const sizedBoxW4H4 = SizedBox(width: 4, height: 4);
 

@@ -37,7 +37,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   })  : _authenticationRepository = authenticationRepository,
         _notificationRepository = notificationRepository,
         _storageProvider = storageProvider,
-        super(const AutoNoticeStateStopped(Duration.zero)) {
+        super(const AutoNoticeStateStopped()) {
     _authSub = _authenticationRepository.status.listen(
       (e) => switch (e) {
         AuthStatusUnknown() ||
@@ -58,13 +58,16 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
   /// Duration between auto fetch actions.
   Duration duration;
 
+  /// Current time to tick.
+  var _remainingTick = Duration.zero;
+
   /// Timer calculating fetch actions.
   Timer? _timer;
 
   AsyncVoidEither _emitDataState(int uid) {
     return AsyncVoidEither(() async {
       debug('auto fetch finished with data');
-      emit(AutoNoticeStatePending(duration));
+      emit(const AutoNoticeStatePending());
 
       // Code below is synced from _onRecordFetchTimeRequested in
       // NotificationBloc.
@@ -74,13 +77,16 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
       final now = DateTime.now();
       debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
       await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+
+      emit(AutoNoticeStateTicking(total: duration, remain: _remainingTick));
+
       return rightVoid();
     });
   }
 
   void _emitErrorState(AppException e) {
     error('auto fetch ended with error: $e');
-    emit(AutoNoticeStateStopped(duration));
+    emit(const AutoNoticeStateStopped());
   }
 
   /// Do the auto fetch action when timeout.
@@ -95,7 +101,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
     debug('running auto fetch...');
 
     // Mark as pending data.
-    emit(AutoNoticeStatePending(duration));
+    emit(const AutoNoticeStatePending());
 
     final uid = _authenticationRepository.currentUser?.uid;
     if (uid == null) {
@@ -137,24 +143,37 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
 
     if (duration != null) {
       this.duration = duration;
+      _remainingTick = duration;
     }
 
     if (_timer?.isActive ?? false) {
       _timer?.cancel();
     }
-    _timer = Timer.periodic(this.duration, (_) async => _onTimeout());
-    emit(AutoNoticeStateWaiting(this.duration));
-  }
+    _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
+      _remainingTick -= const Duration(seconds: 1);
+      emit(
+        AutoNoticeStateTicking(
+          total: this.duration,
+          remain: _remainingTick,
+        ),
+      );
+      if (_remainingTick.inSeconds > 0) {
+        return;
+      }
 
-  /// Enter waiting state.
-  void wait() => emit(AutoNoticeStateWaiting(duration));
+      // Timeout, reset.
+      _remainingTick = this.duration;
+      await _onTimeout();
+    });
+  }
 
   /// Stop the auto fetch scheduler.
   void stop() {
     info('stop auto fetch with duration $duration');
     _timer?.cancel();
     _timer = null;
-    emit(AutoNoticeStateStopped(duration));
+    _remainingTick = Duration.zero;
+    emit(const AutoNoticeStateStopped());
   }
 
   @override
