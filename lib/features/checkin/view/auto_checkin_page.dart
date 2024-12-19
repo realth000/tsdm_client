@@ -55,8 +55,10 @@ class _AutoCheckinPageState extends State<AutoCheckinPage> {
               ),
               ...succeededList.map(
                 (e) => AutoCheckinUserCard(
+                  // Ok to use record.
                   // ignore: avoid_positional_fields_in_records
                   e.$1,
+                  // Ok to use record.
                   // ignore: avoid_positional_fields_in_records
                   CheckinResult.message(context, e.$2),
                   failure: false,
@@ -64,10 +66,13 @@ class _AutoCheckinPageState extends State<AutoCheckinPage> {
               ),
               ...failedList.map(
                 (e) => AutoCheckinUserCard(
+                  // Ok to use record.
                   // ignore: avoid_positional_fields_in_records
                   e.$1,
+                  // Ok to use record.
                   // ignore: avoid_positional_fields_in_records
                   CheckinResult.message(context, e.$2),
+                  // Ok to use record.
                   // ignore: avoid_positional_fields_in_records
                   failure: e.$2 is! CheckinResultAlreadyChecked,
                 ),

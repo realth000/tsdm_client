@@ -1,17 +1,32 @@
 part of 'models.dart';
 
-// ignore_for_file: public_member_api_docs
-
 /// All checkin feelings.
 enum CheckinFeeling {
+  /// 开心
   happy,
+
+  /// 伤心
   sad,
+
+  /// 郁闷
   depressed,
+
+  /// 无聊
   boring,
+
+  /// 生气
   angry,
+
+  /// 无语
   speechless,
+
+  /// 奋斗
   struggle,
+
+  /// 慵懒
   lazy,
+
+  /// 倒霉
   unlucky;
 
   factory CheckinFeeling.from(String feeling) {

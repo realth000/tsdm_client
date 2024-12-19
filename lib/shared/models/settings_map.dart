@@ -1,3 +1,4 @@
+// All public fields in the map is defined in settings keys.
 // ignore_for_file: public_member_api_docs
 
 part of 'models.dart';

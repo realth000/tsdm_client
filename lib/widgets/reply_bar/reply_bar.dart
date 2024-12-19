@@ -767,6 +767,7 @@ final class ReplyBarController with LoggerMixin {
   bool? _closed;
   String? _hintText;
 
+  // Internal _bind setter.
   // ignore: avoid_setters_without_getters
   set _bind(_ReplyBarState state) {
     _state = state;

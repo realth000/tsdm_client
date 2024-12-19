@@ -113,6 +113,9 @@ class _ImageDialogState extends State<_ImageDialog>
         widthController.text = '${uiImage.width}';
         heightController.text = '${uiImage.height}';
       });
+      // Intend to catch all exceptions only be aware of a manual required
+      // state.
+      // ignore: avoid_catches_without_on_clauses
     } catch (e, _) {
       // Directly cache Future.error.
       error('failed to fill image size: invalid image: $e');

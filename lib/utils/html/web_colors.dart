@@ -1,5 +1,6 @@
 import 'dart:ui';
 
+// All colors in current file are defined in web standards.
 // ignore_for_file: public_member_api_docs
 
 enum WebColors {

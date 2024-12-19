@@ -25,12 +25,26 @@ extension _ExtractExt on List<SettingsEntity> {
       return settings.defaultValue;
     }
     return (switch (T) {
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           int => v.intValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           double => v.doubleValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           String => v.stringValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           bool => v.boolValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           DateTime => v.dateTimeValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           Offset => v.offsetValue,
+          // ref: https://github.com/dart-lang/sdk/issues/59334
+          // ignore: type_literal_in_constant_pattern
           Size => v.sizeValue,
           _ => null,
         } ??
@@ -133,12 +147,26 @@ final class SettingsRepository with LoggerMixin {
 
     final name = key.name;
     final v = await switch (T) {
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       int => _storage.getInt(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       double => _storage.getDouble(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       String => _storage.getString(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       bool => _storage.getBool(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       DateTime => _storage.getDateTime(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       Offset => _storage.getOffset(name),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       Size => _storage.getSize(name),
       _ => () {
           error('failed to getValue for key $key: unsupported type $T');
@@ -165,12 +193,26 @@ final class SettingsRepository with LoggerMixin {
 
     final name = key.name;
     final _ = await switch (T) {
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       int => _storage.saveInt(name, value as int),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       double => _storage.saveDouble(name, value as double),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       String => _storage.saveString(name, value as String),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       bool => _storage.saveBool(name, value: value as bool),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       DateTime => _storage.saveDateTime(name, value as DateTime),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       Offset => _storage.saveOffset(name, value as Offset),
+      // ref: https://github.com/dart-lang/sdk/issues/59334
+      // ignore: type_literal_in_constant_pattern
       Size => _storage.saveSize(name, value as Size),
       final t => () {
           error('failed to save settings for key $key:'

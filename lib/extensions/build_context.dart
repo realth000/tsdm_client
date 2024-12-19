@@ -60,6 +60,8 @@ extension AccessContext on BuildContext {
   T? readOrNull<T>() {
     try {
       return read<T>();
+      // This catch clause intends to be a safe accessor on providers.
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       return null;
     }

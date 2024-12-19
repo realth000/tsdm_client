@@ -291,6 +291,7 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Ignore dynamic generic type here because the function is used to compare
   /// all types of [SettingsKeys].
   @override
+  // Intend to have dynamic types.
   // ignore: avoid_dynamic
   int compareTo(SettingsKeys<dynamic> other) => name.compareTo(other.name);
 }

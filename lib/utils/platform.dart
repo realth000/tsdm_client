@@ -2,6 +2,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:flutter/foundation.dart';
 
+// Simple api.
 // ignore_for_file: public_member_api_docs
 
 const isWeb = kIsWeb;

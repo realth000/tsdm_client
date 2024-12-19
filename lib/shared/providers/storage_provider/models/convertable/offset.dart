@@ -10,6 +10,7 @@ class OffsetConverter extends TypeConverter<Offset, String> {
 
   @override
   Offset fromSql(String fromDb) {
+    // Dynamic is required in generic as it is.
     // ignore: avoid_dynamic
     final jsonMap = Map.castFrom<String, dynamic, String, double>(
       jsonDecode(fromDb) as Map<String, dynamic>,

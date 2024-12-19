@@ -71,6 +71,7 @@ Future<void> initCache() async {
 
 /// Provider of cached images.
 final class ImageCacheProvider with LoggerMixin {
+  // Can not be const.
   // ignore: prefer_const_constructor_declarations
   /// Constructor.
   ImageCacheProvider(this._netClientProvider);
@@ -380,6 +381,8 @@ final class ImageCacheProvider with LoggerMixin {
       // Validate all cached emoji files exists.
       final validateResult = info.validateCache(_emojiCacheDirectory.path);
       return validateResult;
+      // Intend to be a muter on all types of exception.
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       warning('validate emoji cache failed: invalid emoji info: $e');
       return false;
@@ -407,6 +410,8 @@ final class ImageCacheProvider with LoggerMixin {
       final info =
           EmojiGroupListMapper.fromJson(_emojiCacheInfoFile.readAsStringSync());
       return info.emojiGroupList;
+      // Intend to be a muter on all types of exception.
+      // ignore: avoid_catches_without_on_clauses
     } catch (e) {
       warning('failed to load emoji info when decoding json: $e');
       return null;

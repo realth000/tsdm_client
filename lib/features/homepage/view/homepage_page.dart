@@ -223,6 +223,7 @@ class _HomepagePageState extends State<HomepagePage> {
                           username: username,
                           avatarUrl: avatarUrl,
                           heroTag: username,
+                          // Ok to use record.
                           // ignore: avoid_positional_fields_in_records
                           latestThreadUrl: state.loggedUserInfo
                               ?.relatedLinkPairList.lastOrNull?.$2,

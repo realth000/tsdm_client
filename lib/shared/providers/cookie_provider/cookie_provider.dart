@@ -181,12 +181,14 @@ final class CookieProvider with LoggerMixin implements Storage {
   ///
   /// The main difference between web page styles are homepage layout.
   ///
+  /// ```console
   /// name    id     avatar   forum-info-layout
   /// 水晶     4    no avatar  <dd> <em> <font>主题</font> <font>123</font> </em> </dd>
   /// 爱丽丝   5       avatar  <dd> <em>主题</em> , <em>123></em> </dd>
   /// 羽翼     6    no avatar  Same with style 4
   /// 旅行者   13      avatar  Same with style 5
   /// 自由之翼 12      avatar  Same with style 5
+  /// ```
   void _setupWebPageStyle() {}
 
   @override

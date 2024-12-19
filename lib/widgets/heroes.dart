@@ -15,6 +15,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 /// Like [CircleAvatar], display user avatar but with hero animation support.
 final class HeroUserAvatar extends StatefulWidget {
+  // Can no be a const constructor.
   // ignore: prefer_const_constructor_declarations
   /// Constructor.
   HeroUserAvatar({
