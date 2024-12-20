@@ -4,7 +4,8 @@ import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 
 /// App full version generated from the compile environment.
-const appFullVersion = '$appVersion.$gitCommitRevisionShort ($gitCommitCount) '
+const appFullVersion = '$appVersion.$gitCommitRevisionShort '
+    '($gitCommitCountCurrentBranch) '
     '($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
 
 /// App logo asset path. Logo format: *.svg.
