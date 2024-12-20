@@ -29,7 +29,7 @@ dependencies:
   drift: ^2.22.1
   # For drift
   drift_dev: ^2.22.1
-  drift_flutter: ^0.2.3
+  drift_flutter: ^0.2.2
   easy_refresh: ^3.4.0
   equatable: ^2.0.7
   extended_nested_scroll_view: ^6.2.1
