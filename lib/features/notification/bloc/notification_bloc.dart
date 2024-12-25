@@ -5,7 +5,6 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/repository/notification_info_repository.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
@@ -83,16 +82,13 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     debug('updating all notifications...');
 
     emit(state.copyWith(status: NotificationStatus.loading));
-    var uid = _authRepo.currentUser?.uid;
+    final uid = _authRepo.currentUser?.uid;
     if (uid == null) {
-      // If not authed, waiting for next authed state.
-      // This step is optimizing initializing step when app startup.
-      final waitingUid = await _authRepo.status
-          .firstWhere((e) => e is AuthStatusAuthed && e.userInfo.uid != null);
-      uid = (waitingUid as AuthStatusAuthed).userInfo.uid;
+      info('skip request of update notification: uid is null, not authorized');
+      return;
     }
     final lastFetchTimeEither =
-        await _storageProvider.fetchLastFetchNoticeTime(uid!).run();
+        await _storageProvider.fetchLastFetchNoticeTime(uid).run();
     int? timestamp;
     if (lastFetchTimeEither.isRight()) {
       final datetime = lastFetchTimeEither.unwrap();
@@ -131,19 +127,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
 
     emit(state.copyWith(status: NotificationStatus.loading));
 
-    // Load local notice cache.
-    // Here fetch all cached notice, no matter what time is it when last fetch
-    // notice happened.
-    final localNoticeData = await _storageProvider
-        .fetchNotificationSince(uid: uid, timestamp: 0)
-        .run();
-    debug('load local notification: '
-        'notice=${localNoticeData.noticeList.length} '
-        'personalMessage=${localNoticeData.personalMessageList.length} '
-        'broadcastMessage=${localNoticeData.broadcastMessageList.length}');
-
     // Save fetched notice.
-
     debug('saving notification: notice=${info.noticeList.length} '
         'personalMessage=${info.personalMessageList.length} '
         'broadcastMessage=${info.broadcastMessageList.length}');
@@ -190,6 +174,23 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
           ),
         )
         .run();
+
+    final currentUid = _authRepo.currentUser?.uid;
+    if (currentUid != uid) {
+      debug('Async gap meets uid changes, do NOT update state.');
+      return;
+    }
+
+    // Load local notice cache.
+    // Here fetch all cached notice, no matter what time is it when last fetch
+    // notice happened.
+    final localNoticeData = await _storageProvider
+        .fetchNotificationSince(uid: uid, timestamp: 0)
+        .run();
+    debug('load local notification: '
+        'notice=${localNoticeData.noticeList.length} '
+        'personalMessage=${localNoticeData.personalMessageList.length} '
+        'broadcastMessage=${localNoticeData.broadcastMessageList.length}');
 
     // Filter all outdated messages.
     localNoticeData.personalMessageList.removeWhere(
