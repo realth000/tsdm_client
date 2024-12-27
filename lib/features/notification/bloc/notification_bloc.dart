@@ -1,6 +1,7 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -400,6 +401,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     final task = switch (recordMark) {
       RecordMarkNotice(:final uid, :final nid, alreadyRead: final read) => () {
           final targetIndex = state.noticeList.indexWhere((e) => e.id == nid);
+          if (targetIndex < 0) {
+            // target not found.
+            return AsyncVoidEither(() async => left(NotificationNotFound()));
+          }
           final target = state.noticeList[targetIndex];
           final list = state.noticeList.toList();
           list[targetIndex] = target.copyWith(alreadyRead: read);

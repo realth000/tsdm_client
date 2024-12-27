@@ -372,6 +372,11 @@ final class ThreadPublishLocationNotFoundException extends AppException
 final class NotificationUserNotFound extends AppException
     with NotificationUserNotFoundMappable {}
 
+/// Notification not found in bloc.
+@MappableClass()
+final class NotificationNotFound extends AppException
+    with NotificationNotFoundMappable {}
+
 /// Cookie not found in storage when doing auto checkin for user [userInfo].
 ///
 /// Means a checkin failure.

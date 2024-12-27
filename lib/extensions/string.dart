@@ -204,6 +204,36 @@ extension ParseUrl on String {
   String? uriQueryParameter(String name) {
     return Uri.parse(this).queryParameters[name];
   }
+
+  /// Check a string is pattern of user space url.
+  ///
+  /// A string is a valid user space url ONLY if
+  ///
+  /// 1. Is a valid url.
+  /// 2. In query parameters, 'mod' == 'space'.
+  /// 3. In query parameters, contains key 'uid' or 'username'. (email ignored).
+  /// 4. In query parameters, value of 'ac' is neither 'usergroup' nor 'credit'.
+  bool get isUserSpaceUrl {
+    final args = Uri.tryParse(this)?.queryParameters;
+    if (args == null) {
+      return false;
+    }
+
+    if (args['mod'] != 'space') {
+      return false;
+    }
+
+    if (args['uid'] == null && args['username'] == null) {
+      return false;
+    }
+
+    final ac = args['ac'];
+    if (ac == 'usergroup' || ac == 'credit') {
+      return false;
+    }
+
+    return true;
+  }
 }
 
 /// Extension on [String] that enhances modification.

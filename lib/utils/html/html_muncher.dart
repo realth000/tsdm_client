@@ -846,7 +846,7 @@ final class _Muncher with LoggerMixin {
       return ret;
     }
     final Widget content;
-    if (url.contains('mod=space') && !element.innerText.contains('@')) {
+    if (url.isUserSpaceUrl && !element.innerText.contains('@')) {
       content = Text(
         '@',
         style: TextStyle(
