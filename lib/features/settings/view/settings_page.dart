@@ -676,6 +676,37 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
+  List<Widget> _buildDebugSection(
+    BuildContext context,
+    SettingsState state,
+  ) {
+    final enableDebugOperations = state.settingsMap.enableDebugOperations;
+
+    final tr = context.t.settingsPage.debugSection;
+    return [
+      SectionTitleText(tr.title),
+      ExpansionTile(
+        leading: const Icon(Icons.bug_report_outlined),
+        title: Text(tr.tip),
+        children: [
+          SectionSwitchListTile(
+            title: Text(tr.enableDebugOperations.title),
+            subtitle: Text(tr.enableDebugOperations.detail),
+            value: enableDebugOperations,
+            onChanged: (v) {
+              context.read<SettingsBloc>().add(
+                    SettingsValueChanged(
+                      SettingsKeys.enableDebugOperations,
+                      v,
+                    ),
+                  );
+            },
+          ),
+        ],
+      ),
+    ];
+  }
+
   List<Widget> _buildOtherSection(BuildContext context) {
     final tr = context.t.settingsPage.othersSection;
     return [
@@ -771,6 +802,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ..._buildCheckinSection(context, state),
               ..._buildStorageSection(context, state),
               ..._buildAdvanceSection(context, state),
+              ..._buildDebugSection(context, state),
               ..._buildOtherSection(context),
             ],
           ),

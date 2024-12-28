@@ -184,6 +184,14 @@
         }
       }
     },
+    "debugSection": {
+      "title": "调试",
+      "tip": "除非得到建议，否则请勿更改这些设置",
+      "enableDebugOperations": {
+        "title": "启用调试操作",
+        "detail": "显示仅用来调试的操作选项"
+      }
+    },
     "othersSection": {
       "title": "其他",
       "about": "关于",

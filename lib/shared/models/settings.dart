@@ -276,6 +276,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'autoSyncNoticeSeconds',
     type: int,
     defaultValue: 600,
+  ),
+
+  /// Enable operations for debugging.
+  enableDebugOperations<bool>(
+    name: 'enableDebugOperations',
+    type: bool,
+    defaultValue: false,
   );
 
   const SettingsKeys({

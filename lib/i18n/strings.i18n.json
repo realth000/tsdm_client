@@ -184,6 +184,14 @@
         }
       }
     },
+    "debugSection": {
+      "title": "Debug",
+      "tip": "Do not change these settings unless you are advised to",
+      "enableDebugOperations": {
+        "title": "Enable debug operations",
+        "detail": "show operations that only used for debugging"
+      }
+    },
     "othersSection": {
       "title": "Others",
       "about": "About",

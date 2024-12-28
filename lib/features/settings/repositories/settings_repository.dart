@@ -129,6 +129,7 @@ final class SettingsRepository with LoggerMixin {
       showUnreadBroadcastMessageBadge:
           s.extract(_SK.showUnreadBroadcastMessageBadge),
       autoSyncNoticeSeconds: s.extract(_SK.autoSyncNoticeSeconds),
+      enableDebugOperations: s.extract(_SK.enableDebugOperations),
     );
   }
 

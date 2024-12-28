@@ -184,6 +184,14 @@
         }
       }
     },
+    "debugSection": {
+      "title": "調試",
+      "tip": "除非得到建議，否則請勿更改這些設定",
+      "enableDebugOperations": {
+        "title": "啟用偵錯操作",
+        "detail": "顯示僅用來偵錯的操作選項"
+      }
+    },
     "othersSection": {
       "title": "其他",
       "about": "關於",

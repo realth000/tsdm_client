@@ -42,6 +42,7 @@ class SettingsMap with SettingsMapMappable {
     required this.showUnreadPersonalMessageBadge,
     required this.showUnreadBroadcastMessageBadge,
     required this.autoSyncNoticeSeconds,
+    required this.enableDebugOperations,
   });
 
   final String netClientAccept;
@@ -78,6 +79,7 @@ class SettingsMap with SettingsMapMappable {
   final bool showUnreadPersonalMessageBadge;
   final bool showUnreadBroadcastMessageBadge;
   final int autoSyncNoticeSeconds;
+  final bool enableDebugOperations;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -141,6 +143,8 @@ class SettingsMap with SettingsMapMappable {
         copyWith(showUnreadBroadcastMessageBadge: value as bool?),
       SettingsKeys.autoSyncNoticeSeconds =>
         copyWith(autoSyncNoticeSeconds: value as int?),
+      SettingsKeys.enableDebugOperations =>
+        copyWith(enableDebugOperations: value as bool?),
     };
   }
 }
