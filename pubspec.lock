@@ -346,10 +346,10 @@ packages:
     dependency: "direct main"
     description:
       name: device_info_plus
-      sha256: a7fd703482b391a87d60b6061d04dfdeab07826b96f9abd8f5ed98068acc0074
+      sha256: "4fa68e53e26ab17b70ca39f072c285562cfc1589df5bb1e9295db90f6645f431"
       url: "https://pub.dev"
     source: hosted
-    version: "10.1.2"
+    version: "11.2.0"
   device_info_plus_platform_interface:
     dependency: transitive
     description:
@@ -402,18 +402,18 @@ packages:
     dependency: "direct main"
     description:
       name: drift
-      sha256: c2d073d35ad441730812f4ea05b5dd031fb81c5f9786a4f5fb77ecd6307b6f74
+      sha256: cc593c8acaccaf4a5750fac034e06289f572038a38391d4343739789591e6b01
       url: "https://pub.dev"
     source: hosted
-    version: "2.22.1"
+    version: "2.23.0"
   drift_dev:
     dependency: "direct main"
     description:
       name: drift_dev
-      sha256: f4ab5d6976b1e31551ceb82ff597a505bda7818ff4f7be08a1da9d55eb6e730c
+      sha256: fde4fcb5776c2048ecdf672de396e3fdad8e93bf5148b69dd401cf6767a16e0d
       url: "https://pub.dev"
     source: hosted
-    version: "2.22.1"
+    version: "2.23.0"
   drift_flutter:
     dependency: "direct main"
     description:
@@ -482,10 +482,10 @@ packages:
     dependency: transitive
     description:
       name: file_picker
-      sha256: c2376a6aae82358a9f9ccdd7d1f4006d08faa39a2767cce01031d9f593a8bd3b
+      sha256: c904b4ab56d53385563c7c39d8e9fa9af086f91495dfc48717ad84a42c3cf204
       url: "https://pub.dev"
     source: hosted
-    version: "8.1.6"
+    version: "8.1.7"
   file_selector_linux:
     dependency: transitive
     description:
@@ -931,10 +931,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_android
-      sha256: fa8141602fde3f7e2f81dbf043613eb44dfa325fa0bcf93c0f142c9f7a2c193e
+      sha256: aa6f1280b670861ac45220cc95adc59bb6ae130259d36f980ccb62220dc5e59f
       url: "https://pub.dev"
     source: hosted
-    version: "0.8.12+18"
+    version: "0.8.12+19"
   image_picker_for_web:
     dependency: transitive
     description:
@@ -1776,26 +1776,26 @@ packages:
     dependency: "direct main"
     description:
       name: talker
-      sha256: acd8f23656ea77b4170652a00268ae62a9fcf62e22f8aefff29bf5eb468207bf
+      sha256: a6f41a41df44d1e5adbb2bce5605ab70ac9b1fff2bb214f04d081099de3b6041
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.2"
+    version: "4.5.4"
   talker_flutter:
     dependency: "direct main"
     description:
       name: talker_flutter
-      sha256: a2a96b608b8deb8f9940f9f19ccca45c35214192c00f21fe07142512b5e7117e
+      sha256: "7dce55a42ffe9ac590d46f71a978aa1eb7aecd040915a8307f8880526c47f9ae"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.2"
+    version: "4.5.4"
   talker_logger:
     dependency: transitive
     description:
       name: talker_logger
-      sha256: "55b56ef63923972dc04e193d7939807eef5bb94c8bf7bcb1c408f6cbc46ab2d5"
+      sha256: "2fcceac82e5cc03680502c05316a88c48438836d3bf44329e3eab77b234181ef"
       url: "https://pub.dev"
     source: hosted
-    version: "4.5.2"
+    version: "4.5.4"
   term_glyph:
     dependency: transitive
     description:
