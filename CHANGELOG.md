@@ -6,6 +6,23 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.0.1] - 2024-12-28
+
+### Fixed
+
+- 编辑：修复保存折叠区域和隐藏区域的内容时，光标不在区域旁边会导致保存失败的问题。
+- 编辑：修复安卓上使用折叠区域和隐藏区域会导致卡死的问题。
+  - 在安卓上暂时改为插入`hide`和`spoiler`源代码，需要重构相关功能。
+
+### Changed
+
+- app: 去除了一部分不需要的依赖。
+- internal: 依赖的flutter最低版本提升至3.27.1。
+
+### Removed
+
+- 通知：暂时移除自动拉取通知的功能，待相关问题修复后再恢复。
+
 ## [1.0.0] - 2024-12-13
 
 ### Added
