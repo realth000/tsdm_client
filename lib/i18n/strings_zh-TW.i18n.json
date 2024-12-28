@@ -190,6 +190,10 @@
       "enableDebugOperations": {
         "title": "啟用偵錯操作",
         "detail": "顯示僅用來偵錯的操作選項"
+      },
+      "exportLog": {
+        "title": "匯出日誌",
+        "detail": "日誌已匯出到 ${path: String}"
       }
     },
     "othersSection": {

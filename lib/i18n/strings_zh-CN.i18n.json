@@ -190,6 +190,10 @@
       "enableDebugOperations": {
         "title": "启用调试操作",
         "detail": "显示仅用来调试的操作选项"
+      },
+      "exportLog": {
+        "title": "导出日志",
+        "detail": "日志已导出到 ${path: String}"
       }
     },
     "othersSection": {

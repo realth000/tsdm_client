@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -5,6 +7,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -45,6 +49,9 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   final scrollController = ScrollController();
+
+  /// Tip of log export path.
+  String? _logExportPath;
 
   /// Show a dialog to let user select locale.
   ///
@@ -700,6 +707,35 @@ class _SettingsPageState extends State<SettingsPage> {
                       v,
                     ),
                   );
+            },
+          ),
+          SectionListTile(
+            title: Text(tr.exportLog.title),
+            subtitle: _logExportPath == null
+                ? null
+                : Text(tr.exportLog.detail(path: _logExportPath!)),
+            onTap: () async {
+              final logData =
+                  talker.history.map((e) => e.generateTextMessage()).join('\n');
+
+              final sysDownloadPath = path.join(
+                isAndroid
+                    ? '/storage/emulated/0/download'
+                    : (await getDownloadsDirectory())!.path,
+                'tsdm_client',
+              );
+              final logName =
+                  'log_${DateTime.now().millisecondsSinceEpoch}.txt';
+              final savePath = path.join(sysDownloadPath, logName);
+              final logDir = Directory(sysDownloadPath);
+              if (!logDir.existsSync()) {
+                await logDir.create();
+              }
+              final logFile = File(savePath);
+              await logFile.writeAsString(logData);
+              setState(() {
+                _logExportPath = savePath;
+              });
             },
           ),
         ],

@@ -190,6 +190,10 @@
       "enableDebugOperations": {
         "title": "Enable debug operations",
         "detail": "show operations that only used for debugging"
+      },
+      "exportLog": {
+        "title": "Export log",
+        "detail": "Log has been exported to ${path: String}"
       }
     },
     "othersSection": {
