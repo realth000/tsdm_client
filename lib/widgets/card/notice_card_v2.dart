@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/html/munch_options.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -23,6 +24,7 @@ enum _Actions {
   markAsRead,
   markAsUnread,
   deleteItem,
+  copyRawContent,
 }
 
 /// Widgets in this file are for models fetched through notification APIs.
@@ -125,6 +127,16 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                     ),
                   ),
                 PopupMenuItem(
+                  value: _Actions.copyRawContent,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.copy_all_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.copyRawContent),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
                   value: _Actions.deleteItem,
                   child: Row(
                     children: [
@@ -173,6 +185,8 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                             nid: widget.data.id,
                           ),
                         );
+                  case _Actions.copyRawContent:
+                    await copyToClipboard(context, widget.data.data);
                 }
               },
             ),
@@ -321,6 +335,16 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                       ),
                     ),
                   PopupMenuItem(
+                    value: _Actions.copyRawContent,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.copy_all_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.copyRawContent),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
                     value: _Actions.deleteItem,
                     child: Row(
                       children: [
@@ -362,6 +386,8 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                               peerUid: widget.data.peerUid,
                             ),
                           );
+                    case _Actions.copyRawContent:
+                      await copyToClipboard(context, widget.data.data);
                   }
                 },
               ),
@@ -484,6 +510,16 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                       ),
                     ),
                   PopupMenuItem(
+                    value: _Actions.copyRawContent,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.copy_all_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.copyRawContent),
+                      ],
+                    ),
+                  ),
+                  PopupMenuItem(
                     value: _Actions.deleteItem,
                     child: Row(
                       children: [
@@ -525,6 +561,8 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                               pmid: widget.data.pmid,
                             ),
                           );
+                    case _Actions.copyRawContent:
+                      await copyToClipboard(context, widget.data.data);
                   }
                 },
               ),

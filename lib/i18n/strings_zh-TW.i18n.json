@@ -398,7 +398,8 @@
       "delete": {
         "title": "刪除訊息",
         "detail": "確定要刪除這則訊息？操作無法撤銷"
-      }
+      },
+      "copyRawContent": "拷貝原始內容"
     }
   },
   "searchPage": {

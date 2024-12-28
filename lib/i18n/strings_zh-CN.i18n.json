@@ -398,7 +398,8 @@
       "delete": {
         "title": "删除消息",
         "detail": "确定要删除这条消息？操作无法撤销"
-      }
+      },
+      "copyRawContent": "拷贝原始内容"
     }
   },
   "searchPage": {

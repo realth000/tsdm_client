@@ -398,7 +398,8 @@
       "delete": {
         "title": "Delete message",
         "detail": "Are you sure to delete this message? this action can not be undone"
-      }
+      },
+      "copyRawContent": "Copy raw content"
     }
   },
   "searchPage": {
