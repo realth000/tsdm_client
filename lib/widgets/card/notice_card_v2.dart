@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/authentication/repository/authentication_re
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -127,16 +128,6 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                     ),
                   ),
                 PopupMenuItem(
-                  value: _Actions.copyRawContent,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.copy_all_outlined),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(tr.copyRawContent),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
                   value: _Actions.deleteItem,
                   child: Row(
                     children: [
@@ -154,6 +145,31 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                     ],
                   ),
                 ),
+                if (context
+                    .read<SettingsBloc>()
+                    .state
+                    .settingsMap
+                    .enableDebugOperations) ...<PopupMenuEntry<_Actions>>[
+                  const PopupMenuDivider(),
+                  PopupMenuItem(
+                    value: _Actions.copyRawContent,
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.bug_report_outlined,
+                          color: Theme.of(context).colorScheme.secondary,
+                        ),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(
+                          tr.copyRawContent,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ],
               onSelected: (value) async {
                 switch (value) {
@@ -335,22 +351,20 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                       ),
                     ),
                   PopupMenuItem(
-                    value: _Actions.copyRawContent,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.copy_all_outlined),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.copyRawContent),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
                     value: _Actions.deleteItem,
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_forever_outlined),
+                        Icon(
+                          Icons.delete_forever_outlined,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                         sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.delete.title),
+                        Text(
+                          tr.delete.title,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
                       ],
                     ),
                   ),
@@ -510,22 +524,20 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                       ),
                     ),
                   PopupMenuItem(
-                    value: _Actions.copyRawContent,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.copy_all_outlined),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.copyRawContent),
-                      ],
-                    ),
-                  ),
-                  PopupMenuItem(
                     value: _Actions.deleteItem,
                     child: Row(
                       children: [
-                        const Icon(Icons.delete_forever_outlined),
+                        Icon(
+                          Icons.delete_forever_outlined,
+                          color: Theme.of(context).colorScheme.error,
+                        ),
                         sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.delete.title),
+                        Text(
+                          tr.delete.title,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
                       ],
                     ),
                   ),
