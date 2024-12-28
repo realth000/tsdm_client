@@ -42,6 +42,7 @@ Future<bool?> showQuestionDialog({
   required String title,
   String? message,
   TextSpan? richMessage,
+  bool dangerous = false,
 }) async {
   assert(
     message != null || richMessage != null,
@@ -64,9 +65,17 @@ Future<bool?> showQuestionDialog({
             },
           ),
           TextButton(
-            child: Text(context.t.general.ok),
+            child: Text(
+              context.t.general.ok,
+              style: dangerous
+                  ? TextStyle(color: Theme.of(context).colorScheme.error)
+                  : null,
+            ),
             onPressed: () {
-              Navigator.pop(context, true);
+              Navigator.pop(
+                context,
+                true,
+              );
             },
           ),
         ],

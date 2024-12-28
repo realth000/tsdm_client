@@ -128,9 +128,17 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                   value: _Actions.deleteItem,
                   child: Row(
                     children: [
-                      const Icon(Icons.delete_forever_outlined),
+                      Icon(
+                        Icons.delete_forever_outlined,
+                        color: Theme.of(context).colorScheme.error,
+                      ),
                       sizedBoxPopupMenuItemIconSpacing,
-                      Text(tr.delete.title),
+                      Text(
+                        tr.delete.title,
+                        style: TextStyle(
+                          color: Theme.of(context).colorScheme.error,
+                        ),
+                      ),
                     ],
                   ),
                 ),
@@ -147,6 +155,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                       context: context,
                       title: tr.title,
                       message: tr.detail,
+                      dangerous: true,
                     );
                     if (!context.mounted || result == null || !result) {
                       return;
