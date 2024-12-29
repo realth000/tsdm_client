@@ -6,6 +6,24 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.0.2] - 2024-12-29
+
+### Fixed
+
+- app: 在安卓平台上禁用impeller以修复各种渲染和白屏问题。
+
+### Changed
+
+- debug: 增加了一点用来调试的功能。
+- app: 应用名缩短为“天使动漫” by [@Qing-Novel](https://github.com/Qing-Novel) in [#151](https://github.com/realth000/tsdm_client/pull/151)
+- android: F-Droid配置 by [@linsui](https://github.com/linsui) in [#141](https://github.com/realth000/tsdm_client/pull/141)
+  - 这个版本稍后应该可以从F-Droid下载了。
+  - 非常感谢[@linsui](https://github.com/linsui)帮忙发布到F-Droid。
+- internal: 更新以下依赖项版本 by [@Malus-risus](https://github.com/Malus-risus) in [#154](https://github.com/realth000/tsdm_client/pull/154)
+  - `kotlin=2.1.0`
+  - `gradle=8.12`
+  - `AGP=8.7.3`
+
 ## [1.0.1] - 2024-12-28
 
 ### Fixed
