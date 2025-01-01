@@ -265,29 +265,9 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           threadDataNode,
           document.currentPage() ?? 1,
         );
-        String? title;
-        // Most threads have thread type node before the title.
-        title =
-            // Thread belongs to not types.
-            document
-                    .querySelector('div#postlist h1.ts > a:nth-child(1)')
-                    ?.nextNode
-                    ?.text
-                    ?.trim() ??
-                // Thread belongs to some type.
-                document
-                    .querySelector('div#postlist h1.ts > a:nth-child(1)')
-                    ?.innerText
-                    .trim();
-        if (title?.isEmpty ?? true) {
-          // Some thread belongs to no type.
-          title = document
-              .querySelector('div#postlist h1.ts')
-              ?.nodes
-              .elementAtOrNull(0)
-              ?.text
-              ?.trim();
-        }
+        // Title node ALWAYS has an `a` node with id `thread_subject`.
+        // It's invisible in most styles and visible in 爱丽丝 style.
+        final title = document.querySelector('a#thread_subject')?.text?.trim();
 
         final allLinksInBreadCrumb = document.querySelectorAll('div#pt a');
         final forumName = switch (allLinksInBreadCrumb.length < 2) {
