@@ -194,6 +194,9 @@
       "exportLog": {
         "title": "Export log",
         "detail": "Log has been exported to ${path: String}"
+      },
+      "viewLog": {
+        "title": "View log"
       }
     },
     "othersSection": {
@@ -762,5 +765,9 @@
         "bm": "You received ${noticeCount: int} notice, ${pmCount: int} PMs, ${bmCount: int} BMs\n[BM]${msg: String}"
       }
     }
+  },
+  "debugLogPage": {
+    "title": "Log",
+    "copyLogToClipboard": "Log copied to clipboard"
   }
 }

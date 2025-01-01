@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -16,11 +18,15 @@ import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:window_manager/window_manager.dart';
 
-Future<void> main(List<String> args) async {
+Future<void> main(List<String> args) async =>
+    runZonedGuarded(() async => _boot(args), _ensureHandled);
+
+Future<void> _boot(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   parseCmdArgs(args);
 
   talker.debug('start app...');
-  WidgetsFlutterBinding.ensureInitialized();
   await initProviders();
 
   final settings = getIt.get<SettingsRepository>().currentSettings;
@@ -101,3 +107,6 @@ Future<void> main(List<String> args) async {
     ),
   );
 }
+
+void _ensureHandled(Object exception, StackTrace? stackTrace) =>
+    talker.handle(exception, stackTrace);

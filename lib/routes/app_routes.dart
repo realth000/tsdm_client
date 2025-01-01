@@ -25,6 +25,7 @@ import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
+import 'package:tsdm_client/features/settings/view/debug_log_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
 import 'package:tsdm_client/features/settings/view/thread_card_appearance.dart';
 import 'package:tsdm_client/features/settings/widgets/app_license_page.dart';
@@ -334,6 +335,11 @@ final router = GoRouter(
       path: ScreenPaths.autoCheckinDetail,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const AutoCheckinPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.debugLog,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const DebugLogPage(),
     ),
   ],
 );

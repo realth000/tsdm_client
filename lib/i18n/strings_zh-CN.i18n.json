@@ -194,6 +194,9 @@
       "exportLog": {
         "title": "导出日志",
         "detail": "日志已导出到 ${path: String}"
+      },
+      "viewLog": {
+        "title": "查看日志"
       }
     },
     "othersSection": {
@@ -762,5 +765,9 @@
         "bm": "收到了${noticeCount: int}条提醒，${pmCount: int}条私信，${bmCount: int}条公共消息\n[公共消息]${msg: String}"
       }
     }
+  },
+  "debugLogPage": {
+    "title": "日志",
+    "copyLogToClipboard": "日志已复制到剪切板"
   }
 }

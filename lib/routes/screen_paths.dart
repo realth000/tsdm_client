@@ -174,6 +174,9 @@ class ScreenPaths {
 
   /// Page  to show auto checkin detail information.
   static const String autoCheckinDetail = '/autoCheckinDetail';
+
+  /// Page to show logs for debugging.
+  static const String debugLog = '/debugLog';
 }
 
 /// Route path for a screen.

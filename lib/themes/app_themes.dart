@@ -33,29 +33,32 @@ class AppTheme {
     drawerRadius: 0,
   );
 
-  static CardTheme _buildCardTheme() => const CardTheme(
+  static CardTheme _buildCardTheme() =>
+      const CardTheme(
         elevation: 0,
       );
 
-  static ChipThemeData _buildChipTheme() => const ChipThemeData(
+  static ChipThemeData _buildChipTheme() =>
+      const ChipThemeData(
         padding: EdgeInsets.all(2),
       );
 
   /// Global theme for [ListTile].
-  static ListTileThemeData _buildListTileTheme() => const ListTileThemeData(
+  static ListTileThemeData _buildListTileTheme() =>
+      const ListTileThemeData(
         visualDensity: VisualDensity.standard,
         contentPadding: EdgeInsets.symmetric(horizontal: 10),
         horizontalTitleGap: 10,
       );
 
   /// Global theme for [TabBar].
-  static TabBarTheme _buildTabBarTheme() => const TabBarTheme(
+  static TabBarTheme _buildTabBarTheme() =>
+      const TabBarTheme(
         dividerHeight: 0,
       );
 
   static NavigationDrawerThemeData _buildNavigationDrawerTheme(
-    ColorScheme? colorScheme,
-  ) =>
+      ColorScheme? colorScheme,) =>
       NavigationDrawerThemeData(
         labelTextStyle: WidgetStateProperty.resolveWith((state) {
           if (state.contains(WidgetState.selected)) {
@@ -78,16 +81,17 @@ class AppTheme {
       seedScheme = ColorScheme.fromSeed(seedColor: seedColor);
     }
     return FlexThemeData.light(
+      fontFamily: 'Microsoft YaHei UI',
       colors: seedScheme != null
           ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
+        primary: seedScheme.primary,
+        primaryContainer: seedScheme.primaryContainer,
+        secondary: seedScheme.secondary,
+        secondaryContainer: seedScheme.secondaryContainer,
+        tertiary: seedScheme.tertiary,
+        tertiaryContainer: seedScheme.tertiaryContainer,
+        error: seedScheme.error,
+      )
           : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
@@ -116,16 +120,17 @@ class AppTheme {
       );
     }
     return FlexThemeData.dark(
+      fontFamily: '更纱黑体 UI SC',
       colors: seedScheme != null
           ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
+        primary: seedScheme.primary,
+        primaryContainer: seedScheme.primaryContainer,
+        secondary: seedScheme.secondary,
+        secondaryContainer: seedScheme.secondaryContainer,
+        tertiary: seedScheme.tertiary,
+        tertiaryContainer: seedScheme.tertiaryContainer,
+        error: seedScheme.error,
+      )
           : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
