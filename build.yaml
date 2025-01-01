@@ -1,10 +1,6 @@
 targets:
   $default:
     builders:
-      slang_build_runner:
-        enabled: true
-        options:
-          base_locale: en
       gitsumu|info:
         generate_for:
           - lib/utils/git_info.dart
