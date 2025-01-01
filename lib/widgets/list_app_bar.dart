@@ -6,6 +6,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
@@ -28,6 +29,11 @@ enum MenuActions {
   ///
   /// Only available to thread pages.
   reverseOrder,
+
+  /// Debug option.
+  ///
+  /// View log.
+  debugViewLog,
 }
 
 /// A app bar contains list and provides features including:
@@ -186,6 +192,22 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
+            if (context
+                .read<SettingsBloc>()
+                .state
+                .settingsMap
+                .enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: MenuActions.debugViewLog,
+                child: Text(
+                  context.t.settingsPage.debugSection.viewLog.title,
+                  style: TextStyle(
+                    color: Theme.of(context).colorScheme.secondary,
+                  ),
+                ),
+              ),
+            ],
           ],
           onSelected: onSelected,
         ),

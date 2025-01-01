@@ -369,6 +369,8 @@ class _ThreadPageState extends State<ThreadPage>
                       context
                           .readOrNull<ThreadBloc>()
                           ?.add(const ThreadChangeViewOrderRequested());
+                    case MenuActions.debugViewLog:
+                      await context.pushNamed(ScreenPaths.debugLog);
                   }
                 },
               ),

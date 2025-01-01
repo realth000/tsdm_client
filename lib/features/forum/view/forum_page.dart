@@ -183,6 +183,8 @@ class _ForumPageState extends State<ForumPage>
             );
           case MenuActions.reverseOrder:
             ;
+          case MenuActions.debugViewLog:
+            await context.pushNamed(ScreenPaths.debugLog);
         }
       },
     );

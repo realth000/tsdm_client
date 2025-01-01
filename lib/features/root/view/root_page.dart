@@ -30,13 +30,11 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
   @override
   void initState() {
     super.initState();
-    debug('enter page ${widget.path}');
     rootLocationStream.add(RootLocationEventEnter(widget.path));
   }
 
   @override
   void dispose() {
-    debug('leave page ${widget.path}');
     rootLocationStream.add(RootLocationEventLeave(widget.path));
     super.dispose();
   }
