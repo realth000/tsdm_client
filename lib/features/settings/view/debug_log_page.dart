@@ -16,12 +16,6 @@ class _DebugLogPageState extends State<DebugLogPage> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.debugLogPage;
-    return TalkerScreen(
-      talker: talker,
-      appBarTitle: tr.title,
-      theme: TalkerScreenTheme(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-      ),
-    );
+    return TalkerScreen(talker: talker, appBarTitle: tr.title);
   }
 }
