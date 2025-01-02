@@ -1,4 +1,2 @@
 base_locale: en
 input_directory: lib/i18n
-namespaces: true
-output_file_name: strings.g.dart
