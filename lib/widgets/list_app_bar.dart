@@ -200,12 +200,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
               const PopupMenuDivider(),
               PopupMenuItem(
                 value: MenuActions.debugViewLog,
-                child: Text(
-                  context.t.settingsPage.debugSection.viewLog.title,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
+                child: Text(context.t.settingsPage.debugSection.viewLog.title),
               ),
             ],
           ],

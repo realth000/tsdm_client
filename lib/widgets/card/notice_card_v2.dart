@@ -153,12 +153,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                   const PopupMenuDivider(),
                   PopupMenuItem(
                     value: _Actions.copyRawContent,
-                    child: Text(
-                      tr.copyRawContent,
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    ),
+                    child: Text(tr.copyRawContent),
                   ),
                 ],
               ],
