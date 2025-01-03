@@ -72,6 +72,7 @@
       <td>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
+        <a href="https://f-droid.org/packages/kzs.th000.tsdm_client/"><img src="https://img.shields.io/f-droid/v/kzs.th000.tsdm_client?logo=fdroid&logoColor=white" alt="F-Droid"/></a><br>
       </td>
     </tr>
     <tr>
