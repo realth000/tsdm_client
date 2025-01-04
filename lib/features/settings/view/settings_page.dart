@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
@@ -9,8 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -737,26 +734,6 @@ class _SettingsPageState extends State<SettingsPage> {
                   _logExportPath = outputFile;
                 });
               }
-              return;
-
-              final sysDownloadPath = path.join(
-                isAndroid
-                    ? '/storage/emulated/0/download'
-                    : (await getDownloadsDirectory())!.path,
-                'tsdm_client',
-              );
-              final logName =
-                  'log_${DateTime.now().millisecondsSinceEpoch}.txt';
-              final savePath = path.join(sysDownloadPath, logName);
-              final logDir = Directory(sysDownloadPath);
-              if (!logDir.existsSync()) {
-                await logDir.create();
-              }
-              final logFile = File(savePath);
-              await logFile.writeAsString(logData);
-              setState(() {
-                _logExportPath = savePath;
-              });
             },
           ),
         ],
