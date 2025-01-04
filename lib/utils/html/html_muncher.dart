@@ -832,7 +832,7 @@ final class _Muncher with LoggerMixin {
         element.childNodes[0].nodeType == uh.Node.ELEMENT_NODE &&
         (element.childNodes[0] as uh.Element).tagName == 'IMG';
     state
-      ..tapUrl = url
+      ..tapUrl = url.prependHost()
       ..wrapInWord = true;
     final ret = _munch(element);
     state.wrapInWord = false;
