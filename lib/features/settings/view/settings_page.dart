@@ -1,6 +1,8 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:collection/collection.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -721,6 +723,21 @@ class _SettingsPageState extends State<SettingsPage> {
             onTap: () async {
               final logData =
                   talker.history.map((e) => e.generateTextMessage()).join('\n');
+
+              final outputFile = await FilePicker.platform.saveFile(
+                fileName: 'log_${DateTime.now().millisecondsSinceEpoch}.txt',
+                bytes: utf8.encode(logData),
+              );
+              if (outputFile == null) {
+                setState(() {
+                  _logExportPath = null;
+                });
+              } else {
+                setState(() {
+                  _logExportPath = outputFile;
+                });
+              }
+              return;
 
               final sysDownloadPath = path.join(
                 isAndroid

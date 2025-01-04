@@ -33,6 +33,7 @@ dependencies:
   easy_refresh: ^3.4.0
   equatable: ^2.0.7
   extended_nested_scroll_view: ^6.2.1
+  file_picker: ^8.1.7
   flex_color_scheme: ^8.0.2
   flutter:
     sdk: flutter
