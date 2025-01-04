@@ -752,5 +752,8 @@
   "debugLogPage": {
     "title": "日志",
     "copyLogToClipboard": "日志已复制到剪切板"
+  },
+  "packetDetailPage": {
+    "title": "红包详情"
   }
 }

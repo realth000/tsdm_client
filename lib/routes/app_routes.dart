@@ -17,6 +17,7 @@ import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/view/broadcast_message_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
+import 'package:tsdm_client/features/packet/view/packet_detail_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
@@ -334,6 +335,14 @@ final router = GoRouter(
       path: ScreenPaths.debugLog,
       parentNavigatorKey: _rootRouteKey,
       builder: (_) => const DebugLogPage(),
+    ),
+    AppRoute(
+      path: ScreenPaths.packetDetail,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final tid = int.parse(state.pathParameters['tid']!);
+        return PacketDetailPage(tid);
+      },
     ),
   ],
 );

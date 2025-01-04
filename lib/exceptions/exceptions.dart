@@ -407,3 +407,16 @@ final class ImageUploadFailed extends AppException
   /// Constructor.
   ImageUploadFailed(String message) : super(message: message);
 }
+
+/// Failed to parse packet detail table
+@MappableClass()
+final class PacketDetailParseFailed extends AppException
+    with PacketDetailParseFailedMappable {
+  // Super not const.
+  // ignore: prefer_const_constructor_declarations
+  /// Constructor.
+  PacketDetailParseFailed(this.tid, String message) : super(message: message);
+
+  /// Thread id.
+  final int tid;
+}

@@ -174,6 +174,9 @@ class ScreenPaths {
 
   /// Page to show logs for debugging.
   static const String debugLog = '/debugLog';
+
+  /// Page to show packet statistics detail info of a thread.
+  static const String packetDetail = '/packetDetail/:tid';
 }
 
 /// Route path for a screen.

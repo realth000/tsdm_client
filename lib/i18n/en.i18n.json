@@ -752,5 +752,8 @@
   "debugLogPage": {
     "title": "Log",
     "copyLogToClipboard": "Log copied to clipboard"
+  },
+  "packetDetailPage": {
+    "title": "Packet details"
   }
 }

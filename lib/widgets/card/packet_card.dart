@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/packet/cubit/packet_cubit.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 
 /// 红包
 class PacketCard extends StatelessWidget {
@@ -16,6 +19,12 @@ class PacketCard extends StatelessWidget {
     super.key,
   });
 
+  /// Regexp to parse thread id from [packetUrl].
+  ///
+  /// Because here we are deeply inside a thread where we do not have direct
+  /// access to current thread.
+  static final _re = RegExp(r'tid=(?<tid>\d+)');
+
   /// Url to fetch/receive the packet.
   final String packetUrl;
 
@@ -24,6 +33,8 @@ class PacketCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tid = _re.firstMatch(packetUrl)?.namedGroup('tid')?.parseToInt();
+
     final primaryColor = Theme.of(context).colorScheme.primary;
     final tr = context.t.packetCard;
 
@@ -105,6 +116,22 @@ class PacketCard extends StatelessWidget {
                           style:
                               Theme.of(context).textTheme.titleMedium?.copyWith(
                                     color: primaryColor,
+                                  ),
+                        ),
+                        // Some spacing.
+                        sizedBoxW32H32,
+                        sizedBoxW32H32,
+                        sizedBoxW32H32,
+                        IconButton(
+                          icon: Icon(
+                            Icons.bar_chart_outlined,
+                            color: Theme.of(context).colorScheme.secondary,
+                          ),
+                          onPressed: tid == null
+                              ? null
+                              : () async => context.pushNamed(
+                                    ScreenPaths.packetDetail,
+                                    pathParameters: {'tid': '$tid'},
                                   ),
                         ),
                       ],
