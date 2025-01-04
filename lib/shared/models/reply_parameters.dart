@@ -22,7 +22,7 @@ class ReplyParameters with ReplyParametersMappable {
   final String tid;
 
   /// Post time.
-  final String postTime;
+  final String? postTime;
 
   /// Form hash used in post request.
   final String formHash;

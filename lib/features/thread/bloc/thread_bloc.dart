@@ -321,13 +321,17 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             .querySelector('input[name="subject"]')
             ?.attributes['value'];
 
+        // If the post time parameter is null, only warn in log.
+        // Because some subreddits do not have it.
+        if (postTime == null) {
+          warning('null post time found in thread, '
+              'reply parameter may be invalid');
+        }
+
         ReplyParameters? replyParameters;
-        if (fid == null ||
-            postTime == null ||
-            formHash == null ||
-            subject == null) {
+        if (fid == null || formHash == null || subject == null) {
           error(
-            'failed to get reply form hash: fid=$fid postTime=$postTime '
+            'failed to get reply form hash: fid=$fid '
             'formHash=$formHash subject=$subject',
           );
         } else {

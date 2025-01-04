@@ -139,10 +139,13 @@ final class ReplyRepository with LoggerMixin {
     final formData = <String, dynamic>{
       'message': replyMessage,
       'usesig': 1,
-      'posttime': replyParameters.postTime,
       'formhash': replyParameters.formHash,
       'subject': replyParameters.subject,
     };
+    // Only apply post time when not null.
+    if (replyParameters.postTime != null) {
+      formData['posttime'] = replyParameters.postTime;
+    }
     final e = await getIt
         .get<NetClientProvider>()
         .postForm(
