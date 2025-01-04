@@ -12,8 +12,6 @@ environment:
   sdk: ">=3.6.0 <4.0.0"
 
 dependencies:
-  # Workaround for dart_mappable build issue
-  ansicolor: any
   args: ^2.6.0
   bbob_dart: ^0.2.1
   bloc: ^8.1.4
@@ -22,7 +20,6 @@ dependencies:
   collection: any
   cookie_jar: ^4.0.8
   dart_mappable: ^4.3.0
-  device_info_plus: any
   dio: ^5.7.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1

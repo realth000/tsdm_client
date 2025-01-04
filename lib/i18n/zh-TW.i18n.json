@@ -202,7 +202,10 @@
     "othersSection": {
       "title": "其他",
       "about": "關於",
-      "upgrade": "更新",
+      "update": {
+        "title": "取得更新",
+        "fDroidTip": "如果這個應用程式是從F-Droid安裝的，建議仍然走F-Droid升級"
+      },
       "changelog": "變更記錄"
     }
   },
@@ -218,26 +221,6 @@
     "flutterVersion": "Flutter版本",
     "dartVersion": "Dart版本",
     "license": "版權"
-  },
-  "upgradePage": {
-    "title": "更新",
-    "description": "檢查並下載最新版本",
-    "currentVersion": "目前版本: $currentVersion",
-    "latestVersion": "最新版本: $latestVersion",
-    "releaseNotes": "更新記錄",
-    "fetchingData": "取得中",
-    "download": "下載",
-    "savePath": "儲存路徑",
-    "storagePermissionNotGranted": "下載失敗，因為未授予儲存權限",
-    "saveTo": "儲存到 $path",
-    "failedToDownloadDialog": {
-      "title": "下載失敗",
-      "description": "沒有找到適合目前系統的安裝套件"
-    },
-    "fullChangelogDialog": {
-      "title": "更新歷史",
-      "loading": "載入中"
-    }
   },
   "loginPage": {
     "title": "登入天使動漫",

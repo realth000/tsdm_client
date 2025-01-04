@@ -69,6 +69,10 @@ const checkAuthenticationStateUrl = modifyUserCredentialUrl;
 const upgradeGithubReleaseUrl =
     'https://github.com/realth000/tsdm_client/releases/latest';
 
+/// F-Droid homepage.
+const upgradeFDroidHomepageUrl =
+    'https://f-droid.org/packages/kzs.th000.tsdm_client';
+
 /// Target url to post a reply to thread [tid], forum [fid].
 String formatReplyThreadUrl(String fid, String tid) {
   return '$homePage?mod=post&action=reply&fid=$fid&tid=$tid&'

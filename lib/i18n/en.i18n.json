@@ -202,7 +202,10 @@
     "othersSection": {
       "title": "Others",
       "about": "About",
-      "upgrade": "Update",
+      "update": {
+        "title": "Get updates",
+        "fDroidTip": "It is recommended to upgrade this app through F-Droid if you installed from there"
+      },
       "changelog": "Changelog"
     }
   },
@@ -218,26 +221,6 @@
     "flutterVersion": "Flutter Version",
     "dartVersion": "Dart Version",
     "license": "License"
-  },
-  "upgradePage": {
-    "title": "Upgrade",
-    "description": "Check and download the latest version",
-    "currentVersion": "Current version: $currentVersion",
-    "latestVersion": "Latest version:  $latestVersion",
-    "releaseNotes": "Release Notes",
-    "fetchingData": "fetching",
-    "download": "Download",
-    "savePath": "Save path",
-    "storagePermissionNotGranted": "Download failed because storage permission not granted",
-    "saveTo": "Save to $path",
-    "failedToDownloadDialog": {
-      "title": "Download Failed",
-      "description": "No package suitable for the current system found"
-    },
-    "fullChangelogDialog": {
-      "title": "Changelog",
-      "loading": "Loading"
-    }
   },
   "loginPage": {
     "title": "Login TSDM",

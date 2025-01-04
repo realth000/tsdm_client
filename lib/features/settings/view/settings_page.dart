@@ -6,11 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
@@ -36,6 +38,7 @@ import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 import 'package:tsdm_client/widgets/tips.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
@@ -757,10 +760,38 @@ class _SettingsPageState extends State<SettingsPage> {
       /// Update
       SectionListTile(
         leading: const Icon(Icons.new_releases_outlined),
-        title: Text(tr.upgrade),
-        onTap: () async {
-          await context.pushNamed(ScreenPaths.upgrade);
-        },
+        title: Text(tr.update.title),
+        onTap: () async => showCustomBottomSheet<void>(
+          context: context,
+          constraints: const BoxConstraints(maxHeight: 300),
+          title: tr.update.title,
+          pinnedWidget: Tips(
+            tr.update.fDroidTip,
+            sizePreferred: true,
+          ),
+          childrenBuilder: (context) => [
+            ListTile(
+              leading: Icon(MdiIcons.github),
+              title: const Text('GitHub'),
+              onTap: () async => launchUrl(
+                Uri.parse(upgradeGithubReleaseUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+            ),
+            ListTile(
+              leading: SvgPicture.asset(
+                assetsFDroidLogoPath,
+                width: 22,
+                height: 22,
+              ),
+              title: const Text('F-Droid'),
+              onTap: () async => launchUrl(
+                Uri.parse(upgradeFDroidHomepageUrl),
+                mode: LaunchMode.externalApplication,
+              ),
+            ),
+          ],
+        ),
       ),
 
       /// Changelog till publish.

@@ -14,6 +14,7 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 Future<T?> showCustomBottomSheet<T>({
   required BuildContext context,
   required String title,
+  PreferredSizeWidget? pinnedWidget,
   List<Widget> Function(BuildContext context)? childrenBuilder,
   Widget Function(BuildContext context)? builder,
   BoxConstraints? constraints,
@@ -46,11 +47,13 @@ Future<T?> showCustomBottomSheet<T>({
           title: Text(title),
           automaticallyImplyLeading: false,
           centerTitle: true,
+          bottom: pinnedWidget,
         ),
         body: Padding(
           padding: edgeInsetsL16T16R16B16,
           child: content,
         ),
+        primary: false,
       );
     },
   );
