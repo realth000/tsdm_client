@@ -64,19 +64,6 @@ final class HeroUserAvatar extends StatefulWidget {
 class _HeroUserAvatarState extends State<HeroUserAvatar> {
   bool hasError = false;
 
-  /// Has data
-  ///
-  /// This flag is a flag that can ONLY be set once.
-  /// Because [hasError] may change during `setState` triggered from other part
-  /// of the widget tree and the loaded data is reserved during all `setState`,
-  /// The state may be incorrectly considered as "has error, has no image data"
-  /// when effected by `setState`.
-  ///
-  /// Use this flag to indicate that the image is already cached and should not
-  /// be considered as broken state, which prevents showing the fallback first
-  /// letter.
-  bool _dataLoaded = false;
-
   StreamSubscription<ImageCacheResponse>? imageCacheSub;
 
   Future<void> onImageCachedResponse(ImageCacheResponse resp) async {
@@ -88,12 +75,7 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       case ImageCacheSuccessResponse():
         // Now the image is cached, load image data.
         if (hasError) {
-          setState(() {
-            hasError = false;
-          });
-        }
-        if (!_dataLoaded) {
-          setState(() => _dataLoaded = true);
+          setState(() => hasError = false);
         }
         await widget._imageProvider.evict();
       case ImageCacheLoadingResponse() ||
@@ -104,22 +86,12 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       case ImageCacheFailedResponse() ||
             ImageCacheStatusResponse(status: ImageCacheStatus2.notCached):
         if (!hasError) {
-          setState(() {
-            hasError = true;
-            _dataLoaded = false;
-          });
+          setState(() => hasError = true);
         }
       case ImageCacheStatusResponse(status: ImageCacheStatus2.cached):
         // Now the image is cached, load image data.
         if (hasError) {
-          setState(() {
-            hasError = false;
-          });
-          if (!_dataLoaded) {
-            setState(() => _dataLoaded = true);
-          }
-        } else {
-          setState(() => _dataLoaded = false);
+          setState(() => hasError = false);
         }
         await widget._imageProvider.evict();
     }
@@ -158,7 +130,7 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       backgroundImage: widget._imageProvider,
       maxRadius: widget.maxRadius,
       minRadius: widget.minRadius,
-      child: hasError & !_dataLoaded
+      child: hasError
           ? Text(widget.username.isEmpty ? ' ' : widget.username[0])
           : null,
     );
