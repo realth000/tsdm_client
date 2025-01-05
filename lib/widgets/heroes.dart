@@ -5,6 +5,7 @@ import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 
 ////////////////////////////////////////////////////////////////////////
@@ -63,6 +64,19 @@ final class HeroUserAvatar extends StatefulWidget {
 class _HeroUserAvatarState extends State<HeroUserAvatar> {
   bool hasError = false;
 
+  /// Has data
+  ///
+  /// This flag is a flag that can ONLY be set once.
+  /// Because [hasError] may change during `setState` triggered from other part
+  /// of the widget tree and the loaded data is reserved during all `setState`,
+  /// The state may be incorrectly considered as "has error, has no image data"
+  /// when effected by `setState`.
+  ///
+  /// Use this flag to indicate that the image is already cached and should not
+  /// be considered as broken state, which prevents showing the fallback first
+  /// letter.
+  bool _dataLoaded = false;
+
   StreamSubscription<ImageCacheResponse>? imageCacheSub;
 
   Future<void> onImageCachedResponse(ImageCacheResponse resp) async {
@@ -72,8 +86,14 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
 
     switch (resp) {
       case ImageCacheSuccessResponse():
+        // Now the image is cached, load image data.
         if (hasError) {
-          setState(() => hasError = false);
+          setState(() {
+            hasError = false;
+          });
+        }
+        if (!_dataLoaded) {
+          setState(() => _dataLoaded = true);
         }
         await widget._imageProvider.evict();
       case ImageCacheLoadingResponse() ||
@@ -84,11 +104,22 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       case ImageCacheFailedResponse() ||
             ImageCacheStatusResponse(status: ImageCacheStatus2.notCached):
         if (!hasError) {
-          setState(() => hasError = true);
+          setState(() {
+            hasError = true;
+            _dataLoaded = false;
+          });
         }
       case ImageCacheStatusResponse(status: ImageCacheStatus2.cached):
+        // Now the image is cached, load image data.
         if (hasError) {
-          setState(() => hasError = false);
+          setState(() {
+            hasError = false;
+          });
+          if (!_dataLoaded) {
+            setState(() => _dataLoaded = true);
+          }
+        } else {
+          setState(() => _dataLoaded = false);
         }
         await widget._imageProvider.evict();
     }
@@ -106,6 +137,12 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
               e.imageId == widget.username,
         )
         .listen((resp) async => onImageCachedResponse(resp));
+    getIt.get<ImageCacheProvider>().queryCacheState(
+          ImageCacheUserAvatarRequest(
+            username: widget.username,
+            imageUrl: widget.avatarUrl ?? '',
+          ),
+        );
   }
 
   @override
@@ -121,18 +158,9 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       backgroundImage: widget._imageProvider,
       maxRadius: widget.maxRadius,
       minRadius: widget.minRadius,
-      child: hasError
+      child: hasError & !_dataLoaded
           ? Text(widget.username.isEmpty ? ' ' : widget.username[0])
           : null,
-      onBackgroundImageError: (_, __) {
-        if (mounted) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            setState(() {
-              hasError = true;
-            });
-          });
-        }
-      },
     );
     if (widget.disableHero) {
       return avatar;

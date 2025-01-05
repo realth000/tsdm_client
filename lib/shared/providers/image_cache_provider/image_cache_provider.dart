@@ -107,6 +107,44 @@ final class ImageCacheProvider with LoggerMixin {
   ImageEntity? getCacheInfo(String imageUrl) =>
       getIt.get<StorageProvider>().getImageCacheSync(imageUrl);
 
+  /// Pend a cache response.
+  Future<void> queryCacheState(ImageCacheUserAvatarRequest req) async {
+    final cacheInfo =
+        await getIt.get<StorageProvider>().getUserAvatarEntityCache(
+              username: req.username,
+              imageUrl: req.imageUrl.isEmpty ? null : req.imageUrl,
+            );
+
+    if (cacheInfo == null) {
+      _controller.add(
+        ImageCacheFailedResponse(
+          req.imageId,
+          ImageCacheResponseType.userAvatar,
+        ),
+      );
+      return;
+    }
+
+    final cacheFile = getCacheFile(cacheInfo.cacheName);
+    if (!cacheFile.existsSync()) {
+      _controller.add(
+        ImageCacheFailedResponse(
+          req.imageId,
+          ImageCacheResponseType.userAvatar,
+        ),
+      );
+      return;
+    }
+    final cacheData = await cacheFile.readAsBytes();
+    _controller.add(
+      ImageCacheSuccessResponse(
+        req.imageId,
+        ImageCacheResponseType.userAvatar,
+        cacheData,
+      ),
+    );
+  }
+
   /// Get the cache image data related to [req].
   ///
   /// Only return the image data.

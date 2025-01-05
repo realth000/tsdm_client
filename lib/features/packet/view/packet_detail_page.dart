@@ -31,7 +31,7 @@ class PacketDetailPage extends StatefulWidget {
 enum _SortBy { time, coinsLeast, coinsMost }
 
 class _PacketDetailPageState extends State<PacketDetailPage> {
-  final _SortBy _sortByCoins = _SortBy.time;
+  _SortBy _sortByCoins = _SortBy.time;
 
   Widget _buildInfoRow(BuildContext context, List<PacketDetailModel> data) {
     final tr = context.t.packetDetailPage;
@@ -97,11 +97,11 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
     final secondaryColor = Theme.of(context).colorScheme.secondary;
 
     final dataSorted = switch (_sortByCoins) {
-      _SortBy.time => data,
+      _SortBy.time => data.toList(),
       _SortBy.coinsLeast =>
-        data.sortedByCompare((e) => e.coins, (lhs, rhs) => lhs - rhs),
+        data.sortedByCompare((e) => e.coins, (lhs, rhs) => lhs - rhs).toList(),
       _SortBy.coinsMost =>
-        data.sortedByCompare((e) => e.coins, (lhs, rhs) => rhs - lhs),
+        data.sortedByCompare((e) => e.coins, (lhs, rhs) => rhs - lhs).toList(),
     };
 
     return ListView.builder(
@@ -112,6 +112,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
           queryParameters: {'username': dataSorted[index].username},
         ),
         child: Padding(
+          key: ValueKey(dataSorted[index].id),
           padding: edgeInsetsL12T4R12,
           child: Row(
             children: [
@@ -195,22 +196,19 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
           return Scaffold(
             appBar: AppBar(
               title: Text(tr.title),
-              // FIXME: Enable sorting when when image provider setstate fixed.
-              // Now the fallback text is shown once setState.
-              //
-              // actions: [
-              //   IconButton(
-              //     icon: const Icon(Icons.sort_outlined),
-              //     onPressed: state is PacketDetailSuccess
-              //         ? () => setState(
-              //               () => _sortByCoins == _SortBy.values.last
-              //                   ? _sortByCoins = _SortBy.values.first
-              //                   : _sortByCoins =
-              //                       _SortBy.values[_sortByCoins.index + 1],
-              //             )
-              //         : null,
-              //   ),
-              // ],
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.sort_outlined),
+                  onPressed: state is PacketDetailSuccess
+                      ? () => setState(
+                            () => _sortByCoins == _SortBy.values.last
+                                ? _sortByCoins = _SortBy.values.first
+                                : _sortByCoins =
+                                    _SortBy.values[_sortByCoins.index + 1],
+                          )
+                      : null,
+                ),
+              ],
               bottom: infoRow == null
                   ? null
                   : PreferredSize(
