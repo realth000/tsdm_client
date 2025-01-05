@@ -21,6 +21,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
   ThreadBloc({
     required String? tid,
     required String? pid,
+    required String? onlyVisibleUid,
     required bool? reverseOrder,
     required ThreadRepository threadRepository,
   })  : _threadRepository = threadRepository,
@@ -28,6 +29,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           ThreadState(
             tid: tid,
             pid: pid,
+            onlyVisibleUid: onlyVisibleUid,
             reverseOrder: reverseOrder,
           ),
         ) {

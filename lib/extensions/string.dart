@@ -70,6 +70,8 @@ extension ParseUrl on String {
             'pageNumber': "${queryParameters['page']}",
           if (anchor != null) 'overrideReverseOrder': 'false',
           if (anchor != null) 'pid': anchor,
+          if (queryParameters.containsKey('authorid'))
+            'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
     }
@@ -90,7 +92,11 @@ extension ParseUrl on String {
     if (mod == 'redirect' && queryParameters['tid'] != null) {
       return RecognizedRoute(
         ScreenPaths.thread,
-        queryParameters: {'tid': "${queryParameters['tid']}"},
+        queryParameters: {
+          'tid': "${queryParameters['tid']}",
+          if (queryParameters.containsKey('authorid'))
+            'onlyVisibleUid': "${queryParameters['authorid']}",
+        },
       );
     }
 
@@ -105,6 +111,8 @@ extension ParseUrl on String {
           // Find post will always return a non-reversed thread, so disable it
           // to avoid incorrect page loaded when loading more pages.
           'overrideReverseOrder': 'false',
+          if (queryParameters.containsKey('authorid'))
+            'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
     }

@@ -41,6 +41,7 @@ class ThreadPage extends StatefulWidget {
     required this.overrideReverseOrder,
     this.title,
     this.threadType,
+    this.onlyVisibleUid,
     super.key,
   }) : assert(
           threadID != null || findPostID != null,
@@ -86,6 +87,9 @@ class ThreadPage extends StatefulWidget {
   /// Sometimes we do not know the thread type before we load it, redirect from
   /// homepage, for example. So it's a nullable String.
   final String? threadType;
+
+  /// Only watch the floors posted by the user with uid [onlyVisibleUid].
+  final String? onlyVisibleUid;
 
   @override
   State<ThreadPage> createState() => _ThreadPageState();
@@ -211,6 +215,7 @@ class _ThreadPageState extends State<ThreadPage>
           create: (context) => ThreadBloc(
             tid: widget.threadID,
             pid: widget.findPostID,
+            onlyVisibleUid: widget.onlyVisibleUid,
             threadRepository: context.repo(),
             reverseOrder:
                 widget.overrideReverseOrder ? threadReverseOrder : null,

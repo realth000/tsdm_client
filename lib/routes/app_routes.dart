@@ -138,6 +138,7 @@ final router = GoRouter(
         final threadType = state.uri.queryParameters['threadType'];
         final tid = state.uri.queryParameters['tid'];
         final pid = state.uri.queryParameters['pid'];
+        final onlyVisibleUid = state.uri.queryParameters['onlyVisibleUid'];
         final bool overrideReverseOrder;
         if (state.uri.queryParameters['overrideReverseOrder'] == 'false') {
           overrideReverseOrder = false;
@@ -157,6 +158,7 @@ final router = GoRouter(
           findPostID: pid,
           pageNumber: pageNumber ?? '1',
           overrideReverseOrder: overrideReverseOrder,
+          onlyVisibleUid: onlyVisibleUid,
         );
       },
     ),
