@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -5,12 +6,14 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/extensions/duration.dart';
 import 'package:tsdm_client/features/packet/cubit/packet_detail_cubit.dart';
 import 'package:tsdm_client/features/packet/models/models.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 
 /// Page showing packet statistics detail data for a given thread.
@@ -25,24 +28,95 @@ class PacketDetailPage extends StatefulWidget {
   State<PacketDetailPage> createState() => _PacketDetailPageState();
 }
 
+enum _SortBy { time, coinsLeast, coinsMost }
+
 class _PacketDetailPageState extends State<PacketDetailPage> {
+  final _SortBy _sortByCoins = _SortBy.time;
+
+  Widget _buildInfoRow(BuildContext context, List<PacketDetailModel> data) {
+    final tr = context.t.packetDetailPage;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final textStyle =
+        Theme.of(context).textTheme.labelLarge?.copyWith(color: secondaryColor);
+
+    final timeElapsed =
+        data.first.time.difference(data.last.time).readable(context);
+    final userCount = data.length;
+    final coinsCount = data.fold(0, (prev, e) => prev + e.coins);
+
+    return InkWell(
+      onTap: () async => showMessageSingleButtonDialog(
+        context: context,
+        title: tr.title,
+        message: tr.statistics(
+          users: userCount,
+          coins: coinsCount,
+          time: timeElapsed,
+        ),
+      ),
+      child: Column(
+        children: [
+          sizedBoxW4H4,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Icon(
+                Icons.timelapse_outlined,
+                color: secondaryColor,
+                size: 16,
+              ),
+              sizedBoxW4H4,
+              Text(timeElapsed, style: textStyle),
+              sizedBoxW12H12,
+              Icon(
+                Icons.person_outline,
+                color: secondaryColor,
+                size: 16,
+              ),
+              sizedBoxW4H4,
+              Text('$userCount', style: textStyle),
+              sizedBoxW12H12,
+              Icon(
+                FontAwesomeIcons.coins,
+                color: secondaryColor,
+                size: 16,
+              ),
+              sizedBoxW4H4,
+              Text('$coinsCount', style: textStyle),
+              sizedBoxW12H12,
+            ],
+          ),
+          sizedBoxW4H4,
+        ],
+      ),
+    );
+  }
+
   Widget _buildContent(BuildContext context, List<PacketDetailModel> data) {
     final primaryColor = Theme.of(context).colorScheme.primary;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
+
+    final dataSorted = switch (_sortByCoins) {
+      _SortBy.time => data,
+      _SortBy.coinsLeast =>
+        data.sortedByCompare((e) => e.coins, (lhs, rhs) => lhs - rhs),
+      _SortBy.coinsMost =>
+        data.sortedByCompare((e) => e.coins, (lhs, rhs) => rhs - lhs),
+    };
 
     return ListView.builder(
       itemCount: data.length,
       itemBuilder: (context, index) => InkWell(
         onTap: () async => context.pushNamed(
           ScreenPaths.profile,
-          queryParameters: {'username': data[index].username},
+          queryParameters: {'username': dataSorted[index].username},
         ),
         child: Padding(
           padding: edgeInsetsL12T4R12,
           child: Row(
             children: [
               Text(
-                '${data[index].id}',
+                '${dataSorted[index].id}',
                 style: Theme.of(context)
                     .textTheme
                     .titleMedium
@@ -51,19 +125,19 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               Expanded(
                 child: ListTile(
                   leading: HeroUserAvatar(
-                    username: data[index].username,
+                    username: dataSorted[index].username,
                     avatarUrl: null,
                   ),
                   title: Text(
-                    data[index].username,
+                    dataSorted[index].username,
                     style: TextStyle(color: primaryColor),
                   ),
-                  subtitle: Text(data[index].time.yyyyMMDDHHMMSS()),
+                  subtitle: Text(dataSorted[index].time.yyyyMMDDHHMMSS()),
                   trailing: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        '${data[index].coins}',
+                        '${dataSorted[index].coins}',
                         style: Theme.of(context)
                             .textTheme
                             .labelMedium
@@ -80,105 +154,6 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
         ),
       ),
     );
-
-    // final table = Table(
-    //   defaultColumnWidth: const IntrinsicColumnWidth(),
-    //   columnWidths: const <int, TableColumnWidth>{
-    //     0: FixedColumnWidth(50),
-    //     1: FixedColumnWidth(200),
-    //     2: FixedColumnWidth(60),
-    //     3: FixedColumnWidth(150),
-    //   },
-    //   defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-    //   children: [
-    //     // Table header.
-    //     TableRow(
-    //       children: ['序号', '用户', '天使币', '时间']
-    //           .map(
-    //             (e) => Text(
-    //               e,
-    //               style: Theme.of(context)
-    //                   .textTheme
-    //                   .titleSmall
-    //                   ?.copyWith(color: secondaryColor),
-    //             ),
-    //           )
-    //           .toList(),
-    //     ),
-
-    //     // Table body.
-    //     ...data.mapIndexed(
-    //       (idx, e) => TableRow(
-    //         decoration: BoxDecoration(
-    //           color: idx.isOdd
-    //               ? Theme.of(context).colorScheme.surfaceContainerHigh
-    //               : null,
-    //         ),
-    //         children: [
-    //           // Column 0
-    //           // id
-    //           Text('${e.id}'),
-    //           // Column 1
-    //           // User info
-    //           Row(
-    //             children: [
-    //               SizedBox(
-    //                 height: 50,
-    //                 child: Center(
-    //                   child: GestureDetector(
-    //                     onTap: () async => context.pushNamed(
-    //                       ScreenPaths.profile,
-    //                       queryParameters: {'username': e.username},
-    //                     ),
-    //                     // TODO: Add hero here.
-    //                     child: HeroUserAvatar(
-    //                       username: e.username,
-    //                       avatarUrl: null,
-    //                     ),
-    //                   ),
-    //                 ),
-    //               ),
-    //               sizedBoxW4H4,
-    //               Expanded(
-    //                 child: GestureDetector(
-    //                   onTap: () async => context.pushNamed(
-    //                     ScreenPaths.profile,
-    //                     queryParameters: {'username': e.username},
-    //                   ),
-    //                   child: Row(
-    //                     children: [
-    //                       Text(
-    //                         e.username,
-    //                         textAlign: TextAlign.left,
-    //                       ),
-    //                     ],
-    //                   ),
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //           // Column 2
-    //           // coins
-    //           Text('${e.coins}', style: TextStyle(color: primaryColor)),
-
-    //           // Column 3
-    //           // time
-    //           Text(e.time.yyyyMMDDHHMMSS()),
-    //         ],
-    //       ),
-    //     ),
-    //   ],
-    // );
-
-    // return Padding(
-    //   padding: edgeInsetsL4R4,
-    //   child: SingleChildScrollView(
-    //     child: SingleChildScrollView(
-    //       scrollDirection: Axis.horizontal,
-    //       child: table,
-    //     ),
-    //   ),
-    // );
   }
 
   @override
@@ -195,23 +170,53 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
         builder: (context, state) {
           final tr = context.t.packetDetailPage;
 
-          final body = switch (state) {
-            PacketDetailInitial() ||
-            PacketDetailLoading() =>
-              const Center(child: CircularProgressIndicator()),
-            PacketDetailFailure() => Center(
-                child: buildRetryButton(
-                  context,
-                  () async =>
-                      context.read<PacketDetailCubit>().fetchDetail(widget.tid),
-                ),
+          final (body, infoRow) = switch (state) {
+            PacketDetailInitial() || PacketDetailLoading() => (
+                const Center(child: CircularProgressIndicator()),
+                null
               ),
-            PacketDetailSuccess(:final data) => _buildContent(context, data),
+            PacketDetailFailure() => (
+                Center(
+                  child: buildRetryButton(
+                    context,
+                    () async => context
+                        .read<PacketDetailCubit>()
+                        .fetchDetail(widget.tid),
+                  ),
+                ),
+                null
+              ),
+            PacketDetailSuccess(:final data) => (
+                _buildContent(context, data),
+                _buildInfoRow(context, data),
+              ),
           };
 
           return Scaffold(
             appBar: AppBar(
               title: Text(tr.title),
+              // FIXME: Enable sorting when when image provider setstate fixed.
+              // Now the fallback text is shown once setState.
+              //
+              // actions: [
+              //   IconButton(
+              //     icon: const Icon(Icons.sort_outlined),
+              //     onPressed: state is PacketDetailSuccess
+              //         ? () => setState(
+              //               () => _sortByCoins == _SortBy.values.last
+              //                   ? _sortByCoins = _SortBy.values.first
+              //                   : _sortByCoins =
+              //                       _SortBy.values[_sortByCoins.index + 1],
+              //             )
+              //         : null,
+              //   ),
+              // ],
+              bottom: infoRow == null
+                  ? null
+                  : PreferredSize(
+                      preferredSize: const Size.fromHeight(24),
+                      child: infoRow,
+                    ),
             ),
             body: body,
           );

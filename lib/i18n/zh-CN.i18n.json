@@ -754,6 +754,7 @@
     "copyLogToClipboard": "日志已复制到剪切板"
   },
   "packetDetailPage": {
-    "title": "红包详情"
+    "title": "红包详情",
+    "statistics": "在 ${time: String} 中有 ${users: int} 名用户获得共 ${coins: int} 个天使币"
   }
 }

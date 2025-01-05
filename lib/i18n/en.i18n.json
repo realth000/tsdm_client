@@ -754,6 +754,7 @@
     "copyLogToClipboard": "Log copied to clipboard"
   },
   "packetDetailPage": {
-    "title": "Packet details"
+    "title": "Packet details",
+    "statistics": "${users: int} users got ${coins: int} coins in ${time: String}"
   }
 }
