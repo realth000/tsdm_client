@@ -116,12 +116,15 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
           padding: edgeInsetsL12T4R12,
           child: Row(
             children: [
-              Text(
-                '${dataSorted[index].id}',
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(color: secondaryColor),
+              SizedBox(
+                width: 20,
+                child: Text(
+                  '${dataSorted[index].id}',
+                  style: Theme.of(context)
+                      .textTheme
+                      .titleMedium
+                      ?.copyWith(color: secondaryColor),
+                ),
               ),
               Expanded(
                 child: ListTile(
