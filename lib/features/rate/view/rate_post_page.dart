@@ -214,6 +214,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               children: scoreWidgetList,
             ),
           ),
+          sizedBoxW8H8,
           Row(
             children: [
               sizedBoxW12H12,

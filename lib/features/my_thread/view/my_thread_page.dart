@@ -90,6 +90,7 @@ class _MyThreadPageState extends State<MyThreadPage>
       );
     } else {
       child = ListView.separated(
+        padding: edgeInsetsL12T4R12,
         itemCount: state.replyList.length,
         itemBuilder: (context, index) {
           return MyThreadCard(state.replyList[index]);
@@ -98,26 +99,23 @@ class _MyThreadPageState extends State<MyThreadPage>
       );
     }
 
-    return Padding(
-      padding: edgeInsetsL12T4R12B24,
-      child: EasyRefresh(
-        controller: _replyRefreshController,
-        header: const MaterialHeader(),
-        footer: const MaterialFooter(),
-        onRefresh: () async {
-          context.read<MyThreadBloc>().add(MyThreadRefreshReplyRequested());
-        },
-        onLoad: () async {
-          if (state.nextReplyPageUrl == null) {
-            _replyRefreshController.finishLoad(IndicatorResult.noMore);
-            return;
-          }
-          context
-              .read<MyThreadBloc>()
-              .add(const MyThreadLoadMoreReplyRequested());
-        },
-        child: child,
-      ),
+    return EasyRefresh(
+      controller: _replyRefreshController,
+      header: const MaterialHeader(),
+      footer: const MaterialFooter(),
+      onRefresh: () async {
+        context.read<MyThreadBloc>().add(MyThreadRefreshReplyRequested());
+      },
+      onLoad: () async {
+        if (state.nextReplyPageUrl == null) {
+          _replyRefreshController.finishLoad(IndicatorResult.noMore);
+          return;
+        }
+        context
+            .read<MyThreadBloc>()
+            .add(const MyThreadLoadMoreReplyRequested());
+      },
+      child: child,
     );
   }
 

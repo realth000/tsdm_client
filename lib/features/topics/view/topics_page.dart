@@ -62,7 +62,7 @@ class _TopicsPageState extends State<TopicsPage>
     final groupTabBodyList = forumGroupList
         .map(
           (e) => ListView.separated(
-            padding: edgeInsetsL12T4R12B24,
+            padding: edgeInsetsL12T4R12,
             itemCount: e.forumList.length,
             itemBuilder: (context, index) => ForumCard(e.forumList[index]),
             separatorBuilder: (context, index) => sizedBoxW4H4,

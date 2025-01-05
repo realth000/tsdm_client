@@ -117,7 +117,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
           child: Row(
             children: [
               SizedBox(
-                width: 20,
+                width: 30,
                 child: Text(
                   '${dataSorted[index].id}',
                   style: Theme.of(context)

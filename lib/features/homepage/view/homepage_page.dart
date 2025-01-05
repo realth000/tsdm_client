@@ -183,7 +183,7 @@ class _HomepagePageState extends State<HomepagePage> {
                   childBuilder: (context, physics) => ListView(
                     physics: physics,
                     controller: _scrollController,
-                    padding: edgeInsetsL12T4R12B24,
+                    padding: edgeInsetsL12T4R12B4,
                     children: [
                       WelcomeSection(
                         forumStatus: state.forumStatus,

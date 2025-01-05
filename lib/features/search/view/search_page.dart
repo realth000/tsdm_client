@@ -410,7 +410,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
   Widget _buildBody(BuildContext context, SearchState state) {
     return Padding(
-      padding: edgeInsetsL12T4R12B24,
+      padding: edgeInsetsL12T4R12,
       child: Column(
         children: [
           if (expandForm) _buildSearchForm(context, state),

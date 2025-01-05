@@ -225,7 +225,7 @@ class _ForumPageState extends State<ForumPage>
     if (state.rulesElement == null) {
       content = ListView.separated(
         controller: _pinnedScrollController,
-        padding: edgeInsetsL12T4R12B24,
+        padding: edgeInsetsL12T4R12,
         itemCount: state.stickThreadList.length,
         itemBuilder: (context, index) =>
             NormalThreadCard(state.stickThreadList[index]),
@@ -234,7 +234,7 @@ class _ForumPageState extends State<ForumPage>
     } else {
       content = ListView.separated(
         controller: _pinnedScrollController,
-        padding: edgeInsetsL12T4R12B24,
+        padding: edgeInsetsL12T4R12,
         itemCount: state.stickThreadList.length + 1,
         itemBuilder: (context, index) {
           // TODO: Do NOT add leading rules card by checking index value.
@@ -416,7 +416,7 @@ class _ForumPageState extends State<ForumPage>
       },
       child: ListView.separated(
         controller: _subredditScrollController,
-        padding: edgeInsetsL12T4R12B24,
+        padding: edgeInsetsL12T4R12,
         itemCount: subredditList.length,
         itemBuilder: (context, index) => ForumCard(subredditList[index]),
         separatorBuilder: (context, index) => sizedBoxW4H4,
