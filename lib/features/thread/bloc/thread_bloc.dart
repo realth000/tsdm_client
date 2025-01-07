@@ -353,6 +353,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             ?.text
             ?.contains('草稿');
 
+        final latestModAct = document.querySelector('div.modact')?.innerText;
+
         final threadState = ThreadState(
           tid: tid,
           pid: state.pid,
@@ -374,6 +376,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
               (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
           reverseOrder: state.reverseOrder,
           isDraft: isDraft ?? false,
+          latestModAct: latestModAct,
         );
 
         return threadState;

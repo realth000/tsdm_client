@@ -139,6 +139,7 @@ class _ThreadPageState extends State<ThreadPage>
             postList: state.postList,
             canLoadMore: state.canLoadMore,
             isDraft: state.isDraft,
+            latestModAct: state.latestModAct,
           ),
         ),
         _buildReplyBar(context, state),

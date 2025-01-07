@@ -24,6 +24,7 @@ class PostList extends StatefulWidget {
     required this.canLoadMore,
     required this.scrollController,
     required this.isDraft,
+    required this.latestModAct,
     this.title,
     this.pageNumber = 1,
     this.useDivider = false,
@@ -68,6 +69,9 @@ class PostList extends StatefulWidget {
 
   /// Is thread in draft state.
   final bool isDraft;
+
+  /// Latest modification action.
+  final String? latestModAct;
 
   @override
   State<PostList> createState() => _PostListState();
@@ -173,24 +177,35 @@ class _PostListState extends State<PostList> with LoggerMixin {
     if (_listScrollController.offset <= expandHeight) {
       return Padding(
         padding: edgeInsetsL12R12B12,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: <Widget>[
-            if (widget.isDraft)
-              Text(
-                '[${context.t.threadPage.draft}]',
-                style: infoTextStyle,
-              ),
-            Text(
-              '[${context.t.threadPage.title} ${widget.threadID ?? ""}]',
-              style: infoTextStyle,
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: <Widget>[
+                if (widget.isDraft)
+                  Text(
+                    '[${context.t.threadPage.draft}]',
+                    style: infoTextStyle,
+                  ),
+                Text(
+                  '[${context.t.threadPage.title} ${widget.threadID ?? ""}]',
+                  style: infoTextStyle,
+                ),
+                if (_threadType != null && _threadType!.isNotEmpty)
+                  Text(
+                    '[${_threadType!}]',
+                    style: infoTextStyle,
+                  ),
+              ].insertBetween(sizedBoxW4H4),
             ),
-            if (_threadType != null && _threadType!.isNotEmpty)
-              Text(
-                '[${_threadType!}]',
-                style: infoTextStyle,
+            if (widget.latestModAct != null)
+              Row(
+                children: [
+                  const Spacer(),
+                  Text('${widget.latestModAct}', style: infoTextStyle),
+                ],
               ),
-          ].insertBetween(sizedBoxW4H4),
+          ],
         ),
       );
     }
@@ -233,7 +248,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
   }
 
   Widget _buildBody(BuildContext context, ThreadState state) {
-    const safeHeight = 40.0;
+    const safeHeight = 60.0;
 
     _refreshController.finishLoad();
 

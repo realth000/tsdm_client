@@ -39,6 +39,7 @@ class ThreadState with ThreadStateMappable {
     this.onlyVisibleUid,
     this.reverseOrder,
     this.isDraft = false,
+    this.latestModAct,
   });
 
   /// Status.
@@ -125,4 +126,7 @@ class ThreadState with ThreadStateMappable {
 
   /// Indicating current thread is a draft or not.
   final bool isDraft;
+
+  /// Latest modification log.
+  final String? latestModAct;
 }
