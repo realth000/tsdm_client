@@ -9,8 +9,9 @@ import 'package:tsdm_client/instance.dart';
 
 /// Get the database storage file.
 Future<File> get databaseFile async {
+  final sep = Platform.pathSeparator;
   final dbPath =
-      '${(await getApplicationSupportDirectory()).path}/db/mainV2.db';
+      '${(await getApplicationSupportDirectory()).path}${sep}db${sep}mainV2.db';
   talker.debug('init database file at $dbPath');
   return File(dbPath);
 }

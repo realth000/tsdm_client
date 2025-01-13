@@ -201,7 +201,8 @@
       },
       "viewLog": {
         "title": "查看日誌"
-      }
+      },
+      "copyDatabaseDir": "複製資料庫路徑"
     },
     "othersSection": {
       "title": "其他",

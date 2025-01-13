@@ -201,7 +201,8 @@
       },
       "viewLog": {
         "title": "View log"
-      }
+      },
+      "copyDatabaseDir": "Copy database path"
     },
     "othersSection": {
       "title": "Others",

@@ -30,6 +30,8 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/native.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -762,6 +764,16 @@ class _SettingsPageState extends State<SettingsPage> {
                   _logExportPath = outputFile;
                 });
               }
+            },
+          ),
+          SectionListTile(
+            title: Text(tr.copyDatabaseDir),
+            onTap: () async {
+              final path = (await databaseFile).parent.path;
+              if (!context.mounted) {
+                return;
+              }
+              await copyToClipboard(context, path);
             },
           ),
         ],
