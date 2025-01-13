@@ -43,6 +43,7 @@ class SettingsMap with SettingsMapMappable {
     required this.showUnreadBroadcastMessageBadge,
     required this.autoSyncNoticeSeconds,
     required this.enableDebugOperations,
+    required this.fontFamily,
   });
 
   final String netClientAccept;
@@ -80,6 +81,7 @@ class SettingsMap with SettingsMapMappable {
   final bool showUnreadBroadcastMessageBadge;
   final int autoSyncNoticeSeconds;
   final bool enableDebugOperations;
+  final String fontFamily;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -145,6 +147,7 @@ class SettingsMap with SettingsMapMappable {
         copyWith(autoSyncNoticeSeconds: value as int?),
       SettingsKeys.enableDebugOperations =>
         copyWith(enableDebugOperations: value as bool?),
+      SettingsKeys.fontFamily => copyWith(fontFamily: value as String?),
     };
   }
 }

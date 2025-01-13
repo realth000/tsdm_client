@@ -130,6 +130,7 @@ final class SettingsRepository with LoggerMixin {
           s.extract(_SK.showUnreadBroadcastMessageBadge),
       autoSyncNoticeSeconds: s.extract(_SK.autoSyncNoticeSeconds),
       enableDebugOperations: s.extract(_SK.enableDebugOperations),
+      fontFamily: s.extract(_SK.fontFamily),
     );
   }
 

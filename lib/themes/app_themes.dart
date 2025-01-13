@@ -72,12 +72,17 @@ class AppTheme {
       );
 
   /// App light theme.
-  static ThemeData makeLight(BuildContext context, [Color? seedColor]) {
+  static ThemeData makeLight(
+    BuildContext context, {
+    required Color? seedColor,
+    required String fontFamily,
+  }) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
       seedScheme = ColorScheme.fromSeed(seedColor: seedColor);
     }
     return FlexThemeData.light(
+      fontFamily: fontFamily.isEmpty ? null : fontFamily,
       colors: seedScheme != null
           ? FlexSchemeColor(
               primary: seedScheme.primary,
@@ -107,7 +112,11 @@ class AppTheme {
   }
 
   /// App dark themes.
-  static ThemeData makeDark(BuildContext context, [Color? seedColor]) {
+  static ThemeData makeDark(
+    BuildContext context, {
+    required Color? seedColor,
+    required String fontFamily,
+  }) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
       seedScheme = ColorScheme.fromSeed(
@@ -116,6 +125,7 @@ class AppTheme {
       );
     }
     return FlexThemeData.dark(
+      fontFamily: fontFamily.isEmpty ? null : fontFamily,
       colors: seedScheme != null
           ? FlexSchemeColor(
               primary: seedScheme.primary,

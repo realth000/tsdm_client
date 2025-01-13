@@ -91,6 +91,9 @@ Future<void> _boot(List<String> args) async {
     }
   }
 
+  // Load font family.
+  final fontFamily = settings.fontFamily;
+
   runApp(
     TranslationProvider(
       child: ResponsiveBreakpoints.builder(
@@ -102,6 +105,7 @@ Future<void> _boot(List<String> args) async {
           themeModeIndex,
           autoCheckin: autoCheckin,
           autoSyncNoticeSeconds: autoSyncNoticeSeconds,
+          fontFamily: fontFamily,
         ),
       ),
     ),

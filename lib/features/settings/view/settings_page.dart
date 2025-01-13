@@ -21,6 +21,7 @@ import 'package:tsdm_client/features/settings/view/debug_showcase_page.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/font_family_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/switch_account_dialog.dart';
@@ -143,6 +144,9 @@ class _SettingsPageState extends State<SettingsPage> {
         state.settingsMap.showUnreadPersonalMessageBadge;
     final showUnreadBroadcastMessageBadge =
         state.settingsMap.showUnreadBroadcastMessageBadge;
+
+    /// App wide font family
+    final fontFamily = state.settingsMap.fontFamily;
 
     return [
       SectionTitleText(tr.title),
@@ -383,6 +387,27 @@ class _SettingsPageState extends State<SettingsPage> {
         //   builder: (context) => const ThreadCardDialog(),
         //   constraints: const BoxConstraints(maxHeight: 400),
         // ),
+      ),
+
+      /// Font family
+      SectionListTile(
+        leading: const Icon(Icons.font_download_outlined),
+        title: Text(tr.fontFamily.title),
+        subtitle: fontFamily.isEmpty ? null : Text(fontFamily),
+        onTap: () async {
+          final selectedFont = await showDialog<String>(
+            context: context,
+            builder: (_) => FontFamilyDialog(fontFamily),
+          );
+          if (selectedFont == null || !context.mounted) {
+            return;
+          }
+
+          context.read<ThemeCubit>().setFontFamily(selectedFont);
+          context.read<SettingsBloc>().add(
+                SettingsValueChanged(SettingsKeys.fontFamily, selectedFont),
+              );
+        },
       ),
     ];
   }

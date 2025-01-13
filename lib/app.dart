@@ -33,6 +33,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:window_manager/window_manager.dart';
 
@@ -44,6 +45,7 @@ class App extends StatefulWidget {
     this.themeModeIndex, {
     required this.autoCheckin,
     required this.autoSyncNoticeSeconds,
+    required this.fontFamily,
     super.key,
   });
 
@@ -59,11 +61,14 @@ class App extends StatefulWidget {
   /// Duration to sync notice from server.
   final int autoSyncNoticeSeconds;
 
+  /// Font family.
+  final String fontFamily;
+
   @override
   State<App> createState() => _AppState();
 }
 
-class _AppState extends State<App> with WindowListener {
+class _AppState extends State<App> with WindowListener, LoggerMixin {
   /// Duration used to debounce the frequency to save window attributes into
   /// storage.
   ///
@@ -248,6 +253,7 @@ class _AppState extends State<App> with WindowListener {
             create: (context) => ThemeCubit(
               accentColor: widget.color >= 0 ? Color(widget.color) : null,
               themeModeIndex: widget.themeModeIndex,
+              fontFamily: widget.fontFamily,
             ),
           ),
         ],
@@ -257,8 +263,18 @@ class _AppState extends State<App> with WindowListener {
             final themeState = context.watch<ThemeCubit>().state;
             final accentColor = themeState.accentColor;
             final themeModeIndex = themeState.themeModeIndex;
-            final lightTheme = AppTheme.makeLight(context, accentColor);
-            final darkTheme = AppTheme.makeDark(context, accentColor);
+            final fontFamily = themeState.fontFamily;
+
+            final lightTheme = AppTheme.makeLight(
+              context,
+              seedColor: accentColor,
+              fontFamily: fontFamily,
+            );
+            final darkTheme = AppTheme.makeDark(
+              context,
+              seedColor: accentColor,
+              fontFamily: fontFamily,
+            );
 
             return MaterialApp.router(
               title: context.t.appName,

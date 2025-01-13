@@ -283,6 +283,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'enableDebugOperations',
     type: bool,
     defaultValue: false,
+  ),
+
+  /// APP font family.
+  fontFamily<String>(
+    name: 'fontFamily',
+    type: String,
+    defaultValue: '',
   );
 
   const SettingsKeys({

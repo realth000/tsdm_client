@@ -12,10 +12,12 @@ class ThemeCubit extends Cubit<ThemeState> {
   ThemeCubit({
     Color? accentColor,
     int themeModeIndex = 0,
+    String fontFamily = '',
   }) : super(
           ThemeState(
             accentColor: accentColor,
             themeModeIndex: themeModeIndex,
+            fontFamily: fontFamily,
           ),
         );
 
@@ -26,4 +28,8 @@ class ThemeCubit extends Cubit<ThemeState> {
   /// Set the app the mode by its index.
   void setThemeModeIndex(int themeModeIndex) =>
       emit(state.copyWith(themeModeIndex: themeModeIndex));
+
+  /// Set the font family to [fontFamily].
+  void setFontFamily(String fontFamily) =>
+      emit(state.copyWith(fontFamily: fontFamily));
 }
