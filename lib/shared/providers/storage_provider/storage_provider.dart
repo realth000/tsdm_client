@@ -645,4 +645,12 @@ class StorageProvider with LoggerMixin {
   Future<void> clearUserAvatarInfo() async {
     await UserAvatarDao(_db).deleteAll();
   }
+
+  /// Dispose the database.
+  ///
+  /// WARNING: avoid to use this function when possible as reconnect is not in
+  /// consideration.
+  Future<void> dispose() async {
+    await _db.close();
+  }
 }

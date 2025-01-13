@@ -186,6 +186,12 @@
           "connected": "Proxy is running",
           "disconnected": "Proxy may not running"
         }
+      },
+      "exportData": "Export data",
+      "importData": {
+        "title": "Import data",
+        "invalidData": "Invalid data",
+        "tip": "All existing data will be OVERWRITTEN, and a restart is needed to take effect.\nApp will exit if succeed, continue?"
       }
     },
     "debugSection": {

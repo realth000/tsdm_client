@@ -186,6 +186,12 @@
           "connected": "代理正在運行",
           "disconnected": "代理程式可能未執行"
         }
+      },
+      "exportData": "匯出資料",
+      "importData": {
+        "title": "導入資料",
+        "invalidData": "無效的資料",
+        "tip": "所有現有資料都會被覆蓋，並且需要重新啟動應用程式生效。\n導入成功後應用會自動退出，是否繼續導入？"
       }
     },
     "debugSection": {

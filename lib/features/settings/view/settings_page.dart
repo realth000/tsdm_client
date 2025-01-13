@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:collection/collection.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_svg/svg.dart';
@@ -31,9 +33,11 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/native.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
@@ -708,6 +712,67 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           barrierDismissible: false,
         ),
+      ),
+
+      // Export data.
+      SectionListTile(
+        leading: const Icon(Icons.download_outlined),
+        title: Text(tr.exportData),
+        onTap: () async {
+          final db = await databaseFile;
+          final data = await db.readAsBytes();
+
+          await FilePicker.platform.saveFile(
+            dialogTitle: tr.exportData,
+            fileName:
+                'tsdm_client_data_${DateTime.now().microsecondsSinceEpoch}.db',
+            bytes: data,
+          );
+        },
+      ),
+
+      // Import data.
+      SectionListTile(
+        leading: const Icon(Icons.upload_outlined),
+        title: Text(tr.importData.title),
+        onTap: () async {
+          final ok = await showQuestionDialog(
+            context: context,
+            title: tr.importData.title,
+            message: tr.importData.tip,
+          );
+          if (ok != true || !context.mounted) {
+            return;
+          }
+
+          final files = await FilePicker.platform
+              .pickFiles(dialogTitle: tr.importData.title);
+          if (files == null || !context.mounted) {
+            return;
+          }
+
+          final data = files.files.firstOrNull?.bytes;
+          if (data == null) {
+            showSnackBar(context: context, message: tr.importData.invalidData);
+            return;
+          }
+
+          // TODO: Validate database
+
+          // CAUTION: unsafe operation.
+          await getIt.get<StorageProvider>().dispose();
+
+          final db = await databaseFile;
+          await db.writeAsBytes(data);
+
+          // Close the app.
+          if (isAndroid || isIOS) {
+            await SystemNavigator.pop(animated: true);
+          } else {
+            // CAUTION: unsafe operation.
+            exit(0);
+          }
+        },
       ),
     ];
   }

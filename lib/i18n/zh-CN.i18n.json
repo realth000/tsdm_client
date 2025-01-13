@@ -186,6 +186,12 @@
           "connected": "代理正在运行",
           "disconnected": "代理可能未运行"
         }
+      },
+      "exportData": "导出数据",
+      "importData": {
+        "title": "导入数据",
+        "invalidData": "无效的数据",
+        "tip": "所有现有数据都会被覆盖，并且需要重启应用生效。\n导入成功后应用会自动退出，是否继续导入？"
       }
     },
     "debugSection": {
