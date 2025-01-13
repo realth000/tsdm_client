@@ -14,7 +14,7 @@ environment:
 dependencies:
   args: ^2.6.0
   bbob_dart: ^0.2.1
-  bloc: ^8.1.4
+  bloc: ^9.0.0
   chat_bottom_container: ^0.3.0
   # Blocked by flutter
   collection: any
@@ -23,32 +23,32 @@ dependencies:
   dio: ^5.7.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1
-  drift: ^2.23.0
+  drift: ^2.23.1
   # For drift
-  drift_dev: ^2.23.0
-  drift_flutter: ^0.2.3
+  drift_dev: ^2.23.1
+  drift_flutter: ^0.2.4
   easy_refresh: ^3.4.0
   equatable: ^2.0.7
   extended_nested_scroll_view: ^6.2.1
   file_picker: ^8.1.7
-  flex_color_scheme: ^8.0.2
+  flex_color_scheme: ^8.1.0
   flutter:
     sdk: flutter
   flutter_avif:
     path: ./packages/flutter_avif/flutter_avif
   flutter_bbcode_editor:
     path: ./packages/flutter_bbcode_editor
-  flutter_bloc: ^8.1.6
+  flutter_bloc: ^9.0.0
   flutter_local_notifications: ^18.0.1
   flutter_localizations:
     sdk: flutter
-  flutter_markdown: ^0.7.4+3
-  flutter_svg: ^2.0.16
+  flutter_markdown: ^0.7.5
+  flutter_svg: ^2.0.17
   font_awesome_flutter: ^10.8.0
   fpdart: ^1.1.1
   get_it: ^8.0.3
   gitsumu: ^0.6.0
-  go_router: ^14.6.2
+  go_router: ^14.6.3
   html: ^0.15.5
   image_picker: ^1.1.2
   json_annotation: ^4.9.0
@@ -59,18 +59,18 @@ dependencies:
   responsive_framework: ^1.5.1
   rxdart: ^0.28.0
   shimmer: ^3.0.0
-  slang: ^4.4.0
+  slang: ^4.4.1
   slang_flutter: ^4.4.0
   # For drift
-  sqlite3: ^2.5.0
+  sqlite3: ^2.6.0
   # For drift
   sqlite3_flutter_libs: ^0.5.28
   stream_transform: ^2.1.1
   super_sliver_list: ^0.4.1
   surf_lint_rules: ^3.1.0
   system_theme: ^3.1.2
-  talker: ^4.5.4
-  talker_flutter: ^4.5.4
+  talker: ^4.6.2
+  talker_flutter: ^4.6.2
   universal_html: ^2.2.4
   url_launcher: ^6.3.1
   uuid: ^4.5.1
