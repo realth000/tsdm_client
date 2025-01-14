@@ -216,6 +216,9 @@ class _LockedCardState extends State<LockedCard> {
           style: secondaryStyle,
         ),
       ]);
+    } else if (widget.locked.lockedWithBlocked) {
+      title = Text(tr.blocked.title, style: primaryStyle);
+      widgets.add(Text(tr.blocked.detail));
     } else {
       throw UnimplementedError(
         'Widget for card type of locked card not implemented',

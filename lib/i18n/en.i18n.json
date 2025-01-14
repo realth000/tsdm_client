@@ -578,6 +578,10 @@
       "title": "Only visible to the thread author",
       "detail(rich)": "This content only visible to $author",
       "detailAuthor": "author"
+    },
+    "blocked": {
+      "title": "Blocked content",
+      "detail": "This post has been blocked by administrator or moderator"
     }
   },
   "rateCard": {

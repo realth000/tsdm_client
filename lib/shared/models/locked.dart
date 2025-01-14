@@ -19,6 +19,8 @@ sealed class _LockedInfo extends Equatable {
 
   const factory _LockedInfo.author() = _LockedWithAuthor;
 
+  const factory _LockedInfo.banned() = _LockedWithBlocked;
+
   @override
   List<Object?> get props => [];
 }
@@ -75,6 +77,11 @@ final class _LockedWithAuthor extends _LockedInfo {
   const _LockedWithAuthor() : super._();
 }
 
+/// This section is blocked by admin or moderator.
+final class _LockedWithBlocked extends _LockedInfo {
+  const _LockedWithBlocked() : super._();
+}
+
 /// Describe a locked area in `Post`.
 ///
 /// Different types may be locked with different reasons:
@@ -121,6 +128,9 @@ class Locked extends Equatable {
 
   /// Is it only visible to the author and forum moderator.
   bool get lockedWithAuthor => _info != null && _info is _LockedWithAuthor;
+
+  /// Is it blocked by moderator.
+  bool get lockedWithBlocked => _info != null && _info is _LockedWithBlocked;
 
   /// Get the tid of current locked model.
   String? get tid {
@@ -236,6 +246,10 @@ class Locked extends Equatable {
     final pid = match?.namedGroup('pid');
 
     if (tid == null || pid == null || price == null || purchasedCount == null) {
+      if (element.innerText.contains('该帖被管理员或版主屏蔽')) {
+        return const _LockedInfo.banned();
+      }
+
       if (!allowWithPoints) {
         // Do not allow locked area that locked with points here.
         return null;
@@ -279,7 +293,9 @@ class Locked extends Equatable {
     if (_info is _LockedWithPurchase) {
       return _info.price > 0 && tid != null && pid != null;
     }
-    if (_info is _LockedWithPoints || _info is _LockedWithAuthor) {
+    if (_info is _LockedWithPoints ||
+        _info is _LockedWithAuthor ||
+        _info is _LockedWithBlocked) {
       return true;
     }
     return false;

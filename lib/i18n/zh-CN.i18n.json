@@ -578,6 +578,10 @@
       "title": "仅对作者可见",
       "detail(rich)": "该部分内容仅对$author可见",
       "detailAuthor": "作者"
+    },
+    "blocked": {
+      "title": "内容被屏蔽",
+      "detail": "此楼层已被管理员或版主屏蔽"
     }
   },
   "rateCard": {
