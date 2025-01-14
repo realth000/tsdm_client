@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.1.0] - 2025-01-15
+
 ### Added
 
 - 帖子：新增红包领取情况统计页面。
