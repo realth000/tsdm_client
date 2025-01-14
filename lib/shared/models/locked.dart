@@ -104,12 +104,14 @@ class Locked extends Equatable {
     bool allowWithPurchase = true,
     bool allowWithReply = true,
     bool allowWithAuthor = true,
+    bool allowWithBlocked = true,
   }) : _info = _buildLockedFromNode(
           element,
           allowWithPoints: allowWithPoints,
           allowWithPurchase: allowWithPurchase,
           allowWithReply: allowWithReply,
           allowWithAuthor: allowWithAuthor,
+          allowWithBlocked: allowWithBlocked,
         );
 
   static final _re =
@@ -213,6 +215,7 @@ class Locked extends Equatable {
     required bool allowWithPurchase,
     required bool allowWithReply,
     required bool allowWithAuthor,
+    required bool allowWithBlocked,
   }) {
     if (allowWithAuthor &&
         element.childNodes.length == 1 &&
@@ -246,7 +249,7 @@ class Locked extends Equatable {
     final pid = match?.namedGroup('pid');
 
     if (tid == null || pid == null || price == null || purchasedCount == null) {
-      if (element.innerText.contains('该帖被管理员或版主屏蔽')) {
+      if (allowWithBlocked && element.innerText.contains('该帖被管理员或版主屏蔽')) {
         return const _LockedInfo.banned();
       }
 

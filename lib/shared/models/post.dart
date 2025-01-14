@@ -205,6 +205,8 @@ class Post with PostMappable {
             e,
             allowWithPoints: false,
             allowWithReply: false,
+            allowWithAuthor: false,
+            allowWithBlocked: false,
           ),
         )
         .toList();
