@@ -721,13 +721,28 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: () async {
           final db = await databaseFile;
           final data = await db.readAsBytes();
+          final name =
+              'tsdm_client_data_${DateTime.now().microsecondsSinceEpoch}.db';
 
-          await FilePicker.platform.saveFile(
-            dialogTitle: tr.exportData,
-            fileName:
-                'tsdm_client_data_${DateTime.now().microsecondsSinceEpoch}.db',
-            bytes: data,
-          );
+          if (isDesktop) {
+            // On desktop platforms, `saveFiles` only return the selected path.
+            final filePath = await FilePicker.platform.saveFile(
+              dialogTitle: tr.exportData,
+              fileName: name,
+            );
+            if (filePath == null) {
+              return;
+            }
+
+            await File(filePath).writeAsBytes(data, flush: true);
+          } else {
+            // Mobile in one step.
+            await FilePicker.platform.saveFile(
+              dialogTitle: tr.exportData,
+              fileName: name,
+              bytes: data,
+            );
+          }
         },
       ),
 
@@ -751,11 +766,12 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
 
-          final data = files.files.firstOrNull?.bytes;
-          if (data == null) {
+          final file = files.files.firstOrNull;
+          if (file == null || file.path == null) {
             showSnackBar(context: context, message: tr.importData.invalidData);
             return;
           }
+          final data = await File(file.path!).readAsBytes();
 
           // TODO: Validate database
 
