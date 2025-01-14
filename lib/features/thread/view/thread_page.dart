@@ -39,6 +39,7 @@ class ThreadPage extends StatefulWidget {
     required this.findPostID,
     required this.pageNumber,
     required this.overrideReverseOrder,
+    required this.overrideWithExactOrder,
     this.title,
     this.threadType,
     this.onlyVisibleUid,
@@ -80,7 +81,27 @@ class ThreadPage extends StatefulWidget {
   /// This flag is used in situation that user is heading to a certain page
   /// contains a target post. If set to `true`, override order may cause going
   /// to a wrong page.
+  ///
+  /// Additionally, the effect has less priority compared to
+  /// [overrideWithExactOrder] where the latter one is specifying the exact
+  /// order type and current field only determines using the order specified by
+  /// app if has.
   final bool overrideReverseOrder;
+
+  /// Carries the exact order required by external reasons.
+  ///
+  /// If value is not null, the final thread order is override by the value no
+  /// matter [overrideReverseOrder] is true or false.
+  ///
+  /// Actually this field is a patch on is the following situation:
+  ///
+  /// ```console
+  /// ${HOST}/...&ordertype=N
+  /// ```
+  ///
+  /// where order type is directly specified in url before dispatching, and
+  /// should override any order in app settings.
+  final int? overrideWithExactOrder;
 
   /// Thread type.
   ///
@@ -220,6 +241,7 @@ class _ThreadPageState extends State<ThreadPage>
             threadRepository: context.repo(),
             reverseOrder:
                 widget.overrideReverseOrder ? threadReverseOrder : null,
+            exactOrder: widget.overrideWithExactOrder,
           )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(

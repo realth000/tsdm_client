@@ -23,6 +23,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     required String? pid,
     required String? onlyVisibleUid,
     required bool? reverseOrder,
+    required int? exactOrder,
     required ThreadRepository threadRepository,
   })  : _threadRepository = threadRepository,
         super(
@@ -31,6 +32,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             pid: pid,
             onlyVisibleUid: onlyVisibleUid,
             reverseOrder: reverseOrder,
+            exactOrder: exactOrder,
           ),
         ) {
     on<ThreadLoadMoreRequested>(_onThreadLoadMoreRequested);
@@ -59,6 +61,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       pageNumber: event.pageNumber,
       onlyVisibleUid: state.onlyVisibleUid,
       reverseOrder: state.reverseOrder,
+      exactOrder: state.exactOrder,
     )
         .match(
       (e) {
@@ -85,6 +88,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       pid: state.pid,
       onlyVisibleUid: state.onlyVisibleUid,
       reverseOrder: state.reverseOrder,
+      exactOrder: state.exactOrder,
     )
         .match(
       (e) {
@@ -112,6 +116,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           pageNumber: event.pageNumber,
           onlyVisibleUid: state.onlyVisibleUid,
           reverseOrder: state.reverseOrder,
+          exactOrder: state.exactOrder,
         )
         .map(
           (v) =>
@@ -147,6 +152,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       pageNumber: state.currentPage,
       onlyVisibleUid: event.uid,
       reverseOrder: state.reverseOrder,
+      exactOrder: state.exactOrder,
     )
         .match(
       (e) {
@@ -186,6 +192,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       pid: state.pid,
       pageNumber: state.currentPage,
       reverseOrder: state.reverseOrder,
+      exactOrder: state.exactOrder,
     )
         .match(
       (e) {
@@ -230,6 +237,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       pageNumber: state.currentPage,
       onlyVisibleUid: state.onlyVisibleUid,
       reverseOrder: state.reverseOrder,
+      exactOrder: state.exactOrder,
     )
         .match(
       (e) {
@@ -375,6 +383,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
           onlyVisibleUid:
               (clearOnlyVisibleUid ?? false) ? null : state.onlyVisibleUid,
           reverseOrder: state.reverseOrder,
+          exactOrder: state.exactOrder,
           isDraft: isDraft ?? false,
           latestModAct: latestModAct,
         );

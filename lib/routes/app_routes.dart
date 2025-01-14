@@ -145,6 +145,8 @@ final router = GoRouter(
         } else {
           overrideReverseOrder = true;
         }
+        final overrideWithExactOrder =
+            state.uri.queryParameters['overrideWithExactOrder']?.parseToInt();
 
         assert(
           tid != null || pid != null,
@@ -158,6 +160,7 @@ final router = GoRouter(
           findPostID: pid,
           pageNumber: pageNumber ?? '1',
           overrideReverseOrder: overrideReverseOrder,
+          overrideWithExactOrder: overrideWithExactOrder,
           onlyVisibleUid: onlyVisibleUid,
         );
       },

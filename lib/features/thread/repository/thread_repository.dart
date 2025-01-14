@@ -32,6 +32,7 @@ class ThreadRepository {
     int pageNumber = 1,
     String? onlyVisibleUid,
     bool? reverseOrder,
+    int? exactOrder,
   }) =>
       AsyncEither(() async {
         assert(
@@ -56,10 +57,11 @@ class ThreadRepository {
         // to find a post in a certain page number, in this use case a manually
         // other override may going into different page that does NOT contain
         // the target post.
-        final orderType = switch (reverseOrder) {
-          true => '&ordertype=1',
-          false => '&ordertype=2',
-          null => '',
+        final orderType = switch ((exactOrder, reverseOrder)) {
+          (final int i, _) => '&ordertype=$i',
+          (null, true) => '&ordertype=1',
+          (null, false) => '&ordertype=2',
+          (null, null) => '',
         };
 
         _pageNumber = pageNumber;

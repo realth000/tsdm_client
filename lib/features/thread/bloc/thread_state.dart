@@ -38,6 +38,7 @@ class ThreadState with ThreadStateMappable {
     this.threadType,
     this.onlyVisibleUid,
     this.reverseOrder,
+    this.exactOrder,
     this.isDraft = false,
     this.latestModAct,
   });
@@ -123,6 +124,11 @@ class ThreadState with ThreadStateMappable {
   /// * Force set to asc order if `false`.
   /// * Not force order if `null`.
   final bool? reverseOrder;
+
+  /// The exact thread order in state.
+  ///
+  /// Specify this field if want to override with the app one.
+  final int? exactOrder;
 
   /// Indicating current thread is a draft or not.
   final bool isDraft;

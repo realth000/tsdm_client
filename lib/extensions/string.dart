@@ -57,6 +57,8 @@ extension ParseUrl on String {
     }
 
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
+      final order = queryParameters['ordertype']?.parseToInt();
+
       // When anchor is used, means need to scroll to a target post by its pid.
       //
       // In this situation, do NOT override page order because the page number
@@ -69,6 +71,7 @@ extension ParseUrl on String {
           if (queryParameters.containsKey('page'))
             'pageNumber': "${queryParameters['page']}",
           if (anchor != null) 'overrideReverseOrder': 'false',
+          if (order != null) 'overrideWithExactOrder': '$order',
           if (anchor != null) 'pid': anchor,
           if (queryParameters.containsKey('authorid'))
             'onlyVisibleUid': "${queryParameters['authorid']}",

@@ -79,6 +79,9 @@ class ScreenPaths {
   ///
   /// `overrideReverseOrder`: set to "false" keep the original post order in
   /// thread, for some use case user heading to a page contains a certain post.
+  ///
+  /// `overrideWithExactOrder`: set the exact thread order type, this value
+  /// is usually specified by the original source (in url).
   static const String thread = '/thread';
 
   /// Notice page.
