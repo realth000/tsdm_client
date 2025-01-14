@@ -344,6 +344,7 @@ class Post with PostMappable {
         final post = Post.fromPostNode(currentElement, page);
         if (post == null) {
           talker.error('warning: post is empty');
+          currentElement = currentElement.nextElementSibling;
           continue;
         }
         tdPostList.add(post);
