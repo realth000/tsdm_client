@@ -1,7 +1,7 @@
 ---
 name: 功能请求
 about: 请求实现新功能
-title: "[FR]"
+title: "[FR] "
 labels: enhancement
 assignees: ''
 

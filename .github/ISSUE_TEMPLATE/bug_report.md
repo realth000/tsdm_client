@@ -1,7 +1,7 @@
 ---
 name: 反馈bug
 about: 反馈遇到的bug
-title: "[BUG]"
+title: "[BUG] "
 labels: bug
 assignees: ''
 
@@ -16,8 +16,8 @@ assignees: ''
 *复现问题的步骤：*
 
 1. ...
-2. 
-3. 
+2.
+3.
 
 ## 期望的行为
 
