@@ -23,9 +23,9 @@ dependencies:
   dio: ^5.7.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.1.1
-  drift: ^2.23.1
+  drift: ^2.24.0
   # For drift
-  drift_dev: ^2.23.1
+  drift_dev: ^2.24.0
   drift_flutter: ^0.2.4
   easy_refresh: ^3.4.0
   equatable: ^2.0.7
@@ -62,15 +62,15 @@ dependencies:
   slang: ^4.4.1
   slang_flutter: ^4.4.0
   # For drift
-  sqlite3: ^2.6.0
+  sqlite3: ^2.7.2
   # For drift
-  sqlite3_flutter_libs: ^0.5.28
+  sqlite3_flutter_libs: ^0.5.29
   stream_transform: ^2.1.1
   super_sliver_list: ^0.4.1
   surf_lint_rules: ^3.1.0
   system_theme: ^3.1.2
-  talker: ^4.6.2
-  talker_flutter: ^4.6.2
+  talker: ^4.6.6
+  talker_flutter: ^4.6.6
   universal_html: ^2.2.4
   url_launcher: ^6.3.1
   uuid: ^4.5.1
@@ -83,7 +83,7 @@ dev_dependencies:
   # Blocked by flutter_l18n, analyzer and collection
   custom_lint: ^0.6.8
   dart_mappable_builder: ^4.3.0
-  flutter_launcher_icons: ^0.14.2
+  flutter_launcher_icons: ^0.14.3
   flutter_test:
     sdk: flutter
   # Blocked by dart_mappable_builder
