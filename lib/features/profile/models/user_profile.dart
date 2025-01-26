@@ -223,7 +223,7 @@ class UserProfile with UserProfileMappable {
 
   /// Special attr changes over time.
   ///
-  /// 龙之印章/西瓜
+  /// 龙之印章/西瓜/爱心/金蛋
   final String? specialAttr;
 
   /// Special attr name.

@@ -106,7 +106,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
 
   /// Special attr that changes over time.
   ///
-  /// 龙之印章/西瓜
+  /// 龙之印章/西瓜/爱心/金蛋
   final String specialAttr;
 
   /// Name of [specialAttr].
@@ -218,7 +218,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
         '注册时间:' => registrationDate = data,
         '来自:' => comeFrom = data,
         // Special attr that changes over time.
-        // 2023 春节
+        // 2024 春节
         '龙之印章:' => () {
             specialAttr = data;
             specialAttrName = '龙之印章';
@@ -232,6 +232,11 @@ final class UserBriefProfile with UserBriefProfileMappable {
         '爱心❤:' => () {
             specialAttr = data;
             specialAttrName = '爱心';
+          }(),
+        // 2025 春节
+        '金蛋:' => () {
+            specialAttr = data;
+            specialAttrName = '金蛋';
           }(),
         _ => '',
       };
