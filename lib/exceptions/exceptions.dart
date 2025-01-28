@@ -62,6 +62,21 @@ extension FPHttpExt on AsyncEither<Response<dynamic>> {
           Right(:final value) => right(onOk(value)),
         },
       );
+
+  /// * Return error if any.
+  /// * Return `HttpRequestFailedException` when status code is not 200.
+  /// * Return result called on [onOk] when ok.
+  AsyncEither<T> andThenHttp<T>(
+    AsyncEither<T> Function(Response<dynamic> resp) onOk,
+  ) =>
+      AsyncEither(
+        () async => switch (await run()) {
+          Left(:final value) => left(value),
+          Right(:final value) when value.statusCode != HttpStatus.ok =>
+            left(HttpRequestFailedException(value.statusCode)),
+          Right(:final value) => await onOk(value).run(),
+        },
+      );
 }
 
 /// Base class for all exceptions.
@@ -419,4 +434,17 @@ final class PacketDetailParseFailed extends AppException
 
   /// Thread id.
   final int tid;
+}
+
+/// Server responded an error, likely the client side sent an invalid request.
+@MappableClass()
+final class ServerRespFailure extends AppException
+    with ServerRespFailureMappable {
+  // Super not const.
+  // ignore: prefer_const_constructor_declarations
+  /// Constructor.
+  ServerRespFailure({required this.status, required super.message});
+
+  /// Non zero status code.
+  final int? status;
 }
