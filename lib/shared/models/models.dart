@@ -6,6 +6,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
+import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'cookie.dart';
@@ -18,7 +19,9 @@ part 'locked.dart';
 part 'models.mapper.dart';
 part 'normal_thread.dart';
 part 'post.dart';
+part 'post_v2.dart';
 part 'rate.dart';
+part 'rate_v2.dart';
 part 'reply_parameters.dart';
 part 'settings.dart';
 part 'settings_map.dart';
