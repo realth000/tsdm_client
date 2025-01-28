@@ -167,9 +167,9 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
                       }
                       info('find post: tid:$_tid, page:$_page, pid:$_pid');
                       await context.pushNamed(
-                        ScreenPaths.thread,
+                        ScreenPaths.threadV2,
+                        pathParameters: {'id': _tid!},
                         queryParameters: <String, String>{
-                          'tid': _tid!,
                           'pageNumber': _page!,
                           'pid': _pid!,
                           // Set this value to false to reserve the original

@@ -68,9 +68,10 @@ class _CardLayout extends StatelessWidget {
               ? null
               : () async {
                   await context.pushNamed(
-                    ScreenPaths.thread,
+                    ScreenPaths.threadV2,
+                    pathParameters: {'id': threadID},
+                    // FIXME: Query parameters are not recognized by v2 yet.
                     queryParameters: {
-                      'tid': threadID,
                       'appBarTitle': title,
                       'threadType': threadType?.name,
                     },

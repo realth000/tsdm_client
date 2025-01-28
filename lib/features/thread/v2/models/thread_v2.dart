@@ -1,6 +1,8 @@
 part of 'models.dart';
 
-/// Thread v2.
+/// Thread model v2.
+///
+/// Each instance represents a page of thread.
 @MappableClass()
 final class ThreadV2 with ThreadV2Mappable {
   /// Constructor.

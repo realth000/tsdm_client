@@ -1,27 +1,3 @@
-import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/routes/screen_paths.dart';
-
-/// Extension on [Map] that provides ability to check archiver urls.
-extension ParseRoute on Map<String, String> {
-  /// Parse to archiver url.
-  ///
-  /// $host/archiver/?fid=$fid;
-  /// $host/archiver/?fid=$tid;
-  String? parseArchiverUrl(String screenPath) {
-    final route = switch (screenPath) {
-      ScreenPaths.forum => this['fid'] == null ? null : "fid=${this['fid']!}",
-      ScreenPaths.thread => this['tid'] == null ? null : "tid=${this['tid']!}",
-      _ => null,
-    };
-
-    if (route == null) {
-      return null;
-    }
-
-    return '$baseUrl/archiver?$route';
-  }
-}
-
 /// Extension on [Map] that provides methods about modification.
 extension ModifyMap<K, V> on Map<K, V> {
   /// Return a new map that copies current map and [other] together.

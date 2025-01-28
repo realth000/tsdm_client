@@ -65,9 +65,9 @@ extension ParseUrl on String {
       // is also provided, overriding post sort order will go into the wrong
       // page which does not contain the target post.
       return RecognizedRoute(
-        ScreenPaths.thread,
+        ScreenPaths.threadV2,
+        pathParameters: {'id': "${queryParameters['tid']}"},
         queryParameters: {
-          'tid': "${queryParameters['tid']}",
           if (queryParameters.containsKey('page'))
             'pageNumber': "${queryParameters['page']}",
           if (anchor != null) 'overrideReverseOrder': 'false',
@@ -93,8 +93,9 @@ extension ParseUrl on String {
     }
 
     if (mod == 'redirect' && queryParameters['tid'] != null) {
+      // TODO: Migrate to v2 when supported.
       return RecognizedRoute(
-        ScreenPaths.thread,
+        ScreenPaths.threadV1,
         queryParameters: {
           'tid': "${queryParameters['tid']}",
           if (queryParameters.containsKey('authorid'))
@@ -106,8 +107,9 @@ extension ParseUrl on String {
     if (mod == 'redirect' &&
         queryParameters['goto'] == 'findpost' &&
         queryParameters['pid'] != null) {
+      // TODO: Migrate to v2 when supported.
       return RecognizedRoute(
-        ScreenPaths.thread,
+        ScreenPaths.threadV1,
         queryParameters: {
           'pid': "${queryParameters['pid']}",
           // Disable reverse order when go with findpost.

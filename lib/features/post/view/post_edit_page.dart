@@ -796,8 +796,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           }
           if (result ?? false) {
             context.pushReplacementNamed(
-              ScreenPaths.thread,
-              queryParameters: {'tid': state.redirectTid},
+              ScreenPaths.threadV2,
+              pathParameters: {'id': state.redirectTid!},
             );
             return;
           }

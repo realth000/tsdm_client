@@ -82,7 +82,20 @@ class ScreenPaths {
   ///
   /// `overrideWithExactOrder`: set the exact thread order type, this value
   /// is usually specified by the original source (in url).
-  static const String thread = '/thread';
+  static const String threadV1 = '/thread/v1';
+
+  /// V2 version of the thread page.
+  ///
+  /// # Parameters
+  ///
+  /// `id` is thread id.
+  ///
+  /// `overrideReverseOrder`: set to "false" keep the original post order in
+  /// thread, for some use case user heading to a page contains a certain post.
+  ///
+  /// `overrideWithExactOrder`: set the exact thread order type, this value
+  /// is usually specified by the original source (in url).
+  static const String threadV2 = '/thread/v2/:id';
 
   /// Notice page.
   ///
