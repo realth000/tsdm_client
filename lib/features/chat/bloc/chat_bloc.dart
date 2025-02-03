@@ -45,17 +45,16 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
   }
 
   void _updateState(uh.Document document, _Emit emit) {
-    final username = document
+    final titleText = document
         .querySelector('h3 > em')
         ?.innerText
         .replaceFirst('正在与', '')
-        .split('聊天中')
-        .reversed
-        .toList()
-        .slice(1)
-        .reversed
-        .toList()
-        .join();
+        .split('聊天中');
+
+    final username =
+        titleText?.reversed.toList().slice(1).reversed.toList().join();
+    final online = titleText?.elementAtOrNull(1)?.endsWith('[在线]');
+
     final chatHistoryUrl = document
         .querySelector('div.pm_tac.bbda.cl > a:nth-child(1)')
         ?.attributes['href'];
@@ -116,6 +115,7 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
       state.copyWith(
         status: ChatStatus.success,
         username: username,
+        online: online,
         uid: touid,
         chatHistoryUrl: chatHistoryUrl,
         spaceUrl: userspaceUrl,

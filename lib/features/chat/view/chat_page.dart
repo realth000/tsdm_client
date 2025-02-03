@@ -200,7 +200,8 @@ final class _ChatPageState extends State<ChatPage> {
                     child: Row(
                       children: [
                         SingleLineText(
-                          tr.hint(user: widget.username ?? widget.uid),
+                          '${tr.hint(user: widget.username ?? widget.uid)} '
+                          '${state.online ? tr.online : tr.offline}',
                           style: Theme.of(context).textTheme.labelMedium,
                         ),
                       ],

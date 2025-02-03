@@ -520,7 +520,9 @@
     "title": "聊天",
     "hint": "与 $user 聊天",
     "success": "发送成功",
-    "failed": "发送失败：$message"
+    "failed": "发送失败：$message",
+    "online": "[在线]",
+    "offline": "[离线]"
   },
   "imageDetailPage": {
     "title": "图片详情"

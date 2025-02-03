@@ -25,6 +25,7 @@ final class ChatState with ChatStateMappable {
   const ChatState({
     this.status = ChatStatus.initial,
     this.username = '',
+    this.online = false,
     this.uid = '',
     this.chatHistoryUrl = '',
     this.spaceUrl = '',
@@ -41,6 +42,9 @@ final class ChatState with ChatStateMappable {
   /// Because sometimes we do not know who is chatting with (username is
   /// nullable in chat page). This value is parsed from the chat dialog.
   final String username;
+
+  /// The user chat with is online or not.
+  final bool online;
 
   /// Uid of the other user that chat with.
   final String uid;

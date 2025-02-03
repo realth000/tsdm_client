@@ -520,7 +520,9 @@
     "title": "Chat",
     "hint": "Chat with $user",
     "success": "Sent successfully",
-    "failed": "Sent failed: $message"
+    "failed": "Sent failed: $message",
+    "online": "[Online]",
+    "offline": "[Offline]"
   },
   "imageDetailPage": {
     "title": "Image Detail"

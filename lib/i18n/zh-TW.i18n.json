@@ -520,7 +520,9 @@
     "title": "聊天",
     "hint": "與 $user 聊天",
     "success": "發送成功",
-    "failed": "發送失敗：$message"
+    "failed": "發送失敗：$message",
+    "online": "[線上]",
+    "offline": "[離線]"
   },
   "imageDetailPage": {
     "title": "圖片詳情"
