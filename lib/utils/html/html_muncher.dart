@@ -364,8 +364,11 @@ final class _Muncher with LoggerMixin {
             'h2' => _buildH2(node),
             'h3' => _buildH3(node),
             'h4' => _buildH4(node),
-            'ul' => _buildUl(node),
-            'ol' => _buildOl(node),
+            // Ordered list in web page uses ul tag and has class "litype_1".
+            'ul' when !node.classes.contains('litype_1') => _buildUl(node),
+            'ol' ||
+            'ul' when node.classes.contains('litype_1') =>
+              _buildOl(node),
             'li' => _buildLi(node),
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
@@ -974,7 +977,7 @@ final class _Muncher with LoggerMixin {
 
   /// Build `<ol>` tag.
   List<InlineSpan>? _buildOl(uh.Element element) {
-    state.listStack.add(_ListOrdered(0));
+    state.listStack.add(_ListOrdered(1));
     final ret = _munch(element);
     state.listStack.removeLast();
     return ret;
