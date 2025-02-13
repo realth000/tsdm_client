@@ -13,7 +13,8 @@ const Uuid _uuid = Uuid();
 /// Represents a route that can be directed to.
 class RecognizedRoute {
   /// Constructor.
-  const RecognizedRoute(this.screenPath, {
+  const RecognizedRoute(
+    this.screenPath, {
     this.pathParameters = const {},
     this.queryParameters = const {},
   });
@@ -214,9 +215,7 @@ extension ParseUrl on String {
 
   /// Parse self as an uri and return the value of parameter [name].
   String? uriQueryParameter(String name) {
-    return Uri
-        .parse(this)
-        .queryParameters[name];
+    return Uri.parse(this).queryParameters[name];
   }
 
   /// Check a string is pattern of user space url.
@@ -228,9 +227,7 @@ extension ParseUrl on String {
   /// 3. In query parameters, contains key 'uid' or 'username'. (email ignored).
   /// 4. In query parameters, value of 'ac' is neither 'usergroup' nor 'credit'.
   bool get isUserSpaceUrl {
-    final args = Uri
-        .tryParse(this)
-        ?.queryParameters;
+    final args = Uri.tryParse(this)?.queryParameters;
     if (args == null) {
       return false;
     }
@@ -284,14 +281,14 @@ extension EnhanceModification on String {
   /// Trim the trailing web page title.
   String trimTitle() {
     return replaceFirst(
-        ' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!', '');
+      ' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!',
+      '',
+    );
   }
 
   /// Parse html escaped text into normal text.
   String? unescapeHtml() {
-    return h
-        .parseFragment(this)
-        .text;
+    return h.parseFragment(this).text;
   }
 }
 
@@ -327,10 +324,7 @@ extension ParseStringTo on String {
   }
 
   /// Parse the string bytes size in utf-8 encoding.
-  int get parseUtf8Length =>
-      utf8
-          .encode(this)
-          .length;
+  int get parseUtf8Length => utf8.encode(this).length;
 }
 
 /// Extension on [String] that provides info used in caching images.
