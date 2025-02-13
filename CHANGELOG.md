@@ -6,6 +6,21 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+### Added
+
+- 私信：在私信聊天页面显示对方的离线/在线状态。
+  - 仅有发起聊天的页面可以显示，聊天历史记录页面由于网页端不存在该信息故无法显示。
+
+### Fixed
+
+- 用户：修复用户资料页中通知按钮不会显示未读消息数的问题。
+- html：修复将有序列表显示为无序列表的问题。
+- 私信：修复发送信息失败时发送按钮一直加载中的问题。
+
+### Changed
+
+- app：升级到`flutter >= 3.29`，`Dart >= 3.7`
+
 ## [1.1.1] - 2025-01-15
 
 ### Added
