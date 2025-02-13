@@ -78,7 +78,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           replyType: ReplyTypes.notice,
           disabledEditorFeatures: defaultEditorDisabledFeatures,
           fullScreenDisabledEditorFeatures:
-              defaultFullScreenDisabledEditorFeatures,
+          defaultFullScreenDisabledEditorFeatures,
         ),
       ],
     );
@@ -93,7 +93,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
       NoticeType.invite ||
       NoticeType.newFriend ||
       NoticeType.batchRate =>
-        '', // No detail page for invites, impossible.
+      '', // No detail page for invites, impossible.
     };
     return MultiBlocProvider(
       providers: [
@@ -107,9 +107,11 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           create: (context) => ReplyBloc(replyRepository: context.repo()),
         ),
         BlocProvider(
-          create: (context) => NotificationDetailCubit(
+          create: (context) =>
+          NotificationDetailCubit(
             notificationRepository: context.repo(),
-          )..fetchDetail(widget.url),
+          )
+            ..fetchDetail(widget.url),
         ),
       ],
       child: MultiBlocListener(
@@ -139,17 +141,21 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
             final body = switch (state.status) {
               NotificationDetailStatus.initial ||
               NotificationDetailStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
+              const Center(child: CircularProgressIndicator()),
               NotificationDetailStatus.success => _buildBody(context, state),
-              NotificationDetailStatus.failed => buildRetryButton(context, () {
-                  context
-                      .read<NotificationDetailCubit>()
-                      .fetchDetail(widget.url);
-                }),
+              NotificationDetailStatus.failed =>
+                  buildRetryButton(context, () {
+                    context
+                        .read<NotificationDetailCubit>()
+                        .fetchDetail(widget.url);
+                  }),
             };
 
             // Update thread closed state to reply bar.
-            if (state.threadClosed != context.read<ReplyBloc>().state.closed) {
+            if (state.threadClosed != context
+                .read<ReplyBloc>()
+                .state
+                .closed) {
               context
                   .read<ReplyBloc>()
                   .add(ReplyThreadClosed(closed: state.threadClosed));
@@ -167,9 +173,9 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
                       }
                       info('find post: tid:$_tid, page:$_page, pid:$_pid');
                       await context.pushNamed(
-                        ScreenPaths.threadV2,
-                        pathParameters: {'id': _tid!},
+                        ScreenPaths.threadV1,
                         queryParameters: <String, String>{
+                          'tid': _tid!,
                           'pageNumber': _page!,
                           'pid': _pid!,
                           // Set this value to false to reserve the original

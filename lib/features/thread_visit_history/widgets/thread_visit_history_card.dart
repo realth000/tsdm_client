@@ -21,8 +21,8 @@ class ThreadVisitHistoryCard extends StatelessWidget {
       clipBehavior: Clip.hardEdge,
       child: InkWell(
         onTap: () async => context.pushNamed(
-          ScreenPaths.threadV2,
-          pathParameters: {'id': '${model.threadId}'},
+          ScreenPaths.threadV1,
+          queryParameters: {'tid': '${model.threadId}'},
         ),
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
