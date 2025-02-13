@@ -31,6 +31,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
+import 'package:tsdm_client/widgets/notice_button.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -156,12 +157,7 @@ class _ProfilePageState extends State<ProfilePage> {
             await context.pushNamed(ScreenPaths.points);
           },
         ),
-        IconButton(
-          icon: noticeIcon,
-          onPressed: () async {
-            await context.pushNamed(ScreenPaths.notice);
-          },
-        ),
+        const NoticeButton(),
         const CheckinButton(),
         DebounceIconButton(
           icon: const Icon(Icons.logout_outlined),
