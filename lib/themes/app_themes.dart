@@ -53,6 +53,14 @@ class AppTheme {
         dividerHeight: 0,
       );
 
+  static ProgressIndicatorThemeData _buildProcessIndicatorTheme() =>
+      const ProgressIndicatorThemeData(
+        // This flag is deprecated since 3.29 but not default to false yet. Keep
+        // it to false so we have the latest M3 style process indicator.
+        // ignore: deprecated_member_use
+        year2023: false,
+      );
+
   static NavigationDrawerThemeData _buildNavigationDrawerTheme(
     ColorScheme? colorScheme,
   ) =>
@@ -108,6 +116,7 @@ class AppTheme {
       listTileTheme: _buildListTileTheme(),
       navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
       tabBarTheme: _buildTabBarTheme(),
+      progressIndicatorTheme: _buildProcessIndicatorTheme(),
     );
   }
 
@@ -151,6 +160,7 @@ class AppTheme {
       listTileTheme: _buildListTileTheme(),
       navigationDrawerTheme: _buildNavigationDrawerTheme(seedScheme),
       tabBarTheme: _buildTabBarTheme(),
+      progressIndicatorTheme: _buildProcessIndicatorTheme(),
     );
   }
 }
