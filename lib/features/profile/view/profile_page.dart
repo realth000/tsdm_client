@@ -17,9 +17,7 @@ import 'package:tsdm_client/features/checkin/widgets/checkin_button.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
-import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
@@ -121,30 +119,9 @@ class _ProfilePageState extends State<ProfilePage> {
     required bool logout,
   }) {
     final userProfile = state.userProfile!;
-    final unreadNoticeCount = state.unreadNoticeCount;
-    final hasUnreadMessage = state.hasUnreadMessage;
-
-    late final Widget noticeIcon;
-    final showUnreadInfoHint =
-        getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
 
     if (!context.mounted) {
       return sizedBoxEmpty;
-    }
-
-    if (showUnreadInfoHint) {
-      if (unreadNoticeCount > 0) {
-        noticeIcon = Badge(
-          label: Text('$unreadNoticeCount'),
-          child: const Icon(Icons.notifications_outlined),
-        );
-      } else if (unreadNoticeCount <= 0 && hasUnreadMessage) {
-        noticeIcon = const Badge(child: Icon(Icons.notifications_outlined));
-      } else {
-        noticeIcon = const Icon(Icons.notifications_outlined);
-      }
-    } else {
-      noticeIcon = const Icon(Icons.notifications_outlined);
     }
 
     late final List<Widget> actions;
