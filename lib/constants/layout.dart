@@ -134,9 +134,9 @@ const edgeInsetsL60B12 = EdgeInsets.only(left: 60, bottom: 12);
 
 /// A minimum sized [CircularProgressIndicator] that should use in buttons.
 const sizedCircularProgressIndicator = SizedBox(
-  width: 16,
-  height: 16,
-  child: CircularProgressIndicator(strokeWidth: 3),
+  width: 24,
+  height: 24,
+  child: CircularProgressIndicator(strokeWidth: 2.5),
 );
 
 /// Widget with 24 height and infinite width to use in shimmers.
