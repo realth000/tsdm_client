@@ -725,7 +725,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "10.8.4"
+    version: "11.0.0"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
@@ -740,7 +740,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill/flutter_quill_extensions"
       relative: true
     source: path
-    version: "10.8.4"
+    version: "11.0.0"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -791,22 +791,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.0"
-  gal:
-    dependency: transitive
-    description:
-      name: gal
-      sha256: "2771519c8b29f784d5e27f4efc2667667eef51c6c47cccaa0435a8fe8aa208e4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.1"
-  gal_linux:
-    dependency: transitive
-    description:
-      name: gal_linux
-      sha256: "0040d61843134cc5a93e4597080a86f2ba073217957e28b2a684b4d8b050873c"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.2"
   get_it:
     dependency: "direct main"
     description:
@@ -1341,56 +1325,56 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge"
       relative: true
     source: path
-    version: "10.7.11"
+    version: "11.0.0"
   quill_native_bridge_android:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_android"
       relative: true
     source: path
-    version: "0.0.1-dev.5"
+    version: "0.0.1+2"
   quill_native_bridge_ios:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_ios"
       relative: true
     source: path
-    version: "0.0.1-dev.6"
+    version: "0.0.1"
   quill_native_bridge_linux:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_linux"
       relative: true
     source: path
-    version: "0.0.1-dev.4"
+    version: "0.0.1"
   quill_native_bridge_macos:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_macos"
       relative: true
     source: path
-    version: "0.0.1-dev.5"
+    version: "0.0.1"
   quill_native_bridge_platform_interface:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_platform_interface"
       relative: true
     source: path
-    version: "0.0.1-dev.5"
+    version: "0.0.1+1"
   quill_native_bridge_web:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_web"
       relative: true
     source: path
-    version: "0.0.1-dev.6"
+    version: "0.0.1"
   quill_native_bridge_windows:
     dependency: transitive
     description:
       path: "packages/flutter_bbcode_editor/packages/quill-native-bridge/quill_native_bridge_windows"
       relative: true
     source: path
-    version: "0.0.1-dev.4"
+    version: "0.0.1"
   quiver:
     dependency: transitive
     description:
