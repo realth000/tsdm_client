@@ -17,7 +17,7 @@ class RichEditor extends StatelessWidget {
   const RichEditor({
     required this.controller,
     this.scrollController,
-    this.focusNode,
+    this.editorFocusNode,
     this.autoFocus = false,
     super.key,
   });
@@ -29,7 +29,7 @@ class RichEditor extends StatelessWidget {
   final ScrollController? scrollController;
 
   /// Editor focus.
-  final FocusNode? focusNode;
+  final FocusNode? editorFocusNode;
 
   /// Automatically focus the editor.
   final bool autoFocus;
@@ -56,7 +56,7 @@ class RichEditor extends StatelessWidget {
   Widget build(BuildContext context) {
     return BBCodeEditor(
       controller: controller,
-      focusNode: focusNode,
+      focusNode: editorFocusNode,
       autoFocus: autoFocus,
       scrollController: scrollController,
       imageProvider: (context, url, width, height) {
@@ -76,14 +76,16 @@ class RichEditor extends StatelessWidget {
       },
       // Enable this constraints if needed.
       // imageConstraints: const BoxConstraints(maxWidth: 200, maxHeight: 200),
-      imagePicker: (context, url, width, height) =>
-          showImagePicker(context, url: url, width: width, height: height),
+      imagePicker:
+          (context, url, width, height) =>
+              showImagePicker(context, url: url, width: width, height: height),
       emojiProvider: (context, code) {
         // code is supposed in
         // {:${group_id}_${emoji_id}:}
         // format.
-        final data =
-            getIt.get<ImageCacheProvider>().getEmojiCacheFromRawCodeSync(code);
+        final data = getIt
+            .get<ImageCacheProvider>()
+            .getEmojiCacheFromRawCodeSync(code);
         if (data == null) {
           return Text(code);
         }
@@ -97,17 +99,14 @@ class RichEditor extends StatelessWidget {
       // TODO: Implement imageBuilder in editor package.
       // imageBuilder: (String url) => CachedImageProvider(url, context),
       urlLauncher: (url) async => context.dispatchAsUrl(url),
-      userMentionHandler: (username) => context.dispatchAsUrl(
-        '$usernameProfilePage$username',
-      ),
+      userMentionHandler:
+          (username) => context.dispatchAsUrl('$usernameProfilePage$username'),
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context) async => showColorPicker(context),
       backgroundColorPicker: (context) async => showColorPicker(context),
-      urlPicker: (context, url, description) async => showUrlPicker(
-        context,
-        url: url,
-        description: description,
-      ),
+      urlPicker:
+          (context, url, description) async =>
+              showUrlPicker(context, url: url, description: description),
     );
   }
 }

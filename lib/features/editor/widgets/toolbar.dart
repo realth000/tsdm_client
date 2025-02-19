@@ -100,6 +100,7 @@ class EditorToolbar extends StatelessWidget {
     required this.bbcodeController,
     this.disabledFeatures = const {},
     this.afterButtonPressed,
+    this.editorFocusNode,
     super.key,
   });
 
@@ -115,6 +116,11 @@ class EditorToolbar extends StatelessWidget {
   /// Callback when button pressed.
   final VoidCallback? afterButtonPressed;
 
+  /// The focus node shared with editor.
+  ///
+  /// Use This field to update editor focus state.
+  final FocusNode? editorFocusNode;
+
   bool _hasFeature(EditorFeatures feature) =>
       !disabledFeatures.contains(feature);
 
@@ -122,15 +128,18 @@ class EditorToolbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return BBCodeEditorToolbar(
       afterButtonPressed: afterButtonPressed,
+      focusNode: editorFocusNode,
       controller: bbcodeController,
       config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context) async => showColorPicker(context),
-      urlPicker: (context, url, description) async =>
-          showUrlPicker(context, url: url, description: description),
+      urlPicker:
+          (context, url, description) async =>
+              showUrlPicker(context, url: url, description: description),
       backgroundColorPicker: (context) async => showColorPicker(context),
-      imagePicker: (context, url, width, height) =>
-          showImagePicker(context, url: url, width: width, height: height),
+      imagePicker:
+          (context, url, width, height) =>
+              showImagePicker(context, url: url, width: width, height: height),
       usernamePicker: showUsernamePickerDialog,
       // Features.
       showUndo: _hasFeature(EditorFeatures.undo),

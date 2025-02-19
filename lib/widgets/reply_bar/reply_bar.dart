@@ -18,11 +18,7 @@ import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 
-enum _BottomPanelType {
-  none,
-  keyboard,
-  toolbar,
-}
+enum _BottomPanelType { none, keyboard, toolbar }
 
 /// Widget provide reply functionality.
 ///
@@ -92,17 +88,18 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
     final c = showBottomSheet(
       context: context,
       shape: InputBorder.none,
-      builder: (_) => _ReplyBar(
-        controller: widget.controller,
-        outerTextController: controller,
-        replyType: widget.replyType,
-        chatHistorySendTarget: widget.chatHistorySendTarget,
-        chatSendTarget: widget.chatSendTarget,
-        disabledEditorFeatures: widget.disabledEditorFeatures,
-        fullScreenDisabledEditorFeatures:
-            widget.fullScreenDisabledEditorFeatures,
-        fullScreen: widget.fullScreen,
-      ),
+      builder:
+          (_) => _ReplyBar(
+            controller: widget.controller,
+            outerTextController: controller,
+            replyType: widget.replyType,
+            chatHistorySendTarget: widget.chatHistorySendTarget,
+            chatSendTarget: widget.chatSendTarget,
+            disabledEditorFeatures: widget.disabledEditorFeatures,
+            fullScreenDisabledEditorFeatures:
+                widget.fullScreenDisabledEditorFeatures,
+            fullScreen: widget.fullScreen,
+          ),
     );
 
     widget.controller._showingEditor = true;
@@ -155,8 +152,9 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
           controller: controller,
           readOnly: true,
           enabled: onTapCallback != null,
-          decoration:
-              InputDecoration(hintText: context.t.threadPage.sendReplyHint),
+          decoration: InputDecoration(
+            hintText: context.t.threadPage.sendReplyHint,
+          ),
           onTap: onTapCallback,
         ),
       ),
@@ -355,11 +353,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       return;
     }
     context.read<ReplyBloc>().add(
-          ReplyToThreadRequested(
-            replyParameters: _replyParameters!,
-            replyMessage: _replyRichController.toBBCode(),
-          ),
-        );
+      ReplyToThreadRequested(
+        replyParameters: _replyParameters!,
+        replyMessage: _replyRichController.toBBCode(),
+      ),
+    );
   }
 
   /// Post reply to another post in thread tid/fid.
@@ -376,12 +374,12 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
 
     context.read<ReplyBloc>().add(
-          ReplyToPostRequested(
-            replyParameters: _replyParameters!,
-            replyAction: _replyAction!,
-            replyMessage: _replyRichController.toBBCode(), // data,
-          ),
-        );
+      ReplyToPostRequested(
+        replyParameters: _replyParameters!,
+        replyAction: _replyAction!,
+        replyMessage: _replyRichController.toBBCode(), // data,
+      ),
+    );
   }
 
   /// Send message in chat history reply type.
@@ -397,12 +395,12 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
 
     context.read<ReplyBloc>().add(
-          ReplyChatHistoryRequested(
-            targetUrl: widget.chatHistorySendTarget!.targetUrl,
-            formHash: widget.chatHistorySendTarget!.formHash,
-            message: _replyRichController.toBBCode(),
-          ),
-        );
+      ReplyChatHistoryRequested(
+        targetUrl: widget.chatHistorySendTarget!.targetUrl,
+        formHash: widget.chatHistorySendTarget!.formHash,
+        message: _replyRichController.toBBCode(),
+      ),
+    );
   }
 
   Future<void> _sendChatMessage() async {
@@ -417,15 +415,15 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
 
     context.read<ReplyBloc>().add(
-          ReplyChatRequested(widget.chatSendTarget!.touid, {
-            'pmsubmit': widget.chatSendTarget!.pmsubmit,
-            'touid': widget.chatSendTarget!.touid,
-            'formhash': widget.chatSendTarget!.formHash,
-            'handlekey': widget.chatSendTarget!.handleKey,
-            'message': _replyRichController.toBBCode(),
-            'messageappand': widget.chatSendTarget!.messageAppend,
-          }),
-        );
+      ReplyChatRequested(widget.chatSendTarget!.touid, {
+        'pmsubmit': widget.chatSendTarget!.pmsubmit,
+        'touid': widget.chatSendTarget!.touid,
+        'formhash': widget.chatSendTarget!.formHash,
+        'handlekey': widget.chatSendTarget!.handleKey,
+        'message': _replyRichController.toBBCode(),
+        'messageappand': widget.chatSendTarget!.messageAppend,
+      }),
+    );
   }
 
   /// Send message, according to [ReplyTypes].
@@ -463,7 +461,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       child: RichEditor(
         // Initial text is the text passed from outside.
         controller: _replyRichController,
-        focusNode: focusNode,
+        editorFocusNode: focusNode,
       ),
     );
   }
@@ -483,17 +481,13 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         children: [
           Text(
             _hintText!,
-            style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                  color: outlineColor,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.labelLarge?.copyWith(color: outlineColor),
           ),
           const Spacer(),
           IconButton(
-            icon: Icon(
-              Icons.clear_outlined,
-              color: outlineColor,
-              size: 16,
-            ),
+            icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16),
             onPressed: _clearTextAndHint,
           ),
         ],
@@ -507,9 +501,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
     return EditorToolbar(
       bbcodeController: _replyRichController,
-      disabledFeatures: fullScreen
-          ? widget.fullScreenDisabledEditorFeatures
-          : widget.disabledEditorFeatures,
+      disabledFeatures:
+          fullScreen
+              ? widget.fullScreenDisabledEditorFeatures
+              : widget.disabledEditorFeatures,
+      editorFocusNode: focusNode,
     );
   }
 
@@ -526,11 +522,13 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           _BottomPanelType.none => sizedBoxEmpty,
           _BottomPanelType.keyboard => sizedBoxEmpty,
           _BottomPanelType.toolbar => EditorToolbar(
-              bbcodeController: _replyRichController,
-              disabledFeatures: fullScreen
-                  ? widget.fullScreenDisabledEditorFeatures
-                  : widget.disabledEditorFeatures,
-            )
+            bbcodeController: _replyRichController,
+            disabledFeatures:
+                fullScreen
+                    ? widget.fullScreenDisabledEditorFeatures
+                    : widget.disabledEditorFeatures,
+            editorFocusNode: focusNode,
+          ),
         };
       },
       onPanelTypeChange: (p, data) {
@@ -587,10 +585,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                   // Only collapse editor toolbar on mobile platforms.
                   isMobile
                       ? (_) {
-                          setState(() {
-                            fullScreen = false;
-                          });
-                        }
+                        setState(() {
+                          fullScreen = false;
+                        });
+                      }
                       : null,
               child: _buildRichEditor(context),
             ),
@@ -622,8 +620,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                         data: _BottomPanelType.toolbar,
                       );
                     } else {
-                      panelController
-                          .updatePanelType(ChatBottomPanelType.keyboard);
+                      panelController.updatePanelType(
+                        ChatBottomPanelType.keyboard,
+                      );
                     }
                   },
                 ),
@@ -639,9 +638,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                     (canSendReply && !isSendingReply && !_closed && _hasLogin)
                         ? () async => _sendMessage()
                         : null,
-                child: isSendingReply
-                    ? sizedCircularProgressIndicator
-                    : const Icon(Icons.send),
+                child:
+                    isSendingReply
+                        ? sizedCircularProgressIndicator
+                        : const Icon(Icons.send),
               ),
             ],
           ),
@@ -661,13 +661,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       initialText: widget.outerTextController.text,
     );
     _replyRichController.addListener(_checkEditorContent);
-    _authStatusSub = authRepo.status.listen(
-      (status) {
-        setState(() {
-          status is AuthStatusAuthed ? _hasLogin = true : _hasLogin = false;
-        });
-      },
-    );
+    _authStatusSub = authRepo.status.listen((status) {
+      setState(() {
+        status is AuthStatusAuthed ? _hasLogin = true : _hasLogin = false;
+      });
+    });
     fullScreen = widget.fullScreen;
     focusNode.requestFocus();
   }
