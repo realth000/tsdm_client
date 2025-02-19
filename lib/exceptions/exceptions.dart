@@ -57,8 +57,9 @@ extension FPHttpExt on AsyncEither<Response<dynamic>> {
       AsyncEither(
         () async => switch (await run()) {
           Left(:final value) => left(value),
-          Right(:final value) when value.statusCode != HttpStatus.ok =>
-            left(HttpRequestFailedException(value.statusCode)),
+          Right(:final value) when value.statusCode != HttpStatus.ok => left(
+            HttpRequestFailedException(value.statusCode),
+          ),
           Right(:final value) => right(onOk(value)),
         },
       );
@@ -68,23 +69,21 @@ extension FPHttpExt on AsyncEither<Response<dynamic>> {
   /// * Return result called on [onOk] when ok.
   AsyncEither<T> andThenHttp<T>(
     AsyncEither<T> Function(Response<dynamic> resp) onOk,
-  ) =>
-      AsyncEither(
-        () async => switch (await run()) {
-          Left(:final value) => left(value),
-          Right(:final value) when value.statusCode != HttpStatus.ok =>
-            left(HttpRequestFailedException(value.statusCode)),
-          Right(:final value) => await onOk(value).run(),
-        },
-      );
+  ) => AsyncEither(
+    () async => switch (await run()) {
+      Left(:final value) => left(value),
+      Right(:final value) when value.statusCode != HttpStatus.ok => left(
+        HttpRequestFailedException(value.statusCode),
+      ),
+      Right(:final value) => await onOk(value).run(),
+    },
+  );
 }
 
 /// Base class for all exceptions.
 @MappableClass()
 sealed class AppException with AppExceptionMappable implements Exception {
-  AppException({
-    this.message,
-  }) : stackTrace = StackTrace.current;
+  AppException({this.message}) : stackTrace = StackTrace.current;
 
   /// Message to print
   final String? message;
@@ -117,11 +116,8 @@ final class HttpRequestFailedException extends AppException
 final class HttpHandshakeFailedException extends AppException
     with HttpHandshakeFailedExceptionMappable {
   /// Constructor.
-  HttpHandshakeFailedException(
-    String message, {
-    this.statusCode,
-    this.headers,
-  }) : super(message: message);
+  HttpHandshakeFailedException(String message, {this.statusCode, this.headers})
+    : super(message: message);
 
   /// Optional status code.
   final int? statusCode;
@@ -370,7 +366,7 @@ class ReplyPersonalMessageFailedException extends AppException
 final class ThreadPublishFailedException extends AppException
     with ThreadPublishFailedExceptionMappable {
   /// Constructor.
-  ThreadPublishFailedException(this.code);
+  ThreadPublishFailedException(this.code, {super.message});
 
   /// Unexpected http status code.
   final int code;

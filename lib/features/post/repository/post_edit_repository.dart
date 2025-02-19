@@ -60,61 +60,59 @@ final class PostEditRepository with LoggerMixin {
     required String save,
     required String? perm,
     required int? price,
-  }) =>
-      AsyncVoidEither(() async {
-        final body = <String, String>{
-          'formhash': formHash,
-          'posttime': postTime,
-          'delattachop': delattachop,
-          'wysiwyg': wysiwyg,
-          'fid': fid,
-          'tid': tid,
-          'pid': pid,
-          'checkbox': '0',
-          'page': page,
-          'subject': threadTitle ?? '',
-          'message': data,
-          'editsubmit': 'true',
-          'save': save,
-          'price': '${price ?? ""}',
-        };
-        if (threadType != null) {
-          body['typeid'] = threadType;
-        }
-        if (perm != null) {
-          body['readperm'] = perm;
-        }
+  }) => AsyncVoidEither(() async {
+    final body = <String, String>{
+      'formhash': formHash,
+      'posttime': postTime,
+      'delattachop': delattachop,
+      'wysiwyg': wysiwyg,
+      'fid': fid,
+      'tid': tid,
+      'pid': pid,
+      'checkbox': '0',
+      'page': page,
+      'subject': threadTitle ?? '',
+      'message': data,
+      'editsubmit': 'true',
+      'save': save,
+      'price': '${price ?? ""}',
+    };
+    if (threadType != null) {
+      body['typeid'] = threadType;
+    }
+    if (perm != null) {
+      body['readperm'] = perm;
+    }
 
-        for (final entry in options.entries) {
-          body[entry.key] = entry.value;
-        }
-        final respEither = await getIt
+    for (final entry in options.entries) {
+      body[entry.key] = entry.value;
+    }
+    final respEither =
+        await getIt
             .get<NetClientProvider>()
             .postMultipartForm(_postSubmitTarget, data: body)
             .run();
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
-        final resp = respEither.unwrap();
-        // When post succeed, server responses 301.
-        // If we got a 200, likely we ran into some error.
-        if (resp.statusCode == HttpStatus.ok) {
-          final document = parseHtmlDocument(resp.data as String);
-          return left(
-            PostEditFailedToUploadResult(
-              document.querySelector('div#messagetext > p')?.innerText ??
-                  'unknown error',
-            ),
-          );
-        }
-        if (resp.statusCode != HttpStatus.movedPermanently) {
-          return left(
-            HttpRequestFailedException(resp.statusCode),
-          );
-        }
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
+    final resp = respEither.unwrap();
+    // When post succeed, server responses 301.
+    // If we got a 200, likely we ran into some error.
+    if (resp.statusCode == HttpStatus.ok) {
+      final document = parseHtmlDocument(resp.data as String);
+      return left(
+        PostEditFailedToUploadResult(
+          document.querySelector('div#messagetext > p')?.innerText ??
+              'unknown error',
+        ),
+      );
+    }
+    if (resp.statusCode != HttpStatus.movedPermanently) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
 
-        return rightVoid();
-      });
+    return rightVoid();
+  });
 
   /// Fetch required info that used in posting new thread.
   ///
@@ -128,41 +126,47 @@ final class PostEditRepository with LoggerMixin {
   ///
   /// Generally the serer will response a status code of 301 with location in
   /// header to redirect to published thread page.
-  AsyncEither<String> postThread(ThreadPublishInfo info) =>
-      AsyncEither(() async {
-        switch (await getIt
-            .get<NetClientProvider>()
-            .postForm(
-              _buildThreadPostUrl(info.fid),
-              data: info.toPostPayload(),
-            )
-            .run()) {
-          // Intended into this branch:
-          // Server response 301 and dio considered it as an error.
-          case Left(:final value)
-              when value is HttpHandshakeFailedException &&
-                  value.statusCode == HttpStatus.movedPermanently &&
-                  (value.headers
-                          ?.value(HttpHeaders.locationHeader)
-                          ?.isNotEmpty ??
-                      false):
-            return Right(value.headers!.value(HttpHeaders.locationHeader)!);
-          case Left(:final value):
-            return left(value);
-          case Right(:final value)
-              when value.statusCode != HttpStatus.movedPermanently:
-            return left(ThreadPublishFailedException(value.statusCode!));
-          case Right(:final value):
-            if (value.headers.map.containsKey(HttpHeaders.locationHeader)) {
-              error('location header not found in response');
-              return left(ThreadPublishLocationNotFoundException());
-            }
-            final locations = value.headers.map[HttpHeaders.locationHeader];
-            if (locations?.isEmpty ?? true) {
-              error('empty location header');
-              return left(ThreadPublishLocationNotFoundException());
-            }
-            return right(locations!.first);
-        }
-      });
+  AsyncEither<String> postThread(ThreadPublishInfo info) => AsyncEither(
+    () async {
+      switch (await getIt
+          .get<NetClientProvider>()
+          .postForm(_buildThreadPostUrl(info.fid), data: info.toPostPayload())
+          .run()) {
+        // Intended into this branch:
+        // Server response 301 and dio considered it as an error.
+        case Left(:final value)
+            when value is HttpHandshakeFailedException &&
+                value.statusCode == HttpStatus.movedPermanently &&
+                (value.headers?.value(HttpHeaders.locationHeader)?.isNotEmpty ??
+                    false):
+          return Right(value.headers!.value(HttpHeaders.locationHeader)!);
+        case Left(:final value):
+          return left(value);
+        case Right(:final value) when value.statusCode == HttpStatus.ok:
+          return left(
+            ThreadPublishFailedException(
+              HttpStatus.ok,
+              message:
+                  parseHtmlDocument(
+                    value.data as String,
+                  ).querySelector('div#messagetext > p')?.innerText,
+            ),
+          );
+        case Right(:final value)
+            when value.statusCode != HttpStatus.movedPermanently:
+          return left(ThreadPublishFailedException(value.statusCode!));
+        case Right(:final value):
+          if (value.headers.map.containsKey(HttpHeaders.locationHeader)) {
+            error('location header not found in response');
+            return left(ThreadPublishLocationNotFoundException());
+          }
+          final locations = value.headers.map[HttpHeaders.locationHeader];
+          if (locations?.isEmpty ?? true) {
+            error('empty location header');
+            return left(ThreadPublishLocationNotFoundException());
+          }
+          return right(locations!.first);
+      }
+    },
+  );
 }
