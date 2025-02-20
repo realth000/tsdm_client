@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/editor/widgets/color_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/emoji_bottom_sheet.dart';
 import 'package:tsdm_client/features/editor/widgets/image_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/url_dialog.dart';
 import 'package:tsdm_client/features/editor/widgets/username_picker_dialog.dart';
+import 'package:tsdm_client/utils/platform.dart';
 
 /// Representing all features types.
 enum EditorFeatures {
@@ -125,7 +127,7 @@ class EditorToolbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BBCodeEditorToolbar(
+    final toolbar = BBCodeEditorToolbar(
       afterButtonPressed: afterButtonPressed,
       focusNode: editorFocusNode,
       controller: bbcodeController,
@@ -164,5 +166,11 @@ class EditorToolbar extends StatelessWidget {
       showClipboardPasteButton: _hasFeature(EditorFeatures.paste),
       showUserMentionButton: _hasFeature(EditorFeatures.userMention),
     );
+
+    if (isMobile) {
+      return Column(mainAxisSize: MainAxisSize.min, children: [toolbar, sizedBoxW24H24]);
+    }
+
+    return toolbar;
   }
 }
