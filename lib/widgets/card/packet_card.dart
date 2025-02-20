@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/packet/cubit/packet_cubit.dart';
 import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 
 /// 红包
 class PacketCard extends StatelessWidget {
@@ -45,14 +46,14 @@ class PacketCard extends StatelessWidget {
         listener: (context, state) {
           if (state.status == PacketStatus.failed) {
             if (state.reason != null) {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.reason!)));
+              showSnackBar(context: context, message: state.reason!);
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr.failedToOpen)));
+              showSnackBar(context: context, message: tr.failedToOpen);
             }
           } else if (state.status == PacketStatus.success) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.reason!)));
+            showSnackBar(context: context, message: state.reason!);
           } else if (state.status == PacketStatus.takenAway) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr.allTakenAway)));
+            showSnackBar(context: context, message: tr.allTakenAway);
           }
         },
         child: BlocBuilder<PacketCubit, PacketState>(

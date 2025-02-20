@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/show_toast.dart' as toast;
 
 /// Copy [data] into system clipboard and show a snack bar if [showSnackBar] is
 /// true.
@@ -10,6 +11,6 @@ Future<void> copyToClipboard(BuildContext context, String data, {bool showSnackB
     return;
   }
   if (showSnackBar) {
-    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(context.t.general.copiedToClipboard)));
+    toast.showSnackBar(context: context, message: context.t.general.copiedToClipboard);
   }
 }
