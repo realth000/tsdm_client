@@ -148,7 +148,10 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
           controller: controller,
           readOnly: true,
           enabled: onTapCallback != null,
-          decoration: InputDecoration(hintText: context.t.threadPage.sendReplyHint),
+          decoration: InputDecoration(
+            hintText: context.t.threadPage.sendReplyHint,
+            border: const UnderlineInputBorder(),
+          ),
           onTap: onTapCallback,
         ),
       ),
@@ -553,7 +556,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         // Editor.
         Flexible(
           child: Padding(
-            padding: edgeInsetsL12T12R12B12,
+            padding: edgeInsetsL12T4R12B4,
             child: Listener(
               onPointerUp:
                   // Only collapse editor toolbar on mobile platforms.
