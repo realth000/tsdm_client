@@ -3,6 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -281,6 +282,17 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
 
     final latestModAct = document.querySelector('div.modact')?.innerText;
 
+    // Parse breadcrumb.
+    final breadcrumbs =
+        document
+            .querySelectorAll('div#pt > div.z > a')
+            .skipWhile((e) => !(e.attributes['href'] ?? '').contains('?gid='))
+            .map((e) => ThreadBreadcrumb(description: e.innerText, link: e.attributes['href']!.prependHost()))
+            .toList();
+    if (breadcrumbs.isNotEmpty) {
+      breadcrumbs.removeLast();
+    }
+
     final threadState = ThreadState(
       tid: tid,
       pid: state.pid,
@@ -303,6 +315,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       exactOrder: state.exactOrder,
       isDraft: isDraft ?? false,
       latestModAct: latestModAct,
+      breadcrumbs: breadcrumbs,
     );
 
     return threadState;

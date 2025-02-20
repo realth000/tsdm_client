@@ -41,6 +41,7 @@ class ThreadState with ThreadStateMappable {
     this.exactOrder,
     this.isDraft = false,
     this.latestModAct,
+    this.breadcrumbs = const [],
   });
 
   /// Status.
@@ -137,4 +138,9 @@ class ThreadState with ThreadStateMappable {
 
   /// Latest modification log.
   final String? latestModAct;
+
+  /// All breadcrumbs that describe the position of current thread.
+  ///
+  /// It's ordered so held by a list and more right side more deep.
+  final List<ThreadBreadcrumb> breadcrumbs;
 }

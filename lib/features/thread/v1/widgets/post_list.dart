@@ -1,13 +1,15 @@
 import 'dart:core';
 
+import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
+import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -162,7 +164,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
     super.dispose();
   }
 
-  Widget _buildHeader(BuildContext context, double shrinkOffset, double expandHeight) {
+  Widget _buildHeader(BuildContext context, List<ThreadBreadcrumb> breadcrumbs, double expandHeight) {
     final infoTextStyle = Theme.of(
       context,
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
@@ -171,13 +173,41 @@ class _PostListState extends State<PostList> with LoggerMixin {
         padding: edgeInsetsL12R12B12,
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                if (widget.isDraft) Text('[${context.t.threadPage.draft}]', style: infoTextStyle),
-                Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]', style: infoTextStyle),
-                if (_threadType != null && _threadType!.isNotEmpty) Text('[${_threadType!}]', style: infoTextStyle),
-              ].insertBetween(sizedBoxW4H4),
+            SizedBox(
+              height: 20,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                reverse: true,
+                children:
+                    <Widget>[
+                      ...breadcrumbs
+                          .map(
+                            (e) => [
+                              // TODO: Group not supported yet.
+                              if (e.link.contains('?gid='))
+                                // TODO: Group not supported yet.
+                                Text(e.description, style: infoTextStyle)
+                              else
+                                MouseRegion(
+                                  cursor: SystemMouseCursors.click,
+                                  child: GestureDetector(
+                                    onTap: () async => context.dispatchAsUrl(e.link),
+                                    child: Text(
+                                      e.description,
+                                      style: infoTextStyle?.copyWith(decoration: TextDecoration.underline),
+                                    ),
+                                  ),
+                                ),
+                              const Text(' > '),
+                            ],
+                          )
+                          .flattenedToList,
+                      if (_threadType != null && _threadType!.isNotEmpty)
+                        Text('[${_threadType!}]', style: infoTextStyle),
+                      Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]', style: infoTextStyle),
+                      if (widget.isDraft) Text('[${context.t.threadPage.draft}]', style: infoTextStyle),
+                    ].reversed.toList(),
+              ),
             ),
             if (widget.latestModAct != null)
               Row(children: [const Spacer(), Text('${widget.latestModAct}', style: infoTextStyle)]),
@@ -265,7 +295,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
               floating: true,
               delegate: SliverAppBarPersistentDelegate(
                 buildHeader: (context, shrinkOffset, {required bool overlapsContent}) {
-                  return _buildHeader(context, shrinkOffset, safeHeight);
+                  return _buildHeader(context, state.breadcrumbs, safeHeight);
                 },
                 headerMaxExtent: safeHeight,
                 headerMinExtent: safeHeight,
