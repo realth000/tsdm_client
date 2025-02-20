@@ -38,12 +38,12 @@ class NetworkIndicatorImage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => CachedImage(
-        src,
-        width: width,
-        height: height,
-        maxWidth: maxWidth,
-        maxHeight: maxHeight,
-        minWidth: minWidth,
-        minHeight: minHeight,
-      );
+    src,
+    width: width,
+    height: height,
+    maxWidth: maxWidth,
+    maxHeight: maxHeight,
+    minWidth: minWidth,
+    minHeight: minHeight,
+  );
 }

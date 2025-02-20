@@ -9,8 +9,7 @@ sealed class ChatEvent with ChatEventMappable {
 
 /// Basic event of chat.
 @MappableClass()
-final class ChatFetchHistoryRequested extends ChatEvent
-    with ChatFetchHistoryRequestedMappable {
+final class ChatFetchHistoryRequested extends ChatEvent with ChatFetchHistoryRequestedMappable {
   /// Constructor.
   const ChatFetchHistoryRequested(this.uid);
 

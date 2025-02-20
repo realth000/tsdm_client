@@ -10,13 +10,9 @@ sealed class PurchaseEvent with PurchaseEventMappable {
 ///
 /// Should do this before the purchase action.
 @MappableClass()
-final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent
-    with PurchaseFetchConfirmInfoRequestedMappable {
+final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent with PurchaseFetchConfirmInfoRequestedMappable {
   /// Constructor.
-  const PurchaseFetchConfirmInfoRequested({
-    required this.tid,
-    required this.pid,
-  }) : super();
+  const PurchaseFetchConfirmInfoRequested({required this.tid, required this.pid}) : super();
 
   /// Thread id to purchase.
   final String tid;
@@ -29,12 +25,10 @@ final class PurchaseFetchConfirmInfoRequested extends PurchaseEvent
 ///
 /// Should let user confirmed the info related to purchasing.
 @MappableClass()
-final class PurchasePurchaseRequested extends PurchaseEvent
-    with PurchasePurchaseRequestedMappable {}
+final class PurchasePurchaseRequested extends PurchaseEvent with PurchasePurchaseRequestedMappable {}
 
 /// User required to cancel the purchase.
 ///
 /// This is likely to trigger by closing the confirm dialog.
 @MappableClass()
-final class PurchasePurchasedCanceled extends PurchaseEvent
-    with PurchasePurchasedCanceledMappable {}
+final class PurchasePurchasedCanceled extends PurchaseEvent with PurchasePurchasedCanceledMappable {}

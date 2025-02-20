@@ -6,10 +6,7 @@ part of 'models.dart';
 @MappableClass()
 class ChangelogPointsType with ChangelogPointsTypeMappable {
   /// Constructor.
-  const ChangelogPointsType({
-    required this.name,
-    required this.extType,
-  });
+  const ChangelogPointsType({required this.name, required this.extType});
 
   /// Human readable name.
   ///
@@ -74,9 +71,9 @@ class ChangelogAllParameters with ChangelogAllParametersMappable {
 
   /// Construct an empty parameter.
   const ChangelogAllParameters.empty()
-      : extTypeList = const [],
-        operationTypeList = const [],
-        changeTypeList = const [];
+    : extTypeList = const [],
+      operationTypeList = const [],
+      changeTypeList = const [];
 
   /// All available points type to filter.
   final List<ChangelogPointsType> extTypeList;

@@ -31,8 +31,7 @@ final class _PlatformMapper extends SimpleMapper<Platform> with LoggerMixin {
       return Platform.unknown;
     }
 
-    return Platform.values.firstWhereOrNull((v) => v.code == value) ??
-        Platform.unknown;
+    return Platform.values.firstWhereOrNull((v) => v.code == value) ?? Platform.unknown;
   }
 
   @override

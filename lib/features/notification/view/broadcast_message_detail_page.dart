@@ -29,16 +29,11 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
           children: [
             ListTile(
               leading: const CircleAvatar(child: Icon(Icons.campaign_outlined)),
-              title: SingleLineText(
-                context.t.noticePage.broadcastMessageTab.system,
-              ),
+              title: SingleLineText(context.t.noticePage.broadcastMessageTab.system),
               subtitle: Text(state.dateTime?.yyyyMMDD() ?? ''),
             ),
             sizedBoxW4H4,
-            Padding(
-              padding: edgeInsetsL16R16,
-              child: munchElement(context, state.messageNode!),
-            ),
+            Padding(padding: edgeInsetsL16R16, child: munchElement(context, state.messageNode!)),
           ],
         ),
       ),
@@ -49,34 +44,24 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => NotificationRepository(),
-        ),
-        BlocProvider(
-          create: (context) =>
-              BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid),
-        ),
+        RepositoryProvider(create: (_) => NotificationRepository()),
+        BlocProvider(create: (context) => BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid)),
       ],
-      child: BlocListener<BroadcastMessageDetailCubit,
-          BroadcastMessageDetailState>(
+      child: BlocListener<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
         listener: (context, state) {
           if (state.status == BroadcastMessageDetailStatus.failed) {
             showFailedToLoadSnackBar(context);
           }
         },
-        child: BlocBuilder<BroadcastMessageDetailCubit,
-            BroadcastMessageDetailState>(
+        child: BlocBuilder<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
           builder: (context, state) {
             final body = switch (state.status) {
               BroadcastMessageDetailStatus.initial ||
-              BroadcastMessageDetailStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
-              BroadcastMessageDetailStatus.success =>
-                _buildBody(context, state),
-              BroadcastMessageDetailStatus.failed =>
-                buildRetryButton(context, () {
-                  context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
-                }),
+              BroadcastMessageDetailStatus.loading => const Center(child: CircularProgressIndicator()),
+              BroadcastMessageDetailStatus.success => _buildBody(context, state),
+              BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
+                context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
+              }),
             };
 
             return Scaffold(
@@ -85,10 +70,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.open_in_new_outlined),
-                    onPressed: () async => context.dispatchAsUrl(
-                      '$broadcastMessageDetailUrl$pmid',
-                      external: true,
-                    ),
+                    onPressed: () async => context.dispatchAsUrl('$broadcastMessageDetailUrl$pmid', external: true),
                   ),
                 ],
               ),

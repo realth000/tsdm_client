@@ -9,8 +9,7 @@ sealed class CheckinEvent with CheckinEventMappable {
 
 /// User required to checkin.
 @MappableClass()
-final class CheckinRequested extends CheckinEvent
-    with CheckinRequestedMappable {
+final class CheckinRequested extends CheckinEvent with CheckinRequestedMappable {
   /// Constructor.
   const CheckinRequested() : super();
 }
@@ -21,8 +20,7 @@ final class CheckinRequested extends CheckinEvent
 ///
 /// Passive event.
 @MappableClass()
-final class CheckinAuthChanged extends CheckinEvent
-    with CheckinAuthChangedMappable {
+final class CheckinAuthChanged extends CheckinEvent with CheckinAuthChangedMappable {
   /// Constructor.
   const CheckinAuthChanged({required this.authed}) : super();
 

@@ -44,10 +44,7 @@ class ThreadPage extends StatefulWidget {
     this.threadType,
     this.onlyVisibleUid,
     super.key,
-  }) : assert(
-          threadID != null || findPostID != null,
-          'MUST provide threadID or findPostID',
-        );
+  }) : assert(threadID != null || findPostID != null, 'MUST provide threadID or findPostID');
 
   /// Thread ID, tid.
   final String? threadID;
@@ -116,18 +113,13 @@ class ThreadPage extends StatefulWidget {
   State<ThreadPage> createState() => _ThreadPageState();
 }
 
-class _ThreadPageState extends State<ThreadPage>
-    with SingleTickerProviderStateMixin, LoggerMixin {
+class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateMixin, LoggerMixin {
   /// Controller of thread tab.
   final _listScrollController = ScrollController();
 
   final _replyBarController = ReplyBarController();
 
-  Future<void> replyPostCallback(
-    User user,
-    int? postFloor,
-    String? replyAction,
-  ) async {
+  Future<void> replyPostCallback(User user, int? postFloor, String? replyAction) async {
     if (replyAction == null) {
       return;
     }
@@ -152,10 +144,7 @@ class _ThreadPageState extends State<ThreadPage>
             pageNumber: context.read<JumpPageCubit>().state.currentPage,
             initialPostID: widget.findPostID?.parseToInt(),
             scrollController: _listScrollController,
-            widgetBuilder: (context, post) => PostCard(
-              post,
-              replyCallback: replyPostCallback,
-            ),
+            widgetBuilder: (context, post) => PostCard(post, replyCallback: replyPostCallback),
             useDivider: true,
             postList: state.postList,
             canLoadMore: state.canLoadMore,
@@ -189,14 +178,10 @@ class _ThreadPageState extends State<ThreadPage>
     }
 
     return switch (state.status) {
-      ThreadStatus.initial ||
-      ThreadStatus.loading =>
-        const Center(child: CircularProgressIndicator()),
+      ThreadStatus.initial || ThreadStatus.loading => const Center(child: CircularProgressIndicator()),
       ThreadStatus.failure => buildRetryButton(context, () {
-          context
-              .read<ThreadBloc>()
-              .add(ThreadLoadMoreRequested(state.currentPage));
-        }),
+        context.read<ThreadBloc>().add(ThreadLoadMoreRequested(state.currentPage));
+      }),
       ThreadStatus.success => _buildContent(context, state),
     };
   }
@@ -222,60 +207,44 @@ class _ThreadPageState extends State<ThreadPage>
 
   @override
   Widget build(BuildContext context) {
-    final threadReverseOrder =
-        getIt.get<SettingsRepository>().currentSettings.threadReverseOrder;
+    final threadReverseOrder = getIt.get<SettingsRepository>().currentSettings.threadReverseOrder;
 
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider<ThreadRepository>(
-          create: (_) => ThreadRepository(),
-        ),
-        RepositoryProvider<ReplyRepository>(
-          create: (_) => const ReplyRepository(),
-        ),
+        RepositoryProvider<ThreadRepository>(create: (_) => ThreadRepository()),
+        RepositoryProvider<ReplyRepository>(create: (_) => const ReplyRepository()),
         BlocProvider(
-          create: (context) => ThreadBloc(
-            tid: widget.threadID,
-            pid: widget.findPostID,
-            onlyVisibleUid: widget.onlyVisibleUid,
-            threadRepository: context.repo(),
-            reverseOrder:
-                widget.overrideReverseOrder ? threadReverseOrder : null,
-            exactOrder: widget.overrideWithExactOrder,
-          )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
+          create:
+              (context) => ThreadBloc(
+                tid: widget.threadID,
+                pid: widget.findPostID,
+                onlyVisibleUid: widget.onlyVisibleUid,
+                threadRepository: context.repo(),
+                reverseOrder: widget.overrideReverseOrder ? threadReverseOrder : null,
+                exactOrder: widget.overrideWithExactOrder,
+              )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
-        BlocProvider(
-          create: (context) => ReplyBloc(replyRepository: context.repo()),
-        ),
-        BlocProvider(
-          create: (context) => JumpPageCubit(),
-        ),
+        BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
+        BlocProvider(create: (context) => JumpPageCubit()),
       ],
       child: MultiBlocListener(
         listeners: [
           BlocListener<ThreadBloc, ThreadState>(
             listener: (context, state) {
               // Update reply parameters to reply bar.
-              context
-                  .read<ReplyBloc>()
-                  .add(ReplyParametersUpdated(state.replyParameters));
+              context.read<ReplyBloc>().add(ReplyParametersUpdated(state.replyParameters));
 
               // Update thread closed state to reply bar.
               if (state.threadClosed) {
-                context
-                    .read<ReplyBloc>()
-                    .add(const ReplyThreadClosed(closed: true));
+                context.read<ReplyBloc>().add(const ReplyThreadClosed(closed: true));
               } else {
-                context
-                    .read<ReplyBloc>()
-                    .add(const ReplyThreadClosed(closed: false));
+                context.read<ReplyBloc>().add(const ReplyThreadClosed(closed: false));
               }
               if (state.status == ThreadStatus.failure) {
                 showFailedToLoadSnackBar(context);
               } else if (state.status == ThreadStatus.success) {
                 // Record thread visit history.
-                final currentUser =
-                    context.read<AuthenticationRepository>().currentUser;
+                final currentUser = context.read<AuthenticationRepository>().currentUser;
                 if (currentUser == null) {
                   // Do nothing if not logged in.
                   return;
@@ -283,31 +252,30 @@ class _ThreadPageState extends State<ThreadPage>
                 final uid = currentUser.uid;
                 final username = currentUser.username;
                 if (uid == null || username == null) {
-                  unreachable('intend to record thread visit history but '
-                      'user info is incomplete: uid=$uid, username=$username');
+                  unreachable(
+                    'intend to record thread visit history but '
+                    'user info is incomplete: uid=$uid, username=$username',
+                  );
                   return;
                 }
-                if (state.tid == null ||
-                    state.title == null ||
-                    state.fid == null ||
-                    state.forumName == null) {
+                if (state.tid == null || state.title == null || state.fid == null || state.forumName == null) {
                   info('not prepared to save visit history yet');
                   return;
                 }
                 debug('save thread visit history tid=${state.tid}');
                 context.read<ThreadVisitHistoryBloc>().add(
-                      ThreadVisitHistoryUpdateRequested(
-                        ThreadVisitHistoryModel(
-                          uid: uid,
-                          threadId: int.parse(state.tid!),
-                          forumId: state.fid!,
-                          username: username,
-                          threadTitle: state.title!,
-                          forumName: state.forumName!,
-                          visitTime: DateTime.now(),
-                        ),
-                      ),
-                    );
+                  ThreadVisitHistoryUpdateRequested(
+                    ThreadVisitHistoryModel(
+                      uid: uid,
+                      threadId: int.parse(state.tid!),
+                      forumId: state.fid!,
+                      username: username,
+                      threadTitle: state.title!,
+                      forumName: state.forumName!,
+                      visitTime: DateTime.now(),
+                    ),
+                  ),
+                );
               }
             },
           ),
@@ -315,10 +283,7 @@ class _ThreadPageState extends State<ThreadPage>
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(
-                  context: context,
-                  message: context.t.threadPage.replySuccess,
-                );
+                showSnackBar(context: context, message: context.t.threadPage.replySuccess);
                 // Close the reply bar when sent success.
                 if (_replyBarController.showingEditor) {
                   context.pop();
@@ -330,31 +295,28 @@ class _ThreadPageState extends State<ThreadPage>
         child: BlocBuilder<ThreadBloc, ThreadState>(
           builder: (context, state) {
             // Update jump page state.
-            context.read<JumpPageCubit>().setPageInfo(
-                  totalPages: state.totalPages,
-                  currentPage: state.currentPage,
-                );
+            context.read<JumpPageCubit>().setPageInfo(totalPages: state.totalPages, currentPage: state.currentPage);
 
             String? title;
 
             // Reset jump page state when every build.
-            if (state.status == ThreadStatus.loading ||
-                state.status == ThreadStatus.initial) {
+            if (state.status == ThreadStatus.loading || state.status == ThreadStatus.initial) {
               context.read<JumpPageCubit>().markLoading();
               title = widget.title;
             } else {
               context.read<JumpPageCubit>().markSuccess();
             }
 
-            var threadUrl =
-                RepositoryProvider.of<ThreadRepository>(context).threadUrl;
+            var threadUrl = RepositoryProvider.of<ThreadRepository>(context).threadUrl;
             if (widget.threadID != null) {
-              threadUrl ??= '$baseUrl/forum.php?mod=viewthread&'
+              threadUrl ??=
+                  '$baseUrl/forum.php?mod=viewthread&'
                   'tid=${widget.threadID}&extra=page%3D1';
             } else {
               // Here we don;t have threadID, thus the findPostID is
               // definitely not null.
-              threadUrl ??= '$baseUrl/forum.php?mode=redirect&goto=findpost&'
+              threadUrl ??=
+                  '$baseUrl/forum.php?mode=redirect&goto=findpost&'
                   'pid=${widget.findPostID}';
             }
 
@@ -375,9 +337,7 @@ class _ThreadPageState extends State<ThreadPage>
                   // Mark state will be removed when loading finishes
                   // in next build.
                   context.read<JumpPageCubit>().markLoading();
-                  context
-                      .read<ThreadBloc>()
-                      .add(ThreadJumpPageRequested(pageNumber));
+                  context.read<ThreadBloc>().add(ThreadJumpPageRequested(pageNumber));
                 },
                 onSelected: (value) async {
                   switch (value) {
@@ -394,9 +354,7 @@ class _ThreadPageState extends State<ThreadPage>
                         duration: const Duration(milliseconds: 500),
                       );
                     case MenuActions.reverseOrder:
-                      context
-                          .readOrNull<ThreadBloc>()
-                          ?.add(const ThreadChangeViewOrderRequested());
+                      context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested());
                     case MenuActions.debugViewLog:
                       await context.pushNamed(ScreenPaths.debugLog);
                   }

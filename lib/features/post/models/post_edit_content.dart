@@ -102,10 +102,7 @@ final class PostEditContent with PostEditContentMappable {
   /// Set [requireThreadInfo] to false if [document] is expected to have no
   /// info about current editing thread. e.g. Drafting a new thread where those
   /// info are not generated until we post the thread to server.
-  static PostEditContent? fromDocument(
-    uh.Document document, {
-    bool requireThreadInfo = true,
-  }) {
+  static PostEditContent? fromDocument(uh.Document document, {bool requireThreadInfo = true}) {
     final rootNode = document.querySelector('div#ct');
     final postBoxNode = document.querySelector('div#postbox');
 
@@ -132,24 +129,17 @@ final class PostEditContent with PostEditContentMappable {
     //   </div>
     // </div>
     // ```
-    final threadTypeList = postBoxNode
-        ?.querySelector('div select#typeid')
-        ?.querySelectorAll('option')
-        .where(
-          (e) => e.attributes['value'] != null && e.innerText.trim().isNotEmpty,
-        )
-        .map(
-          (e) => PostEditThreadType(
-            name: e.innerText.trim(),
-            typeID: e.attributes['value'],
-          ),
-        )
-        .toList();
+    final threadTypeList =
+        postBoxNode
+            ?.querySelector('div select#typeid')
+            ?.querySelectorAll('option')
+            .where((e) => e.attributes['value'] != null && e.innerText.trim().isNotEmpty)
+            .map((e) => PostEditThreadType(name: e.innerText.trim(), typeID: e.attributes['value']))
+            .toList();
 
     // Current thread type.
     PostEditThreadType? threadType;
-    final threadTypeNode =
-        postBoxNode?.querySelector('div select > option[selected="selected"]');
+    final threadTypeNode = postBoxNode?.querySelector('div select > option[selected="selected"]');
     if (threadTypeNode != null) {
       threadType = PostEditThreadType(
         name: threadTypeNode.innerText.trim(),
@@ -159,35 +149,26 @@ final class PostEditContent with PostEditContentMappable {
 
     // Thread title.
     // Max length is 210 bytes (utf-8).
-    final threadTitle =
-        postBoxNode?.querySelector('div.z > span > input')?.attributes['value'];
-    final threadTitleMaxLength = postBoxNode
-        ?.querySelector('div.z > span > input')
-        ?.attributes['onkeyup']
-        ?.split(' ')
-        .lastOrNull
-        ?.replaceFirst(');', '')
-        .parseToInt();
+    final threadTitle = postBoxNode?.querySelector('div.z > span > input')?.attributes['value'];
+    final threadTitleMaxLength =
+        postBoxNode
+            ?.querySelector('div.z > span > input')
+            ?.attributes['onkeyup']
+            ?.split(' ')
+            .lastOrNull
+            ?.replaceFirst(');', '')
+            .parseToInt();
 
     // Parse response parameters.
-    final formHash =
-        rootNode?.querySelector('input[name="formhash"]')?.attributes['value'];
-    final postTime =
-        rootNode?.querySelector('input[name="posttime"]')?.attributes['value'];
-    final wysiwyg =
-        rootNode?.querySelector('input[name="wysiwyg"]')?.attributes['value'];
+    final formHash = rootNode?.querySelector('input[name="formhash"]')?.attributes['value'];
+    final postTime = rootNode?.querySelector('input[name="posttime"]')?.attributes['value'];
+    final wysiwyg = rootNode?.querySelector('input[name="wysiwyg"]')?.attributes['value'];
 
-    final delattachop = rootNode
-        ?.querySelector('input[name="delattachop"]')
-        ?.attributes['value'];
-    final fid =
-        rootNode?.querySelector('input[name="fid"]')?.attributes['value'];
-    final tid =
-        rootNode?.querySelector('input[name="tid"]')?.attributes['value'];
-    final pid =
-        rootNode?.querySelector('input[name="pid"]')?.attributes['value'];
-    final page =
-        rootNode?.querySelector('input[name="page"]')?.attributes['value'];
+    final delattachop = rootNode?.querySelector('input[name="delattachop"]')?.attributes['value'];
+    final fid = rootNode?.querySelector('input[name="fid"]')?.attributes['value'];
+    final tid = rootNode?.querySelector('input[name="tid"]')?.attributes['value'];
+    final pid = rootNode?.querySelector('input[name="pid"]')?.attributes['value'];
+    final page = rootNode?.querySelector('input[name="page"]')?.attributes['value'];
 
     // Post data.
     final data = postBoxNode?.querySelector('div.area > textarea')?.innerText;
@@ -197,41 +178,35 @@ final class PostEditContent with PostEditContentMappable {
         wysiwyg == null ||
         (requireThreadInfo &&
             // Only check these thread info when `requireThreadInfo` is true.
-            (delattachop == null ||
-                fid == null ||
-                tid == null ||
-                pid == null ||
-                page == null)) ||
+            (delattachop == null || fid == null || tid == null || pid == null || page == null)) ||
         data == null) {
-      talker.error('invalid post edit form data: '
-          'formhash=$formHash, posttime=$postTime, '
-          'delattachop=$delattachop, wysiwyg=$wysiwyg, '
-          'fid=$fid, tid=$tid, pid=$pid, page=$page, data=$data');
+      talker.error(
+        'invalid post edit form data: '
+        'formhash=$formHash, posttime=$postTime, '
+        'delattachop=$delattachop, wysiwyg=$wysiwyg, '
+        'fid=$fid, tid=$tid, pid=$pid, page=$page, data=$data',
+      );
       return null;
     }
 
     // Additional options;
-    final options = rootNode
-        ?.querySelectorAll('div#psd p.mbn')
-        .where(
-          (e) =>
-              e.querySelector('input') != null &&
-              e.querySelector('label') != null,
-        )
-        .map(
-      (e) {
-        final input = e.querySelector('input')!;
-        final label = e.querySelector('label')!;
+    final options =
+        rootNode
+            ?.querySelectorAll('div#psd p.mbn')
+            .where((e) => e.querySelector('input') != null && e.querySelector('label') != null)
+            .map((e) {
+              final input = e.querySelector('input')!;
+              final label = e.querySelector('label')!;
 
-        return PostEditContentOption(
-          name: input.id,
-          readableName: label.innerText,
-          disabled: input.attributes.containsKey('disabled'),
-          checked: input.attributes.containsKey('checked'),
-          value: input.attributes['value']!,
-        );
-      },
-    ).toList();
+              return PostEditContentOption(
+                name: input.id,
+                readableName: label.innerText,
+                disabled: input.attributes.containsKey('disabled'),
+                checked: input.attributes.containsKey('checked'),
+                value: input.attributes['value']!,
+              );
+            })
+            .toList();
 
     final permListNode = rootNode?.querySelector('select#readperm');
     List<ThreadPerm>? permList;

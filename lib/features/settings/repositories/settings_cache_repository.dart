@@ -21,7 +21,7 @@ class SettingsCacheRepository {
     return imageCacheProvider.calculateCache();
   }
 
-// void dispose() {
-//   _controller.close();
-// }
+  // void dispose() {
+  //   _controller.close();
+  // }
 }

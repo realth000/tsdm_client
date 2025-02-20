@@ -17,8 +17,7 @@ enum BroadcastMessageDetailStatus {
 
 /// State of broadcast message detail page.
 @MappableClass()
-final class BroadcastMessageDetailState
-    with BroadcastMessageDetailStateMappable {
+final class BroadcastMessageDetailState with BroadcastMessageDetailStateMappable {
   /// Constructor.
   const BroadcastMessageDetailState({
     this.status = BroadcastMessageDetailStatus.initial,

@@ -24,34 +24,22 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
   Widget build(BuildContext context) {
     final tr = context.t.threadVisitHistoryPage;
     return BlocProvider(
-      create: (context) => ThreadVisitHistoryBloc(context.repo())
-        ..add(const ThreadVisitHistoryFetchAllRequested()),
+      create: (context) => ThreadVisitHistoryBloc(context.repo())..add(const ThreadVisitHistoryFetchAllRequested()),
       child: BlocBuilder<ThreadVisitHistoryBloc, ThreadVisitHistoryState>(
         builder: (context, state) {
           final body = switch (state.status) {
             ThreadVisitHistoryStatus.initial ||
-            ThreadVisitHistoryStatus.loadingData =>
-              const Center(child: CircularProgressIndicator()),
-            ThreadVisitHistoryStatus.savingData ||
-            ThreadVisitHistoryStatus.success =>
-              _Body(state.history),
+            ThreadVisitHistoryStatus.loadingData => const Center(child: CircularProgressIndicator()),
+            ThreadVisitHistoryStatus.savingData || ThreadVisitHistoryStatus.success => _Body(state.history),
             ThreadVisitHistoryStatus.failure => buildRetryButton(
-                context,
-                () => context
-                    .read<ThreadVisitHistoryBloc>()
-                    .add(const ThreadVisitHistoryFetchAllRequested()),
-              ),
+              context,
+              () => context.read<ThreadVisitHistoryBloc>().add(const ThreadVisitHistoryFetchAllRequested()),
+            ),
           };
 
           return Scaffold(
-            appBar: AppBar(
-              title: Text(tr.title),
-              bottom: Tips(tr.localOnlyTip, sizePreferred: true),
-            ),
-            body: AnimatedSwitcher(
-              duration: duration200,
-              child: body,
-            ),
+            appBar: AppBar(title: Text(tr.title), bottom: Tips(tr.localOnlyTip, sizePreferred: true)),
+            body: AnimatedSwitcher(duration: duration200, child: body),
           );
         },
       ),
@@ -90,9 +78,7 @@ class _BodyState extends State<_Body> {
       controller: _refreshController,
       scrollController: _scrollController,
       header: const MaterialHeader(),
-      onRefresh: () => context
-          .read<ThreadVisitHistoryBloc>()
-          .add(const ThreadVisitHistoryFetchAllRequested()),
+      onRefresh: () => context.read<ThreadVisitHistoryBloc>().add(const ThreadVisitHistoryFetchAllRequested()),
       childBuilder: (context, physics) {
         return ListView.separated(
           controller: _scrollController,

@@ -10,12 +10,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 /// expand less.
 class SpoilerCard extends StatefulWidget {
   /// Constructor.
-  const SpoilerCard({
-    required this.title,
-    required this.content,
-    this.elevation,
-    super.key,
-  });
+  const SpoilerCard({required this.title, required this.content, this.elevation, super.key});
 
   /// Title of this expand more/less area.
   final InlineSpan title;
@@ -50,19 +45,12 @@ class _SpoilerCardState extends State<SpoilerCard> {
               children: [
                 Icon(Icons.expand_outlined, color: primaryColor),
                 sizedBoxW8H8,
-                Text(
-                  tr.title,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: primaryColor,
-                      ),
-                ),
+                Text(tr.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primaryColor)),
               ],
             ),
             sizedBoxW8H8,
             OutlinedButton.icon(
-              icon: _visible
-                  ? const Icon(Icons.expand_less_outlined)
-                  : const Icon(Icons.expand_more_outlined),
+              icon: _visible ? const Icon(Icons.expand_less_outlined) : const Icon(Icons.expand_more_outlined),
               label: Text.rich(widget.title),
               onPressed: () {
                 setState(() {
@@ -70,10 +58,7 @@ class _SpoilerCardState extends State<SpoilerCard> {
                 });
               },
             ),
-            if (_visible) ...[
-              sizedBoxW8H8,
-              Text.rich(widget.content),
-            ],
+            if (_visible) ...[sizedBoxW8H8, Text.rich(widget.content)],
           ].insertBetween(sizedBoxW4H4),
         ),
       ),

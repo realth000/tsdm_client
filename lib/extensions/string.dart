@@ -13,11 +13,7 @@ const Uuid _uuid = Uuid();
 /// Represents a route that can be directed to.
 class RecognizedRoute {
   /// Constructor.
-  const RecognizedRoute(
-    this.screenPath, {
-    this.pathParameters = const {},
-    this.queryParameters = const {},
-  });
+  const RecognizedRoute(this.screenPath, {this.pathParameters = const {}, this.queryParameters = const {}});
 
   /// Available screen path that defines in `screen_path.dart`.
   final String screenPath;
@@ -50,10 +46,7 @@ extension ParseUrl on String {
     final mod = queryParameters['mod'];
 
     if (mod == 'forumdisplay' && queryParameters.containsKey('fid')) {
-      return RecognizedRoute(
-        ScreenPaths.forum,
-        pathParameters: {'fid': "${queryParameters['fid']}"},
-      );
+      return RecognizedRoute(ScreenPaths.forum, pathParameters: {'fid': "${queryParameters['fid']}"});
     }
 
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {
@@ -68,28 +61,21 @@ extension ParseUrl on String {
         ScreenPaths.threadV1,
         queryParameters: {
           'tid': "${queryParameters['tid']}",
-          if (queryParameters.containsKey('page'))
-            'pageNumber': "${queryParameters['page']}",
+          if (queryParameters.containsKey('page')) 'pageNumber': "${queryParameters['page']}",
           if (anchor != null) 'overrideReverseOrder': 'false',
           if (order != null) 'overrideWithExactOrder': '$order',
           if (anchor != null) 'pid': anchor,
-          if (queryParameters.containsKey('authorid'))
-            'onlyVisibleUid': "${queryParameters['authorid']}",
+          if (queryParameters.containsKey('authorid')) 'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
     }
 
-    if (mod == 'space' &&
-        queryParameters['do'] == 'thread' &&
-        queryParameters['view'] == 'me') {
+    if (mod == 'space' && queryParameters['do'] == 'thread' && queryParameters['view'] == 'me') {
       return const RecognizedRoute(ScreenPaths.myThread);
     }
 
     if (mod == 'forum' && queryParameters['srchfrom'] != null) {
-      return RecognizedRoute(
-        ScreenPaths.latestThread,
-        queryParameters: {'url': prependHost()},
-      );
+      return RecognizedRoute(ScreenPaths.latestThread, queryParameters: {'url': prependHost()});
     }
 
     if (mod == 'redirect' && queryParameters['tid'] != null) {
@@ -98,15 +84,12 @@ extension ParseUrl on String {
         ScreenPaths.threadV1,
         queryParameters: {
           'tid': "${queryParameters['tid']}",
-          if (queryParameters.containsKey('authorid'))
-            'onlyVisibleUid': "${queryParameters['authorid']}",
+          if (queryParameters.containsKey('authorid')) 'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
     }
 
-    if (mod == 'redirect' &&
-        queryParameters['goto'] == 'findpost' &&
-        queryParameters['pid'] != null) {
+    if (mod == 'redirect' && queryParameters['goto'] == 'findpost' && queryParameters['pid'] != null) {
       // TODO: Migrate to v2 when supported.
       return RecognizedRoute(
         ScreenPaths.threadV1,
@@ -116,8 +99,7 @@ extension ParseUrl on String {
           // Find post will always return a non-reversed thread, so disable it
           // to avoid incorrect page loaded when loading more pages.
           'overrideReverseOrder': 'false',
-          if (queryParameters.containsKey('authorid'))
-            'onlyVisibleUid': "${queryParameters['authorid']}",
+          if (queryParameters.containsKey('authorid')) 'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
     }
@@ -126,18 +108,12 @@ extension ParseUrl on String {
     if (mod == 'space' && queryParameters['do'] != 'friend') {
       // Access by uid.
       if (queryParameters['uid'] != null) {
-        return RecognizedRoute(
-          ScreenPaths.profile,
-          queryParameters: {'uid': '${queryParameters["uid"]}'},
-        );
+        return RecognizedRoute(ScreenPaths.profile, queryParameters: {'uid': '${queryParameters["uid"]}'});
       }
 
       // Access by username.
       if (queryParameters['username'] != null) {
-        return RecognizedRoute(
-          ScreenPaths.profile,
-          queryParameters: {'username': '${queryParameters["username"]}'},
-        );
+        return RecognizedRoute(ScreenPaths.profile, queryParameters: {'username': '${queryParameters["username"]}'});
       }
     }
 
@@ -149,14 +125,8 @@ extension ParseUrl on String {
         queryParameters['pid'] != null) {
       return RecognizedRoute(
         ScreenPaths.editPost,
-        pathParameters: {
-          'editType': '${PostEditType.editPost.index}',
-          'fid': '${queryParameters["fid"]}',
-        },
-        queryParameters: {
-          'tid': '${queryParameters["tid"]}',
-          'pid': '${queryParameters["pid"]}',
-        },
+        pathParameters: {'editType': '${PostEditType.editPost.index}', 'fid': '${queryParameters["fid"]}'},
+        queryParameters: {'tid': '${queryParameters["tid"]}', 'pid': '${queryParameters["pid"]}'},
       );
     }
 
@@ -165,12 +135,7 @@ extension ParseUrl on String {
         queryParameters['do'] == 'pm' &&
         queryParameters['subop'] == 'viewg' &&
         queryParameters.containsKey('pmid')) {
-      return RecognizedRoute(
-        ScreenPaths.broadcastMessageDetail,
-        pathParameters: {
-          'pmid': queryParameters['pmid']!,
-        },
-      );
+      return RecognizedRoute(ScreenPaths.broadcastMessageDetail, pathParameters: {'pmid': queryParameters['pmid']!});
     }
 
     // Chat page.
@@ -189,12 +154,7 @@ extension ParseUrl on String {
         queryParameters.containsKey('touid') &&
         queryParameters.containsKey('pmid') &&
         queryParameters.containsKey('daterange')) {
-      return RecognizedRoute(
-        ScreenPaths.chat,
-        pathParameters: {
-          'uid': queryParameters['touid']!,
-        },
-      );
+      return RecognizedRoute(ScreenPaths.chat, pathParameters: {'uid': queryParameters['touid']!});
     }
 
     /// Chat history.
@@ -202,12 +162,7 @@ extension ParseUrl on String {
         queryParameters['do'] == 'pm' &&
         queryParameters['subop'] == 'view' &&
         queryParameters['touid'] != null) {
-      return RecognizedRoute(
-        ScreenPaths.chatHistory,
-        pathParameters: {
-          'uid': queryParameters['touid']!,
-        },
-      );
+      return RecognizedRoute(ScreenPaths.chatHistory, pathParameters: {'uid': queryParameters['touid']!});
     }
 
     return null;
@@ -273,17 +228,12 @@ extension EnhanceModification on String {
   ///
   /// If [length] is smaller than [size], return the whole string.
   String truncate(int size, {bool ellipsis = false}) {
-    return length > size
-        ? '${substring(0, size)}${ellipsis ? "..." : ""}'
-        : this;
+    return length > size ? '${substring(0, size)}${ellipsis ? "..." : ""}' : this;
   }
 
   /// Trim the trailing web page title.
   String trimTitle() {
-    return replaceFirst(
-      ' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!',
-      '',
-    );
+    return replaceFirst(' -  天使动漫论坛 - 梦开始的地方  -  Powered by Discuz!', '');
   }
 
   /// Parse html escaped text into normal text.
@@ -315,12 +265,11 @@ extension ParseStringTo on String {
       // Should not happen.
       return DateTime.tryParse(this);
     }
-    final formattedDateString = '${datePartList[0]}-'
+    final formattedDateString =
+        '${datePartList[0]}-'
         '${datePartList[1].padLeft(2, '0')}-'
         '${datePartList[2].padLeft(2, '0')}';
-    return DateTime.tryParse(
-      timePart == null ? formattedDateString : '$formattedDateString $timePart',
-    );
+    return DateTime.tryParse(timePart == null ? formattedDateString : '$formattedDateString $timePart');
   }
 
   /// Parse the string bytes size in utf-8 encoding.

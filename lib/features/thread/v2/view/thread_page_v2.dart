@@ -66,12 +66,8 @@ class _ThreadPageV2State extends State<ThreadPageV2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('THREAD PAGE V2'),
-      ),
-      body: Center(
-        child: Text('id=${widget.id}, page=${widget.pageNumber}'),
-      ),
+      appBar: AppBar(title: const Text('THREAD PAGE V2')),
+      body: Center(child: Text('id=${widget.id}, page=${widget.pageNumber}')),
     );
   }
 }

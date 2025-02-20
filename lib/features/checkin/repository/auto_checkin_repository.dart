@@ -17,8 +17,7 @@ import 'package:tsdm_client/utils/logger.dart';
 /// Repository for the auto checkin feature.
 final class AutoCheckinRepository with LoggerMixin {
   /// Constructor.
-  AutoCheckinRepository({required StorageProvider storageProvider})
-      : _storageProvider = storageProvider;
+  AutoCheckinRepository({required StorageProvider storageProvider}) : _storageProvider = storageProvider;
 
   final StorageProvider _storageProvider;
 
@@ -44,96 +43,77 @@ final class AutoCheckinRepository with LoggerMixin {
     required int concurrencyLimit,
     required CheckinFeeling feeling,
     required String message,
-  }) =>
-      AsyncVoidEither(() async {
-        // Initialize state.
-        _updateSkipped(skippedList);
-        _updateWaiting(waitingList);
+  }) => AsyncVoidEither(() async {
+    // Initialize state.
+    _updateSkipped(skippedList);
+    _updateWaiting(waitingList);
 
-        final progressGroups = waitingList.slices(concurrencyLimit);
-        for (final pg in progressGroups) {
-          debug('run auto checkin for uid '
-              '${pg.map((e) => "${e.uid}".obscured(4)).join(", ")}');
-          _updateRunning(pg);
+    final progressGroups = waitingList.slices(concurrencyLimit);
+    for (final pg in progressGroups) {
+      debug(
+        'run auto checkin for uid '
+        '${pg.map((e) => "${e.uid}".obscured(4)).join(", ")}',
+      );
+      _updateRunning(pg);
 
-          // FIXME: Reduce complexity.
-          final tasks = pg
-              .map(
-                (userInfo) => _prepareCheckin(userInfo)
-                    .mapLeft(
-                      (e) =>
-                          _updateFailure(e, const CheckinResultNotAuthorized()),
-                    )
-                    .map(
-                      (netClient) async => (
-                        userInfo,
-                        await doCheckin(netClient, feeling, message).run()
-                      ),
-                    ),
-              )
-              .map((e) async => e.run());
-          final info = await Future.wait(tasks);
-          final results = await Future.wait(info.map((e) => e.unwrap()));
-          // FIXME: This message extracting step is anti-pattern.
-          for (final result in results) {
-            final (userInfo, checkinResult) = result;
-            switch (checkinResult) {
-              case CheckinResultSuccess(:final message):
-                _updateSuccess(userInfo, CheckinResultSuccess(message));
-              case CheckinResultNotAuthorized():
-                _updateNotAuthed(userInfo);
-              case CheckinResultWebRequestFailed(:final statusCode):
-                _updateFailure(
-                  userInfo,
-                  CheckinResultWebRequestFailed(statusCode),
-                );
-              case CheckinResultFormHashNotFound():
-                _updateFailure(userInfo, const CheckinResultFormHashNotFound());
-              case CheckinResultAlreadyChecked():
-                _updateFailure(userInfo, const CheckinResultAlreadyChecked());
-              case CheckinResultEarlyInTime():
-                _updateFailure(userInfo, const CheckinResultEarlyInTime());
-              case CheckinResultLateInTime():
-                _updateFailure(userInfo, const CheckinResultLateInTime());
-              case CheckinResultOtherError(:final message):
-                _updateFailure(userInfo, CheckinResultOtherError(message));
-            }
-          }
+      // FIXME: Reduce complexity.
+      final tasks = pg
+          .map(
+            (userInfo) => _prepareCheckin(userInfo)
+                .mapLeft((e) => _updateFailure(e, const CheckinResultNotAuthorized()))
+                .map((netClient) async => (userInfo, await doCheckin(netClient, feeling, message).run())),
+          )
+          .map((e) async => e.run());
+      final info = await Future.wait(tasks);
+      final results = await Future.wait(info.map((e) => e.unwrap()));
+      // FIXME: This message extracting step is anti-pattern.
+      for (final result in results) {
+        final (userInfo, checkinResult) = result;
+        switch (checkinResult) {
+          case CheckinResultSuccess(:final message):
+            _updateSuccess(userInfo, CheckinResultSuccess(message));
+          case CheckinResultNotAuthorized():
+            _updateNotAuthed(userInfo);
+          case CheckinResultWebRequestFailed(:final statusCode):
+            _updateFailure(userInfo, CheckinResultWebRequestFailed(statusCode));
+          case CheckinResultFormHashNotFound():
+            _updateFailure(userInfo, const CheckinResultFormHashNotFound());
+          case CheckinResultAlreadyChecked():
+            _updateFailure(userInfo, const CheckinResultAlreadyChecked());
+          case CheckinResultEarlyInTime():
+            _updateFailure(userInfo, const CheckinResultEarlyInTime());
+          case CheckinResultLateInTime():
+            _updateFailure(userInfo, const CheckinResultLateInTime());
+          case CheckinResultOtherError(:final message):
+            _updateFailure(userInfo, CheckinResultOtherError(message));
         }
+      }
+    }
 
-        return rightVoid();
-      });
+    return rightVoid();
+  });
 
-  TaskEither<UserLoginInfo, NetClientProvider> _prepareCheckin(
-    UserLoginInfo userInfo,
-  ) =>
-      TaskEither(() async {
-        final cookieProvider =
-            getIt.get<CookieProvider>(instanceName: ServiceKeys.empty);
-        final loaded = await cookieProvider.loadCookieFromStorage(userInfo);
-        if (!loaded) {
-          return left(userInfo);
-        }
-        // FIXME: anti-pattern.
-        final netClient = NetClientProvider.buildNoCookie(
-          cookie: cookieProvider,
-        );
-        return right(netClient);
-      });
+  TaskEither<UserLoginInfo, NetClientProvider> _prepareCheckin(UserLoginInfo userInfo) => TaskEither(() async {
+    final cookieProvider = getIt.get<CookieProvider>(instanceName: ServiceKeys.empty);
+    final loaded = await cookieProvider.loadCookieFromStorage(userInfo);
+    if (!loaded) {
+      return left(userInfo);
+    }
+    // FIXME: anti-pattern.
+    final netClient = NetClientProvider.buildNoCookie(cookie: cookieProvider);
+    return right(netClient);
+  });
 
   /// Update status: [userInfoList] is in unauthenticated state.
   void _updateSkipped(List<UserLoginInfo> userInfoList) {
-    _currentInfo = _currentInfo.copyWith(
-      skipped: [..._currentInfo.skipped, ...userInfoList],
-    );
+    _currentInfo = _currentInfo.copyWith(skipped: [..._currentInfo.skipped, ...userInfoList]);
     _stream.add(_currentInfo);
   }
 
   /// Update status: [userInfoList] is in unauthenticated state.
   void _updateWaiting(List<UserLoginInfo> userInfoList) {
     _currentInfo = _currentInfo.copyWith(
-      waiting: _currentInfo.waiting.toList()
-        ..removeWhere((e) => userInfoList.contains(e)),
+      waiting: _currentInfo.waiting.toList()..removeWhere((e) => userInfoList.contains(e)),
       running: [..._currentInfo.running, ...userInfoList],
     );
     _stream.add(_currentInfo);
@@ -142,8 +122,7 @@ final class AutoCheckinRepository with LoggerMixin {
   /// Update status: [userInfoList] started running.
   void _updateRunning(List<UserLoginInfo> userInfoList) {
     _currentInfo = _currentInfo.copyWith(
-      waiting: _currentInfo.waiting.toList()
-        ..removeWhere((e) => userInfoList.contains(e)),
+      waiting: _currentInfo.waiting.toList()..removeWhere((e) => userInfoList.contains(e)),
       running: [..._currentInfo.running, ...userInfoList],
     );
     _stream.add(_currentInfo);
@@ -159,10 +138,7 @@ final class AutoCheckinRepository with LoggerMixin {
   }
 
   /// Update status: [userInfo] checked in successfully.
-  void _updateSuccess(
-    UserLoginInfo userInfo,
-    CheckinResult checkinResult,
-  ) {
+  void _updateSuccess(UserLoginInfo userInfo, CheckinResult checkinResult) {
     // FIXME: Here is a time gap between start checkin and checkin finished.
     // If any login-user related operation acted, for example logout or switch
     // to another user, the current user below is unexpected behavior.

@@ -9,13 +9,11 @@ sealed class ThreadEvent with ThreadEventMappable {
 
 /// User requested to refresh the page.
 @MappableClass()
-final class ThreadRefreshRequested extends ThreadEvent
-    with ThreadRefreshRequestedMappable {}
+final class ThreadRefreshRequested extends ThreadEvent with ThreadRefreshRequestedMappable {}
 
 /// User requested to load more thread pages.
 @MappableClass()
-final class ThreadLoadMoreRequested extends ThreadEvent
-    with ThreadLoadMoreRequestedMappable {
+final class ThreadLoadMoreRequested extends ThreadEvent with ThreadLoadMoreRequestedMappable {
   /// Constructor.
   const ThreadLoadMoreRequested(this.pageNumber) : super();
 
@@ -25,8 +23,7 @@ final class ThreadLoadMoreRequested extends ThreadEvent
 
 /// User request to jump to another page.
 @MappableClass()
-final class ThreadJumpPageRequested extends ThreadEvent
-    with ThreadJumpPageRequestedMappable {
+final class ThreadJumpPageRequested extends ThreadEvent with ThreadJumpPageRequestedMappable {
   /// Constructor.
   const ThreadJumpPageRequested(this.pageNumber) : super();
 
@@ -40,8 +37,7 @@ final class ThreadJumpPageRequested extends ThreadEvent
 ///
 /// Persistent in state.
 @MappableClass()
-final class ThreadClosedStateUpdated extends ThreadEvent
-    with ThreadClosedStateUpdatedMappable {
+final class ThreadClosedStateUpdated extends ThreadEvent with ThreadClosedStateUpdatedMappable {
   /// Constructor.
   const ThreadClosedStateUpdated({required this.closed}) : super();
 
@@ -51,8 +47,7 @@ final class ThreadClosedStateUpdated extends ThreadEvent
 
 /// Clear current reply parameters.
 @MappableClass()
-final class ThreadClearReplyParameterRequested extends ThreadEvent
-    with ThreadClearReplyParameterRequestedMappable {}
+final class ThreadClearReplyParameterRequested extends ThreadEvent with ThreadClearReplyParameterRequestedMappable {}
 
 /// User requested to only view the posts published by user with [uid] in
 /// current thread.
@@ -60,8 +55,7 @@ final class ThreadClearReplyParameterRequested extends ThreadEvent
 /// Note that triggering this event **will not change the current page number**.
 /// We behave like what it acts in browser.
 @MappableClass()
-final class ThreadOnlyViewAuthorRequested extends ThreadEvent
-    with ThreadOnlyViewAuthorRequestedMappable {
+final class ThreadOnlyViewAuthorRequested extends ThreadEvent with ThreadOnlyViewAuthorRequestedMappable {
   /// Constructor.
   const ThreadOnlyViewAuthorRequested(this.uid);
 
@@ -76,8 +70,7 @@ final class ThreadOnlyViewAuthorRequested extends ThreadEvent
 /// Note that triggering this event **will not change the current page number**.
 /// We behave like what it acts in browser.
 @MappableClass()
-final class ThreadViewAllAuthorsRequested extends ThreadEvent
-    with ThreadViewAllAuthorsRequestedMappable {}
+final class ThreadViewAllAuthorsRequested extends ThreadEvent with ThreadViewAllAuthorsRequestedMappable {}
 
 /// User requested to change the order when viewing posts in current thread.
 ///
@@ -88,8 +81,7 @@ final class ThreadViewAllAuthorsRequested extends ThreadEvent
 /// query parameters in thread url so there is no conflict any more. Different
 /// from the behavior in browser but it's ok, even better.
 @MappableClass()
-final class ThreadChangeViewOrderRequested extends ThreadEvent
-    with ThreadChangeViewOrderRequestedMappable {
+final class ThreadChangeViewOrderRequested extends ThreadEvent with ThreadChangeViewOrderRequestedMappable {
   /// Constructor.
   const ThreadChangeViewOrderRequested();
 }

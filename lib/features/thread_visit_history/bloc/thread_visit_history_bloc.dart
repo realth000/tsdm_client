@@ -12,20 +12,19 @@ part 'thread_visit_history_state.dart';
 typedef _Emit = Emitter<ThreadVisitHistoryState>;
 
 /// Bloc of thread visit history feature.
-final class ThreadVisitHistoryBloc
-    extends Bloc<ThreadVisitHistoryEvent, ThreadVisitHistoryState>
-    with LoggerMixin {
+final class ThreadVisitHistoryBloc extends Bloc<ThreadVisitHistoryEvent, ThreadVisitHistoryState> with LoggerMixin {
   /// Constructor.
   ThreadVisitHistoryBloc(this._repo) : super(const ThreadVisitHistoryState()) {
     on<ThreadVisitHistoryEvent>(
       (event, emit) async => switch (event) {
         ThreadVisitHistoryFetchAllRequested() => _onFetchAllRequested(emit),
-        ThreadVisitHistoryFetchByUserRequested(:final uid) =>
-          _onFetchByUserRequested(uid, emit),
-        ThreadVisitHistoryUpdateRequested(:final history) =>
-          _onUpdateRequested(history, emit),
-        ThreadVisitHistoryDeleteRecordRequested(:final uid, :final tid) =>
-          _onDeleteRecordRequested(emit, uid: uid, tid: tid),
+        ThreadVisitHistoryFetchByUserRequested(:final uid) => _onFetchByUserRequested(uid, emit),
+        ThreadVisitHistoryUpdateRequested(:final history) => _onUpdateRequested(history, emit),
+        ThreadVisitHistoryDeleteRecordRequested(:final uid, :final tid) => _onDeleteRecordRequested(
+          emit,
+          uid: uid,
+          tid: tid,
+        ),
         ThreadVisitHistoryClearRequested() => _onClearRequested(emit),
       },
     );
@@ -41,12 +40,7 @@ final class ThreadVisitHistoryBloc
         emit(state.copyWith(status: ThreadVisitHistoryStatus.failure));
       case Right(:final value):
         debug('fetch all succeeded, data count is ${value.length}');
-        emit(
-          state.copyWith(
-            status: ThreadVisitHistoryStatus.success,
-            history: value,
-          ),
-        );
+        emit(state.copyWith(status: ThreadVisitHistoryStatus.success, history: value));
     }
   }
 
@@ -58,19 +52,11 @@ final class ThreadVisitHistoryBloc
         emit(state.copyWith(status: ThreadVisitHistoryStatus.failure));
       case Right(:final value):
         debug('fetch by uid $uid succeeded, data count is ${value.length}');
-        emit(
-          state.copyWith(
-            status: ThreadVisitHistoryStatus.success,
-            history: value,
-          ),
-        );
+        emit(state.copyWith(status: ThreadVisitHistoryStatus.success, history: value));
     }
   }
 
-  Future<void> _onUpdateRequested(
-    ThreadVisitHistoryModel model,
-    _Emit emit,
-  ) async {
+  Future<void> _onUpdateRequested(ThreadVisitHistoryModel model, _Emit emit) async {
     emit(state.copyWith(status: ThreadVisitHistoryStatus.savingData));
     // TODO: Define the error here and handle it.
     await _repo.saveHistory(model).run();
@@ -78,12 +64,7 @@ final class ThreadVisitHistoryBloc
       if (item.uid == model.uid && item.threadId == model.threadId) {
         final h2 = state.history;
         h2[i] = model;
-        emit(
-          state.copyWith(
-            status: ThreadVisitHistoryStatus.success,
-            history: h2,
-          ),
-        );
+        emit(state.copyWith(status: ThreadVisitHistoryStatus.success, history: h2));
         return;
       }
     }
@@ -91,21 +72,11 @@ final class ThreadVisitHistoryBloc
     emit(state.copyWith(status: ThreadVisitHistoryStatus.success));
   }
 
-  Future<void> _onDeleteRecordRequested(
-    _Emit emit, {
-    required int uid,
-    required int tid,
-  }) async {
+  Future<void> _onDeleteRecordRequested(_Emit emit, {required int uid, required int tid}) async {
     emit(state.copyWith(status: ThreadVisitHistoryStatus.savingData));
     await _repo.deleteRecord(uid: uid, tid: tid).run();
-    final history =
-        state.history.filter((e) => e.uid != uid || e.threadId != tid).toList();
-    emit(
-      state.copyWith(
-        status: ThreadVisitHistoryStatus.success,
-        history: history,
-      ),
-    );
+    final history = state.history.filter((e) => e.uid != uid || e.threadId != tid).toList();
+    emit(state.copyWith(status: ThreadVisitHistoryStatus.success, history: history));
   }
 
   Future<void> _onClearRequested(_Emit emit) async {

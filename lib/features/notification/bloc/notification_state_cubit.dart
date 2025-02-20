@@ -12,18 +12,10 @@ part 'notification_state_cubit.mapper.dart';
 @MappableClass()
 final class NotificationStateInfo with NotificationStateInfoMappable {
   /// Constructor.
-  const NotificationStateInfo({
-    required this.notice,
-    required this.personalMessage,
-    required this.broadcastMessage,
-  });
+  const NotificationStateInfo({required this.notice, required this.personalMessage, required this.broadcastMessage});
 
   /// Empty info for initialization.
-  static const empty = NotificationStateInfo(
-    notice: 0,
-    personalMessage: 0,
-    broadcastMessage: 0,
-  );
+  static const empty = NotificationStateInfo(notice: 0, personalMessage: 0, broadcastMessage: 0);
 
   /// Count of unread notice.
   final int notice;
@@ -50,60 +42,45 @@ final class NotificationStateInfo with NotificationStateInfoMappable {
 final class NotificationStateCubit extends Cubit<NotificationStateInfo> {
   /// Constructor.
   NotificationStateCubit(NotificationInfoRepository infoRepository)
-      : _infoRepository = infoRepository,
-        super(NotificationStateInfo.empty) {
+    : _infoRepository = infoRepository,
+      super(NotificationStateInfo.empty) {
     _infoRepository.status.listen(emit);
   }
 
   final NotificationInfoRepository _infoRepository;
 
   /// Increase unread notice count by [count].
-  void increaseNotice([int count = 1]) =>
-      emit(state.copyWith(notice: state.notice + count));
+  void increaseNotice([int count = 1]) => emit(state.copyWith(notice: state.notice + count));
 
   /// Decrease unread notice count by [count].
-  void decreaseNotice([int count = 1]) =>
-      emit(state.copyWith(notice: math.max(state.notice - count, 0)));
+  void decreaseNotice([int count = 1]) => emit(state.copyWith(notice: math.max(state.notice - count, 0)));
 
   /// Set unread notice count to [count].
   void setNotice(int count) => emit(state.copyWith(notice: count));
 
   /// Increase unread personal message by [count].
-  void increasePersonalMessage([int count = 1]) =>
-      emit(state.copyWith(personalMessage: state.personalMessage + count));
+  void increasePersonalMessage([int count = 1]) => emit(state.copyWith(personalMessage: state.personalMessage + count));
 
   /// Decrease unread personal message by [count].
-  void decreasePersonalMessage([int count = 1]) => emit(
-        state.copyWith(
-          personalMessage: math.max(state.personalMessage - count, 0),
-        ),
-      );
+  void decreasePersonalMessage([int count = 1]) =>
+      emit(state.copyWith(personalMessage: math.max(state.personalMessage - count, 0)));
 
   /// Set unread personal message count to [count].
-  void setPersonalMessage(int count) =>
-      emit(state.copyWith(personalMessage: count));
+  void setPersonalMessage(int count) => emit(state.copyWith(personalMessage: count));
 
   /// Increase unread broadcast message count.
   void increaseBroadcastMessage([int count = 1]) =>
       emit(state.copyWith(broadcastMessage: state.broadcastMessage + count));
 
   /// Decrease unread broadcast message count.
-  void decreaseBroadcastMessage([int count = 1]) => emit(
-        state.copyWith(
-          broadcastMessage: math.max(state.broadcastMessage - count, 0),
-        ),
-      );
+  void decreaseBroadcastMessage([int count = 1]) =>
+      emit(state.copyWith(broadcastMessage: math.max(state.broadcastMessage - count, 0)));
 
   /// Set unread broadcast message count to [count].
-  void setBroadcastMessage(int count) =>
-      emit(state.copyWith(broadcastMessage: count));
+  void setBroadcastMessage(int count) => emit(state.copyWith(broadcastMessage: count));
 
   /// Update all count of types of notification.
-  void setAll({
-    required int noticeCount,
-    required int personalMessageCount,
-    required int broadcastMessageCount,
-  }) =>
+  void setAll({required int noticeCount, required int personalMessageCount, required int broadcastMessageCount}) =>
       emit(
         state.copyWith(
           notice: noticeCount,

@@ -82,38 +82,26 @@ class MyThread with MyThreadMappable {
     }
     final title = titleNode.firstEndDeepText()?.trim();
     final url = titleNode.firstHref();
-    final threadID =
-        url?.uriQueryParameter('tid') ?? url?.uriQueryParameter('ptid');
+    final threadID = url?.uriQueryParameter('tid') ?? url?.uriQueryParameter('ptid');
 
     final forumNode = element.querySelector('td:nth-child(3) > a');
     final forumName = forumNode?.firstEndDeepText();
     final forumUrl = forumNode?.firstHref();
 
-    final replyCount =
-        element.querySelector('td.num > a')?.firstEndDeepText()?.parseToInt();
-    final viewCount =
-        element.querySelector('td.num > em')?.firstEndDeepText()?.parseToInt();
+    final replyCount = element.querySelector('td.num > a')?.firstEndDeepText()?.parseToInt();
+    final viewCount = element.querySelector('td.num > em')?.firstEndDeepText()?.parseToInt();
 
     final latestReplyNode = element.querySelector('td.by');
-    final latestReplyAuthorName =
-        latestReplyNode?.querySelector('cite > a')?.firstEndDeepText();
-    final latestReplyAuthorUrl =
-        latestReplyNode?.querySelector('cite > a')?.firstHref();
+    final latestReplyAuthorName = latestReplyNode?.querySelector('cite > a')?.firstEndDeepText();
+    final latestReplyAuthorUrl = latestReplyNode?.querySelector('cite > a')?.firstHref();
     final latestReplyTime =
         // Within 7 days.
-        latestReplyNode
-                ?.querySelector('em > a > span')
-                ?.attributes['title']
-                ?.parseToDateTimeUtc8() ??
-            // More than 7 days ago.
-            latestReplyNode
-                ?.querySelector('em > a')
-                ?.firstEndDeepText()
-                ?.parseToDateTimeUtc8();
+        latestReplyNode?.querySelector('em > a > span')?.attributes['title']?.parseToDateTimeUtc8() ??
+        // More than 7 days ago.
+        latestReplyNode?.querySelector('em > a')?.firstEndDeepText()?.parseToDateTimeUtc8();
     String? quotedMessage;
     if (element.classes.contains('bw0_all')) {
-      quotedMessage =
-          element.nextElementSibling?.querySelector('td.xg1')?.innerText.trim();
+      quotedMessage = element.nextElementSibling?.querySelector('td.xg1')?.innerText.trim();
     }
 
     if (title == null ||
@@ -164,10 +152,7 @@ failed to parse MyThread node: {
       forumUrl: forumUrl,
       replyCount: replyCount,
       viewCount: viewCount,
-      latestReplyAuthor: User(
-        name: latestReplyAuthorName,
-        url: latestReplyAuthorUrl,
-      ),
+      latestReplyAuthor: User(name: latestReplyAuthorName, url: latestReplyAuthorUrl),
       latestReplyTime: latestReplyTime,
       quotedMessage: quotedMessage,
       stateSet: stateSet,

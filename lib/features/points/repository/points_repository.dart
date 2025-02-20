@@ -9,21 +9,16 @@ import 'package:universal_html/parsing.dart';
 
 /// Repository of points statistics page and points changelog page.
 final class PointsRepository with LoggerMixin {
-  static const _statisticsPageUrl =
-      '$baseUrl/home.php?mod=spacecp&ac=credit&op=base';
-  static const _changelogPageUrl =
-      '$baseUrl/home.php?mod=spacecp&op=log&ac=credit';
+  static const _statisticsPageUrl = '$baseUrl/home.php?mod=spacecp&ac=credit&op=base';
+  static const _changelogPageUrl = '$baseUrl/home.php?mod=spacecp&op=log&ac=credit';
 
   /// Fetch the points statistics page.
-  AsyncEither<uh.Document> fetchStatisticsPage() => getIt
-      .get<NetClientProvider>()
-      .get(_statisticsPageUrl)
-      .mapHttp((v) => parseHtmlDocument(v.data as String));
+  AsyncEither<uh.Document> fetchStatisticsPage() =>
+      getIt.get<NetClientProvider>().get(_statisticsPageUrl).mapHttp((v) => parseHtmlDocument(v.data as String));
 
   /// Fetch the points changelog page with given [parameter].
-  AsyncEither<uh.Document> fetchChangelogPage(ChangelogParameter parameter) =>
-      getIt
-          .get<NetClientProvider>()
-          .get('$_changelogPageUrl$parameter')
-          .mapHttp((v) => parseHtmlDocument(v.data as String));
+  AsyncEither<uh.Document> fetchChangelogPage(ChangelogParameter parameter) => getIt
+      .get<NetClientProvider>()
+      .get('$_changelogPageUrl$parameter')
+      .mapHttp((v) => parseHtmlDocument(v.data as String));
 }

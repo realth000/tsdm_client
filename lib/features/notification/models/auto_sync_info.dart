@@ -8,11 +8,7 @@ part of 'models.dart';
 @MappableClass()
 sealed class NotificationAutoSyncInfo with NotificationAutoSyncInfoMappable {
   /// Constructor.
-  const NotificationAutoSyncInfo({
-    required this.notice,
-    required this.personalMessage,
-    required this.broadcastMessage,
-  });
+  const NotificationAutoSyncInfo({required this.notice, required this.personalMessage, required this.broadcastMessage});
 
   /// Count of unread notice.
   final int notice;
@@ -44,8 +40,7 @@ final class NotificationAutoSyncInfoNotice extends NotificationAutoSyncInfo
 
 /// Received personal message in auto sync notice actions.
 @MappableClass()
-final class NotificationAutoSyncInfoPm extends NotificationAutoSyncInfo
-    with NotificationAutoSyncInfoPmMappable {
+final class NotificationAutoSyncInfoPm extends NotificationAutoSyncInfo with NotificationAutoSyncInfoPmMappable {
   /// Constructor.
   const NotificationAutoSyncInfoPm({
     required this.user,
@@ -64,8 +59,7 @@ final class NotificationAutoSyncInfoPm extends NotificationAutoSyncInfo
 
 /// Received broadcast message in auto sync notice actions.
 @MappableClass()
-final class NotificationAutoSyncInfoBm extends NotificationAutoSyncInfo
-    with NotificationAutoSyncInfoBmMappable {
+final class NotificationAutoSyncInfoBm extends NotificationAutoSyncInfo with NotificationAutoSyncInfoBmMappable {
   /// Constructor.
   const NotificationAutoSyncInfoBm({
     required this.msg,

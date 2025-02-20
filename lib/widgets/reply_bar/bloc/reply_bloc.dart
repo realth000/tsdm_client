@@ -18,8 +18,8 @@ typedef _Emit = Emitter<ReplyState>;
 class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
   /// Constructor.
   ReplyBloc({required ReplyRepository replyRepository})
-      : _replyRepository = replyRepository,
-        super(const ReplyState()) {
+    : _replyRepository = replyRepository,
+      super(const ReplyState()) {
     on<ReplyParametersUpdated>(_onReplyParametersUpdated);
     on<ReplyThreadClosed>(_onReplyThreadClosed);
     on<ReplyToPostRequested>(_onReplyToPostRequested);
@@ -31,10 +31,7 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
 
   final ReplyRepository _replyRepository;
 
-  Future<void> _onReplyParametersUpdated(
-    ReplyParametersUpdated event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyParametersUpdated(ReplyParametersUpdated event, _Emit emit) async {
     if (event.replyParameters == null) {
       emit(state.copyWithNullReplyParameters());
     } else {
@@ -42,25 +39,20 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     }
   }
 
-  Future<void> _onReplyThreadClosed(
-    ReplyThreadClosed event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyThreadClosed(ReplyThreadClosed event, _Emit emit) async {
     emit(state.copyWith(closed: event.closed));
   }
 
-  Future<void> _onReplyToPostRequested(
-    ReplyToPostRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyToPostRequested(ReplyToPostRequested event, _Emit emit) async {
     emit(state.copyWith(status: ReplyStatus.loading));
-    final ret = await _replyRepository
-        .replyToPost(
-          replyParameters: event.replyParameters,
-          replyAction: event.replyAction,
-          replyMessage: event.replyMessage,
-        )
-        .run();
+    final ret =
+        await _replyRepository
+            .replyToPost(
+              replyParameters: event.replyParameters,
+              replyAction: event.replyAction,
+              replyMessage: event.replyMessage,
+            )
+            .run();
     if (ret.isLeft()) {
       handle(ret.unwrapErr());
       emit(state.copyWith(status: ReplyStatus.failure));
@@ -69,16 +61,10 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
   }
 
-  Future<void> _onReplyToThreadRequested(
-    ReplyToThreadRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyToThreadRequested(ReplyToThreadRequested event, _Emit emit) async {
     try {
       emit(state.copyWith(status: ReplyStatus.loading));
-      await _replyRepository.replyToThread(
-        replyParameters: event.replyParameters,
-        replyMessage: event.replyMessage,
-      );
+      await _replyRepository.replyToThread(replyParameters: event.replyParameters, replyMessage: event.replyMessage);
       emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
     } on HttpRequestFailedException catch (e) {
       error('failed to reply to thread: http failed with $e');
@@ -89,36 +75,22 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     }
   }
 
-  Future<void> _onReplyResetClearTextStateTriggered(
-    ReplyResetClearTextStateTriggered event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyResetClearTextStateTriggered(ReplyResetClearTextStateTriggered event, _Emit emit) async {
     emit(state.copyWith(needClearText: false));
   }
 
-  Future<void> _onReplyChatHistoryRequested(
-    ReplyChatHistoryRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyChatHistoryRequested(ReplyChatHistoryRequested event, _Emit emit) async {
     emit(state.copyWith(status: ReplyStatus.loading));
     // TODO: Update chat history with returned pmid.
-    final result = await _replyRepository
-        .replyHistoryPersonalMessage(
-          targetUrl: event.targetUrl,
-          formHash: event.formHash,
-          message: event.message,
-        )
-        .run();
+    final result =
+        await _replyRepository
+            .replyHistoryPersonalMessage(targetUrl: event.targetUrl, formHash: event.formHash, message: event.message)
+            .run();
     if (result.isLeft()) {
       final err = result.unwrapErr();
       if (err case ReplyPersonalMessageFailedException()) {
         error('failed to reply chat history');
-        emit(
-          state.copyWith(
-            status: ReplyStatus.failure,
-            failedReason: err.message,
-          ),
-        );
+        emit(state.copyWith(status: ReplyStatus.failure, failedReason: err.message));
         return;
       }
       handle(err);
@@ -128,24 +100,14 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
     emit(state.copyWith(status: ReplyStatus.success, needClearText: true));
   }
 
-  Future<void> _onReplyChatRequested(
-    ReplyChatRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onReplyChatRequested(ReplyChatRequested event, _Emit emit) async {
     emit(state.copyWith(status: ReplyStatus.loading));
     // TODO: Update chat history with returned pmid.
-    final result = await _replyRepository
-        .replyPersonalMessage(event.touid, event.formData)
-        .run();
+    final result = await _replyRepository.replyPersonalMessage(event.touid, event.formData).run();
     if (result.isLeft()) {
       final err = result.unwrapErr();
       if (err case ReplyPersonalMessageFailedException()) {
-        emit(
-          state.copyWith(
-            status: ReplyStatus.failure,
-            failedReason: err.message,
-          ),
-        );
+        emit(state.copyWith(status: ReplyStatus.failure, failedReason: err.message));
         return;
       }
       handle(err);

@@ -27,11 +27,7 @@ enum AuthenticationStatus {
 @MappableClass()
 final class AuthenticationState with AuthenticationStateMappable {
   /// Constructor.
-  const AuthenticationState({
-    this.status = AuthenticationStatus.initial,
-    this.loginHash,
-    this.loginException,
-  });
+  const AuthenticationState({this.status = AuthenticationStatus.initial, this.loginHash, this.loginException});
 
   /// Status of authentication.
   final AuthenticationStatus status;

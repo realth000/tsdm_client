@@ -25,10 +25,7 @@ enum LoginField {
 @MappableClass()
 class SecurityQuestion with SecurityQuestionMappable {
   /// Constructor.
-  const SecurityQuestion({
-    required this.questionId,
-    required this.answer,
-  });
+  const SecurityQuestion({required this.questionId, required this.answer});
 
   /// The question id of security question chose by user.
   final String questionId;
@@ -38,10 +35,7 @@ class SecurityQuestion with SecurityQuestionMappable {
 }
 
 /// Login credential.
-@MappableClass(
-  generateMethods:
-      GenerateMethods.stringify | GenerateMethods.copy | GenerateMethods.equals,
-)
+@MappableClass(generateMethods: GenerateMethods.stringify | GenerateMethods.copy | GenerateMethods.equals)
 class UserCredential with UserCredentialMappable {
   /// Constructor.
   const UserCredential({

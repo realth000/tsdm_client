@@ -15,19 +15,15 @@ typedef _Emitter = Emitter<AuthenticationState>;
 /// Bloc the authentication, including login and logout.
 ///
 /// This bloc should be used as a global long-live bloc.
-class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
-    with LoggerMixin {
+class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> with LoggerMixin {
   /// Constructor
-  AuthenticationBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(const AuthenticationState()) {
+  AuthenticationBloc({required AuthenticationRepository authenticationRepository})
+    : _authenticationRepository = authenticationRepository,
+      super(const AuthenticationState()) {
     on<AuthenticationEvent>(
       (event, emitter) => switch (event) {
-        AuthenticationFetchLoginHashRequested() =>
-          _onFetchLoginHashRequested(emitter),
-        AuthenticationLoginRequested(:final userCredential) =>
-          _onLoginRequested(emitter, userCredential),
+        AuthenticationFetchLoginHashRequested() => _onFetchLoginHashRequested(emitter),
+        AuthenticationLoginRequested(:final userCredential) => _onLoginRequested(emitter, userCredential),
       },
     );
   }
@@ -36,31 +32,17 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState>
 
   Future<void> _onFetchLoginHashRequested(_Emitter emit) async {
     emit(state.copyWith(status: AuthenticationStatus.fetchingHash));
-    await _authenticationRepository.fetchHash().match(
-      (e) {
-        handle(e);
-        emit(state.copyWith(status: AuthenticationStatus.failure));
-      },
-      (v) => emit(
-        state.copyWith(
-          status: AuthenticationStatus.gotHash,
-          loginHash: v,
-        ),
-      ),
-    ).run();
+    await _authenticationRepository.fetchHash().match((e) {
+      handle(e);
+      emit(state.copyWith(status: AuthenticationStatus.failure));
+    }, (v) => emit(state.copyWith(status: AuthenticationStatus.gotHash, loginHash: v))).run();
   }
 
-  Future<void> _onLoginRequested(
-    _Emitter emit,
-    UserCredential userCredential,
-  ) async {
+  Future<void> _onLoginRequested(_Emitter emit, UserCredential userCredential) async {
     emit(state.copyWith(status: AuthenticationStatus.loggingIn));
-    await _authenticationRepository.loginWithPassword(userCredential).match(
-      (e) {
-        handle(e);
-        emit(state.copyWith(status: AuthenticationStatus.failure));
-      },
-      (_) => emit(state.copyWith(status: AuthenticationStatus.success)),
-    ).run();
+    await _authenticationRepository.loginWithPassword(userCredential).match((e) {
+      handle(e);
+      emit(state.copyWith(status: AuthenticationStatus.failure));
+    }, (_) => emit(state.copyWith(status: AuthenticationStatus.success))).run();
   }
 }

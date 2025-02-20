@@ -64,10 +64,7 @@ class AboutPage extends StatelessWidget {
             title: Text(context.t.aboutPage.forumHomepage),
             subtitle: const Text(baseUrl),
             onTap: () async {
-              await launchUrl(
-                Uri.parse(baseUrl),
-                mode: LaunchMode.externalApplication,
-              );
+              await launchUrl(Uri.parse(baseUrl), mode: LaunchMode.externalApplication);
             },
           ),
           SectionListTile(
@@ -84,14 +81,9 @@ class AboutPage extends StatelessWidget {
           SectionListTile(
             leading: const FlutterLogo(),
             title: Text(context.t.aboutPage.flutterVersion),
-            subtitle: const Text(
-              '$flutterVersion ($flutterChannel) - $flutterFrameworkRevision',
-            ),
+            subtitle: const Text('$flutterVersion ($flutterChannel) - $flutterFrameworkRevision'),
             onTap: () async {
-              await launchUrl(
-                Uri.parse('https://flutter.dev/'),
-                mode: LaunchMode.externalApplication,
-              );
+              await launchUrl(Uri.parse('https://flutter.dev/'), mode: LaunchMode.externalApplication);
             },
           ),
           SectionListTile(
@@ -99,10 +91,7 @@ class AboutPage extends StatelessWidget {
             title: Text(context.t.aboutPage.dartVersion),
             subtitle: const Text(dartVersion),
             onTap: () async {
-              await launchUrl(
-                Uri.parse('https://dart.dev/'),
-                mode: LaunchMode.externalApplication,
-              );
+              await launchUrl(Uri.parse('https://dart.dev/'), mode: LaunchMode.externalApplication);
             },
           ),
           SectionListTile(

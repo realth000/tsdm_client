@@ -78,13 +78,11 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
           setState(() => hasError = false);
         }
         await widget._imageProvider.evict();
-      case ImageCacheLoadingResponse() ||
-            ImageCacheStatusResponse(status: ImageCacheStatus2.loading):
+      case ImageCacheLoadingResponse() || ImageCacheStatusResponse(status: ImageCacheStatus2.loading):
         if (hasError) {
           setState(() => hasError = false);
         }
-      case ImageCacheFailedResponse() ||
-            ImageCacheStatusResponse(status: ImageCacheStatus2.notCached):
+      case ImageCacheFailedResponse() || ImageCacheStatusResponse(status: ImageCacheStatus2.notCached):
         if (!hasError) {
           setState(() => hasError = true);
         }
@@ -103,18 +101,11 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
     imageCacheSub = getIt
         .get<ImageCacheProvider>()
         .response
-        .where(
-          (e) =>
-              e.respType == ImageCacheResponseType.userAvatar &&
-              e.imageId == widget.username,
-        )
+        .where((e) => e.respType == ImageCacheResponseType.userAvatar && e.imageId == widget.username)
         .listen((resp) async => onImageCachedResponse(resp));
     getIt.get<ImageCacheProvider>().queryCacheState(
-          ImageCacheUserAvatarRequest(
-            username: widget.username,
-            imageUrl: widget.avatarUrl ?? '',
-          ),
-        );
+      ImageCacheUserAvatarRequest(username: widget.username, imageUrl: widget.avatarUrl ?? ''),
+    );
   }
 
   @override
@@ -130,20 +121,16 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
       backgroundImage: widget._imageProvider,
       maxRadius: widget.maxRadius,
       minRadius: widget.minRadius,
-      child: hasError
-          ? Text(widget.username.isEmpty ? ' ' : widget.username[0])
-          : null,
+      child: hasError ? Text(widget.username.isEmpty ? ' ' : widget.username[0]) : null,
     );
     if (widget.disableHero) {
       return avatar;
     }
     return Hero(
       tag: widget.heroTag ?? 'UserAvatar_${widget.username}',
-      flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
-          DefaultTextStyle(
-        style: DefaultTextStyle.of(toHeroContext).style,
-        child: toHeroContext.widget,
-      ),
+      flightShuttleBuilder:
+          (_, __, ___, ____, toHeroContext) =>
+              DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
       child: avatar,
     );
   }
@@ -152,27 +139,19 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
 /// Show a dialog with hero animation support.
 ///
 /// The dialog content is built by the parameter [builder].
-Future<T?> showHeroDialog<T>(
-  BuildContext context,
-  RoutePageBuilder builder,
-) async {
+Future<T?> showHeroDialog<T>(BuildContext context, RoutePageBuilder builder) async {
   return Navigator.push<T>(
     context,
     PageRouteBuilder(
       opaque: false,
       // Fix barrier color.
       // ref: flutter/lib/src/material/dialog.dart: showDialog()
-      barrierColor:
-          Theme.of(context).dialogTheme.barrierColor ?? Colors.black54,
+      barrierColor: Theme.of(context).dialogTheme.barrierColor ?? Colors.black54,
       barrierDismissible: true,
-      pageBuilder: (context, animation, secondaryAnimation) =>
-          builder(context, animation, secondaryAnimation),
+      pageBuilder: (context, animation, secondaryAnimation) => builder(context, animation, secondaryAnimation),
       // fullscreenDialog: true,
       transitionsBuilder: (context, ani1, ani2, child) {
-        return FadeTransition(
-          opacity: CurveTween(curve: Curves.easeIn).animate(ani1),
-          child: child,
-        );
+        return FadeTransition(opacity: CurveTween(curve: Curves.easeIn).animate(ani1), child: child);
       },
     ),
   );

@@ -9,10 +9,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// Widget provides ability to checkin.
 class CheckinButton extends StatelessWidget {
   /// Constructor.
-  const CheckinButton({
-    this.enableSnackBar = false,
-    super.key,
-  });
+  const CheckinButton({this.enableSnackBar = false, super.key});
 
   /// Enable snack bar feedback after checkin action.
   ///
@@ -21,17 +18,11 @@ class CheckinButton extends StatelessWidget {
   /// Only a workaround.
   final bool enableSnackBar;
 
-  Future<void> _showCheckinFailedSnackBar(
-    BuildContext context,
-    CheckinResult result,
-  ) async {
+  Future<void> _showCheckinFailedSnackBar(BuildContext context, CheckinResult result) async {
     if (!context.mounted) {
       return;
     }
-    return showSnackBar(
-      context: context,
-      message: CheckinResult.message(context, result),
-    );
+    return showSnackBar(context: context, message: CheckinResult.message(context, result));
   }
 
   @override
@@ -40,10 +31,7 @@ class CheckinButton extends StatelessWidget {
     return BlocListener<CheckinBloc, CheckinState>(
       listener: (context, state) async {
         if (state is CheckinStateSuccess) {
-          return showSnackBar(
-            context: context,
-            message: tr.success(msg: state.message),
-          );
+          return showSnackBar(context: context, message: tr.success(msg: state.message));
         }
         if (state is CheckinStateFailed && enableSnackBar) {
           await _showCheckinFailedSnackBar(context, state.result);
@@ -55,19 +43,11 @@ class CheckinButton extends StatelessWidget {
           final tooltip = context.t.homepage.welcome.checkin;
 
           if (state is CheckinStateLoading) {
-            return IconButton(
-              icon: sizedCircularProgressIndicator,
-              tooltip: tooltip,
-              onPressed: null,
-            );
+            return IconButton(icon: sizedCircularProgressIndicator, tooltip: tooltip, onPressed: null);
           }
 
           if (state is CheckinStateNeedLogin) {
-            return IconButton(
-              icon: const Icon(Icons.domain_verification_outlined),
-              tooltip: tooltip,
-              onPressed: null,
-            );
+            return IconButton(icon: const Icon(Icons.domain_verification_outlined), tooltip: tooltip, onPressed: null);
           }
 
           return IconButton(

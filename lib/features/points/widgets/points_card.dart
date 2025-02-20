@@ -21,11 +21,12 @@ class PointsChangeCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: pointsChange.redirectUrl == null
-            ? null
-            : () async {
-                await context.dispatchAsUrl(pointsChange.redirectUrl!);
-              },
+        onTap:
+            pointsChange.redirectUrl == null
+                ? null
+                : () async {
+                  await context.dispatchAsUrl(pointsChange.redirectUrl!);
+                },
         child: Padding(
           padding: edgeInsetsL12R12B12,
           child: Column(
@@ -34,23 +35,11 @@ class PointsChangeCard extends StatelessWidget {
             children: [
               ListTile(
                 leading: switch (pointsChange.pointsChangeType) {
-                  PointsChangeType.more => const Icon(
-                      Icons.trending_up_outlined,
-                      color: Color(0xF26C4F00),
-                    ),
-                  PointsChangeType.less => const Icon(
-                      Icons.trending_down_outlined,
-                      color: Color(0x99999999),
-                    ),
-                  PointsChangeType.unlimited =>
-                    const Icon(Icons.trending_flat_outlined),
+                  PointsChangeType.more => const Icon(Icons.trending_up_outlined, color: Color(0xF26C4F00)),
+                  PointsChangeType.less => const Icon(Icons.trending_down_outlined, color: Color(0x99999999)),
+                  PointsChangeType.unlimited => const Icon(Icons.trending_flat_outlined),
                 },
-                title: Text(
-                  pointsChange.operation,
-                  style: TextStyle(
-                    color: Theme.of(context).colorScheme.secondary,
-                  ),
-                ),
+                title: Text(pointsChange.operation, style: TextStyle(color: Theme.of(context).colorScheme.secondary)),
                 subtitle: Text(pointsChange.time.yyyyMMDDHHMMSS()),
               ),
               munchElement(
@@ -61,9 +50,7 @@ class PointsChangeCard extends StatelessWidget {
               sizedBoxW4H4,
               Text(
                 pointsChange.changeMapString,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                    ),
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
               ),
             ],
           ),

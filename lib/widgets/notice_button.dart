@@ -27,21 +27,16 @@ class _NoticeButtonState extends State<NoticeButton> {
   @override
   Widget build(BuildContext context) {
     final noticeState = context.watch<NotificationBloc>().state;
-    final isLogin = context.select<AuthenticationRepository, bool>(
-      (repo) => repo.currentUser != null,
-    );
-    final showUnreadHint =
-        getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
-    final unreadNoticeCount = context
-        .select<NotificationStateCubit, int>((cubit) => cubit.state.total);
+    final isLogin = context.select<AuthenticationRepository, bool>((repo) => repo.currentUser != null);
+    final showUnreadHint = getIt.get<SettingsRepository>().currentSettings.showUnreadInfoHint;
+    final unreadNoticeCount = context.select<NotificationStateCubit, int>((cubit) => cubit.state.total);
 
     if (!isLogin) {
       return const IconButton(icon: iconData, onPressed: null);
     }
 
     final Widget noticeIcon;
-    if (noticeState.status == NotificationStatus.initial ||
-        noticeState.status == NotificationStatus.loading) {
+    if (noticeState.status == NotificationStatus.initial || noticeState.status == NotificationStatus.loading) {
       noticeIcon = sizedCircularProgressIndicator;
     } else if (showUnreadHint && unreadNoticeCount > 0) {
       noticeIcon = Badge(label: Text('$unreadNoticeCount'), child: iconData);

@@ -11,11 +11,7 @@ sealed class RecordMark with RecordMarkMappable {
 @MappableClass()
 final class RecordMarkNotice extends RecordMark with RecordMarkNoticeMappable {
   /// Constructor.
-  const RecordMarkNotice({
-    required this.uid,
-    required this.nid,
-    required this.alreadyRead,
-  });
+  const RecordMarkNotice({required this.uid, required this.nid, required this.alreadyRead});
 
   /// Uid of the notice.
   final int uid;
@@ -29,14 +25,9 @@ final class RecordMarkNotice extends RecordMark with RecordMarkNoticeMappable {
 
 /// Mark a personal message.
 @MappableClass()
-final class RecordMarkPersonalMessage extends RecordMark
-    with RecordMarkPersonalMessageMappable {
+final class RecordMarkPersonalMessage extends RecordMark with RecordMarkPersonalMessageMappable {
   /// Constructor.
-  const RecordMarkPersonalMessage({
-    required this.uid,
-    required this.peerUid,
-    required this.alreadyRead,
-  });
+  const RecordMarkPersonalMessage({required this.uid, required this.peerUid, required this.alreadyRead});
 
   /// Uid of the notice.
   final int uid;
@@ -50,14 +41,9 @@ final class RecordMarkPersonalMessage extends RecordMark
 
 /// Mark a personal message.
 @MappableClass()
-final class RecordMarkBroadcastMessage extends RecordMark
-    with RecordMarkBroadcastMessageMappable {
+final class RecordMarkBroadcastMessage extends RecordMark with RecordMarkBroadcastMessageMappable {
   /// Constructor.
-  const RecordMarkBroadcastMessage({
-    required this.uid,
-    required this.timestamp,
-    required this.alreadyRead,
-  });
+  const RecordMarkBroadcastMessage({required this.uid, required this.timestamp, required this.alreadyRead});
 
   /// Uid of the notice.
   final int uid;

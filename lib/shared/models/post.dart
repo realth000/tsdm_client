@@ -7,9 +7,7 @@ extension _ParseExtension on uh.Element {
   static final _rateActionRe = RegExp("'rate', '(?<url>forum.php[^']*)',");
 
   String? _parseRateAction() {
-    return _rateActionRe
-        .firstMatch(attributes['onclick'] ?? '')
-        ?.namedGroup('url');
+    return _rateActionRe.firstMatch(attributes['onclick'] ?? '')?.namedGroup('url');
   }
 }
 
@@ -125,19 +123,14 @@ class Post with PostMappable {
       return null;
     }
     // <td class="pls">
-    final postInfoNode =
-        trRootNode?.querySelector('td:nth-child(1) > div#ts_avatar_$postID');
+    final postInfoNode = trRootNode?.querySelector('td:nth-child(1) > div#ts_avatar_$postID');
     // <td class="plc tsdm_ftc">
-    final postAuthorName =
-        postInfoNode?.querySelector('div')?.firstEndDeepText();
-    final postAuthorUrl =
-        postInfoNode?.querySelector('div.avatar > a')?.attributes['href'];
+    final postAuthorName = postInfoNode?.querySelector('div')?.firstEndDeepText();
+    final postAuthorUrl = postInfoNode?.querySelector('div.avatar > a')?.attributes['href'];
     final postAuthorUid = postAuthorUrl?.split('uid=').elementAtOrNull(1);
-    final postAuthorAvatarNode =
-        postInfoNode?.querySelector('div.avatar > a > img');
+    final postAuthorAvatarNode = postInfoNode?.querySelector('div.avatar > a > img');
     final postAuthorAvatarUrl =
-        postAuthorAvatarNode?.attributes['data-original'] ??
-            postAuthorAvatarNode?.attributes['src'];
+        postAuthorAvatarNode?.attributes['data-original'] ?? postAuthorAvatarNode?.attributes['src'];
     final postAuthor = User(
       name: postAuthorName ?? '',
       uid: postAuthorUid,
@@ -151,15 +144,12 @@ class Post with PostMappable {
     }
 
     final postDataNode = trRootNode?.querySelector('td:nth-child(2)');
-    final postPublishTimeNode =
-        postDataNode?.querySelector('#authorposton$postID');
+    final postPublishTimeNode = postDataNode?.querySelector('#authorposton$postID');
     // Recent post can grep [publishTime] in the the "title" attribute
     // in first child.
     // Otherwise fallback split time string.
-    final postPublishTime = postPublishTimeNode
-            ?.querySelector('span')
-            ?.attributes['title']
-            ?.parseToDateTimeUtc8() ??
+    final postPublishTime =
+        postPublishTimeNode?.querySelector('span')?.attributes['title']?.parseToDateTimeUtc8() ??
         postPublishTimeNode?.text?.substring(4).parseToDateTimeUtc8();
     // Sometimes the #postmessage_ID ID does not match postID.
     // e.g. tid=1184238
@@ -187,8 +177,8 @@ class Post with PostMappable {
     // </div>
     //
     // Now we only search for the <div class="pcb"> node.
-    final postData = postDataNode?.querySelector('div.pcb')?.innerHtml ??
-        postDataNode?.querySelector('div.pcbs')?.innerHtml;
+    final postData =
+        postDataNode?.querySelector('div.pcb')?.innerHtml ?? postDataNode?.querySelector('div.pcbs')?.innerHtml;
 
     // Locked block in this post.
     //
@@ -197,29 +187,24 @@ class Post with PostMappable {
     //
     // Should not build locked with points which must be built in "postmessage"
     // munching.
-    final locked = postDataNode
-        ?.querySelectorAll('div.locked')
-        .where((e) => e.querySelector('span') == null)
-        .map(
-          (e) => Locked.fromLockDivNode(
-            e,
-            allowWithPoints: false,
-            allowWithReply: false,
-            allowWithAuthor: false,
-            allowWithBlocked: false,
-          ),
-        )
-        .toList();
+    final locked =
+        postDataNode
+            ?.querySelectorAll('div.locked')
+            .where((e) => e.querySelector('span') == null)
+            .map(
+              (e) => Locked.fromLockDivNode(
+                e,
+                allowWithPoints: false,
+                allowWithReply: false,
+                allowWithAuthor: false,
+                allowWithBlocked: false,
+              ),
+            )
+            .toList();
 
-    final postFloor = postDataNode
-        ?.querySelector('div.pi > strong > a > em')
-        ?.firstEndDeepText()
-        ?.parseToInt();
+    final postFloor = postDataNode?.querySelector('div.pi > strong > a > em')?.firstEndDeepText()?.parseToInt();
 
-    final shareLink = postDataNode
-        ?.querySelector('div.pi > strong > a')
-        ?.attributes['href']
-        ?.prependHost();
+    final shareLink = postDataNode?.querySelector('div.pi > strong > a')?.attributes['href']?.prependHost();
 
     // Some users have style overflow in signature so the following selector not
     // works:
@@ -228,52 +213,43 @@ class Post with PostMappable {
     //           'div > em > a[href*="action=reply"]',
     //
     // Should use a more permissive one.
-    final replyAction = element
-        .querySelector(
-          'table > tbody > tr:nth-child(2) > td.tsdm_replybar div.pob em > '
-          'a[href*="action=reply"]',
-        )
-        ?.firstHref();
+    final replyAction =
+        element
+            .querySelector(
+              'table > tbody > tr:nth-child(2) > td.tsdm_replybar div.pob em > '
+              'a[href*="action=reply"]',
+            )
+            ?.firstHref();
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');
     final rate = Rate.fromRateLogNode(rateNode);
-    final packetUrl = postDataNode
-        ?.querySelector('div.pct > div#ts_packet > a')
-        ?.attributes['href']
-        ?.prependHost();
-    final packetAllTaken = postDataNode
-            ?.querySelector('div.pct > div#ts_packet > a > img')
-            ?.attributes['src'] ==
-        _emptyPacketImageUrl;
+    final packetUrl = postDataNode?.querySelector('div.pct > div#ts_packet > a')?.attributes['href']?.prependHost();
+    final packetAllTaken =
+        postDataNode?.querySelector('div.pct > div#ts_packet > a > img')?.attributes['src'] == _emptyPacketImageUrl;
 
     // Parse rate action:
     // * If current post is the first floor in thread, rate action node is in <div id="fj">...</div>.
     // * If current post is not the first floor, rate action is in <div class="pob cl"><p>...</p></div>
     // Allow to be empty.
     String? rateAction;
-    rateAction = element
-        .querySelector('table  div.pob.cl p > a[onclick*="action=rate"]')
-        ?._parseRateAction()
-        ?.prependHost();
+    rateAction =
+        element.querySelector('table  div.pob.cl p > a[onclick*="action=rate"]')?._parseRateAction()?.prependHost();
 
-    rateAction ??= element
-        .querySelector('div#fj > a[onclick*="action=rate"]')
-        ?._parseRateAction()
-        ?.prependHost();
+    rateAction ??= element.querySelector('div#fj > a[onclick*="action=rate"]')?._parseRateAction()?.prependHost();
 
     rateAction?.prependHost();
 
     // Url to edit the post is also in the `<div id=fj>` node.
     // We can only find it by the content text "编辑"。
-    final editUrl = element
-        .querySelectorAll('div#fj > a')
-        .firstWhereOrNull((e) => e.firstEndDeepText() == '编辑')
-        ?.attributes['href']
-        ?.prependHost();
+    final editUrl =
+        element
+            .querySelectorAll('div#fj > a')
+            .firstWhereOrNull((e) => e.firstEndDeepText() == '编辑')
+            ?.attributes['href']
+            ?.prependHost();
 
     // Check for last edit status.
-    final lastEditText =
-        element.querySelector('i.pstatus')?.innerText.trim().split(' ');
+    final lastEditText = element.querySelector('i.pstatus')?.innerText.trim().split(' ');
     String? lastEditUsername;
     String? lastEditTime;
     // 本帖最后由 $username 于 xxxx-xx-xx xx:xx:xx 编辑
@@ -291,12 +267,10 @@ class Post with PostMappable {
     }
 
     // User profile
-    final userProfileNode =
-        element.querySelector('table > tbody > tr:nth-child(1) > td.pls');
+    final userProfileNode = element.querySelector('table > tbody > tr:nth-child(1) > td.pls');
     UserBriefProfile? userBriefProfile;
     if (userProfileNode != null) {
-      userBriefProfile =
-          UserBriefProfile.buildFromUserProfileNode(userProfileNode);
+      userBriefProfile = UserBriefProfile.buildFromUserProfileNode(userProfileNode);
     } else {
       talker.error('post $postID: user profile node not found');
     }
@@ -335,8 +309,8 @@ class Post with PostMappable {
     final threadDataRootNode =
         // Style 5
         element.querySelector('div.bm > div') ??
-            // Some normal styles.
-            element.childAtOrNull(2);
+        // Some normal styles.
+        element.childAtOrNull(2);
     var currentElement = threadDataRootNode;
     final tdPostList = <Post>[];
     while (currentElement != null) {

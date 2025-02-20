@@ -19,10 +19,7 @@ enum EmojiStatus {
 @MappableClass()
 final class EmojiState with EmojiStateMappable {
   /// Constructor.
-  const EmojiState({
-    required this.status,
-    this.emojiGroupList,
-  });
+  const EmojiState({required this.status, this.emojiGroupList});
 
   /// Status
   final EmojiStatus status;

@@ -6,12 +6,7 @@ part of 'models.dart';
 @MappableClass()
 class User with UserMappable {
   /// Constructor.
-  const User({
-    required this.name,
-    required this.url,
-    this.uid,
-    this.avatarUrl,
-  });
+  const User({required this.name, required this.url, this.uid, this.avatarUrl});
 
   /// User name.
   final String name;

@@ -24,13 +24,9 @@ enum ThreadVisitHistoryStatus {
 ///
 /// Stores full history saved in db.
 @MappableClass()
-final class ThreadVisitHistoryState
-    with ThreadVisitHistoryStateMappable, LoggerMixin {
+final class ThreadVisitHistoryState with ThreadVisitHistoryStateMappable, LoggerMixin {
   /// Constructor.
-  const ThreadVisitHistoryState({
-    this.status = ThreadVisitHistoryStatus.initial,
-    this.history = const [],
-  });
+  const ThreadVisitHistoryState({this.status = ThreadVisitHistoryStatus.initial, this.history = const []});
 
   /// Current status.
   final ThreadVisitHistoryStatus status;

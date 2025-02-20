@@ -13,18 +13,8 @@ typedef _Emit = Emitter<ThreadStateV2>;
 /// V2 bloc of thread feature.
 final class ThreadBlocV2 extends Bloc<ThreadV2Event, ThreadStateV2> {
   /// Constructor.
-  ThreadBlocV2(
-    this._repo, {
-    required String threadId,
-    int page = 1,
-    String? forumId,
-  }) : super(
-          ThreadStateV2(
-            threadId: threadId,
-            pageRange: PageRange(start: page, end: page),
-            forumId: forumId,
-          ),
-        ) {
+  ThreadBlocV2(this._repo, {required String threadId, int page = 1, String? forumId})
+    : super(ThreadStateV2(threadId: threadId, pageRange: PageRange(start: page, end: page), forumId: forumId)) {
     on<ThreadV2Event>(
       (event, emit) => switch (event) {
         ThreadV2LoadPrevPageRequested() => _onLoadPrevPage(emit),
@@ -41,17 +31,11 @@ final class ThreadBlocV2 extends Bloc<ThreadV2Event, ThreadStateV2> {
       return;
     }
 
-    if (state.pageRange == null ||
-        !state.pageRange!.hasNext(state.entirePageRange)) {
+    if (state.pageRange == null || !state.pageRange!.hasNext(state.entirePageRange)) {
       return;
     }
 
     // TODO: Implement the handler
-    final _ = await _repo
-        .fetchThreadContent(
-          tid: state.threadId,
-          page: state.pageRange!.start - 1,
-        )
-        .run();
+    final _ = await _repo.fetchThreadContent(tid: state.threadId, page: state.pageRange!.start - 1).run();
   }
 }

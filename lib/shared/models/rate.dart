@@ -4,10 +4,7 @@ part of 'models.dart';
 @MappableClass()
 class SingleRate with SingleRateMappable {
   /// Constructor.
-  const SingleRate({
-    required this.user,
-    required this.attrValueList,
-  });
+  const SingleRate({required this.user, required this.attrValueList});
 
   /// User info.
   /// Name, user space url and avatar url is required.
@@ -53,16 +50,14 @@ class Rate with RateMappable {
     if (element == null) {
       return null;
     }
-    final rateHeaders =
-        element.querySelectorAll('table > tbody:nth-child(1) > tr > th');
+    final rateHeaders = element.querySelectorAll('table > tbody:nth-child(1) > tr > th');
     if (rateHeaders.length < 2) {
       talker.error('failed to build rate: invalid rate header');
       return null;
     }
 
     final infoNode = rateHeaders.firstOrNull?.querySelector('a');
-    final userCount =
-        infoNode?.querySelector('span.xi1')?.firstEndDeepText()?.parseToInt();
+    final userCount = infoNode?.querySelector('span.xi1')?.firstEndDeepText()?.parseToInt();
     if (userCount == null) {
       talker.error('failed to build rate: user count not found');
       return null;
@@ -72,20 +67,15 @@ class Rate with RateMappable {
       talker.error('failed to build rate: detail url not found');
       return null;
     }
-    final attrList = rateHeaders
-        .skip(1)
-        .map((e) => e.querySelector('i')?.firstEndDeepText()?.trim())
-        .whereType<String>()
-        .toList();
+    final attrList =
+        rateHeaders.skip(1).map((e) => e.querySelector('i')?.firstEndDeepText()?.trim()).whereType<String>().toList();
     if (attrList.isEmpty) {
       talker.error('failed to build rate: rate attr list is empty');
       return null;
     }
 
-    final recordNodeList =
-        element.querySelectorAll('table > tbody.ratl_l > tr');
-    final records =
-        recordNodeList.map(_parseSingleRate).whereType<SingleRate>().toList();
+    final recordNodeList = element.querySelectorAll('table > tbody.ratl_l > tr');
+    final records = recordNodeList.map(_parseSingleRate).whereType<SingleRate>().toList();
     if (records.isEmpty) {
       talker.error('failed to build rate: records is empty');
       return null;
@@ -120,22 +110,13 @@ class Rate with RateMappable {
     }
     final userNode = tdList.firstOrNull;
     final url = userNode?.querySelector('a:nth-child(1)')?.firstHref();
-    final avatarUrl =
-        userNode?.querySelector('a:nth-child(1) > img')?.imageUrl();
+    final avatarUrl = userNode?.querySelector('a:nth-child(1) > img')?.imageUrl();
     final name = userNode?.querySelector('a:nth-child(2)')?.firstEndDeepText();
-    final attrValueList =
-        tdList.skip(1).map((e) => e.firstEndDeepText()?.trim() ?? '').toList();
+    final attrValueList = tdList.skip(1).map((e) => e.firstEndDeepText()?.trim() ?? '').toList();
 
     if (url == null || name == null) {
       return null;
     }
-    return SingleRate(
-      user: User(
-        name: name,
-        url: url,
-        avatarUrl: avatarUrl,
-      ),
-      attrValueList: attrValueList,
-    );
+    return SingleRate(user: User(name: name, url: url, avatarUrl: avatarUrl), attrValueList: attrValueList);
   }
 }

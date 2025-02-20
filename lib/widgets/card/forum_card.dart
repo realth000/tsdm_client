@@ -36,15 +36,9 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
           ListTile(
             title: Row(
               children: [
-                Text(
-                  widget.forum.latestThreadTitle ?? '',
-                  style: Theme.of(context).textTheme.labelMedium,
-                ),
+                Text(widget.forum.latestThreadTitle ?? '', style: Theme.of(context).textTheme.labelMedium),
                 Expanded(child: Container()),
-                Text(
-                  widget.forum.latestThreadUserName ?? '',
-                  style: Theme.of(context).textTheme.labelSmall,
-                ),
+                Text(widget.forum.latestThreadUserName ?? '', style: Theme.of(context).textTheme.labelSmall),
               ],
             ),
             onTap: () async {
@@ -64,15 +58,13 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
             },
           ),
         if (widget.forum.subThreadList?.isNotEmpty ?? false)
-          ..._buildWrapSection(context, context.t.forumCard.links,
-              widget.forum.subThreadList!, showingSubThread, () {
+          ..._buildWrapSection(context, context.t.forumCard.links, widget.forum.subThreadList!, showingSubThread, () {
             setState(() {
               showingSubThread = !showingSubThread;
             });
           }),
         if (widget.forum.subForumList?.isNotEmpty ?? false)
-          ..._buildWrapSection(context, context.t.forumCard.subForums,
-              widget.forum.subForumList!, showingSubForum, () {
+          ..._buildWrapSection(context, context.t.forumCard.subForums, widget.forum.subForumList!, showingSubForum, () {
             setState(() {
               showingSubForum = !showingSubForum;
             });
@@ -88,27 +80,28 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
     bool state,
     VoidCallback onPressed,
   ) {
-    final wrapChildren = dataList
-        .map(
-          (e) => ActionChip(
-            label: Text(e.$1),
-            labelStyle: Theme.of(context).textTheme.labelSmall,
-            shape: LinearBorder.start(),
-            onPressed: () async {
-              final target = e.$2.parseUrlToRoute();
-              if (target == null) {
-                debug('invalid url : ${e.$2}');
-                return;
-              }
-              await context.pushNamed(
-                target.screenPath,
-                pathParameters: target.pathParameters,
-                queryParameters: target.queryParameters,
-              );
-            },
-          ),
-        )
-        .toList();
+    final wrapChildren =
+        dataList
+            .map(
+              (e) => ActionChip(
+                label: Text(e.$1),
+                labelStyle: Theme.of(context).textTheme.labelSmall,
+                shape: LinearBorder.start(),
+                onPressed: () async {
+                  final target = e.$2.parseUrlToRoute();
+                  if (target == null) {
+                    debug('invalid url : ${e.$2}');
+                    return;
+                  }
+                  await context.pushNamed(
+                    target.screenPath,
+                    pathParameters: target.pathParameters,
+                    queryParameters: target.queryParameters,
+                  );
+                },
+              ),
+            )
+            .toList();
 
     return [
       ListTile(
@@ -121,14 +114,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
           padding: edgeInsetsL8R8,
           child: Row(
             children: [
-              Expanded(
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  runAlignment: WrapAlignment.end,
-                  children: wrapChildren,
-                ),
-              ),
+              Expanded(child: Wrap(spacing: 8, runSpacing: 8, runAlignment: WrapAlignment.end, children: wrapChildren)),
             ],
           ),
         ),
@@ -139,40 +125,32 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
   Widget build(BuildContext context) {
     final settingsStream = getIt.get<SettingsRepository>().settings;
     final forumInfoList = [
-      (
-        Icons.forum_outlined,
-        widget.forum.threadCount,
-      ),
-      (
-        Icons.chat_outlined,
-        widget.forum.replyCount,
-      ),
-      (
-        Icons.mark_chat_unread_outlined,
-        widget.forum.threadTodayCount ?? 0,
-      ),
+      (Icons.forum_outlined, widget.forum.threadCount),
+      (Icons.chat_outlined, widget.forum.replyCount),
+      (Icons.mark_chat_unread_outlined, widget.forum.threadTodayCount ?? 0),
     ];
 
-    final forumInfoWidgets = forumInfoList
-        .map(
-          (e) => Expanded(
-            child: Row(
-              children: [
-                Icon(e.$1, size: smallIconSize),
-                sizedBoxW4H4,
-                Flexible(
-                  child: Text(
-                    '${e.$2}',
-                    style: const TextStyle(fontSize: smallTextSize),
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                  ),
+    final forumInfoWidgets =
+        forumInfoList
+            .map(
+              (e) => Expanded(
+                child: Row(
+                  children: [
+                    Icon(e.$1, size: smallIconSize),
+                    sizedBoxW4H4,
+                    Flexible(
+                      child: Text(
+                        '${e.$2}',
+                        style: const TextStyle(fontSize: smallTextSize),
+                        maxLines: 1,
+                        overflow: TextOverflow.clip,
+                      ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
-          ),
-        )
-        .toList();
+              ),
+            )
+            .toList();
 
     return Card(
       margin: EdgeInsets.zero,
@@ -181,35 +159,22 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
         onTap: () async {
           await context.pushNamed(
             ScreenPaths.forum,
-            pathParameters: <String, String>{
-              'fid': '${widget.forum.forumID}',
-            },
-            queryParameters: {
-              'appBarTitle': widget.forum.name,
-            },
+            pathParameters: <String, String>{'fid': '${widget.forum.forumID}'},
+            queryParameters: {'appBarTitle': widget.forum.name},
           );
         },
         child: Column(
           children: [
             ListTile(
-              leading: SizedBox(
-                width: 100,
-                height: 50,
-                child: NetworkIndicatorImage(widget.forum.iconUrl),
-              ),
-              title: Text(
-                widget.forum.name,
-                style: Theme.of(context).textTheme.titleMedium,
-                maxLines: 2,
-              ),
-              subtitle: widget.forum.latestThreadTime != null
-                  ? Text(
-                      widget.forum.latestThreadTime!.elapsedTillNow(context),
-                      style: TextStyle(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
-                    )
-                  : null,
+              leading: SizedBox(width: 100, height: 50, child: NetworkIndicatorImage(widget.forum.iconUrl)),
+              title: Text(widget.forum.name, style: Theme.of(context).textTheme.titleMedium, maxLines: 2),
+              subtitle:
+                  widget.forum.latestThreadTime != null
+                      ? Text(
+                        widget.forum.latestThreadTime!.elapsedTillNow(context),
+                        style: TextStyle(color: Theme.of(context).colorScheme.secondary),
+                      )
+                      : null,
             ),
             StreamBuilder(
               stream: settingsStream,
@@ -225,12 +190,7 @@ final class _ForumCardState extends State<ForumCard> with LoggerMixin {
             ),
             Padding(
               padding: edgeInsetsL16R16B12,
-              child: Column(
-                children: [
-                  sizedBoxW12H12,
-                  Row(children: forumInfoWidgets),
-                ],
-              ),
+              child: Column(children: [sizedBoxW12H12, Row(children: forumInfoWidgets)]),
             ),
           ],
         ),

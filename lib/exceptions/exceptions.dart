@@ -35,10 +35,7 @@ Either<L, void> rightVoid<L>() => Right<L, void>(null);
 /// Functional programming operators on [AsyncEither] with generic type [T].
 extension FPFutureExt<T> on AsyncEither<T> {
   /// Await and handle result.
-  Future<void> handle(
-    FutureOr<void> Function(AppException e) onLeft,
-    FutureOr<void> Function(T v) onRight,
-  ) async {
+  Future<void> handle(FutureOr<void> Function(AppException e) onLeft, FutureOr<void> Function(T v) onRight) async {
     switch (await run()) {
       case Left(:final value):
         onLeft(value);
@@ -53,28 +50,21 @@ extension FPHttpExt on AsyncEither<Response<dynamic>> {
   /// * Return error if any.
   /// * Return `HttpRequestFailedException` when status code is not 200.
   /// * Return result called on [onOk] when ok.
-  AsyncEither<T> mapHttp<T>(T Function(Response<dynamic> resp) onOk) =>
-      AsyncEither(
-        () async => switch (await run()) {
-          Left(:final value) => left(value),
-          Right(:final value) when value.statusCode != HttpStatus.ok => left(
-            HttpRequestFailedException(value.statusCode),
-          ),
-          Right(:final value) => right(onOk(value)),
-        },
-      );
+  AsyncEither<T> mapHttp<T>(T Function(Response<dynamic> resp) onOk) => AsyncEither(
+    () async => switch (await run()) {
+      Left(:final value) => left(value),
+      Right(:final value) when value.statusCode != HttpStatus.ok => left(HttpRequestFailedException(value.statusCode)),
+      Right(:final value) => right(onOk(value)),
+    },
+  );
 
   /// * Return error if any.
   /// * Return `HttpRequestFailedException` when status code is not 200.
   /// * Return result called on [onOk] when ok.
-  AsyncEither<T> andThenHttp<T>(
-    AsyncEither<T> Function(Response<dynamic> resp) onOk,
-  ) => AsyncEither(
+  AsyncEither<T> andThenHttp<T>(AsyncEither<T> Function(Response<dynamic> resp) onOk) => AsyncEither(
     () async => switch (await run()) {
       Left(:final value) => left(value),
-      Right(:final value) when value.statusCode != HttpStatus.ok => left(
-        HttpRequestFailedException(value.statusCode),
-      ),
+      Right(:final value) when value.statusCode != HttpStatus.ok => left(HttpRequestFailedException(value.statusCode)),
       Right(:final value) => await onOk(value).run(),
     },
   );
@@ -96,8 +86,7 @@ sealed class AppException with AppExceptionMappable implements Exception {
 ///
 /// Usually the response status code is not 200.
 @MappableClass()
-final class HttpRequestFailedException extends AppException
-    with HttpRequestFailedExceptionMappable {
+final class HttpRequestFailedException extends AppException with HttpRequestFailedExceptionMappable {
   /// Constructor.
   HttpRequestFailedException(this.statusCode);
 
@@ -113,11 +102,9 @@ final class HttpRequestFailedException extends AppException
 /// Till now we manually set the status code to 999 to indicate this error, but
 /// it should be refactored to a more proper way.
 @MappableClass()
-final class HttpHandshakeFailedException extends AppException
-    with HttpHandshakeFailedExceptionMappable {
+final class HttpHandshakeFailedException extends AppException with HttpHandshakeFailedExceptionMappable {
   /// Constructor.
-  HttpHandshakeFailedException(String message, {this.statusCode, this.headers})
-    : super(message: message);
+  HttpHandshakeFailedException(String message, {this.statusCode, this.headers}) : super(message: message);
 
   /// Optional status code.
   final int? statusCode;
@@ -128,30 +115,25 @@ final class HttpHandshakeFailedException extends AppException
 
 /// The form hash used in login progress is not found.
 @MappableClass()
-final class LoginFormHashNotFoundException extends AppException
-    with LoginFormHashNotFoundExceptionMappable {}
+final class LoginFormHashNotFoundException extends AppException with LoginFormHashNotFoundExceptionMappable {}
 
 /// Found form hash, but it's not in the expect format.
 @MappableClass()
-final class LoginInvalidFormHashException extends AppException
-    with LoginInvalidFormHashExceptionMappable {}
+final class LoginInvalidFormHashException extends AppException with LoginInvalidFormHashExceptionMappable {}
 
 /// The login result message of login progress is not found.
 ///
 /// Indicating that we do not know whether we logged in successful or not.
 @MappableClass()
-final class LoginMessageNotFoundException extends AppException
-    with LoginMessageNotFoundExceptionMappable {}
+final class LoginMessageNotFoundException extends AppException with LoginMessageNotFoundExceptionMappable {}
 
 /// The captcha user texted is incorrect.
 @MappableClass()
-final class LoginIncorrectCaptchaException extends AppException
-    with LoginIncorrectCaptchaExceptionMappable {}
+final class LoginIncorrectCaptchaException extends AppException with LoginIncorrectCaptchaExceptionMappable {}
 
 /// Incorrect password or account.
 @MappableClass()
-final class LoginInvalidCredentialException extends AppException
-    with LoginInvalidCredentialExceptionMappable {}
+final class LoginInvalidCredentialException extends AppException with LoginInvalidCredentialExceptionMappable {}
 
 /// Security question or its answer is incorrect.
 @MappableClass()
@@ -162,21 +144,18 @@ final class LoginIncorrectSecurityQuestionException extends AppException
 ///
 /// Maybe locked in 20 minutes.
 @MappableClass()
-final class LoginAttemptLimitException extends AppException
-    with LoginAttemptLimitExceptionMappable {}
+final class LoginAttemptLimitException extends AppException with LoginAttemptLimitExceptionMappable {}
 
 /// User info not found when try to login after login seems success.
 ///
 /// Now we should update the logged user info but this exception means we can
 /// not found the logged user info.
 @MappableClass()
-final class LoginUserInfoNotFoundException extends AppException
-    with LoginUserInfoNotFoundExceptionMappable {}
+final class LoginUserInfoNotFoundException extends AppException with LoginUserInfoNotFoundExceptionMappable {}
 
 /// Some other exception that not recognized.
 @MappableClass()
-final class LoginOtherErrorException extends AppException
-    with LoginOtherErrorExceptionMappable {
+final class LoginOtherErrorException extends AppException with LoginOtherErrorExceptionMappable {
   /// Constructor.
   LoginOtherErrorException(String message) : super(message: message);
 }
@@ -185,35 +164,29 @@ final class LoginOtherErrorException extends AppException
 ///
 /// This means either an unexpected html doc change, or not authorized.
 @MappableClass()
-final class LoginUserInfoIncompleteException extends AppException
-    with LoginUserInfoIncompleteExceptionMappable {}
+final class LoginUserInfoIncompleteException extends AppException with LoginUserInfoIncompleteExceptionMappable {}
 
 /// The form hash used to logout is not found.
 @MappableClass()
-final class LogoutFormHashNotFoundException extends AppException
-    with LogoutFormHashNotFoundExceptionMappable {}
+final class LogoutFormHashNotFoundException extends AppException with LogoutFormHashNotFoundExceptionMappable {}
 
 /// Failed to logout.
 ///
 /// Nearly impossible to happen.
 @MappableClass()
-final class LogoutFailedException extends AppException
-    with LogoutFailedExceptionMappable {}
+final class LogoutFailedException extends AppException with LogoutFailedExceptionMappable {}
 
 /// Document contains chat data not found.
 @MappableClass()
-final class ChatDataDocumentNotFoundException extends AppException
-    with ChatDataDocumentNotFoundExceptionMappable {}
+final class ChatDataDocumentNotFoundException extends AppException with ChatDataDocumentNotFoundExceptionMappable {}
 
 /// Failed to load emoji
 @MappableClass()
-final class EmojiLoadFailedException extends AppException
-    with EmojiLoadFailedExceptionMappable {}
+final class EmojiLoadFailedException extends AppException with EmojiLoadFailedExceptionMappable {}
 
 /// Failed to upload edit result.
 @MappableClass()
-final class PostEditFailedToUploadResult extends AppException
-    with PostEditFailedToUploadResultMappable {
+final class PostEditFailedToUploadResult extends AppException with PostEditFailedToUploadResultMappable {
   /// Constructor.
   PostEditFailedToUploadResult(this.errorText);
 
@@ -229,25 +202,21 @@ final class PurchaseInfoInvalidParameterCountException extends AppException
 
 /// Confirm info is incomplete.
 @MappableClass()
-final class PurchaseInfoIncompleteException extends AppException
-    with PurchaseInfoIncompleteExceptionMappable {}
+final class PurchaseInfoIncompleteException extends AppException with PurchaseInfoIncompleteExceptionMappable {}
 
 /// Some info that need to display in the confirm process is invalid.
 ///
 /// Maybe invalid username or uid.
 @MappableClass()
-final class PurchaseInfoInvalidNoticeException extends AppException
-    with PurchaseInfoInvalidNoticeExceptionMappable {}
+final class PurchaseInfoInvalidNoticeException extends AppException with PurchaseInfoInvalidNoticeExceptionMappable {}
 
 /// Failed to do the purchase action.
 @MappableClass()
-final class PurchaseActionFailedException extends AppException
-    with PurchaseActionFailedExceptionMappable {}
+final class PurchaseActionFailedException extends AppException with PurchaseActionFailedExceptionMappable {}
 
 /// Basic exception class of rate.
 @MappableClass()
-class RateFailedException extends AppException
-    with RateFailedExceptionMappable {
+class RateFailedException extends AppException with RateFailedExceptionMappable {
   /// Constructor.
   RateFailedException(this.reason);
 
@@ -257,16 +226,14 @@ class RateFailedException extends AppException
 
 /// Result of fetching rate window info.
 @MappableClass()
-sealed class RateInfoException extends AppException
-    with RateInfoExceptionMappable {
+sealed class RateInfoException extends AppException with RateInfoExceptionMappable {
   RateInfoException();
 }
 
 /// Html info content not found in response.
 /// This is not the "404 NOT FOUND".
 @MappableClass()
-final class RateInfoNotFound extends AppException
-    with RateInfoNotFoundMappable {
+final class RateInfoNotFound extends AppException with RateInfoNotFoundMappable {
   /// Constructor.
   RateInfoNotFound();
 }
@@ -274,16 +241,14 @@ final class RateInfoNotFound extends AppException
 /// The html body should contains the rate info is missing
 /// in the response.
 @MappableClass()
-final class RateInfoHtmlBodyNotFound extends AppException
-    with RateInfoHtmlBodyNotFoundMappable {
+final class RateInfoHtmlBodyNotFound extends AppException with RateInfoHtmlBodyNotFoundMappable {
   /// Constructor.
   RateInfoHtmlBodyNotFound();
 }
 
 /// Rate info html body is missing.
 @MappableClass()
-final class RateInfoDivCNodeNotFound extends AppException
-    with RateInfoDivCNodeNotFoundMappable {
+final class RateInfoDivCNodeNotFound extends AppException with RateInfoDivCNodeNotFoundMappable {
   /// Constructor.
   RateInfoDivCNodeNotFound();
 }
@@ -293,16 +258,14 @@ final class RateInfoDivCNodeNotFound extends AppException
 /// This is a fallback exception after [RateInfoWithErrorException].
 /// Because we encountered an error and no error text found.
 @MappableClass()
-final class RateInfoInvalidDivCNode extends AppException
-    with RateInfoInvalidDivCNodeMappable {
+final class RateInfoInvalidDivCNode extends AppException with RateInfoInvalidDivCNodeMappable {
   /// Constructor.
   RateInfoInvalidDivCNode();
 }
 
 /// Rate failed but luckily we found the error text in response.
 @MappableClass()
-final class RateInfoWithErrorException extends AppException
-    with RateInfoWithErrorExceptionMappable {
+final class RateInfoWithErrorException extends AppException with RateInfoWithErrorExceptionMappable {
   /// Constructor.
   RateInfoWithErrorException(String message) : super(message: message);
 }
@@ -311,24 +274,21 @@ final class RateInfoWithErrorException extends AppException
 ///
 /// Used in profile feature.
 @MappableClass()
-final class ProfileNeedLoginException extends AppException
-    with ProfileNeedLoginExceptionMappable {
+final class ProfileNeedLoginException extends AppException with ProfileNeedLoginExceptionMappable {
   /// Constructor.
   ProfileNeedLoginException();
 }
 
 /// Status field not found in profile response.
 @MappableClass()
-final class ProfileStatusNotFoundException extends AppException
-    with ProfileStatusNotFoundExceptionMappable {
+final class ProfileStatusNotFoundException extends AppException with ProfileStatusNotFoundExceptionMappable {
   /// Constructor.
   ProfileStatusNotFoundException();
 }
 
 /// Status field is unrecognized in profile response.
 @MappableClass()
-final class ProfileStatusUnknownException extends AppException
-    with ProfileStatusUnknownExceptionMappable {
+final class ProfileStatusUnknownException extends AppException with ProfileStatusUnknownExceptionMappable {
   /// Constructor.
   ProfileStatusUnknownException(this.status);
 
@@ -343,18 +303,15 @@ class ReplyToPostFetchParameterFailedException extends AppException
 
 /// Reply to a post, but no successful result found in response.
 @MappableClass()
-class ReplyToPostResultFailedException extends AppException
-    with ReplyToPostResultFailedExceptionMappable {}
+class ReplyToPostResultFailedException extends AppException with ReplyToPostResultFailedExceptionMappable {}
 
 /// Reply to thread, but no successful result found in response.
 @MappableClass()
-class ReplyToThreadResultFailedException extends AppException
-    with ReplyToThreadResultFailedExceptionMappable {}
+class ReplyToThreadResultFailedException extends AppException with ReplyToThreadResultFailedExceptionMappable {}
 
 /// Reply personal message, but failed in response.
 @MappableClass()
-class ReplyPersonalMessageFailedException extends AppException
-    with ReplyPersonalMessageFailedExceptionMappable {
+class ReplyPersonalMessageFailedException extends AppException with ReplyPersonalMessageFailedExceptionMappable {
   /// Constructor.
   ReplyPersonalMessageFailedException(String message) : super(message: message);
 }
@@ -363,8 +320,7 @@ class ReplyPersonalMessageFailedException extends AppException
 ///
 /// Server returned unexpected status code.
 @MappableClass()
-final class ThreadPublishFailedException extends AppException
-    with ThreadPublishFailedExceptionMappable {
+final class ThreadPublishFailedException extends AppException with ThreadPublishFailedExceptionMappable {
   /// Constructor.
   ThreadPublishFailedException(this.code, {super.message});
 
@@ -380,20 +336,17 @@ final class ThreadPublishLocationNotFoundException extends AppException
 
 /// User not found when trying to operate on that user's notification.
 @MappableClass()
-final class NotificationUserNotFound extends AppException
-    with NotificationUserNotFoundMappable {}
+final class NotificationUserNotFound extends AppException with NotificationUserNotFoundMappable {}
 
 /// Notification not found in bloc.
 @MappableClass()
-final class NotificationNotFound extends AppException
-    with NotificationNotFoundMappable {}
+final class NotificationNotFound extends AppException with NotificationNotFoundMappable {}
 
 /// Cookie not found in storage when doing auto checkin for user [userInfo].
 ///
 /// Means a checkin failure.
 @MappableClass()
-final class AutoCheckinCookieNotFound extends AppException
-    with AutoCheckinCookieNotFoundMappable {
+final class AutoCheckinCookieNotFound extends AppException with AutoCheckinCookieNotFoundMappable {
   /// Constructor.
   AutoCheckinCookieNotFound(this.userInfo);
 
@@ -405,24 +358,21 @@ final class AutoCheckinCookieNotFound extends AppException
 ///
 /// The response data can not be parsed as known data.
 @MappableClass()
-final class ImageUploadInvalidResponse extends AppException
-    with ImageUploadInvalidResponseMappable {}
+final class ImageUploadInvalidResponse extends AppException with ImageUploadInvalidResponseMappable {}
 
 /// Failed to upload image.
 ///
 /// Unlike [ImageUploadInvalidResponse], the response data is successfully
 /// parsed to known format, but the message carried indicates an error.
 @MappableClass()
-final class ImageUploadFailed extends AppException
-    with ImageUploadFailedMappable {
+final class ImageUploadFailed extends AppException with ImageUploadFailedMappable {
   /// Constructor.
   ImageUploadFailed(String message) : super(message: message);
 }
 
 /// Failed to parse packet detail table
 @MappableClass()
-final class PacketDetailParseFailed extends AppException
-    with PacketDetailParseFailedMappable {
+final class PacketDetailParseFailed extends AppException with PacketDetailParseFailedMappable {
   // Super not const.
   // ignore: prefer_const_constructor_declarations
   /// Constructor.
@@ -434,8 +384,7 @@ final class PacketDetailParseFailed extends AppException
 
 /// Server responded an error, likely the client side sent an invalid request.
 @MappableClass()
-final class ServerRespFailure extends AppException
-    with ServerRespFailureMappable {
+final class ServerRespFailure extends AppException with ServerRespFailureMappable {
   // Super not const.
   // ignore: prefer_const_constructor_declarations
   /// Constructor.

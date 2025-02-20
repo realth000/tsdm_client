@@ -44,10 +44,7 @@ Future<bool?> showQuestionDialog({
   TextSpan? richMessage,
   bool dangerous = false,
 }) async {
-  assert(
-    message != null || richMessage != null,
-    'MUST provide message or richMessage',
-  );
+  assert(message != null || richMessage != null, 'MUST provide message or richMessage');
 
   return showDialog<bool?>(
     context: context,
@@ -55,8 +52,7 @@ Future<bool?> showQuestionDialog({
       return AlertDialog(
         scrollable: true,
         title: Text(title),
-        content:
-            message != null ? SelectableText(message) : Text.rich(richMessage!),
+        content: message != null ? SelectableText(message) : Text.rich(richMessage!),
         actions: [
           TextButton(
             child: Text(context.t.general.cancel),
@@ -67,15 +63,10 @@ Future<bool?> showQuestionDialog({
           TextButton(
             child: Text(
               context.t.general.ok,
-              style: dangerous
-                  ? TextStyle(color: Theme.of(context).colorScheme.error)
-                  : null,
+              style: dangerous ? TextStyle(color: Theme.of(context).colorScheme.error) : null,
             ),
             onPressed: () {
-              Navigator.pop(
-                context,
-                true,
-              );
+              Navigator.pop(context, true);
             },
           ),
         ],
@@ -98,11 +89,7 @@ Future<void> showModalWorkDialog({
     context: context,
     builder: (context) {
       dialogContext = context;
-      return AlertDialog(
-        scrollable: true,
-        title: Text(context.t.general.pleaseWait),
-        content: SelectableText(message),
-      );
+      return AlertDialog(scrollable: true, title: Text(context.t.general.pleaseWait), content: SelectableText(message));
     },
   ).then((_) {
     dialogContext = null;

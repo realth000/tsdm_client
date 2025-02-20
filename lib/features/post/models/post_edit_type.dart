@@ -19,6 +19,5 @@ enum PostEditType {
   bool get isEditingPost => this == editPost;
 
   /// Check whether the edit type is writing new thread.
-  bool get isEditingDraft =>
-      this == PostEditType.newThread || this == PostEditType.editDraft;
+  bool get isEditingDraft => this == PostEditType.newThread || this == PostEditType.editDraft;
 }

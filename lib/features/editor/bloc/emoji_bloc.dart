@@ -18,8 +18,8 @@ typedef _Emit = Emitter<EmojiState>;
 final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
   /// Constructor.
   EmojiBloc({required EditorRepository editRepository})
-      : _editorRepository = editRepository,
-        super(const EmojiState(status: EmojiStatus.initial)) {
+    : _editorRepository = editRepository,
+      super(const EmojiState(status: EmojiStatus.initial)) {
     on<EmojiEvent>(
       (event, emit) => switch (event) {
         EmojiFetchFromServerEvent() => _onFetchFromServer(emit),
@@ -38,24 +38,14 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
         handle(e);
         emit(state.copyWith(status: EmojiStatus.failure));
       },
-      (_) => emit(
-        state.copyWith(
-          status: EmojiStatus.success,
-          emojiGroupList: _editorRepository.emojiGroupList,
-        ),
-      ),
+      (_) => emit(state.copyWith(status: EmojiStatus.success, emojiGroupList: _editorRepository.emojiGroupList)),
     ).run();
   }
 
   Future<void> _onFetchFromAsset(_Emit emit) async {
     emit(state.copyWith(status: EmojiStatus.loading));
     await _editorRepository.loadEmojiFromAsset().run();
-    emit(
-      state.copyWith(
-        status: EmojiStatus.success,
-        emojiGroupList: _editorRepository.emojiGroupList,
-      ),
-    );
+    emit(state.copyWith(status: EmojiStatus.success, emojiGroupList: _editorRepository.emojiGroupList));
   }
 
   Future<void> _onFetchFromServer(_Emit emit) async {
@@ -65,12 +55,7 @@ final class EmojiBloc extends Bloc<EmojiEvent, EmojiState> with LoggerMixin {
       if (!result) {
         emit(state.copyWith(status: EmojiStatus.failure));
       } else {
-        emit(
-          state.copyWith(
-            status: EmojiStatus.success,
-            emojiGroupList: _editorRepository.emojiGroupList,
-          ),
-        );
+        emit(state.copyWith(status: EmojiStatus.success, emojiGroupList: _editorRepository.emojiGroupList));
       }
       return;
     } on HttpRequestFailedException catch (e) {

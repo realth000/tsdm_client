@@ -9,16 +9,14 @@ sealed class NotificationInfoState with NotificationInfoStateMappable {
 
 /// Fetching notification.
 @MappableClass()
-final class NotificationInfoStateLoading extends NotificationInfoState
-    with NotificationInfoStateLoadingMappable {
+final class NotificationInfoStateLoading extends NotificationInfoState with NotificationInfoStateLoadingMappable {
   /// Constructor.
   const NotificationInfoStateLoading();
 }
 
 /// Fetched notice successfully.
 @MappableClass()
-final class NotificationInfoStateSuccess extends NotificationInfoState
-    with NotificationInfoStateSuccessMappable {
+final class NotificationInfoStateSuccess extends NotificationInfoState with NotificationInfoStateSuccessMappable {
   /// Constructor.
   const NotificationInfoStateSuccess(this.uid, this.info);
 
@@ -31,8 +29,7 @@ final class NotificationInfoStateSuccess extends NotificationInfoState
 
 /// Failed to fetch notification.
 @MappableClass()
-final class NotificationInfoStateFailure extends NotificationInfoState
-    with NotificationInfoStateFailureMappable {
+final class NotificationInfoStateFailure extends NotificationInfoState with NotificationInfoStateFailureMappable {
   /// Constructor.
   const NotificationInfoStateFailure();
 }

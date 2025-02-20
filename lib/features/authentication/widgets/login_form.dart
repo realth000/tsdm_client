@@ -12,26 +12,12 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 
 // TODO: Fetch login questions dynamically from web server.
-final _loginQuestions = [
-  '无安全问题',
-  '母亲的名字',
-  '爷爷的名字',
-  '父亲出生的城市',
-  '您其中一位老师的名字',
-  '您个人计算机的型号',
-  '您最喜欢的餐馆名称',
-  '驾驶执照的最后四位数字',
-];
+final _loginQuestions = ['无安全问题', '母亲的名字', '爷爷的名字', '父亲出生的城市', '您其中一位老师的名字', '您个人计算机的型号', '您最喜欢的餐馆名称', '驾驶执照的最后四位数字'];
 
 /// Form for user to fill login info.
 class LoginForm extends StatefulWidget {
   /// Constructor.
-  const LoginForm({
-    this.redirectPath,
-    this.redirectPathParameters,
-    this.redirectExtra,
-    super.key,
-  });
+  const LoginForm({this.redirectPath, this.redirectPathParameters, this.redirectExtra, super.key});
 
   /// The url path to redirect back once login succeed.
   final String? redirectPath;
@@ -62,11 +48,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
 
   late final FocusNode loginFieldFocus;
 
-  Future<void> _login(
-    BuildContext context,
-    LoginField loginField,
-    AuthenticationState state,
-  ) async {
+  Future<void> _login(BuildContext context, LoginField loginField, AuthenticationState state) async {
     if (formKey.currentState == null || !(formKey.currentState!).validate()) {
       return;
     }
@@ -77,17 +59,13 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
       password: passwordController.text,
       // formHash: state.loginHash!.formHash,
       tsdmVerify: verifyCodeController.text,
-      securityQuestion: _question == _loginQuestions.first
-          ? null
-          : SecurityQuestion(
-              questionId: '${_loginQuestions.indexOf(_question)}',
-              answer: answerController.text,
-            ),
+      securityQuestion:
+          _question == _loginQuestions.first
+              ? null
+              : SecurityQuestion(questionId: '${_loginQuestions.indexOf(_question)}', answer: answerController.text),
     );
 
-    context
-        .read<AuthenticationBloc>()
-        .add(AuthenticationLoginRequested(credential));
+    context.read<AuthenticationBloc>().add(AuthenticationLoginRequested(credential));
   }
 
   Widget _buildForm(BuildContext context, AuthenticationState state) {
@@ -99,12 +77,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
       key: formKey,
       child: ListView(
         children: [
-          Center(
-            child: Text(
-              tr.login,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
+          Center(child: Text(tr.login, style: Theme.of(context).textTheme.titleLarge)),
           sizedBoxW12H12,
           TextFormField(
             autofocus: true,
@@ -133,18 +106,9 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                     loginFieldFocus.requestFocus();
                   },
                   items: [
-                    DropdownMenuItem(
-                      value: LoginField.username,
-                      child: Text(tr.loginField.username),
-                    ),
-                    DropdownMenuItem(
-                      value: LoginField.uid,
-                      child: Text(tr.loginField.uid),
-                    ),
-                    DropdownMenuItem(
-                      value: LoginField.email,
-                      child: Text(tr.loginField.email),
-                    ),
+                    DropdownMenuItem(value: LoginField.username, child: Text(tr.loginField.username)),
+                    DropdownMenuItem(value: LoginField.uid, child: Text(tr.loginField.uid)),
+                    DropdownMenuItem(value: LoginField.email, child: Text(tr.loginField.email)),
                   ],
                 ),
               ),
@@ -161,9 +125,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                 canRequestFocus: false,
                 descendantsAreFocusable: false,
                 child: IconButton(
-                  icon: _showPassword
-                      ? const Icon(Icons.visibility)
-                      : const Icon(Icons.visibility_off),
+                  icon: _showPassword ? const Icon(Icons.visibility) : const Icon(Icons.visibility_off),
                   onPressed: () {
                     setState(() {
                       _showPassword = !_showPassword;
@@ -181,19 +143,13 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               Expanded(
                 child: TextFormField(
                   controller: verifyCodeController,
-                  decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.pin),
-                    labelText: tr.verifyCode,
-                  ),
-                  validator: (v) =>
-                      v!.trim().isNotEmpty ? null : tr.verifyCodeEmpty,
+                  decoration: InputDecoration(prefixIcon: const Icon(Icons.pin), labelText: tr.verifyCode),
+                  validator: (v) => v!.trim().isNotEmpty ? null : tr.verifyCodeEmpty,
                 ),
               ),
               sizedBoxW12H12,
               ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxWidth: 150,
-                ),
+                constraints: const BoxConstraints(maxWidth: 150),
                 child: CaptchaImage(captchaImageController),
               ),
             ],
@@ -216,12 +172,10 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                     _question = newValue;
                   });
                 },
-                items: _loginQuestions.map((value) {
-                  return DropdownMenuItem<String>(
-                    value: value,
-                    child: Text(value),
-                  );
-                }).toList(),
+                items:
+                    _loginQuestions.map((value) {
+                      return DropdownMenuItem<String>(value: value, child: Text(value));
+                    }).toList(),
               ),
             ),
           ),
@@ -233,10 +187,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               labelText: tr.answer,
               enabled: _question != _loginQuestions.first,
             ),
-            validator: (v) =>
-                _question == _loginQuestions.first || v!.trim().isNotEmpty
-                    ? null
-                    : tr.answerEmpty,
+            validator: (v) => _question == _loginQuestions.first || v!.trim().isNotEmpty ? null : tr.answerEmpty,
           ),
           sizedBoxW12H12,
           DebounceFilledButton(
@@ -247,14 +198,8 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           sizedBoxW12H12,
           Center(
             child: TextButton(
-              child: Text(
-                tr.signUpHint,
-                style: const TextStyle(decoration: TextDecoration.underline),
-              ),
-              onPressed: () async => context.dispatchAsUrl(
-                signUpPage,
-                external: true,
-              ),
+              child: Text(tr.signUpHint, style: const TextStyle(decoration: TextDecoration.underline)),
+              onPressed: () async => context.dispatchAsUrl(signUpPage, external: true),
             ),
           ),
         ],
@@ -309,9 +254,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           verifyCodeController.clear();
         }
       },
-      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(
-        builder: _buildForm,
-      ),
+      child: BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: _buildForm),
     );
   }
 }

@@ -14,12 +14,10 @@ class SettingsThreadCardAppearancePage extends StatefulWidget {
   const SettingsThreadCardAppearancePage({super.key});
 
   @override
-  State<SettingsThreadCardAppearancePage> createState() =>
-      _SettingsThreadCardAppearancePageState();
+  State<SettingsThreadCardAppearancePage> createState() => _SettingsThreadCardAppearancePageState();
 }
 
-class _SettingsThreadCardAppearancePageState
-    extends State<SettingsThreadCardAppearancePage> {
+class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardAppearancePage> {
   Widget _buildExampleRow(BuildContext context) {
     final tr = context.t.settingsPage.appearanceSection.threadCard.example;
     final someTime = DateTime.fromMillisecondsSinceEpoch(int.parse(tr.time));
@@ -44,8 +42,7 @@ class _SettingsThreadCardAppearancePageState
                   name: tr.lastReplyAuthor,
                   url: '', // Not used
                 ),
-                latestReplyTime:
-                    DateTime.now().add(const Duration(minutes: -1)),
+                latestReplyTime: DateTime.now().add(const Duration(minutes: -1)),
                 iconUrl: '',
                 // Not used
                 threadType: ThreadType(
@@ -57,10 +54,7 @@ class _SettingsThreadCardAppearancePageState
                 price: null,
                 privilege: 0,
                 css: null,
-                stateSet: {
-                  ThreadStateModel.pinnedGlobally,
-                  ThreadStateModel.digested,
-                },
+                stateSet: {ThreadStateModel.pinnedGlobally, ThreadStateModel.digested},
                 isRecentThread: true,
               ),
               disableTap: true,
@@ -77,9 +71,7 @@ class _SettingsThreadCardAppearancePageState
     final settings = context.watch<SettingsBloc>().state.settingsMap;
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text(tr.title),
-      ),
+      appBar: AppBar(title: Text(tr.title)),
       body: Column(
         children: [
           _buildExampleRow(context),
@@ -91,51 +83,41 @@ class _SettingsThreadCardAppearancePageState
                 SectionSwitchListTile(
                   title: Text(tr.infoRowAlignCenter),
                   value: settings.threadCardInfoRowAlignCenter,
-                  onChanged: (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(
-                          SettingsKeys.threadCardInfoRowAlignCenter,
-                          v,
-                        ),
+                  onChanged:
+                      (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(SettingsKeys.threadCardInfoRowAlignCenter, v),
                       ),
                 ),
                 SectionSwitchListTile(
                   title: Text(tr.showLastReplyAuthor),
                   value: settings.threadCardShowLastReplyAuthor,
-                  onChanged: (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(
-                          SettingsKeys.threadCardShowLastReplyAuthor,
-                          v,
-                        ),
+                  onChanged:
+                      (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(SettingsKeys.threadCardShowLastReplyAuthor, v),
                       ),
                 ),
                 SectionSwitchListTile(
                   title: Text(tr.highlightRecentThread),
                   value: settings.threadCardHighlightRecentThread,
-                  onChanged: (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(
-                          SettingsKeys.threadCardHighlightRecentThread,
-                          v,
-                        ),
+                  onChanged:
+                      (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(SettingsKeys.threadCardHighlightRecentThread, v),
                       ),
                 ),
                 SectionSwitchListTile(
                   title: Text(tr.highlightAuthorName),
                   value: settings.threadCardHighlightAuthorName,
-                  onChanged: (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(
-                          SettingsKeys.threadCardHighlightAuthorName,
-                          v,
-                        ),
+                  onChanged:
+                      (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(SettingsKeys.threadCardHighlightAuthorName, v),
                       ),
                 ),
                 SectionSwitchListTile(
                   title: Text(tr.highlightInfoRow),
                   value: settings.threadCardHighlightInfoRow,
-                  onChanged: (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(
-                          SettingsKeys.threadCardHighlightInfoRow,
-                          v,
-                        ),
+                  onChanged:
+                      (v) => context.read<SettingsBloc>().add(
+                        SettingsValueChanged(SettingsKeys.threadCardHighlightInfoRow, v),
                       ),
                 ),
               ],

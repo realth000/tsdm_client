@@ -10,15 +10,13 @@ sealed class HomepageEvent with HomepageEventMappable {
 ///
 /// This will load from cache if available.
 @MappableClass()
-final class HomepageLoadRequested extends HomepageEvent
-    with HomepageLoadRequestedMappable {}
+final class HomepageLoadRequested extends HomepageEvent with HomepageLoadRequestedMappable {}
 
 /// User requests to refresh homepage.
 ///
 /// Directly load homepage from server.
 @MappableClass()
-final class HomepageRefreshRequested extends HomepageEvent
-    with HomepageRefreshRequestedMappable {
+final class HomepageRefreshRequested extends HomepageEvent with HomepageRefreshRequestedMappable {
   /// Constructor.
   HomepageRefreshRequested({this.userLoginInfo});
 
@@ -28,15 +26,13 @@ final class HomepageRefreshRequested extends HomepageEvent
 
 /// User requests to login.
 @MappableClass()
-final class HomepageLoginRequested extends HomepageEvent
-    with HomepageLoginRequestedMappable {}
+final class HomepageLoginRequested extends HomepageEvent with HomepageLoginRequestedMappable {}
 
 /// Current logged user changed.
 ///
 /// This is a passive event.
 @MappableClass()
-final class HomepageAuthChanged extends HomepageEvent
-    with HomepageAuthChangedMappable {
+final class HomepageAuthChanged extends HomepageEvent with HomepageAuthChangedMappable {
   /// Constructor.
   const HomepageAuthChanged({required this.prev, required this.curr}) : super();
 
@@ -49,16 +45,14 @@ final class HomepageAuthChanged extends HomepageEvent
 
 /// Pause the swiper scrolling.
 @MappableClass()
-final class HomepagePauseSwiper extends HomepageEvent
-    with HomepagePauseSwiperMappable {
+final class HomepagePauseSwiper extends HomepageEvent with HomepagePauseSwiperMappable {
   /// Constructor.
   const HomepagePauseSwiper();
 }
 
 /// Resume the swiper scrolling.
 @MappableClass()
-final class HomepageResumeSwiper extends HomepageEvent
-    with HomepageResumeSwiperMappable {
+final class HomepageResumeSwiper extends HomepageEvent with HomepageResumeSwiperMappable {
   /// Constructor.
   const HomepageResumeSwiper();
 }

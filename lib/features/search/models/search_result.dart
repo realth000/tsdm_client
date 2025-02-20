@@ -4,12 +4,7 @@ part of 'models.dart';
 @MappableClass()
 class SearchResult with SearchResultMappable {
   /// Constructor.
-  const SearchResult({
-    required this.currentPage,
-    required this.totalPages,
-    required this.count,
-    required this.data,
-  });
+  const SearchResult({required this.currentPage, required this.totalPages, required this.count, required this.data});
 
   /// Current search result page number.
   final int currentPage;

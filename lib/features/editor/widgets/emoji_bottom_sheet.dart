@@ -10,9 +10,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
-Future<String?> showEmojiPicker(
-  BuildContext context,
-) async {
+Future<String?> showEmojiPicker(BuildContext context) async {
   return showCustomBottomSheet<String>(
     title: context.t.bbcodeEditor.emoji.title,
     context: context,
@@ -23,9 +21,7 @@ Future<String?> showEmojiPicker(
 /// Widget to show all available emojis can use in editor.
 class _EmojiBottomSheet extends StatefulWidget {
   /// Constructor.
-  const _EmojiBottomSheet(
-    this.context,
-  );
+  const _EmojiBottomSheet(this.context);
 
   final BuildContext context;
 
@@ -33,8 +29,7 @@ class _EmojiBottomSheet extends StatefulWidget {
   State<_EmojiBottomSheet> createState() => _EmojiBottomSheetState();
 }
 
-class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
-    with SingleTickerProviderStateMixin {
+class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerProviderStateMixin {
   TabController? tabController;
 
   @override
@@ -46,10 +41,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
   /// When calling this function, assume all emoji is available.
   Widget _buildEmojiTab(BuildContext context, EmojiState state) {
     final emojiGroupList = state.emojiGroupList!;
-    tabController ??= TabController(
-      length: emojiGroupList.length,
-      vsync: this,
-    );
+    tabController ??= TabController(length: emojiGroupList.length, vsync: this);
 
     final tabs = emojiGroupList.map((e) => Tab(child: Text(e.name)));
     final tabViews = emojiGroupList.map(
@@ -62,26 +54,17 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
           mainAxisExtent: 50,
         ),
         itemBuilder: (context, index) {
-          final data = RepositoryProvider.of<ImageCacheRepository>(context)
-              .getEmojiCacheSync(
-            e.id,
-            e.emojiList[index].id,
-          );
+          final data = RepositoryProvider.of<ImageCacheRepository>(
+            context,
+          ).getEmojiCacheSync(e.id, e.emojiList[index].id);
           if (data == null) {
-            return Text(
-              '${e.id}_${e.emojiList[index].id}',
-            );
+            return Text('${e.id}_${e.emojiList[index].id}');
           }
           return GestureDetector(
             onTap: () async {
               Navigator.of(context).pop(e.emojiList[index].code);
             },
-            child: ClipOval(
-              child: Image.memory(
-                data,
-                fit: BoxFit.cover,
-              ),
-            ),
+            child: ClipOval(child: Image.memory(data, fit: BoxFit.cover)),
           );
         },
         itemCount: e.emojiList.length,
@@ -90,19 +73,9 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
 
     return Column(
       children: [
-        TabBar(
-          isScrollable: true,
-          tabAlignment: TabAlignment.start,
-          controller: tabController,
-          tabs: tabs.toList(),
-        ),
+        TabBar(isScrollable: true, tabAlignment: TabAlignment.start, controller: tabController, tabs: tabs.toList()),
         sizedBoxW12H12,
-        Expanded(
-          child: TabBarView(
-            controller: tabController,
-            children: tabViews.toList(),
-          ),
-        ),
+        Expanded(child: TabBarView(controller: tabController, children: tabViews.toList())),
       ],
     );
   }
@@ -112,35 +85,27 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet>
     return MultiBlocProvider(
       providers: [
         RepositoryProvider<EditorRepository>(create: (_) => EditorRepository()),
-        BlocProvider(
-          create: (context) => EmojiBloc(
-            editRepository: context.repo(),
-          )..add(EmojiFetchFromAssetEvent()),
-        ),
+        BlocProvider(create: (context) => EmojiBloc(editRepository: context.repo())..add(EmojiFetchFromAssetEvent())),
       ],
       child: BlocBuilder<EmojiBloc, EmojiState>(
         builder: (context, state) {
           final body = switch (state.status) {
             EmojiStatus.initial || EmojiStatus.loading => Center(
-                child: Padding(
-                  padding: edgeInsetsL24R24,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const CircularProgressIndicator(),
-                      sizedBoxW12H12,
-                      Expanded(
-                        child: Text(
-                          context.t.bbcodeEditor.emoji.loadingAssets,
-                        ),
-                      ),
-                    ],
-                  ),
+              child: Padding(
+                padding: edgeInsetsL24R24,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const CircularProgressIndicator(),
+                    sizedBoxW12H12,
+                    Expanded(child: Text(context.t.bbcodeEditor.emoji.loadingAssets)),
+                  ],
                 ),
               ),
+            ),
             EmojiStatus.failure => buildRetryButton(context, () {
-                context.read<EmojiBloc>().add(EmojiFetchFromAssetEvent());
-              }),
+              context.read<EmojiBloc>().add(EmojiFetchFromAssetEvent());
+            }),
             EmojiStatus.success => _buildEmojiTab(context, state),
           };
 

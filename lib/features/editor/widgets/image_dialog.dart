@@ -16,28 +16,15 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Show a picture dialog to add picture into editor.
-Future<BBCodeImageInfo?> showImagePicker(
-  BuildContext context, {
-  String? url,
-  int? width,
-  int? height,
-}) async =>
+Future<BBCodeImageInfo?> showImagePicker(BuildContext context, {String? url, int? width, int? height}) async =>
     showDialog<BBCodeImageInfo>(
       context: context,
-      builder: (context) => _ImageDialog(
-        url: url,
-        width: width,
-        height: height,
-      ),
+      builder: (context) => _ImageDialog(url: url, width: width, height: height),
     );
 
 /// Show a dialog to insert picture and description.
 class _ImageDialog extends StatefulWidget {
-  const _ImageDialog({
-    required this.url,
-    required this.width,
-    required this.height,
-  });
+  const _ImageDialog({required this.url, required this.width, required this.height});
 
   final String? url;
   final int? width;
@@ -47,8 +34,7 @@ class _ImageDialog extends StatefulWidget {
   State<_ImageDialog> createState() => _ImageDialogState();
 }
 
-class _ImageDialogState extends State<_ImageDialog>
-    with LoggerMixin, SingleTickerProviderStateMixin {
+class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTickerProviderStateMixin {
   final urlForm = GlobalKey<FormState>();
   final urlFieldKey = GlobalKey<FormFieldState<String>>();
   final smmsFieldKey = GlobalKey<FormFieldState<String>>();
@@ -102,9 +88,7 @@ class _ImageDialogState extends State<_ImageDialog>
           await context.read<ImageCacheRepository>().updateImageCache(url);
         }
       }
-      final imageData = await getIt
-          .get<ImageCacheProvider>()
-          .getOrMakeCache(ImageCacheGeneralRequest(url));
+      final imageData = await getIt.get<ImageCacheProvider>().getOrMakeCache(ImageCacheGeneralRequest(url));
       final uiImage = await decodeImageFromList(imageData);
       if (!mounted) {
         return;
@@ -129,10 +113,7 @@ class _ImageDialogState extends State<_ImageDialog>
       key: urlFieldKey,
       controller: urlController,
       autofocus: true,
-      decoration: InputDecoration(
-        prefixIcon: const Icon(Icons.image_outlined),
-        labelText: tr.link,
-      ),
+      decoration: InputDecoration(prefixIcon: const Icon(Icons.image_outlined), labelText: tr.link),
       validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
       onChanged: (v) async {
         // Try fill image size from image file.
@@ -306,11 +287,7 @@ class _ImageDialogState extends State<_ImageDialog>
             TextFormField(
               controller: widthController,
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp('[0-9]+'),
-                ),
-              ],
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
               decoration: InputDecoration(
                 prefixIcon: const Icon(Icons.horizontal_distribute_outlined),
                 labelText: tr.width,
@@ -329,15 +306,8 @@ class _ImageDialogState extends State<_ImageDialog>
             TextFormField(
               controller: heightController,
               keyboardType: TextInputType.number,
-              inputFormatters: [
-                FilteringTextInputFormatter.allow(
-                  RegExp('[0-9]+'),
-                ),
-              ],
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.add),
-                labelText: tr.height,
-              ),
+              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
+              decoration: InputDecoration(prefixIcon: const Icon(Icons.add), labelText: tr.height),
               validator: (v) {
                 if (v == null || v.trim().isEmpty) {
                   return tr.errorEmpty;
@@ -364,15 +334,11 @@ class _ImageDialogState extends State<_ImageDialog>
       ),
       actions: [
         if (fillingSize) sizedCircularProgressIndicator,
-        TextButton(
-          child: Text(context.t.general.cancel),
-          onPressed: () => context.pop(),
-        ),
+        TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop()),
         TextButton(
           child: Text(context.t.general.ok),
           onPressed: () async {
-            if (urlForm.currentState == null ||
-                !(urlForm.currentState!).validate()) {
+            if (urlForm.currentState == null || !(urlForm.currentState!).validate()) {
               return;
             }
 
@@ -381,13 +347,7 @@ class _ImageDialogState extends State<_ImageDialog>
             assert(width != 0, 'image width should >= zero');
             assert(height != 0, 'image height should >= zero');
 
-            context.pop(
-              BBCodeImageInfo(
-                urlController.text,
-                width: width,
-                height: height,
-              ),
-            );
+            context.pop(BBCodeImageInfo(urlController.text, width: width, height: height));
           },
         ),
       ],

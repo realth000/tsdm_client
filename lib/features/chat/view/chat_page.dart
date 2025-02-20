@@ -35,11 +35,7 @@ import 'package:tsdm_client/widgets/single_line_text.dart';
 /// uid and we definitely know it when push to this page. And 5 is not needed
 final class ChatPage extends StatefulWidget {
   /// Constructor.
-  const ChatPage({
-    required this.username,
-    required this.uid,
-    super.key,
-  });
+  const ChatPage({required this.username, required this.uid, super.key});
 
   /// Username of user chat with.
   ///
@@ -61,8 +57,7 @@ final class _ChatPageState extends State<ChatPage> {
   Widget _buildContent(BuildContext context, ChatState state) {
     final messages = state.messageList;
     final messageList = EasyRefresh(
-      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
-          .copyWith(physics: physics, scrollbars: false),
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       controller: _refreshController,
       scrollController: _scrollController,
       header: const MaterialHeader(),
@@ -82,9 +77,7 @@ final class _ChatPageState extends State<ChatPage> {
 
     return Column(
       children: [
-        Expanded(
-          child: messageList,
-        ),
+        Expanded(child: messageList),
         sizedBoxW12H12,
         ReplyBar(
           controller: _replyBarController,
@@ -100,9 +93,7 @@ final class _ChatPageState extends State<ChatPage> {
   @override
   void initState() {
     super.initState();
-    _refreshController = EasyRefreshController(
-      controlFinishLoad: true,
-    );
+    _refreshController = EasyRefreshController(controlFinishLoad: true);
   }
 
   @override
@@ -117,19 +108,10 @@ final class _ChatPageState extends State<ChatPage> {
     final tr = context.t.chatPage;
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => const ChatRepository(),
-        ),
-        RepositoryProvider(
-          create: (context) => const ReplyRepository(),
-        ),
-        BlocProvider(
-          create: (context) => ReplyBloc(replyRepository: context.repo()),
-        ),
-        BlocProvider(
-          create: (context) => ChatBloc(context.repo())
-            ..add(ChatFetchHistoryRequested(widget.uid)),
-        ),
+        RepositoryProvider(create: (context) => const ChatRepository()),
+        RepositoryProvider(create: (context) => const ReplyRepository()),
+        BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
+        BlocProvider(create: (context) => ChatBloc(context.repo())..add(ChatFetchHistoryRequested(widget.uid))),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -144,18 +126,9 @@ final class _ChatPageState extends State<ChatPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(
-                  context: context,
-                  message: tr.success,
-                  avoidKeyboard: true,
-                );
-              } else if (state.status == ReplyStatus.failure &&
-                  state.failedReason != null) {
-                showSnackBar(
-                  context: context,
-                  message: tr.failed(message: state.failedReason!),
-                  avoidKeyboard: true,
-                );
+                showSnackBar(context: context, message: tr.success, avoidKeyboard: true);
+              } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
+                showSnackBar(context: context, message: tr.failed(message: state.failedReason!), avoidKeyboard: true);
               }
             },
           ),
@@ -163,16 +136,12 @@ final class _ChatPageState extends State<ChatPage> {
         child: BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
             final body = switch (state.status) {
-              ChatStatus.initial ||
-              ChatStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
+              ChatStatus.initial || ChatStatus.loading => const Center(child: CircularProgressIndicator()),
               ChatStatus.success => _buildContent(context, state),
               ChatStatus.failure => buildRetryButton(
-                  context,
-                  () => context
-                      .read<ChatBloc>()
-                      .add(ChatFetchHistoryRequested(widget.uid)),
-                ),
+                context,
+                () => context.read<ChatBloc>().add(ChatFetchHistoryRequested(widget.uid)),
+              ),
             };
 
             return Scaffold(
@@ -183,18 +152,15 @@ final class _ChatPageState extends State<ChatPage> {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.contact_page_outlined),
-                    onPressed: () async =>
-                        context.dispatchAsUrl(state.spaceUrl),
+                    onPressed: () async => context.dispatchAsUrl(state.spaceUrl),
                   ),
                   IconButton(
                     icon: const Icon(Icons.history_outlined),
-                    onPressed: () async =>
-                        context.dispatchAsUrl(state.chatHistoryUrl),
+                    onPressed: () async => context.dispatchAsUrl(state.chatHistoryUrl),
                   ),
                 ],
                 bottom: PreferredSize(
-                  preferredSize:
-                      const Size(kToolbarHeight / 2, kToolbarHeight / 2),
+                  preferredSize: const Size(kToolbarHeight / 2, kToolbarHeight / 2),
                   child: Padding(
                     padding: edgeInsetsL12R12B12,
                     child: Row(

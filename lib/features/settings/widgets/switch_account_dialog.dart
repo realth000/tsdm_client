@@ -52,10 +52,7 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
             title: Row(
               children: [
                 Text(tr.switchAccount),
-                if (state) ...[
-                  sizedBoxW8H8,
-                  sizedCircularProgressIndicator,
-                ],
+                if (state) ...[sizedBoxW8H8, sizedCircularProgressIndicator],
               ],
             ),
             content: FutureBuilder(
@@ -66,28 +63,17 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
                   return Center(child: Text('${snapshot.error}'));
                 }
                 if (snapshot.hasData) {
-                  final currentUser =
-                      context.read<AuthenticationRepository>().currentUser;
+                  final currentUser = context.read<AuthenticationRepository>().currentUser;
                   final users = snapshot.data!;
 
                   return SingleChildScrollView(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
-                      children: users
-                          .where(
-                            (e) =>
-                                e.username != null &&
-                                e.username!.isNotEmpty &&
-                                e.uid != null &&
-                                e.uid != 0,
-                          )
-                          .map(
-                            (e) => _UserInfoListTile(
-                              userInfo: e,
-                              currentUserInfo: currentUser,
-                            ),
-                          )
-                          .toList(),
+                      children:
+                          users
+                              .where((e) => e.username != null && e.username!.isNotEmpty && e.uid != null && e.uid != 0)
+                              .map((e) => _UserInfoListTile(userInfo: e, currentUserInfo: currentUser))
+                              .toList(),
                     ),
                   );
                 }
@@ -96,20 +82,18 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
               },
             ),
             actions: [
+              TextButton(onPressed: state ? null : () async => context.pop(), child: Text(context.t.general.cancel)),
               TextButton(
-                onPressed: state ? null : () async => context.pop(),
-                child: Text(context.t.general.cancel),
-              ),
-              TextButton(
-                onPressed: state
-                    ? null
-                    : () async {
-                        await context.pushNamed(ScreenPaths.login);
-                        if (!context.mounted) {
-                          return;
-                        }
-                        context.pop();
-                      },
+                onPressed:
+                    state
+                        ? null
+                        : () async {
+                          await context.pushNamed(ScreenPaths.login);
+                          if (!context.mounted) {
+                            return;
+                          }
+                          context.pop();
+                        },
                 child: Text(tr.loginAnother),
               ),
             ],
@@ -121,10 +105,7 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
 }
 
 class _UserInfoListTile extends StatelessWidget with LoggerMixin {
-  const _UserInfoListTile({
-    required this.userInfo,
-    required this.currentUserInfo,
-  });
+  const _UserInfoListTile({required this.userInfo, required this.currentUserInfo});
 
   /// User info displayed in this widget.
   final UserLoginInfo userInfo;
@@ -135,10 +116,7 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
   Future<void> _callback(BuildContext context) async {
     info('switch user to uid ${"${userInfo.uid}".obscured(4)}');
     context.read<_LoggingInCubit>().setLoggingIn();
-    final ret = await context
-        .read<AuthenticationRepository>()
-        .switchUser(userInfo)
-        .run();
+    final ret = await context.read<AuthenticationRepository>().switchUser(userInfo).run();
 
     if (ret.isLeft()) {
       handle(ret.unwrapErr());
@@ -146,20 +124,14 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
         return;
       }
       context.read<_LoggingInCubit>().setNotLoggingIn();
-      showSnackBar(
-        context: context,
-        message: '${ret.unwrapErr()}',
-      );
+      showSnackBar(context: context, message: '${ret.unwrapErr()}');
       context.pop();
       return;
     }
     if (!context.mounted) {
       return;
     }
-    showSnackBar(
-      context: context,
-      message: context.t.settingsPage.accountSection.switchSuccess,
-    );
+    showSnackBar(context: context, message: context.t.settingsPage.accountSection.switchSuccess);
     context.read<_LoggingInCubit>().setNotLoggingIn();
     context.pop();
   }
@@ -177,23 +149,20 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
           leading: CircleAvatar(child: Text(userInfo.username![0])),
           title: Text(userInfo.username!),
           subtitle: Text('${userInfo.uid!}'),
-          trailing: isCurrentUser
-              ? Chip(
-                  side: BorderSide.none,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.secondaryContainer,
-                  label: Text(
-                    tr.online,
-                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSecondaryContainer,
-                        ),
-                  ),
-                )
-              : null,
-          onTap:
-              (state || isCurrentUser) ? null : () async => _callback(context),
+          trailing:
+              isCurrentUser
+                  ? Chip(
+                    side: BorderSide.none,
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                    label: Text(
+                      tr.online,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    ),
+                  )
+                  : null,
+          onTap: (state || isCurrentUser) ? null : () async => _callback(context),
         );
       },
     );

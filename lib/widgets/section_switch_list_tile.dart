@@ -10,8 +10,7 @@ class WidgetStatePropertySelected<T> implements WidgetStateProperty<T?> {
   final T? value;
 
   @override
-  T? resolve(Set<WidgetState> states) =>
-      states.contains(WidgetState.selected) ? value : null;
+  T? resolve(Set<WidgetState> states) => states.contains(WidgetState.selected) ? value : null;
 
   @override
   String toString() => 'WidgetStatePropertySelected($value)';
@@ -34,8 +33,7 @@ class SectionSwitchListTile extends SwitchListTile {
     super.thumbColor,
     super.trackColor,
     super.trackOutlineColor,
-    super.thumbIcon =
-        const WidgetStatePropertySelected(Icon(Icons.check_outlined)),
+    super.thumbIcon = const WidgetStatePropertySelected(Icon(Icons.check_outlined)),
     super.materialTapTargetSize,
     super.dragStartBehavior,
     super.mouseCursor,

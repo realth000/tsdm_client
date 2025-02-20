@@ -20,47 +20,43 @@ final class ForumHomeRepository with LoggerMixin {
   uh.Document? getCache() => _document;
 
   /// Fetch the home page of app from server.
-  AsyncEither<uh.Document> fetchHomePage({bool force = false}) =>
-      AsyncEither(() async {
-        debug('fetch home page');
-        if (!force && _document != null) {
-          debug('use cached home page');
-          return right(_document!);
-        }
+  AsyncEither<uh.Document> fetchHomePage({bool force = false}) => AsyncEither(() async {
+    debug('fetch home page');
+    if (!force && _document != null) {
+      debug('use cached home page');
+      return right(_document!);
+    }
 
-        final docEither = await _fetchForumHome().run();
-        if (docEither.isLeft()) {
-          return left(docEither.unwrapErr());
-        }
+    final docEither = await _fetchForumHome().run();
+    if (docEither.isLeft()) {
+      return left(docEither.unwrapErr());
+    }
 
-        _document = docEither.unwrap();
-        debug('use fetched home page');
-        return right(_document!);
-      });
+    _document = docEither.unwrap();
+    debug('use fetched home page');
+    return right(_document!);
+  });
 
   /// Fetch the topic page of app from server.
-  AsyncEither<uh.Document> fetchTopicPage({bool force = false}) =>
-      AsyncEither(() async {
-        debug('fetch topics page');
-        if (!force && _document != null) {
-          debug('use cached topics page');
-          return right(_document!);
-        }
-        final e = await _fetchForumHome().run();
-        if (e.isLeft()) {
-          return left(e.unwrapErr());
-        }
-        _document = e.unwrap();
-        return right(_document!);
-      });
+  AsyncEither<uh.Document> fetchTopicPage({bool force = false}) => AsyncEither(() async {
+    debug('fetch topics page');
+    if (!force && _document != null) {
+      debug('use cached topics page');
+      return right(_document!);
+    }
+    final e = await _fetchForumHome().run();
+    if (e.isLeft()) {
+      return left(e.unwrapErr());
+    }
+    _document = e.unwrap();
+    return right(_document!);
+  });
 
   /// Fetch the [homePage] of forum.
   ///
   /// # Exception
   ///
   /// * [HttpHandshakeFailedException] if GET request failed.
-  AsyncEither<uh.Document> _fetchForumHome() => getIt
-      .get<NetClientProvider>()
-      .get(homePage)
-      .mapHttp((v) => parseHtmlDocument(v.data as String));
+  AsyncEither<uh.Document> _fetchForumHome() =>
+      getIt.get<NetClientProvider>().get(homePage).mapHttp((v) => parseHtmlDocument(v.data as String));
 }

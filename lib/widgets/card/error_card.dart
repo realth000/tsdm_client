@@ -38,12 +38,8 @@ class ErrorCard extends StatelessWidget {
                   color: Theme.of(context).colorScheme.error,
                 ),
                 Text(
-                  message ??
-                      getIt.get<NetErrorSaver>().error() ??
-                      context.t.general.failedToLoad,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.outline,
-                      ),
+                  message ?? getIt.get<NetErrorSaver>().error() ?? context.t.general.failedToLoad,
+                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
                 ),
                 Center(child: child),
               ].insertBetween(sizedBoxW24H24),

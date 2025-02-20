@@ -8,11 +8,7 @@ part of 'models.dart';
 @MappableClass()
 final class LoggedUserInfo with LoggedUserInfoMappable {
   /// Constructor.
-  const LoggedUserInfo({
-    required this.username,
-    required this.relatedLinkPairList,
-    this.avatarUrl,
-  });
+  const LoggedUserInfo({required this.username, required this.relatedLinkPairList, this.avatarUrl});
 
   /// User name.
   final String username;

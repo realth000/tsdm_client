@@ -10,8 +10,7 @@ part 'image_cache_trigger_state.dart';
 /// Just a wrapper outside the internal repository.
 class ImageCacheTriggerCubit extends Cubit<ImageCacheTriggerState> {
   /// Constructor.
-  ImageCacheTriggerCubit(this._imageCacheRepository)
-      : super(ImageCacheTriggerState());
+  ImageCacheTriggerCubit(this._imageCacheRepository) : super(ImageCacheTriggerState());
 
   final ImageCacheRepository _imageCacheRepository;
 

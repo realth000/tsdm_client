@@ -7,12 +7,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 /// Widget to show a review for a post.
 class ReviewCard extends StatelessWidget {
   /// Constructor.
-  const ReviewCard({
-    required this.name,
-    required this.content,
-    this.avatarUrl,
-    super.key,
-  });
+  const ReviewCard({required this.name, required this.content, this.avatarUrl, super.key});
 
   /// Reviewer avatar url.
   final String? avatarUrl;
@@ -29,10 +24,7 @@ class ReviewCard extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         const Divider(),
-        Text(
-          context.t.reviewCard.title,
-          style: Theme.of(context).textTheme.titleMedium,
-        ),
+        Text(context.t.reviewCard.title, style: Theme.of(context).textTheme.titleMedium),
         ListTile(
           leading: CircleAvatar(
             backgroundImage: CachedImageProvider(

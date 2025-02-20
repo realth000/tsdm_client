@@ -17,8 +17,7 @@ final class NotificationInfoRepository with LoggerMixin {
   Stream<NotificationStateInfo> get status => _controller.asBroadcastStream();
 
   /// Stream of incoming new notification to display as local notification.
-  Stream<NotificationAutoSyncInfo> get autoSyncStatus =>
-      _autoSyncController.asBroadcastStream();
+  Stream<NotificationAutoSyncInfo> get autoSyncStatus => _autoSyncController.asBroadcastStream();
 
   /// Update notification state info.
   ///

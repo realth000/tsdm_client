@@ -9,8 +9,7 @@ sealed class PostEditEvent with PostEditEventMappable {
 
 /// User requested to load the data to edit.
 @MappableClass()
-final class PostEditLoadDataRequested extends PostEditEvent
-    with PostEditLoadDataRequestedMappable {
+final class PostEditLoadDataRequested extends PostEditEvent with PostEditLoadDataRequestedMappable {
   /// Constructor.
   const PostEditLoadDataRequested(this.editUrl) : super();
 
@@ -20,8 +19,7 @@ final class PostEditLoadDataRequested extends PostEditEvent
 
 /// User completed the editing and need to post to the server.
 @MappableClass()
-final class PostEditCompleteEditRequested extends PostEditEvent
-    with PostEditCompleteEditRequestedMappable {
+final class PostEditCompleteEditRequested extends PostEditEvent with PostEditCompleteEditRequestedMappable {
   /// Constructor.
   const PostEditCompleteEditRequested({
     required this.formHash,
@@ -99,8 +97,7 @@ final class PostEditCompleteEditRequested extends PostEditEvent
 
 /// Fetch required info for publishing, including form hash, post time and more.
 @MappableClass()
-final class ThreadPubFetchInfoRequested extends PostEditEvent
-    with ThreadPubFetchInfoRequestedMappable {
+final class ThreadPubFetchInfoRequested extends PostEditEvent with ThreadPubFetchInfoRequestedMappable {
   /// Constructor.
   const ThreadPubFetchInfoRequested({required this.fid});
 
@@ -110,8 +107,7 @@ final class ThreadPubFetchInfoRequested extends PostEditEvent
 
 /// Post a new thread to forum.
 @MappableClass()
-final class ThreadPubPostThread extends PostEditEvent
-    with ThreadPubPostThreadMappable {
+final class ThreadPubPostThread extends PostEditEvent with ThreadPubPostThreadMappable {
   /// Constructor.
   const ThreadPubPostThread(this.info);
 

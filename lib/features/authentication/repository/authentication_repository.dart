@@ -33,10 +33,8 @@ class AuthenticationRepository with LoggerMixin {
   static const _checkAuthUrl = '$baseUrl/home.php?mod=spacecp';
 
   // FIXME: Refactor login base url.
-  static const _loginBaseUrl =
-      '$baseUrl/member.php?mobile=yes&tsdmapp=1&mod=logging&action=login&loginsubmit=yes';
-  static const _logoutBaseUrl =
-      '$baseUrl/member.php?mod=logging&action=logout&formhash=';
+  static const _loginBaseUrl = '$baseUrl/member.php?mobile=yes&tsdmapp=1&mod=logging&action=login&loginsubmit=yes';
+  static const _logoutBaseUrl = '$baseUrl/member.php?mod=logging&action=logout&formhash=';
   static const _fakeFormUrl =
       '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
   static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
@@ -69,10 +67,8 @@ class AuthenticationRepository with LoggerMixin {
   }
 
   /// Fetch login hash and form hash for logging in.
-  AsyncEither<LoginHash> fetchHash() => getIt
-          .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
-          .get(_fakeFormUrl)
-          .flatMap((v) {
+  AsyncEither<LoginHash> fetchHash() =>
+      getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie).get(_fakeFormUrl).flatMap((v) {
         // TODO: Parse CDATA.
         // 返回的data是xml：
         //
@@ -105,172 +101,146 @@ class AuthenticationRepository with LoggerMixin {
   /// Login with password and other parameters in [credential].
   ///
   /// Will not change authentication status if failed to login.
-  AsyncVoidEither loginWithPassword(UserCredential credential) =>
-      AsyncVoidEither(() async {
-        debug('login with passwd');
-        await _markUnauthenticated();
-        // When login with password, use an empty and injected cookie when
-        // performing login request. Because :
-        //
-        // * Want to use a pure and clean cookie when start login, to avoid
-        //   using current authed user's cookie.
-        // * Control when and what user info to save with the cookie stored in
-        //   it, so that the token is successfully saved in storage.
-        final cookie =
-            getIt.get<CookieProvider>(instanceName: ServiceKeys.empty);
-        // Inject cookie provider.
-        final netClient = NetClientProvider.buildNoCookie(
-          cookie: cookie,
-          forceDesktop: false,
-        );
+  AsyncVoidEither loginWithPassword(UserCredential credential) => AsyncVoidEither(() async {
+    debug('login with passwd');
+    await _markUnauthenticated();
+    // When login with password, use an empty and injected cookie when
+    // performing login request. Because :
+    //
+    // * Want to use a pure and clean cookie when start login, to avoid
+    //   using current authed user's cookie.
+    // * Control when and what user info to save with the cookie stored in
+    //   it, so that the token is successfully saved in storage.
+    final cookie = getIt.get<CookieProvider>(instanceName: ServiceKeys.empty);
+    // Inject cookie provider.
+    final netClient = NetClientProvider.buildNoCookie(cookie: cookie, forceDesktop: false);
 
-        final respEither = await netClient
-            .postForm(_loginBaseUrl, data: credential.toJson())
-            .run();
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
+    final respEither = await netClient.postForm(_loginBaseUrl, data: credential.toJson()).run();
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
 
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-        final loginResult = LoginResultMapper.fromJson(resp.data as String);
-        if (loginResult.status != 0) {
-          error('failed to login: $loginResult}');
-          return left(LoginOtherErrorException('login failed'));
-        }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
+    final loginResult = LoginResultMapper.fromJson(resp.data as String);
+    if (loginResult.status != 0) {
+      error('failed to login: $loginResult}');
+      return left(LoginOtherErrorException('login failed'));
+    }
 
-        // Here we get complete user info.
-        final userInfo = UserLoginInfo(
-          username: loginResult.values!.username,
-          uid: int.parse(loginResult.values!.uid!),
-        );
-        // First combine user info and cookie together.
-        await cookie.updateUserInfo(userInfo);
-        // Second, save credential in storage.
-        await cookie.saveCookieToStorage();
-        // Refresh the cookie in global cookie provider.
-        await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo);
-        // Finally save authed user info and update authentication status to
-        // let auth stream subscribers update their status.
-        await _markAuthenticated(userInfo);
-        debug('end login with success');
+    // Here we get complete user info.
+    final userInfo = UserLoginInfo(username: loginResult.values!.username, uid: int.parse(loginResult.values!.uid!));
+    // First combine user info and cookie together.
+    await cookie.updateUserInfo(userInfo);
+    // Second, save credential in storage.
+    await cookie.saveCookieToStorage();
+    // Refresh the cookie in global cookie provider.
+    await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo);
+    // Finally save authed user info and update authentication status to
+    // let auth stream subscribers update their status.
+    await _markAuthenticated(userInfo);
+    debug('end login with success');
 
-        return rightVoid();
-      });
+    return rightVoid();
+  });
 
   /// Parse logged user info from html [document].
-  AsyncVoidEither loginWithDocument(uh.Document document) =>
-      AsyncVoidEither(() async {
-        // Do NOT mark as unauthenticated here because auth with document is
-        // only used as a verification of a token that intend to be valid. It's
-        // outside the regular login progress.
-        final userInfo = _parseUserInfoFromDocument(document);
-        if (userInfo == null) {
-          debug('failed to login with document: user info not found');
-          return left(LoginUserInfoNotFoundException());
-        }
+  AsyncVoidEither loginWithDocument(uh.Document document) => AsyncVoidEither(() async {
+    // Do NOT mark as unauthenticated here because auth with document is
+    // only used as a verification of a token that intend to be valid. It's
+    // outside the regular login progress.
+    final userInfo = _parseUserInfoFromDocument(document);
+    if (userInfo == null) {
+      debug('failed to login with document: user info not found');
+      return left(LoginUserInfoNotFoundException());
+    }
 
-        // Here we get complete user info.
-        await getIt.get<CookieProvider>().saveCookieToStorage();
-        await _markAuthenticated(userInfo);
+    // Here we get complete user info.
+    await getIt.get<CookieProvider>().saveCookieToStorage();
+    await _markAuthenticated(userInfo);
 
-        debug('login with document: user $userInfo');
-        return rightVoid();
-      });
+    debug('login with document: user $userInfo');
+    return rightVoid();
+  });
 
   /// Logout the current user.
   ///
   /// Check authentication status first then try to logout.
   /// Do nothing if already unauthenticated.
   AsyncVoidEither logout() => AsyncVoidEither(() async {
-        if (_authedUser == null) {
-          return rightVoid();
-        }
-        final netClient = NetClientProvider.build(
-          userLoginInfo: UserLoginInfo(
-            username: _authedUser!.username,
-            uid: _authedUser!.uid,
-          ),
-        );
-        final respEither = await netClient.get(_checkAuthUrl).run();
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-        final document = parseHtmlDocument(resp.data as String);
-        final userInfo = _parseUserInfoFromDocument(document);
-        if (userInfo == null) {
-          // Not logged in.
-          await _markUnauthenticated();
-          return rightVoid();
-        }
-        final formHash = _formHashRe
-            .firstMatch(document.body?.innerHtml ?? '')
-            ?.namedGroup('FormHash');
-        if (formHash == null) {
-          return left(LogoutFormHashNotFoundException());
-        }
+    if (_authedUser == null) {
+      return rightVoid();
+    }
+    final netClient = NetClientProvider.build(
+      userLoginInfo: UserLoginInfo(username: _authedUser!.username, uid: _authedUser!.uid),
+    );
+    final respEither = await netClient.get(_checkAuthUrl).run();
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
+    final document = parseHtmlDocument(resp.data as String);
+    final userInfo = _parseUserInfoFromDocument(document);
+    if (userInfo == null) {
+      // Not logged in.
+      await _markUnauthenticated();
+      return rightVoid();
+    }
+    final formHash = _formHashRe.firstMatch(document.body?.innerHtml ?? '')?.namedGroup('FormHash');
+    if (formHash == null) {
+      return left(LogoutFormHashNotFoundException());
+    }
 
-        final logoutRespEither =
-            await netClient.get(_buildLogoutUrl(formHash)).run();
-        if (logoutRespEither.isLeft()) {
-          return left(logoutRespEither.unwrapErr());
-        }
-        final logoutResp = logoutRespEither.unwrap();
-        if (logoutResp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(logoutResp.statusCode));
-        }
-        final logoutDocument = parseHtmlDocument(logoutResp.data as String);
-        final logoutMessage = logoutDocument.getElementById('messagetext');
-        if (logoutMessage == null ||
-            !logoutMessage.innerHtmlEx().contains('已退出')) {
-          // TODO: Here we'd better to check the failed reason.
-          return left(LogoutFailedException());
-        }
+    final logoutRespEither = await netClient.get(_buildLogoutUrl(formHash)).run();
+    if (logoutRespEither.isLeft()) {
+      return left(logoutRespEither.unwrapErr());
+    }
+    final logoutResp = logoutRespEither.unwrap();
+    if (logoutResp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(logoutResp.statusCode));
+    }
+    final logoutDocument = parseHtmlDocument(logoutResp.data as String);
+    final logoutMessage = logoutDocument.getElementById('messagetext');
+    if (logoutMessage == null || !logoutMessage.innerHtmlEx().contains('已退出')) {
+      // TODO: Here we'd better to check the failed reason.
+      return left(LogoutFailedException());
+    }
 
-        getIt.get<CookieProvider>().clearUserInfoAndCookie();
-        await getIt.get<StorageProvider>().deleteCookieByUid(_authedUser!.uid!);
-        await _markUnauthenticated();
-        return rightVoid();
-      });
+    getIt.get<CookieProvider>().clearUserInfoAndCookie();
+    await getIt.get<StorageProvider>().deleteCookieByUid(_authedUser!.uid!);
+    await _markUnauthenticated();
+    return rightVoid();
+  });
 
   /// Switch to another user described in [userInfo].
-  AsyncVoidEither switchUser(UserLoginInfo userInfo) =>
-      AsyncVoidEither(() async {
-        if (!await getIt
-            .get<CookieProvider>()
-            .loadCookieFromStorage(userInfo)) {
-          return left(LoginInvalidCredentialException());
-        }
-        final resp = await getIt
+  AsyncVoidEither switchUser(UserLoginInfo userInfo) => AsyncVoidEither(() async {
+    if (!await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo)) {
+      return left(LoginInvalidCredentialException());
+    }
+    final resp =
+        await getIt
             .get<NetClientProvider>()
             .get(homePage)
-            .flatMap(
-              (e) => loginWithDocument(parseHtmlDocument(e.data as String)),
-            )
+            .flatMap((e) => loginWithDocument(parseHtmlDocument(e.data as String)))
             .run();
-        if (resp.isLeft()) {
-          return left(resp.unwrapErr());
-        }
-        return rightVoid();
-      });
+    if (resp.isLeft()) {
+      return left(resp.unwrapErr());
+    }
+    return rightVoid();
+  });
 
   /// Parse html [document], find current logged in user uid in it.
   UserLoginInfo? _parseUserInfoFromDocument(uh.Document document) {
     final userNode =
         // Style 1: With avatar.
-        document.querySelector(
-              'div#hd div.wp div.hdc.cl div#um p strong.vwmy a',
-            ) ??
-            // Style 2: Without avatar.
-            document.querySelector(
-              'div#inner_stat > strong > a',
-            );
+        document.querySelector('div#hd div.wp div.hdc.cl div#um p strong.vwmy a') ??
+        // Style 2: Without avatar.
+        document.querySelector('div#inner_stat > strong > a');
     if (userNode == null) {
       debug('auth failed: user node not found');
       return null;
@@ -290,40 +260,31 @@ class AuthenticationRepository with LoggerMixin {
     // if (parseEmail) {
     //   email = document.querySelector('input#emailnew')?.attributes['value'];
     // }
-    return UserLoginInfo(
-      uid: uid,
-      username: username, /*email: email*/
-    );
+    return UserLoginInfo(uid: uid, username: username /*email: email*/);
   }
 
   /// Parse the login result.
   ///
   /// Do nothing if login succeed.
-// SyncVoidEither _mapLoginResult(LoginResult loginResult) =>
-//     switch (loginResult) {
-//       LoginResult.success => rightVoid(),
-//       LoginResult.incorrectCaptcha => left(LoginIncorrectCaptchaException()),
-//       LoginResult.invalidUsernamePassword =>
-//         left(LoginInvalidCredentialException()),
-//       LoginResult.incorrectQuestionOrAnswer =>
-//         left(LoginIncorrectSecurityQuestionException()),
-//       LoginResult.attemptLimit => left(LoginAttemptLimitException()),
-//     LoginResult.otherError => left(LoginOtherErrorException('other error')),
-//     LoginResult.unknown => left(LoginOtherErrorException('unknown result')),
-//     };
+  // SyncVoidEither _mapLoginResult(LoginResult loginResult) =>
+  //     switch (loginResult) {
+  //       LoginResult.success => rightVoid(),
+  //       LoginResult.incorrectCaptcha => left(LoginIncorrectCaptchaException()),
+  //       LoginResult.invalidUsernamePassword =>
+  //         left(LoginInvalidCredentialException()),
+  //       LoginResult.incorrectQuestionOrAnswer =>
+  //         left(LoginIncorrectSecurityQuestionException()),
+  //       LoginResult.attemptLimit => left(LoginAttemptLimitException()),
+  //     LoginResult.otherError => left(LoginOtherErrorException('other error')),
+  //     LoginResult.unknown => left(LoginOtherErrorException('unknown result')),
+  //     };
 
   Future<void> _saveLoggedUserInfo(UserLoginInfo userInfo) async {
     debug('save logged user info: $userInfo');
     // Save logged user info in settings.
     final settings = getIt.get<SettingsRepository>();
-    await settings.setValue<String>(
-      SettingsKeys.loginUsername,
-      userInfo.username!,
-    );
-    await settings.setValue<int>(
-      SettingsKeys.loginUid,
-      userInfo.uid!,
-    );
+    await settings.setValue<String>(SettingsKeys.loginUsername, userInfo.username!);
+    await settings.setValue<int>(SettingsKeys.loginUid, userInfo.uid!);
     // await settings.setValue<String>(
     //   SettingsKeys.loginEmail,
     //   userInfo.email!,
@@ -343,12 +304,7 @@ class AuthenticationRepository with LoggerMixin {
     // Save user info to memory and storage.
     await _saveLoggedUserInfo(userInfo);
     // Clear cookie.
-    await getIt<CookieProvider>().updateUserInfo(
-      UserLoginInfo(
-        username: userInfo.username,
-        uid: userInfo.uid,
-      ),
-    );
+    await getIt<CookieProvider>().updateUserInfo(UserLoginInfo(username: userInfo.username, uid: userInfo.uid));
     // Do NOT save cookie to storage here, because it's not always the normal
     // global cookie provider doing the auth work, maybe another local cookie in
     // some scope.

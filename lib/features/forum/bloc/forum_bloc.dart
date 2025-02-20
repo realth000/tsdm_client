@@ -22,131 +22,72 @@ final _datelineRe = RegExp(r'&dateline=(?<dateline>\d+)');
 /// Bloc of forum page.
 class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
   /// Constructor.
-  ForumBloc({
-    required String fid,
-    required ForumRepository forumRepository,
-  })  : _forumRepository = forumRepository,
-        super(ForumState(fid: fid)) {
+  ForumBloc({required String fid, required ForumRepository forumRepository})
+    : _forumRepository = forumRepository,
+      super(ForumState(fid: fid)) {
     on<ForumLoadMoreRequested>(_onForumLoadMoreRequested);
     on<ForumRefreshRequested>(_onForumRefreshRequested);
     on<ForumJumpPageRequested>(_onForumJumpPageRequested);
-    on<ForumChangeThreadFilterStateRequested>(
-      _onForumChangeThreadFilterStateRequested,
-    );
+    on<ForumChangeThreadFilterStateRequested>(_onForumChangeThreadFilterStateRequested);
   }
 
   final ForumRepository _forumRepository;
 
-  Future<void> _onForumLoadMoreRequested(
-    ForumLoadMoreRequested event,
-    ForumEmitter emit,
-  ) async {
+  Future<void> _onForumLoadMoreRequested(ForumLoadMoreRequested event, ForumEmitter emit) async {
     if (state.status == ForumStatus.failure) {
       // Restoring from failure state.
       emit(state.copyWith(status: ForumStatus.loading));
     }
     await await _forumRepository
-        .fetchForum(
-      fid: state.fid,
-      pageNumber: event.pageNumber,
-      filterState: state.filterState,
-    )
-        .match(
-      (e) {
-        handle(e);
-        emit(state.copyWith(status: ForumStatus.failure));
-      },
-      (v) async => emit(await _parseFromDocument(v, event.pageNumber)),
-    ).run();
+        .fetchForum(fid: state.fid, pageNumber: event.pageNumber, filterState: state.filterState)
+        .match((e) {
+          handle(e);
+          emit(state.copyWith(status: ForumStatus.failure));
+        }, (v) async => emit(await _parseFromDocument(v, event.pageNumber)))
+        .run();
   }
 
-  Future<void> _onForumRefreshRequested(
-    ForumRefreshRequested event,
-    ForumEmitter emit,
-  ) async {
-    emit(
-      state.copyWith(
-        status: ForumStatus.loading,
-        normalThreadList: [],
-      ),
-    );
+  Future<void> _onForumRefreshRequested(ForumRefreshRequested event, ForumEmitter emit) async {
+    emit(state.copyWith(status: ForumStatus.loading, normalThreadList: []));
 
-    await await _forumRepository
-        .fetchForum(
-      fid: state.fid,
-      filterState: state.filterState,
-    )
-        .match(
-      (e) {
-        handle(e);
-        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-        emit(state.copyWith(status: ForumStatus.failure));
-      },
-      (v) async => emit(await _parseFromDocument(v, 1)),
-    ).run();
+    await await _forumRepository.fetchForum(fid: state.fid, filterState: state.filterState).match((e) {
+      handle(e);
+      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failure));
+    }, (v) async => emit(await _parseFromDocument(v, 1))).run();
   }
 
-  Future<void> _onForumJumpPageRequested(
-    ForumJumpPageRequested event,
-    ForumEmitter emit,
-  ) async {
+  Future<void> _onForumJumpPageRequested(ForumJumpPageRequested event, ForumEmitter emit) async {
     emit(state.copyWith(status: ForumStatus.loading, normalThreadList: []));
     await await _forumRepository
-        .fetchForum(
-      fid: state.fid,
-      pageNumber: event.pageNumber,
-      filterState: state.filterState,
-    )
-        .match(
-      (e) {
-        handle(e);
-        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-        emit(state.copyWith(status: ForumStatus.failure));
-      },
-      (v) async => emit(await _parseFromDocument(v, event.pageNumber)),
-    ).run();
+        .fetchForum(fid: state.fid, pageNumber: event.pageNumber, filterState: state.filterState)
+        .match((e) {
+          handle(e);
+          error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+          emit(state.copyWith(status: ForumStatus.failure));
+        }, (v) async => emit(await _parseFromDocument(v, event.pageNumber)))
+        .run();
   }
 
   Future<void> _onForumChangeThreadFilterStateRequested(
     ForumChangeThreadFilterStateRequested event,
     ForumEmitter emit,
   ) async {
-    emit(
-      state.copyWith(
-        status: ForumStatus.loading,
-        normalThreadList: [],
-        filterState: event.filterState,
-      ),
-    );
-    await await _forumRepository
-        .fetchForum(
-      fid: state.fid,
-      filterState: state.filterState,
-    )
-        .match(
-      (e) {
-        handle(e);
-        error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
-        emit(state.copyWith(status: ForumStatus.failure));
-      },
-      (v) async => emit(await _parseFromDocument(v, 1)),
-    ).run();
+    emit(state.copyWith(status: ForumStatus.loading, normalThreadList: [], filterState: event.filterState));
+    await await _forumRepository.fetchForum(fid: state.fid, filterState: state.filterState).match((e) {
+      handle(e);
+      error('failed to load forum page: fid=${state.fid}, pageNumber=1 : $e');
+      emit(state.copyWith(status: ForumStatus.failure));
+    }, (v) async => emit(await _parseFromDocument(v, 1))).run();
   }
 
-  Future<ForumState> _parseFromDocument(
-    uh.Document document,
-    int pageNumber,
-  ) async {
+  Future<ForumState> _parseFromDocument(uh.Document document, int pageNumber) async {
     // Parse data.
     final rulesElement = document.querySelector('div#forum_rules_${state.fid}');
     final title = document.querySelector('div#ct h1.xs2 > a')?.innerText;
     List<StickThread>? stickThreadList;
     List<Forum>? subredditList;
-    final normalThreadList = _buildThreadList<NormalThread>(
-      document,
-      'tsdm_normalthread',
-      NormalThread.fromTBody,
-    );
+    final normalThreadList = _buildThreadList<NormalThread>(document, 'tsdm_normalthread', NormalThread.fromTBody);
 
     // When jump to other pages, pinned thread and subreddits should be
     // reserved in state.
@@ -155,11 +96,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     // If any filter options applied on current state, ignore the pinned thread
     // result in fetched dom because none may found.
     if (pageNumber == 1 && !state.hasFilter) {
-      stickThreadList = _buildThreadList<StickThread>(
-        document,
-        'tsdm_stickthread',
-        StickThread.fromTBody,
-      );
+      stickThreadList = _buildThreadList<StickThread>(document, 'tsdm_stickthread', StickThread.fromTBody);
       subredditList = _buildForumList(document, state.fid);
     }
 
@@ -187,61 +124,57 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     final totalPages = document.totalPages();
 
     // Update thread filter config.
-    final filterTypeList = document
-        .querySelector('ul#thread_types')
-        ?.querySelectorAll('li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterType(
-            name: e.innerText.trim(),
-            typeID: _typeIDRe
-                .firstMatch(e.attributes['href'] ?? '')
-                ?.namedGroup('id'),
-          ),
-        )
-        .toList();
+    final filterTypeList =
+        document
+            .querySelector('ul#thread_types')
+            ?.querySelectorAll('li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterType(
+                name: e.innerText.trim(),
+                typeID: _typeIDRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('id'),
+              ),
+            )
+            .toList();
 
-    final filterSpecialTypeList = document
-        .querySelector('div#filter_special_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterSpecialType(
-            name: e.innerText.trim(),
-            specialType: _specialTypeRe
-                .firstMatch(e.attributes['href'] ?? '')
-                ?.namedGroup('type'),
-          ),
-        )
-        .toList();
+    final filterSpecialTypeList =
+        document
+            .querySelector('div#filter_special_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterSpecialType(
+                name: e.innerText.trim(),
+                specialType: _specialTypeRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('type'),
+              ),
+            )
+            .toList();
 
-    final filterOrderList = document
-        .querySelector('div#filter_orderby_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterOrder(
-            name: e.innerText.trim(),
-            orderBy: _orderByRe
-                .firstMatch(e.attributes['href'] ?? '')
-                ?.namedGroup('orderby'),
-          ),
-        )
-        .toList();
+    final filterOrderList =
+        document
+            .querySelector('div#filter_orderby_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterOrder(
+                name: e.innerText.trim(),
+                orderBy: _orderByRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('orderby'),
+              ),
+            )
+            .toList();
 
-    final filterDatelineList = document
-        .querySelector('div#filter_dateline_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterDateline(
-            name: e.innerText.trim(),
-            dateline: _datelineRe
-                .firstMatch(e.attributes['href'] ?? '')
-                ?.namedGroup('dateline'),
-          ),
-        )
-        .toList();
+    final filterDatelineList =
+        document
+            .querySelector('div#filter_dateline_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterDateline(
+                name: e.innerText.trim(),
+                dateline: _datelineRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('dateline'),
+              ),
+            )
+            .toList();
 
     var anotherState = state.copyWith(
       status: ForumStatus.success,
@@ -278,11 +211,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     String threadClass,
     T? Function(uh.Element element) threadBuilder,
   ) {
-    final threadList = document
-        .querySelectorAll('tbody.$threadClass')
-        .map((e) => threadBuilder(e))
-        .whereType<T>()
-        .toList();
+    final threadList =
+        document.querySelectorAll('tbody.$threadClass').map((e) => threadBuilder(e)).whereType<T>().toList();
     return threadList;
   }
 

@@ -68,11 +68,6 @@ class _ObscureListTile extends State<ObscureListTile> {
       );
     }
 
-    return ListTile(
-      leading: widget.leading,
-      title: widget.title,
-      subtitle: subtitleWidget,
-      trailing: trailingWidget,
-    );
+    return ListTile(leading: widget.leading, title: widget.title, subtitle: subtitleWidget, trailing: trailingWidget);
   }
 }

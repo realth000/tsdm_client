@@ -10,12 +10,8 @@ sealed class SearchEvent with SearchEventMappable {
 @MappableClass()
 final class SearchRequested extends SearchEvent with SearchRequestedMappable {
   /// Constructor.
-  const SearchRequested({
-    required this.keyword,
-    required this.fid,
-    required this.uid,
-    required this.pageNumer,
-  }) : super();
+  const SearchRequested({required this.keyword, required this.fid, required this.uid, required this.pageNumer})
+    : super();
 
   /// Keyword to search.
   final String keyword;
@@ -36,8 +32,7 @@ final class SearchRequested extends SearchEvent with SearchRequestedMappable {
 
 /// User requested to jump to another page [pageNumber].
 @MappableClass()
-final class SearchJumpPageRequested extends SearchEvent
-    with SearchJumpPageRequestedMappable {
+final class SearchJumpPageRequested extends SearchEvent with SearchJumpPageRequestedMappable {
   /// Constructor.
   const SearchJumpPageRequested(this.pageNumber) : super();
 
@@ -47,10 +42,8 @@ final class SearchJumpPageRequested extends SearchEvent
 
 /// User requested to jump to the next page.
 @MappableClass()
-final class SearchGotoNextPageRequested extends SearchEvent
-    with SearchGotoNextPageRequestedMappable {}
+final class SearchGotoNextPageRequested extends SearchEvent with SearchGotoNextPageRequestedMappable {}
 
 /// User requested to jump to the previous page.
 @MappableClass()
-final class SearchGotoPreviousPageRequested extends SearchEvent
-    with SearchGotoPreviousPageRequestedMappable {}
+final class SearchGotoPreviousPageRequested extends SearchEvent with SearchGotoPreviousPageRequestedMappable {}

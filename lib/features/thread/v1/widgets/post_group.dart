@@ -12,11 +12,7 @@ class PostGroupHeaderDelegate extends SliverPersistentHeaderDelegate {
   final String groupIndex;
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Container(
       alignment: Alignment.centerLeft,
       color: ElevationOverlay.applySurfaceTint(

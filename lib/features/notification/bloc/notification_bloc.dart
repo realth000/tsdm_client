@@ -23,51 +23,44 @@ part 'notification_state.dart';
 typedef _Emit = Emitter<NotificationState>;
 
 /// Bloc of notification.
-class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
-    with LoggerMixin {
+class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with LoggerMixin {
   /// Constructor.
   NotificationBloc({
     required NotificationRepository notificationRepository,
     required NotificationInfoRepository infoRepository,
     required AuthenticationRepository authRepo,
     required StorageProvider storageProvider,
-  })  : _notificationRepository = notificationRepository,
-        _infoRepository = infoRepository,
-        _authRepo = authRepo,
-        _storageProvider = storageProvider,
-        super(const NotificationState()) {
+  }) : _notificationRepository = notificationRepository,
+       _infoRepository = infoRepository,
+       _authRepo = authRepo,
+       _storageProvider = storageProvider,
+       super(const NotificationState()) {
     on<NotificationEvent>(
       (e, emit) => switch (e) {
         NotificationUpdateAllRequested() => _onUpdateAllRequested(emit),
         NotificationRecordFetchTimeRequested() => _onRecordFetchTimeRequested(),
-        NotificationMarkReadRequested(:final recordMark) =>
-          _onMarkReadRequested(emit, recordMark),
-        NotificationInfoFetched(:final info) =>
-          _onNoticeInfoFetched(emit, info),
-        NotificationMarkTypeReadRequested(:final markAsRead, :final markType) =>
-          _onMarkTypeReadRequested(
-            emit,
-            markType,
-            markAsRead: markAsRead,
-          ),
-        NotificationDeleteNoticeRequested(:final uid, :final nid) =>
-          _onDeleteNotice(
-            emit,
-            uid: uid,
-            nid: nid,
-          ),
-        NotificationDeletePersonalMessageRequested(
-          :final uid,
-          :final peerUid
-        ) =>
-          _onDeletePersonalMessage(emit, uid: uid, peerUid: peerUid),
-        NotificationDeleteBroadcastMessageRequested(:final uid, :final pmid) =>
-          _onDeleteBroadcastMessage(emit, uid: uid, pmid: pmid),
+        NotificationMarkReadRequested(:final recordMark) => _onMarkReadRequested(emit, recordMark),
+        NotificationInfoFetched(:final info) => _onNoticeInfoFetched(emit, info),
+        NotificationMarkTypeReadRequested(:final markAsRead, :final markType) => _onMarkTypeReadRequested(
+          emit,
+          markType,
+          markAsRead: markAsRead,
+        ),
+        NotificationDeleteNoticeRequested(:final uid, :final nid) => _onDeleteNotice(emit, uid: uid, nid: nid),
+        NotificationDeletePersonalMessageRequested(:final uid, :final peerUid) => _onDeletePersonalMessage(
+          emit,
+          uid: uid,
+          peerUid: peerUid,
+        ),
+        NotificationDeleteBroadcastMessageRequested(:final uid, :final pmid) => _onDeleteBroadcastMessage(
+          emit,
+          uid: uid,
+          pmid: pmid,
+        ),
       },
     );
 
-    _notificationRepository.status
-        .listen((info) => add(NotificationInfoFetched(info)));
+    _notificationRepository.status.listen((info) => add(NotificationInfoFetched(info)));
   }
 
   final NotificationRepository _notificationRepository;
@@ -88,8 +81,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
       info('skip request of update notification: uid is null, not authorized');
       return;
     }
-    final lastFetchTimeEither =
-        await _storageProvider.fetchLastFetchNoticeTime(uid).run();
+    final lastFetchTimeEither = await _storageProvider.fetchLastFetchNoticeTime(uid).run();
     int? timestamp;
     if (lastFetchTimeEither.isRight()) {
       final datetime = lastFetchTimeEither.unwrap();
@@ -103,15 +95,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
 
     // The final state will be triggered inside repository, do NOT manually
     // update here.
-    await _notificationRepository
-        .fetchNotificationV2(uid: uid, timestamp: timestamp)
-        .run();
+    await _notificationRepository.fetchNotificationV2(uid: uid, timestamp: timestamp).run();
   }
 
-  Future<void> _onNoticeInfoFetched(
-    _Emit emit,
-    NotificationInfoState infoState,
-  ) async {
+  Future<void> _onNoticeInfoFetched(_Emit emit, NotificationInfoState infoState) async {
     late final NotificationV2 info;
     late final int uid;
     switch (infoState) {
@@ -129,49 +116,49 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     emit(state.copyWith(status: NotificationStatus.loading));
 
     // Save fetched notice.
-    debug('saving notification: notice=${info.noticeList.length} '
-        'personalMessage=${info.personalMessageList.length} '
-        'broadcastMessage=${info.broadcastMessageList.length}');
+    debug(
+      'saving notification: notice=${info.noticeList.length} '
+      'personalMessage=${info.personalMessageList.length} '
+      'broadcastMessage=${info.broadcastMessageList.length}',
+    );
     // Save fetched notifications.
     await _storageProvider
         .saveNotification(
           uid: uid,
           notificationGroup: NotificationGroup(
-            noticeList: info.noticeList
-                .map(
-                  (e) => NoticeEntity(
-                    uid: uid,
-                    nid: e.id,
-                    timestamp: e.timestamp,
-                    data: e.data,
-                    alreadyRead: false,
-                  ),
-                )
-                .toList(),
-            personalMessageList: info.personalMessageList
-                .map(
-                  (e) => PersonalMessageEntity(
-                    uid: uid,
-                    timestamp: e.timestamp,
-                    data: e.data,
-                    peerUid: e.peerUid,
-                    peerUsername: e.peerUsername,
-                    sender: e.sender,
-                    alreadyRead: e.alreadyRead,
-                  ),
-                )
-                .toList(),
-            broadcastMessageList: info.broadcastMessageList
-                .map(
-                  (e) => BroadcastMessageEntity(
-                    uid: uid,
-                    timestamp: e.timestamp,
-                    data: e.data,
-                    pmid: e.pmid,
-                    alreadyRead: false,
-                  ),
-                )
-                .toList(),
+            noticeList:
+                info.noticeList
+                    .map(
+                      (e) =>
+                          NoticeEntity(uid: uid, nid: e.id, timestamp: e.timestamp, data: e.data, alreadyRead: false),
+                    )
+                    .toList(),
+            personalMessageList:
+                info.personalMessageList
+                    .map(
+                      (e) => PersonalMessageEntity(
+                        uid: uid,
+                        timestamp: e.timestamp,
+                        data: e.data,
+                        peerUid: e.peerUid,
+                        peerUsername: e.peerUsername,
+                        sender: e.sender,
+                        alreadyRead: e.alreadyRead,
+                      ),
+                    )
+                    .toList(),
+            broadcastMessageList:
+                info.broadcastMessageList
+                    .map(
+                      (e) => BroadcastMessageEntity(
+                        uid: uid,
+                        timestamp: e.timestamp,
+                        data: e.data,
+                        pmid: e.pmid,
+                        alreadyRead: false,
+                      ),
+                    )
+                    .toList(),
           ),
         )
         .run();
@@ -185,31 +172,23 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     // Load local notice cache.
     // Here fetch all cached notice, no matter what time is it when last fetch
     // notice happened.
-    final localNoticeData = await _storageProvider
-        .fetchNotificationSince(uid: uid, timestamp: 0)
-        .run();
-    debug('load local notification: '
-        'notice=${localNoticeData.noticeList.length} '
-        'personalMessage=${localNoticeData.personalMessageList.length} '
-        'broadcastMessage=${localNoticeData.broadcastMessageList.length}');
+    final localNoticeData = await _storageProvider.fetchNotificationSince(uid: uid, timestamp: 0).run();
+    debug(
+      'load local notification: '
+      'notice=${localNoticeData.noticeList.length} '
+      'personalMessage=${localNoticeData.personalMessageList.length} '
+      'broadcastMessage=${localNoticeData.broadcastMessageList.length}',
+    );
 
     // Filter all outdated messages.
     localNoticeData.personalMessageList.removeWhere(
-      (x) =>
-          x.uid == uid &&
-          info.personalMessageList.any((y) => y.peerUid == x.peerUid),
+      (x) => x.uid == uid && info.personalMessageList.any((y) => y.peerUid == x.peerUid),
     );
 
     // Filter all duplicate messages.
-    localNoticeData.noticeList.removeWhere(
-      (x) => info.noticeList.any(
-        (y) => x.uid == uid && x.nid == y.id,
-      ),
-    );
+    localNoticeData.noticeList.removeWhere((x) => info.noticeList.any((y) => x.uid == uid && x.nid == y.id));
     localNoticeData.broadcastMessageList.removeWhere(
-      (x) => info.broadcastMessageList.any(
-        (y) => x.uid == uid && x.pmid == y.pmid,
-      ),
+      (x) => info.broadcastMessageList.any((y) => x.uid == uid && x.pmid == y.pmid),
     );
 
     // Here simply prepend fetching notification a front of all current
@@ -229,12 +208,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     final allNotice = [
       ...info.noticeList,
       ...localNoticeData.noticeList.map(
-        (e) => NoticeV2(
-          id: e.nid,
-          timestamp: e.timestamp,
-          data: e.data,
-          alreadyRead: e.alreadyRead ?? false,
-        ),
+        (e) => NoticeV2(id: e.nid, timestamp: e.timestamp, data: e.data, alreadyRead: e.alreadyRead ?? false),
       ),
     ];
     final allPersonalMessage = [
@@ -253,22 +227,16 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     final allBroadcastMessage = [
       ...info.broadcastMessageList,
       ...localNoticeData.broadcastMessageList.map(
-        (e) => BroadcastMessageV2(
-          timestamp: e.timestamp,
-          data: e.data,
-          pmid: e.pmid,
-          alreadyRead: e.alreadyRead ?? false,
-        ),
+        (e) =>
+            BroadcastMessageV2(timestamp: e.timestamp, data: e.data, pmid: e.pmid, alreadyRead: e.alreadyRead ?? false),
       ),
     ];
 
     // Post the latest unread notification info to global state cubit.
     _infoRepository.updateInfo(
       unreadNoticeCount: allNotice.where((e) => !e.alreadyRead).length,
-      unreadPersonalMessageCount:
-          allPersonalMessage.where((e) => !e.alreadyRead).length,
-      unreadBroadcastMessageCount:
-          allBroadcastMessage.where((e) => !e.alreadyRead).length,
+      unreadPersonalMessageCount: allPersonalMessage.where((e) => !e.alreadyRead).length,
+      unreadBroadcastMessageCount: allBroadcastMessage.where((e) => !e.alreadyRead).length,
     );
 
     // Post the latest sync result in the action to global auto sync info state
@@ -300,11 +268,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     } else if (info.noticeList.isNotEmpty) {
       _infoRepository.updateAutoSyncInfo(
         NotificationAutoSyncInfoNotice(
-          msg: parseHtmlDocument(info.noticeList.last.data)
-                  .body
-                  ?.innerText
-                  .truncate(40, ellipsis: true) ??
-              '<null>',
+          msg: parseHtmlDocument(info.noticeList.last.data).body?.innerText.truncate(40, ellipsis: true) ?? '<null>',
           notice: info.noticeList.length,
           personalMessage: info.personalMessageList.length,
           broadcastMessage: info.broadcastMessageList.length,
@@ -322,11 +286,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     );
   }
 
-  Future<void> _onMarkTypeReadRequested(
-    _Emit emit,
-    NotificationType markType, {
-    required bool markAsRead,
-  }) async {
+  Future<void> _onMarkTypeReadRequested(_Emit emit, NotificationType markType, {required bool markAsRead}) async {
     final uid = _authRepo.currentUser?.uid;
     if (uid == null) {
       error('intend to mark all notice for user but uid not found');
@@ -335,45 +295,18 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
 
     emit(state.copyWith(status: NotificationStatus.loading));
 
-    await _storageProvider
-        .markTypeAsRead(
-          notificationType: markType,
-          uid: uid,
-          alreadyRead: markAsRead,
-        )
-        .run();
+    await _storageProvider.markTypeAsRead(notificationType: markType, uid: uid, alreadyRead: markAsRead).run();
 
     switch (markType) {
       case NotificationType.notice:
-        final list = state.noticeList
-            .map((e) => e.copyWith(alreadyRead: markAsRead))
-            .toList();
-        emit(
-          state.copyWith(
-            status: NotificationStatus.success,
-            noticeList: list,
-          ),
-        );
+        final list = state.noticeList.map((e) => e.copyWith(alreadyRead: markAsRead)).toList();
+        emit(state.copyWith(status: NotificationStatus.success, noticeList: list));
       case NotificationType.personalMessage:
-        final list = state.personalMessageList
-            .map((e) => e.copyWith(alreadyRead: markAsRead))
-            .toList();
-        emit(
-          state.copyWith(
-            status: NotificationStatus.success,
-            personalMessageList: list,
-          ),
-        );
+        final list = state.personalMessageList.map((e) => e.copyWith(alreadyRead: markAsRead)).toList();
+        emit(state.copyWith(status: NotificationStatus.success, personalMessageList: list));
       case NotificationType.broadcastMessage:
-        final list = state.broadcastMessageList
-            .map((e) => e.copyWith(alreadyRead: markAsRead))
-            .toList();
-        emit(
-          state.copyWith(
-            status: NotificationStatus.success,
-            broadcastMessageList: list,
-          ),
-        );
+        final list = state.broadcastMessageList.map((e) => e.copyWith(alreadyRead: markAsRead)).toList();
+        emit(state.copyWith(status: NotificationStatus.success, broadcastMessageList: list));
     }
   }
 
@@ -400,111 +333,57 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState>
     late final int currentUid;
     final task = switch (recordMark) {
       RecordMarkNotice(:final uid, :final nid, alreadyRead: final read) => () {
-          final targetIndex = state.noticeList.indexWhere((e) => e.id == nid);
-          if (targetIndex < 0) {
-            // target not found.
-            return AsyncVoidEither(() async => left(NotificationNotFound()));
-          }
-          final target = state.noticeList[targetIndex];
-          final list = state.noticeList.toList();
-          list[targetIndex] = target.copyWith(alreadyRead: read);
-          emit(state.copyWith(noticeList: list));
-          currentUid = uid;
-          return _storageProvider.markNoticeAsRead(
-            uid: uid,
-            nid: nid,
-            read: read,
-          );
-        }(),
-      RecordMarkPersonalMessage(
-        :final uid,
-        :final peerUid,
-        alreadyRead: final read
-      ) =>
-        () {
-          final targetIndex =
-              state.personalMessageList.indexWhere((e) => e.peerUid == peerUid);
-          final target = state.personalMessageList[targetIndex];
-          final list = state.personalMessageList.toList();
-          list[targetIndex] = target.copyWith(alreadyRead: read);
-          emit(state.copyWith(personalMessageList: list));
-          currentUid = uid;
-          return _storageProvider.markPersonalMessageAsRead(
-            uid: uid,
-            peerUid: peerUid,
-            read: read,
-          );
-        }(),
-      RecordMarkBroadcastMessage(
-        :final uid,
-        :final timestamp,
-        alreadyRead: final read
-      ) =>
-        () {
-          final targetIndex = state.broadcastMessageList
-              .indexWhere((e) => e.timestamp == timestamp);
-          final target = state.broadcastMessageList[targetIndex];
-          final list = state.broadcastMessageList.toList();
-          list[targetIndex] = target.copyWith(alreadyRead: read);
-          emit(state.copyWith(broadcastMessageList: list));
-          currentUid = uid;
-          return _storageProvider.markBroadcastMessageAsRead(
-            uid: uid,
-            timestamp: timestamp,
-            read: read,
-          );
-        }(),
+        final targetIndex = state.noticeList.indexWhere((e) => e.id == nid);
+        if (targetIndex < 0) {
+          // target not found.
+          return AsyncVoidEither(() async => left(NotificationNotFound()));
+        }
+        final target = state.noticeList[targetIndex];
+        final list = state.noticeList.toList();
+        list[targetIndex] = target.copyWith(alreadyRead: read);
+        emit(state.copyWith(noticeList: list));
+        currentUid = uid;
+        return _storageProvider.markNoticeAsRead(uid: uid, nid: nid, read: read);
+      }(),
+      RecordMarkPersonalMessage(:final uid, :final peerUid, alreadyRead: final read) => () {
+        final targetIndex = state.personalMessageList.indexWhere((e) => e.peerUid == peerUid);
+        final target = state.personalMessageList[targetIndex];
+        final list = state.personalMessageList.toList();
+        list[targetIndex] = target.copyWith(alreadyRead: read);
+        emit(state.copyWith(personalMessageList: list));
+        currentUid = uid;
+        return _storageProvider.markPersonalMessageAsRead(uid: uid, peerUid: peerUid, read: read);
+      }(),
+      RecordMarkBroadcastMessage(:final uid, :final timestamp, alreadyRead: final read) => () {
+        final targetIndex = state.broadcastMessageList.indexWhere((e) => e.timestamp == timestamp);
+        final target = state.broadcastMessageList[targetIndex];
+        final list = state.broadcastMessageList.toList();
+        list[targetIndex] = target.copyWith(alreadyRead: read);
+        emit(state.copyWith(broadcastMessageList: list));
+        currentUid = uid;
+        return _storageProvider.markBroadcastMessageAsRead(uid: uid, timestamp: timestamp, read: read);
+      }(),
     };
     await task
-        .andThen(
-          () => TaskEither.fromTask(
-            _storageProvider.updateLastFetchNoticeTime(currentUid, now),
-          ),
-        )
+        .andThen(() => TaskEither.fromTask(_storageProvider.updateLastFetchNoticeTime(currentUid, now)))
         .mapLeft((e) => error('failed to mark read: $e'))
         .run();
   }
 
-  Future<void> _onDeleteNotice(
-    _Emit emit, {
-    required int uid,
-    required int nid,
-  }) async {
-    emit(
-      state.copyWith(
-        noticeList: state.noticeList.toList()..removeWhere((e) => e.id == nid),
-      ),
-    );
+  Future<void> _onDeleteNotice(_Emit emit, {required int uid, required int nid}) async {
+    emit(state.copyWith(noticeList: state.noticeList.toList()..removeWhere((e) => e.id == nid)));
     await _storageProvider.deleteNotice(uid: uid, nid: nid).run();
   }
 
-  Future<void> _onDeletePersonalMessage(
-    _Emit emit, {
-    required int uid,
-    required int peerUid,
-  }) async {
+  Future<void> _onDeletePersonalMessage(_Emit emit, {required int uid, required int peerUid}) async {
     emit(
-      state.copyWith(
-        personalMessageList: state.personalMessageList.toList()
-          ..removeWhere((e) => e.peerUid == peerUid),
-      ),
+      state.copyWith(personalMessageList: state.personalMessageList.toList()..removeWhere((e) => e.peerUid == peerUid)),
     );
-    await _storageProvider
-        .deletePersonalMessage(uid: uid, peerUid: peerUid)
-        .run();
+    await _storageProvider.deletePersonalMessage(uid: uid, peerUid: peerUid).run();
   }
 
-  Future<void> _onDeleteBroadcastMessage(
-    _Emit emit, {
-    required int uid,
-    required int pmid,
-  }) async {
-    emit(
-      state.copyWith(
-        broadcastMessageList: state.broadcastMessageList.toList()
-          ..removeWhere((e) => e.pmid == pmid),
-      ),
-    );
+  Future<void> _onDeleteBroadcastMessage(_Emit emit, {required int uid, required int pmid}) async {
+    emit(state.copyWith(broadcastMessageList: state.broadcastMessageList.toList()..removeWhere((e) => e.pmid == pmid)));
     await _storageProvider.deleteBroadcastMessage(uid: uid, pmid: pmid).run();
   }
 

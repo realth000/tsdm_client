@@ -115,34 +115,19 @@ class LatestThread {
     final url = titleNode?.firstHref()?.prependHost();
     final threadID = url?.uriQueryParameter('tid');
 
-    final statisticsText =
-        element.querySelector('p:nth-child(2)')?.firstEndDeepText();
+    final statisticsText = element.querySelector('p:nth-child(2)')?.firstEndDeepText();
     final matches = _re.allMatches(statisticsText ?? '').toList();
-    final replyCount =
-        matches.elementAtOrNull(0)?.namedGroup('count')?.parseToInt();
-    final viewCount =
-        matches.elementAtOrNull(1)?.namedGroup('count')?.parseToInt();
+    final replyCount = matches.elementAtOrNull(0)?.namedGroup('count')?.parseToInt();
+    final viewCount = matches.elementAtOrNull(1)?.namedGroup('count')?.parseToInt();
 
-    final quotedMessage =
-        element.querySelector('p:nth-child(3)')?.firstEndDeepText();
+    final quotedMessage = element.querySelector('p:nth-child(3)')?.firstEndDeepText();
 
     final infoNode = element.querySelector('p:nth-child(4)');
-    final publishTime = infoNode
-        ?.querySelector('span:nth-child(1)')
-        ?.firstEndDeepText()
-        ?.parseToDateTimeUtc8();
-    final username =
-        infoNode?.querySelector('span:nth-child(2) > a')?.firstEndDeepText();
-    final userUrl = infoNode
-        ?.querySelector('span:nth-child(2) > a')
-        ?.firstHref()
-        ?.prependHost();
-    final forumName =
-        infoNode?.querySelector('span:nth-child(3) > a')?.firstEndDeepText();
-    final forumUrl = infoNode
-        ?.querySelector('span:nth-child(3) > a')
-        ?.firstHref()
-        ?.prependHost();
+    final publishTime = infoNode?.querySelector('span:nth-child(1)')?.firstEndDeepText()?.parseToDateTimeUtc8();
+    final username = infoNode?.querySelector('span:nth-child(2) > a')?.firstEndDeepText();
+    final userUrl = infoNode?.querySelector('span:nth-child(2) > a')?.firstHref()?.prependHost();
+    final forumName = infoNode?.querySelector('span:nth-child(3) > a')?.firstEndDeepText();
+    final forumUrl = infoNode?.querySelector('span:nth-child(3) > a')?.firstHref()?.prependHost();
 
     if (title == null ||
         url == null ||
@@ -180,10 +165,7 @@ failed to parse LatestThread node: {
       forumUrl: forumUrl,
       replyCount: replyCount,
       viewCount: viewCount,
-      latestReplyAuthor: User(
-        name: username,
-        url: userUrl,
-      ),
+      latestReplyAuthor: User(name: username, url: userUrl),
       latestReplyTime: publishTime,
       quotedMessage: quotedMessage,
     );

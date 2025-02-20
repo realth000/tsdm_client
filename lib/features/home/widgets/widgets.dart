@@ -42,25 +42,25 @@ final class _NavigationItem {
 
 /// All navigation bar items.
 List<_NavigationItem> _buildNavigationItems(BuildContext context) => [
-      _NavigationItem(
-        icon: const Icon(Icons.home_outlined),
-        selectedIcon: const Icon(Icons.home),
-        label: context.t.navigation.homepage,
-        targetPath: ScreenPaths.homepage,
-        tab: HomeTab.home,
-      ),
-      _NavigationItem(
-        icon: const Icon(Icons.topic_outlined),
-        selectedIcon: const Icon(Icons.topic),
-        label: context.t.navigation.topics,
-        targetPath: ScreenPaths.topic,
-        tab: HomeTab.topic,
-      ),
-      _NavigationItem(
-        icon: const Icon(Icons.settings_outlined),
-        selectedIcon: const Icon(Icons.settings),
-        label: context.t.navigation.settings,
-        targetPath: ScreenPaths.settings.path,
-        tab: HomeTab.settings,
-      ),
-    ];
+  _NavigationItem(
+    icon: const Icon(Icons.home_outlined),
+    selectedIcon: const Icon(Icons.home),
+    label: context.t.navigation.homepage,
+    targetPath: ScreenPaths.homepage,
+    tab: HomeTab.home,
+  ),
+  _NavigationItem(
+    icon: const Icon(Icons.topic_outlined),
+    selectedIcon: const Icon(Icons.topic),
+    label: context.t.navigation.topics,
+    targetPath: ScreenPaths.topic,
+    tab: HomeTab.topic,
+  ),
+  _NavigationItem(
+    icon: const Icon(Icons.settings_outlined),
+    selectedIcon: const Icon(Icons.settings),
+    label: context.t.navigation.settings,
+    targetPath: ScreenPaths.settings.path,
+    tab: HomeTab.settings,
+  ),
+];

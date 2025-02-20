@@ -10,13 +10,11 @@ part 'notification_detail_cubit.mapper.dart';
 part 'notification_detail_state.dart';
 
 /// Cubit of the notification detail page.
-class NotificationDetailCubit extends Cubit<NotificationDetailState>
-    with LoggerMixin {
+class NotificationDetailCubit extends Cubit<NotificationDetailState> with LoggerMixin {
   /// Constructor.
-  NotificationDetailCubit({
-    required NotificationRepository notificationRepository,
-  })  : _notificationRepository = notificationRepository,
-        super(const NotificationDetailState());
+  NotificationDetailCubit({required NotificationRepository notificationRepository})
+    : _notificationRepository = notificationRepository,
+      super(const NotificationDetailState());
 
   static final _pidRe = RegExp(r'pid=(?<pid>\d+)');
   static final _tidRe = RegExp(r'ptid=(?<ptid>\d+)');
@@ -29,84 +27,77 @@ class NotificationDetailCubit extends Cubit<NotificationDetailState>
   /// the corresponding post in thread.
   Future<void> fetchDetail(String url) async {
     emit(state.copyWith(status: NotificationDetailStatus.loading));
-    await _notificationRepository.fetchDocument(url).match((e) {
-      handle(e);
+    await _notificationRepository
+        .fetchDocument(url)
+        .match(
+          (e) {
+            handle(e);
 
-      error('failed to fetch notification detail: $e');
-      emit(state.copyWith(status: NotificationDetailStatus.failed));
-    }, (v) {
-      final (document, page) = v;
+            error('failed to fetch notification detail: $e');
+            emit(state.copyWith(status: NotificationDetailStatus.failed));
+          },
+          (v) {
+            final (document, page) = v;
 
-      final threadClosed = document.querySelector('form#fastpostform') == null;
+            final threadClosed = document.querySelector('form#fastpostform') == null;
 
-      final match = _pidRe.firstMatch(url);
-      final pid = match?.namedGroup('pid');
-      if (pid == null) {
-        error('pid not found in url: $url');
-        emit(state.copyWith(status: NotificationDetailStatus.failed));
-        return;
-      }
+            final match = _pidRe.firstMatch(url);
+            final pid = match?.namedGroup('pid');
+            if (pid == null) {
+              error('pid not found in url: $url');
+              emit(state.copyWith(status: NotificationDetailStatus.failed));
+              return;
+            }
 
-      final postNode = document.querySelector('div#post_$pid');
-      if (postNode == null) {
-        error('failed to build reply page: post node not found for pid $pid');
-        emit(state.copyWith(status: NotificationDetailStatus.failed));
-        return;
-      }
-      final postData = Post.fromPostNode(postNode, document.currentPage() ?? 1);
+            final postNode = document.querySelector('div#post_$pid');
+            if (postNode == null) {
+              error('failed to build reply page: post node not found for pid $pid');
+              emit(state.copyWith(status: NotificationDetailStatus.failed));
+              return;
+            }
+            final postData = Post.fromPostNode(postNode, document.currentPage() ?? 1);
 
-      // Parse thread id.
-      final tidMatch = _tidRe.firstMatch(url);
-      final tid = tidMatch?.namedGroup('ptid');
-      if (tid == null) {
-        error('failed to build reply page: tid not found');
-        emit(state.copyWith(status: NotificationDetailStatus.failed));
-        return;
-      }
-      final replyParameters = _parseParameters(document, tid);
-      if (isClosed) {
-        return;
-      }
-      emit(
-        state.copyWith(
-          status: NotificationDetailStatus.success,
-          post: postData,
-          replyParameters: replyParameters,
-          tid: tid,
-          pid: pid,
-          page: page,
-          threadClosed: threadClosed,
-        ),
-      );
-    }).run();
+            // Parse thread id.
+            final tidMatch = _tidRe.firstMatch(url);
+            final tid = tidMatch?.namedGroup('ptid');
+            if (tid == null) {
+              error('failed to build reply page: tid not found');
+              emit(state.copyWith(status: NotificationDetailStatus.failed));
+              return;
+            }
+            final replyParameters = _parseParameters(document, tid);
+            if (isClosed) {
+              return;
+            }
+            emit(
+              state.copyWith(
+                status: NotificationDetailStatus.success,
+                post: postData,
+                replyParameters: replyParameters,
+                tid: tid,
+                pid: pid,
+                page: page,
+                threadClosed: threadClosed,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
   ReplyParameters? _parseParameters(uh.Document document, String tid) {
-    final fid =
-        document.querySelector('input[name="srhfid"]')?.attributes['value'];
-    final postTime =
-        document.querySelector('input[name="posttime"]')?.attributes['value'];
-    final formHash =
-        document.querySelector('input[name="formhash"]')?.attributes['value'];
-    final subject =
-        document.querySelector('input[name="subject"]')?.attributes['value'];
+    final fid = document.querySelector('input[name="srhfid"]')?.attributes['value'];
+    final postTime = document.querySelector('input[name="posttime"]')?.attributes['value'];
+    final formHash = document.querySelector('input[name="formhash"]')?.attributes['value'];
+    final subject = document.querySelector('input[name="subject"]')?.attributes['value'];
 
-    if (fid == null ||
-        postTime == null ||
-        formHash == null ||
-        subject == null) {
+    if (fid == null || postTime == null || formHash == null || subject == null) {
       debug(
         'failed to get reply form hash: fid=$fid postTime=$postTime '
         'formHash=$formHash subject=$subject',
       );
       return null;
     }
-    return ReplyParameters(
-      fid: fid,
-      tid: tid,
-      postTime: postTime,
-      formHash: formHash,
-      subject: subject,
-    );
+    return ReplyParameters(fid: fid, tid: tid, postTime: postTime, formHash: formHash, subject: subject);
   }
 }

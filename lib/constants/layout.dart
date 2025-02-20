@@ -74,12 +74,7 @@ const edgeInsetsL16R16 = EdgeInsets.only(left: 16, right: 16);
 const edgeInsetsL16T16R16B16 = EdgeInsets.all(16);
 
 /// An [EdgeInsets] with 16 at left and 16 at right, 12 at top and 12 at bottom.
-const edgeInsetsL16T12R16B12 = EdgeInsets.only(
-  left: 16,
-  top: 12,
-  right: 16,
-  bottom: 12,
-);
+const edgeInsetsL16T12R16B12 = EdgeInsets.only(left: 16, top: 12, right: 16, bottom: 12);
 
 /// An [EdgeInsets] with 12 at left, top and right.
 const edgeInsetsL12T12R12 = EdgeInsets.only(left: 12, top: 12, right: 12);
@@ -103,14 +98,10 @@ const edgeInsetsL24R24 = EdgeInsets.only(left: 24, right: 24);
 const edgeInsetsL24R24B12 = EdgeInsets.only(left: 24, right: 24, bottom: 12);
 
 /// An [EdgeInsets] with 24 at left and right, 16 at top and bottom.
-const edgeInsetsL24T12R24B12 = EdgeInsets.symmetric(
-  horizontal: 24,
-  vertical: 12,
-);
+const edgeInsetsL24T12R24B12 = EdgeInsets.symmetric(horizontal: 24, vertical: 12);
 
 /// An [EdgeInsets] with 12 at left, 4 at top and 4 at bottom.
-const edgeInsetsL12T4R4B4 =
-    EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4);
+const edgeInsetsL12T4R4B4 = EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4);
 
 /// An [EdgeInsets] with 12 at left, 4 at top and 12 at right.
 const edgeInsetsL12T4R12 = EdgeInsets.only(left: 12, top: 4, right: 12);
@@ -119,12 +110,7 @@ const edgeInsetsL12T4R12 = EdgeInsets.only(left: 12, top: 4, right: 12);
 const edgeInsetsL12T8R12 = EdgeInsets.only(left: 12, top: 8, right: 12);
 
 /// An [EdgeInsets] with 12 at left, 4 at top, 12 at right and 4 at bottom.
-const edgeInsetsL12T4R12B4 = EdgeInsets.only(
-  left: 12,
-  top: 4,
-  right: 12,
-  bottom: 4,
-);
+const edgeInsetsL12T4R12B4 = EdgeInsets.only(left: 12, top: 4, right: 12, bottom: 4);
 
 /// An [EdgeInsets] with 12 at left and 12 at right.
 const edgeInsetsL12R12 = EdgeInsets.only(left: 12, right: 12);
@@ -142,87 +128,45 @@ const sizedCircularProgressIndicator = SizedBox(
 /// Widget with 24 height and infinite width to use in shimmers.
 const sizedH24Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: double.infinity,
-    height: 24,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: double.infinity, height: 24, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 40 width and height to use in shimmers.
 const sizedW40H40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: 40,
-    height: 40,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: 40, height: 40, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 40 width and height to use in shimmers.
 const sizedW80H40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: 80,
-    height: 40,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: 80, height: 40, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 80 width and height to use in shimmers.
 const sizedW120H40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: 120,
-    height: 40,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: 120, height: 40, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 40 height and infinite width to use in shimmers.
 const sizedH40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: double.infinity,
-    height: 40,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: double.infinity, height: 40, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 60 height infinite width to use in shimmers.
 ///
 const sizedH60Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: double.infinity,
-    height: 60,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: double.infinity, height: 60, child: ColoredBox(color: Colors.white)),
 );
 
 /// Widget with 100 height infinite width to use in shimmers.
 ///
 const sizedH100Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(
-    width: double.infinity,
-    height: 100,
-    child: ColoredBox(
-      color: Colors.white,
-    ),
-  ),
+  child: SizedBox(width: double.infinity, height: 100, child: ColoredBox(color: Colors.white)),
 );
 
 /// Define window size boundaries.
@@ -254,11 +198,7 @@ enum WindowSize {
   /// [1600, +infinity)
   extraLarge('EXTRA_LARGE', 1600, double.infinity);
 
-  const WindowSize(this.name, this.start, this.end)
-      : assert(
-          start < end,
-          'start MUST less than end',
-        );
+  const WindowSize(this.name, this.start, this.end) : assert(start < end, 'start MUST less than end');
 
   /// Name of window size.
   final String name;

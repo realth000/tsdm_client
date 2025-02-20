@@ -61,34 +61,27 @@ class _CardLayout extends StatelessWidget {
   final bool isRecentThread;
 
   Card _wrapWithCard(BuildContext context, Widget child) => Card(
-        margin: EdgeInsets.zero,
-        clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onTap: disableTap
+    margin: EdgeInsets.zero,
+    clipBehavior: Clip.antiAlias,
+    child: InkWell(
+      onTap:
+          disableTap
               ? null
               : () async {
-                  await context.pushNamed(
-                    ScreenPaths.threadV1,
-                    // pathParameters: {'id': threadID},
-                    // FIXME: Query parameters are not recognized by v2 yet.
-                    queryParameters: {
-                      'tid': threadID,
-                      'appBarTitle': title,
-                      'threadType': threadType?.name,
-                    },
-                  );
-                },
-          child: child,
-        ),
-      );
+                await context.pushNamed(
+                  ScreenPaths.threadV1,
+                  // pathParameters: {'id': threadID},
+                  // FIXME: Query parameters are not recognized by v2 yet.
+                  queryParameters: {'tid': threadID, 'appBarTitle': title, 'threadType': threadType?.name},
+                );
+              },
+      child: child,
+    ),
+  );
 
   /// [author] MUST not be null.
   Widget _buildAvatar(BuildContext context) {
-    return HeroUserAvatar(
-      username: author!.name,
-      avatarUrl: author!.avatarUrl,
-      disableHero: true,
-    );
+    return HeroUserAvatar(username: author!.name, avatarUrl: author!.avatarUrl, disableHero: true);
   }
 
   /// Mainly for test.
@@ -108,13 +101,8 @@ class _CardLayout extends StatelessWidget {
     final infoList = <_ThreadInfo>[
       if (replyCount != null) (Icons.forum_outlined, '$replyCount'),
       if (viewCount != null) (Icons.bar_chart_outlined, '$viewCount'),
-      if (showLastReplyAuthor && lastReplyAuthor != null)
-        (Icons.person_outline, lastReplyAuthor!.name),
-      if (latestReplyTime != null)
-        (
-          Icons.timelapse_outlined,
-          latestReplyTime!.elapsedTillNow(context),
-        ),
+      if (showLastReplyAuthor && lastReplyAuthor != null) (Icons.person_outline, lastReplyAuthor!.name),
+      if (latestReplyTime != null) (Icons.timelapse_outlined, latestReplyTime!.elapsedTillNow(context)),
       if ((price ?? 0) > 0) (FontAwesomeIcons.coins, '$price'),
       if ((privilege ?? 0) > 0) (Icons.feedback_outlined, '$privilege'),
     ];
@@ -131,29 +119,27 @@ class _CardLayout extends StatelessWidget {
           children: [
             Expanded(
               child: Row(
-                children: infoList
-                    .map(
-                      (e) => Expanded(
-                        child: Row(
-                          children: [
-                            Icon(e.$1, size: smallIconSize, color: infoColor),
-                            sizedBoxW4H4,
-                            Expanded(
-                              child: Text(
-                                e.$2,
-                                style: TextStyle(
-                                  fontSize: smallTextSize,
-                                  color: infoColor,
+                children:
+                    infoList
+                        .map(
+                          (e) => Expanded(
+                            child: Row(
+                              children: [
+                                Icon(e.$1, size: smallIconSize, color: infoColor),
+                                sizedBoxW4H4,
+                                Expanded(
+                                  child: Text(
+                                    e.$2,
+                                    style: TextStyle(fontSize: smallTextSize, color: infoColor),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.clip,
+                                  ),
                                 ),
-                                maxLines: 1,
-                                overflow: TextOverflow.clip,
-                              ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
+                          ),
+                        )
+                        .toList(),
               ),
             ),
           ],
@@ -166,24 +152,18 @@ class _CardLayout extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: infoList
-                .map(
-                  (e) => [
-                    Icon(e.$1, size: smallIconSize, color: infoColor),
-                    sizedBoxW4H4,
-                    Text(
-                      e.$2,
-                      style: TextStyle(
-                        fontSize: smallTextSize,
-                        color: infoColor,
-                      ),
-                      maxLines: 1,
-                    ),
-                    sizedBoxW12H12,
-                  ],
-                )
-                .flattened
-                .toList(),
+            children:
+                infoList
+                    .map(
+                      (e) => [
+                        Icon(e.$1, size: smallIconSize, color: infoColor),
+                        sizedBoxW4H4,
+                        Text(e.$2, style: TextStyle(fontSize: smallTextSize, color: infoColor), maxLines: 1),
+                        sizedBoxW12H12,
+                      ],
+                    )
+                    .flattened
+                    .toList(),
           ),
         ),
       );
@@ -191,22 +171,17 @@ class _CardLayout extends StatelessWidget {
   }
 
   Widget _buildCardTitle(BuildContext context, SettingsState state) {
-    final highlightRecentThread =
-        state.settingsMap.threadCardHighlightRecentThread;
+    final highlightRecentThread = state.settingsMap.threadCardHighlightRecentThread;
     final TextStyle? authorNameStyle;
     if (state.settingsMap.threadCardHighlightAuthorName) {
-      authorNameStyle = TextStyle(
-        color: Theme.of(context).colorScheme.primary,
-      );
+      authorNameStyle = TextStyle(color: Theme.of(context).colorScheme.primary);
     } else {
       authorNameStyle = null;
     }
 
     final TextStyle? timeStyle;
     if (isRecentThread && highlightRecentThread) {
-      timeStyle = TextStyle(
-        color: Theme.of(context).colorScheme.secondary,
-      );
+      timeStyle = TextStyle(color: Theme.of(context).colorScheme.secondary);
     } else {
       timeStyle = null;
     }
@@ -214,31 +189,24 @@ class _CardLayout extends StatelessWidget {
     if (author != null) {
       return ListTile(
         leading: GestureDetector(
-          onTap: disableTap
-              ? null
-              : () async => context.dispatchAsUrl(author!.url),
+          onTap: disableTap ? null : () async => context.dispatchAsUrl(author!.url),
           child: _buildAvatar(context),
         ),
         title: Row(
           children: [
             GestureDetector(
-              onTap: disableTap
-                  ? null
-                  : () async => context.dispatchAsUrl(author!.url),
+              onTap: disableTap ? null : () async => context.dispatchAsUrl(author!.url),
               child: SingleLineText(author!.name, style: authorNameStyle),
             ),
             Expanded(child: Container()),
           ],
         ),
-        subtitle: publishTime != null
-            ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle)
-            : null,
+        subtitle: publishTime != null ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle) : null,
         trailing: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
-            if (stateSet != null)
-              ...stateSet!.map((e) => Icon(e.icon, size: 16)),
+            if (stateSet != null) ...stateSet!.map((e) => Icon(e.icon, size: 16)),
             Text(threadType?.name ?? ''),
           ].insertBetween(sizedBoxW4H4),
         ),
@@ -248,12 +216,7 @@ class _CardLayout extends StatelessWidget {
     return ListTile(
       leading: Chip(label: Text(context.t.myThreadPage.forum)),
       title: Text('$forum', style: authorNameStyle),
-      subtitle: publishTime != null
-          ? SingleLineText(
-              publishTime!.yyyyMMDD(),
-              style: timeStyle,
-            )
-          : null,
+      subtitle: publishTime != null ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle) : null,
       trailing: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         mainAxisSize: MainAxisSize.min,
@@ -289,10 +252,7 @@ class _CardLayout extends StatelessWidget {
                     title,
                     maxLines: 3,
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
-                      color: css?.color,
-                      fontWeight: css?.fontWeight,
-                    ),
+                    style: TextStyle(color: css?.color, fontWeight: css?.fontWeight),
                   ),
                 ),
               ],
@@ -301,9 +261,7 @@ class _CardLayout extends StatelessWidget {
           if (quotedMessage != null)
             Padding(
               padding: edgeInsetsL16R16B12,
-              child: Row(
-                children: [Expanded(child: QuotedText(quotedMessage ?? ''))],
-              ),
+              child: Row(children: [Expanded(child: QuotedText(quotedMessage ?? ''))]),
             ),
           _buildInfoWidgetRow(
             context: context,
@@ -323,14 +281,10 @@ class _CardLayout extends StatelessWidget {
         final pm = prev.settingsMap;
         final cm = curr.settingsMap;
 
-        return pm.threadCardInfoRowAlignCenter !=
-                cm.threadCardInfoRowAlignCenter ||
-            pm.threadCardShowLastReplyAuthor !=
-                cm.threadCardShowLastReplyAuthor ||
-            pm.threadCardHighlightRecentThread !=
-                cm.threadCardHighlightRecentThread ||
-            pm.threadCardHighlightAuthorName !=
-                cm.threadCardHighlightAuthorName ||
+        return pm.threadCardInfoRowAlignCenter != cm.threadCardInfoRowAlignCenter ||
+            pm.threadCardShowLastReplyAuthor != cm.threadCardShowLastReplyAuthor ||
+            pm.threadCardHighlightRecentThread != cm.threadCardHighlightRecentThread ||
+            pm.threadCardHighlightAuthorName != cm.threadCardHighlightAuthorName ||
             pm.threadCardHighlightInfoRow != cm.threadCardHighlightInfoRow;
       },
       builder: _buildContent,

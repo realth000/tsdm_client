@@ -32,11 +32,7 @@ CssTypes? parseCssString(String css) {
     }
   }
 
-  final ret = CssTypes(
-    color: color,
-    fontWeight: fontWeight,
-    backgroundColor: backgroundColor,
-  );
+  final ret = CssTypes(color: color, fontWeight: fontWeight, backgroundColor: backgroundColor);
   return ret;
 }
 
@@ -62,10 +58,7 @@ FontWeight? _parseFontWeight(String data) {
     return null;
   }
 
-  return (
-    cssPart.substring(0, separateIndex),
-    cssPart.substring(separateIndex + 1)
-  );
+  return (cssPart.substring(0, separateIndex), cssPart.substring(separateIndex + 1));
 }
 
 /// Extension to convert nullable string to [Color].

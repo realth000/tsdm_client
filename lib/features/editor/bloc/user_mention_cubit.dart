@@ -20,24 +20,14 @@ final class UserMentionCubit extends Cubit<UserMentionState> with LoggerMixin {
   /// Search user by part of username [keyword].
   ///
   /// Only update search result in state.
-  Future<void> searchUserByName({
-    required String keyword,
-    required String formHash,
-  }) async {
+  Future<void> searchUserByName({required String keyword, required String formHash}) async {
     emit(state.copyWith(searchStatus: UserMentionStatus.loading));
-    switch (await _repo
-        .searchUserByName(keyword: keyword, formHash: formHash)
-        .run()) {
+    switch (await _repo.searchUserByName(keyword: keyword, formHash: formHash).run()) {
       case Left(:final value):
         handle(value);
         emit(state.copyWith(searchStatus: UserMentionStatus.failure));
       case Right(:final value):
-        emit(
-          state.copyWith(
-            searchStatus: UserMentionStatus.success,
-            searchResult: value,
-          ),
-        );
+        emit(state.copyWith(searchStatus: UserMentionStatus.success, searchResult: value));
     }
   }
 
@@ -49,13 +39,7 @@ final class UserMentionCubit extends Cubit<UserMentionState> with LoggerMixin {
         handle(value);
         emit(state.copyWith(recommendStatus: UserMentionStatus.failure));
       case Right(:final value):
-        emit(
-          state.copyWith(
-            recommendStatus: UserMentionStatus.success,
-            randomFriend: value.$1,
-            formHash: value.$2,
-          ),
-        );
+        emit(state.copyWith(recommendStatus: UserMentionStatus.success, randomFriend: value.$1, formHash: value.$2));
     }
   }
 }

@@ -13,11 +13,7 @@ import 'package:universal_html/parsing.dart';
 class ForumRepository {
   /// Fetch the html document of given [fid] at page [pageNumber].
   ///
-  AsyncEither<uh.Document> fetchForum({
-    required String fid,
-    required FilterState filterState,
-    int pageNumber = 1,
-  }) =>
+  AsyncEither<uh.Document> fetchForum({required String fid, required FilterState filterState, int pageNumber = 1}) =>
       AsyncEither(() async {
         final fetchUrl = _formatForumUrl(fid, pageNumber, filterState);
         final netClient = getIt.get<NetClientProvider>();
@@ -33,16 +29,8 @@ class ForumRepository {
         return right(document);
       });
 
-  Uri _formatForumUrl(
-    String fid,
-    int pageNumber,
-    FilterState filterState,
-  ) {
-    final queryMap = {
-      'mod': 'forumdisplay',
-      'fid': fid,
-      'page': '$pageNumber',
-    };
+  Uri _formatForumUrl(String fid, int pageNumber, FilterState filterState) {
+    final queryMap = {'mod': 'forumdisplay', 'fid': fid, 'page': '$pageNumber'};
 
     // Recommend flag checking MUST before the check of thread order as
     // order will be changed if recommend filter is on, we do this behave
@@ -70,10 +58,6 @@ class ForumRepository {
       queryMap['digest'] = '1';
     }
 
-    return Uri.https(
-      'tsdm39.com',
-      '/forum.php',
-      queryMap,
-    );
+    return Uri.https('tsdm39.com', '/forum.php', queryMap);
   }
 }

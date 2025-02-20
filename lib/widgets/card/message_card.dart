@@ -30,31 +30,19 @@ final class PrivateMessageCard extends StatelessWidget {
           children: [
             ListTile(
               leading: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(
-                  userUrl,
-                  extraQueryParameters: {'hero': heroTag},
-                ),
-                child: HeroUserAvatar(
-                  username: message.user.name,
-                  avatarUrl: message.user.avatarUrl,
-                  heroTag: heroTag,
-                ),
+                onTap: () async => context.dispatchAsUrl(userUrl, extraQueryParameters: {'hero': heroTag}),
+                child: HeroUserAvatar(username: message.user.name, avatarUrl: message.user.avatarUrl, heroTag: heroTag),
               ),
               title: Row(
                 children: [
                   GestureDetector(
-                    onTap: () async => context.dispatchAsUrl(
-                      userUrl,
-                      extraQueryParameters: {'hero': heroTag},
-                    ),
+                    onTap: () async => context.dispatchAsUrl(userUrl, extraQueryParameters: {'hero': heroTag}),
                     child: SingleLineText(message.user.name),
                   ),
                   Expanded(child: Container()),
                 ],
               ),
-              trailing: message.count != null
-                  ? Text(tr.messageCount(count: message.count!))
-                  : null,
+              trailing: message.count != null ? Text(tr.messageCount(count: message.count!)) : null,
               subtitle: Text(message.lastMessageTime.yyyyMMDD()),
             ),
             sizedBoxW4H4,
@@ -90,9 +78,7 @@ final class BroadcastMessageCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: message.redirectUrl != null
-            ? () async => context.dispatchAsUrl(message.redirectUrl!)
-            : null,
+        onTap: message.redirectUrl != null ? () async => context.dispatchAsUrl(message.redirectUrl!) : null,
         child: Column(
           children: [
             ListTile(

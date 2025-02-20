@@ -5,14 +5,8 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 /// Show a dialog to let user input a price for current thread.
 ///
 /// Only use this when setting price for thread.
-Future<int?> showInputPriceDialog(
-  BuildContext context,
-  int? initialPrice,
-) async =>
-    showDialog<int>(
-      context: context,
-      builder: (_) => _InputPriceDialog(initialPrice),
-    );
+Future<int?> showInputPriceDialog(BuildContext context, int? initialPrice) async =>
+    showDialog<int>(context: context, builder: (_) => _InputPriceDialog(initialPrice));
 
 class _InputPriceDialog extends StatefulWidget {
   const _InputPriceDialog(this.initialPrice);
@@ -38,9 +32,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
   void initState() {
     super.initState();
     currentPrice = widget.initialPrice;
-    priceController = TextEditingController(
-      text: currentPrice != null && currentPrice != 0 ? '$currentPrice' : '',
-    );
+    priceController = TextEditingController(text: currentPrice != null && currentPrice != 0 ? '$currentPrice' : '');
   }
 
   @override
@@ -59,9 +51,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
         child: TextFormField(
           controller: priceController,
           autofocus: true,
-          decoration: InputDecoration(
-            helperText: tr.maximum,
-          ),
+          decoration: InputDecoration(helperText: tr.maximum),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (v) {
             if (v == null) {
@@ -83,10 +73,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
         ),
       ),
       actions: [
-        TextButton(
-          child: Text(context.t.general.cancel),
-          onPressed: () => context.pop(),
-        ),
+        TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop()),
         TextButton(
           child: Text(context.t.general.ok),
           onPressed: () {

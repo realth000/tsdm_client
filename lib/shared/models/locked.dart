@@ -3,10 +3,7 @@ part of 'models.dart';
 sealed class _LockedInfo extends Equatable {
   const _LockedInfo._();
 
-  const factory _LockedInfo.points({
-    required int requiredPoints,
-    required int points,
-  }) = _LockedWithPoints;
+  const factory _LockedInfo.points({required int requiredPoints, required int points}) = _LockedWithPoints;
 
   const factory _LockedInfo.purchase({
     required int price,
@@ -27,10 +24,7 @@ sealed class _LockedInfo extends Equatable {
 
 /// This section is invisible because current user does not have enough points.
 final class _LockedWithPoints extends _LockedInfo {
-  const _LockedWithPoints({
-    required this.requiredPoints,
-    required this.points,
-  }) : super._();
+  const _LockedWithPoints({required this.requiredPoints, required this.points}) : super._();
 
   /// Points required to see this post area.
   final int requiredPoints;
@@ -44,12 +38,8 @@ final class _LockedWithPoints extends _LockedInfo {
 
 /// This section needs purchase to be visible.
 final class _LockedWithPurchase extends _LockedInfo {
-  const _LockedWithPurchase({
-    required this.price,
-    required this.purchasedCount,
-    required this.tid,
-    required this.pid,
-  }) : super._();
+  const _LockedWithPurchase({required this.price, required this.purchasedCount, required this.tid, required this.pid})
+    : super._();
 
   /// Thread id.
   final String? tid;
@@ -106,16 +96,15 @@ class Locked extends Equatable {
     bool allowWithAuthor = true,
     bool allowWithBlocked = true,
   }) : _info = _buildLockedFromNode(
-          element,
-          allowWithPoints: allowWithPoints,
-          allowWithPurchase: allowWithPurchase,
-          allowWithReply: allowWithReply,
-          allowWithAuthor: allowWithAuthor,
-          allowWithBlocked: allowWithBlocked,
-        );
+         element,
+         allowWithPoints: allowWithPoints,
+         allowWithPurchase: allowWithPurchase,
+         allowWithReply: allowWithReply,
+         allowWithAuthor: allowWithAuthor,
+         allowWithBlocked: allowWithBlocked,
+       );
 
-  static final _re =
-      RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
+  static final _re = RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
 
   final _LockedInfo? _info;
 
@@ -217,9 +206,7 @@ class Locked extends Equatable {
     required bool allowWithAuthor,
     required bool allowWithBlocked,
   }) {
-    if (allowWithAuthor &&
-        element.childNodes.length == 1 &&
-        (element.childNodes[0].text?.contains('仅作者可见') ?? false)) {
+    if (allowWithAuthor && element.childNodes.length == 1 && (element.childNodes[0].text?.contains('仅作者可见') ?? false)) {
       return const _LockedInfo.author();
     }
 
@@ -228,18 +215,8 @@ class Locked extends Equatable {
       return const _LockedInfo.reply();
     }
 
-    final price = element
-        .querySelector('strong')
-        ?.firstEndDeepText()
-        ?.split(' ')
-        .firstOrNull
-        ?.parseToInt();
-    final purchasedCount = element
-        .querySelector('em')
-        ?.firstEndDeepText()
-        ?.split(' ')
-        .elementAtOrNull(1)
-        ?.parseToInt();
+    final price = element.querySelector('strong')?.firstEndDeepText()?.split(' ').firstOrNull?.parseToInt();
+    final purchasedCount = element.querySelector('em')?.firstEndDeepText()?.split(' ').elementAtOrNull(1)?.parseToInt();
 
     final targetString = element.querySelector('a')?.attributes['onclick'];
 
@@ -266,22 +243,14 @@ class Locked extends Equatable {
       if (requiredPoints == null || points == null) {
         return null;
       }
-      return _LockedInfo.points(
-        requiredPoints: requiredPoints,
-        points: points,
-      );
+      return _LockedInfo.points(requiredPoints: requiredPoints, points: points);
     }
 
     if (!allowWithPurchase) {
       return null;
     }
 
-    return _LockedInfo.purchase(
-      price: price,
-      purchasedCount: purchasedCount,
-      tid: tid,
-      pid: pid,
-    );
+    return _LockedInfo.purchase(price: price, purchasedCount: purchasedCount, tid: tid, pid: pid);
   }
 
   /// Check is valid locked area or not.
@@ -296,9 +265,7 @@ class Locked extends Equatable {
     if (_info is _LockedWithPurchase) {
       return _info.price > 0 && tid != null && pid != null;
     }
-    if (_info is _LockedWithPoints ||
-        _info is _LockedWithAuthor ||
-        _info is _LockedWithBlocked) {
+    if (_info is _LockedWithPoints || _info is _LockedWithAuthor || _info is _LockedWithBlocked) {
       return true;
     }
     return false;

@@ -16,8 +16,7 @@ class DebugShowcasePage extends StatefulWidget {
   State<DebugShowcasePage> createState() => _DebugShowcasePageState();
 }
 
-class _DebugShowcasePageState extends State<DebugShowcasePage>
-    with SingleTickerProviderStateMixin {
+class _DebugShowcasePageState extends State<DebugShowcasePage> with SingleTickerProviderStateMixin {
   late TabController tabController;
 
   @override
@@ -41,9 +40,7 @@ class _DebugShowcasePageState extends State<DebugShowcasePage>
           tabAlignment: TabAlignment.start,
           isScrollable: true,
           controller: tabController,
-          tabs: const [
-            Tab(text: 'HTML'),
-          ],
+          tabs: const [Tab(text: 'HTML')],
         ),
         actions: [
           IconButton(
@@ -61,12 +58,7 @@ class _DebugShowcasePageState extends State<DebugShowcasePage>
           ),
         ],
       ),
-      body: TabBarView(
-        controller: tabController,
-        children: const [
-          SingleChildScrollView(child: _HtmlFragment()),
-        ],
-      ),
+      body: TabBarView(controller: tabController, children: const [SingleChildScrollView(child: _HtmlFragment())]),
     );
   }
 }
@@ -201,11 +193,7 @@ class _HtmlFragment extends StatelessWidget {
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        munchElement(
-          context,
-          parseHtmlDocument(htmlData).body!,
-          parseLockedWithPurchase: true,
-        ),
+        munchElement(context, parseHtmlDocument(htmlData).body!, parseLockedWithPurchase: true),
         RateCard(Rate.fromRateLogNode(parseHtmlDocument(rateBlockData).body)!),
         const PacketCard('', allTaken: false),
         const PacketCard('', allTaken: true),

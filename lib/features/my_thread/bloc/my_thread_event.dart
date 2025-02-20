@@ -10,31 +10,26 @@ sealed class MyThreadEvent with MyThreadEventMappable {
 ///
 /// NEVER trigger this manually.
 @MappableClass()
-final class MyThreadLoadInitialDataRequested extends MyThreadEvent
-    with MyThreadLoadInitialDataRequestedMappable {}
+final class MyThreadLoadInitialDataRequested extends MyThreadEvent with MyThreadLoadInitialDataRequestedMappable {}
 
 /// User requires to load more pages.
 @MappableClass()
-final class MyThreadLoadMoreThreadRequested extends MyThreadEvent
-    with MyThreadLoadMoreThreadRequestedMappable {
+final class MyThreadLoadMoreThreadRequested extends MyThreadEvent with MyThreadLoadMoreThreadRequestedMappable {
   /// Constructor.
   const MyThreadLoadMoreThreadRequested() : super();
 }
 
 /// User requires to load more reply pages.
 @MappableClass()
-final class MyThreadLoadMoreReplyRequested extends MyThreadEvent
-    with MyThreadLoadMoreReplyRequestedMappable {
+final class MyThreadLoadMoreReplyRequested extends MyThreadEvent with MyThreadLoadMoreReplyRequestedMappable {
   /// Constructor.
   const MyThreadLoadMoreReplyRequested() : super();
 }
 
 /// User requires to refresh thread tab page.
 @MappableClass()
-final class MyThreadRefreshThreadRequested extends MyThreadEvent
-    with MyThreadRefreshThreadRequestedMappable {}
+final class MyThreadRefreshThreadRequested extends MyThreadEvent with MyThreadRefreshThreadRequestedMappable {}
 
 /// User requires to refresh reply tab page.
 @MappableClass()
-final class MyThreadRefreshReplyRequested extends MyThreadEvent
-    with MyThreadRefreshReplyRequestedMappable {}
+final class MyThreadRefreshReplyRequested extends MyThreadEvent with MyThreadRefreshReplyRequestedMappable {}

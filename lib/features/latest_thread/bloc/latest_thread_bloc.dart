@@ -15,78 +15,79 @@ part 'latest_thread_state.dart';
 typedef LatestThreadEmitter = Emitter<LatestThreadState>;
 
 /// Bloc the the latest thread feature.
-final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState>
-    with LoggerMixin {
+final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState> with LoggerMixin {
   /// Constructor.
   LatestThreadBloc({required LatestThreadRepository latestThreadRepository})
-      : _latestThreadRepository = latestThreadRepository,
-        super(const LatestThreadState()) {
+    : _latestThreadRepository = latestThreadRepository,
+      super(const LatestThreadState()) {
     on<LatestThreadLoadMoreRequested>(_onLatestThreadLoadMoreRequested);
     on<LatestThreadRefreshRequested>(_onLatestThreadRefreshRequested);
   }
 
   final LatestThreadRepository _latestThreadRepository;
 
-  Future<void> _onLatestThreadLoadMoreRequested(
-    LatestThreadLoadMoreRequested event,
-    LatestThreadEmitter emit,
-  ) async {
+  Future<void> _onLatestThreadLoadMoreRequested(LatestThreadLoadMoreRequested event, LatestThreadEmitter emit) async {
     // Do nothing, UI should check this.
     if (state.nextPageUrl == null) {
       return;
     }
-    await _latestThreadRepository.fetchDocument(state.nextPageUrl!).match((e) {
-      handle(e);
-      error('failed to load latest thread next page: $e');
-      emit(state.copyWith(status: LatestThreadStatus.failed));
-    }, (v) {
-      final (threadList, nextPageUrl) = _parseThreadList(v);
-      emit(
-        state.copyWith(
-          status: LatestThreadStatus.success,
-          threadList: [...state.threadList, ...?threadList],
-          pageNumber: state.pageNumber + 1,
-          nextPageUrl: nextPageUrl,
-        ),
-      );
-    }).run();
+    await _latestThreadRepository
+        .fetchDocument(state.nextPageUrl!)
+        .match(
+          (e) {
+            handle(e);
+            error('failed to load latest thread next page: $e');
+            emit(state.copyWith(status: LatestThreadStatus.failed));
+          },
+          (v) {
+            final (threadList, nextPageUrl) = _parseThreadList(v);
+            emit(
+              state.copyWith(
+                status: LatestThreadStatus.success,
+                threadList: [...state.threadList, ...?threadList],
+                pageNumber: state.pageNumber + 1,
+                nextPageUrl: nextPageUrl,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
-  Future<void> _onLatestThreadRefreshRequested(
-    LatestThreadRefreshRequested event,
-    LatestThreadEmitter emit,
-  ) async {
+  Future<void> _onLatestThreadRefreshRequested(LatestThreadRefreshRequested event, LatestThreadEmitter emit) async {
     emit(state.copyWith(status: LatestThreadStatus.loading, threadList: []));
-    await _latestThreadRepository.fetchDocument(event.url).match((e) {
-      handle(e);
-      error('failed to load latest thread page: $e');
-      emit(state.copyWith(status: LatestThreadStatus.failed));
-    }, (v) {
-      final (threadList, nextPageUrl) = _parseThreadList(v);
-      emit(
-        state.copyWith(
-          status: LatestThreadStatus.success,
-          threadList: threadList,
-          pageNumber: 1,
-          nextPageUrl: nextPageUrl,
-        ),
-      );
-    }).run();
+    await _latestThreadRepository
+        .fetchDocument(event.url)
+        .match(
+          (e) {
+            handle(e);
+            error('failed to load latest thread page: $e');
+            emit(state.copyWith(status: LatestThreadStatus.failed));
+          },
+          (v) {
+            final (threadList, nextPageUrl) = _parseThreadList(v);
+            emit(
+              state.copyWith(
+                status: LatestThreadStatus.success,
+                threadList: threadList,
+                pageNumber: 1,
+                nextPageUrl: nextPageUrl,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
-  (List<LatestThread>?, String? nextPageUrl) _parseThreadList(
-    uh.Document document,
-  ) {
-    final data = document
-        .querySelector('div#threadlist > ul')
-        ?.querySelectorAll('li')
-        .map(LatestThread.fromLi)
-        .whereType<LatestThread>()
-        .toList();
-    final nextPageUrl = document
-        .querySelector('div#ct_shell div.pg > a.nxt')
-        ?.firstHref()
-        ?.prependHost();
+  (List<LatestThread>?, String? nextPageUrl) _parseThreadList(uh.Document document) {
+    final data =
+        document
+            .querySelector('div#threadlist > ul')
+            ?.querySelectorAll('li')
+            .map(LatestThread.fromLi)
+            .whereType<LatestThread>()
+            .toList();
+    final nextPageUrl = document.querySelector('div#ct_shell div.pg > a.nxt')?.firstHref()?.prependHost();
     return (data ?? const [], nextPageUrl);
   }
 }

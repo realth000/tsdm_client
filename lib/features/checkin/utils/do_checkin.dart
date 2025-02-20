@@ -10,8 +10,7 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:universal_html/parsing.dart';
 
 const _checkInPageUrl = '$baseUrl/plugin.php?id=dsu_paulsign:sign';
-const _checkInRequestUrl =
-    '$baseUrl/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
+const _checkInRequestUrl = '$baseUrl/plugin.php?id=dsu_paulsign:sign&operation=qiandao&infloat=1&inajax=1';
 
 final _re = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 
@@ -22,11 +21,7 @@ final _re = RegExp(r'formhash" value="(?<FormHash>\w+)"');
 /// This function acts like a common function used by both AutoCheckinRepository
 /// and CheckinRepository, but not becomes a static function of those' base
 /// class, because they don't have it.
-Task<CheckinResult> doCheckin(
-  NetClientProvider netClient,
-  CheckinFeeling feeling,
-  String message,
-) {
+Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feeling, String message) {
   return Task(() async {
     final respEither = await netClient.get(_checkInPageUrl).run();
     if (respEither.isLeft()) {
@@ -50,16 +45,9 @@ Task<CheckinResult> doCheckin(
       return const CheckinResultFormHashNotFound();
     }
 
-    final body = {
-      'formhash': formHash,
-      'qdxq': feeling.toString(),
-      'qdmode': 1,
-      'todaysay': message,
-      'fastreply': 1,
-    };
+    final body = {'formhash': formHash, 'qdxq': feeling.toString(), 'qdmode': 1, 'todaysay': message, 'fastreply': 1};
 
-    final checkInRespEither =
-        await netClient.postForm(_checkInRequestUrl, data: body).run();
+    final checkInRespEither = await netClient.postForm(_checkInRequestUrl, data: body).run();
     if (checkInRespEither.isLeft()) {
       return const CheckinResultWebRequestFailed(null);
     }
@@ -67,10 +55,8 @@ Task<CheckinResult> doCheckin(
     final checkInResp = checkInRespEither.unwrap();
     final checkInRespData = (checkInResp.data as String).split('\n');
 
-    final checkInResult = checkInRespData
-        .firstWhereOrNull((e) => e.contains('</div>'))
-        ?.replaceFirst('</div>', '')
-        .trim();
+    final checkInResult =
+        checkInRespData.firstWhereOrNull((e) => e.contains('</div>'))?.replaceFirst('</div>', '').trim();
 
     // Return results.
     if (checkInResult == null) {

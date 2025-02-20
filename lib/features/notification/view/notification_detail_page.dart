@@ -22,11 +22,7 @@ import 'package:tsdm_client/widgets/reply_bar/repository/reply_repository.dart';
 /// or [NoticeType.mention].
 class NoticeDetailPage extends StatefulWidget {
   /// Constructor.
-  const NoticeDetailPage({
-    required this.url,
-    required this.noticeType,
-    super.key,
-  });
+  const NoticeDetailPage({required this.url, required this.noticeType, super.key});
 
   /// [NoticeType] of current notice.
   ///
@@ -61,9 +57,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
 
     if (state.replyParameters != null) {
       _replyBarController.replyAction = post.replyAction;
-      context
-          .read<ReplyBloc>()
-          .add(ReplyParametersUpdated(state.replyParameters));
+      context.read<ReplyBloc>().add(ReplyParametersUpdated(state.replyParameters));
     }
 
     return Column(
@@ -77,8 +71,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           // [ReplyBar] closed.
           replyType: ReplyTypes.notice,
           disabledEditorFeatures: defaultEditorDisabledFeatures,
-          fullScreenDisabledEditorFeatures:
-          defaultFullScreenDisabledEditorFeatures,
+          fullScreenDisabledEditorFeatures: defaultFullScreenDisabledEditorFeatures,
         ),
       ],
     );
@@ -92,26 +85,15 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
       NoticeType.mention => context.t.noticePage.noticeDetailPage.titleMention,
       NoticeType.invite ||
       NoticeType.newFriend ||
-      NoticeType.batchRate =>
-      '', // No detail page for invites, impossible.
+      NoticeType.batchRate => '', // No detail page for invites, impossible.
     };
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => NotificationRepository(),
-        ),
-        RepositoryProvider(
-          create: (_) => const ReplyRepository(),
-        ),
+        RepositoryProvider(create: (_) => NotificationRepository()),
+        RepositoryProvider(create: (_) => const ReplyRepository()),
+        BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
         BlocProvider(
-          create: (context) => ReplyBloc(replyRepository: context.repo()),
-        ),
-        BlocProvider(
-          create: (context) =>
-          NotificationDetailCubit(
-            notificationRepository: context.repo(),
-          )
-            ..fetchDetail(widget.url),
+          create: (context) => NotificationDetailCubit(notificationRepository: context.repo())..fetchDetail(widget.url),
         ),
       ],
       child: MultiBlocListener(
@@ -128,10 +110,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(
-                  context: context,
-                  message: context.t.threadPage.replySuccess,
-                );
+                showSnackBar(context: context, message: context.t.threadPage.replySuccess);
               }
             },
           ),
@@ -140,25 +119,16 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           builder: (context, state) {
             final body = switch (state.status) {
               NotificationDetailStatus.initial ||
-              NotificationDetailStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
+              NotificationDetailStatus.loading => const Center(child: CircularProgressIndicator()),
               NotificationDetailStatus.success => _buildBody(context, state),
-              NotificationDetailStatus.failed =>
-                  buildRetryButton(context, () {
-                    context
-                        .read<NotificationDetailCubit>()
-                        .fetchDetail(widget.url);
-                  }),
+              NotificationDetailStatus.failed => buildRetryButton(context, () {
+                context.read<NotificationDetailCubit>().fetchDetail(widget.url);
+              }),
             };
 
             // Update thread closed state to reply bar.
-            if (state.threadClosed != context
-                .read<ReplyBloc>()
-                .state
-                .closed) {
-              context
-                  .read<ReplyBloc>()
-                  .add(ReplyThreadClosed(closed: state.threadClosed));
+            if (state.threadClosed != context.read<ReplyBloc>().state.closed) {
+              context.read<ReplyBloc>().add(ReplyThreadClosed(closed: state.threadClosed));
             }
 
             return Scaffold(

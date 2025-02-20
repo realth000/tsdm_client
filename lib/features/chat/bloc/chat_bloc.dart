@@ -29,53 +29,37 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
 
   final ChatRepository _chatRepository;
 
-  FutureOr<void> _onChatFetchHistoryRequested(
-    ChatFetchHistoryRequested event,
-    _Emit emit,
-  ) async {
+  FutureOr<void> _onChatFetchHistoryRequested(ChatFetchHistoryRequested event, _Emit emit) async {
     emit(state.copyWith(status: ChatStatus.loading));
 
-    await await _chatRepository.fetchChat(event.uid).match(
-      (e) {
-        handle(e);
-        emit(state.copyWith(status: ChatStatus.failure));
-      },
-      (v) async => _updateState(v, emit),
-    ).run();
+    await await _chatRepository.fetchChat(event.uid).match((e) {
+      handle(e);
+      emit(state.copyWith(status: ChatStatus.failure));
+    }, (v) async => _updateState(v, emit)).run();
   }
 
   void _updateState(uh.Document document, _Emit emit) {
-    final titleText = document
-        .querySelector('h3 > em')
-        ?.innerText
-        .replaceFirst('正在与', '')
-        .split('聊天中');
+    final titleText = document.querySelector('h3 > em')?.innerText.replaceFirst('正在与', '').split('聊天中');
 
-    final username =
-        titleText?.reversed.toList().slice(1).reversed.toList().join();
+    final username = titleText?.reversed.toList().slice(1).reversed.toList().join();
     final online = titleText?.elementAtOrNull(1)?.endsWith('[在线]');
 
-    final chatHistoryUrl = document
-        .querySelector('div.pm_tac.bbda.cl > a:nth-child(1)')
-        ?.attributes['href'];
-    final userspaceUrl = document
-        .querySelector('div.pm_tac.bbda.cl > a:nth-child(2)')
-        ?.attributes['href'];
+    final chatHistoryUrl = document.querySelector('div.pm_tac.bbda.cl > a:nth-child(1)')?.attributes['href'];
+    final userspaceUrl = document.querySelector('div.pm_tac.bbda.cl > a:nth-child(2)')?.attributes['href'];
     if (username == null || chatHistoryUrl == null || userspaceUrl == null) {
-      error('failed to build chat state: '
-          'username=$username, userspaceUrl=$userspaceUrl, '
-          'chatHistoryUrl=$chatHistoryUrl');
+      error(
+        'failed to build chat state: '
+        'username=$username, userspaceUrl=$userspaceUrl, '
+        'chatHistoryUrl=$chatHistoryUrl',
+      );
       emit(state.copyWith(status: ChatStatus.failure));
       return;
     }
 
     // TODO: Parse and save message send date time.
     // Here we ignored message send time.
-    final messagelist = document
-        .querySelectorAll('ul#msglist > li')
-        .map(ChatMessage.fromLi)
-        .whereType<ChatMessage>()
-        .toList();
+    final messagelist =
+        document.querySelectorAll('ul#msglist > li').map(ChatMessage.fromLi).whereType<ChatMessage>().toList();
 
     final formNode = document.querySelector('div.pmfm > form');
     if (formNode == null) {
@@ -83,16 +67,11 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
       emit(state.copyWith(status: ChatStatus.failure));
       return;
     }
-    final pmsubmit =
-        formNode.querySelector('input[name="pmsubmit"]')?.attributes['value'];
-    final touid =
-        formNode.querySelector('input[name="touid"]')?.attributes['value'];
-    final formHash =
-        formNode.querySelector('input[name="formhash"]')?.attributes['value'];
-    final handlekey =
-        formNode.querySelector('input[name="handlekey"]')?.attributes['value'];
-    final messageAppend =
-        formNode.querySelector('div#messageappend')?.attributes['value'];
+    final pmsubmit = formNode.querySelector('input[name="pmsubmit"]')?.attributes['value'];
+    final touid = formNode.querySelector('input[name="touid"]')?.attributes['value'];
+    final formHash = formNode.querySelector('input[name="formhash"]')?.attributes['value'];
+    final handlekey = formNode.querySelector('input[name="handlekey"]')?.attributes['value'];
+    final messageAppend = formNode.querySelector('div#messageappend')?.attributes['value'];
     // TODO: Parse and handle message refresh url.
     // Here we ignored message refresh url.
 

@@ -32,10 +32,7 @@ class CodeCard extends StatelessWidget {
                 sizedBoxW8H8,
                 Text(
                   context.t.codeCard.title,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: primaryColor),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primaryColor),
                 ),
               ],
             ),

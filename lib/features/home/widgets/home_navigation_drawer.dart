@@ -16,15 +16,10 @@ class HomeNavigationDrawer extends StatelessWidget {
         context.read<HomeCubit>().setTab(barItems[index].tab);
         context.goNamed(barItems[index].targetPath);
       },
-      children: barItems
-          .map(
-            (e) => NavigationDrawerDestination(
-              icon: e.icon,
-              selectedIcon: e.selectedIcon,
-              label: Text(e.label),
-            ),
-          )
-          .toList(),
+      children:
+          barItems
+              .map((e) => NavigationDrawerDestination(icon: e.icon, selectedIcon: e.selectedIcon, label: Text(e.label)))
+              .toList(),
     );
   }
 }

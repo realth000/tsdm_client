@@ -15,12 +15,12 @@ final class ChangelogParameter with ChangelogParameterMappable {
 
   /// Construct an empty query parameter.
   const ChangelogParameter.empty()
-      : extType = '',
-        startTime = '',
-        endTime = '',
-        changeType = '',
-        operation = '',
-        pageNumber = 1;
+    : extType = '',
+      startTime = '',
+      endTime = '',
+      changeType = '',
+      operation = '',
+      pageNumber = 1;
 
   /// Points type
   ///

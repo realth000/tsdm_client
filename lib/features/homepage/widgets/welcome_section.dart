@@ -33,10 +33,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
   Timer? _swiperTimer;
   bool _reverseSwiper = false;
 
-  Widget _buildKahrpbaSwiper(
-    BuildContext context,
-    List<SwiperUrl> swiperUrlList,
-  ) {
+  Widget _buildKahrpbaSwiper(BuildContext context, List<SwiperUrl> swiperUrlList) {
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -109,11 +106,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
         }
       }
       if (target != null) {
-        _swiperController.animateTo(
-          target,
-          duration: duration200,
-          curve: Curves.ease,
-        );
+        _swiperController.animateTo(target, duration: duration200, curve: Curves.ease);
       }
     });
   }

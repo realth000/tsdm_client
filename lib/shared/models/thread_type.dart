@@ -6,10 +6,7 @@ part of 'models.dart';
 @MappableClass()
 class ThreadType with ThreadTypeMappable {
   /// Constructor.
-  const ThreadType({
-    required this.name,
-    required this.url,
-  });
+  const ThreadType({required this.name, required this.url});
 
   /// Parse and build [ThreadType]
   static ThreadType? parse(String? name, String? url) {

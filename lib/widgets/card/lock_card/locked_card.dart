@@ -31,27 +31,15 @@ class LockedCard extends StatefulWidget {
 class _LockedCardState extends State<LockedCard> {
   Future<void> _purchaseFetchConfirmInfo(BuildContext context) async {
     context.read<PurchaseBloc>().add(
-          PurchaseFetchConfirmInfoRequested(
-            tid: widget.locked.tid!,
-            pid: widget.locked.pid!,
-          ),
-        );
+      PurchaseFetchConfirmInfoRequested(tid: widget.locked.tid!, pid: widget.locked.pid!),
+    );
   }
 
   WidgetSpan _buildUnderlineText(BuildContext context, String text) {
     return WidgetSpan(
       child: DecoratedBox(
-        decoration: BoxDecoration(
-          border: Border(
-            bottom: BorderSide(
-              color: Theme.of(context).colorScheme.onSurface,
-            ),
-          ),
-        ),
-        child: Text(
-          text,
-          style: Theme.of(context).textTheme.bodySmall,
-        ),
+        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface))),
+        child: Text(text, style: Theme.of(context).textTheme.bodySmall),
       ),
     );
   }
@@ -60,12 +48,8 @@ class _LockedCardState extends State<LockedCard> {
     final tr = context.t.lockedCard.purchase;
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => PurchaseRepository(),
-        ),
-        BlocProvider(
-          create: (context) => PurchaseBloc(purchaseRepository: context.repo()),
-        ),
+        RepositoryProvider(create: (_) => PurchaseRepository()),
+        BlocProvider(create: (context) => PurchaseBloc(purchaseRepository: context.repo())),
       ],
       child: BlocListener<PurchaseBloc, PurchaseState>(
         listener: (context, state) async {
@@ -95,19 +79,13 @@ class _LockedCardState extends State<LockedCard> {
             }
             return;
           } else if (state.status == PurchaseStatus.success) {
-            showSnackBar(
-              context: context,
-              message: tr.successPurchaseInfo,
-            );
+            showSnackBar(context: context, message: tr.successPurchaseInfo);
             if (!context.mounted) {
               return;
             }
             context.read<ThreadBloc>().add(ThreadRefreshRequested());
           } else if (state.status == PurchaseStatus.failed) {
-            showSnackBar(
-              context: context,
-              message: tr.failedPurchase,
-            );
+            showSnackBar(context: context, message: tr.failedPurchase);
             if (!context.mounted) {
               return;
             }
@@ -131,12 +109,8 @@ class _LockedCardState extends State<LockedCard> {
                 icon: const Icon(FontAwesomeIcons.coins),
                 label: Text('${widget.locked.price}'),
                 onPressed: switch (state.status) {
-                  PurchaseStatus.initial || PurchaseStatus.failed => () async =>
-                      _purchaseFetchConfirmInfo(context),
-                  PurchaseStatus.loading ||
-                  PurchaseStatus.gotInfo ||
-                  PurchaseStatus.success =>
-                    null,
+                  PurchaseStatus.initial || PurchaseStatus.failed => () async => _purchaseFetchConfirmInfo(context),
+                  PurchaseStatus.loading || PurchaseStatus.gotInfo || PurchaseStatus.success => null,
                 },
               ),
             );
@@ -151,9 +125,9 @@ class _LockedCardState extends State<LockedCard> {
     final tr = context.t.lockedCard;
     final widgets = <Widget>[];
 
-    final primaryStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: Theme.of(context).colorScheme.primary,
-        );
+    final primaryStyle = Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary);
     final secondaryStyle = Theme.of(context).textTheme.bodySmall;
 
     final Text title;
@@ -163,14 +137,8 @@ class _LockedCardState extends State<LockedCard> {
       widgets.addAll([
         Text.rich(
           tr.points.detail(
-            requiredPoints: _buildUnderlineText(
-              context,
-              '${widget.locked.requiredPoints!}',
-            ),
-            points: _buildUnderlineText(
-              context,
-              '${widget.locked.points!}',
-            ),
+            requiredPoints: _buildUnderlineText(context, '${widget.locked.requiredPoints!}'),
+            points: _buildUnderlineText(context, '${widget.locked.points!}'),
           ),
           style: secondaryStyle,
         ),
@@ -179,12 +147,7 @@ class _LockedCardState extends State<LockedCard> {
       title = Text(tr.purchase.title, style: primaryStyle);
       widgets.addAll([
         Text.rich(
-          tr.purchase.purchasedInfo(
-            num: _buildUnderlineText(
-              context,
-              '${widget.locked.purchasedCount!}',
-            ),
-          ),
+          tr.purchase.purchasedInfo(num: _buildUnderlineText(context, '${widget.locked.purchasedCount!}')),
           style: secondaryStyle,
         ),
         sizedBoxW4H4,
@@ -193,26 +156,13 @@ class _LockedCardState extends State<LockedCard> {
     } else if (widget.locked.lockedWithReply) {
       title = Text(tr.reply.title, style: primaryStyle);
       widgets.addAll([
-        Text.rich(
-          tr.reply.detail(
-            reply: _buildUnderlineText(
-              context,
-              tr.reply.detailReply,
-            ),
-          ),
-          style: secondaryStyle,
-        ),
+        Text.rich(tr.reply.detail(reply: _buildUnderlineText(context, tr.reply.detailReply)), style: secondaryStyle),
       ]);
     } else if (widget.locked.lockedWithAuthor) {
       title = Text(tr.author.title, style: primaryStyle);
       widgets.addAll([
         Text.rich(
-          tr.author.detail(
-            author: _buildUnderlineText(
-              context,
-              tr.author.detailAuthor,
-            ),
-          ),
+          tr.author.detail(author: _buildUnderlineText(context, tr.author.detailAuthor)),
           style: secondaryStyle,
         ),
       ]);
@@ -220,9 +170,7 @@ class _LockedCardState extends State<LockedCard> {
       title = Text(tr.blocked.title, style: primaryStyle);
       widgets.add(Text(tr.blocked.detail));
     } else {
-      throw UnimplementedError(
-        'Widget for card type of locked card not implemented',
-      );
+      throw UnimplementedError('Widget for card type of locked card not implemented');
     }
 
     return Card(
@@ -235,14 +183,7 @@ class _LockedCardState extends State<LockedCard> {
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  Icons.lock_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
-                sizedBoxW8H8,
-                title,
-              ],
+              children: [Icon(Icons.lock_outlined, color: Theme.of(context).colorScheme.primary), sizedBoxW8H8, title],
             ),
             sizedBoxW8H8,
             ...widgets.insertBetween(sizedBoxW8H8),

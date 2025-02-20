@@ -5,10 +5,7 @@ import 'package:flutter/material.dart';
 /// Pinned in sliver list.
 class ThreadPinnedHeader extends SliverPersistentHeaderDelegate {
   /// Constructor.
-  ThreadPinnedHeader({
-    required this.height,
-    required this.child,
-  });
+  ThreadPinnedHeader({required this.height, required this.child});
 
   /// Inner pinned child widget.
   final Widget child;
@@ -17,16 +14,8 @@ class ThreadPinnedHeader extends SliverPersistentHeaderDelegate {
   final double height;
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
-    return SizedBox(
-      width: double.infinity,
-      height: height,
-      child: child,
-    );
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox(width: double.infinity, height: height, child: child);
   }
 
   @override

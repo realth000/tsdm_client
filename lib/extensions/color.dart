@@ -26,11 +26,7 @@ extension Accessor327Ext on Color {
   ///   _floatToInt8(b) << 0;
   /// }
   /// ```
-  int get valueA =>
-      _floatToInt8(a) << 24 |
-      _floatToInt8(r) << 16 |
-      _floatToInt8(g) << 8 |
-      _floatToInt8(b) << 0;
+  int get valueA => _floatToInt8(a) << 24 | _floatToInt8(r) << 16 | _floatToInt8(g) << 8 | _floatToInt8(b) << 0;
 
   /// Accessor of color.withOpacity also keeps precision.
   ///

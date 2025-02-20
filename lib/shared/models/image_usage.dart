@@ -25,16 +25,14 @@ sealed class ImageUsageInfo with ImageUsageInfoMappable {
 
 /// Associated info for [ImageUsage.other].
 @MappableClass()
-final class ImageUsageInfoOther extends ImageUsageInfo
-    with ImageUsageInfoOtherMappable {
+final class ImageUsageInfoOther extends ImageUsageInfo with ImageUsageInfoOtherMappable {
   /// Constructor.
   const ImageUsageInfoOther();
 }
 
 /// Associated info for [ImageUsage.userAvatar].
 @MappableClass()
-final class ImageUsageInfoUserAvatar extends ImageUsageInfo
-    with ImageUsageInfoUserAvatarMappable {
+final class ImageUsageInfoUserAvatar extends ImageUsageInfo with ImageUsageInfoUserAvatarMappable {
   /// Constructor.
   const ImageUsageInfoUserAvatar(this.username);
 

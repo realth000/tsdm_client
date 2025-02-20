@@ -12,8 +12,7 @@ sealed class ThreadV2Event with ThreadV2EventMappable {
 /// Actually this event means loading the previous page before the current
 /// page range.
 @MappableClass()
-final class ThreadV2LoadPrevPageRequested extends ThreadV2Event
-    with ThreadV2LoadPrevPageRequestedMappable {
+final class ThreadV2LoadPrevPageRequested extends ThreadV2Event with ThreadV2LoadPrevPageRequestedMappable {
   /// Constructor.
   const ThreadV2LoadPrevPageRequested();
 }
@@ -23,16 +22,14 @@ final class ThreadV2LoadPrevPageRequested extends ThreadV2Event
 /// Actually this event means loading the next page after the current
 /// page range.
 @MappableClass()
-final class ThreadV2LoadNextPageRequested extends ThreadV2Event
-    with ThreadV2LoadNextPageRequestedMappable {
+final class ThreadV2LoadNextPageRequested extends ThreadV2Event with ThreadV2LoadNextPageRequestedMappable {
   /// Constructor.
   const ThreadV2LoadNextPageRequested();
 }
 
 /// Jump to a certain page.
 @MappableClass()
-final class ThreadV2JumpPageRequested extends ThreadV2Event
-    with ThreadV2JumpPageRequestedMappable {
+final class ThreadV2JumpPageRequested extends ThreadV2Event with ThreadV2JumpPageRequestedMappable {
   /// Constructor.
   const ThreadV2JumpPageRequested(this.page);
 

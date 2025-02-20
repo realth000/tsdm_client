@@ -20,21 +20,22 @@ class CheckinFeelingDialog extends StatelessWidget {
       title: Text(context.t.settingsPage.checkinSection.feeling),
       content: SingleChildScrollView(
         child: Column(
-          children: CheckinFeeling.values
-              .map(
-                (e) => RadioListTile(
-                  title: Text(e.translate(context)),
-                  onChanged: (value) async {
-                    if (value == null) {
-                      return;
-                    }
-                    Navigator.of(context).pop(value);
-                  },
-                  value: e.toString(),
-                  groupValue: defaultFeeling,
-                ),
-              )
-              .toList(),
+          children:
+              CheckinFeeling.values
+                  .map(
+                    (e) => RadioListTile(
+                      title: Text(e.translate(context)),
+                      onChanged: (value) async {
+                        if (value == null) {
+                          return;
+                        }
+                        Navigator.of(context).pop(value);
+                      },
+                      value: e.toString(),
+                      groupValue: defaultFeeling,
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );
@@ -102,9 +103,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
                   });
                 },
                 controller: textController,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(_maxTextLength),
-                ],
+                inputFormatters: [LengthLimitingTextInputFormatter(_maxTextLength)],
               ),
             ),
           ),
@@ -123,8 +122,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
           child: Text(context.t.general.ok),
           onPressed: () async {
             // Validate
-            if (formKey.currentState == null ||
-                !(formKey.currentState!).validate()) {
+            if (formKey.currentState == null || !(formKey.currentState!).validate()) {
               return;
             }
             Navigator.of(context).pop(textController.text);

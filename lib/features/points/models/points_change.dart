@@ -90,16 +90,20 @@ class PointsChange with PointsChangeMappable {
   static PointsChange? fromTrNode(uh.Element element) {
     final tdList = element.querySelectorAll('td');
     if (tdList.length != 4) {
-      talker.error('failed to build PointsChange instance: '
-          'invalid td count: ${tdList.length}');
+      talker.error(
+        'failed to build PointsChange instance: '
+        'invalid td count: ${tdList.length}',
+      );
       return null;
     }
 
     final operation = tdList[0].querySelector('a')?.innerText;
     final operationFilterUrl = tdList[0].querySelector('a')?.attributes['href'];
     if (operation == null || operationFilterUrl == null) {
-      talker.error('failed to build PointsChange: operation=$operation, '
-          'operationFilterUrl=$operationFilterUrl');
+      talker.error(
+        'failed to build PointsChange: operation=$operation, '
+        'operationFilterUrl=$operationFilterUrl',
+      );
       return null;
     }
     final attrNameList = <String>[];
@@ -118,14 +122,15 @@ class PointsChange with PointsChangeMappable {
       }
     }
     if (attrNameList.length != attrValueList.length) {
-      talker.error('failed to build PointsChange: invalid attar name '
-          'value length: $attrNameList and $attrValueList');
+      talker.error(
+        'failed to build PointsChange: invalid attar name '
+        'value length: $attrNameList and $attrValueList',
+      );
       return null;
     }
 
     // Points become more or less on this change.
-    final pointsChangeType =
-        switch (tdList[1].querySelector('span')?.classes.firstOrNull) {
+    final pointsChangeType = switch (tdList[1].querySelector('span')?.classes.firstOrNull) {
       // Up lifted changelog has an orange font color with class name "xi1"
       'xi1' => PointsChangeType.more,
       // Down lifted changelog has an gray font color with class name "xg1".
@@ -140,12 +145,13 @@ class PointsChange with PointsChangeMappable {
     }
 
     final detail = tdList[2].outerHtml ?? tdList[2].innerText.trim();
-    final redirectUrl =
-        tdList[2].querySelector('a')?.attributes['href']?.prependHost();
+    final redirectUrl = tdList[2].querySelector('a')?.attributes['href']?.prependHost();
     final changedTime = tdList[3].innerText.trim().parseToDateTimeUtc8();
     if (changedTime == null) {
-      talker.error('failed to build PointsChange: invalid change time:'
-          '${tdList[3].innerText.trim()}');
+      talker.error(
+        'failed to build PointsChange: invalid change time:'
+        '${tdList[3].innerText.trim()}',
+      );
       return null;
     }
 
@@ -161,6 +167,5 @@ class PointsChange with PointsChangeMappable {
   }
 
   /// Get tht formatted change.
-  String get changeMapString =>
-      changeMap.entries.map((e) => '${e.key} ${e.value}').join(',');
+  String get changeMapString => changeMap.entries.map((e) => '${e.key} ${e.value}').join(',');
 }

@@ -67,14 +67,8 @@ class _SettingsPageState extends State<SettingsPage> {
   /// * Return null if user canceled the selection.
   /// * Return (null, true) if user chose to use system locale.
   /// * Return (locale, false) if user chose to use specified locale.
-  Future<(AppLocale?, bool)?> selectLanguageDialog(
-    BuildContext context,
-    String currentLocale,
-  ) async {
-    return showDialog<(AppLocale?, bool)>(
-      context: context,
-      builder: (context) => LanguageDialog(currentLocale),
-    );
+  Future<(AppLocale?, bool)?> selectLanguageDialog(BuildContext context, String currentLocale) async {
+    return showDialog<(AppLocale?, bool)>(context: context, builder: (context) => LanguageDialog(currentLocale));
   }
 
   /// Show a dialog to let user select accent color.
@@ -82,54 +76,41 @@ class _SettingsPageState extends State<SettingsPage> {
   /// * Return null if user canceled the selection.
   /// * Return (null, true) if user chose to use default color.
   /// * Return (color, false) if user chose to use specified color.
-  Future<(Color?, bool)?> _showAccentColorPickerDialog(
-    BuildContext context,
-  ) async {
-    final colorValue =
-        getIt.get<SettingsRepository>().currentSettings.accentColor;
+  Future<(Color?, bool)?> _showAccentColorPickerDialog(BuildContext context) async {
+    final colorValue = getIt.get<SettingsRepository>().currentSettings.accentColor;
     if (!context.mounted) {
       return null;
     }
     return showCustomBottomSheet<(Color?, bool)>(
       title: context.t.colorPickerDialog.title,
       context: context,
-      builder: (context) => ColorPickerDialog(
-        currentColorValue: colorValue,
-        blocContext: context,
-      ),
+      builder: (context) => ColorPickerDialog(currentColorValue: colorValue, blocContext: context),
     );
   }
 
-  List<Widget> _buildAccountSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildAccountSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.accountSection;
     return [
       SectionTitleText(tr.title),
       SectionListTile(
         leading: const Icon(Icons.account_circle_outlined),
         title: Text(tr.switchAccount),
-        onTap: () async => showDialog<void>(
-          context: context,
-          builder: (_) => const SwitchAccountDialog(),
-          barrierDismissible: false,
-        ),
+        onTap:
+            () async => showDialog<void>(
+              context: context,
+              builder: (_) => const SwitchAccountDialog(),
+              barrierDismissible: false,
+            ),
       ),
     ];
   }
 
-  List<Widget> _buildAppearanceSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildAppearanceSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.appearanceSection;
     // Locale.
     final settingsLocale = state.settingsMap.locale;
-    final locale = AppLocale.values
-        .firstWhereOrNull((v) => v.languageTag == settingsLocale);
-    final localeName =
-        locale == null ? tr.languages.followSystem : context.t.locale;
+    final locale = AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
+    final localeName = locale == null ? tr.languages.followSystem : context.t.locale;
 
     // Theme mode.
     final themeModeIndex = state.settingsMap.themeMode;
@@ -146,10 +127,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
     // Unread message on state.
     final showUnreadNoticeBadge = state.settingsMap.showUnreadNoticeBadge;
-    final showUnreadPersonalMessageBadge =
-        state.settingsMap.showUnreadPersonalMessageBadge;
-    final showUnreadBroadcastMessageBadge =
-        state.settingsMap.showUnreadBroadcastMessageBadge;
+    final showUnreadPersonalMessageBadge = state.settingsMap.showUnreadPersonalMessageBadge;
+    final showUnreadBroadcastMessageBadge = state.settingsMap.showUnreadBroadcastMessageBadge;
 
     /// App wide font family
     final fontFamily = state.settingsMap.fontFamily;
@@ -160,13 +139,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionListTile(
         leading: const Icon(Icons.contrast_outlined),
         title: Text(tr.themeMode.title),
-        subtitle: Text(
-          <String>[
-            tr.themeMode.system,
-            tr.themeMode.light,
-            tr.themeMode.dark,
-          ][themeModeIndex],
-        ),
+        subtitle: Text(<String>[tr.themeMode.system, tr.themeMode.light, tr.themeMode.dark][themeModeIndex]),
         trailing: ToggleButtons(
           isSelected: [
             themeModeIndex == ThemeMode.light.index,
@@ -195,9 +168,7 @@ class _SettingsPageState extends State<SettingsPage> {
             // Effect immediately.
             context.read<ThemeCubit>().setThemeModeIndex(themeIndex);
             // Save to settings.
-            context
-                .read<SettingsBloc>()
-                .add(SettingsValueChanged(SettingsKeys.themeMode, themeIndex));
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.themeMode, themeIndex));
           },
         ),
       ),
@@ -207,8 +178,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.languages.title),
         subtitle: Text(localeName),
         onTap: () async {
-          final localeGroup =
-              await selectLanguageDialog(context, locale?.languageTag ?? '');
+          final localeGroup = await selectLanguageDialog(context, locale?.languageTag ?? '');
           if (localeGroup == null) {
             return;
           }
@@ -219,9 +189,7 @@ class _SettingsPageState extends State<SettingsPage> {
             if (!context.mounted) {
               return;
             }
-            context
-                .read<SettingsBloc>()
-                .add(const SettingsValueChanged(SettingsKeys.locale, ''));
+            context.read<SettingsBloc>().add(const SettingsValueChanged(SettingsKeys.locale, ''));
             return;
           }
           await LocaleSettings.setLocale(localeGroup.$1!);
@@ -229,12 +197,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (!context.mounted) {
             return;
           }
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(
-                  SettingsKeys.locale,
-                  localeGroup.$1!.languageTag,
-                ),
-              );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.locale, localeGroup.$1!.languageTag));
         },
       ),
 
@@ -245,12 +208,7 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(tr.showShortcutInForumCard.detail),
         value: showForumCardShortcut,
         onChanged: (v) async {
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(
-                  SettingsKeys.showShortcutInForumCard,
-                  v,
-                ),
-              );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showShortcutInForumCard, v));
         },
       ),
 
@@ -261,9 +219,7 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(tr.colorSchemeFollowSystem.detail),
         value: accentColorFollowSystem,
         onChanged: (v) async {
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(SettingsKeys.accentColorFollowSystem, v),
-              );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.accentColorFollowSystem, v));
           if (v) {
             // Switched to system color.
             await SystemTheme.accentColor.load();
@@ -276,12 +232,8 @@ class _SettingsPageState extends State<SettingsPage> {
           } else {
             // Switched to user specified color.
             context.read<ThemeCubit>().setAccentColor(
-                  Color(
-                    accentColor >= 0
-                        ? accentColor
-                        : SettingsKeys.accentColor.defaultValue,
-                  ),
-                );
+              Color(accentColor >= 0 ? accentColor : SettingsKeys.accentColor.defaultValue),
+            );
           }
         },
       ),
@@ -291,12 +243,8 @@ class _SettingsPageState extends State<SettingsPage> {
         enabled: !accentColorFollowSystem,
         leading: const Icon(Icons.color_lens_outlined),
         title: Text(tr.colorScheme.title),
-        subtitle: accentColorFollowSystem
-            ? Text(tr.colorScheme.overrideWithSystem)
-            : null,
-        trailing: accentColor < 0 || accentColorFollowSystem
-            ? null
-            : ColorPalette(color: Color(accentColor)),
+        subtitle: accentColorFollowSystem ? Text(tr.colorScheme.overrideWithSystem) : null,
+        trailing: accentColor < 0 || accentColorFollowSystem ? null : ColorPalette(color: Color(accentColor)),
         onTap: () async {
           final color = await _showAccentColorPickerDialog(context);
           if (color == null) {
@@ -307,25 +255,15 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           if (color.$2) {
             // Effect immediately.
-            context
-                .read<ThemeCubit>()
-                .setAccentColor(Color(SettingsKeys.accentColor.defaultValue));
+            context.read<ThemeCubit>().setAccentColor(Color(SettingsKeys.accentColor.defaultValue));
             // Set to -1 ( < 0) will clear accent color.
             context.read<SettingsBloc>().add(
-                  SettingsValueChanged(
-                    SettingsKeys.accentColor,
-                    SettingsKeys.accentColor.defaultValue,
-                  ),
-                );
+              SettingsValueChanged(SettingsKeys.accentColor, SettingsKeys.accentColor.defaultValue),
+            );
             return;
           }
           context.read<ThemeCubit>().setAccentColor(color.$1!);
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(
-                  SettingsKeys.accentColor,
-                  color.$1!.valueA,
-                ),
-              );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.accentColor, color.$1!.valueA));
         },
       ),
       SectionSwitchListTile(
@@ -334,9 +272,7 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(tr.showUnreadInfoHint.detail),
         value: showUnreadInfoHint,
         onChanged: (v) async {
-          context
-              .read<SettingsBloc>()
-              .add(SettingsValueChanged(SettingsKeys.showUnreadInfoHint, v));
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadInfoHint, v));
         },
       ),
 
@@ -345,9 +281,7 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notifications_paused_outlined),
         title: Text(tr.unreadNoticeBadge),
         value: showUnreadNoticeBadge,
-        onChanged: (v) => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.showUnreadNoticeBadge, v)),
+        onChanged: (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadNoticeBadge, v)),
       ),
 
       // Unread personal message badge.
@@ -355,12 +289,9 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notifications_active_outlined),
         title: Text(tr.unreadPersonalMessageBadge),
         value: showUnreadPersonalMessageBadge,
-        onChanged: (v) => context.read<SettingsBloc>().add(
-              SettingsValueChanged(
-                SettingsKeys.showUnreadPersonalMessageBadge,
-                v,
-              ),
-            ),
+        onChanged:
+            (v) =>
+                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadPersonalMessageBadge, v)),
       ),
 
       // Unread broadcast message badge.
@@ -368,25 +299,18 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notification_important_outlined),
         title: Text(tr.unreadBroadcastMessageBadge),
         value: showUnreadBroadcastMessageBadge,
-        onChanged: (v) => context.read<SettingsBloc>().add(
-              SettingsValueChanged(
-                SettingsKeys.showUnreadBroadcastMessageBadge,
-                v,
-              ),
-            ),
+        onChanged:
+            (v) =>
+                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadBroadcastMessageBadge, v)),
       ),
 
-      Padding(
-        padding: edgeInsetsT4B4,
-        child: Tips(tr.unreadBadgeLimitation),
-      ),
+      Padding(padding: edgeInsetsT4B4, child: Tips(tr.unreadBadgeLimitation)),
 
       SectionListTile(
         leading: const Icon(Icons.article_outlined),
         title: Text(tr.threadCard.title),
         subtitle: Text(tr.threadCard.detail),
-        onTap: () =>
-            context.pushNamed(ScreenPaths.settingsThreadAppearance.path),
+        onTap: () => context.pushNamed(ScreenPaths.settingsThreadAppearance.path),
         // onTap: () async => showCustomBottomSheet(
         //   context: context,
         //   title: tr.title,
@@ -401,18 +325,13 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.fontFamily.title),
         subtitle: fontFamily.isEmpty ? null : Text(fontFamily),
         onTap: () async {
-          final selectedFont = await showDialog<String>(
-            context: context,
-            builder: (_) => FontFamilyDialog(fontFamily),
-          );
+          final selectedFont = await showDialog<String>(context: context, builder: (_) => FontFamilyDialog(fontFamily));
           if (selectedFont == null || !context.mounted) {
             return;
           }
 
           context.read<ThemeCubit>().setFontFamily(selectedFont);
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(SettingsKeys.fontFamily, selectedFont),
-              );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.fontFamily, selectedFont));
         },
       ),
     ];
@@ -421,10 +340,7 @@ class _SettingsPageState extends State<SettingsPage> {
   /// App window related settings.
   ///
   /// Only available on desktop platforms.
-  List<Widget> _buildWindowSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildWindowSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.windowSection;
     final windowRememberSize = state.settingsMap.windowRememberSize;
     final windowRememberPosition = state.settingsMap.windowRememberPosition;
@@ -437,36 +353,28 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.windowRememberSize.title),
         subtitle: Text(tr.windowRememberSize.detail),
         value: windowRememberSize,
-        onChanged: (v) => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.windowRememberSize, v)),
+        onChanged: (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.windowRememberSize, v)),
       ),
       SectionSwitchListTile(
         secondary: const Icon(Icons.open_with_outlined),
         title: Text(tr.windowRememberPosition.title),
         subtitle: Text(tr.windowRememberPosition.detail),
         value: windowRememberPosition,
-        onChanged: (v) => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.windowRememberPosition, v)),
+        onChanged:
+            (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.windowRememberPosition, v)),
       ),
       SectionSwitchListTile(
         secondary: const Icon(Icons.filter_center_focus_outlined),
         title: Text(tr.windowInCenter.title),
         subtitle: Text(tr.windowInCenter.detail),
         value: windowInCenter,
-        onChanged: (v) => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.windowInCenter, v)),
+        onChanged: (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.windowInCenter, v)),
       ),
       Tips(tr.disableHint),
     ];
   }
 
-  List<Widget> _buildBehaviorSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildBehaviorSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.behaviorSection;
     final doublePressExit = state.settingsMap.doublePressExit;
     final threadReverseOrder = state.settingsMap.threadReverseOrder;
@@ -486,9 +394,7 @@ class _SettingsPageState extends State<SettingsPage> {
           subtitle: Text(tr.doublePressExit.detail),
           value: doublePressExit,
           onChanged: (v) async {
-            context
-                .read<SettingsBloc>()
-                .add(SettingsValueChanged(SettingsKeys.doublePressExit, v));
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.doublePressExit, v));
           },
         ),
       SectionSwitchListTile(
@@ -496,9 +402,8 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.threadReverseOrder.title),
         subtitle: Text(tr.threadReverseOrder.detail),
         value: threadReverseOrder,
-        onChanged: (v) async => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
+        onChanged:
+            (v) async => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
       ),
       // SectionListTile(
       //   leading: const Icon(Icons.sync_outlined),
@@ -538,30 +443,15 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  Future<String?> _showSetCheckinFeelingDialog(
-    BuildContext context,
-    String defaultFeeling,
-  ) async {
-    return showDialog<String>(
-      context: context,
-      builder: (context) => CheckinFeelingDialog(defaultFeeling),
-    );
+  Future<String?> _showSetCheckinFeelingDialog(BuildContext context, String defaultFeeling) async {
+    return showDialog<String>(context: context, builder: (context) => CheckinFeelingDialog(defaultFeeling));
   }
 
-  Future<String?> _showSetCheckinMessageDialog(
-    BuildContext context,
-    String defaultMessage,
-  ) async {
-    return showDialog<String>(
-      context: context,
-      builder: (context) => CheckinMessageDialog(defaultMessage),
-    );
+  Future<String?> _showSetCheckinMessageDialog(BuildContext context, String defaultMessage) async {
+    return showDialog<String>(context: context, builder: (context) => CheckinMessageDialog(defaultMessage));
   }
 
-  List<Widget> _buildCheckinSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildCheckinSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.checkinSection;
 
     final checkinFeeling = state.settingsMap.checkinFeeling;
@@ -576,8 +466,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.feeling),
         subtitle: Text(CheckinFeeling.from(checkinFeeling).translate(context)),
         onTap: () async {
-          final result =
-              await _showSetCheckinFeelingDialog(context, checkinFeeling);
+          final result = await _showSetCheckinFeelingDialog(context, checkinFeeling);
           if (result == null) {
             return;
           }
@@ -585,12 +474,12 @@ class _SettingsPageState extends State<SettingsPage> {
             return;
           }
           context.read<SettingsBloc>().add(
-                SettingsValueChanged(
-                  SettingsKeys.checkinFeeling,
-                  result,
-                  // CheckinFeeling.from(result),
-                ),
-              );
+            SettingsValueChanged(
+              SettingsKeys.checkinFeeling,
+              result,
+              // CheckinFeeling.from(result),
+            ),
+          );
         },
       ),
       // Message
@@ -599,17 +488,14 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.anythingToSay),
         subtitle: Text(checkinMessage),
         onTap: () async {
-          final result =
-              await _showSetCheckinMessageDialog(context, checkinMessage);
+          final result = await _showSetCheckinMessageDialog(context, checkinMessage);
           if (result == null) {
             return;
           }
           if (!context.mounted) {
             return;
           }
-          context
-              .read<SettingsBloc>()
-              .add(SettingsValueChanged(SettingsKeys.checkinMessage, result));
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.checkinMessage, result));
         },
       ),
       SectionSwitchListTile(
@@ -617,17 +503,12 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.autoCheckin.title),
         subtitle: Text(tr.autoCheckin.detail),
         value: autoCheckin,
-        onChanged: (v) async => context
-            .read<SettingsBloc>()
-            .add(SettingsValueChanged(SettingsKeys.autoCheckin, v)),
+        onChanged: (v) async => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.autoCheckin, v)),
       ),
     ];
   }
 
-  List<Widget> _buildStorageSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildStorageSection(BuildContext context, SettingsState state) {
     return [
       // Cache.
       SectionTitleText(context.t.settingsPage.storageSection.title),
@@ -641,10 +522,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  List<Widget> _buildAdvanceSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildAdvanceSection(BuildContext context, SettingsState state) {
     final netClientUseProxy = state.settingsMap.netClientUseProxy;
     final netClientProxy = state.settingsMap.netClientProxy;
     String? host;
@@ -660,12 +538,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (!netClientUseProxy) {
       proxyOptionHint = Text(tr.proxySettings.disabled);
     } else if (host == null && port == null) {
-      proxyOptionHint = Text(
-        tr.proxySettings.notSet,
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.error,
-        ),
-      );
+      proxyOptionHint = Text(tr.proxySettings.notSet, style: TextStyle(color: Theme.of(context).colorScheme.error));
     }
     return [
       SectionTitleText(tr.title),
@@ -674,12 +547,7 @@ class _SettingsPageState extends State<SettingsPage> {
           leading: const Icon(Icons.developer_mode_outlined),
           title: const Text('DEBUG SHOWCASE'),
           onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (context) => const DebugShowcasePage(),
-              ),
-            );
+            Navigator.push(context, MaterialPageRoute<void>(builder: (context) => const DebugShowcasePage()));
           },
         ),
       SectionSwitchListTile(
@@ -687,16 +555,8 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.useProxy),
         value: netClientUseProxy,
         onChanged: (v) {
-          context.read<SettingsBloc>().add(
-                SettingsValueChanged(
-                  SettingsKeys.netClientUseProxy,
-                  v,
-                ),
-              );
-          showSnackBar(
-            context: context,
-            message: context.t.general.affectAfterRestart,
-          );
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
+          showSnackBar(context: context, message: context.t.general.affectAfterRestart);
         },
       ),
       SectionListTile(
@@ -704,14 +564,12 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const Icon(Icons.network_locked_outlined),
         title: Text(tr.proxySettings.title),
         subtitle: proxyOptionHint,
-        onTap: () async => showDialog<void>(
-          context: context,
-          builder: (context) => ProxySettingsDialog(
-            host: host,
-            port: port,
-          ),
-          barrierDismissible: false,
-        ),
+        onTap:
+            () async => showDialog<void>(
+              context: context,
+              builder: (context) => ProxySettingsDialog(host: host, port: port),
+              barrierDismissible: false,
+            ),
       ),
 
       // Export data.
@@ -721,15 +579,11 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: () async {
           final db = await databaseFile;
           final data = await db.readAsBytes();
-          final name =
-              'tsdm_client_data_${DateTime.now().microsecondsSinceEpoch}.db';
+          final name = 'tsdm_client_data_${DateTime.now().microsecondsSinceEpoch}.db';
 
           if (isDesktop) {
             // On desktop platforms, `saveFiles` only return the selected path.
-            final filePath = await FilePicker.platform.saveFile(
-              dialogTitle: tr.exportData,
-              fileName: name,
-            );
+            final filePath = await FilePicker.platform.saveFile(dialogTitle: tr.exportData, fileName: name);
             if (filePath == null) {
               return;
             }
@@ -737,11 +591,7 @@ class _SettingsPageState extends State<SettingsPage> {
             await File(filePath).writeAsBytes(data, flush: true);
           } else {
             // Mobile in one step.
-            await FilePicker.platform.saveFile(
-              dialogTitle: tr.exportData,
-              fileName: name,
-              bytes: data,
-            );
+            await FilePicker.platform.saveFile(dialogTitle: tr.exportData, fileName: name, bytes: data);
           }
         },
       ),
@@ -751,17 +601,12 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const Icon(Icons.upload_outlined),
         title: Text(tr.importData.title),
         onTap: () async {
-          final ok = await showQuestionDialog(
-            context: context,
-            title: tr.importData.title,
-            message: tr.importData.tip,
-          );
+          final ok = await showQuestionDialog(context: context, title: tr.importData.title, message: tr.importData.tip);
           if (ok != true || !context.mounted) {
             return;
           }
 
-          final files = await FilePicker.platform
-              .pickFiles(dialogTitle: tr.importData.title);
+          final files = await FilePicker.platform.pickFiles(dialogTitle: tr.importData.title);
           if (files == null || !context.mounted) {
             return;
           }
@@ -793,10 +638,7 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  List<Widget> _buildDebugSection(
-    BuildContext context,
-    SettingsState state,
-  ) {
+  List<Widget> _buildDebugSection(BuildContext context, SettingsState state) {
     final enableDebugOperations = state.settingsMap.enableDebugOperations;
 
     final tr = context.t.settingsPage.debugSection;
@@ -811,26 +653,15 @@ class _SettingsPageState extends State<SettingsPage> {
             subtitle: Text(tr.enableDebugOperations.detail),
             value: enableDebugOperations,
             onChanged: (v) {
-              context.read<SettingsBloc>().add(
-                    SettingsValueChanged(
-                      SettingsKeys.enableDebugOperations,
-                      v,
-                    ),
-                  );
+              context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableDebugOperations, v));
             },
           ),
-          SectionListTile(
-            title: Text(tr.viewLog.title),
-            onTap: () async => context.pushNamed(ScreenPaths.debugLog),
-          ),
+          SectionListTile(title: Text(tr.viewLog.title), onTap: () async => context.pushNamed(ScreenPaths.debugLog)),
           SectionListTile(
             title: Text(tr.exportLog.title),
-            subtitle: _logExportPath == null
-                ? null
-                : Text(tr.exportLog.detail(path: _logExportPath!)),
+            subtitle: _logExportPath == null ? null : Text(tr.exportLog.detail(path: _logExportPath!)),
             onTap: () async {
-              final logData =
-                  talker.history.map((e) => e.generateTextMessage()).join('\n');
+              final logData = talker.history.map((e) => e.generateTextMessage()).join('\n');
 
               final outputFile = await FilePicker.platform.saveFile(
                 fileName: 'log_${DateTime.now().millisecondsSinceEpoch}.txt',
@@ -879,37 +710,30 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionListTile(
         leading: const Icon(Icons.new_releases_outlined),
         title: Text(tr.update.title),
-        onTap: () async => showCustomBottomSheet<void>(
-          context: context,
-          constraints: const BoxConstraints(maxHeight: 300),
-          title: tr.update.title,
-          pinnedWidget: Tips(
-            tr.update.fDroidTip,
-            sizePreferred: true,
-          ),
-          childrenBuilder: (context) => [
-            ListTile(
-              leading: Icon(MdiIcons.github),
-              title: const Text('GitHub'),
-              onTap: () async => launchUrl(
-                Uri.parse(upgradeGithubReleaseUrl),
-                mode: LaunchMode.externalApplication,
-              ),
+        onTap:
+            () async => showCustomBottomSheet<void>(
+              context: context,
+              constraints: const BoxConstraints(maxHeight: 300),
+              title: tr.update.title,
+              pinnedWidget: Tips(tr.update.fDroidTip, sizePreferred: true),
+              childrenBuilder:
+                  (context) => [
+                    ListTile(
+                      leading: Icon(MdiIcons.github),
+                      title: const Text('GitHub'),
+                      onTap:
+                          () async =>
+                              launchUrl(Uri.parse(upgradeGithubReleaseUrl), mode: LaunchMode.externalApplication),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset(assetsFDroidLogoPath, width: 22, height: 22),
+                      title: const Text('F-Droid'),
+                      onTap:
+                          () async =>
+                              launchUrl(Uri.parse(upgradeFDroidHomepageUrl), mode: LaunchMode.externalApplication),
+                    ),
+                  ],
             ),
-            ListTile(
-              leading: SvgPicture.asset(
-                assetsFDroidLogoPath,
-                width: 22,
-                height: 22,
-              ),
-              title: const Text('F-Droid'),
-              onTap: () async => launchUrl(
-                Uri.parse(upgradeFDroidHomepageUrl),
-                mode: LaunchMode.externalApplication,
-              ),
-            ),
-          ],
-        ),
       ),
 
       /// Changelog till publish.
@@ -940,19 +764,13 @@ class _SettingsPageState extends State<SettingsPage> {
                       width: size.width * 0.7,
                       height: size.height * 0.7,
                       child: ScrollConfiguration(
-                        behavior: ScrollConfiguration.of(context)
-                            .copyWith(scrollbars: false),
+                        behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
                         child: Markdown(data: snapshot.data!),
                       ),
                     );
                   },
                 ),
-                actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context),
-                    child: Text(context.t.general.ok),
-                  ),
-                ],
+                actions: [TextButton(onPressed: () => Navigator.pop(context), child: Text(context.t.general.ok))],
               );
             },
           );
@@ -972,9 +790,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return BlocBuilder<SettingsBloc, SettingsState>(
       builder: (context, state) {
         return Scaffold(
-          appBar: AppBar(
-            title: Text(context.t.navigation.settings),
-          ),
+          appBar: AppBar(title: Text(context.t.navigation.settings)),
           body: ListView(
             controller: scrollController,
             children: [

@@ -15,42 +15,37 @@ final class ChatRepository {
   const ChatRepository();
 
   /// Fetch the chat history with user [uid].
-  AsyncEither<uh.Document> fetchChatHistory(String uid, {int? page}) =>
-      AsyncEither(() async {
-        final respEither = await getIt
-            .get<NetClientProvider>()
-            .get(formatChatFullHistoryUrl(uid, page: page))
-            .run();
+  AsyncEither<uh.Document> fetchChatHistory(String uid, {int? page}) => AsyncEither(() async {
+    final respEither = await getIt.get<NetClientProvider>().get(formatChatFullHistoryUrl(uid, page: page)).run();
 
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-        final document = parseHtmlDocument(resp.data as String);
-        return right(document);
-      });
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
+    final document = parseHtmlDocument(resp.data as String);
+    return right(document);
+  });
 
   /// Fetch the chat history with user [uid].
   AsyncEither<uh.Document> fetchChat(String uid) => AsyncEither(() async {
-        final respEither =
-            await getIt.get<NetClientProvider>().get(formatChatUrl(uid)).run();
+    final respEither = await getIt.get<NetClientProvider>().get(formatChatUrl(uid)).run();
 
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
-        final xmlDoc = parseXmlDocument(resp.data as String);
-        final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
-        if (htmlBodyData == null) {
-          return left(ChatDataDocumentNotFoundException());
-        }
-        final document = parseHtmlDocument(htmlBodyData);
-        return right(document);
-      });
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
+    final xmlDoc = parseXmlDocument(resp.data as String);
+    final htmlBodyData = xmlDoc.documentElement?.nodes.firstOrNull?.text;
+    if (htmlBodyData == null) {
+      return left(ChatDataDocumentNotFoundException());
+    }
+    final document = parseHtmlDocument(htmlBodyData);
+    return right(document);
+  });
 }

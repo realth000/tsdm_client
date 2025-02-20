@@ -91,19 +91,13 @@ class SettingsMap with SettingsMapMappable {
     );
 
     return switch (key) {
-      SettingsKeys.netClientAccept =>
-        copyWith(netClientAccept: value as String?),
-      SettingsKeys.netClientAcceptEncoding =>
-        copyWith(netClientAcceptEncoding: value as String?),
-      SettingsKeys.netClientAcceptLanguage =>
-        copyWith(netClientAcceptLanguage: value as String?),
-      SettingsKeys.netClientUserAgent =>
-        copyWith(netClientUserAgent: value as String?),
-      SettingsKeys.windowRememberSize =>
-        copyWith(windowRememberSize: value as bool?),
+      SettingsKeys.netClientAccept => copyWith(netClientAccept: value as String?),
+      SettingsKeys.netClientAcceptEncoding => copyWith(netClientAcceptEncoding: value as String?),
+      SettingsKeys.netClientAcceptLanguage => copyWith(netClientAcceptLanguage: value as String?),
+      SettingsKeys.netClientUserAgent => copyWith(netClientUserAgent: value as String?),
+      SettingsKeys.windowRememberSize => copyWith(windowRememberSize: value as bool?),
       SettingsKeys.windowSize => copyWith(windowSize: value as Size?),
-      SettingsKeys.windowRememberPosition =>
-        copyWith(windowRememberPosition: value as bool?),
+      SettingsKeys.windowRememberPosition => copyWith(windowRememberPosition: value as bool?),
       SettingsKeys.windowPosition => copyWith(windowPosition: value as Offset?),
       SettingsKeys.windowInCenter => copyWith(windowInCenter: value as bool?),
       SettingsKeys.loginUsername => copyWith(loginUsername: value as String?),
@@ -113,40 +107,25 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.locale => copyWith(locale: value as String?),
       SettingsKeys.checkinFeeling => copyWith(checkinFeeling: value as String?),
       SettingsKeys.checkinMessage => copyWith(checkinMessage: value as String?),
-      SettingsKeys.showShortcutInForumCard =>
-        copyWith(showShortcutInForumCard: value as bool?),
+      SettingsKeys.showShortcutInForumCard => copyWith(showShortcutInForumCard: value as bool?),
       SettingsKeys.accentColor => copyWith(accentColor: value as int?),
-      SettingsKeys.accentColorFollowSystem =>
-        copyWith(accentColorFollowSystem: value as bool?),
-      SettingsKeys.showUnreadInfoHint =>
-        copyWith(showUnreadInfoHint: value as bool?),
+      SettingsKeys.accentColorFollowSystem => copyWith(accentColorFollowSystem: value as bool?),
+      SettingsKeys.showUnreadInfoHint => copyWith(showUnreadInfoHint: value as bool?),
       SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool?),
-      SettingsKeys.threadReverseOrder =>
-        copyWith(threadReverseOrder: value as bool?),
-      SettingsKeys.threadCardInfoRowAlignCenter =>
-        copyWith(threadCardInfoRowAlignCenter: value as bool?),
-      SettingsKeys.threadCardShowLastReplyAuthor =>
-        copyWith(threadCardShowLastReplyAuthor: value as bool?),
-      SettingsKeys.threadCardHighlightRecentThread =>
-        copyWith(threadCardHighlightRecentThread: value as bool?),
-      SettingsKeys.threadCardHighlightAuthorName =>
-        copyWith(threadCardHighlightAuthorName: value as bool?),
-      SettingsKeys.threadCardHighlightInfoRow =>
-        copyWith(threadCardHighlightInfoRow: value as bool?),
+      SettingsKeys.threadReverseOrder => copyWith(threadReverseOrder: value as bool?),
+      SettingsKeys.threadCardInfoRowAlignCenter => copyWith(threadCardInfoRowAlignCenter: value as bool?),
+      SettingsKeys.threadCardShowLastReplyAuthor => copyWith(threadCardShowLastReplyAuthor: value as bool?),
+      SettingsKeys.threadCardHighlightRecentThread => copyWith(threadCardHighlightRecentThread: value as bool?),
+      SettingsKeys.threadCardHighlightAuthorName => copyWith(threadCardHighlightAuthorName: value as bool?),
+      SettingsKeys.threadCardHighlightInfoRow => copyWith(threadCardHighlightInfoRow: value as bool?),
       SettingsKeys.netClientProxy => copyWith(netClientProxy: value as String?),
-      SettingsKeys.netClientUseProxy =>
-        copyWith(netClientUseProxy: value as bool?),
+      SettingsKeys.netClientUseProxy => copyWith(netClientUseProxy: value as bool?),
       SettingsKeys.autoCheckin => copyWith(autoCheckin: value as bool?),
-      SettingsKeys.showUnreadNoticeBadge =>
-        copyWith(showUnreadNoticeBadge: value as bool?),
-      SettingsKeys.showUnreadPersonalMessageBadge =>
-        copyWith(showUnreadPersonalMessageBadge: value as bool?),
-      SettingsKeys.showUnreadBroadcastMessageBadge =>
-        copyWith(showUnreadBroadcastMessageBadge: value as bool?),
-      SettingsKeys.autoSyncNoticeSeconds =>
-        copyWith(autoSyncNoticeSeconds: value as int?),
-      SettingsKeys.enableDebugOperations =>
-        copyWith(enableDebugOperations: value as bool?),
+      SettingsKeys.showUnreadNoticeBadge => copyWith(showUnreadNoticeBadge: value as bool?),
+      SettingsKeys.showUnreadPersonalMessageBadge => copyWith(showUnreadPersonalMessageBadge: value as bool?),
+      SettingsKeys.showUnreadBroadcastMessageBadge => copyWith(showUnreadBroadcastMessageBadge: value as bool?),
+      SettingsKeys.autoSyncNoticeSeconds => copyWith(autoSyncNoticeSeconds: value as int?),
+      SettingsKeys.enableDebugOperations => copyWith(enableDebugOperations: value as bool?),
       SettingsKeys.fontFamily => copyWith(fontFamily: value as String?),
     };
   }

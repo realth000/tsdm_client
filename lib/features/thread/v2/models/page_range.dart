@@ -4,10 +4,7 @@ part of 'models.dart';
 @MappableClass()
 final class PageRange with PageRangeMappable {
   /// Constructor.
-  const PageRange({
-    required this.start,
-    required this.end,
-  });
+  const PageRange({required this.start, required this.end});
 
   /// Start page number of the range.
   final int start;

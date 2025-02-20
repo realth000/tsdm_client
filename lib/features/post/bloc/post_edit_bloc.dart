@@ -14,30 +14,22 @@ part 'post_edit_state.dart';
 typedef _Emit = Emitter<PostEditState>;
 
 /// Bloc of editing a post.
-final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
-    with LoggerMixin {
+final class PostEditBloc extends Bloc<PostEditEvent, PostEditState> with LoggerMixin {
   /// Constructor.
   PostEditBloc({required PostEditRepository postEditRepository})
     : _repo = postEditRepository,
       super(const PostEditState()) {
     on<PostEditLoadDataRequested>(_onPostEditLoadDataRequested);
     on<PostEditCompleteEditRequested>(_onPostEditCompleteEditRequested);
-    on<ThreadPubFetchInfoRequested>(
-      (event, emit) => _onFetchNewThreadInfo(event.fid, emit),
-    );
-    on<ThreadPubPostThread>(
-      (event, emit) => _onPostNewThread(event.info, emit),
-    );
+    on<ThreadPubFetchInfoRequested>((event, emit) => _onFetchNewThreadInfo(event.fid, emit));
+    on<ThreadPubPostThread>((event, emit) => _onPostNewThread(event.info, emit));
   }
 
   static final _tidRe = RegExp(r'tid=(?<tid>\d+)');
 
   final PostEditRepository _repo;
 
-  Future<void> _onPostEditLoadDataRequested(
-    PostEditLoadDataRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onPostEditLoadDataRequested(PostEditLoadDataRequested event, _Emit emit) async {
     emit(state.copyWith(status: PostEditStatus.loading));
     await _repo
         .fetchData(event.editUrl)
@@ -54,18 +46,13 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
               emit(state.copyWith(status: PostEditStatus.failedToLoad));
               return;
             }
-            emit(
-              state.copyWith(status: PostEditStatus.editing, content: content),
-            );
+            emit(state.copyWith(status: PostEditStatus.editing, content: content));
           },
         )
         .run();
   }
 
-  Future<void> _onPostEditCompleteEditRequested(
-    PostEditCompleteEditRequested event,
-    _Emit emit,
-  ) async {
+  Future<void> _onPostEditCompleteEditRequested(PostEditCompleteEditRequested event, _Emit emit) async {
     emit(state.copyWith(status: PostEditStatus.uploading));
     await _repo
         .postEditedContent(
@@ -84,9 +71,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
           perm: event.perm,
           price: event.price,
           options: Map.fromEntries(
-            event.options
-                .where((e) => !e.disabled && e.checked)
-                .map((e) => MapEntry(e.name, e.value)),
+            event.options.where((e) => !e.disabled && e.checked).map((e) => MapEntry(e.name, e.value)),
           ),
         )
         .match(
@@ -96,12 +81,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
             if (e case HttpRequestFailedException()) {
               emit(state.copyWith(status: PostEditStatus.failedToUpload));
             } else if (e case PostEditFailedToUploadResult()) {
-              emit(
-                state.copyWith(
-                  status: PostEditStatus.failedToUpload,
-                  errorText: e.errorText,
-                ),
-              );
+              emit(state.copyWith(status: PostEditStatus.failedToUpload, errorText: e.errorText));
             }
           },
           (v) => emit(state.copyWith(status: PostEditStatus.success)),
@@ -122,29 +102,16 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
 
     final doc = docEither.unwrap();
 
-    final editContent = PostEditContent.fromDocument(
-      doc,
-      requireThreadInfo: false,
-    );
+    final editContent = PostEditContent.fromDocument(doc, requireThreadInfo: false);
     if (editContent == null) {
       error('failed to build edit content');
       emit(state.copyWith(status: PostEditStatus.failedToLoad));
       return;
     }
 
-    final forumName =
-        doc
-            .querySelectorAll('div#pt > div.z > a[href*="&fid="]')
-            .lastOrNull
-            ?.text;
+    final forumName = doc.querySelectorAll('div#pt > div.z > a[href*="&fid="]').lastOrNull?.text;
 
-    emit(
-      state.copyWith(
-        status: PostEditStatus.editing,
-        content: editContent,
-        forumName: forumName,
-      ),
-    );
+    emit(state.copyWith(status: PostEditStatus.editing, content: editContent, forumName: forumName));
   }
 
   Future<void> _onPostNewThread(ThreadPublishInfo info, _Emit emit) async {
@@ -154,12 +121,7 @@ final class PostEditBloc extends Bloc<PostEditEvent, PostEditState>
     if (tidEither.isLeft()) {
       final err = tidEither.unwrapErr();
       handle(err);
-      emit(
-        state.copyWith(
-          status: PostEditStatus.failedToUpload,
-          errorText: err.message,
-        ),
-      );
+      emit(state.copyWith(status: PostEditStatus.failedToUpload, errorText: err.message));
       return;
     }
     final tid = _tidRe.firstMatch(tidEither.unwrap())?.namedGroup('tid');

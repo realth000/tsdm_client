@@ -9,8 +9,7 @@ sealed class AutoNoticeState with AutoNoticeStateMappable {
 
 /// Initial state.
 @MappableClass()
-final class AutoNoticeStateStopped extends AutoNoticeState
-    with AutoNoticeStateStoppedMappable {
+final class AutoNoticeStateStopped extends AutoNoticeState with AutoNoticeStateStoppedMappable {
   /// Constructor.
   const AutoNoticeStateStopped();
 }
@@ -20,13 +19,9 @@ final class AutoNoticeStateStopped extends AutoNoticeState
 /// This state indicates a waiting for next fetch state, may be triggered
 /// frequently.
 @MappableClass()
-final class AutoNoticeStateTicking extends AutoNoticeState
-    with AutoNoticeStateTickingMappable {
+final class AutoNoticeStateTicking extends AutoNoticeState with AutoNoticeStateTickingMappable {
   /// Constructor.
-  const AutoNoticeStateTicking({
-    required this.total,
-    required this.remain,
-  });
+  const AutoNoticeStateTicking({required this.total, required this.remain});
 
   /// Total scheduled time.
   final Duration total;
@@ -40,8 +35,7 @@ final class AutoNoticeStateTicking extends AutoNoticeState
 /// Fetching notice from server, checking for unread new notice, updating
 /// notice state in cache, and more.
 @MappableClass()
-final class AutoNoticeStatePending extends AutoNoticeState
-    with AutoNoticeStatePendingMappable {
+final class AutoNoticeStatePending extends AutoNoticeState with AutoNoticeStatePendingMappable {
   /// Constructor.
   const AutoNoticeStatePending();
 }

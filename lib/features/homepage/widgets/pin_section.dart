@@ -10,11 +10,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
   /// All pinned thread gathered in groups.
   final List<PinnedThreadGroup> pinnedThreadGroup;
 
-  Widget _sectionThreadBuilder(
-    BuildContext context,
-    PinnedThread pinnedThread, {
-    bool isRank = false,
-  }) {
+  Widget _sectionThreadBuilder(BuildContext context, PinnedThread pinnedThread, {bool isRank = false}) {
     final String username;
     final String threadTitle;
     if (isRank) {
@@ -30,29 +26,14 @@ class PinSection extends StatelessWidget with LoggerMixin {
       // Set this value to make every group of section has the same height.
       minTileHeight: 72,
       leading: GestureDetector(
-        child: HeroUserAvatar(
-          username: username,
-          avatarUrl: null,
-          disableHero: true,
-        ),
-        onTap: () async => context.pushNamed(
-          ScreenPaths.profile,
-          queryParameters: {'username': username},
-        ),
+        child: HeroUserAvatar(username: username, avatarUrl: null, disableHero: true),
+        onTap: () async => context.pushNamed(ScreenPaths.profile, queryParameters: {'username': username}),
       ),
       title: GestureDetector(
         child: Row(children: [SingleLineText(username)]),
-        onTap: () async => context.pushNamed(
-          ScreenPaths.profile,
-          queryParameters: {'username': username},
-        ),
+        onTap: () async => context.pushNamed(ScreenPaths.profile, queryParameters: {'username': username}),
       ),
-      subtitle: isRank
-          ? null
-          : SingleLineText(
-              threadTitle,
-              overflow: TextOverflow.ellipsis,
-            ),
+      subtitle: isRank ? null : SingleLineText(threadTitle, overflow: TextOverflow.ellipsis),
       trailing: isRank ? SingleLineText(threadTitle) : null,
       onTap: () {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
@@ -63,8 +44,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
         context.pushNamed(
           target.screenPath,
           pathParameters: target.pathParameters,
-          queryParameters: target.queryParameters
-              .copyWith({'appBarTitle': pinnedThread.threadTitle}),
+          queryParameters: target.queryParameters.copyWith({'appBarTitle': pinnedThread.threadTitle}),
         );
       },
     );
@@ -73,21 +53,9 @@ class PinSection extends StatelessWidget with LoggerMixin {
   /// Build a list of [PinnedThread] to a list of [ListTile] and
   /// wrap in a [Card].
   /// All [PinnedThread] inside [threads] should guarantee not null.
-  Widget _buildSectionThreads(
-    BuildContext context,
-    List<PinnedThread?> threads, {
-    bool reverseTitle = false,
-  }) {
-    final listTileList = threads
-        .whereType<PinnedThread>()
-        .map(
-          (e) => _sectionThreadBuilder(
-            context,
-            e,
-            isRank: reverseTitle,
-          ),
-        )
-        .toList();
+  Widget _buildSectionThreads(BuildContext context, List<PinnedThread?> threads, {bool reverseTitle = false}) {
+    final listTileList =
+        threads.whereType<PinnedThread>().map((e) => _sectionThreadBuilder(context, e, isRank: reverseTitle)).toList();
 
     return Column(children: listTileList);
   }
@@ -99,11 +67,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
 
     for (var i = 0; i < count; i++) {
       final sectionName = pinnedThreadGroup[i].title;
-      final threadWidgetList = _buildSectionThreads(
-        context,
-        pinnedThreadGroup[i].threadList,
-        reverseTitle: i == 6,
-      );
+      final threadWidgetList = _buildSectionThreads(context, pinnedThreadGroup[i].threadList, reverseTitle: i == 6);
       ret.add(
         Card(
           margin: EdgeInsets.zero,
@@ -112,15 +76,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    sizedBoxW12H12,
-                    Text(
-                      sectionName,
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                  ],
-                ),
+                Row(children: [sizedBoxW12H12, Text(sectionName, style: Theme.of(context).textTheme.titleLarge)]),
                 sizedBoxW12H12,
                 threadWidgetList,
               ],

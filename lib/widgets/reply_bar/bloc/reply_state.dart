@@ -53,11 +53,6 @@ class ReplyState with ReplyStateMappable {
 
   /// Copy with, but make the `replyParameters` to null.
   ReplyState copyWithNullReplyParameters() {
-    return ReplyState(
-      status: status,
-      closed: closed,
-      needClearText: needClearText,
-      failedReason: failedReason,
-    );
+    return ReplyState(status: status, closed: closed, needClearText: needClearText, failedReason: failedReason);
   }
 }

@@ -22,10 +22,7 @@ enum ProfileStatus {
 }
 
 /// State of profile page of the app.
-@MappableClass(
-  generateMethods:
-      GenerateMethods.decode | GenerateMethods.encode | GenerateMethods.equals,
-)
+@MappableClass(generateMethods: GenerateMethods.decode | GenerateMethods.encode | GenerateMethods.equals)
 class ProfileState with ProfileStateMappable {
   /// Constructor.
   const ProfileState({

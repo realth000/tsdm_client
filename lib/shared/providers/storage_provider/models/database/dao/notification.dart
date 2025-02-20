@@ -1,78 +1,38 @@
 part of 'dao.dart';
 
 /// DAO for all notification related tables.
-@DriftAccessor(
-  tables: [
-    Notice,
-    PersonalMessage,
-    BroadcastMessage,
-  ],
-)
-final class NotificationDao extends DatabaseAccessor<AppDatabase>
-    with _$NotificationDaoMixin {
+@DriftAccessor(tables: [Notice, PersonalMessage, BroadcastMessage])
+final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$NotificationDaoMixin {
   /// Constructor.
   NotificationDao(super.db);
 
   /// Select notice for user [uid] since [timestamp].
   ///
   /// [timestamp] is in seconds.
-  Future<List<NoticeEntity>> selectNoticeSince({
-    required int uid,
-    required int timestamp,
-  }) async {
+  Future<List<NoticeEntity>> selectNoticeSince({required int uid, required int timestamp}) async {
     return (select(notice)
-          ..where(
-            (e) =>
-                e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          )
-          ..orderBy([
-            (e) => OrderingTerm(
-                  expression: e.timestamp,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+          ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
         .get();
   }
 
   /// Select personal messages for user [uid] since [timestamp].
   ///
   /// [timestamp] is in seconds.
-  Future<List<PersonalMessageEntity>> selectPersonalMessageSince({
-    required int uid,
-    required int timestamp,
-  }) async {
+  Future<List<PersonalMessageEntity>> selectPersonalMessageSince({required int uid, required int timestamp}) async {
     return (select(personalMessage)
-          ..where(
-            (e) =>
-                e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          )
-          ..orderBy([
-            (e) => OrderingTerm(
-                  expression: e.timestamp,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+          ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
         .get();
   }
 
   /// Select broadcast messages for user [uid] since [timestamp].
   ///
   /// [timestamp] is in seconds.
-  Future<List<BroadcastMessageEntity>> selectBroadcastMessageSince({
-    required int uid,
-    required int timestamp,
-  }) async {
+  Future<List<BroadcastMessageEntity>> selectBroadcastMessageSince({required int uid, required int timestamp}) async {
     return (select(broadcastMessage)
-          ..where(
-            (e) =>
-                e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp),
-          )
-          ..orderBy([
-            (e) => OrderingTerm(
-                  expression: e.timestamp,
-                  mode: OrderingMode.desc,
-                ),
-          ]))
+          ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
         .get();
   }
 
@@ -135,64 +95,38 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
   }
 
   /// Delete all [notice] for user [uid].
-  Future<int> deleteNotice({
-    required int uid,
-    required int nid,
-  }) async {
-    return (delete(notice)..where((e) => e.uid.equals(uid) & e.nid.equals(nid)))
-        .go();
+  Future<int> deleteNotice({required int uid, required int nid}) async {
+    return (delete(notice)..where((e) => e.uid.equals(uid) & e.nid.equals(nid))).go();
   }
 
   /// Delete all [personalMessage] for user [uid].
-  Future<int> deletePersonalMessage({
-    required int uid,
-    required int peerUid,
-  }) async {
-    return (delete(personalMessage)
-          ..where((e) => e.uid.equals(uid) & e.peerUid.equals(peerUid)))
-        .go();
+  Future<int> deletePersonalMessage({required int uid, required int peerUid}) async {
+    return (delete(personalMessage)..where((e) => e.uid.equals(uid) & e.peerUid.equals(peerUid))).go();
   }
 
   /// Delete all [broadcastMessage] for user [uid].
-  Future<int> deleteBroadcastMessage({
-    required int uid,
-    required int pmid,
-  }) async {
-    return (delete(broadcastMessage)
-          ..where((e) => e.uid.equals(uid) & e.pmid.equals(pmid)))
-        .go();
+  Future<int> deleteBroadcastMessage({required int uid, required int pmid}) async {
+    return (delete(broadcastMessage)..where((e) => e.uid.equals(uid) & e.pmid.equals(pmid))).go();
   }
 
   /// Mark a given notice as [read].
-  Future<int> markNoticeAsRead({
-    required int uid,
-    required int nid,
-    required bool read,
-  }) async {
-    return (update(notice)..where((e) => e.uid.equals(uid) & e.nid.equals(nid)))
-        .write(NoticeCompanion(alreadyRead: Value(read)));
+  Future<int> markNoticeAsRead({required int uid, required int nid, required bool read}) async {
+    return (update(notice)
+      ..where((e) => e.uid.equals(uid) & e.nid.equals(nid))).write(NoticeCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark given personal message notice as [read].
-  Future<int> markPersonalMessageAsRead({
-    required int uid,
-    required int peerUid,
-    required bool read,
-  }) async {
-    return (update(personalMessage)
-          ..where((e) => e.uid.equals(uid) & e.peerUid.equals(peerUid)))
-        .write(PersonalMessageCompanion(alreadyRead: Value(read)));
+  Future<int> markPersonalMessageAsRead({required int uid, required int peerUid, required bool read}) async {
+    return (update(personalMessage)..where(
+      (e) => e.uid.equals(uid) & e.peerUid.equals(peerUid),
+    )).write(PersonalMessageCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark given broadcast message notice as [read].
-  Future<int> markBroadcastMessageAsRead({
-    required int uid,
-    required int timestamp,
-    required bool read,
-  }) async {
-    return (update(broadcastMessage)
-          ..where((e) => e.uid.equals(uid) & e.timestamp.equals(timestamp)))
-        .write(BroadcastMessageCompanion(alreadyRead: Value(read)));
+  Future<int> markBroadcastMessageAsRead({required int uid, required int timestamp, required bool read}) async {
+    return (update(broadcastMessage)..where(
+      (e) => e.uid.equals(uid) & e.timestamp.equals(timestamp),
+    )).write(BroadcastMessageCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark all messages of [notificationType] as [alreadyRead].
@@ -204,25 +138,14 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase>
     await transaction(() async {
       switch (notificationType) {
         case NotificationType.notice:
-          await (update(notice)..where((e) => e.uid.equals(uid))).write(
-            NoticeCompanion(
-              alreadyRead: Value(alreadyRead),
-            ),
-          );
+          await (update(notice)
+            ..where((e) => e.uid.equals(uid))).write(NoticeCompanion(alreadyRead: Value(alreadyRead)));
         case NotificationType.personalMessage:
-          await (update(personalMessage)..where((e) => e.uid.equals(uid)))
-              .write(
-            PersonalMessageCompanion(
-              alreadyRead: Value(alreadyRead),
-            ),
-          );
+          await (update(personalMessage)
+            ..where((e) => e.uid.equals(uid))).write(PersonalMessageCompanion(alreadyRead: Value(alreadyRead)));
         case NotificationType.broadcastMessage:
-          await (update(broadcastMessage)..where((e) => e.uid.equals(uid)))
-              .write(
-            BroadcastMessageCompanion(
-              alreadyRead: Value(alreadyRead),
-            ),
-          );
+          await (update(broadcastMessage)
+            ..where((e) => e.uid.equals(uid))).write(BroadcastMessageCompanion(alreadyRead: Value(alreadyRead)));
       }
     });
   }

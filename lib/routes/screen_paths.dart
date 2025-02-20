@@ -58,8 +58,7 @@ class ScreenPaths {
   static const settings = NestedPath._('/settings');
 
   /// Settings page for thread card appearance.
-  static const settingsThreadAppearance =
-      NestedPath._('threadAppearance', settings);
+  static const settingsThreadAppearance = NestedPath._('threadAppearance', settings);
 
   /// Thread page.
   ///

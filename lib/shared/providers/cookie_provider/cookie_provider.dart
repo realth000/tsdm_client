@@ -31,11 +31,12 @@ final class CookieProvider with LoggerMixin implements Storage {
       return CookieProvider(userInfo, {});
     }
 
-    talker.debug('load cookie from database with login user '
-        'uid: ${"$loggedUid".obscured(4)}');
+    talker.debug(
+      'load cookie from database with login user '
+      'uid: ${"$loggedUid".obscured(4)}',
+    );
     // Has user login before, load cookie.
-    final databaseCookie =
-        getIt.get<StorageProvider>().getCookieByUidSync(loggedUid);
+    final databaseCookie = getIt.get<StorageProvider>().getCookieByUidSync(loggedUid);
     if (databaseCookie == null) {
       talker.error(
         'failed to init cookie: current login user '
@@ -48,8 +49,7 @@ final class CookieProvider with LoggerMixin implements Storage {
   }
 
   /// Construct a instance with no preload cookie or user info
-  factory CookieProvider.buildEmpty() =>
-      CookieProvider(UserLoginInfo.empty(), {});
+  factory CookieProvider.buildEmpty() => CookieProvider(UserLoginInfo.empty(), {});
 
   /// Cookie data.
   Map<String, String> _cookieMap;
@@ -83,12 +83,16 @@ final class CookieProvider with LoggerMixin implements Storage {
     final storage = getIt.get<StorageProvider>();
 
     if (uid != null) {
-      info('load cookie from database with given '
-          'uid: ${"$uid".obscured(4)}');
+      info(
+        'load cookie from database with given '
+        'uid: ${"$uid".obscured(4)}',
+      );
       databaseCookie = storage.getCookieByUidSync(uid);
     } else if (username != null) {
-      info('load cookie from database with given '
-          'username: ${username.obscured()}');
+      info(
+        'load cookie from database with given '
+        'username: ${username.obscured()}',
+      );
       databaseCookie = storage.getCookieByUsernameSync(username);
       // } else if (email != null) {
       //   databaseCookie = storage.getCookieByEmailSync(email);
@@ -112,10 +116,10 @@ final class CookieProvider with LoggerMixin implements Storage {
     }
     debug('save authed cookie to storage');
     await getIt.get<StorageProvider>().saveCookie(
-          username: _userLoginInfo.username!,
-          uid: _userLoginInfo.uid!,
-          cookie: _cookieMap,
-        );
+      username: _userLoginInfo.username!,
+      uid: _userLoginInfo.uid!,
+      cookie: _cookieMap,
+    );
   }
 
   /// Delete current login user info and cookie from memory and database.
@@ -148,10 +152,10 @@ final class CookieProvider with LoggerMixin implements Storage {
     }
 
     await getIt.get<StorageProvider>().saveCookie(
-          username: _userLoginInfo.username!,
-          uid: _userLoginInfo.uid!,
-          cookie: _cookieMap,
-        );
+      username: _userLoginInfo.username!,
+      uid: _userLoginInfo.uid!,
+      cookie: _cookieMap,
+    );
 
     return true;
   }
@@ -196,8 +200,10 @@ final class CookieProvider with LoggerMixin implements Storage {
     _cookieMap.remove(key);
     // If user cookie is empty, delete that item from database.
     if (_cookieMap.isEmpty) {
-      debug('delete user ($_userLoginInfo) cookie from database '
-          'because cookie value is empty');
+      debug(
+        'delete user ($_userLoginInfo) cookie from database '
+        'because cookie value is empty',
+      );
       await _deleteUserCookie();
     } else {
       await _syncCookie();
@@ -222,8 +228,7 @@ final class CookieProvider with LoggerMixin implements Storage {
   @override
   Future<void> write(String key, String value) async {
     // Do not update authed cookie with not authed one.
-    if ((_cookieMap[key]?.contains('s_gkr8_682f_auth') ?? false) &&
-        !value.contains('s_gkr8_682f_auth')) {
+    if ((_cookieMap[key]?.contains('s_gkr8_682f_auth') ?? false) && !value.contains('s_gkr8_682f_auth')) {
       return;
     }
     _cookieMap[key] = value;

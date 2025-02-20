@@ -20,13 +20,7 @@ class AutoSyncNoticeDialog extends StatelessWidget {
       content: SingleChildScrollView(
         child: Column(
           children: [
-            ...[
-              60,
-              300,
-              600,
-              1800,
-              3600,
-            ].map(
+            ...[60, 300, 600, 1800, 3600].map(
               (e) => RadioListTile(
                 title: Text(Duration(seconds: e).readable(context)),
                 value: e,

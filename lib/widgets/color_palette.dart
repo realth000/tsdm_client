@@ -35,34 +35,22 @@ class ColorPalette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final paddingColor = brightness == Brightness.dark
-        ? Theme.of(context).colorScheme.surfaceBright
-        : Theme.of(context).colorScheme.surfaceDim;
-    final colorScheme =
-        ColorScheme.fromSeed(seedColor: color, brightness: brightness);
+    final paddingColor =
+        brightness == Brightness.dark
+            ? Theme.of(context).colorScheme.surfaceBright
+            : Theme.of(context).colorScheme.surfaceDim;
+    final colorScheme = ColorScheme.fromSeed(seedColor: color, brightness: brightness);
     final palette = ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: width - padding * 2,
-            height: height / 2 - padding,
-            color: colorScheme.primary,
-          ),
+          Container(width: width - padding * 2, height: height / 2 - padding, color: colorScheme.primary),
           Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Container(
-                width: width / 2 - padding,
-                height: height / 2 - padding,
-                color: colorScheme.secondary,
-              ),
-              Container(
-                width: width / 2 - padding,
-                height: height / 2 - padding,
-                color: colorScheme.tertiary,
-              ),
+              Container(width: width / 2 - padding, height: height / 2 - padding, color: colorScheme.secondary),
+              Container(width: width / 2 - padding, height: height / 2 - padding, color: colorScheme.tertiary),
             ],
           ),
         ],
@@ -74,33 +62,25 @@ class ColorPalette extends StatelessWidget {
       height: height,
       decoration: ShapeDecoration(
         color: paddingColor,
-        shape: StarBorder(
-          side: BorderSide(color: paddingColor),
-          points: 12,
-          pointRounding: 1,
-          innerRadiusRatio: 0.7,
-        ),
+        shape: StarBorder(side: BorderSide(color: paddingColor), points: 12, pointRounding: 1, innerRadiusRatio: 0.7),
       ),
       child: Center(
         child: Stack(
           children: [
             Align(child: palette),
             Align(
-              child: selected
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(padding * 1.5),
-                      child: Container(
-                        width: padding * 1.5,
-                        height: padding * 1.5,
-                        color: colorScheme.primaryContainer,
-                        child: Icon(
-                          Icons.check,
-                          size: padding,
-                          color: colorScheme.primary,
+              child:
+                  selected
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(padding * 1.5),
+                        child: Container(
+                          width: padding * 1.5,
+                          height: padding * 1.5,
+                          color: colorScheme.primaryContainer,
+                          child: Icon(Icons.check, size: padding, color: colorScheme.primary),
                         ),
-                      ),
-                    )
-                  : sizedBoxEmpty,
+                      )
+                      : sizedBoxEmpty,
             ),
           ],
         ),

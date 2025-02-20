@@ -9,16 +9,14 @@ sealed class AutoCheckinState with AutoCheckinStateMappable {
 
 /// Initial state
 @MappableClass()
-final class AutoCheckinStateInitial extends AutoCheckinState
-    with AutoCheckinStateInitialMappable {
+final class AutoCheckinStateInitial extends AutoCheckinState with AutoCheckinStateInitialMappable {
   /// Constructor.
   const AutoCheckinStateInitial();
 }
 
 /// Preparing state.
 @MappableClass()
-final class AutoCheckinStatePreparing extends AutoCheckinState
-    with AutoCheckinStatePreparingMappable {
+final class AutoCheckinStatePreparing extends AutoCheckinState with AutoCheckinStatePreparingMappable {
   /// Constructor.
   const AutoCheckinStatePreparing();
 }
@@ -29,14 +27,12 @@ final class AutoCheckinStatePreparing extends AutoCheckinState
 /// Only leave this state when all users finished checkin progress, no matter
 /// end with success or failure.
 @MappableClass()
-final class AutoCheckinStateLoading extends AutoCheckinState
-    with AutoCheckinStateLoadingMappable {
+final class AutoCheckinStateLoading extends AutoCheckinState with AutoCheckinStateLoadingMappable {
   /// Constructor.
   const AutoCheckinStateLoading(this.info);
 
   /// Construct a instance with starting point values.
-  factory AutoCheckinStateLoading.start(AutoCheckinInfo info) =>
-      AutoCheckinStateLoading(info);
+  factory AutoCheckinStateLoading.start(AutoCheckinInfo info) => AutoCheckinStateLoading(info);
 
   /// Current checkin info.
   final AutoCheckinInfo info;
@@ -46,13 +42,9 @@ final class AutoCheckinStateLoading extends AutoCheckinState
 ///
 /// Store the result state because user may want to check it.
 @MappableClass()
-final class AutoCheckinStateFinished extends AutoCheckinState
-    with AutoCheckinStateFinishedMappable {
+final class AutoCheckinStateFinished extends AutoCheckinState with AutoCheckinStateFinishedMappable {
   /// Constructor.
-  const AutoCheckinStateFinished({
-    required this.succeeded,
-    required this.failed,
-  });
+  const AutoCheckinStateFinished({required this.succeeded, required this.failed});
 
   /// All users run the checkin progress successfully.
   final List<(UserLoginInfo, CheckinResult)> succeeded;

@@ -4,11 +4,7 @@ part of 'models.dart';
 @MappableClass()
 class Emoji with EmojiMappable {
   /// Constructor.
-  const Emoji({
-    required this.id,
-    required this.code,
-    required this.url,
-  });
+  const Emoji({required this.id, required this.code, required this.url});
 
   /// Id in emoji group.
   final String id;
@@ -24,12 +20,7 @@ class Emoji with EmojiMappable {
 @MappableClass()
 class EmojiGroup with EmojiGroupMappable {
   /// Constructor.
-  const EmojiGroup({
-    required this.name,
-    required this.id,
-    required this.routeName,
-    required this.emojiList,
-  });
+  const EmojiGroup({required this.name, required this.id, required this.routeName, required this.emojiList});
 
   /// Human readable name.
   final String name;

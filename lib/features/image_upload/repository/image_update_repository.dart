@@ -16,30 +16,25 @@ final class ImageUploadRepository with LoggerMixin {
 
   /// Parse network response info [SmmsResponse], parse result and return
   /// the image url if success.
-  AsyncEither<String> _parseSmmsResponse(Response<dynamic> resp) =>
-      AsyncEither<String>(() async {
-        final dataMap = resp.data as Map<String, dynamic>?;
-        if (dataMap == null) {
-          return left(ImageUploadInvalidResponse());
-        }
-        info('resp of uploading image to smms: $dataMap');
-        final smmsResp = SmmsResponseMapper.fromMap(dataMap);
-        if (!smmsResp.success || smmsResp.data?.url == null) {
-          return left(ImageUploadFailed(smmsResp.message));
-        }
-        return right(smmsResp.data!.url);
-      });
+  AsyncEither<String> _parseSmmsResponse(Response<dynamic> resp) => AsyncEither<String>(() async {
+    final dataMap = resp.data as Map<String, dynamic>?;
+    if (dataMap == null) {
+      return left(ImageUploadInvalidResponse());
+    }
+    info('resp of uploading image to smms: $dataMap');
+    final smmsResp = SmmsResponseMapper.fromMap(dataMap);
+    if (!smmsResp.success || smmsResp.data?.url == null) {
+      return left(ImageUploadFailed(smmsResp.message));
+    }
+    return right(smmsResp.data!.url);
+  });
 
   /// Do the upload action
-  AsyncEither<String> uploadToSmms(SmmsRequest req) =>
-      _netClientProvider.postMultipartForm(
+  AsyncEither<String> uploadToSmms(SmmsRequest req) => _netClientProvider
+      .postMultipartForm(
         _smmsEndPoint,
-        header: <String, String>{
-          'Authorization': '',
-        },
-        data: <String, dynamic>{
-          'file': MultipartFile.fromBytes(req.data),
-          'format': 'json',
-        },
-      ).flatMap(_parseSmmsResponse);
+        header: <String, String>{'Authorization': ''},
+        data: <String, dynamic>{'file': MultipartFile.fromBytes(req.data), 'format': 'json'},
+      )
+      .flatMap(_parseSmmsResponse);
 }

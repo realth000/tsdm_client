@@ -16,20 +16,13 @@ class JumpPageCubit extends Cubit<JumpPageState> {
   JumpPageCubit() : super(const JumpPageState());
 
   /// Jump to another [page].
-  void jumpTo(int page) => emit(
-        state.copyWith(
-          status: JumpPageStatus.success,
-          currentPage: page,
-        ),
-      );
+  void jumpTo(int page) => emit(state.copyWith(status: JumpPageStatus.success, currentPage: page));
 
   /// Mark the current page is loading, disable jump page.
-  void markLoading() =>
-      emit(state.copyWith(status: JumpPageStatus.loading, canJumpPage: false));
+  void markLoading() => emit(state.copyWith(status: JumpPageStatus.loading, canJumpPage: false));
 
   /// Mark the current page finished loading, enable jump page.
-  void markSuccess() =>
-      emit(state.copyWith(status: JumpPageStatus.success, canJumpPage: true));
+  void markSuccess() => emit(state.copyWith(status: JumpPageStatus.success, canJumpPage: true));
 
   /// Set current page status and total page status.
   void setPageInfo({int? currentPage, int? totalPages}) =>

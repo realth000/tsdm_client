@@ -28,66 +28,52 @@ final class NotificationRepository with LoggerMixin {
     final now = DateTime.now();
     final int? argTimestamp;
     // The input [timestamp] is in seconds.
-    final time = timestamp != null
-        ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000)
-        : now;
-    if (timestamp != null &&
-        0 <= now.difference(time).inDays &&
-        now.difference(time).inDays <= 3) {
+    final time = timestamp != null ? DateTime.fromMillisecondsSinceEpoch(timestamp * 1000) : now;
+    if (timestamp != null && 0 <= now.difference(time).inDays && now.difference(time).inDays <= 3) {
       argTimestamp = timestamp;
     } else {
-      argTimestamp =
-          now.add(const Duration(days: -3)).millisecondsSinceEpoch ~/ 1000;
+      argTimestamp = now.add(const Duration(days: -3)).millisecondsSinceEpoch ~/ 1000;
     }
 
     return '$baseUrl/plugin.php?mobile=yes&tsdmapp=1&id=Kahrpba:usernotify&last_updated=$argTimestamp';
   }
 
   /// Fetch the html document of notice detail page.
-  AsyncEither<(uh.Document, String? page)> fetchDocument(String url) =>
-      AsyncEither(
-        () async =>
-            switch (await getIt.get<NetClientProvider>().get(url).run()) {
-          Left(:final value) => left(value),
-          Right(:final value) when value.statusCode != HttpStatus.ok =>
-            left(HttpRequestFailedException(value.statusCode)),
-          Right(:final value) => right(
-              (
-                parseHtmlDocument(value.data as String),
-                value.realUri.queryParameters['page']
-              ),
-            ),
-        },
-      );
+  AsyncEither<(uh.Document, String? page)> fetchDocument(String url) => AsyncEither(
+    () async => switch (await getIt.get<NetClientProvider>().get(url).run()) {
+      Left(:final value) => left(value),
+      Right(:final value) when value.statusCode != HttpStatus.ok => left(HttpRequestFailedException(value.statusCode)),
+      Right(:final value) => right((parseHtmlDocument(value.data as String), value.realUri.queryParameters['page'])),
+    },
+  );
 
   /// Fetch all personal messages from server page.
   AsyncEither<List<PersonalMessage>> fetchPersonalMessage() => AsyncEither(
-        () async => switch (await getIt
-            .get<NetClientProvider>()
-            .get(personalMessageUrl)
-            .run()) {
-          Left(:final value) => left(value),
-          Right(:final value) when value.statusCode != HttpStatus.ok =>
-            left(HttpRequestFailedException(value.statusCode)),
-          Right(:final value) => right(
-              parseHtmlDocument(value.data as String)
-                  .querySelectorAll('form#deletepmform > div > dl')
-                  .map(PersonalMessage.fromDl)
-                  .whereType<PersonalMessage>()
-                  .toList(),
-            )
-        },
-      );
+    () async => switch (await getIt.get<NetClientProvider>().get(personalMessageUrl).run()) {
+      Left(:final value) => left(value),
+      Right(:final value) when value.statusCode != HttpStatus.ok => left(HttpRequestFailedException(value.statusCode)),
+      Right(:final value) => right(
+        parseHtmlDocument(value.data as String)
+            .querySelectorAll('form#deletepmform > div > dl')
+            .map(PersonalMessage.fromDl)
+            .whereType<PersonalMessage>()
+            .toList(),
+      ),
+    },
+  );
 
   /// Fetch all broadcast messages from server page.
-  AsyncEither<List<BroadcastMessage>> fetchBroadMessage() =>
-      getIt.get<NetClientProvider>().get(broadcastMessageUrl).mapHttp(
-            (v) => parseHtmlDocument(v.data as String)
+  AsyncEither<List<BroadcastMessage>> fetchBroadMessage() => getIt
+      .get<NetClientProvider>()
+      .get(broadcastMessageUrl)
+      .mapHttp(
+        (v) =>
+            parseHtmlDocument(v.data as String)
                 .querySelectorAll('form#deletepmform > div > dl')
                 .map(BroadcastMessage.fromDl)
                 .whereType<BroadcastMessage>()
                 .toList(),
-          );
+      );
 
   /// Fetch all kinds of notification using API v2.
   ///
@@ -99,17 +85,12 @@ final class NotificationRepository with LoggerMixin {
         .get<NetClientProvider>()
         .get(_buildNotificationV2Url(timestamp: timestamp))
         .mapHttp(
-          (v) => _controller.add(
-            NotificationInfoStateSuccess(
-              uid,
-              NotificationV2Mapper.fromJson(v.data as String),
-            ),
-          ),
+          (v) => _controller.add(NotificationInfoStateSuccess(uid, NotificationV2Mapper.fromJson(v.data as String))),
         )
         .mapLeft((e) {
-      _controller.add(const NotificationInfoStateFailure());
-      return e;
-    });
+          _controller.add(const NotificationInfoStateFailure());
+          return e;
+        });
   }
 
   /// Dispose the repo.

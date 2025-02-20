@@ -38,8 +38,8 @@ final class ChatMessage with ChatMessageMappable {
   /// Build from node `<dl>` with id starts with "pmlist_".
   static ChatMessage? fromDl(uh.Element element) {
     // Not null when another user sent the message.
-    final username = element.querySelector('dd.ptm > a')?.innerText ??
-        element.querySelector('dd.ptm > span.xi2')?.innerText;
+    final username =
+        element.querySelector('dd.ptm > a')?.innerText ?? element.querySelector('dd.ptm > span.xi2')?.innerText;
     // Not null when current logged user sent the message.
     final currentUserNode = element.querySelector('dd.ptm > span.xi2');
     if (username == null && currentUserNode == null) {
@@ -55,33 +55,23 @@ final class ChatMessage with ChatMessageMappable {
 
     final dateTime = element.querySelector('dd.ptm > span.xg1')?.dateTime();
 
-    final authorAvatarUrl =
-        element.querySelector('dd.m.avt > a > img')?.imageUrl();
+    final authorAvatarUrl = element.querySelector('dd.m.avt > a > img')?.imageUrl();
 
-    return ChatMessage(
-      author: username,
-      authorAvatarUrl: authorAvatarUrl,
-      message: message,
-      dateTime: dateTime,
-    );
+    return ChatMessage(author: username, authorAvatarUrl: authorAvatarUrl, message: message, dateTime: dateTime);
   }
 
   /// Build from node `<li class="cl pmm">`.
   static ChatMessage? fromLi(uh.Element element) {
-    final username =
-        element.querySelector('div.pmt')?.innerText.split(':').first;
+    final username = element.querySelector('div.pmt')?.innerText.split(':').first;
     final message = element.querySelector('div.pmd')?.innerHtml;
     if (username == null || message == null) {
-      talker.error('failed to build chat message: '
-          'username=$username, message=$message');
+      talker.error(
+        'failed to build chat message: '
+        'username=$username, message=$message',
+      );
       return null;
     }
 
-    return ChatMessage(
-      author: username,
-      authorAvatarUrl: null,
-      message: message,
-      dateTime: null,
-    );
+    return ChatMessage(author: username, authorAvatarUrl: null, message: message, dateTime: null);
   }
 }

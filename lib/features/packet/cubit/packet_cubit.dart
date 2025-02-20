@@ -9,47 +9,36 @@ part 'packet_state.dart';
 /// Cubit of read packets.
 class PacketCubit extends Cubit<PacketState> with LoggerMixin {
   /// Constructor.
-  PacketCubit({
-    required PacketRepository packetRepository,
-    required bool allTaken,
-  })  : _packetRepository = packetRepository,
-        super(
-          allTaken
-              ? const PacketState(status: PacketStatus.takenAway)
-              : const PacketState(),
-        );
+  PacketCubit({required PacketRepository packetRepository, required bool allTaken})
+    : _packetRepository = packetRepository,
+      super(allTaken ? const PacketState(status: PacketStatus.takenAway) : const PacketState());
 
   final PacketRepository _packetRepository;
 
   /// Try to get coins from the packet.
   Future<void> receivePacket(String url) async {
     emit(state.copyWith(status: PacketStatus.loading));
-    await _packetRepository.receivePacket(url).match((e) {
-      handle(e);
+    await _packetRepository
+        .receivePacket(url)
+        .match(
+          (e) {
+            handle(e);
 
-      error('failed to receive packet: $e');
-      emit(
-        state.copyWith(
-          status: PacketStatus.failed,
-          reason: e.toString(),
-        ),
-      );
-    }, (v) {
-      final document = v;
-      final result = document
-          .querySelector('div#messagetext > p')
-          ?.innerText
-          .split('setTimeout')
-          .firstOrNull;
-      if (result != null &&
-          (result.contains('已经领取过') || result.contains('领取成功'))) {
-        emit(state.copyWith(status: PacketStatus.success, reason: result));
-      } else if (result != null &&
-          result.contains('err_packet_has_gone_away')) {
-        emit(state.copyWith(status: PacketStatus.takenAway));
-      } else {
-        emit(state.copyWith(status: PacketStatus.failed, reason: result));
-      }
-    }).run();
+            error('failed to receive packet: $e');
+            emit(state.copyWith(status: PacketStatus.failed, reason: e.toString()));
+          },
+          (v) {
+            final document = v;
+            final result = document.querySelector('div#messagetext > p')?.innerText.split('setTimeout').firstOrNull;
+            if (result != null && (result.contains('已经领取过') || result.contains('领取成功'))) {
+              emit(state.copyWith(status: PacketStatus.success, reason: result));
+            } else if (result != null && result.contains('err_packet_has_gone_away')) {
+              emit(state.copyWith(status: PacketStatus.takenAway));
+            } else {
+              emit(state.copyWith(status: PacketStatus.failed, reason: result));
+            }
+          },
+        )
+        .run();
   }
 }

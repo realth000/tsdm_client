@@ -15,18 +15,20 @@ final class RootLocationCubit extends Cubit<List<String>> with LoggerMixin {
     _sub = rootLocationStream.stream.listen(
       (event) => switch (event) {
         RootLocationEventEnter(:final path) => () {
-            debug('enter page $path');
-            emit(state.toList()..add(path));
-          }(),
+          debug('enter page $path');
+          emit(state.toList()..add(path));
+        }(),
         RootLocationEventLeave(:final path) => () {
-            debug('leave page $path');
-            if (state.lastOrNull != path) {
-              error('failed to leave page non-current path $path, current '
-                  'page is $state');
-              return;
-            }
-            emit(state.toList()..removeLast());
-          }(),
+          debug('leave page $path');
+          if (state.lastOrNull != path) {
+            error(
+              'failed to leave page non-current path $path, current '
+              'page is $state',
+            );
+            return;
+          }
+          emit(state.toList()..removeLast());
+        }(),
       },
     );
   }

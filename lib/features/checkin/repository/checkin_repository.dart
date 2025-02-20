@@ -8,17 +8,12 @@ import 'package:tsdm_client/utils/logger.dart';
 /// Repository of checkin feature.
 final class CheckinRepository with LoggerMixin {
   /// Constructor.
-  const CheckinRepository({required StorageProvider storageProvider})
-      : _storageProvider = storageProvider;
+  const CheckinRepository({required StorageProvider storageProvider}) : _storageProvider = storageProvider;
 
   final StorageProvider _storageProvider;
 
   /// Perform a checkin for user [uid].
-  Future<CheckinResult> checkin(
-    int uid,
-    CheckinFeeling feeling,
-    String message,
-  ) async {
+  Future<CheckinResult> checkin(int uid, CheckinFeeling feeling, String message) async {
     final netClient = getIt.get<NetClientProvider>();
     final checkinResult = await doCheckin(netClient, feeling, message).run();
 
@@ -26,8 +21,7 @@ final class CheckinRepository with LoggerMixin {
     // If any login-user related operation acted, for example logout or switch
     // to another user, the current user below is unexpected behavior.
     // So it's better to make a lock when doing checkin.
-    if (checkinResult is CheckinResultSuccess ||
-        checkinResult is CheckinResultAlreadyChecked) {
+    if (checkinResult is CheckinResultSuccess || checkinResult is CheckinResultAlreadyChecked) {
       await _storageProvider.updateLastCheckinTime(uid, DateTime.now()).run();
     }
     return checkinResult;

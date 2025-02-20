@@ -60,8 +60,10 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
     });
     try {
       final _ = await Dio().getUri<dynamic>(
-        Uri.http('${hostController.text.trim()}'
-            ':${portController.text.trim()}'),
+        Uri.http(
+          '${hostController.text.trim()}'
+          ':${portController.text.trim()}',
+        ),
         options: Options(sendTimeout: const Duration(seconds: 3)),
       );
       setState(() {
@@ -113,10 +115,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
             TextFormField(
               controller: hostController,
               autofocus: true,
-              decoration: InputDecoration(
-                prefixIcon: Icon(MdiIcons.ipNetworkOutline),
-                labelText: tr.host,
-              ),
+              decoration: InputDecoration(prefixIcon: Icon(MdiIcons.ipNetworkOutline), labelText: tr.host),
               validator: (v) {
                 if (v == null || v.trim().isEmpty || v.contains(':')) {
                   return tr.invalidHostOrIp;
@@ -127,10 +126,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
             sizedBoxW16H16,
             TextFormField(
               controller: portController,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.network_ping_outlined),
-                labelText: tr.port,
-              ),
+              decoration: InputDecoration(prefixIcon: const Icon(Icons.network_ping_outlined), labelText: tr.port),
               validator: (v) {
                 if (v == null || v.trim().isEmpty) {
                   return tr.invalidPort;
@@ -144,19 +140,14 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
             ),
             sizedBoxW16H16,
             TextButton.icon(
-              label: Text(
-                switch (connStatus) {
-                  _TestConnStatus.waiting => tr.testConnection.waiting,
-                  _TestConnStatus.testing => tr.testConnection.testing,
-                  _TestConnStatus.connected => tr.testConnection.connected,
-                  _TestConnStatus.disconnected =>
-                    tr.testConnection.disconnected,
-                },
-              ),
+              label: Text(switch (connStatus) {
+                _TestConnStatus.waiting => tr.testConnection.waiting,
+                _TestConnStatus.testing => tr.testConnection.testing,
+                _TestConnStatus.connected => tr.testConnection.connected,
+                _TestConnStatus.disconnected => tr.testConnection.disconnected,
+              }),
               icon: const Icon(Icons.refresh_outlined),
-              onPressed: connStatus == _TestConnStatus.testing
-                  ? null
-                  : () async => testConnection(),
+              onPressed: connStatus == _TestConnStatus.testing ? null : () async => testConnection(),
             ),
           ],
         ),
@@ -165,38 +156,27 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
         TextButton(
           onPressed: () {
             // Clear proxy settings.
-            context.read<SettingsBloc>().add(
-                  const SettingsValueChanged(SettingsKeys.netClientProxy, ''),
-                );
-            showSnackBar(
-              context: context,
-              message: context.t.general.affectAfterRestart,
-            );
+            context.read<SettingsBloc>().add(const SettingsValueChanged(SettingsKeys.netClientProxy, ''));
+            showSnackBar(context: context, message: context.t.general.affectAfterRestart);
             context.pop();
           },
           child: Text(context.t.general.reset),
         ),
         sizedBoxW24H24,
-        TextButton(
-          onPressed: () => context.pop(),
-          child: Text(context.t.general.cancel),
-        ),
+        TextButton(onPressed: () => context.pop(), child: Text(context.t.general.cancel)),
         TextButton(
           onPressed: () {
             if (!formKey.currentState!.validate()) {
               return;
             }
             context.read<SettingsBloc>().add(
-                  SettingsValueChanged(
-                    SettingsKeys.netClientProxy,
-                    '${hostController.text.trim()}:'
-                    '${portController.text.trim()}',
-                  ),
-                );
-            showSnackBar(
-              context: context,
-              message: context.t.general.affectAfterRestart,
+              SettingsValueChanged(
+                SettingsKeys.netClientProxy,
+                '${hostController.text.trim()}:'
+                '${portController.text.trim()}',
+              ),
             );
+            showSnackBar(context: context, message: context.t.general.affectAfterRestart);
             context.pop();
           },
           child: Text(context.t.general.ok),

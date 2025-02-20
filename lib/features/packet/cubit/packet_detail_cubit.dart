@@ -12,8 +12,7 @@ part 'packet_detail_state.dart';
 ///
 /// Recording the process state of fetching packet statistics detail data of a
 /// given thread.
-final class PacketDetailCubit extends Cubit<PacketDetailState>
-    with LoggerMixin {
+final class PacketDetailCubit extends Cubit<PacketDetailState> with LoggerMixin {
   /// Constructor.
   PacketDetailCubit(this._repo) : super(PacketDetailInitial());
 

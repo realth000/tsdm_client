@@ -159,8 +159,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
     final username = avatarNode.querySelector('div:nth-child(1)')?.innerText;
     // Allow empty value.
     final nickname = avatarNode.querySelector('div:nth-child(2)')?.innerText;
-    final avatarUrl =
-        avatarNode.querySelector('div.avatar > a > img')?.imageUrl();
+    final avatarUrl = avatarNode.querySelector('div.avatar > a > img')?.imageUrl();
     if (username == null || nickname == null || avatarUrl == null) {
       talker.error(
         'warning when build UserBriefProfile: username or nickname or'
@@ -220,30 +219,29 @@ final class UserBriefProfile with UserBriefProfileMappable {
         // Special attr that changes over time.
         // 2024 春节
         '龙之印章:' => () {
-            specialAttr = data;
-            specialAttrName = '龙之印章';
-          }(),
+          specialAttr = data;
+          specialAttrName = '龙之印章';
+        }(),
         // 2024 夏日
         '西瓜:' => () {
-            specialAttr = data;
-            specialAttrName = '西瓜';
-          }(),
+          specialAttr = data;
+          specialAttrName = '西瓜';
+        }(),
         // 2024 坛庆
         '爱心❤:' => () {
-            specialAttr = data;
-            specialAttrName = '爱心';
-          }(),
+          specialAttr = data;
+          specialAttrName = '爱心';
+        }(),
         // 2025 春节
         '金蛋:' => () {
-            specialAttr = data;
-            specialAttrName = '金蛋';
-          }(),
+          specialAttr = data;
+          specialAttrName = '金蛋';
+        }(),
         _ => '',
       };
     }
 
-    online =
-        statBarNode.querySelector('div > a')?.title?.contains('在线') ?? false;
+    online = statBarNode.querySelector('div > a')?.title?.contains('在线') ?? false;
 
     return UserBriefProfile(
       username: username ?? '',

@@ -17,8 +17,7 @@ final class ThreadVisitHistoryFetchAllRequested extends ThreadVisitHistoryEvent
 
 /// Fetch all history on given user's [uid].
 @MappableClass()
-final class ThreadVisitHistoryFetchByUserRequested
-    extends ThreadVisitHistoryEvent
+final class ThreadVisitHistoryFetchByUserRequested extends ThreadVisitHistoryEvent
     with ThreadVisitHistoryFetchByUserRequestedMappable {
   /// Constructor.
   const ThreadVisitHistoryFetchByUserRequested(this.uid);
@@ -42,14 +41,10 @@ final class ThreadVisitHistoryUpdateRequested extends ThreadVisitHistoryEvent
 ///
 /// Find it by user's id [uid] and thread's id [tid].
 @MappableClass()
-final class ThreadVisitHistoryDeleteRecordRequested
-    extends ThreadVisitHistoryEvent
+final class ThreadVisitHistoryDeleteRecordRequested extends ThreadVisitHistoryEvent
     with ThreadVisitHistoryDeleteRecordRequestedMappable {
   /// Constructor.
-  const ThreadVisitHistoryDeleteRecordRequested({
-    required this.uid,
-    required this.tid,
-  });
+  const ThreadVisitHistoryDeleteRecordRequested({required this.uid, required this.tid});
 
   /// User id to locate the unique history item.
   final int uid;

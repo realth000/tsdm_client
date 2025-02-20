@@ -96,8 +96,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
             chatHistorySendTarget: widget.chatHistorySendTarget,
             chatSendTarget: widget.chatSendTarget,
             disabledEditorFeatures: widget.disabledEditorFeatures,
-            fullScreenDisabledEditorFeatures:
-                widget.fullScreenDisabledEditorFeatures,
+            fullScreenDisabledEditorFeatures: widget.fullScreenDisabledEditorFeatures,
             fullScreen: widget.fullScreen,
           ),
     );
@@ -124,9 +123,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
   @override
   Widget build(BuildContext context) {
-    final hasLogin = context.select<AuthenticationRepository, bool>(
-      (repo) => repo.currentUser != null,
-    );
+    final hasLogin = context.select<AuthenticationRepository, bool>((repo) => repo.currentUser != null);
     final closed = context.select<ReplyBloc, bool>((bloc) => bloc.state.closed);
 
     Future<void> Function()? onTapCallback;
@@ -136,8 +133,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       onTapCallback = null;
     } else if (closed &&
         // Never close in chat page.
-        (widget.replyType != ReplyTypes.chat &&
-            widget.replyType != ReplyTypes.chatHistory)) {
+        (widget.replyType != ReplyTypes.chat && widget.replyType != ReplyTypes.chatHistory)) {
       controller.text = context.t.threadPage.closed;
       onTapCallback = null;
     } else {
@@ -152,9 +148,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
           controller: controller,
           readOnly: true,
           enabled: onTapCallback != null,
-          decoration: InputDecoration(
-            hintText: context.t.threadPage.sendReplyHint,
-          ),
+          decoration: InputDecoration(hintText: context.t.threadPage.sendReplyHint),
           onTap: onTapCallback,
         ),
       ),
@@ -216,8 +210,7 @@ class _ReplyBar extends StatefulWidget {
 }
 
 final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
-  final panelController =
-      ChatBottomPanelContainerController<_BottomPanelType>();
+  final panelController = ChatBottomPanelContainerController<_BottomPanelType>();
   _BottomPanelType panelType = _BottomPanelType.none;
 
   /// Indicate current thread is closed.
@@ -353,10 +346,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       return;
     }
     context.read<ReplyBloc>().add(
-      ReplyToThreadRequested(
-        replyParameters: _replyParameters!,
-        replyMessage: _replyRichController.toBBCode(),
-      ),
+      ReplyToThreadRequested(replyParameters: _replyParameters!, replyMessage: _replyRichController.toBBCode()),
     );
   }
 
@@ -438,9 +428,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
             );
             return;
           }
-          _replyAction == null
-              ? await _sendReplyThreadMessage()
-              : await _sendReplyPostMessage();
+          _replyAction == null ? await _sendReplyThreadMessage() : await _sendReplyPostMessage();
         }
       case ReplyTypes.chatHistory:
         {
@@ -479,17 +467,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       padding: edgeInsetsL12T4R12,
       child: Row(
         children: [
-          Text(
-            _hintText!,
-            style: Theme.of(
-              context,
-            ).textTheme.labelLarge?.copyWith(color: outlineColor),
-          ),
+          Text(_hintText!, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: outlineColor)),
           const Spacer(),
-          IconButton(
-            icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16),
-            onPressed: _clearTextAndHint,
-          ),
+          IconButton(icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16), onPressed: _clearTextAndHint),
         ],
       ),
     );
@@ -501,10 +481,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     }
     return EditorToolbar(
       bbcodeController: _replyRichController,
-      disabledFeatures:
-          fullScreen
-              ? widget.fullScreenDisabledEditorFeatures
-              : widget.disabledEditorFeatures,
+      disabledFeatures: fullScreen ? widget.fullScreenDisabledEditorFeatures : widget.disabledEditorFeatures,
       editorFocusNode: focusNode,
     );
   }
@@ -523,10 +500,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           _BottomPanelType.keyboard => sizedBoxEmpty,
           _BottomPanelType.toolbar => EditorToolbar(
             bbcodeController: _replyRichController,
-            disabledFeatures:
-                fullScreen
-                    ? widget.fullScreenDisabledEditorFeatures
-                    : widget.disabledEditorFeatures,
+            disabledFeatures: fullScreen ? widget.fullScreenDisabledEditorFeatures : widget.disabledEditorFeatures,
             editorFocusNode: focusNode,
           ),
         };
@@ -605,24 +579,16 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               if (isMobile)
                 IconButton(
                   icon: const Icon(Icons.expand),
-                  selectedIcon: Icon(
-                    Icons.expand_outlined,
-                    color: Theme.of(context).primaryColor,
-                  ),
+                  selectedIcon: Icon(Icons.expand_outlined, color: Theme.of(context).primaryColor),
                   isSelected: fullScreen,
                   onPressed: () {
                     setState(() {
                       fullScreen = !fullScreen;
                     });
                     if (fullScreen) {
-                      panelController.updatePanelType(
-                        ChatBottomPanelType.other,
-                        data: _BottomPanelType.toolbar,
-                      );
+                      panelController.updatePanelType(ChatBottomPanelType.other, data: _BottomPanelType.toolbar);
                     } else {
-                      panelController.updatePanelType(
-                        ChatBottomPanelType.keyboard,
-                      );
+                      panelController.updatePanelType(ChatBottomPanelType.keyboard);
                     }
                   },
                 ),
@@ -635,13 +601,8 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               // Send Button
               FilledButton(
                 onPressed:
-                    (canSendReply && !isSendingReply && !_closed && _hasLogin)
-                        ? () async => _sendMessage()
-                        : null,
-                child:
-                    isSendingReply
-                        ? sizedCircularProgressIndicator
-                        : const Icon(Icons.send),
+                    (canSendReply && !isSendingReply && !_closed && _hasLogin) ? () async => _sendMessage() : null,
+                child: isSendingReply ? sizedCircularProgressIndicator : const Icon(Icons.send),
               ),
             ],
           ),
@@ -657,9 +618,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
-    _replyRichController = buildBBCodeEditorController(
-      initialText: widget.outerTextController.text,
-    );
+    _replyRichController = buildBBCodeEditorController(initialText: widget.outerTextController.text);
     _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen((status) {
       setState(() {

@@ -6,17 +6,10 @@ part of 'models.dart';
 @MappableClass()
 final class ForumStatus with ForumStatusMappable {
   /// Constructor.
-  const ForumStatus({
-    required this.todayCount,
-    required this.yesterdayCount,
-    required this.threadCount,
-  });
+  const ForumStatus({required this.todayCount, required this.yesterdayCount, required this.threadCount});
 
   /// Construct an empty forum status.
-  const ForumStatus.empty()
-      : todayCount = '0',
-        yesterdayCount = '0',
-        threadCount = '0';
+  const ForumStatus.empty() : todayCount = '0', yesterdayCount = '0', threadCount = '0';
 
   /// "今日"
   final String todayCount;

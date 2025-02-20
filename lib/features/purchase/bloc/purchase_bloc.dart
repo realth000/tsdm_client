@@ -13,12 +13,11 @@ part 'purchase_state.dart';
 typedef PurchaseEmitter = Emitter<PurchaseState>;
 
 /// Bloc of purchasing.
-final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState>
-    with LoggerMixin {
+final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState> with LoggerMixin {
   /// Constructor.
   PurchaseBloc({required PurchaseRepository purchaseRepository})
-      : _purchaseRepository = purchaseRepository,
-        super(const PurchaseState()) {
+    : _purchaseRepository = purchaseRepository,
+      super(const PurchaseState()) {
     on<PurchaseFetchConfirmInfoRequested>(_onPurchaseFetchConfirmInfoRequested);
     on<PurchasePurchaseRequested>(_onPurchasePurchaseRequested);
     on<PurchasePurchasedCanceled>(_onPurchasePurchasedCanceled);
@@ -31,27 +30,14 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState>
     PurchaseEmitter emit,
   ) async {
     emit(state.copyWith(status: PurchaseStatus.loading));
-    await _purchaseRepository
-        .fetchPurchaseConfirmInfo(
-      tid: event.tid,
-      pid: event.pid,
-    )
-        .match(
-      (e) {
-        handle(e);
-        error('failed to fetch purchase info: $e');
-        emit(state.copyWith(status: PurchaseStatus.failed));
-      },
-      (v) => emit(
-        state.copyWith(status: PurchaseStatus.gotInfo, confirmInfo: v),
-      ),
-    ).run();
+    await _purchaseRepository.fetchPurchaseConfirmInfo(tid: event.tid, pid: event.pid).match((e) {
+      handle(e);
+      error('failed to fetch purchase info: $e');
+      emit(state.copyWith(status: PurchaseStatus.failed));
+    }, (v) => emit(state.copyWith(status: PurchaseStatus.gotInfo, confirmInfo: v))).run();
   }
 
-  Future<void> _onPurchasePurchaseRequested(
-    PurchasePurchaseRequested event,
-    PurchaseEmitter emit,
-  ) async {
+  Future<void> _onPurchasePurchaseRequested(PurchasePurchaseRequested event, PurchaseEmitter emit) async {
     if (state.confirmInfo == null) {
       error('failed to purchase: confirm info not prepared');
       emit(state.copyWith(status: PurchaseStatus.failed));
@@ -82,10 +68,7 @@ final class PurchaseBloc extends Bloc<PurchaseEvent, PurchaseState>
     }
   }
 
-  Future<void> _onPurchasePurchasedCanceled(
-    PurchasePurchasedCanceled event,
-    PurchaseEmitter emit,
-  ) async {
+  Future<void> _onPurchasePurchasedCanceled(PurchasePurchasedCanceled event, PurchaseEmitter emit) async {
     emit(state.copyWith(status: PurchaseStatus.initial));
   }
 }

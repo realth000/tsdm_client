@@ -13,8 +13,7 @@ sealed class AuthStatus with AuthStatusMappable {
 ///
 /// Intend to be not used.
 @MappableClass()
-final class AuthStatusUnknown extends AuthStatus
-    with AuthStatusUnknownMappable {
+final class AuthStatusUnknown extends AuthStatus with AuthStatusUnknownMappable {
   /// Constructor.
   const AuthStatusUnknown();
 }
@@ -24,16 +23,14 @@ final class AuthStatusUnknown extends AuthStatus
 /// Current state is not stable, performing user login and should block most
 /// other actions.
 @MappableClass()
-final class AuthStatusLoading extends AuthStatus
-    with AuthStatusLoadingMappable {
+final class AuthStatusLoading extends AuthStatus with AuthStatusLoadingMappable {
   /// Constructor.
   const AuthStatusLoading();
 }
 
 /// Not authed.
 @MappableClass()
-final class AuthStatusNotAuthed extends AuthStatus
-    with AuthStatusNotAuthedMappable {
+final class AuthStatusNotAuthed extends AuthStatus with AuthStatusNotAuthedMappable {
   /// Constructor.
   const AuthStatusNotAuthed();
 }

@@ -4,8 +4,7 @@ import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dar
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/connection.dart'
-    as conn;
+import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/connection.dart' as conn;
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -36,8 +35,7 @@ Future<void> initProviders() async {
   final preloadedCookie = await preloadCookie(db);
   final preloadedImageCache = await preloadImageCache(db);
 
-  final storageProvider =
-      StorageProvider(db, preloadedCookie, preloadedImageCache);
+  final storageProvider = StorageProvider(db, preloadedCookie, preloadedImageCache);
 
   final settingsRepo = SettingsRepository(storageProvider);
   await settingsRepo.init();
@@ -47,23 +45,13 @@ Future<void> initProviders() async {
     ..registerSingleton(storageProvider)
     ..registerSingleton(settingsRepo)
     ..registerSingleton(CookieProvider.build())
-    ..registerFactory(
-      CookieProvider.buildEmpty,
-      instanceName: ServiceKeys.empty,
-    )
+    ..registerFactory(CookieProvider.buildEmpty, instanceName: ServiceKeys.empty)
     ..registerSingleton(ImageCacheProvider.new)
     ..registerFactory(NetClientProvider.build)
-    ..registerFactory(
-      NetClientProvider.buildNoCookie,
-      instanceName: ServiceKeys.noCookie,
-    )
+    ..registerFactory(NetClientProvider.buildNoCookie, instanceName: ServiceKeys.noCookie)
     ..registerSingleton(NetErrorSaver());
   await getIt.allReady();
 
-  getIt.registerSingleton(
-    ImageCacheProvider(
-      getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie),
-    ),
-  );
+  getIt.registerSingleton(ImageCacheProvider(getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie)));
   await getIt.allReady();
 }

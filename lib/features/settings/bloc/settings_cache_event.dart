@@ -8,13 +8,11 @@ sealed class SettingsCacheEvent with SettingsCacheEventMappable {
 
 /// Required to calculate cache size.
 @MappableClass()
-final class SettingsCacheCalculateRequested extends SettingsCacheEvent
-    with SettingsCacheCalculateRequestedMappable {}
+final class SettingsCacheCalculateRequested extends SettingsCacheEvent with SettingsCacheCalculateRequestedMappable {}
 
 /// User requested to clear cache.
 @MappableClass()
-final class SettingsCacheClearCacheRequested extends SettingsCacheEvent
-    with SettingsCacheClearCacheRequestedMappable {
+final class SettingsCacheClearCacheRequested extends SettingsCacheEvent with SettingsCacheClearCacheRequestedMappable {
   /// Constructor.
   const SettingsCacheClearCacheRequested(this.clearInfo);
 

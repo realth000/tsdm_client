@@ -8,8 +8,7 @@ import 'package:window_manager/window_manager.dart';
 /// Only available on desktop platforms.
 Future<void> desktopUpdateWindowTitle() async {
   if (isDesktop && !cmdArgs.noWindowConfigs) {
-    await windowManager
-        .setTitle(LocaleSettings.currentLocale.translations.appName);
+    await windowManager.setTitle(LocaleSettings.currentLocale.translations.appName);
     talker.debug('set window title with current locale');
   }
 }

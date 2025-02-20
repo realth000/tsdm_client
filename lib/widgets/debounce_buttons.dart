@@ -32,12 +32,7 @@ typedef FutureVoidCallback = Future<void> Function();
 /// state should be globally stored.
 class DebounceTextButton extends StatelessWidget {
   /// Constructor.
-  const DebounceTextButton({
-    required this.text,
-    required this.shouldDebounce,
-    required this.onPressed,
-    super.key,
-  });
+  const DebounceTextButton({required this.text, required this.shouldDebounce, required this.onPressed, super.key});
 
   /// Should in debounce state.
   final bool shouldDebounce;
@@ -60,12 +55,7 @@ class DebounceTextButton extends StatelessWidget {
 /// Debounce button in [ElevatedButton] style.
 class DebounceFilledButton extends StatelessWidget {
   /// Constructor.
-  const DebounceFilledButton({
-    required this.child,
-    required this.shouldDebounce,
-    required this.onPressed,
-    super.key,
-  });
+  const DebounceFilledButton({required this.child, required this.shouldDebounce, required this.onPressed, super.key});
 
   /// Should in debounce state.
   final bool shouldDebounce;
@@ -88,12 +78,7 @@ class DebounceFilledButton extends StatelessWidget {
 /// Debounce button in [IconButton] style.
 class DebounceIconButton extends StatelessWidget {
   /// Constructor.
-  const DebounceIconButton({
-    required this.icon,
-    required this.shouldDebounce,
-    required this.onPressed,
-    super.key,
-  });
+  const DebounceIconButton({required this.icon, required this.shouldDebounce, required this.onPressed, super.key});
 
   /// Should in debounce state.
   final bool shouldDebounce;

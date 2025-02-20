@@ -4,11 +4,7 @@ part of 'models.dart';
 @MappableClass()
 final class LoginValue with LoginValueMappable {
   /// Constructor.
-  const LoginValue({
-    this.username,
-    this.userGroup,
-    this.uid,
-  });
+  const LoginValue({this.username, this.userGroup, this.uid});
 
   /// username
   final String? username;
@@ -27,11 +23,7 @@ final class LoginValue with LoginValueMappable {
 @MappableClass()
 final class LoginExtra with LoginExtraMappable {
   /// Constructor.
-  const LoginExtra({
-    this.showDialog,
-    this.locationTime,
-    this.extraJs,
-  });
+  const LoginExtra({this.showDialog, this.locationTime, this.extraJs});
 
   /// Value is "1"
   @MappableField(key: 'showdialog')
@@ -50,12 +42,7 @@ final class LoginExtra with LoginExtraMappable {
 @MappableClass()
 final class LoginResult with LoginResultMappable {
   /// Constructor.
-  const LoginResult({
-    required this.status,
-    required this.message,
-    required this.values,
-    this.extra,
-  });
+  const LoginResult({required this.status, required this.message, required this.values, this.extra});
 
   /// Message means login success.
   static const messageSuccess = 'location_login_succeed_mobile';

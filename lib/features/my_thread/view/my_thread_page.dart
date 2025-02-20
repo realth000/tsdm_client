@@ -17,8 +17,7 @@ class MyThreadPage extends StatefulWidget {
   State<MyThreadPage> createState() => _MyThreadPageState();
 }
 
-class _MyThreadPageState extends State<MyThreadPage>
-    with SingleTickerProviderStateMixin {
+class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderStateMixin {
   late final TabController _tabController;
 
   late final EasyRefreshController _threadRefreshController;
@@ -36,9 +35,7 @@ class _MyThreadPageState extends State<MyThreadPage>
       child = Center(
         child: Text(
           context.t.general.noData,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
         ),
       );
     } else {
@@ -63,9 +60,7 @@ class _MyThreadPageState extends State<MyThreadPage>
           _threadRefreshController.finishLoad(IndicatorResult.noMore);
           return;
         }
-        context
-            .read<MyThreadBloc>()
-            .add(const MyThreadLoadMoreThreadRequested());
+        context.read<MyThreadBloc>().add(const MyThreadLoadMoreThreadRequested());
       },
       child: child,
     );
@@ -83,9 +78,7 @@ class _MyThreadPageState extends State<MyThreadPage>
       child = Center(
         child: Text(
           context.t.general.noData,
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                color: Theme.of(context).colorScheme.outline,
-              ),
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
         ),
       );
     } else {
@@ -111,9 +104,7 @@ class _MyThreadPageState extends State<MyThreadPage>
           _replyRefreshController.finishLoad(IndicatorResult.noMore);
           return;
         }
-        context
-            .read<MyThreadBloc>()
-            .add(const MyThreadLoadMoreReplyRequested());
+        context.read<MyThreadBloc>().add(const MyThreadLoadMoreReplyRequested());
       },
       child: child,
     );
@@ -123,14 +114,8 @@ class _MyThreadPageState extends State<MyThreadPage>
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
-    _threadRefreshController = EasyRefreshController(
-      controlFinishRefresh: true,
-      controlFinishLoad: true,
-    );
-    _replyRefreshController = EasyRefreshController(
-      controlFinishRefresh: true,
-      controlFinishLoad: true,
-    );
+    _threadRefreshController = EasyRefreshController(controlFinishRefresh: true, controlFinishLoad: true);
+    _replyRefreshController = EasyRefreshController(controlFinishRefresh: true, controlFinishLoad: true);
   }
 
   @override
@@ -145,12 +130,10 @@ class _MyThreadPageState extends State<MyThreadPage>
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => MyThreadRepository(),
-        ),
+        RepositoryProvider(create: (_) => MyThreadRepository()),
         BlocProvider(
-          create: (context) => MyThreadBloc(myThreadRepository: context.repo())
-            ..add(MyThreadLoadInitialDataRequested()),
+          create:
+              (context) => MyThreadBloc(myThreadRepository: context.repo())..add(MyThreadLoadInitialDataRequested()),
         ),
       ],
       child: BlocBuilder<MyThreadBloc, MyThreadState>(
@@ -168,10 +151,7 @@ class _MyThreadPageState extends State<MyThreadPage>
             ),
             body: TabBarView(
               controller: _tabController,
-              children: [
-                _buildThreadTab(context, state),
-                _buildReplyTab(context, state),
-              ],
+              children: [_buildThreadTab(context, state), _buildReplyTab(context, state)],
             ),
           );
         },

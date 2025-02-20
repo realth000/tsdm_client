@@ -25,18 +25,17 @@ part 'auto_notification_state.dart';
 /// cubit SHOULD only be ca optional trigger of notification state update, all
 /// data handling logic and presentation state update logic are implemented in
 /// `NotificationBloc`.
-final class AutoNotificationCubit extends Cubit<AutoNoticeState>
-    with LoggerMixin {
+final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixin {
   /// Constructor.
   AutoNotificationCubit({
     required AuthenticationRepository authenticationRepository,
     required NotificationRepository notificationRepository,
     required StorageProvider storageProvider,
     this.duration = Duration.zero,
-  })  : _authenticationRepository = authenticationRepository,
-        _notificationRepository = notificationRepository,
-        _storageProvider = storageProvider,
-        super(const AutoNoticeStateStopped());
+  }) : _authenticationRepository = authenticationRepository,
+       _notificationRepository = notificationRepository,
+       _storageProvider = storageProvider,
+       super(const AutoNoticeStateStopped());
 
   final AuthenticationRepository _authenticationRepository;
   final NotificationRepository _notificationRepository;
@@ -98,8 +97,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
 
     int? lastFetchTime;
     // TODO: More FP.
-    final lastFetchTimeEither =
-        await _storageProvider.fetchLastFetchNoticeTime(uid).run();
+    final lastFetchTimeEither = await _storageProvider.fetchLastFetchNoticeTime(uid).run();
     if (lastFetchTimeEither.isRight()) {
       final t = lastFetchTimeEither.unwrap();
       if (t != null) {
@@ -138,12 +136,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState>
     }
     _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
       _remainingTick -= const Duration(seconds: 1);
-      emit(
-        AutoNoticeStateTicking(
-          total: this.duration,
-          remain: _remainingTick,
-        ),
-      );
+      emit(AutoNoticeStateTicking(total: this.duration, remain: _remainingTick));
       if (_remainingTick.inSeconds > 0) {
         return;
       }

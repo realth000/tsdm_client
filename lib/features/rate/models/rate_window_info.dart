@@ -95,8 +95,7 @@ final class RateWindowInfo with RateWindowInfoMappable {
 
     // Rows in table.
     // The first element is row title.
-    final rateTableRowsNodeList =
-        element.querySelectorAll('table > tbody > tr').toList();
+    final rateTableRowsNodeList = element.querySelectorAll('table > tbody > tr').toList();
 
     // Should have at least one type of score to rate and also the row title as
     // list elements.
@@ -109,11 +108,12 @@ final class RateWindowInfo with RateWindowInfoMappable {
     }
 
     // Length of row title list should be 4.
-    final rowTitleList = rateTableRowsNodeList.firstOrNull
-        ?.querySelectorAll('th')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
+    final rowTitleList =
+        rateTableRowsNodeList.firstOrNull
+            ?.querySelectorAll('th')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
     // Explicitly check null here just make the compiler happy.
     if (rowTitleList == null || rowTitleList.length != 4) {
       talker.error(
@@ -127,11 +127,8 @@ final class RateWindowInfo with RateWindowInfoMappable {
 
     // Parse table score rows.
 
-    final scoreList = rateTableRowsNodeList
-        .skip(1)
-        .map(_buildRateScoreRowFromTrNode)
-        .whereType<RateWindowScore>()
-        .toList();
+    final scoreList =
+        rateTableRowsNodeList.skip(1).map(_buildRateScoreRowFromTrNode).whereType<RateWindowScore>().toList();
 
     /// Score types available to rate should not be empty;
     if (scoreList.isEmpty) {
@@ -142,28 +139,22 @@ final class RateWindowInfo with RateWindowInfoMappable {
     // Parse default reasons.
 
     // Allow default reason list to be empty.
-    final defaultReasonList = element
-        .querySelector('div.tpclg ul#reasonselect')
-        ?.querySelectorAll('li')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
+    final defaultReasonList =
+        element
+            .querySelector('div.tpclg ul#reasonselect')
+            ?.querySelectorAll('li')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
 
     // Parse form data.
-    final formHash =
-        element.querySelector('input[name="formhash"]')?.attributes['value'];
+    final formHash = element.querySelector('input[name="formhash"]')?.attributes['value'];
     final tid = element.querySelector('input[name="tid"]')?.attributes['value'];
     final pid = element.querySelector('input[name="pid"]')?.attributes['value'];
-    final referer =
-        element.querySelector('input[name="referer"]')?.attributes['value'];
-    final handleKey =
-        element.querySelector('input[name="handlekey"]')?.attributes['value'];
+    final referer = element.querySelector('input[name="referer"]')?.attributes['value'];
+    final handleKey = element.querySelector('input[name="handlekey"]')?.attributes['value'];
 
-    if (formHash == null ||
-        tid == null ||
-        pid == null ||
-        referer == null ||
-        handleKey == null) {
+    if (formHash == null || tid == null || pid == null || referer == null || handleKey == null) {
       talker.error(
         'invalid rate window info: invalid form data: formHash=$formHash, '
         'tid=$tid, pid=$pid, referer=$referer, handleKey=$handleKey',
@@ -187,21 +178,16 @@ final class RateWindowInfo with RateWindowInfoMappable {
   static RateWindowScore? _buildRateScoreRowFromTrNode(uh.Element element) {
     final name = element.querySelector('td')?.firstEndDeepText();
     final id = element.querySelector('td:nth-child(2) > input')?.id;
-    final allowedRange = element
-        .querySelector('td:nth-child(2) > ul')
-        ?.querySelectorAll('li')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
-    final allowedRangeDescription =
-        element.querySelector('td:nth-child(3)')?.firstEndDeepText();
-    final remaining =
-        element.querySelector('td:nth-child(4)')?.firstEndDeepText();
-    if (name == null ||
-        id == null ||
-        allowedRange == null ||
-        allowedRangeDescription == null ||
-        remaining == null) {
+    final allowedRange =
+        element
+            .querySelector('td:nth-child(2) > ul')
+            ?.querySelectorAll('li')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
+    final allowedRangeDescription = element.querySelector('td:nth-child(3)')?.firstEndDeepText();
+    final remaining = element.querySelector('td:nth-child(4)')?.firstEndDeepText();
+    if (name == null || id == null || allowedRange == null || allowedRangeDescription == null || remaining == null) {
       talker.error(
         'invalid rate score row: name=$name, id=$id, '
         'allowedRange=$allowedRange, '

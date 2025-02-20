@@ -9,14 +9,11 @@ import 'package:universal_html/parsing.dart';
 
 /// 红包
 final class PacketRepository {
-  static const _packetDetailUrl =
-      '$baseUrl/plugin.php?id=tsdmbet:awardPacket&action=showaward&tid=';
+  static const _packetDetailUrl = '$baseUrl/plugin.php?id=tsdmbet:awardPacket&action=showaward&tid=';
 
   /// Receive a packet from [url].
-  AsyncEither<uh.Document> receivePacket(String url) => getIt
-      .get<NetClientProvider>()
-      .get(url)
-      .mapHttp((v) => parseHtmlDocument(v.data as String));
+  AsyncEither<uh.Document> receivePacket(String url) =>
+      getIt.get<NetClientProvider>().get(url).mapHttp((v) => parseHtmlDocument(v.data as String));
 
   /// Fetch packet statistics info of a given thread [tid].
   ///
@@ -29,21 +26,14 @@ final class PacketRepository {
       .mapHttp((v) => parseHtmlDocument(v.data as String))
       .flatMap((v) => _parsePacketInfo(v, tid));
 
-  AsyncEither<List<PacketDetailModel>> _parsePacketInfo(
-    uh.Document document,
-    int tid,
-  ) =>
-      AsyncEither(() async {
-        final infoTable = document.querySelector('table.pure-table');
-        if (infoTable == null) {
-          return left(PacketDetailParseFailed(tid, 'info table not found'));
-        }
+  AsyncEither<List<PacketDetailModel>> _parsePacketInfo(uh.Document document, int tid) => AsyncEither(() async {
+    final infoTable = document.querySelector('table.pure-table');
+    if (infoTable == null) {
+      return left(PacketDetailParseFailed(tid, 'info table not found'));
+    }
 
-        final data = infoTable
-            .querySelectorAll('tbody > tr')
-            .map(PacketDetailModel.fromTr)
-            .whereType<PacketDetailModel>();
+    final data = infoTable.querySelectorAll('tbody > tr').map(PacketDetailModel.fromTr).whereType<PacketDetailModel>();
 
-        return right(data.toList());
-      });
+    return right(data.toList());
+  });
 }

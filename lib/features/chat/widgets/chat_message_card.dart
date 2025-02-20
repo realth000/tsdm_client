@@ -27,12 +27,11 @@ final class ChatMessageCard extends StatelessWidget {
         children: [
           ListTile(
             leading: GestureDetector(
-              onTap: chatMessage.author != null
-                  ? () async => context.pushNamed(
-                        ScreenPaths.profile,
-                        queryParameters: {'username': chatMessage.author},
-                      )
-                  : null,
+              onTap:
+                  chatMessage.author != null
+                      ? () async =>
+                          context.pushNamed(ScreenPaths.profile, queryParameters: {'username': chatMessage.author})
+                      : null,
               child: HeroUserAvatar(
                 username: chatMessage.author ?? '',
                 avatarUrl: chatMessage.authorAvatarUrl,
@@ -40,29 +39,20 @@ final class ChatMessageCard extends StatelessWidget {
               ),
             ),
             title: GestureDetector(
-              onTap: chatMessage.author != null
-                  ? () async => context.pushNamed(
-                        ScreenPaths.profile,
-                        queryParameters: {'username': chatMessage.author},
-                      )
-                  : null,
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(chatMessage.author ?? ''),
-              ),
+              onTap:
+                  chatMessage.author != null
+                      ? () async =>
+                          context.pushNamed(ScreenPaths.profile, queryParameters: {'username': chatMessage.author})
+                      : null,
+              child: Align(alignment: Alignment.centerLeft, child: Text(chatMessage.author ?? '')),
             ),
-            subtitle: chatMessage.dateTime == null
-                ? null
-                : Text(chatMessage.dateTime!.yyyyMMDDHHMMSS()),
+            subtitle: chatMessage.dateTime == null ? null : Text(chatMessage.dateTime!.yyyyMMDDHHMMSS()),
           ),
           Align(
             alignment: Alignment.centerLeft,
             child: Padding(
               padding: edgeInsetsL16R16,
-              child: munchElement(
-                context,
-                parseHtmlDocument(chatMessage.message).body!,
-              ),
+              child: munchElement(context, parseHtmlDocument(chatMessage.message).body!),
             ),
           ),
         ],

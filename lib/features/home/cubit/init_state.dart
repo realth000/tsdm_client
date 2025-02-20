@@ -4,9 +4,7 @@ part of 'init_cubit.dart';
 @MappableClass()
 final class InitState with InitStateMappable {
   /// Constructor.
-  const InitState({
-    this.v0LegacyDataDeleted = false,
-  });
+  const InitState({this.v0LegacyDataDeleted = false});
 
   /// Flag indicating legacy data used before v1.0 found and deleted.
   ///

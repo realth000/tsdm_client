@@ -8,10 +8,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 /// Each info occupies a row in table.
 class NewcomerReportInfo {
   /// Constructor.
-  NewcomerReportInfo({
-    required this.title,
-    required this.data,
-  });
+  NewcomerReportInfo({required this.title, required this.data});
 
   /// Info title.
   final String title;
@@ -42,16 +39,11 @@ class NewcomerReportCard extends StatelessWidget {
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Icon(
-                  Icons.article_outlined,
-                  color: Theme.of(context).colorScheme.primary,
-                ),
+                Icon(Icons.article_outlined, color: Theme.of(context).colorScheme.primary),
                 sizedBoxW4H4,
                 Text(
                   context.t.html.newcomerReportCard.title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: Theme.of(context).colorScheme.primary,
-                      ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
                 ),
               ],
             ),
@@ -60,43 +52,29 @@ class NewcomerReportCard extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               child: Table(
                 defaultColumnWidth: const IntrinsicColumnWidth(),
-                columnWidths: const <int, TableColumnWidth>{
-                  0: FixedColumnWidth(100),
-                },
+                columnWidths: const <int, TableColumnWidth>{0: FixedColumnWidth(100)},
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: data
-                    .mapIndexed(
-                      (idx, e) => TableRow(
-                        decoration: BoxDecoration(
-                          color: idx.isOdd
-                              ? Theme.of(context)
-                                  .colorScheme
-                                  .surfaceContainerHigh
-                              : null,
-                        ),
-                        children: [
-                          TableCell(
-                            child: Text(
-                              e.title,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(
-                                    color:
-                                        Theme.of(context).colorScheme.secondary,
-                                  ),
+                children:
+                    data
+                        .mapIndexed(
+                          (idx, e) => TableRow(
+                            decoration: BoxDecoration(
+                              color: idx.isOdd ? Theme.of(context).colorScheme.surfaceContainerHigh : null,
                             ),
+                            children: [
+                              TableCell(
+                                child: Text(
+                                  e.title,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                                ),
+                              ),
+                              TableCell(child: Text(e.data, style: Theme.of(context).textTheme.bodyMedium)),
+                            ],
                           ),
-                          TableCell(
-                            child: Text(
-                              e.data,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                    .toList(),
+                        )
+                        .toList(),
               ),
             ),
           ],

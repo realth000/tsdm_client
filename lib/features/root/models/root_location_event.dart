@@ -9,8 +9,7 @@ sealed class RootLocationEvent with RootLocationEventMappable {
 
 /// Entered (or say pushed) a new page with path [path].
 @MappableClass()
-final class RootLocationEventEnter extends RootLocationEvent
-    with RootLocationEventEnterMappable {
+final class RootLocationEventEnter extends RootLocationEvent with RootLocationEventEnterMappable {
   /// Constructor.
   const RootLocationEventEnter(this.path);
 
@@ -20,8 +19,7 @@ final class RootLocationEventEnter extends RootLocationEvent
 
 /// Leaved (or say popped) a new page with path [path].
 @MappableClass()
-final class RootLocationEventLeave extends RootLocationEvent
-    with RootLocationEventLeaveMappable {
+final class RootLocationEventLeave extends RootLocationEvent with RootLocationEventLeaveMappable {
   /// Constructor.
   const RootLocationEventLeave(this.path);
 

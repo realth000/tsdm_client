@@ -71,8 +71,7 @@ class _HomepagePageState extends State<HomepagePage> {
       setState(() {
         _fabVisible = true;
       });
-    } else if (notification.direction == ScrollDirection.reverse &&
-        _fabVisible) {
+    } else if (notification.direction == ScrollDirection.reverse && _fabVisible) {
       setState(() {
         _fabVisible = false;
       });
@@ -80,20 +79,13 @@ class _HomepagePageState extends State<HomepagePage> {
     return true;
   }
 
-  Widget? _buildFloatingActionButton(
-    BuildContext context,
-    HomepageState state,
-  ) {
+  Widget? _buildFloatingActionButton(BuildContext context, HomepageState state) {
     if (state.status != HomepageStatus.success || !_fabVisible) {
       return null;
     }
 
     return FloatingActionButton(
-      onPressed: () async => _scrollController.animateTo(
-        0,
-        duration: duration200,
-        curve: Curves.easeInOut,
-      ),
+      onPressed: () async => _scrollController.animateTo(0, duration: duration200, curve: Curves.easeInOut),
       child: const Icon(Icons.arrow_upward_outlined),
     );
   }
@@ -108,13 +100,12 @@ class _HomepagePageState extends State<HomepagePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HomepageBloc(
-        authenticationRepository:
-            RepositoryProvider.of<AuthenticationRepository>(context),
-        forumHomeRepository:
-            RepositoryProvider.of<ForumHomeRepository>(context),
-        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-      )..add(HomepageLoadRequested()),
+      create:
+          (context) => HomepageBloc(
+            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+            forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context),
+            profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+          )..add(HomepageLoadRequested()),
       child: MultiBlocListener(
         listeners: [
           BlocListener<HomeCubit, HomeState>(
@@ -127,14 +118,10 @@ class _HomepagePageState extends State<HomepagePage> {
             },
           ),
           BlocListener<HomepageBloc, HomepageState>(
-            listenWhen: (prev, curr) =>
-                prev.status == HomepageStatus.loading &&
-                curr.status == HomepageStatus.success,
+            listenWhen: (prev, curr) => prev.status == HomepageStatus.loading && curr.status == HomepageStatus.success,
             listener: (context, _) {
               // From loading state to success state, refresh notice.
-              context
-                  .read<NotificationBloc>()
-                  .add(NotificationUpdateAllRequested());
+              context.read<NotificationBloc>().add(NotificationUpdateAllRequested());
             },
           ),
         ],
@@ -147,54 +134,49 @@ class _HomepagePageState extends State<HomepagePage> {
           builder: (context, state) {
             final body = switch (state.status) {
               HomepageStatus.initial || HomepageStatus.loading => EasyRefresh(
-                  key: const ValueKey('loading'),
-                  scrollController: _scrollController,
-                  controller: _refreshController,
-                  header: const MaterialHeader(),
-                  onRefresh: () {
-                    context
-                        .read<HomepageBloc>()
-                        .add(HomepageRefreshRequested());
-                  },
-                  child: const Center(child: CircularProgressIndicator()),
-                ),
-              HomepageStatus.needLogin => NeedLoginPage(
-                  backUri: GoRouterState.of(context).uri,
-                  needPop: true,
-                  popCallback: (context) {
-                    context
-                        .read<HomepageBloc>()
-                        .add(HomepageRefreshRequested());
-                  },
-                ),
-              HomepageStatus.failure => buildRetryButton(context, () {
+                key: const ValueKey('loading'),
+                scrollController: _scrollController,
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                onRefresh: () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
-                }),
+                },
+                child: const Center(child: CircularProgressIndicator()),
+              ),
+              HomepageStatus.needLogin => NeedLoginPage(
+                backUri: GoRouterState.of(context).uri,
+                needPop: true,
+                popCallback: (context) {
+                  context.read<HomepageBloc>().add(HomepageRefreshRequested());
+                },
+              ),
+              HomepageStatus.failure => buildRetryButton(context, () {
+                context.read<HomepageBloc>().add(HomepageRefreshRequested());
+              }),
               HomepageStatus.success => EasyRefresh.builder(
-                  key: const ValueKey('success'),
-                  scrollController: _scrollController,
-                  controller: _refreshController,
-                  header: const MaterialHeader(),
-                  onRefresh: () {
-                    context
-                        .read<HomepageBloc>()
-                        .add(HomepageRefreshRequested());
-                  },
-                  childBuilder: (context, physics) => ListView(
-                    physics: physics,
-                    controller: _scrollController,
-                    padding: edgeInsetsL12T4R12B4,
-                    children: [
-                      WelcomeSection(
-                        forumStatus: state.forumStatus,
-                        loggedUserInfo: state.loggedUserInfo,
-                        swiperUrlList: state.swiperUrlList,
-                      ),
-                      sizedBoxW12H12,
-                      PinSection(state.pinnedThreadGroupList),
-                    ],
-                  ),
-                ),
+                key: const ValueKey('success'),
+                scrollController: _scrollController,
+                controller: _refreshController,
+                header: const MaterialHeader(),
+                onRefresh: () {
+                  context.read<HomepageBloc>().add(HomepageRefreshRequested());
+                },
+                childBuilder:
+                    (context, physics) => ListView(
+                      physics: physics,
+                      controller: _scrollController,
+                      padding: edgeInsetsL12T4R12B4,
+                      children: [
+                        WelcomeSection(
+                          forumStatus: state.forumStatus,
+                          loggedUserInfo: state.loggedUserInfo,
+                          swiperUrlList: state.swiperUrlList,
+                        ),
+                        sizedBoxW12H12,
+                        PinSection(state.pinnedThreadGroupList),
+                      ],
+                    ),
+              ),
             };
 
             _refreshController.finishRefresh();
@@ -211,24 +193,20 @@ class _HomepagePageState extends State<HomepagePage> {
                       icon: SizedBox(
                         width: 32,
                         height: 32,
-                        child: HeroUserAvatar(
-                          username: username,
-                          avatarUrl: avatarUrl,
-                          heroTag: username,
-                        ),
+                        child: HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username),
                       ),
-                      onPressed: () async => showHeroDialog(
-                        context,
-                        (context, _, __) => UserOperationDialog(
-                          username: username,
-                          avatarUrl: avatarUrl,
-                          heroTag: username,
-                          // Ok to use record.
-                          // ignore: avoid_positional_fields_in_records
-                          latestThreadUrl: state.loggedUserInfo
-                              ?.relatedLinkPairList.lastOrNull?.$2,
-                        ),
-                      ),
+                      onPressed:
+                          () async => showHeroDialog(
+                            context,
+                            (context, _, __) => UserOperationDialog(
+                              username: username,
+                              avatarUrl: avatarUrl,
+                              heroTag: username,
+                              // Ok to use record.
+                              // ignore: avoid_positional_fields_in_records
+                              latestThreadUrl: state.loggedUserInfo?.relatedLinkPairList.lastOrNull?.$2,
+                            ),
+                          ),
                     ),
                     const NoticeButton(),
                     const CheckinButton(enableSnackBar: true),

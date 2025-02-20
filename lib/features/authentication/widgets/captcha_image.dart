@@ -17,16 +17,14 @@ const _captchaImageHeight = 150.0;
 
 const _renderHeight = 52.0;
 
-const _indicatorBoxWidth =
-    (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
+const _indicatorBoxWidth = (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
 
 /// The captcha image used in login form.
 class CaptchaImage extends StatefulWidget {
   /// Constructor.
   const CaptchaImage(this.controller, {super.key});
 
-  static final Uri _fakeFormVerifyUri =
-      Uri.https('tsdm39.com', '/plugin.php', {'id': 'oracle:verify'});
+  static final Uri _fakeFormVerifyUri = Uri.https('tsdm39.com', '/plugin.php', {'id': 'oracle:verify'});
 
   /// Injected controller.
   final CaptchaImageController controller;
@@ -56,8 +54,8 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
         .getImageFromUri(CaptchaImage._fakeFormVerifyUri)
         .run()
         .whenComplete(() {
-      futureComplete = true;
-    });
+          futureComplete = true;
+        });
 
     setState(() {
       refreshDebounce = true;
@@ -93,8 +91,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             // Impossible.
-            final message =
-                t.loginPage.failedToGetCaptcha(err: snapshot.error!);
+            final message = t.loginPage.failedToGetCaptcha(err: snapshot.error!);
             debug(message);
             return Text(message);
           }
@@ -106,18 +103,12 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
               return const FallbackPicture();
             }
 
-            final bytes =
-                Uint8List.fromList(snapshot.data!.unwrap().data as List<int>);
+            final bytes = Uint8List.fromList(snapshot.data!.unwrap().data as List<int>);
             debug('fetch login captcha finished, ${f.hashCode}');
             // 130 x 60 -> 110.9 -> 52
             return Image.memory(bytes, height: _renderHeight);
           }
-          return const SizedBox(
-            width: _indicatorBoxWidth,
-            child: Center(
-              child: CircularProgressIndicator(),
-            ),
-          );
+          return const SizedBox(width: _indicatorBoxWidth, child: Center(child: CircularProgressIndicator()));
         },
       ),
     );

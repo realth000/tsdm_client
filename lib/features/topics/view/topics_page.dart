@@ -29,8 +29,7 @@ class TopicsPage extends StatefulWidget {
 }
 
 /// State of homepage.
-class _TopicsPageState extends State<TopicsPage>
-    with SingleTickerProviderStateMixin {
+class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateMixin {
   /// Constructor.
   _TopicsPageState();
 
@@ -48,27 +47,26 @@ class _TopicsPageState extends State<TopicsPage>
       if (tabController == null) {
         return;
       }
-      RepositoryProvider.of<FragmentsRepository>(context).topicsPageTabIndex =
-          tabController!.index;
+      RepositoryProvider.of<FragmentsRepository>(context).topicsPageTabIndex = tabController!.index;
     };
 
     tabController ??= TabController(
-      initialIndex: RepositoryProvider.of<FragmentsRepository>(context)
-          .topicsPageTabIndex,
+      initialIndex: RepositoryProvider.of<FragmentsRepository>(context).topicsPageTabIndex,
       length: forumGroupList.length,
       vsync: this,
     )..addListener(_updateIndexListener!);
 
-    final groupTabBodyList = forumGroupList
-        .map(
-          (e) => ListView.separated(
-            padding: edgeInsetsL12T4R12,
-            itemCount: e.forumList.length,
-            itemBuilder: (context, index) => ForumCard(e.forumList[index]),
-            separatorBuilder: (context, index) => sizedBoxW4H4,
-          ),
-        )
-        .toList();
+    final groupTabBodyList =
+        forumGroupList
+            .map(
+              (e) => ListView.separated(
+                padding: edgeInsetsL12T4R12,
+                itemCount: e.forumList.length,
+                itemBuilder: (context, index) => ForumCard(e.forumList[index]),
+                separatorBuilder: (context, index) => sizedBoxW4H4,
+              ),
+            )
+            .toList();
 
     _refreshController.finishRefresh();
 
@@ -79,10 +77,7 @@ class _TopicsPageState extends State<TopicsPage>
       onRefresh: () {
         context.read<TopicsBloc>().add(TopicsRefreshRequested());
       },
-      child: TabBarView(
-        controller: tabController,
-        children: groupTabBodyList,
-      ),
+      child: TabBarView(controller: tabController, children: groupTabBodyList),
     );
   }
 
@@ -101,10 +96,10 @@ class _TopicsPageState extends State<TopicsPage>
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => TopicsBloc(
-        forumHomeRepository:
-            RepositoryProvider.of<ForumHomeRepository>(context),
-      )..add(TopicsLoadRequested()),
+      create:
+          (_) =>
+              TopicsBloc(forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context))
+                ..add(TopicsLoadRequested()),
       child: BlocConsumer<TopicsBloc, TopicsState>(
         listener: (context, state) {
           if (state.status == TopicsStatus.failed) {
@@ -114,24 +109,23 @@ class _TopicsPageState extends State<TopicsPage>
         builder: (context, state) {
           final body = switch (state.status) {
             TopicsStatus.loading || TopicsStatus.initial => EasyRefresh(
-                key: const ValueKey('loading'),
-                controller: _refreshController,
-                header: const MaterialHeader(),
-                child: const Center(child: CircularProgressIndicator()),
-              ),
+              key: const ValueKey('loading'),
+              controller: _refreshController,
+              header: const MaterialHeader(),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
             TopicsStatus.failed => buildRetryButton(context, () {
-                context.read<TopicsBloc>().add(TopicsRefreshRequested());
-              }),
-            TopicsStatus.success when state.forumGroupList.isNotEmpty =>
-              _buildContent(context, state),
+              context.read<TopicsBloc>().add(TopicsRefreshRequested());
+            }),
+            TopicsStatus.success when state.forumGroupList.isNotEmpty => _buildContent(context, state),
             // Some server enforced situation.
             TopicsStatus.success => NeedLoginPage(
-                backUri: GoRouterState.of(context).uri,
-                needPop: true,
-                popCallback: (context) {
-                  context.read<TopicsBloc>().add(TopicsRefreshRequested());
-                },
-              ),
+              backUri: GoRouterState.of(context).uri,
+              needPop: true,
+              popCallback: (context) {
+                context.read<TopicsBloc>().add(TopicsRefreshRequested());
+              },
+            ),
           };
 
           final PreferredSizeWidget tabBar;
@@ -143,10 +137,7 @@ class _TopicsPageState extends State<TopicsPage>
               tabAlignment: TabAlignment.start,
             );
           } else {
-            tabBar = const PreferredSize(
-              preferredSize: Size(40, 40),
-              child: SizedBox.shrink(),
-            );
+            tabBar = const PreferredSize(preferredSize: Size(40, 40), child: SizedBox.shrink());
           }
 
           return Scaffold(

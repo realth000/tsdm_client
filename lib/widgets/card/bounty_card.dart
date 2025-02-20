@@ -21,14 +21,8 @@ class BountyCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final secondaryColor = Theme.of(context).colorScheme.secondary;
     final tertiaryColor = Theme.of(context).colorScheme.tertiary;
-    final bountyStatusTextStyle =
-        Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: tertiaryColor,
-            );
-    final bountyStatusTextResolvedStyle =
-        Theme.of(context).textTheme.bodyMedium?.copyWith(
-              color: secondaryColor,
-            );
+    final bountyStatusTextStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(color: tertiaryColor);
+    final bountyStatusTextResolvedStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryColor);
 
     // Bounty status.
     late final Widget bountyStatusWidget;
@@ -38,10 +32,7 @@ class BountyCard extends StatelessWidget {
         children: [
           Icon(Icons.done, color: secondaryColor),
           sizedBoxW4H4,
-          Text(
-            context.t.bountyCard.resolved,
-            style: bountyStatusTextResolvedStyle,
-          ),
+          Text(context.t.bountyCard.resolved, style: bountyStatusTextResolvedStyle),
         ],
       );
     } else {
@@ -68,9 +59,7 @@ class BountyCard extends StatelessWidget {
                 children: [
                   Text(
                     context.t.bountyCard.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: secondaryColor,
-                        ),
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor),
                   ),
                   sizedBoxW24H24,
                   bountyStatusWidget,
@@ -79,15 +68,9 @@ class BountyCard extends StatelessWidget {
               Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  const Icon(
-                    FontAwesomeIcons.coins,
-                    size: 20,
-                  ),
+                  const Icon(FontAwesomeIcons.coins, size: 20),
                   sizedBoxW4H4,
-                  Text(
-                    context.t.bountyCard.price(price: price),
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
+                  Text(context.t.bountyCard.price(price: price), style: Theme.of(context).textTheme.bodyLarge),
                 ],
               ),
             ].insertBetween(sizedBoxW12H12),

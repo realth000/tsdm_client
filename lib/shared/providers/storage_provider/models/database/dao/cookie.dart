@@ -2,8 +2,7 @@ part of 'dao.dart';
 
 /// DAO for table [Cookie].
 @DriftAccessor(tables: [Cookie])
-final class CookieDao extends DatabaseAccessor<AppDatabase>
-    with _$CookieDaoMixin {
+final class CookieDao extends DatabaseAccessor<AppDatabase> with _$CookieDaoMixin {
   /// Constructor.
   CookieDao(super.db);
 
@@ -14,8 +13,7 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
 
   /// Get cookie by [username].
   Future<CookieEntity?> selectCookieByUsername(String username) async {
-    return (select(cookie)..where((e) => e.username.equals(username)))
-        .getSingleOrNull();
+    return (select(cookie)..where((e) => e.username.equals(username))).getSingleOrNull();
   }
 
   /// Get cookie by [uid].
@@ -51,17 +49,11 @@ final class CookieDao extends DatabaseAccessor<AppDatabase>
 
   /// Update the last checkin time for user [uid].
   Future<int> updateLastCheckinTime(int uid, DateTime datetime) async {
-    return (update(cookie)..where((e) => e.uid.equals(uid))).write(
-      CookieCompanion(lastCheckin: Value(datetime)),
-    );
+    return (update(cookie)..where((e) => e.uid.equals(uid))).write(CookieCompanion(lastCheckin: Value(datetime)));
   }
 
   /// Update the last fetch notification timestamp for user [uid].
   Future<int> updateLastFetchNoticeTime(int uid, DateTime datetime) async {
-    return (update(cookie)..where((e) => e.uid.equals(uid))).write(
-      CookieCompanion(
-        lastFetchNotice: Value(datetime),
-      ),
-    );
+    return (update(cookie)..where((e) => e.uid.equals(uid))).write(CookieCompanion(lastFetchNotice: Value(datetime)));
   }
 }

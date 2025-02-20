@@ -24,55 +24,39 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(context.t.loginPage.title),
-      ),
+      appBar: AppBar(title: Text(context.t.loginPage.title)),
       body: BlocProvider(
-        create: (context) => AuthenticationBloc(
-          authenticationRepository: context.repo(),
-        )..add(AuthenticationFetchLoginHashRequested()),
+        create:
+            (context) =>
+                AuthenticationBloc(authenticationRepository: context.repo())
+                  ..add(AuthenticationFetchLoginHashRequested()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state.status == AuthenticationStatus.failure) {
               final errorText = switch (state.loginException) {
-                LoginFormHashNotFoundException() =>
-                  context.t.loginPage.hashValueNotFound,
-                LoginInvalidFormHashException() =>
-                  context.t.loginPage.failedToGetFormHash,
-                LoginMessageNotFoundException() =>
-                  context.t.loginPage.failedToLoginMessageNodeNotFound,
-                LoginIncorrectCaptchaException() =>
-                  context.t.loginPage.loginResultIncorrectCaptcha,
-                LoginInvalidCredentialException() =>
-                  context.t.loginPage.loginResultIncorrectUsernameOrPassword,
-                LoginIncorrectSecurityQuestionException() =>
-                  context.t.loginPage.loginResultIncorrectQuestionOrAnswer,
-                LoginAttemptLimitException() =>
-                  context.t.loginPage.loginResultTooManyLoginAttempts,
-                LoginUserInfoNotFoundException() =>
-                  context.t.loginPage.loginFailed,
-                LoginOtherErrorException() =>
-                  context.t.loginPage.loginResultOtherErrors,
+                LoginFormHashNotFoundException() => context.t.loginPage.hashValueNotFound,
+                LoginInvalidFormHashException() => context.t.loginPage.failedToGetFormHash,
+                LoginMessageNotFoundException() => context.t.loginPage.failedToLoginMessageNodeNotFound,
+                LoginIncorrectCaptchaException() => context.t.loginPage.loginResultIncorrectCaptcha,
+                LoginInvalidCredentialException() => context.t.loginPage.loginResultIncorrectUsernameOrPassword,
+                LoginIncorrectSecurityQuestionException() => context.t.loginPage.loginResultIncorrectQuestionOrAnswer,
+                LoginAttemptLimitException() => context.t.loginPage.loginResultTooManyLoginAttempts,
+                LoginUserInfoNotFoundException() => context.t.loginPage.loginFailed,
+                LoginOtherErrorException() => context.t.loginPage.loginResultOtherErrors,
                 _ => context.t.general.failedToLoad,
               };
               showSnackBar(context: context, message: errorText);
-              context
-                  .read<AuthenticationBloc>()
-                  .add(AuthenticationFetchLoginHashRequested());
+              context.read<AuthenticationBloc>().add(AuthenticationFetchLoginHashRequested());
             }
           },
           child: Padding(
             padding: const EdgeInsets.all(15),
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(
-                  maxHeight: 500,
-                  maxWidth: 500,
-                ),
+                constraints: const BoxConstraints(maxHeight: 500, maxWidth: 500),
                 child: LoginForm(
                   redirectPath: widget.redirectBackState?.fullPath,
-                  redirectPathParameters:
-                      widget.redirectBackState?.pathParameters,
+                  redirectPathParameters: widget.redirectBackState?.pathParameters,
                   redirectExtra: widget.redirectBackState?.extra,
                 ),
               ),

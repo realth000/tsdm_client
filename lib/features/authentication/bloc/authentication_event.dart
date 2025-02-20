@@ -13,8 +13,7 @@ final class AuthenticationFetchLoginHashRequested extends AuthenticationEvent
 
 /// User request to login with user credential.
 @MappableClass()
-final class AuthenticationLoginRequested extends AuthenticationEvent
-    with AuthenticationLoginRequestedMappable {
+final class AuthenticationLoginRequested extends AuthenticationEvent with AuthenticationLoginRequestedMappable {
   /// Constructor.
   const AuthenticationLoginRequested(this.userCredential) : super();
 

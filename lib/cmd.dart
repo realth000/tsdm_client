@@ -3,14 +3,7 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 import 'package:args/args.dart';
 import 'package:tsdm_client/instance.dart';
 
-const _linuxTilingWindowManagers = [
-  'bspwm',
-  'dwm',
-  'hyprland',
-  'i3wm',
-  'niri',
-  'sway',
-];
+const _linuxTilingWindowManagers = ['bspwm', 'dwm', 'hyprland', 'i3wm', 'niri', 'sway'];
 
 /// All flags in cmdline.
 abstract class Flags {
@@ -30,10 +23,7 @@ abstract class Flags {
 /// Cmdline arguments parsed result.
 class CmdArgs {
   /// Constructor.
-  const CmdArgs({
-    required this.noWindowConfigs,
-    required this.noWindowChangeRecords,
-  });
+  const CmdArgs({required this.noWindowConfigs, required this.noWindowChangeRecords});
 
   /// Disable window related configs.
   ///
@@ -50,31 +40,32 @@ class CmdArgs {
 
 /// Parse cmdline [args] into global variable [cmdArgs].
 void parseCmdArgs(List<String> args) {
-  final parser = ArgParser()
-    ..addFlag(Flags.noWindowConfigs, negatable: false)
-    ..addFlag(Flags.noWindowChangeRecords, negatable: false);
+  final parser =
+      ArgParser()
+        ..addFlag(Flags.noWindowConfigs, negatable: false)
+        ..addFlag(Flags.noWindowChangeRecords, negatable: false);
   final argsResult = parser.parse(args);
 
   var noWindowConfig = argsResult.flag(Flags.noWindowConfigs);
   var noWindowChangeRecords = argsResult.flag(Flags.noWindowChangeRecords);
 
-  final envInTilingWindowManager = _linuxTilingWindowManagers
-      .contains(Platform.environment['XDG_CURRENT_DESKTOP']);
+  final envInTilingWindowManager = _linuxTilingWindowManagers.contains(Platform.environment['XDG_CURRENT_DESKTOP']);
 
   if (Platform.isLinux && !noWindowConfig && envInTilingWindowManager) {
-    talker.debug('set no-window-configs to true due to ENV '
-        'detected as tiling window manager');
+    talker.debug(
+      'set no-window-configs to true due to ENV '
+      'detected as tiling window manager',
+    );
     noWindowConfig = true;
   }
 
   if (Platform.isLinux && !noWindowChangeRecords && envInTilingWindowManager) {
-    talker.debug('set no-window-change-records to true due to ENV '
-        'detected as tiling window manager');
+    talker.debug(
+      'set no-window-change-records to true due to ENV '
+      'detected as tiling window manager',
+    );
     noWindowChangeRecords = true;
   }
 
-  cmdArgs = CmdArgs(
-    noWindowConfigs: noWindowConfig,
-    noWindowChangeRecords: noWindowChangeRecords,
-  );
+  cmdArgs = CmdArgs(noWindowConfigs: noWindowConfig, noWindowChangeRecords: noWindowChangeRecords);
 }

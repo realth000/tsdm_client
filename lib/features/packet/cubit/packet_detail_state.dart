@@ -9,18 +9,15 @@ sealed class PacketDetailState with PacketDetailStateMappable {
 
 /// Initial state.
 @MappableClass()
-final class PacketDetailInitial extends PacketDetailState
-    with PacketDetailInitialMappable {}
+final class PacketDetailInitial extends PacketDetailState with PacketDetailInitialMappable {}
 
 /// Loading packet detail data
 @MappableClass()
-final class PacketDetailLoading extends PacketDetailState
-    with PacketDetailLoadingMappable {}
+final class PacketDetailLoading extends PacketDetailState with PacketDetailLoadingMappable {}
 
 /// Loaded data successfully
 @MappableClass()
-final class PacketDetailSuccess extends PacketDetailState
-    with PacketDetailSuccessMappable {
+final class PacketDetailSuccess extends PacketDetailState with PacketDetailSuccessMappable {
   /// Constructor.
   const PacketDetailSuccess(this.data);
 
@@ -30,5 +27,4 @@ final class PacketDetailSuccess extends PacketDetailState
 
 /// Failed to load packet statistics data.
 @MappableClass()
-final class PacketDetailFailure extends PacketDetailState
-    with PacketDetailFailureMappable {}
+final class PacketDetailFailure extends PacketDetailState with PacketDetailFailureMappable {}

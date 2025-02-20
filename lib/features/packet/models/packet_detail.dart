@@ -28,8 +28,10 @@ final class PacketDetailModel with PacketDetailModelMappable {
   static PacketDetailModel? fromTr(uh.Element element) {
     final trList = element.querySelectorAll('td');
     if (trList.length != 5) {
-      talker.error('failed to build packet detail from tr node: '
-          'incorrect tr count ${trList.length}');
+      talker.error(
+        'failed to build packet detail from tr node: '
+        'incorrect tr count ${trList.length}',
+      );
       return null;
     }
 
@@ -39,23 +41,15 @@ final class PacketDetailModel with PacketDetailModelMappable {
     final coins = int.tryParse(trList.elementAt(3).innerText);
     final time = DateTime.tryParse(trList.elementAt(4).innerText);
 
-    if (id == null ||
-        uid == null ||
-        username.isEmpty ||
-        coins == null ||
-        time == null) {
-      talker.error('failed to build packet detail from tr node: '
-          'id=$id, uid=$uid, username=$username, coins=$coins, time=$time');
+    if (id == null || uid == null || username.isEmpty || coins == null || time == null) {
+      talker.error(
+        'failed to build packet detail from tr node: '
+        'id=$id, uid=$uid, username=$username, coins=$coins, time=$time',
+      );
       return null;
     }
 
-    return PacketDetailModel(
-      id: id,
-      uid: uid,
-      username: username,
-      coins: coins,
-      time: time,
-    );
+    return PacketDetailModel(id: id, uid: uid, username: username, coins: coins, time: time);
   }
 
   /// Event id in thread.

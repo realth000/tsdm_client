@@ -9,13 +9,9 @@ sealed class ChatHistoryEvent with ChatHistoryEventMappable {
 
 /// Requested to load
 @MappableClass()
-final class ChatHistoryLoadHistoryRequested extends ChatHistoryEvent
-    with ChatHistoryLoadHistoryRequestedMappable {
+final class ChatHistoryLoadHistoryRequested extends ChatHistoryEvent with ChatHistoryLoadHistoryRequestedMappable {
   /// Constructor.
-  const ChatHistoryLoadHistoryRequested({
-    required this.uid,
-    required this.page,
-  });
+  const ChatHistoryLoadHistoryRequested({required this.uid, required this.page});
 
   /// User uid to chat with.
   final String uid;

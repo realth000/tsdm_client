@@ -15,8 +15,7 @@ sealed class ImageCacheRequest with ImageCacheRequestMappable {
 
 /// General purpose image, usage not specified.
 @MappableClass()
-final class ImageCacheGeneralRequest extends ImageCacheRequest
-    with ImageCacheGeneralRequestMappable {
+final class ImageCacheGeneralRequest extends ImageCacheRequest with ImageCacheGeneralRequestMappable {
   /// Constructor.
   const ImageCacheGeneralRequest(super.imageUrl);
 
@@ -26,13 +25,9 @@ final class ImageCacheGeneralRequest extends ImageCacheRequest
 
 /// Request to cached user avatar.
 @MappableClass()
-final class ImageCacheUserAvatarRequest extends ImageCacheRequest
-    with ImageCacheUserAvatarRequestMappable {
+final class ImageCacheUserAvatarRequest extends ImageCacheRequest with ImageCacheUserAvatarRequestMappable {
   /// ImageUrl
-  const ImageCacheUserAvatarRequest({
-    required this.username,
-    required String imageUrl,
-  }) : super(imageUrl);
+  const ImageCacheUserAvatarRequest({required this.username, required String imageUrl}) : super(imageUrl);
 
   /// Extra field for username to locate the request and response.
   final String username;

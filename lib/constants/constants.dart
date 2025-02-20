@@ -4,7 +4,8 @@ import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 
 /// App full version generated from the compile environment.
-const appFullVersion = '$appVersion.$gitCommitRevisionShort '
+const appFullVersion =
+    '$appVersion.$gitCommitRevisionShort '
     '($gitCommitCountCurrentBranch) '
     '($gitCommitTimeYear-$gitCommitTimeMonth-$gitCommitTimeDay)';
 
@@ -48,12 +49,14 @@ Future<String> readChangelogContent(String _) async {
   final changelog = utf8.decode(base64Decode(encodedChangelog));
   final lines = changelog.split('\n');
   var beforeContent = true;
-  return lines.skipWhile((e) {
-    if (beforeContent && (e.startsWith('## [0.') || e.startsWith('## [1.'))) {
-      beforeContent = false;
-    }
-    return beforeContent;
-  }).join('\n');
+  return lines
+      .skipWhile((e) {
+        if (beforeContent && (e.startsWith('## [0.') || e.startsWith('## [1.'))) {
+          beforeContent = false;
+        }
+        return beforeContent;
+      })
+      .join('\n');
 }
 
 /// All features disabled by default.

@@ -19,8 +19,7 @@ import 'package:tsdm_client/utils/logger.dart';
 /// * https://github.com/Baseflow/flutter_cached_network_image/blob/develop/cached_network_image/lib/src/image_provider/cached_network_image_provider.dart
 /// * ${flutter_sdk}/lib/src/painting/_network_image_io.dart
 @immutable
-final class CachedImageProvider extends ImageProvider<CachedImageProvider>
-    with LoggerMixin {
+final class CachedImageProvider extends ImageProvider<CachedImageProvider> with LoggerMixin {
   /// Constructor.
   const CachedImageProvider(
     this.imageUrl, {
@@ -55,10 +54,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
   Future<Uint8List> _onImageError() async {
     final req = switch (usage) {
       ImageUsageInfoOther() => ImageCacheGeneralRequest(imageUrl),
-      ImageUsageInfoUserAvatar(:final username) => ImageCacheUserAvatarRequest(
-          username: username,
-          imageUrl: imageUrl,
-        ),
+      ImageUsageInfoUserAvatar(:final username) => ImageCacheUserAvatarRequest(username: username, imageUrl: imageUrl),
     };
 
     final bytes = await getIt.get<ImageCacheProvider>().getOrMakeCache(req);
@@ -71,10 +67,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
   }
 
   @override
-  ImageStreamCompleter loadImage(
-    CachedImageProvider key,
-    ImageDecoderCallback decode,
-  ) {
+  ImageStreamCompleter loadImage(CachedImageProvider key, ImageDecoderCallback decode) {
     // Ownership of this controller is handed off to [_loadAsync]; it is that
     // method's responsibility to close the controller's stream when the image
     // has been loaded or an error is thrown.
@@ -85,10 +78,11 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
       chunkEvents: chunkEvents.stream,
       scale: key.scale,
       debugLabel: key.url,
-      informationCollector: () => <DiagnosticsNode>[
-        DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
-        DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
-      ],
+      informationCollector:
+          () => <DiagnosticsNode>[
+            DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
+            DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
+          ],
     );
   }
 
@@ -103,12 +97,11 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
         return Future.error('failed to make $usage: empty url');
       }
       final f = switch (usage) {
-        ImageUsageInfoOther() => getIt
-            .get<ImageCacheProvider>()
-            .getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
-        ImageUsageInfoUserAvatar(:final username) => getIt
-            .get<ImageCacheProvider>()
-            .getUserAvatarCache(username: username, imageUrl: imageUrl),
+        ImageUsageInfoOther() => getIt.get<ImageCacheProvider>().getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
+        ImageUsageInfoUserAvatar(:final username) => getIt.get<ImageCacheProvider>().getUserAvatarCache(
+          username: username,
+          imageUrl: imageUrl,
+        ),
       };
 
       final bytes = await f.onError((_, __) => _onImageError());
@@ -136,16 +129,14 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider>
     if (other.runtimeType != runtimeType) {
       return false;
     }
-    return other is CachedImageProvider &&
-        other.imageUrl == imageUrl &&
-        other.usage == usage &&
-        other.scale == scale;
+    return other is CachedImageProvider && other.imageUrl == imageUrl && other.usage == usage && other.scale == scale;
   }
 
   @override
   int get hashCode => Object.hash(imageUrl, usage, scale);
 
   @override
-  String toString() => '${objectRuntimeType(this, 'CachedImageProvider')}'
+  String toString() =>
+      '${objectRuntimeType(this, 'CachedImageProvider')}'
       '("$url", scale: $scale, usage: $usage)';
 }

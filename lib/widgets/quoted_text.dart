@@ -20,8 +20,7 @@ class QuotedText extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final quotedColor = Theme.of(context).colorScheme.tertiary;
-    final quotedStyle =
-        Theme.of(context).textTheme.bodyMedium?.copyWith(color: quotedColor);
+    final quotedStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(color: quotedColor);
 
     final iconHead = Transform.rotate(
       angle: 180 * pi / 180,
@@ -30,15 +29,12 @@ class QuotedText extends StatelessWidget {
 
     final spanHead = TextSpan(children: [WidgetSpan(child: iconHead)]);
 
-    final iconTail =
-        Icon(Icons.format_quote_rounded, size: 28, color: quotedColor);
+    final iconTail = Icon(Icons.format_quote_rounded, size: 28, color: quotedColor);
 
     final spanTail = TextSpan(children: [WidgetSpan(child: iconTail)]);
 
     if (text != null) {
-      return Text.rich(
-        TextSpan(children: [spanHead, TextSpan(text: ' $text '), spanTail]),
-      );
+      return Text.rich(TextSpan(children: [spanHead, TextSpan(text: ' $text '), spanTail]));
     }
 
     if (span != null) {

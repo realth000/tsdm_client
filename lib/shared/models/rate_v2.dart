@@ -19,11 +19,12 @@ final class _ScoreMapMapper extends SimpleMapper<ScoreMap> with LoggerMixin {
       return const ScoreMap({});
     }
 
-    final entries = value
-        .map((e) => e.split(':'))
-        .where((e) => e.length == 2)
-        .map((e) => MapEntry(e.first, int.tryParse(e.elementAt(1))))
-        .whereType<MapEntry<String, int>>();
+    final entries =
+        value
+            .map((e) => e.split(':'))
+            .where((e) => e.length == 2)
+            .map((e) => MapEntry(e.first, int.tryParse(e.elementAt(1))))
+            .whereType<MapEntry<String, int>>();
 
     return ScoreMap(Map.fromEntries(entries));
   }

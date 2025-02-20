@@ -38,8 +38,7 @@ final class ThreadStateV2 with ThreadStateV2Mappable {
     this.scoreInfo = const {},
     this.price = '0',
     this.paid = 1,
-  }) : entirePageRange =
-            PageRange(start: 1, end: (totalPost / postPerPage).ceil());
+  }) : entirePageRange = PageRange(start: 1, end: (totalPost / postPerPage).ceil());
 
   /// The id of current thread.
   final String threadId;

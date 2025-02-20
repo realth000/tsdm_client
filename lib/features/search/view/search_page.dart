@@ -16,13 +16,7 @@ import 'package:tsdm_client/widgets/debounce_buttons.dart';
 /// results.
 class SearchPage extends StatefulWidget {
   /// Constructor.
-  const SearchPage({
-    this.keyword,
-    this.authorUid,
-    this.fid,
-    this.page,
-    super.key,
-  });
+  const SearchPage({this.keyword, this.authorUid, this.fid, this.page, super.key});
 
   /// Keyword to search.
   final String? keyword;
@@ -101,23 +95,12 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       'fid=$fid, page=$page',
     );
 
-    context.read<SearchBloc>().add(
-          SearchRequested(
-            keyword: keyword,
-            uid: authorUid,
-            fid: fid,
-            pageNumer: page,
-          ),
-        );
+    context.read<SearchBloc>().add(SearchRequested(keyword: keyword, uid: authorUid, fid: fid, pageNumer: page));
 
     setState(() {
       // Only return to top when attached (not the first search).
       if (scrollController.hasClients) {
-        scrollController.animateTo(
-          0,
-          curve: Curves.ease,
-          duration: const Duration(microseconds: 500),
-        );
+        scrollController.animateTo(0, curve: Curves.ease, duration: const Duration(microseconds: 500));
       }
     });
   }
@@ -132,13 +115,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       // User want to jump to another page so use the last used parameters
       // and parameter page.
       if (lastKeyword.isNotEmpty) {
-        await _doSearch(
-          context,
-          keyword: lastKeyword,
-          authorUid: lastAuthorUid,
-          fid: lastFid,
-          page: page,
-        );
+        await _doSearch(context, keyword: lastKeyword, authorUid: lastAuthorUid, fid: lastFid, page: page);
       }
       return;
     }
@@ -160,13 +137,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       _ => fidController.text,
     };
 
-    await _doSearch(
-      context,
-      keyword: keyword,
-      authorUid: authorUid,
-      fid: fid,
-      page: page,
-    );
+    await _doSearch(context, keyword: keyword, authorUid: authorUid, fid: fid, page: page);
     lastKeyword = keyword;
     lastAuthorUid = authorUid;
     lastFid = fid;
@@ -186,17 +157,12 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
   ///
   /// `state.SearchResult` is guaranteed to not be null before calling
   /// this function.
-  Future<void> _gotoSpecifiedPage(
-    BuildContext context,
-    SearchState state,
-  ) async {
+  Future<void> _gotoSpecifiedPage(BuildContext context, SearchState state) async {
     final page = await showDialog<int>(
       context: context,
-      builder: (context) => JumpPageDialog(
-        min: 1,
-        current: state.searchResult!.currentPage,
-        max: state.searchResult!.totalPages,
-      ),
+      builder:
+          (context) =>
+              JumpPageDialog(min: 1, current: state.searchResult!.currentPage, max: state.searchResult!.totalPages),
     );
     if (page == null || page == state.searchResult!.currentPage) {
       return;
@@ -208,10 +174,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
   }
 
   /// Search result is guaranteed to not be null before calling this function.
-  Future<void> _searchPreviousPage(
-    BuildContext context,
-    SearchState state,
-  ) async {
+  Future<void> _searchPreviousPage(BuildContext context, SearchState state) async {
     if (!_hasPreviousPage(state)) {
       return;
     }
@@ -274,8 +237,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.person_outline),
               labelText: context.t.searchPage.form.authorUid,
-              suffixText:
-                  unlimitedAuthorUid ? context.t.searchPage.form.any : null,
+              suffixText: unlimitedAuthorUid ? context.t.searchPage.form.any : null,
             ),
             onChanged: (v) {
               setState(() {
@@ -345,10 +307,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       children: [
         Expanded(
           child: ListTile(
-            title: Text(
-              context.t.searchPage.result.title,
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
+            title: Text(context.t.searchPage.result.title, style: Theme.of(context).textTheme.titleMedium),
             subtitle: Text(searchResultCount),
             visualDensity: VisualDensity.compact,
           ),
@@ -356,25 +315,20 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
         // Text(),
         IconButton(
           icon: const Icon(Icons.arrow_left_outlined),
-          onPressed: !searching && _hasPreviousPage(state)
-              ? () async => _searchPreviousPage(context, state)
-              : null,
+          onPressed: !searching && _hasPreviousPage(state) ? () async => _searchPreviousPage(context, state) : null,
         ),
         TextButton(
-          onPressed: !searching &&
-                  (_hasPreviousPage(state) || _hasNextPage(state)) &&
-                  state.searchResult != null
-              ? () async {
-                  await _gotoSpecifiedPage(context, state);
-                }
-              : null,
+          onPressed:
+              !searching && (_hasPreviousPage(state) || _hasNextPage(state)) && state.searchResult != null
+                  ? () async {
+                    await _gotoSpecifiedPage(context, state);
+                  }
+                  : null,
           child: Text('${state.searchResult?.currentPage ?? "-"}'),
         ),
         IconButton(
           icon: const Icon(Icons.arrow_right_outlined),
-          onPressed: !searching && _hasNextPage(state)
-              ? () async => _searchNextPage(context, state)
-              : null,
+          onPressed: !searching && _hasNextPage(state) ? () async => _searchNextPage(context, state) : null,
         ),
       ],
     );
@@ -382,13 +336,9 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
   Widget _buildSearchResult(BuildContext context, SearchState state) {
     if (state.status.isSearching()) {
-      return const Expanded(
-        child: Center(child: CircularProgressIndicator()),
-      );
+      return const Expanded(child: Center(child: CircularProgressIndicator()));
     } else if (state.searchResult?.data?.isEmpty ?? true) {
-      return Expanded(
-        child: Center(child: Text(context.t.searchPage.result.noData)),
-      );
+      return Expanded(child: Center(child: Text(context.t.searchPage.result.noData)));
     }
 
     return Expanded(
@@ -426,9 +376,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => SearchRepository()),
-        BlocProvider(
-          create: (context) => SearchBloc(searchRepository: context.repo()),
-        ),
+        BlocProvider(create: (context) => SearchBloc(searchRepository: context.repo())),
       ],
       child: BlocBuilder<SearchBloc, SearchState>(
         builder: (context, state) {
@@ -438,8 +386,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
               actions: [
                 const ParseUrlDialogButton(),
                 IconButton(
-                  icon:
-                      Icon(expandForm ? Icons.expand_less : Icons.expand_more),
+                  icon: Icon(expandForm ? Icons.expand_less : Icons.expand_more),
                   onPressed: () {
                     setState(() {
                       expandForm = !expandForm;

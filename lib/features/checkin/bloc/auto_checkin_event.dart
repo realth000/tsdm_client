@@ -9,8 +9,7 @@ sealed class AutoCheckinEvent with AutoCheckinEventMappable {
 
 /// Start the progress.
 @MappableClass()
-final class AutoCheckinStartRequested extends AutoCheckinEvent
-    with AutoCheckinStartRequestedMappable {
+final class AutoCheckinStartRequested extends AutoCheckinEvent with AutoCheckinStartRequestedMappable {
   /// Constructor.
   const AutoCheckinStartRequested();
 }
@@ -19,8 +18,7 @@ final class AutoCheckinStartRequested extends AutoCheckinEvent
 ///
 /// Triggers state update with latest user checkin state.
 @MappableClass()
-final class AutoCheckinUserStateChanged extends AutoCheckinEvent
-    with AutoCheckinUserStateChangedMappable {
+final class AutoCheckinUserStateChanged extends AutoCheckinEvent with AutoCheckinUserStateChangedMappable {
   /// Constructor.
   const AutoCheckinUserStateChanged(this.checkinInfo);
 

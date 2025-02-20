@@ -87,8 +87,7 @@ sealed class FilterBase with FilterBaseMappable {
 @MappableClass()
 final class FilterType extends FilterBase with FilterTypeMappable {
   /// Constructor.
-  const FilterType({required this.name, required this.typeID})
-      : super('typeid');
+  const FilterType({required this.name, required this.typeID}) : super('typeid');
 
   /// Thread type name.
   ///
@@ -107,11 +106,9 @@ final class FilterType extends FilterBase with FilterTypeMappable {
 ///
 /// 投票、商品、悬赏……
 @MappableClass()
-final class FilterSpecialType extends FilterBase
-    with FilterSpecialTypeMappable {
+final class FilterSpecialType extends FilterBase with FilterSpecialTypeMappable {
   /// Constructor.
-  const FilterSpecialType({required this.name, required this.specialType})
-      : super('specialtype');
+  const FilterSpecialType({required this.name, required this.specialType}) : super('specialtype');
 
   /// Thread special type name.
   ///
@@ -132,10 +129,7 @@ final class FilterSpecialType extends FilterBase
 @MappableClass()
 final class FilterDateline extends FilterBase with FilterDatelineMappable {
   /// Constructor.
-  const FilterDateline({
-    required this.name,
-    required this.dateline,
-  }) : super('dateline');
+  const FilterDateline({required this.name, required this.dateline}) : super('dateline');
 
   /// Dateline human readable name.
   ///
@@ -154,8 +148,7 @@ final class FilterDateline extends FilterBase with FilterDatelineMappable {
 @MappableClass()
 final class FilterOrder extends FilterBase with FilterOrderMappable {
   /// Constructor.
-  const FilterOrder({required this.name, required this.orderBy})
-      : super('orderby');
+  const FilterOrder({required this.name, required this.orderBy}) : super('orderby');
 
   /// Human readable order name.
   ///

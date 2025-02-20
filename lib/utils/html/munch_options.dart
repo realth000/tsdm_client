@@ -8,10 +8,7 @@ part 'munch_options.mapper.dart';
 @MappableClass()
 final class MunchOptions with MunchOptionsMappable {
   /// Constructor.
-  const MunchOptions({
-    this.renderUrl = true,
-    this.onUrlLaunched,
-  });
+  const MunchOptions({this.renderUrl = true, this.onUrlLaunched});
 
   /// Render <a> tags when munching html document.
   ///

@@ -45,9 +45,7 @@ class BountyAnswerCard extends StatelessWidget {
                 sizedBoxW12H12,
                 Text(
                   context.t.bountyAnswerCard.title,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        color: secondaryColor,
-                      ),
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(color: secondaryColor),
                 ),
               ],
             ),
@@ -64,10 +62,7 @@ class BountyAnswerCard extends StatelessWidget {
                   ),
                 ),
               ),
-              title: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(userSpaceUrl),
-                child: Text(username),
-              ),
+              title: GestureDetector(onTap: () async => context.dispatchAsUrl(userSpaceUrl), child: Text(username)),
             ),
             Text(answer),
           ],

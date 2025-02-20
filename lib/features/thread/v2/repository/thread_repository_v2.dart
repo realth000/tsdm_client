@@ -15,14 +15,8 @@ final class ThreadRepositoryV2 {
       '$baseUrl/forum.php?mobile=yes&tsdmapp=1&mod=viewthread&tid=$tid&page=$page';
 
   /// Fetch thread [tid]'s content in the given [page].
-  AsyncEither<ThreadV2> fetchThreadContent({
-    required String tid,
-    required int page,
-  }) =>
-      getIt
-          .get<NetClientProvider>()
-          .get(_buildUrl(tid: tid, page: page))
-          .andThenHttp((v) {
+  AsyncEither<ThreadV2> fetchThreadContent({required String tid, required int page}) =>
+      getIt.get<NetClientProvider>().get(_buildUrl(tid: tid, page: page)).andThenHttp((v) {
         final result = jsonDecode(v.data as String) as Map<String, dynamic>;
         final status = result['status'];
         if (status == null || status is! int || status != 0) {

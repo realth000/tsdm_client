@@ -4,12 +4,7 @@ part of 'models.dart';
 @MappableClass(ignoreNull: true)
 final class BroadcastMessageV2 with BroadcastMessageV2Mappable {
   /// Constructor.
-  const BroadcastMessageV2({
-    required this.timestamp,
-    required this.data,
-    required this.pmid,
-    this.alreadyRead = false,
-  });
+  const BroadcastMessageV2({required this.timestamp, required this.data, required this.pmid, this.alreadyRead = false});
 
   /// Timestamp in seconds.
   final int timestamp;

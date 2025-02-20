@@ -10,23 +10,20 @@ import 'package:tsdm_client/instance.dart';
 /// Get the database storage file.
 Future<File> get databaseFile async {
   final sep = Platform.pathSeparator;
-  final dbPath =
-      '${(await getApplicationSupportDirectory()).path}${sep}db${sep}mainV2.db';
+  final dbPath = '${(await getApplicationSupportDirectory()).path}${sep}db${sep}mainV2.db';
   talker.debug('init database file at $dbPath');
   return File(dbPath);
 }
 
 /// Connect to database.
 LazyDatabase connect() {
-  return LazyDatabase(
-    () async {
-      if (Platform.isAndroid) {
-        await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
-        sqlite3.tempDirectory = (await getTemporaryDirectory()).path;
-      }
+  return LazyDatabase(() async {
+    if (Platform.isAndroid) {
+      await applyWorkaroundToOpenSqlite3OnOldAndroidVersions();
+      sqlite3.tempDirectory = (await getTemporaryDirectory()).path;
+    }
 
-      talker.debug('connect to database');
-      return NativeDatabase.createBackgroundConnection(await databaseFile);
-    },
-  );
+    talker.debug('connect to database');
+    return NativeDatabase.createBackgroundConnection(await databaseFile);
+  });
 }

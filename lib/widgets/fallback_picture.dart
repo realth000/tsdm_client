@@ -13,10 +13,6 @@ class FallbackPicture extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Image.asset(
-      assetsLogoPngPath,
-      color: Theme.of(context).colorScheme.outlineVariant,
-      fit: fit,
-    );
+    return Image.asset(assetsLogoPngPath, color: Theme.of(context).colorScheme.outlineVariant, fit: fit);
   }
 }

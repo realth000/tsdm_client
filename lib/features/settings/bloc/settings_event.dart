@@ -10,8 +10,7 @@ sealed class SettingsEvent with SettingsEventMappable {
 ///
 /// This is a passive event triggered in bloc.
 @MappableClass()
-final class SettingsMapChanged extends SettingsEvent
-    with SettingsMapChangedMappable {
+final class SettingsMapChanged extends SettingsEvent with SettingsMapChangedMappable {
   /// Constructor.
   const SettingsMapChanged(this.settingsMap) : super();
 
@@ -23,8 +22,7 @@ final class SettingsMapChanged extends SettingsEvent
 ///
 /// Passive event.
 @MappableClass()
-final class SettingsScrollOffsetChanged extends SettingsEvent
-    with SettingsScrollOffsetChangedMappable {
+final class SettingsScrollOffsetChanged extends SettingsEvent with SettingsScrollOffsetChangedMappable {
   /// Constructor.
   const SettingsScrollOffsetChanged(this.offset) : super();
 
@@ -37,8 +35,7 @@ final class SettingsScrollOffsetChanged extends SettingsEvent
 /// The changed settings is [settings], new value is [value].
 /// Caller MUST guarantee [value] is the value type record in [settings].
 @MappableClass()
-final class SettingsValueChanged<T> extends SettingsEvent
-    with SettingsValueChangedMappable<T> {
+final class SettingsValueChanged<T> extends SettingsEvent with SettingsValueChangedMappable<T> {
   /// Constructor.
   const SettingsValueChanged(this.settings, this.value) : super();
 

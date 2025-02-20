@@ -16,10 +16,7 @@ final class ImageCacheRepository with LoggerMixin {
   ///
   /// When [force] is true, always ignore local cache and fetch image from url.
   FutureOr<void> updateImageCache(String url, {bool force = false}) async {
-    await _imageCacheProvider.getOrMakeCache(
-      ImageCacheGeneralRequest(url),
-      force: force,
-    );
+    await _imageCacheProvider.getOrMakeCache(ImageCacheGeneralRequest(url), force: force);
   }
 
   /// Get the cached file of emoji with specified [groupId] and [id].

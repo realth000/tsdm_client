@@ -47,19 +47,17 @@ final class PersonalMessage with PersonalMessageMappable {
     }
 
     // Parse N from "共 N 条"
-    final count = element
-        .querySelector('dd.y.mtm.pm_o > span.xg1')
-        ?.innerText
-        .split(' ')
-        .elementAtOrNull(1)
-        ?.parseToInt();
+    final count =
+        element.querySelector('dd.y.mtm.pm_o > span.xg1')?.innerText.split(' ').elementAtOrNull(1)?.parseToInt();
 
     final avatarUrl = element.querySelector('dd.m.avt > a > img')?.imageUrl();
     final spaceUrl = element.querySelector('dd.m.avt > a')?.attributes['href'];
 
     if (avatarUrl == null || spaceUrl == null) {
-      talker.error('failed to parse private message: '
-          'avatarUrl=$avatarUrl, spaceUrl=$spaceUrl');
+      talker.error(
+        'failed to parse private message: '
+        'avatarUrl=$avatarUrl, spaceUrl=$spaceUrl',
+      );
       return null;
     }
 
@@ -72,43 +70,23 @@ final class PersonalMessage with PersonalMessageMappable {
     final username = element.querySelector('dd:nth-child(3) > a')?.innerText;
     final lastMessageTime =
         // Old messages.
-        element
-                .querySelector('dd:nth-child(3) > span.xg1')
-                ?.innerText
-                .parseToDateTimeUtc8() ??
-            // Recent messages.
-            element
-                .querySelector('dd:nth-child(3) > span.xg1 > span')
-                ?.title
-                ?.parseToDateTimeUtc8();
-    final chatUrl = element
-        .querySelector('a#pmlist_${messageId}_a')
-        ?.attributes['href']
-        ?.unescapeHtml()
-        ?.prependHost();
-    final message = element
-        .querySelector('dd:nth-child(3) > span.xg1')
-        ?.previousNode
-        ?.text
-        ?.split(':')
-        .elementAtOrNull(1)
-        ?.trim();
-    if (username == null ||
-        lastMessageTime == null ||
-        chatUrl == null ||
-        message == null) {
-      talker.error('failed to parse private message: '
-          'username=$username, lastMessageTime=$lastMessageTime, '
-          'chatUrl=$chatUrl, message=$message');
+        element.querySelector('dd:nth-child(3) > span.xg1')?.innerText.parseToDateTimeUtc8() ??
+        // Recent messages.
+        element.querySelector('dd:nth-child(3) > span.xg1 > span')?.title?.parseToDateTimeUtc8();
+    final chatUrl = element.querySelector('a#pmlist_${messageId}_a')?.attributes['href']?.unescapeHtml()?.prependHost();
+    final message =
+        element.querySelector('dd:nth-child(3) > span.xg1')?.previousNode?.text?.split(':').elementAtOrNull(1)?.trim();
+    if (username == null || lastMessageTime == null || chatUrl == null || message == null) {
+      talker.error(
+        'failed to parse private message: '
+        'username=$username, lastMessageTime=$lastMessageTime, '
+        'chatUrl=$chatUrl, message=$message',
+      );
       return null;
     }
 
     return PersonalMessage(
-      user: User(
-        avatarUrl: avatarUrl,
-        name: username,
-        url: spaceUrl,
-      ),
+      user: User(avatarUrl: avatarUrl, name: username, url: spaceUrl),
       message: message,
       lastMessageTime: lastMessageTime,
       count: count,
@@ -123,11 +101,7 @@ final class PersonalMessage with PersonalMessageMappable {
 @MappableClass()
 final class BroadcastMessage with BroadcastMessageMappable {
   /// Constructor.
-  const BroadcastMessage({
-    required this.message,
-    required this.messageTime,
-    required this.redirectUrl,
-  });
+  const BroadcastMessage({required this.message, required this.messageTime, required this.redirectUrl});
 
   /// Message content text.
   final String message;
@@ -156,28 +130,19 @@ final class BroadcastMessage with BroadcastMessageMappable {
       return null;
     }
     final message = infoNode.querySelector('span')?.innerText.trim();
-    final messageTime = infoNode
-            .querySelector('span.xg1')
-            ?.innerText
-            .trim()
-            .parseToDateTimeUtc8() ??
+    final messageTime =
+        infoNode.querySelector('span.xg1')?.innerText.trim().parseToDateTimeUtc8() ??
         // Less than 7 days
         infoNode.querySelector('span.xg1 > span')?.title?.parseToDateTimeUtc8();
-    final redirectUrl = infoNode
-        .querySelector('a')
-        ?.attributes['href']
-        ?.unescapeHtml()
-        ?.prependHost();
+    final redirectUrl = infoNode.querySelector('a')?.attributes['href']?.unescapeHtml()?.prependHost();
     if (message == null || messageTime == null) {
-      talker.error('failed to build broadcast message: '
-          'redirectUrl=$redirectUrl, messageTime=$messageTime');
+      talker.error(
+        'failed to build broadcast message: '
+        'redirectUrl=$redirectUrl, messageTime=$messageTime',
+      );
       return null;
     }
 
-    return BroadcastMessage(
-      message: message,
-      messageTime: messageTime,
-      redirectUrl: redirectUrl,
-    );
+    return BroadcastMessage(message: message, messageTime: messageTime, redirectUrl: redirectUrl);
   }
 }

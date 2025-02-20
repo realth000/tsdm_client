@@ -19,11 +19,7 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// After debugging like this:
   /// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
   /// Remove "gzip" encoding in "Accept-Encoding" can fix this.
-  netClientAcceptEncoding<String>(
-    name: 'netClientAcceptEncoding',
-    type: String,
-    defaultValue: 'deflate, br',
-  ),
+  netClientAcceptEncoding<String>(name: 'netClientAcceptEncoding', type: String, defaultValue: 'deflate, br'),
 
   /// Net client config: Accept-Language.
   netClientAcceptLanguage<String>(
@@ -43,108 +39,56 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Remember window size after window size changed on desktop platforms.
   ///
   /// Disable this config will never update [windowSize].
-  windowRememberSize<bool>(
-    name: 'windowRememberSize',
-    type: bool,
-    defaultValue: true,
-  ),
+  windowRememberSize<bool>(name: 'windowRememberSize', type: bool, defaultValue: true),
 
   /// Window size config on desktop platforms.
-  windowSize<Size>(
-    name: 'windowSize',
-    type: Size,
-    defaultValue: Size(800, 600),
-  ),
+  windowSize<Size>(name: 'windowSize', type: Size, defaultValue: Size(800, 600)),
 
   /// Remember window position after window position changed on desktop
   /// platforms.
   ///
   /// Disable this config will never update [windowPosition].
-  windowRememberPosition<bool>(
-    name: 'windowRememberPosition',
-    type: bool,
-    defaultValue: true,
-  ),
+  windowRememberPosition<bool>(name: 'windowRememberPosition', type: bool, defaultValue: true),
 
   /// Window position config on desktop platforms.
-  windowPosition<Offset>(
-    name: 'windowPosition',
-    type: Offset,
-    defaultValue: Offset.zero,
-  ),
+  windowPosition<Offset>(name: 'windowPosition', type: Offset, defaultValue: Offset.zero),
 
   /// Window whether in the center of screen config on desktop platforms.
   ///
   /// Enable this config will disable [windowPosition] and
   /// [windowRememberPosition].
-  windowInCenter<bool>(
-    name: 'windowInCenter',
-    type: bool,
-    defaultValue: false,
-  ),
+  windowInCenter<bool>(name: 'windowInCenter', type: bool, defaultValue: false),
 
   /// Login user username.
-  loginUsername<String>(
-    name: 'loginUsername',
-    type: String,
-    defaultValue: '',
-  ),
+  loginUsername<String>(name: 'loginUsername', type: String, defaultValue: ''),
 
   /// Login user uid.
-  loginUid<int>(
-    name: 'loginUid',
-    type: int,
-    defaultValue: 0,
-  ),
+  loginUid<int>(name: 'loginUid', type: int, defaultValue: 0),
 
   /// Login user email address.
-  loginEmail<String>(
-    name: 'loginEmail',
-    type: String,
-    defaultValue: '',
-  ),
+  loginEmail<String>(name: 'loginEmail', type: String, defaultValue: ''),
 
   /// Default app theme mode.
   ///
   /// 0: [ThemeMode.system]
   /// 1: [ThemeMode.light]
   /// 2: [ThemeMode.dark]
-  themeMode<int>(
-    name: 'ThemeMode',
-    type: int,
-    defaultValue: 0,
-  ),
+  themeMode<int>(name: 'ThemeMode', type: int, defaultValue: 0),
 
   /// Locale
   ///
   /// Empty means follow system locale.
-  locale<String>(
-    name: 'locale',
-    type: String,
-    defaultValue: '',
-  ),
+  locale<String>(name: 'locale', type: String, defaultValue: ''),
 
   /// Default feeling when check in
-  checkinFeeling<String>(
-    name: 'checkInFeeling',
-    type: String,
-    defaultValue: 'kx',
-  ),
+  checkinFeeling<String>(name: 'checkInFeeling', type: String, defaultValue: 'kx'),
 
   /// Default check in message when check in
-  checkinMessage<String>(
-    name: 'checkInMessage',
-    type: String,
-    defaultValue: '每日签到',
-  ),
+  checkinMessage<String>(name: 'checkInMessage', type: String, defaultValue: '每日签到'),
 
   /// Show shortcut widget that to redirect to latest thread or subreddit in
   /// forum card.
-  showShortcutInForumCard<bool>(
-    name: 'showShortcutInForumCard',
-    type: bool,
-    defaultValue: false,
-  ),
+  showShortcutInForumCard<bool>(name: 'showShortcutInForumCard', type: bool, defaultValue: false),
 
   /// Default accent color.
   ///
@@ -156,147 +100,71 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   ),
 
   /// Using system color (usually wallpaper color) as app accent color.
-  accentColorFollowSystem<bool>(
-    name: 'accentColorFollowSystem',
-    type: bool,
-    defaultValue: false,
-  ),
+  accentColorFollowSystem<bool>(name: 'accentColorFollowSystem', type: bool, defaultValue: false),
 
   /// Show badge or unread notice count on notice button.
-  showUnreadInfoHint<bool>(
-    name: 'showUnreadInfoHint',
-    type: bool,
-    defaultValue: true,
-  ),
+  showUnreadInfoHint<bool>(name: 'showUnreadInfoHint', type: bool, defaultValue: true),
 
   /// Only exit the app when user press back button twice or more.
   ///
   /// Avoid accidentally exit the app.
-  doublePressExit<bool>(
-    name: 'doublePressExit',
-    type: bool,
-    defaultValue: true,
-  ),
+  doublePressExit<bool>(name: 'doublePressExit', type: bool, defaultValue: true),
 
   /// View latest posts in thread first, in other words, posts are sorted in
   /// desc order.
-  threadReverseOrder<bool>(
-    name: 'threadReverseOrder',
-    type: bool,
-    defaultValue: false,
-  ),
+  threadReverseOrder<bool>(name: 'threadReverseOrder', type: bool, defaultValue: false),
 
   /// Center align the info row in thread card.
-  threadCardInfoRowAlignCenter<bool>(
-    name: 'threadCardInfoRowAlignCenter',
-    type: bool,
-    defaultValue: false,
-  ),
+  threadCardInfoRowAlignCenter<bool>(name: 'threadCardInfoRowAlignCenter', type: bool, defaultValue: false),
 
   /// Show last replied author's username in info row in `ThreadCard`.
-  threadCardShowLastReplyAuthor<bool>(
-    name: 'threadCardShowLastReplyAuthor',
-    type: bool,
-    defaultValue: true,
-  ),
+  threadCardShowLastReplyAuthor<bool>(name: 'threadCardShowLastReplyAuthor', type: bool, defaultValue: true),
 
   /// Highlight recent thread (published in recent 24 hours).
-  threadCardHighlightRecentThread<bool>(
-    name: 'threadCardHighlightRecentThread',
-    type: bool,
-    defaultValue: true,
-  ),
+  threadCardHighlightRecentThread<bool>(name: 'threadCardHighlightRecentThread', type: bool, defaultValue: true),
 
   /// Highlight author's username in thread card.
-  threadCardHighlightAuthorName<bool>(
-    name: 'threadCardHighlightAuthorName',
-    type: bool,
-    defaultValue: true,
-  ),
-  threadCardHighlightInfoRow<bool>(
-    name: 'threadCardHighlightInfoRow',
-    type: bool,
-    defaultValue: true,
-  ),
+  threadCardHighlightAuthorName<bool>(name: 'threadCardHighlightAuthorName', type: bool, defaultValue: true),
+  threadCardHighlightInfoRow<bool>(name: 'threadCardHighlightInfoRow', type: bool, defaultValue: true),
 
   /// Use network proxy config below or not.
-  netClientUseProxy<bool>(
-    name: 'netClientUseProxy',
-    type: bool,
-    defaultValue: false,
-  ),
+  netClientUseProxy<bool>(name: 'netClientUseProxy', type: bool, defaultValue: false),
 
   /// Network proxy.
   ///
   /// Manually set, in format: $domain:$port where $domain is usually localhost.
-  netClientProxy<String>(
-    name: 'netClientProxy',
-    type: String,
-    defaultValue: '',
-  ),
+  netClientProxy<String>(name: 'netClientProxy', type: String, defaultValue: ''),
 
   /// Enable auto checkin for all users when app startup.
-  autoCheckin<bool>(
-    name: 'autoCheckin',
-    type: bool,
-    defaultValue: true,
-  ),
+  autoCheckin<bool>(name: 'autoCheckin', type: bool, defaultValue: true),
 
   /// Show unread badge on notice card.
   ///
   /// Disabled by default because the read/unread flag is offline.
-  showUnreadNoticeBadge<bool>(
-    name: 'showUnreadNoticeBadge',
-    type: bool,
-    defaultValue: false,
-  ),
+  showUnreadNoticeBadge<bool>(name: 'showUnreadNoticeBadge', type: bool, defaultValue: false),
 
   /// Show unread badge on personal message card.
   ///
   /// Enabled by default because the read/unread flag is provided by server.
-  showUnreadPersonalMessageBadge<bool>(
-    name: 'showUnreadPersonalMessageBadge',
-    type: bool,
-    defaultValue: true,
-  ),
+  showUnreadPersonalMessageBadge<bool>(name: 'showUnreadPersonalMessageBadge', type: bool, defaultValue: true),
 
   /// Show unread badge on broadcast message card.
   ///
   /// Disabled by default because the read/unread flag is offline.
-  showUnreadBroadcastMessageBadge<bool>(
-    name: 'showUnreadBroadcastMessageBadge',
-    type: bool,
-    defaultValue: false,
-  ),
+  showUnreadBroadcastMessageBadge<bool>(name: 'showUnreadBroadcastMessageBadge', type: bool, defaultValue: false),
 
   /// Duration of automatically fetch notice from server, in seconds.
   ///
   /// Default is 600 seconds.
-  autoSyncNoticeSeconds<int>(
-    name: 'autoSyncNoticeSeconds',
-    type: int,
-    defaultValue: 600,
-  ),
+  autoSyncNoticeSeconds<int>(name: 'autoSyncNoticeSeconds', type: int, defaultValue: 600),
 
   /// Enable operations for debugging.
-  enableDebugOperations<bool>(
-    name: 'enableDebugOperations',
-    type: bool,
-    defaultValue: false,
-  ),
+  enableDebugOperations<bool>(name: 'enableDebugOperations', type: bool, defaultValue: false),
 
   /// APP font family.
-  fontFamily<String>(
-    name: 'fontFamily',
-    type: String,
-    defaultValue: '',
-  );
+  fontFamily<String>(name: 'fontFamily', type: String, defaultValue: '');
 
-  const SettingsKeys({
-    required this.name,
-    required this.type,
-    required this.defaultValue,
-  });
+  const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 
   final String name;
   final Type type;

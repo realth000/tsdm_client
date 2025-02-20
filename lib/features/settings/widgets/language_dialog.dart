@@ -18,9 +18,7 @@ class LanguageDialog extends StatelessWidget {
         child: Column(
           children: [
             RadioListTile(
-              title: Text(
-                t.settingsPage.appearanceSection.languages.followSystem,
-              ),
+              title: Text(t.settingsPage.appearanceSection.languages.followSystem),
               onChanged: (value) async {
                 if (value != null) {
                   Navigator.of(context).pop((null, true));
@@ -34,15 +32,16 @@ class LanguageDialog extends StatelessWidget {
                 // TODO: Check if is caused by lazy loading.
                 // Traditional Chinese language tag is displayed as "English".
                 title: // Text(e.translations.locale),
-                    Text(
-                  switch (e.languageTag) {
-                    'en' => 'English',
-                    'zh-CN' => '简体中文',
-                    'zh-TW' => '繁體中文',
-                    final v => throw UnimplementedError('unsupported '
-                        'language tag $v'),
-                  },
-                ),
+                    Text(switch (e.languageTag) {
+                  'en' => 'English',
+                  'zh-CN' => '简体中文',
+                  'zh-TW' => '繁體中文',
+                  final v =>
+                    throw UnimplementedError(
+                      'unsupported '
+                      'language tag $v',
+                    ),
+                }),
                 value: e.languageTag,
                 groupValue: currentLocale,
                 onChanged: (value) async {

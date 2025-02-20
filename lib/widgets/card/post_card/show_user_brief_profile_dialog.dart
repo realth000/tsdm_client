@@ -26,22 +26,12 @@ Future<void> showUserBriefProfileDialog(
 }) async {
   await showHeroDialog<void>(
     context,
-    (context, _, __) => _UserBriefProfileDialog(
-      userBriefProfile,
-      userSpaceUrl,
-      avatarHeroTag,
-      nameHeroTag,
-    ),
+    (context, _, __) => _UserBriefProfileDialog(userBriefProfile, userSpaceUrl, avatarHeroTag, nameHeroTag),
   );
 }
 
 class _UserBriefProfileDialog extends StatelessWidget {
-  const _UserBriefProfileDialog(
-    this.profile,
-    this.userSpaceUrl,
-    this.avatarHeroTag,
-    this.nameHeroTag,
-  );
+  const _UserBriefProfileDialog(this.profile, this.userSpaceUrl, this.avatarHeroTag, this.nameHeroTag);
 
   final UserBriefProfile profile;
 
@@ -75,15 +65,12 @@ class _UserBriefProfileDialog extends StatelessWidget {
               const Spacer(),
               IconButton(
                 icon: const Icon(Icons.email_outlined),
-                onPressed: () => context.pushNamed(
-                  ScreenPaths.chat,
-                  pathParameters: {
-                    'uid': profile.uid,
-                  },
-                  extra: <String, dynamic>{
-                    'username': profile.username,
-                  },
-                ),
+                onPressed:
+                    () => context.pushNamed(
+                      ScreenPaths.chat,
+                      pathParameters: {'uid': profile.uid},
+                      extra: <String, dynamic>{'username': profile.username},
+                    ),
               ),
               IconButton(
                 icon: const Icon(Icons.info_outline),
@@ -96,52 +83,28 @@ class _UserBriefProfileDialog extends StatelessWidget {
           // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
           Hero(
             tag: nameHeroTag,
-            flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
-                DefaultTextStyle(
-              style: DefaultTextStyle.of(toHeroContext).style,
-              child: toHeroContext.widget,
-            ),
-            child: Text(
-              profile.username,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            flightShuttleBuilder:
+                (_, __, ___, ____, toHeroContext) =>
+                    DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
+            child: Text(profile.username, style: Theme.of(context).textTheme.titleLarge),
           ),
           sizedBoxW4H4,
           Text(
             'UID ${profile.uid}',
-            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                  color: Theme.of(context).colorScheme.outline,
-                ),
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
           ),
         ],
       ),
       content: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.of(context).size.height * 0.4,
-        ),
+        constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.4),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              _UserProfilePair(
-                Icons.group_outlined,
-                tr.group,
-                profile.userGroup,
-                style: _UserProfileAttrStyle.primary,
-              ),
+              _UserProfilePair(Icons.group_outlined, tr.group, profile.userGroup, style: _UserProfileAttrStyle.primary),
               if (profile.title != null)
-                _UserProfilePair(
-                  Icons.badge_outlined,
-                  tr.title,
-                  profile.title,
-                  style: _UserProfileAttrStyle.primary,
-                ),
-              _UserProfilePair(
-                MdiIcons.idCard,
-                tr.nickname,
-                profile.nickname,
-                style: _UserProfileAttrStyle.primary,
-              ),
+                _UserProfilePair(Icons.badge_outlined, tr.title, profile.title, style: _UserProfileAttrStyle.primary),
+              _UserProfilePair(MdiIcons.idCard, tr.nickname, profile.nickname, style: _UserProfileAttrStyle.primary),
               _UserProfilePair(
                 Icons.thumb_up_outlined,
                 tr.recommended,
@@ -166,12 +129,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                 profile.famous,
                 style: _UserProfileAttrStyle.secondary,
               ),
-              _UserProfilePair(
-                FontAwesomeIcons.coins,
-                tr.coins,
-                profile.coins,
-                style: _UserProfileAttrStyle.secondary,
-              ),
+              _UserProfilePair(FontAwesomeIcons.coins, tr.coins, profile.coins, style: _UserProfileAttrStyle.secondary),
               _UserProfilePair(
                 Icons.campaign_outlined,
                 tr.publicity,
@@ -243,20 +201,10 @@ class _UserBriefProfileDialog extends StatelessWidget {
   }
 }
 
-enum _UserProfileAttrStyle {
-  primary,
-  secondary,
-  tertiary,
-  normal,
-}
+enum _UserProfileAttrStyle { primary, secondary, tertiary, normal }
 
 class _UserProfilePair extends StatelessWidget {
-  const _UserProfilePair(
-    this.iconData,
-    this.name,
-    this.value, {
-    this.style = _UserProfileAttrStyle.normal,
-  });
+  const _UserProfilePair(this.iconData, this.name, this.value, {this.style = _UserProfileAttrStyle.normal});
 
   final IconData iconData;
   final String name;

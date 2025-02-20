@@ -18,13 +18,11 @@ typedef PointsStatisticsEmitter = Emitter<PointsStatisticsState>;
 typedef PointsChangelogEmitter = Emitter<PointsChangelogState>;
 
 /// Bloc of user points statistics page.
-final class PointsStatisticsBloc
-    extends Bloc<PointsStatisticsEvent, PointsStatisticsState>
-    with LoggerMixin {
+final class PointsStatisticsBloc extends Bloc<PointsStatisticsEvent, PointsStatisticsState> with LoggerMixin {
   /// Constructor.
   PointsStatisticsBloc({required PointsRepository pointsRepository})
-      : _pointsRepository = pointsRepository,
-        super(const PointsStatisticsState()) {
+    : _pointsRepository = pointsRepository,
+      super(const PointsStatisticsState()) {
     on<PointsStatisticsRefreshRequested>(_onPointsStatisticsRefreshRequested);
   }
 
@@ -35,33 +33,28 @@ final class PointsStatisticsBloc
     PointsStatisticsEmitter emit,
   ) async {
     emit(state.copyWith(status: PointsStatus.loading));
-    await _pointsRepository.fetchStatisticsPage().match(
-      (e) {
-        handle(e);
-        error('failed to fetch points statistics page: $e');
-        emit(state.copyWith(status: PointsStatus.failed));
-      },
-      (v) {
-        final document = v;
-        final result = _parseDocument(document);
-        if (result == null) {
-          emit(state.copyWith(status: PointsStatus.failed));
-          return;
-        }
-        emit(
-          state.copyWith(
-            status: PointsStatus.success,
-            pointsMap: result.$1,
-            recentChangelog: result.$2,
-          ),
-        );
-      },
-    ).run();
+    await _pointsRepository
+        .fetchStatisticsPage()
+        .match(
+          (e) {
+            handle(e);
+            error('failed to fetch points statistics page: $e');
+            emit(state.copyWith(status: PointsStatus.failed));
+          },
+          (v) {
+            final document = v;
+            final result = _parseDocument(document);
+            if (result == null) {
+              emit(state.copyWith(status: PointsStatus.failed));
+              return;
+            }
+            emit(state.copyWith(status: PointsStatus.success, pointsMap: result.$1, recentChangelog: result.$2));
+          },
+        )
+        .run();
   }
 
-  (Map<String, String>, List<PointsChange>)? _parseDocument(
-    uh.Document document,
-  ) {
+  (Map<String, String>, List<PointsChange>)? _parseDocument(uh.Document document) {
     final rootNode = document.querySelector('div#ct_shell div.bm.bw0');
     if (rootNode == null) {
       error('points change root node not found');
@@ -85,12 +78,11 @@ final class PointsStatisticsBloc
 }
 
 /// Bloc of the points changelog page.
-final class PointsChangelogBloc
-    extends Bloc<PointsChangelogEvent, PointsChangelogState> with LoggerMixin {
+final class PointsChangelogBloc extends Bloc<PointsChangelogEvent, PointsChangelogState> with LoggerMixin {
   /// Constructor.
   PointsChangelogBloc({required PointsRepository pointsRepository})
-      : _pointsRepository = pointsRepository,
-        super(const PointsChangelogState()) {
+    : _pointsRepository = pointsRepository,
+      super(const PointsChangelogState()) {
     on<PointsChangelogRefreshRequested>(_onPointsChangelogRefreshRequested);
     on<PointsChangelogLoadMoreRequested>(_onPointsChangelogLoadMoreRequested);
     on<PointsChangelogQueryRequested>(_onPointsChangelogQueryRequested);
@@ -103,69 +95,56 @@ final class PointsChangelogBloc
     PointsChangelogRefreshRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    emit(
-      state.copyWith(
-        status: PointsStatus.loading,
-        fullChangelog: [],
-      ),
-    );
+    emit(state.copyWith(status: PointsStatus.loading, fullChangelog: []));
     await _pointsRepository
         .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1))
         .match(
-      (e) {
-        handle(e);
-        error('failed to refresh changelog tab: $e');
-        emit(state.copyWith(status: PointsStatus.failed));
-      },
-      (v) {
-        final document = v;
-        final s = _parseDocument(document, state.currentPage);
-        final allParameters = _parseAllParameters(document);
-        emit(s.copyWith(allParameters: allParameters));
-      },
-    ).run();
+          (e) {
+            handle(e);
+            error('failed to refresh changelog tab: $e');
+            emit(state.copyWith(status: PointsStatus.failed));
+          },
+          (v) {
+            final document = v;
+            final s = _parseDocument(document, state.currentPage);
+            final allParameters = _parseAllParameters(document);
+            emit(s.copyWith(allParameters: allParameters));
+          },
+        )
+        .run();
   }
 
   Future<void> _onPointsChangelogLoadMoreRequested(
     PointsChangelogLoadMoreRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    await _pointsRepository
-        .fetchChangelogPage(
-      state.parameter.copyWith(pageNumber: state.currentPage + 1),
-    )
-        .match(
-      (e) {
-        handle(e);
-        error('failed to load more points changelog: $e');
-        emit(state.copyWith(status: PointsStatus.failed));
-      },
-      (v) => emit(_parseDocument(v, event.pageNumber)),
-    ).run();
+    await _pointsRepository.fetchChangelogPage(state.parameter.copyWith(pageNumber: state.currentPage + 1)).match((e) {
+      handle(e);
+      error('failed to load more points changelog: $e');
+      emit(state.copyWith(status: PointsStatus.failed));
+    }, (v) => emit(_parseDocument(v, event.pageNumber))).run();
   }
 
   Future<void> _onPointsChangelogQueryRequested(
     PointsChangelogQueryRequested event,
     PointsChangelogEmitter emit,
   ) async {
-    emit(
-      state.copyWith(
-        status: PointsStatus.loading,
-        fullChangelog: [],
-        parameter: event.parameter,
-      ),
-    );
+    emit(state.copyWith(status: PointsStatus.loading, fullChangelog: [], parameter: event.parameter));
     await _pointsRepository
         .fetchChangelogPage(state.parameter.copyWith(pageNumber: 1))
-        .match((e) {
-      error('failed to refresh changelog tab: $e');
-      emit(state.copyWith(status: PointsStatus.failed));
-    }, (v) {
-      final document = v;
-      final s = _parseDocument(document, state.currentPage);
-      final allParameters = _parseAllParameters(document);
-      emit(s.copyWith(allParameters: allParameters));
-    }).run();
+        .match(
+          (e) {
+            error('failed to refresh changelog tab: $e');
+            emit(state.copyWith(status: PointsStatus.failed));
+          },
+          (v) {
+            final document = v;
+            final s = _parseDocument(document, state.currentPage);
+            final allParameters = _parseAllParameters(document);
+            emit(s.copyWith(allParameters: allParameters));
+          },
+        )
+        .run();
   }
 
   ChangelogAllParameters _parseAllParameters(uh.Document document) {
@@ -175,37 +154,25 @@ final class PointsChangelogBloc
     //   <option value="TRC">Task</option>
     //   ...
     // </select>
-    final extTypeList = document
-        .querySelectorAll('select#exttype > option')
-        .where((e) => e.attributes['value'] != null)
-        .map(
-          (e) => ChangelogPointsType(
-            name: e.innerText.trim(),
-            extType: e.attributes['value']!,
-          ),
-        )
-        .toList();
-    final optTypeList = document
-        .querySelectorAll('select#optype > option')
-        .where((e) => e.attributes['value'] != null)
-        .map(
-          (e) => ChangelogOperationType(
-            name: e.innerText.trim(),
-            operation: e.attributes['value']!,
-          ),
-        )
-        .toList();
+    final extTypeList =
+        document
+            .querySelectorAll('select#exttype > option')
+            .where((e) => e.attributes['value'] != null)
+            .map((e) => ChangelogPointsType(name: e.innerText.trim(), extType: e.attributes['value']!))
+            .toList();
+    final optTypeList =
+        document
+            .querySelectorAll('select#optype > option')
+            .where((e) => e.attributes['value'] != null)
+            .map((e) => ChangelogOperationType(name: e.innerText.trim(), operation: e.attributes['value']!))
+            .toList();
 
-    final changeTypeList = document
-        .querySelectorAll('select#income > option')
-        .where((e) => e.attributes['value'] != null)
-        .map(
-          (e) => ChangelogChangeType(
-            name: e.innerText.trim(),
-            changeType: e.attributes['value']!,
-          ),
-        )
-        .toList();
+    final changeTypeList =
+        document
+            .querySelectorAll('select#income > option')
+            .where((e) => e.attributes['value'] != null)
+            .map((e) => ChangelogChangeType(name: e.innerText.trim(), changeType: e.attributes['value']!))
+            .toList();
 
     return ChangelogAllParameters(
       extTypeList: extTypeList,
@@ -238,11 +205,12 @@ final class PointsChangelogBloc
 
 /// Build a list of [PointsChange] from <table class="dt">
 List<PointsChange> _buildChangeListFromTable(uh.Element element) {
-  final ret = element
-      .querySelectorAll('table > tbody > tr')
-      .skip(1)
-      .map(PointsChange.fromTrNode)
-      .whereType<PointsChange>()
-      .toList();
+  final ret =
+      element
+          .querySelectorAll('table > tbody > tr')
+          .skip(1)
+          .map(PointsChange.fromTrNode)
+          .whereType<PointsChange>()
+          .toList();
   return ret;
 }

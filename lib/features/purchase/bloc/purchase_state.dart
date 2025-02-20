@@ -22,10 +22,7 @@ enum PurchaseStatus {
 @MappableClass()
 final class PurchaseState with PurchaseStateMappable {
   /// Constructor.
-  const PurchaseState({
-    this.status = PurchaseStatus.initial,
-    this.confirmInfo,
-  });
+  const PurchaseState({this.status = PurchaseStatus.initial, this.confirmInfo});
 
   /// Status.
   final PurchaseStatus status;

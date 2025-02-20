@@ -13,15 +13,10 @@ class HomeNavigationRail extends StatelessWidget {
 
     return NavigationRail(
       groupAlignment: 0,
-      destinations: barItems
-          .map(
-            (e) => NavigationRailDestination(
-              icon: e.icon,
-              selectedIcon: e.selectedIcon,
-              label: Text(e.label),
-            ),
-          )
-          .toList(),
+      destinations:
+          barItems
+              .map((e) => NavigationRailDestination(icon: e.icon, selectedIcon: e.selectedIcon, label: Text(e.label)))
+              .toList(),
       selectedIndex: context.watch<HomeCubit>().state.tab.index,
       onDestinationSelected: (index) {
         context.read<HomeCubit>().setTab(barItems[index].tab);

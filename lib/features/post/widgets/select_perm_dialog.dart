@@ -4,15 +4,8 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 
 /// Show a dialog to let user select a read permission value for current thread.
-Future<String?> showSelectPermDialog(
-  BuildContext context,
-  List<ThreadPerm> permList,
-  String? initialPerm,
-) async =>
-    showDialog<String>(
-      context: context,
-      builder: (context) => _SelectPermDialog(permList, initialPerm),
-    );
+Future<String?> showSelectPermDialog(BuildContext context, List<ThreadPerm> permList, String? initialPerm) async =>
+    showDialog<String>(context: context, builder: (context) => _SelectPermDialog(permList, initialPerm));
 
 /// Dialog to let user select a value of available read permissions.
 class _SelectPermDialog extends StatefulWidget {
@@ -43,22 +36,23 @@ class _SelectPermDialogState extends State<_SelectPermDialog> {
     return AlertDialog(
       title: Text(context.t.postEditPage.permDialog.title),
       content: Column(
-        children: widget.permList
-            .map(
-              (e) => RadioListTile(
-                title: Text(e.groupName),
-                subtitle: Text(e.perm),
-                value: e.perm,
-                groupValue: currentPerm,
-                onChanged: (v) {
-                  setState(() {
-                    currentPerm = e.perm;
-                  });
-                  context.pop(currentPerm);
-                },
-              ),
-            )
-            .toList(),
+        children:
+            widget.permList
+                .map(
+                  (e) => RadioListTile(
+                    title: Text(e.groupName),
+                    subtitle: Text(e.perm),
+                    value: e.perm,
+                    groupValue: currentPerm,
+                    onChanged: (v) {
+                      setState(() {
+                        currentPerm = e.perm;
+                      });
+                      context.pop(currentPerm);
+                    },
+                  ),
+                )
+                .toList(),
       ),
       scrollable: true,
     );

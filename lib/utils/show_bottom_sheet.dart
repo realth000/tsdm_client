@@ -19,22 +19,13 @@ Future<T?> showCustomBottomSheet<T>({
   Widget Function(BuildContext context)? builder,
   BoxConstraints? constraints,
 }) async {
-  assert(
-    builder != null || childrenBuilder != null,
-    'must provide builder or childrenBuilder',
-  );
+  assert(builder != null || childrenBuilder != null, 'must provide builder or childrenBuilder');
   final Widget content;
   if (builder != null) {
     content = builder.call(context);
   } else {
     content = Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(children: childrenBuilder!(context)),
-          ),
-        ),
-      ],
+      children: [Expanded(child: SingleChildScrollView(child: Column(children: childrenBuilder!(context))))],
     );
   }
   final ret = await showModalBottomSheet<T>(
@@ -49,10 +40,7 @@ Future<T?> showCustomBottomSheet<T>({
           centerTitle: true,
           bottom: pinnedWidget,
         ),
-        body: Padding(
-          padding: edgeInsetsL16T16R16B16,
-          child: content,
-        ),
+        body: Padding(padding: edgeInsetsL16T16R16B16, child: content),
         primary: false,
       );
     },
@@ -80,10 +68,7 @@ Future<void> showImageActionBottomSheet({
       final tr = context.t.imageBottomSheet;
       return Scaffold(
         appBar: AppBar(
-          title: Text(
-            tr.title,
-            style: Theme.of(context).textTheme.titleMedium,
-          ),
+          title: Text(tr.title, style: Theme.of(context).textTheme.titleMedium),
           automaticallyImplyLeading: false,
           centerTitle: true,
         ),
@@ -94,10 +79,7 @@ Future<void> showImageActionBottomSheet({
                 color: Theme.of(context).colorScheme.surfaceContainerLow,
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxHeight: 100),
-                  child: Padding(
-                    padding: edgeInsetsT4B4,
-                    child: NetworkIndicatorImage(imageUrl),
-                  ),
+                  child: Padding(padding: edgeInsetsT4B4, child: NetworkIndicatorImage(imageUrl)),
                 ),
               ),
             ),
@@ -109,10 +91,7 @@ Future<void> showImageActionBottomSheet({
                       leading: const Icon(Icons.fullscreen_outlined),
                       title: Text(tr.checkDetail),
                       onTap: () async {
-                        await context.pushNamed(
-                          ScreenPaths.imageDetail,
-                          pathParameters: {'imageUrl': imageUrl},
-                        );
+                        await context.pushNamed(ScreenPaths.imageDetail, pathParameters: {'imageUrl': imageUrl});
                         if (context.mounted) {
                           context.pop();
                         }
@@ -132,9 +111,7 @@ Future<void> showImageActionBottomSheet({
                     ListTile(
                       leading: const Icon(Icons.refresh_outlined),
                       title: Text(tr.reloadImage),
-                      onTap: () => context
-                          .read<ImageCacheTriggerCubit>()
-                          .updateImageCache(imageUrl, force: true),
+                      onTap: () => context.read<ImageCacheTriggerCubit>().updateImageCache(imageUrl, force: true),
                     ),
                     if (hrefUrl != null)
                       ListTile(

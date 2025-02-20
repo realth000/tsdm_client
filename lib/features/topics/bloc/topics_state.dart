@@ -31,11 +31,7 @@ enum TopicsStatus {
 @MappableClass()
 final class TopicsState with TopicsStateMappable {
   /// Constructor.
-  const TopicsState({
-    this.status = TopicsStatus.initial,
-    this.topicsTab = 0,
-    this.forumGroupList = const [],
-  });
+  const TopicsState({this.status = TopicsStatus.initial, this.topicsTab = 0, this.forumGroupList = const []});
 
   /// Status.
   final TopicsStatus status;

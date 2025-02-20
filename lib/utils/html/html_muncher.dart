@@ -61,11 +61,7 @@ Widget munchElement(
   bool parseLockedWithPurchase = false,
   MunchOptions options = const MunchOptions(),
 }) {
-  final muncher = _Muncher(
-    context,
-    parseLockedWithPurchase: parseLockedWithPurchase,
-    options: options,
-  );
+  final muncher = _Muncher(context, parseLockedWithPurchase: parseLockedWithPurchase, options: options);
 
   final ret = muncher._munch(rootElement);
   if (ret == null) {
@@ -80,9 +76,7 @@ Widget munchElement(
   // page width.
   // Currently is 712.
   return ConstrainedBox(
-    constraints: const BoxConstraints(
-      maxWidth: _maxWidth,
-    ),
+    constraints: const BoxConstraints(maxWidth: _maxWidth),
     child: Text.rich(TextSpan(children: ret)),
   );
 }
@@ -215,11 +209,7 @@ class _MunchState {
 /// Munch html nodes into flutter widgets.
 final class _Muncher with LoggerMixin {
   /// Constructor.
-  _Muncher(
-    this.context, {
-    required this.parseLockedWithPurchase,
-    required this.options,
-  });
+  _Muncher(this.context, {required this.parseLockedWithPurchase, required this.options});
 
   /// Context to build widget when munching.
   final BuildContext context;
@@ -237,8 +227,7 @@ final class _Muncher with LoggerMixin {
   Map<String, List<InlineSpan>? Function(uh.Element)>? _divMap;
 
   /// Regex to match netease player iframe.
-  final _neteasePlayerRe =
-      RegExp(r'//music\.163\.com/outchain/player\?.*id=(?<id>\d+).*');
+  final _neteasePlayerRe = RegExp(r'//music\.163\.com/outchain/player\?.*id=(?<id>\d+).*');
 
   List<InlineSpan>? _munch(uh.Element rootElement) {
     final spanList = <InlineSpan>[];
@@ -291,34 +280,33 @@ final class _Muncher with LoggerMixin {
           }
 
           // Base text style.
-          final color = state.colorStack.lastOrNull ??
-              (state.tapUrl != null
-                  ? Theme.of(context).colorScheme.primary
-                  : null);
+          final color =
+              state.colorStack.lastOrNull ?? (state.tapUrl != null ? Theme.of(context).colorScheme.primary : null);
           final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: color,
-                fontWeight: state.bold ? FontWeight.w600 : null,
-                fontSize: state.fontSizeStack.lastOrNull,
-                backgroundColor: state.backgroundColorStack.lastOrNull,
-                decorationColor: color,
-                decoration: TextDecoration.combine([
-                  if (state.underline) TextDecoration.underline,
-                  if (state.lineThrough) TextDecoration.lineThrough,
-                ]),
-                fontStyle: state.italic ? FontStyle.italic : null,
-                decorationThickness: 1.5,
-              );
+            color: color,
+            fontWeight: state.bold ? FontWeight.w600 : null,
+            fontSize: state.fontSizeStack.lastOrNull,
+            backgroundColor: state.backgroundColorStack.lastOrNull,
+            decorationColor: color,
+            decoration: TextDecoration.combine([
+              if (state.underline) TextDecoration.underline,
+              if (state.lineThrough) TextDecoration.lineThrough,
+            ]),
+            fontStyle: state.italic ? FontStyle.italic : null,
+            decorationThickness: 1.5,
+          );
 
           // Attach url to open when `onTap`.
           TapGestureRecognizer? recognizer;
           if (state.tapUrl != null) {
             // Copy to save the url.
             final url = state.tapUrl;
-            recognizer = TapGestureRecognizer()
-              ..onTap = () {
-                context.dispatchAsUrl(url!);
-                options.onUrlLaunched?.call();
-              };
+            recognizer =
+                TapGestureRecognizer()
+                  ..onTap = () {
+                    context.dispatchAsUrl(url!);
+                    options.onUrlLaunched?.call();
+                  };
           }
           state
             ..headingBrNodePassed = true
@@ -329,9 +317,7 @@ final class _Muncher with LoggerMixin {
           // state.wrapInWord ? text?.split('').join('\u200B') : text;
 
           // TODO: Support text-shadow.
-          return [
-            TextSpan(text: wrapText, recognizer: recognizer, style: style),
-          ];
+          return [TextSpan(text: wrapText, recognizer: recognizer, style: style)];
         }
 
       case uh.Node.ELEMENT_NODE:
@@ -366,9 +352,7 @@ final class _Muncher with LoggerMixin {
             'h4' => _buildH4(node),
             // Ordered list in web page uses ul tag and has class "litype_1".
             'ul' when !node.classes.contains('litype_1') => _buildUl(node),
-            'ol' ||
-            'ul' when node.classes.contains('litype_1') =>
-              _buildOl(node),
+            'ol' || 'ul' when node.classes.contains('litype_1') => _buildOl(node),
             'li' => _buildLi(node),
             'code' => _buildCode(node),
             'dl' => _buildDl(node),
@@ -378,8 +362,7 @@ final class _Muncher with LoggerMixin {
             'pre' => _buildPre(node),
             'details' => _buildDetails(node),
             'iframe' => _buildIframe(node),
-            'table' when node.classes.contains('cgtl') =>
-              _buildNewcomerReport(node),
+            'table' when node.classes.contains('cgtl') => _buildNewcomerReport(node),
             'table' => _buildTable(node),
             'ignore_js_op' ||
             'table' ||
@@ -389,8 +372,7 @@ final class _Muncher with LoggerMixin {
             'center' ||
             'nav' ||
             'section' ||
-            'pre' =>
-              _munch(node),
+            'pre' => _munch(node),
             String() => null,
           };
           return span;
@@ -411,16 +393,9 @@ final class _Muncher with LoggerMixin {
     return [
       WidgetSpan(
         child: GestureDetector(
-          onTap: () async => showImageActionBottomSheet(
-            context: context,
-            imageUrl: url,
-            hrefUrl: hrefUrl,
-          ),
+          onTap: () async => showImageActionBottomSheet(context: context, imageUrl: url, hrefUrl: hrefUrl),
           child: ConstrainedBox(
-            constraints: BoxConstraints(
-              maxWidth: imgWidth ?? double.infinity,
-              maxHeight: imgHeight ?? double.infinity,
-            ),
+            constraints: BoxConstraints(maxWidth: imgWidth ?? double.infinity, maxHeight: imgHeight ?? double.infinity),
             child: NetworkIndicatorImage(url),
           ),
         ),
@@ -509,18 +484,7 @@ final class _Muncher with LoggerMixin {
 
     if (align != null) {
       ret2 = [
-        WidgetSpan(
-          child: Row(
-            children: [
-              Expanded(
-                child: Text.rich(
-                  TextSpan(children: ret),
-                  textAlign: align,
-                ),
-              ),
-            ],
-          ),
-        ),
+        WidgetSpan(child: Row(children: [Expanded(child: Text.rich(TextSpan(children: ret), textAlign: align))])),
       ];
 
       // Restore text align.
@@ -533,15 +497,16 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildSpan(uh.Element element) {
-    final styleEntries = element.attributes['style']
-        ?.split(';')
-        .map((e) {
-          final x = e.trim().split(':');
-          return (x.firstOrNull?.trim(), x.lastOrNull?.trim());
-        })
-        .whereType<(String, String)>()
-        .map((e) => MapEntry(e.$1, e.$2))
-        .toList();
+    final styleEntries =
+        element.attributes['style']
+            ?.split(';')
+            .map((e) {
+              final x = e.trim().split(':');
+              return (x.firstOrNull?.trim(), x.lastOrNull?.trim());
+            })
+            .whereType<(String, String)>()
+            .map((e) => MapEntry(e.$1, e.$2))
+            .toList();
     if (styleEntries == null) {
       final ret = _munch(element);
       if (ret == null) {
@@ -587,13 +552,9 @@ final class _Muncher with LoggerMixin {
     // and restore munch state to avoid potential issued about "styles inside
     // quoted blocks  affects outside main content".
     state.save();
-    final span =
-        element.innerText.isEmpty ? null : TextSpan(children: _munch(element));
+    final span = element.innerText.isEmpty ? null : TextSpan(children: _munch(element));
     state.restore();
-    return [
-      WidgetSpan(child: QuotedText.rich(span)),
-      emptySpan,
-    ];
+    return [WidgetSpan(child: QuotedText.rich(span)), emptySpan];
   }
 
   List<InlineSpan>? _munchDiv(uh.Element element) {
@@ -610,10 +571,7 @@ final class _Muncher with LoggerMixin {
 
     state.inDiv = true;
     // Find the first munch executor, use `_munch` if none found.
-    final executor = _divMap!.entries
-            .firstWhereOrNull((e) => element.classes.contains(e.key))
-            ?.value ??
-        _munch;
+    final executor = _divMap!.entries.firstWhereOrNull((e) => element.classes.contains(e.key))?.value ?? _munch;
     final ret = executor(element);
     state.inDiv = origInDiv;
 
@@ -628,21 +586,13 @@ final class _Muncher with LoggerMixin {
     state
       ..headingBrNodePassed = true
       ..elevation += _elevationStep;
-    final ret = WidgetSpan(
-      child: CodeCard(
-        code: text,
-        elevation: state.elevation,
-      ),
-    );
+    final ret = WidgetSpan(child: CodeCard(code: text, elevation: state.elevation));
     state.elevation -= _elevationStep;
     return [ret];
   }
 
   List<InlineSpan>? _buildLockedArea(uh.Element element) {
-    final lockedArea = Locked.fromLockDivNode(
-      element,
-      allowWithPurchase: parseLockedWithPurchase,
-    );
+    final lockedArea = Locked.fromLockDivNode(element, allowWithPurchase: parseLockedWithPurchase);
     if (lockedArea.isNotValid()) {
       return null;
     }
@@ -650,15 +600,7 @@ final class _Muncher with LoggerMixin {
     state
       ..headingBrNodePassed = true
       ..elevation += _elevationStep;
-    final ret = [
-      WidgetSpan(
-        child: LockedCard(
-          lockedArea,
-          elevation: state.elevation,
-        ),
-      ),
-      emptySpan,
-    ];
+    final ret = [WidgetSpan(child: LockedCard(lockedArea, elevation: state.elevation)), emptySpan];
     state.elevation -= _elevationStep;
     return ret;
   }
@@ -669,34 +611,19 @@ final class _Muncher with LoggerMixin {
     }
     final avatarUrl = element.querySelector('div.psta > a > img')?.imageUrl();
     final name = element.querySelector('div.psti > a')?.firstEndDeepText();
-    final content = element
-        .querySelector('div.psti')
-        ?.nodes
-        .elementAtOrNull(2)
-        ?.text
-        ?.trim();
+    final content = element.querySelector('div.psti')?.nodes.elementAtOrNull(2)?.text?.trim();
     // final time = element
     //     .querySelector('div.psti > span > span')
     //     ?.attributes['title']
     //     ?.parseToDateTimeUtc8();
 
-    return [
-      WidgetSpan(
-        child: ReviewCard(
-          name: name ?? '',
-          content: content ?? '',
-          avatarUrl: avatarUrl,
-        ),
-      ),
-    ];
+    return [WidgetSpan(child: ReviewCard(name: name ?? '', content: content ?? '', avatarUrl: avatarUrl))];
   }
 
   /// Spoiler is a button with an area of contents.
   /// Button is used to control the visibility of contents.
   List<InlineSpan>? _buildSpoiler(uh.Element element) {
-    final title = element
-        .querySelector('div.spoiler_control > input.spoiler_btn')
-        ?.attributes['value'];
+    final title = element.querySelector('div.spoiler_control > input.spoiler_btn')?.attributes['value'];
     final contentNode = element.querySelector('div.spoiler_content');
     if (title == null || contentNode == null) {
       // Impossible.
@@ -714,16 +641,9 @@ final class _Muncher with LoggerMixin {
     }
     state.headingBrNodePassed = true;
     final ret = WidgetSpan(
-      child: SpoilerCard(
-        title: TextSpan(text: title),
-        content: TextSpan(children: content),
-        elevation: elevation,
-      ),
+      child: SpoilerCard(title: TextSpan(text: title), content: TextSpan(children: content), elevation: elevation),
     );
-    return [
-      ret,
-      emptySpan,
-    ];
+    return [ret, emptySpan];
   }
 
   /// Build for the thread bounty info area.
@@ -789,23 +709,17 @@ final class _Muncher with LoggerMixin {
   ///  </div>
   /// ```
   List<InlineSpan>? _buildBountyBestAnswer(uh.Element element) {
-    final userAvatarUrl =
-        element.querySelector('div.pstl > div.psta > img')?.imageUrl();
-    final userInfoNode =
-        element.querySelector('div.pstl > div.psti > p.xi2 > a');
+    final userAvatarUrl = element.querySelector('div.pstl > div.psta > img')?.imageUrl();
+    final userInfoNode = element.querySelector('div.pstl > div.psti > p.xi2 > a');
     final username = userInfoNode?.innerText.trim();
     final userSpaceUrl = userInfoNode?.attributes['href'];
-    final answer = element
-        .querySelector('div.pstl > div.psti > div.mtn')
-        ?.innerText
-        .trim();
-    if (userAvatarUrl == null ||
-        username == null ||
-        userSpaceUrl == null ||
-        answer == null) {
-      error('failed to parse bounty answer: '
-          'avatar=$userAvatarUrl, username=$username, '
-          'userSpaceUrl=$userSpaceUrl, answer=$answer');
+    final answer = element.querySelector('div.pstl > div.psti > div.mtn')?.innerText.trim();
+    if (userAvatarUrl == null || username == null || userSpaceUrl == null || answer == null) {
+      error(
+        'failed to parse bounty answer: '
+        'avatar=$userAvatarUrl, username=$username, '
+        'userSpaceUrl=$userSpaceUrl, answer=$answer',
+      );
       return null;
     }
 
@@ -831,7 +745,8 @@ final class _Muncher with LoggerMixin {
     // <a href="xxx"><img src="xxx"></a>
     //
     // If true, do not show outside.
-    final hasOnlyImg = element.childNodes.length == 1 &&
+    final hasOnlyImg =
+        element.childNodes.length == 1 &&
         element.childNodes[0].nodeType == uh.Node.ELEMENT_NODE &&
         (element.childNodes[0] as uh.Element).tagName == 'IMG';
     state
@@ -850,21 +765,12 @@ final class _Muncher with LoggerMixin {
     }
     final Widget content;
     if (url.isUserSpaceUrl && !element.innerText.contains('@')) {
-      content = Text(
-        '@',
-        style: TextStyle(
-          color: Theme.of(context).colorScheme.primary,
-        ),
-      );
+      content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
     } else {
       content = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(
-            Icons.link,
-            size: state.fontSizeStack.lastOrNull ?? 18,
-            color: Theme.of(context).colorScheme.primary,
-          ),
+          Icon(Icons.link, size: state.fontSizeStack.lastOrNull ?? 18, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 2),
         ],
       );
@@ -876,10 +782,7 @@ final class _Muncher with LoggerMixin {
           WidgetSpan(
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
-              child: GestureDetector(
-                onTap: () async => context.dispatchAsUrl(url),
-                child: content,
-              ),
+              child: GestureDetector(onTap: () async => context.dispatchAsUrl(url), child: content),
             ),
           ),
           ...ret,
@@ -918,11 +821,7 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [
-      emptySpan,
-      ...ret,
-      emptySpan,
-    ];
+    return [emptySpan, ...ret, emptySpan];
   }
 
   List<InlineSpan>? _buildH2(uh.Element element) {
@@ -932,11 +831,7 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [
-      emptySpan,
-      ...ret,
-      emptySpan,
-    ];
+    return [emptySpan, ...ret, emptySpan];
   }
 
   List<InlineSpan>? _buildH3(uh.Element element) {
@@ -946,11 +841,7 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [
-      emptySpan,
-      ...ret,
-      emptySpan,
-    ];
+    return [emptySpan, ...ret, emptySpan];
   }
 
   List<InlineSpan>? _buildH4(uh.Element element) {
@@ -960,11 +851,7 @@ final class _Muncher with LoggerMixin {
     if (ret == null) {
       return null;
     }
-    return [
-      emptySpan,
-      ...ret,
-      emptySpan,
-    ];
+    return [emptySpan, ...ret, emptySpan];
   }
 
   /// Build `<ul>` tag.
@@ -994,22 +881,18 @@ final class _Muncher with LoggerMixin {
     final leading = switch (state.listStack.lastOrNull) {
       _ListUnordered() => '•  ',
       _ListOrdered(:final number) => () {
-          // Pop and push a larger number.
-          state.listStack.removeLast();
-          state.listStack.add(_ListOrdered(number + 1));
-          return '$number. ';
-        }(),
+        // Pop and push a larger number.
+        state.listStack.removeLast();
+        state.listStack.add(_ListOrdered(number + 1));
+        return '$number. ';
+      }(),
       null => () {
-          error('failed to detect html list leading type: empty list stack');
-          return '•  ';
-        }(), // Unreachable but handle it.
+        error('failed to detect html list leading type: empty list stack');
+        return '•  ';
+      }(), // Unreachable but handle it.
     };
 
-    return [
-      TextSpan(text: leading),
-      ...ret,
-      emptySpan,
-    ];
+    return [TextSpan(text: leading), ...ret, emptySpan];
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
@@ -1027,9 +910,7 @@ final class _Muncher with LoggerMixin {
       child: Card(
         elevation: state.elevation,
         color: Theme.of(context).colorScheme.onSecondary,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(5)),
-        ),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         margin: EdgeInsets.zero,
         child: Text.rich(TextSpan(children: ret)),
       ),
@@ -1094,11 +975,7 @@ final class _Muncher with LoggerMixin {
   List<InlineSpan>? _buildDetails(uh.Element element) {
     final summary = element.children.elementAtOrNull(0);
     state.elevation += _elevationStep;
-    final dataSpanList = element.children
-        .skip(1)
-        .map(_munch)
-        .whereType<List<InlineSpan>>()
-        .toList();
+    final dataSpanList = element.children.skip(1).map(_munch).whereType<List<InlineSpan>>().toList();
     state.elevation -= _elevationStep;
     if (summary == null || dataSpanList.isEmpty) {
       return null;
@@ -1113,8 +990,7 @@ final class _Muncher with LoggerMixin {
     final ch = dataSpanList.lastOrNull;
     if (ch != null) {
       while (ch.lastOrNull == emptySpan ||
-          ((ch.lastOrNull is TextSpan) &&
-              ((ch.last as TextSpan).text?.trim().isEmpty ?? false))) {
+          ((ch.lastOrNull is TextSpan) && ((ch.last as TextSpan).text?.trim().isEmpty ?? false))) {
         ch.removeLast();
       }
       dataSpanList.last = ch;
@@ -1129,16 +1005,11 @@ final class _Muncher with LoggerMixin {
     );
     state.elevation -= _elevationStep;
 
-    return [
-      ret,
-      emptySpan,
-    ];
+    return [ret, emptySpan];
   }
 
   List<InlineSpan>? _buildIframe(uh.Element element) {
-    final neteasePlayerId = _neteasePlayerRe
-        .firstMatch(element.attributes['src'] ?? '')
-        ?.namedGroup('id');
+    final neteasePlayerId = _neteasePlayerRe.firstMatch(element.attributes['src'] ?? '')?.namedGroup('id');
     if (neteasePlayerId != null) {
       // Recognized netease player iframe.
       return [WidgetSpan(child: NeteaseCard(neteasePlayerId))];
@@ -1159,28 +1030,15 @@ final class _Muncher with LoggerMixin {
     //
     // </tbody>
     // </table>
-    final data = element
-        .querySelectorRootAll('tbody > tr')
-        .map(
-          (e) => (
-            e.querySelector('th')?.innerText.trim(),
-            e.querySelector('td')?.innerText.trim()
-          ),
-        )
-        .whereType<(String, String)>()
-        .map(
-          (e) => NewcomerReportInfo(
-            title: e.$1,
-            data: e.$2,
-          ),
-        )
-        .toList();
+    final data =
+        element
+            .querySelectorRootAll('tbody > tr')
+            .map((e) => (e.querySelector('th')?.innerText.trim(), e.querySelector('td')?.innerText.trim()))
+            .whereType<(String, String)>()
+            .map((e) => NewcomerReportInfo(title: e.$1, data: e.$2))
+            .toList();
 
-    return [
-      WidgetSpan(
-        child: NewcomerReportCard(data),
-      ),
-    ];
+    return [WidgetSpan(child: NewcomerReportCard(data))];
   }
 
   List<InlineSpan>? _buildTable(uh.Element element) {
@@ -1210,12 +1068,7 @@ final class _Muncher with LoggerMixin {
 
     for (final row in allTableRowContent) {
       if (row.length < columnMaxCount) {
-        row.addAll(
-          List<Widget>.generate(
-            columnMaxCount - row.length,
-            (_) => sizedBoxEmpty,
-          ),
-        );
+        row.addAll(List<Widget>.generate(columnMaxCount - row.length, (_) => sizedBoxEmpty));
       }
     }
 
@@ -1225,22 +1078,17 @@ final class _Muncher with LoggerMixin {
     // Only a workaround on unbalanced tables.
     //
     // FIXME: Support rowspan and colspan attr.
-    tableRows
-        .addAll(allTableRowContent.map((e) => TableRow(children: e)).toList());
+    tableRows.addAll(allTableRowContent.map((e) => TableRow(children: e)).toList());
 
     return [
       WidgetSpan(
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Table(
-            defaultColumnWidth: const MaxIntrinsicColumnWidth(
-              maxWidth: _maxWidth,
-            ),
+            defaultColumnWidth: const MaxIntrinsicColumnWidth(maxWidth: _maxWidth),
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: tableRows,
-            border: TableBorder.all(
-              color: Theme.of(context).colorScheme.surfaceContainer,
-            ),
+            border: TableBorder.all(color: Theme.of(context).colorScheme.surfaceContainer),
           ),
         ),
       ),
@@ -1291,8 +1139,7 @@ final class _Muncher with LoggerMixin {
   ///
   /// If has valid color, push to stack and return true.
   bool _tryPushFontSize(uh.Element element, {String? fontSizeString}) {
-    final fontSize =
-        FontSize.fromString(fontSizeString ?? element.attributes['size']);
+    final fontSize = FontSize.fromString(fontSizeString ?? element.attributes['size']);
     if (fontSize.isValid) {
       state.fontSizeStack.add(fontSize.value());
     }

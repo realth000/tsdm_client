@@ -29,10 +29,7 @@ class MaxIntrinsicColumnWidth extends TableColumnWidth {
   /// there is any room left over when laying out the table. If `flex` is
   /// null (the default), the table will not distribute any extra space to the
   /// column.
-  const MaxIntrinsicColumnWidth({
-    double? flex,
-    this.maxWidth,
-  }) : _flex = flex;
+  const MaxIntrinsicColumnWidth({double? flex, this.maxWidth}) : _flex = flex;
 
   /// Maximum width on each column.
   ///
@@ -45,10 +42,7 @@ class MaxIntrinsicColumnWidth extends TableColumnWidth {
     if (maxWidth != null) {
       for (final cell in cells) {
         final double constrainedWidth;
-        constrainedWidth = math.min(
-          cell.getMinIntrinsicWidth(double.infinity),
-          maxWidth!,
-        );
+        constrainedWidth = math.min(cell.getMinIntrinsicWidth(double.infinity), maxWidth!);
         result = math.max(result, constrainedWidth);
       }
     } else {
@@ -65,10 +59,7 @@ class MaxIntrinsicColumnWidth extends TableColumnWidth {
     if (maxWidth != null) {
       for (final cell in cells) {
         final double constrainedWidth;
-        constrainedWidth = math.min(
-          cell.getMaxIntrinsicWidth(double.infinity),
-          maxWidth!,
-        );
+        constrainedWidth = math.min(cell.getMaxIntrinsicWidth(double.infinity), maxWidth!);
         result = math.max(result, constrainedWidth);
       }
     } else {
@@ -85,6 +76,7 @@ class MaxIntrinsicColumnWidth extends TableColumnWidth {
   double? flex(Iterable<RenderBox> cells) => _flex;
 
   @override
-  String toString() => '${objectRuntimeType(this, 'MaxIntrinsicColumnWidth')}'
+  String toString() =>
+      '${objectRuntimeType(this, 'MaxIntrinsicColumnWidth')}'
       '(flex: ${_flex?.toStringAsFixed(1)})';
 }

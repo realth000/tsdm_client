@@ -4,11 +4,7 @@ part of 'theme_cubit.dart';
 @MappableClass()
 final class ThemeState with ThemeStateMappable {
   /// Constructor.
-  const ThemeState({
-    this.accentColor,
-    this.themeModeIndex = 0,
-    this.fontFamily = '',
-  });
+  const ThemeState({this.accentColor, this.themeModeIndex = 0, this.fontFamily = ''});
 
   /// Current using app accent color.
   final Color? accentColor;

@@ -57,8 +57,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing:
-                    e == pointsType ? const Icon(Icons.check_outlined) : null,
+                trailing: e == pointsType ? const Icon(Icons.check_outlined) : null,
                 onTap: () {
                   setState(() {
                     pointsType = e;
@@ -82,9 +81,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing: e == operationType
-                    ? const Icon(Icons.check_outlined)
-                    : null,
+                trailing: e == operationType ? const Icon(Icons.check_outlined) : null,
                 onTap: () {
                   setState(() {
                     operationType = e;
@@ -107,8 +104,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
             .map(
               (e) => ListTile(
                 title: Text(e.name),
-                trailing:
-                    e == changeType ? const Icon(Icons.check_outlined) : null,
+                trailing: e == changeType ? const Icon(Icons.check_outlined) : null,
                 onTap: () {
                   setState(() {
                     changeType = e;
@@ -139,11 +135,9 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
 
   List<Widget> _buildContent(BuildContext context, PointsChangelogState state) {
     VoidCallback? queryCallback;
-    if (pointsType != null &&
-        operationType != null &&
-        changeType != null &&
-        state.status != PointsStatus.loading) {
-      queryCallback = () => context.read<PointsChangelogBloc>().add(
+    if (pointsType != null && operationType != null && changeType != null && state.status != PointsStatus.loading) {
+      queryCallback =
+          () => context.read<PointsChangelogBloc>().add(
             PointsChangelogQueryRequested(
               ChangelogParameter(
                 extType: pointsType!.extType,
@@ -213,12 +207,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
       ),
       Row(
         children: [
-          Expanded(
-            child: FilledButton(
-              onPressed: queryCallback,
-              child: Text(context.t.pointsPage.changelogTab.query),
-            ),
-          ),
+          Expanded(child: FilledButton(onPressed: queryCallback, child: Text(context.t.pointsPage.changelogTab.query))),
         ],
       ),
     ];
@@ -245,15 +234,11 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
           children: [
             Row(
               children: [
-                Text(
-                  context.t.pointsPage.changelogTab.query,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                Text(context.t.pointsPage.changelogTab.query, style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 IconButton(
-                  icon: showQueryFilter
-                      ? const Icon(Icons.expand_less_outlined)
-                      : const Icon(Icons.expand_more_outlined),
+                  icon:
+                      showQueryFilter ? const Icon(Icons.expand_less_outlined) : const Icon(Icons.expand_more_outlined),
                   onPressed: () {
                     setState(() {
                       showQueryFilter = !showQueryFilter;

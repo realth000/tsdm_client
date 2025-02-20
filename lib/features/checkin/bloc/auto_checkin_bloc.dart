@@ -21,21 +21,19 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
     required AutoCheckinRepository autoCheckinRepository,
     required SettingsRepository settingsRepository,
     required StorageProvider storageProvider,
-  })  : _autoCheckinRepository = autoCheckinRepository,
-        _settingsRepository = settingsRepository,
-        _storageProvider = storageProvider,
-        super(const AutoCheckinStateInitial()) {
+  }) : _autoCheckinRepository = autoCheckinRepository,
+       _settingsRepository = settingsRepository,
+       _storageProvider = storageProvider,
+       super(const AutoCheckinStateInitial()) {
     on<AutoCheckinEvent>(
       (e, emit) => switch (e) {
         AutoCheckinStartRequested() => _onStart(emit),
-        AutoCheckinUserStateChanged(:final checkinInfo) =>
-          _onUserStateChanged(checkinInfo, emit),
+        AutoCheckinUserStateChanged(:final checkinInfo) => _onUserStateChanged(checkinInfo, emit),
       },
     );
 
     // Update checkin state.
-    _stateSub = _autoCheckinRepository.status
-        .listen((e) => add(AutoCheckinUserStateChanged(e)));
+    _stateSub = _autoCheckinRepository.status.listen((e) => add(AutoCheckinUserStateChanged(e)));
   }
 
   final AutoCheckinRepository _autoCheckinRepository;
@@ -61,8 +59,7 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
     final skippedList = <UserLoginInfo>[];
     final waitingList = <UserLoginInfo>[];
     for (final (user, lastCheckinTime) in users) {
-      if ((user.uid == null || user.uid! < 1) ||
-          (user.username == null || user.username!.isEmpty)) {
+      if ((user.uid == null || user.uid! < 1) || (user.username == null || user.username!.isEmpty)) {
         // Drop invalid ones.
         continue;
       }
@@ -83,10 +80,8 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
       return;
     }
 
-    final checkinFeeling =
-        await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
-    final checkinMessage =
-        await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
+    final checkinFeeling = await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
+    final checkinMessage = await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
     await _autoCheckinRepository
         .checkinAll(
           waitingList: waitingList,
@@ -98,12 +93,8 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
         .run();
   }
 
-  Future<void> _onUserStateChanged(
-    AutoCheckinInfo checkinInfo,
-    _Emit emit,
-  ) async {
-    if (checkinInfo.running.isEmpty &&
-        (checkinInfo.succeeded.isNotEmpty || checkinInfo.failed.isNotEmpty)) {
+  Future<void> _onUserStateChanged(AutoCheckinInfo checkinInfo, _Emit emit) async {
+    if (checkinInfo.running.isEmpty && (checkinInfo.succeeded.isNotEmpty || checkinInfo.failed.isNotEmpty)) {
       final now = DateTime.now();
       for (final (user, _) in checkinInfo.succeeded) {
         await _storageProvider.updateLastCheckinTime(user.uid!, now).run();
@@ -115,12 +106,7 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
           await _storageProvider.updateLastCheckinTime(user.uid!, now).run();
         }
       }
-      emit(
-        AutoCheckinStateFinished(
-          succeeded: checkinInfo.succeeded,
-          failed: checkinInfo.failed,
-        ),
-      );
+      emit(AutoCheckinStateFinished(succeeded: checkinInfo.succeeded, failed: checkinInfo.failed));
       return;
     }
 

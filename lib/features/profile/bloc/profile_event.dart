@@ -8,13 +8,9 @@ sealed class ProfileEvent with ProfileEventMappable {
 
 /// Load current logged user profile if both [username] and [uid] are null.
 @MappableClass()
-final class ProfileLoadRequested extends ProfileEvent
-    with ProfileLoadRequestedMappable {
+final class ProfileLoadRequested extends ProfileEvent with ProfileLoadRequestedMappable {
   /// Constructor.
-  const ProfileLoadRequested({
-    required this.username,
-    required this.uid,
-  }) : super();
+  const ProfileLoadRequested({required this.username, required this.uid}) : super();
 
   /// Other user username.
   final String? username;
@@ -25,13 +21,9 @@ final class ProfileLoadRequested extends ProfileEvent
 
 /// User required to refresh the profile page.
 @MappableClass()
-final class ProfileRefreshRequested extends ProfileEvent
-    with ProfileRefreshRequestedMappable {
+final class ProfileRefreshRequested extends ProfileEvent with ProfileRefreshRequestedMappable {
   /// Constructor.
-  const ProfileRefreshRequested({
-    required this.username,
-    required this.uid,
-  });
+  const ProfileRefreshRequested({required this.username, required this.uid});
 
   /// Other user username.
   final String? username;
@@ -44,5 +36,4 @@ final class ProfileRefreshRequested extends ProfileEvent
 ///
 /// Only available when in current logged user's profile page.
 @MappableClass()
-final class ProfileLogoutRequested extends ProfileEvent
-    with ProfileLogoutRequestedMappable {}
+final class ProfileLogoutRequested extends ProfileEvent with ProfileLogoutRequestedMappable {}

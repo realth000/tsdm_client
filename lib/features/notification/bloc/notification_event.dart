@@ -8,8 +8,7 @@ sealed class NotificationEvent with NotificationEventMappable {
 
 /// Required to refresh all kinds of notification.
 @MappableClass()
-final class NotificationUpdateAllRequested extends NotificationEvent
-    with NotificationUpdateAllRequestedMappable {}
+final class NotificationUpdateAllRequested extends NotificationEvent with NotificationUpdateAllRequestedMappable {}
 
 /// Need to update the last fetch notification timestamp for current user in
 /// storage.
@@ -19,8 +18,7 @@ final class NotificationRecordFetchTimeRequested extends NotificationEvent
 
 /// Mark a message as read.
 @MappableClass()
-final class NotificationMarkReadRequested extends NotificationEvent
-    with NotificationMarkReadRequestedMappable {
+final class NotificationMarkReadRequested extends NotificationEvent with NotificationMarkReadRequestedMappable {
   /// Constructor.
   const NotificationMarkReadRequested(this.recordMark);
 
@@ -30,13 +28,9 @@ final class NotificationMarkReadRequested extends NotificationEvent
 
 /// Mark all message of type as read.
 @MappableClass()
-final class NotificationMarkTypeReadRequested extends NotificationEvent
-    with NotificationMarkTypeReadRequestedMappable {
+final class NotificationMarkTypeReadRequested extends NotificationEvent with NotificationMarkTypeReadRequestedMappable {
   /// Constructor.
-  const NotificationMarkTypeReadRequested({
-    required this.markType,
-    required this.markAsRead,
-  });
+  const NotificationMarkTypeReadRequested({required this.markType, required this.markAsRead});
 
   /// Purpose of this event.
   final NotificationType markType;
@@ -49,8 +43,7 @@ final class NotificationMarkTypeReadRequested extends NotificationEvent
 ///
 /// Repository has fetched new info from server.
 @MappableClass()
-final class NotificationInfoFetched extends NotificationEvent
-    with NotificationInfoFetchedMappable {
+final class NotificationInfoFetched extends NotificationEvent with NotificationInfoFetchedMappable {
   /// Constructor.
   const NotificationInfoFetched(this.info);
 
@@ -60,13 +53,9 @@ final class NotificationInfoFetched extends NotificationEvent
 
 /// Delete notice.
 @MappableClass()
-final class NotificationDeleteNoticeRequested extends NotificationEvent
-    with NotificationDeleteNoticeRequestedMappable {
+final class NotificationDeleteNoticeRequested extends NotificationEvent with NotificationDeleteNoticeRequestedMappable {
   /// Constructor.
-  const NotificationDeleteNoticeRequested({
-    required this.uid,
-    required this.nid,
-  });
+  const NotificationDeleteNoticeRequested({required this.uid, required this.nid});
 
   /// Uid of the notice.
   final int uid;
@@ -80,10 +69,7 @@ final class NotificationDeleteNoticeRequested extends NotificationEvent
 final class NotificationDeletePersonalMessageRequested extends NotificationEvent
     with NotificationDeletePersonalMessageRequestedMappable {
   /// Constructor.
-  const NotificationDeletePersonalMessageRequested({
-    required this.uid,
-    required this.peerUid,
-  });
+  const NotificationDeletePersonalMessageRequested({required this.uid, required this.peerUid});
 
   /// Uid of current user.
   final int uid;
@@ -94,14 +80,10 @@ final class NotificationDeletePersonalMessageRequested extends NotificationEvent
 
 /// Delete broadcast message.
 @MappableClass()
-final class NotificationDeleteBroadcastMessageRequested
-    extends NotificationEvent
+final class NotificationDeleteBroadcastMessageRequested extends NotificationEvent
     with NotificationDeleteBroadcastMessageRequestedMappable {
   /// Constructor.
-  const NotificationDeleteBroadcastMessageRequested({
-    required this.uid,
-    required this.pmid,
-  });
+  const NotificationDeleteBroadcastMessageRequested({required this.uid, required this.pmid});
 
   /// Uid of current user.
   final int uid;

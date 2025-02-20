@@ -4,11 +4,7 @@ part of 'models.dart';
 @MappableClass()
 final class ThreadPerm with ThreadPermMappable {
   /// Constructor.
-  const ThreadPerm({
-    required this.groupName,
-    required this.perm,
-    required this.selected,
-  });
+  const ThreadPerm({required this.groupName, required this.perm, required this.selected});
 
   /// Readable user group name.
   final String groupName;

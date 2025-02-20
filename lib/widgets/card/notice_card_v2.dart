@@ -21,12 +21,7 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
-enum _Actions {
-  markAsRead,
-  markAsUnread,
-  deleteItem,
-  copyRawContent,
-}
+enum _Actions { markAsRead, markAsUnread, deleteItem, copyRawContent }
 
 /// Widgets in this file are for models fetched through notification APIs.
 ///
@@ -69,21 +64,14 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
       return;
     }
     context.read<NotificationBloc>().add(
-          NotificationMarkReadRequested(
-            RecordMarkNotice(
-              uid: uid,
-              nid: widget.data.id,
-              alreadyRead: markAsRead,
-            ),
-          ),
-        );
+      NotificationMarkReadRequested(RecordMarkNotice(uid: uid, nid: widget.data.id, alreadyRead: markAsRead)),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.cardMenu;
-    final showBadge =
-        getIt.get<SettingsRepository>().currentSettings.showUnreadNoticeBadge;
+    final showBadge = getIt.get<SettingsRepository>().currentSettings.showUnreadNoticeBadge;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -93,70 +81,57 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
           ListTile(
             leading: Badge(
               isLabelVisible: showBadge && !widget.data.alreadyRead,
-              child: const CircleAvatar(
-                child: Icon(Icons.notifications_outlined),
-              ),
+              child: const CircleAvatar(child: Icon(Icons.notifications_outlined)),
             ),
             title: Text(context.t.noticePage.noticeTab.title),
             subtitle: Text(
               // Timestamp in second.
-              DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000)
-                  .yyyyMMDDHHMMSS(),
+              DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
             ),
             trailing: PopupMenuButton(
-              itemBuilder: (_) => [
-                if (!widget.data.alreadyRead)
-                  PopupMenuItem(
-                    value: _Actions.markAsRead,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.mark_chat_read_outlined),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.markAsRead),
-                      ],
-                    ),
-                  ),
-                if (widget.data.alreadyRead)
-                  PopupMenuItem(
-                    value: _Actions.markAsUnread,
-                    child: Row(
-                      children: [
-                        const Icon(Icons.mark_chat_unread_outlined),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(tr.markAsUnread),
-                      ],
-                    ),
-                  ),
-                PopupMenuItem(
-                  value: _Actions.deleteItem,
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.delete_forever_outlined,
-                        color: Theme.of(context).colorScheme.error,
-                      ),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(
-                        tr.delete.title,
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.error,
+              itemBuilder:
+                  (_) => [
+                    if (!widget.data.alreadyRead)
+                      PopupMenuItem(
+                        value: _Actions.markAsRead,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.mark_chat_read_outlined),
+                            sizedBoxPopupMenuItemIconSpacing,
+                            Text(tr.markAsRead),
+                          ],
                         ),
                       ),
+                    if (widget.data.alreadyRead)
+                      PopupMenuItem(
+                        value: _Actions.markAsUnread,
+                        child: Row(
+                          children: [
+                            const Icon(Icons.mark_chat_unread_outlined),
+                            sizedBoxPopupMenuItemIconSpacing,
+                            Text(tr.markAsUnread),
+                          ],
+                        ),
+                      ),
+                    PopupMenuItem(
+                      value: _Actions.deleteItem,
+                      child: Row(
+                        children: [
+                          Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                        ],
+                      ),
+                    ),
+                    if (context
+                        .read<SettingsBloc>()
+                        .state
+                        .settingsMap
+                        .enableDebugOperations) ...<PopupMenuEntry<_Actions>>[
+                      const PopupMenuDivider(),
+                      PopupMenuItem(value: _Actions.copyRawContent, child: Text(tr.copyRawContent)),
                     ],
-                  ),
-                ),
-                if (context
-                    .read<SettingsBloc>()
-                    .state
-                    .settingsMap
-                    .enableDebugOperations) ...<PopupMenuEntry<_Actions>>[
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    value: _Actions.copyRawContent,
-                    child: Text(tr.copyRawContent),
-                  ),
-                ],
-              ],
+                  ],
               onSelected: (value) async {
                 switch (value) {
                   case _Actions.markAsRead:
@@ -179,14 +154,11 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
                       context.read<NotificationStateCubit>().decreaseNotice();
                     }
                     context.read<NotificationBloc>().add(
-                          NotificationDeleteNoticeRequested(
-                            uid: context
-                                .read<AuthenticationRepository>()
-                                .currentUser!
-                                .uid!,
-                            nid: widget.data.id,
-                          ),
-                        );
+                      NotificationDeleteNoticeRequested(
+                        uid: context.read<AuthenticationRepository>().currentUser!.uid!,
+                        nid: widget.data.id,
+                      ),
+                    );
                   case _Actions.copyRawContent:
                     await copyToClipboard(context, widget.data.data);
                 }
@@ -198,11 +170,7 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
             child: munchElement(
               context,
               parseHtmlDocument(widget.data.data).body!,
-              options: MunchOptions(
-                onUrlLaunched: () => _onUrlLaunched(
-                  markAsRead: true,
-                ),
-              ),
+              options: MunchOptions(onUrlLaunched: () => _onUrlLaunched(markAsRead: true)),
             ),
           ),
         ],
@@ -224,18 +192,11 @@ class PersonalMessageCardV2 extends StatefulWidget {
 }
 
 class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
-  Future<void> _onTap(
-    BuildContext context, {
-    required bool markAsRead,
-    required bool launch,
-  }) async {
+  Future<void> _onTap(BuildContext context, {required bool markAsRead, required bool launch}) async {
     final uid = context.read<AuthenticationRepository>().currentUser?.uid;
 
     if (launch) {
-      await context.pushNamed(
-        ScreenPaths.chatHistory,
-        pathParameters: {'uid': '${widget.data.peerUid}'},
-      );
+      await context.pushNamed(ScreenPaths.chatHistory, pathParameters: {'uid': '${widget.data.peerUid}'});
     }
 
     if (!context.mounted) {
@@ -250,14 +211,10 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
       return;
     }
     context.read<NotificationBloc>().add(
-          NotificationMarkReadRequested(
-            RecordMarkPersonalMessage(
-              uid: uid,
-              peerUid: widget.data.peerUid,
-              alreadyRead: markAsRead,
-            ),
-          ),
-        );
+      NotificationMarkReadRequested(
+        RecordMarkPersonalMessage(uid: uid, peerUid: widget.data.peerUid, alreadyRead: markAsRead),
+      ),
+    );
   }
 
   @override
@@ -268,10 +225,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.cardMenu;
-    final showBadge = getIt
-        .get<SettingsRepository>()
-        .currentSettings
-        .showUnreadPersonalMessageBadge;
+    final showBadge = getIt.get<SettingsRepository>().currentSettings.showUnreadPersonalMessageBadge;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -283,78 +237,60 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           children: [
             ListTile(
               leading: GestureDetector(
-                onTap: () async => context.pushNamed(
-                  ScreenPaths.profile,
-                  queryParameters: {'uid': '${widget.data.peerUid}'},
-                ),
+                onTap:
+                    () async =>
+                        context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
                 child: Badge(
                   isLabelVisible: showBadge && !widget.data.alreadyRead,
-                  child: HeroUserAvatar(
-                    username: widget.data.peerUsername,
-                    avatarUrl: null,
-                    disableHero: true,
-                  ),
+                  child: HeroUserAvatar(username: widget.data.peerUsername, avatarUrl: null, disableHero: true),
                 ),
               ),
               title: GestureDetector(
-                onTap: () async => context.pushNamed(
-                  ScreenPaths.profile,
-                  queryParameters: {'uid': '${widget.data.peerUid}'},
-                ),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(widget.data.peerUsername),
-                ),
+                onTap:
+                    () async =>
+                        context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
+                child: Align(alignment: Alignment.centerLeft, child: Text(widget.data.peerUsername)),
               ),
               subtitle: Text(
                 // Timestamp in second.
-                DateTime.fromMillisecondsSinceEpoch(
-                  widget.data.timestamp * 1000,
-                ).yyyyMMDDHHMMSS(),
+                DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
               ),
               trailing: PopupMenuButton(
-                itemBuilder: (_) => [
-                  if (!widget.data.alreadyRead)
-                    PopupMenuItem(
-                      value: _Actions.markAsRead,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.mark_chat_read_outlined),
-                          sizedBoxPopupMenuItemIconSpacing,
-                          Text(tr.markAsRead),
-                        ],
-                      ),
-                    ),
-                  if (widget.data.alreadyRead)
-                    PopupMenuItem(
-                      value: _Actions.markAsUnread,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.mark_chat_unread_outlined),
-                          sizedBoxPopupMenuItemIconSpacing,
-                          Text(tr.markAsUnread),
-                        ],
-                      ),
-                    ),
-                  PopupMenuItem(
-                    value: _Actions.deleteItem,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.delete_forever_outlined,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(
-                          tr.delete.title,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                itemBuilder:
+                    (_) => [
+                      if (!widget.data.alreadyRead)
+                        PopupMenuItem(
+                          value: _Actions.markAsRead,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.mark_chat_read_outlined),
+                              sizedBoxPopupMenuItemIconSpacing,
+                              Text(tr.markAsRead),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      if (widget.data.alreadyRead)
+                        PopupMenuItem(
+                          value: _Actions.markAsUnread,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.mark_chat_unread_outlined),
+                              sizedBoxPopupMenuItemIconSpacing,
+                              Text(tr.markAsUnread),
+                            ],
+                          ),
+                        ),
+                      PopupMenuItem(
+                        value: _Actions.deleteItem,
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                            sizedBoxPopupMenuItemIconSpacing,
+                            Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                          ],
+                        ),
+                      ),
+                    ],
                 onSelected: (value) async {
                   switch (value) {
                     case _Actions.markAsRead:
@@ -363,29 +299,20 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                       await _onTap(context, markAsRead: false, launch: false);
                     case _Actions.deleteItem:
                       final tr = context.t.noticePage.cardMenu.delete;
-                      final result = await showQuestionDialog(
-                        context: context,
-                        title: tr.title,
-                        message: tr.detail,
-                      );
+                      final result = await showQuestionDialog(context: context, title: tr.title, message: tr.detail);
                       if (!context.mounted || result == null || !result) {
                         return;
                       }
 
                       if (!widget.data.alreadyRead) {
-                        context
-                            .read<NotificationStateCubit>()
-                            .decreasePersonalMessage();
+                        context.read<NotificationStateCubit>().decreasePersonalMessage();
                       }
                       context.read<NotificationBloc>().add(
-                            NotificationDeletePersonalMessageRequested(
-                              uid: context
-                                  .read<AuthenticationRepository>()
-                                  .currentUser!
-                                  .uid!,
-                              peerUid: widget.data.peerUid,
-                            ),
-                          );
+                        NotificationDeletePersonalMessageRequested(
+                          uid: context.read<AuthenticationRepository>().currentUser!.uid!,
+                          peerUid: widget.data.peerUid,
+                        ),
+                      );
                     case _Actions.copyRawContent:
                       await copyToClipboard(context, widget.data.data);
                   }
@@ -394,10 +321,7 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
             ),
             Padding(
               padding: edgeInsetsL16R16B12,
-              child: munchElement(
-                context,
-                parseHtmlDocument(widget.data.data).body!,
-              ),
+              child: munchElement(context, parseHtmlDocument(widget.data.data).body!),
             ),
           ],
         ),
@@ -411,8 +335,7 @@ class BroadcastMessageCardV2 extends StatefulWidget {
   /// Constructor.
   const BroadcastMessageCardV2(this.data, {super.key});
 
-  static const _detailPageUrl =
-      '$baseUrl/home.php?mod=space&do=pm&subop=viewg&pmid=';
+  static const _detailPageUrl = '$baseUrl/home.php?mod=space&do=pm&subop=viewg&pmid=';
 
   /// Data to display.
   final BroadcastMessageV2 data;
@@ -422,17 +345,11 @@ class BroadcastMessageCardV2 extends StatefulWidget {
 }
 
 class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
-  Future<void> _onTap(
-    BuildContext context, {
-    required bool markAsRead,
-    required bool launch,
-  }) async {
+  Future<void> _onTap(BuildContext context, {required bool markAsRead, required bool launch}) async {
     final uid = context.read<AuthenticationRepository>().currentUser?.uid;
 
     if (launch) {
-      await context.dispatchAsUrl(
-        '${BroadcastMessageCardV2._detailPageUrl}${widget.data.pmid}',
-      );
+      await context.dispatchAsUrl('${BroadcastMessageCardV2._detailPageUrl}${widget.data.pmid}');
     }
 
     if (!context.mounted) {
@@ -448,23 +365,16 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
       return;
     }
     context.read<NotificationBloc>().add(
-          NotificationMarkReadRequested(
-            RecordMarkBroadcastMessage(
-              uid: uid,
-              timestamp: widget.data.timestamp,
-              alreadyRead: markAsRead,
-            ),
-          ),
-        );
+      NotificationMarkReadRequested(
+        RecordMarkBroadcastMessage(uid: uid, timestamp: widget.data.timestamp, alreadyRead: markAsRead),
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final tr = context.t.noticePage.cardMenu;
-    final showBadge = getIt
-        .get<SettingsRepository>()
-        .currentSettings
-        .showUnreadBroadcastMessageBadge;
+    final showBadge = getIt.get<SettingsRepository>().currentSettings.showUnreadBroadcastMessageBadge;
     return Card(
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
@@ -481,53 +391,44 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
               title: Text(context.t.noticePage.broadcastMessageTab.system),
               subtitle: Text(
                 // Timestamp in second.
-                DateTime.fromMillisecondsSinceEpoch(
-                  widget.data.timestamp * 1000,
-                ).yyyyMMDDHHMMSS(),
+                DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
               ),
               trailing: PopupMenuButton(
-                itemBuilder: (_) => [
-                  if (!widget.data.alreadyRead)
-                    PopupMenuItem(
-                      value: _Actions.markAsRead,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.mark_chat_read_outlined),
-                          sizedBoxPopupMenuItemIconSpacing,
-                          Text(tr.markAsRead),
-                        ],
-                      ),
-                    ),
-                  if (widget.data.alreadyRead)
-                    PopupMenuItem(
-                      value: _Actions.markAsUnread,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.mark_chat_unread_outlined),
-                          sizedBoxPopupMenuItemIconSpacing,
-                          Text(tr.markAsUnread),
-                        ],
-                      ),
-                    ),
-                  PopupMenuItem(
-                    value: _Actions.deleteItem,
-                    child: Row(
-                      children: [
-                        Icon(
-                          Icons.delete_forever_outlined,
-                          color: Theme.of(context).colorScheme.error,
-                        ),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(
-                          tr.delete.title,
-                          style: TextStyle(
-                            color: Theme.of(context).colorScheme.error,
+                itemBuilder:
+                    (_) => [
+                      if (!widget.data.alreadyRead)
+                        PopupMenuItem(
+                          value: _Actions.markAsRead,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.mark_chat_read_outlined),
+                              sizedBoxPopupMenuItemIconSpacing,
+                              Text(tr.markAsRead),
+                            ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                ],
+                      if (widget.data.alreadyRead)
+                        PopupMenuItem(
+                          value: _Actions.markAsUnread,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.mark_chat_unread_outlined),
+                              sizedBoxPopupMenuItemIconSpacing,
+                              Text(tr.markAsUnread),
+                            ],
+                          ),
+                        ),
+                      PopupMenuItem(
+                        value: _Actions.deleteItem,
+                        child: Row(
+                          children: [
+                            Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                            sizedBoxPopupMenuItemIconSpacing,
+                            Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                          ],
+                        ),
+                      ),
+                    ],
                 onSelected: (value) async {
                   switch (value) {
                     case _Actions.markAsRead:
@@ -536,29 +437,20 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                       await _onTap(context, markAsRead: false, launch: false);
                     case _Actions.deleteItem:
                       final tr = context.t.noticePage.cardMenu.delete;
-                      final result = await showQuestionDialog(
-                        context: context,
-                        title: tr.title,
-                        message: tr.detail,
-                      );
+                      final result = await showQuestionDialog(context: context, title: tr.title, message: tr.detail);
                       if (!context.mounted || result == null || !result) {
                         return;
                       }
 
                       if (!widget.data.alreadyRead) {
-                        context
-                            .read<NotificationStateCubit>()
-                            .decreaseBroadcastMessage();
+                        context.read<NotificationStateCubit>().decreaseBroadcastMessage();
                       }
                       context.read<NotificationBloc>().add(
-                            NotificationDeleteBroadcastMessageRequested(
-                              uid: context
-                                  .read<AuthenticationRepository>()
-                                  .currentUser!
-                                  .uid!,
-                              pmid: widget.data.pmid,
-                            ),
-                          );
+                        NotificationDeleteBroadcastMessageRequested(
+                          uid: context.read<AuthenticationRepository>().currentUser!.uid!,
+                          pmid: widget.data.pmid,
+                        ),
+                      );
                     case _Actions.copyRawContent:
                       await copyToClipboard(context, widget.data.data);
                   }
@@ -567,10 +459,7 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
             ),
             Padding(
               padding: edgeInsetsL16R16B12,
-              child: munchElement(
-                context,
-                parseHtmlDocument(widget.data.data).body!,
-              ),
+              child: munchElement(context, parseHtmlDocument(widget.data.data).body!),
             ),
           ],
         ),

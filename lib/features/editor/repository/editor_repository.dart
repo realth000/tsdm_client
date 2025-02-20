@@ -71,8 +71,7 @@ final class EditorRepository with LoggerMixin {
     r"smilies_type\['_(?<groupId>\d+)'\] = \['(?<groupName>[^']+)', '(?<routeName>[^']+)'\]",
   );
 
-  static final _emojiGroupDataRe =
-      RegExp(r'smilies_array\[(?<groupId>\d+)\]\[\d+\] = \[(?<data>.+)\]');
+  static final _emojiGroupDataRe = RegExp(r'smilies_array\[(?<groupId>\d+)\]\[\d+\] = \[(?<data>.+)\]');
 
   /// Url to get random recommend friends.
   ///
@@ -87,7 +86,8 @@ final class EditorRepository with LoggerMixin {
   /// User to search user by name.
   ///
   /// Post to this url with form hash, handle key and keyword.
-  static const _searchUserByName = '$baseUrl/plugin.php?id=amucallme_dzx:js&'
+  static const _searchUserByName =
+      '$baseUrl/plugin.php?id=amucallme_dzx:js&'
       'sreach=1&callmesubmit=true&ajax=1&adds=fastpostmessage&inajax=1';
 
   /// Flag used to indicate whether repository should be closed or not.
@@ -122,10 +122,7 @@ final class EditorRepository with LoggerMixin {
   /// But this solution add implicit requirements for the caller:
   /// MUST call random friend api before search user, otherwise search will
   /// fail due to lack of form hash.
-  (List<String>, String?) _parseUserFromXmlDocument(
-    String xml, {
-    bool parseFormHash = false,
-  }) {
+  (List<String>, String?) _parseUserFromXmlDocument(String xml, {bool parseFormHash = false}) {
     //<?xml version="1.0" encoding="utf-8"?>
     // <root><![CDATA[
     //
@@ -144,11 +141,8 @@ final class EditorRepository with LoggerMixin {
     // ]]></root>
     final xmlDoc = parseXmlDocument(xml);
     final htmlDoc = parseHtmlDocument(xmlDoc.documentElement?.innerText ?? '');
-    final nameList = htmlDoc
-        .querySelectorAll('a[onclick*="seditor_insertunit"]')
-        .map((e) => e.innerText);
-    final formHash =
-        htmlDoc.querySelector('input[name="formhash"]')?.attributes['value'];
+    final nameList = htmlDoc.querySelectorAll('a[onclick*="seditor_insertunit"]').map((e) => e.innerText);
+    final formHash = htmlDoc.querySelector('input[name="formhash"]')?.attributes['value'];
     if (parseFormHash) {
       if (formHash == null) {
         error('form hash not found in user mention response');
@@ -220,13 +214,7 @@ final class EditorRepository with LoggerMixin {
           final id = dd[1];
           final code = dd[3];
           final fileName = dd[5];
-          emojiList.add(
-            Emoji(
-              id: id,
-              code: code,
-              url: '$_emojiFileUrlHead/$routeName/$fileName',
-            ),
-          );
+          emojiList.add(Emoji(id: id, code: code, url: '$_emojiFileUrlHead/$routeName/$fileName'));
         }
         emojiGroupMap[groupId] = emojiGroupMap[groupId]!.copyWith(
           emojiList: [...emojiGroupMap[groupId]!.emojiList, ...emojiList],
@@ -262,8 +250,10 @@ final class EditorRepository with LoggerMixin {
       if (respEither.isLeft()) {
         if (retryTimes < 0) {
           handle(respEither.unwrapErr());
-          error('failed to download emoji ${emojiGroup.id}_${emoji.id}: '
-              'exceed max retry times');
+          error(
+            'failed to download emoji ${emojiGroup.id}_${emoji.id}: '
+            'exceed max retry times',
+          );
           return false;
         }
         continue;
@@ -272,11 +262,7 @@ final class EditorRepository with LoggerMixin {
       if (resp.statusCode != HttpStatus.ok) {
         return false;
       }
-      await cacheProvider.updateEmojiCache(
-        emojiGroup.id,
-        emoji.id,
-        resp.data as List<int>,
-      );
+      await cacheProvider.updateEmojiCache(emojiGroup.id, emoji.id, resp.data as List<int>);
     }
     return true;
   }
@@ -289,8 +275,7 @@ final class EditorRepository with LoggerMixin {
   Future<bool> loadEmojiFromServer() async {
     info('load emoji from server');
     // TODO: Use injected net client.
-    final netClient =
-        getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
+    final netClient = getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie);
     final respEither = await netClient.get(_emojiInfoUrl).run();
     if (respEither.isLeft()) {
       handle(respEither.unwrapErr());
@@ -313,8 +298,7 @@ final class EditorRepository with LoggerMixin {
         return false;
       }
       final downloadList = emojiGroup.emojiList.map(
-        (e) =>
-            _generateDownloadEmojiTask(netClient, cacheProvider, emojiGroup, e),
+        (e) => _generateDownloadEmojiTask(netClient, cacheProvider, emojiGroup, e),
       );
       debug('download for emoji group: ${emojiGroup.id}');
       debug('emoji group ${emojiGroup.id} ${emojiGroup.emojiList.first.url}');
@@ -341,48 +325,38 @@ final class EditorRepository with LoggerMixin {
   ///
   /// Currently there there is no validation on emoji and emoji groups.
   AsyncVoidEither loadEmojiFromCacheOrServer() => AsyncVoidEither(() async {
-        final cacheProvider = getIt.get<ImageCacheProvider>();
-        if (await cacheProvider.validateEmojiCache()) {
-          // Have valid emoji cache.
-          emojiGroupList = await cacheProvider.loadEmojiInfo();
-        } else {
-          // Do not have valid emoji cache, reload from server.
-          final ret = await loadEmojiFromServer();
-          if (!ret) {
-            return left(EmojiLoadFailedException());
-          }
-        }
-        return rightVoid();
-      });
+    final cacheProvider = getIt.get<ImageCacheProvider>();
+    if (await cacheProvider.validateEmojiCache()) {
+      // Have valid emoji cache.
+      emojiGroupList = await cacheProvider.loadEmojiInfo();
+    } else {
+      // Do not have valid emoji cache, reload from server.
+      final ret = await loadEmojiFromServer();
+      if (!ret) {
+        return left(EmojiLoadFailedException());
+      }
+    }
+    return rightVoid();
+  });
 
   /// Some should be because still developing.
   AsyncVoidEither loadEmojiFromAsset() => AsyncVoidEither(() async {
-        final cacheProvider = getIt.get<ImageCacheProvider>();
-        if (await cacheProvider.validateEmojiCache()) {
-          emojiGroupList = await cacheProvider.loadEmojiInfo();
-        } else {
-          emojiGroupList = await cacheProvider.loadEmojiFromAsset();
-        }
-        return rightVoid();
-      });
+    final cacheProvider = getIt.get<ImageCacheProvider>();
+    if (await cacheProvider.validateEmojiCache()) {
+      emojiGroupList = await cacheProvider.loadEmojiInfo();
+    } else {
+      emojiGroupList = await cacheProvider.loadEmojiFromAsset();
+    }
+    return rightVoid();
+  });
 
   /// Search user by name.
-  AsyncEither<List<String>> searchUserByName({
-    required String keyword,
-    required String formHash,
-  }) =>
-      getIt.get<NetClientProvider>().postForm(
-        _searchUserByName,
-        data: {
-          'handlekey': 'amucallme_dzx_add',
-          'formhash': formHash,
-          'keywords': keyword,
-        },
-      ).mapHttp((e) => _parseUserFromXmlDocument(e.data as String).$1);
+  AsyncEither<List<String>> searchUserByName({required String keyword, required String formHash}) => getIt
+      .get<NetClientProvider>()
+      .postForm(_searchUserByName, data: {'handlekey': 'amucallme_dzx_add', 'formhash': formHash, 'keywords': keyword})
+      .mapHttp((e) => _parseUserFromXmlDocument(e.data as String).$1);
 
   /// Get random recommended user from server.
-  AsyncEither<(List<String>, String?)> recommendUser() => getIt
-      .get<NetClientProvider>()
-      .get(_userRecommendUrl)
-      .mapHttp((e) => _parseUserFromXmlDocument(e.data as String));
+  AsyncEither<(List<String>, String?)> recommendUser() =>
+      getIt.get<NetClientProvider>().get(_userRecommendUrl).mapHttp((e) => _parseUserFromXmlDocument(e.data as String));
 }

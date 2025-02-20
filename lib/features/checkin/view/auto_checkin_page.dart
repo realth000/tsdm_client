@@ -47,12 +47,8 @@ class _AutoCheckinPageState extends State<AutoCheckinPage> {
             padding: edgeInsetsL12T4R12B4,
             children: <Widget>[
               Tips(tr.detail, enablePadding: false),
-              ...runningList.map(
-                (e) => AutoCheckinUserCard(e, tr.user.running),
-              ),
-              ...waitingList.map(
-                (e) => AutoCheckinUserCard(e, tr.user.waiting),
-              ),
+              ...runningList.map((e) => AutoCheckinUserCard(e, tr.user.running)),
+              ...waitingList.map((e) => AutoCheckinUserCard(e, tr.user.waiting)),
               ...succeededList.map(
                 (e) => AutoCheckinUserCard(
                   // Ok to use record.

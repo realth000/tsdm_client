@@ -10,10 +10,7 @@ part of 'models.dart';
 ///
 /// Use this model to store that state.
 @MappableClass(
-  generateMethods: GenerateMethods.encode |
-      GenerateMethods.decode |
-      GenerateMethods.copy |
-      GenerateMethods.equals,
+  generateMethods: GenerateMethods.encode | GenerateMethods.decode | GenerateMethods.copy | GenerateMethods.equals,
 )
 final class UserLoginInfo with UserLoginInfoMappable {
   /// Constructor.
@@ -24,10 +21,7 @@ final class UserLoginInfo with UserLoginInfoMappable {
   });
 
   /// Build a empty instance, all fields are null or default.
-  factory UserLoginInfo.empty() => const UserLoginInfo(
-        username: null,
-        uid: null,
-      );
+  factory UserLoginInfo.empty() => const UserLoginInfo(username: null, uid: null);
 
   /// Username.
   final String? username;

@@ -32,8 +32,10 @@ class _NeteaseCardState extends State<NeteaseCard> with LoggerMixin {
     final artist = doc.querySelector('p.des.s-fc4 > span')?.title;
 
     if (title == null || artist == null) {
-      error('failed to parse netease music info (id ${widget.id}), '
-          'title=$title, artist=$artist');
+      error(
+        'failed to parse netease music info (id ${widget.id}), '
+        'title=$title, artist=$artist',
+      );
       return fallbackInfo;
     }
 
@@ -50,12 +52,8 @@ class _NeteaseCardState extends State<NeteaseCard> with LoggerMixin {
   Widget build(BuildContext context) {
     final tr = context.t.musicCard;
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final primaryStyle = Theme.of(context).textTheme.titleMedium?.copyWith(
-          color: primaryColor,
-        );
-    final infoStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(
-          color: Theme.of(context).colorScheme.secondary,
-        );
+    final primaryStyle = Theme.of(context).textTheme.titleMedium?.copyWith(color: primaryColor);
+    final infoStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.secondary);
 
     return Card(
       child: Padding(
@@ -72,20 +70,13 @@ class _NeteaseCardState extends State<NeteaseCard> with LoggerMixin {
             ),
             sizedBoxW12H12,
             FutureBuilder(
-              future: getIt
-                  .get<NetClientProvider>(
-                    instanceName: ServiceKeys.noCookie,
-                  )
-                  .get('$urlPrefix${widget.id}')
-                  .run(),
+              future:
+                  getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie).get('$urlPrefix${widget.id}').run(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return switch (snapshot.data!) {
                     fp.Left() => Text(fallbackInfo, style: infoStyle),
-                    fp.Right(:final value) => Text(
-                        _parseMusicInfo(value.data as String),
-                        style: infoStyle,
-                      ),
+                    fp.Right(:final value) => Text(_parseMusicInfo(value.data as String), style: infoStyle),
                   };
                 }
                 return sizedCircularProgressIndicator;

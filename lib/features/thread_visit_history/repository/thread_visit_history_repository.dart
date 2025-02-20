@@ -10,27 +10,29 @@ final class ThreadVisitHistoryRepo {
   final StorageProvider _storageProvider;
 
   /// Fetch all history from storage.
-  AsyncEither<List<ThreadVisitHistoryModel>> fetchAllHistory() =>
-      _storageProvider.fetchAllThreadVisitHistory().map(
-            (e) => e
-                .map(
-                  (entity) => ThreadVisitHistoryModel(
-                    uid: entity.uid,
-                    threadId: entity.tid,
-                    forumId: entity.fid,
-                    username: entity.username,
-                    threadTitle: entity.threadTitle,
-                    forumName: entity.forumName,
-                    visitTime: entity.visitTime,
-                  ),
-                )
-                .toList(),
-          );
+  AsyncEither<List<ThreadVisitHistoryModel>> fetchAllHistory() => _storageProvider.fetchAllThreadVisitHistory().map(
+    (e) =>
+        e
+            .map(
+              (entity) => ThreadVisitHistoryModel(
+                uid: entity.uid,
+                threadId: entity.tid,
+                forumId: entity.fid,
+                username: entity.username,
+                threadTitle: entity.threadTitle,
+                forumName: entity.forumName,
+                visitTime: entity.visitTime,
+              ),
+            )
+            .toList(),
+  );
 
   /// Fetch all history on user [uid].
-  AsyncEither<List<ThreadVisitHistoryModel>> fetchHistoryByUid(int uid) =>
-      _storageProvider.fetchThreadVisitHistoryByUid(uid).map(
-            (e) => e
+  AsyncEither<List<ThreadVisitHistoryModel>> fetchHistoryByUid(int uid) => _storageProvider
+      .fetchThreadVisitHistoryByUid(uid)
+      .map(
+        (e) =>
+            e
                 .map(
                   (entity) => ThreadVisitHistoryModel(
                     uid: entity.uid,
@@ -43,22 +45,21 @@ final class ThreadVisitHistoryRepo {
                   ),
                 )
                 .toList(),
-          );
+      );
 
   /// Save history in [model] to storage.
-  AsyncVoidEither saveHistory(ThreadVisitHistoryModel model) =>
-      AsyncVoidEither(() async {
-        await _storageProvider.updateThreadVisitHistory(
-          uid: model.uid,
-          tid: model.threadId,
-          fid: model.forumId,
-          username: model.username,
-          threadTitle: model.threadTitle,
-          forumName: model.forumName,
-          visitTime: model.visitTime,
-        );
-        return rightVoid();
-      });
+  AsyncVoidEither saveHistory(ThreadVisitHistoryModel model) => AsyncVoidEither(() async {
+    await _storageProvider.updateThreadVisitHistory(
+      uid: model.uid,
+      tid: model.threadId,
+      fid: model.forumId,
+      username: model.username,
+      threadTitle: model.threadTitle,
+      forumName: model.forumName,
+      visitTime: model.visitTime,
+    );
+    return rightVoid();
+  });
 
   /// Delete a unique history record located by given user id [uid] and
   /// thread id [tid].
@@ -66,6 +67,5 @@ final class ThreadVisitHistoryRepo {
       _storageProvider.deleteByUidAndTid(uid: uid, tid: tid);
 
   /// Delete all thread visit history records in storage.
-  AsyncVoidEither deleteAllRecords() =>
-      _storageProvider.deleteAllThreadVisitHistory();
+  AsyncVoidEither deleteAllRecords() => _storageProvider.deleteAllThreadVisitHistory();
 }

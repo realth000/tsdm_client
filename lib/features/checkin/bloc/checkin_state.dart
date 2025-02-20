@@ -8,32 +8,28 @@ sealed class CheckinState with CheckinStateMappable {
 
 /// Initial state.
 @MappableClass()
-final class CheckinStateInitial extends CheckinState
-    with CheckinStateInitialMappable {
+final class CheckinStateInitial extends CheckinState with CheckinStateInitialMappable {
   /// Constructor.
   const CheckinStateInitial() : super();
 }
 
 /// Loading data: checking in.
 @MappableClass()
-final class CheckinStateLoading extends CheckinState
-    with CheckinStateLoadingMappable {
+final class CheckinStateLoading extends CheckinState with CheckinStateLoadingMappable {
   /// Constructor.
   const CheckinStateLoading() : super();
 }
 
 /// Need to login to checkin.
 @MappableClass()
-final class CheckinStateNeedLogin extends CheckinState
-    with CheckinStateNeedLoginMappable {
+final class CheckinStateNeedLogin extends CheckinState with CheckinStateNeedLoginMappable {
   /// Constructor.
   const CheckinStateNeedLogin() : super();
 }
 
 /// Checkin failed.
 @MappableClass()
-final class CheckinStateFailed extends CheckinState
-    with CheckinStateFailedMappable {
+final class CheckinStateFailed extends CheckinState with CheckinStateFailedMappable {
   /// Constructor.
   const CheckinStateFailed(this.result) : super();
 
@@ -43,8 +39,7 @@ final class CheckinStateFailed extends CheckinState
 
 /// Checkin succeed.
 @MappableClass()
-final class CheckinStateSuccess extends CheckinState
-    with CheckinStateSuccessMappable {
+final class CheckinStateSuccess extends CheckinState with CheckinStateSuccessMappable {
   /// Constructor.
   const CheckinStateSuccess(this.message) : super();
 

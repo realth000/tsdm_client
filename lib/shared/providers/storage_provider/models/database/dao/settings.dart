@@ -2,8 +2,7 @@ part of 'dao.dart';
 
 /// DAO for table [Settings].
 @DriftAccessor(tables: [Settings])
-final class SettingsDao extends DatabaseAccessor<AppDatabase>
-    with _$SettingsDaoMixin, LoggerMixin {
+final class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDaoMixin, LoggerMixin {
   /// Constructor.
   SettingsDao(super.db);
 
@@ -24,8 +23,7 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase>
   /// * [Offset]
   /// * [Size]
   Future<T?> getValueByName<T>(String name) async {
-    final value = await (select(settings)..where((e) => e.name.equals(name)))
-        .getSingleOrNull();
+    final value = await (select(settings)..where((e) => e.name.equals(name))).getSingleOrNull();
     if (value == null) {
       info('failed to get value by name "$name": value not exists');
       return null;
@@ -63,44 +61,25 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase>
   Future<void> setValue<T>(String name, T value) async {
     final SettingsCompanion companion;
     if (T == String) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        stringValue: Value(value as String),
-      );
+      companion = SettingsCompanion(name: Value(name), stringValue: Value(value as String));
     } else if (T == int) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        intValue: Value(value as int),
-      );
+      companion = SettingsCompanion(name: Value(name), intValue: Value(value as int));
     } else if (T == bool) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        boolValue: Value(value as bool),
-      );
+      companion = SettingsCompanion(name: Value(name), boolValue: Value(value as bool));
     } else if (T == double) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        doubleValue: Value(value as double),
-      );
+      companion = SettingsCompanion(name: Value(name), doubleValue: Value(value as double));
     } else if (T == DateTime) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        dateTimeValue: Value(value as DateTime),
-      );
+      companion = SettingsCompanion(name: Value(name), dateTimeValue: Value(value as DateTime));
     } else if (T == Offset) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        offsetValue: Value(value as Offset),
-      );
+      companion = SettingsCompanion(name: Value(name), offsetValue: Value(value as Offset));
     } else if (T == Size) {
-      companion = SettingsCompanion(
-        name: Value(name),
-        sizeValue: Value(value as Size),
-      );
+      companion = SettingsCompanion(name: Value(name), sizeValue: Value(value as Size));
     } else {
       // Unsupported types.
-      error('intend to save unsupported settings type: '
-          'key=$name, value=$value, type=$T');
+      error(
+        'intend to save unsupported settings type: '
+        'key=$name, value=$value, type=$T',
+      );
       return;
     }
 

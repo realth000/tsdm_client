@@ -28,8 +28,7 @@ part 'homepage_state.dart';
 extension ExtractProfileAvatar on uh.Document {
   /// Extract the user avatar url.
   String? extractAvatar() {
-    return querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-        ?.imageUrl();
+    return querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')?.imageUrl();
   }
 }
 
@@ -40,18 +39,18 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     required ForumHomeRepository forumHomeRepository,
     required ProfileRepository profileRepository,
     required AuthenticationRepository authenticationRepository,
-  })  : _forumHomeRepository = forumHomeRepository,
-        _profileRepository = profileRepository,
-        _authenticationRepository = authenticationRepository,
-        super(
-          forumHomeRepository.hasCache()
-              ? _parseStateFromDocument(
-                  forumHomeRepository.getCache()!,
-                  authenticationRepository.currentUser?.username,
-                  avatarUrl: profileRepository.getCache()?.extractAvatar(),
-                )
-              : const HomepageState(),
-        ) {
+  }) : _forumHomeRepository = forumHomeRepository,
+       _profileRepository = profileRepository,
+       _authenticationRepository = authenticationRepository,
+       super(
+         forumHomeRepository.hasCache()
+             ? _parseStateFromDocument(
+               forumHomeRepository.getCache()!,
+               authenticationRepository.currentUser?.username,
+               avatarUrl: profileRepository.getCache()?.extractAvatar(),
+             )
+             : const HomepageState(),
+       ) {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
     on<HomepageRefreshRequested>(_onHomepageRefreshRequested);
     on<HomepageAuthChanged>(_onHomepageAuthChanged);
@@ -62,13 +61,9 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     // inner data changed. For example switch user from one to anther keeps an
     // authed state but the user is changed.
     _authStatusSub = _authenticationRepository.status.pairwise().listen(
-          (statusList) => add(
-            HomepageAuthChanged(
-              prev: statusList.elementAtOrNull(statusList.length - 2),
-              curr: statusList.last,
-            ),
-          ),
-        );
+      (statusList) =>
+          add(HomepageAuthChanged(prev: statusList.elementAtOrNull(statusList.length - 2), curr: statusList.last)),
+    );
   }
 
   final ForumHomeRepository _forumHomeRepository;
@@ -102,14 +97,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
         .innerHtmlEx()
         .split('\n')
         .where((e) => e.contains("window.location='"))
-        .map(
-          (e) => e
-              .split("window.location='")
-              .lastOrNull
-              ?.split("'")
-              .firstOrNull
-              ?.replaceFirst('&amp;', '&'),
-        )
+        .map((e) => e.split("window.location='").lastOrNull?.split("'").firstOrNull?.replaceFirst('&amp;', '&'))
         .toList();
   }
 
@@ -130,8 +118,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     final allNode = element.querySelectorAll('a').toList();
     // There should be two <a> in children.
     if (allNode.length != 2) {
-      talker.info('skip build thread author pair: '
-          'node count is ${allNode.length}');
+      talker.info(
+        'skip build thread author pair: '
+        'node count is ${allNode.length}',
+      );
       return null;
     }
 
@@ -159,18 +149,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       return null;
     }
 
-    return PinnedThread(
-      threadUrl: threadUrl,
-      threadTitle: threadTitle,
-      authorUrl: authorUrl,
-      authorName: authorName,
-    );
+    return PinnedThread(threadUrl: threadUrl, threadTitle: threadTitle, authorUrl: authorUrl, authorName: authorName);
   }
 
-  Future<void> _onHomepageLoadRequested(
-    HomepageLoadRequested event,
-    Emitter<HomepageState> emit,
-  ) async {
+  Future<void> _onHomepageLoadRequested(HomepageLoadRequested event, Emitter<HomepageState> emit) async {
     if (_forumHomeRepository.hasCache()) {
       final s = _parseStateFromDocument(
         _forumHomeRepository.getCache()!,
@@ -183,33 +165,28 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
     var needLogin = false;
-    final respList = (await Future.wait(
-      [
-        _forumHomeRepository.fetchHomePage().mapLeft((e) {
-          if (e case HttpHandshakeFailedException(:final statusCode)) {
-            if (statusCode == 200) {
+    final respList =
+        (await Future.wait([
+          _forumHomeRepository.fetchHomePage().mapLeft((e) {
+            if (e case HttpHandshakeFailedException(:final statusCode)) {
+              if (statusCode == 200) {
+                needLogin = true;
+              }
+            } else if (e case LoginUserInfoNotFoundException()) {
               needLogin = true;
-            }
-          } else if (e case LoginUserInfoNotFoundException()) {
-            needLogin = true;
-          } else {
-            handle(e);
-          }
-        }).run(),
-        _profileRepository.fetchAvatarUrl().mapLeft((e) {
-          switch (e) {
-            case LoginUserInfoNotFoundException() ||
-                  ProfileNeedLoginException():
-              needLogin = true;
-            default:
+            } else {
               handle(e);
-          }
-        }).run(),
-      ],
-    ))
-        .where((e) => e.isRight())
-        .map((e) => e.unwrap())
-        .toList();
+            }
+          }).run(),
+          _profileRepository.fetchAvatarUrl().mapLeft((e) {
+            switch (e) {
+              case LoginUserInfoNotFoundException() || ProfileNeedLoginException():
+                needLogin = true;
+              default:
+                handle(e);
+            }
+          }).run(),
+        ])).where((e) => e.isRight()).map((e) => e.unwrap()).toList();
     if (respList.length != 2) {
       if (_authenticationRepository.currentUser == null && needLogin) {
         emit(state.copyWith(status: HomepageStatus.needLogin));
@@ -221,23 +198,13 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     }
     final document = respList[0] as uh.Document;
     final avatarUrl = respList[1] as String;
-    await _authenticationRepository
-        .loginWithDocument(document)
-        .mapLeft(handle)
-        .run();
+    await _authenticationRepository.loginWithDocument(document).mapLeft(handle).run();
     // Parse data and change state.
-    final s = _parseStateFromDocument(
-      document,
-      _authenticationRepository.currentUser?.username,
-      avatarUrl: avatarUrl,
-    );
+    final s = _parseStateFromDocument(document, _authenticationRepository.currentUser?.username, avatarUrl: avatarUrl);
     emit(s);
   }
 
-  Future<void> _onHomepageRefreshRequested(
-    HomepageRefreshRequested event,
-    Emitter<HomepageState> emit,
-  ) async {
+  Future<void> _onHomepageRefreshRequested(HomepageRefreshRequested event, Emitter<HomepageState> emit) async {
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
 
@@ -266,24 +233,14 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
           emit(state.copyWith(status: HomepageStatus.failure));
           return;
         }
-        final avatarUrl = d2
-            .unwrap()
-            .querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')
-            ?.imageUrl();
+        final avatarUrl = d2.unwrap().querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')?.imageUrl();
         // Parse data and change state.
-        final s = _parseStateFromDocument(
-          value,
-          _authenticationRepository.currentUser?.username,
-          avatarUrl: avatarUrl,
-        );
+        final s = _parseStateFromDocument(value, _authenticationRepository.currentUser?.username, avatarUrl: avatarUrl);
         emit(s);
     }
   }
 
-  Future<void> _onHomepageAuthChanged(
-    HomepageAuthChanged event,
-    Emitter<HomepageState> emit,
-  ) async {
+  Future<void> _onHomepageAuthChanged(HomepageAuthChanged event, Emitter<HomepageState> emit) async {
     if (event.curr is AuthStatusNotAuthed &&
         state.status != HomepageStatus.loading &&
         state.status != HomepageStatus.needLogin) {
@@ -300,34 +257,21 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       final settings = getIt.get<SettingsRepository>().currentSettings;
       add(
         HomepageRefreshRequested(
-          userLoginInfo: UserLoginInfo(
-            username: settings.loginUsername,
-            uid: settings.loginUid,
-          ),
+          userLoginInfo: UserLoginInfo(username: settings.loginUsername, uid: settings.loginUid),
         ),
       );
     }
   }
 
-  Future<void> _onHomepagePauseSwiper(
-    HomepagePauseSwiper event,
-    Emitter<HomepageState> emit,
-  ) async {
+  Future<void> _onHomepagePauseSwiper(HomepagePauseSwiper event, Emitter<HomepageState> emit) async {
     emit(state.copyWith(scrollSwiper: false));
   }
 
-  Future<void> _onHomepageResumeSwiper(
-    HomepageResumeSwiper event,
-    Emitter<HomepageState> emit,
-  ) async {
+  Future<void> _onHomepageResumeSwiper(HomepageResumeSwiper event, Emitter<HomepageState> emit) async {
     emit(state.copyWith(scrollSwiper: true));
   }
 
-  static HomepageState _parseStateFromDocument(
-    uh.Document document,
-    String? username, {
-    String? avatarUrl,
-  }) {
+  static HomepageState _parseStateFromDocument(uh.Document document, String? username, {String? avatarUrl}) {
     final swiperUrlList = <SwiperUrl>[];
     final pinnedThreadGroupList = <PinnedThreadGroup>[];
     ForumStatus? forumStatus;
@@ -338,34 +282,26 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     final styleNode =
         // Style 1: Without welcome text.
         document.querySelector('div.mn > style') ??
-            // Style 2: With welcome text.
-            document.querySelector('div#chart > style');
+        // Style 2: With welcome text.
+        document.querySelector('div#chart > style');
     final scriptNode =
         // Style 1: Without welcome text.
         document.querySelector('div.mn > script') ??
-            // Style 2: With welcome text
-            document.querySelector('div#chart > script');
+        // Style 2: With welcome text
+        document.querySelector('div#chart > script');
 
-    final picUrlList =
-        _buildKahrpbaPicUrlList(styleNode).whereType<String>().toList();
-    final picHrefList =
-        _buildKahrpbaPicHrefList(scriptNode).whereType<String>().toList();
-    if ((picUrlList.isEmpty && picHrefList.isEmpty) ||
-        (picUrlList.length != picHrefList.length)) {
+    final picUrlList = _buildKahrpbaPicUrlList(styleNode).whereType<String>().toList();
+    final picHrefList = _buildKahrpbaPicHrefList(scriptNode).whereType<String>().toList();
+    if ((picUrlList.isEmpty && picHrefList.isEmpty) || (picUrlList.length != picHrefList.length)) {
       talker.error('root content pinned pic not found: maybe not login');
       // There's no pinned recent threads when not login, just return
     } else {
       for (var i = 0; i < picUrlList.length; i++) {
-        swiperUrlList
-            .add(SwiperUrl(coverUrl: picUrlList[i], linkUrl: picHrefList[i]));
+        swiperUrlList.add(SwiperUrl(coverUrl: picUrlList[i], linkUrl: picHrefList[i]));
       }
     }
     final chartZInfoList = chartZNode?.querySelectorAll('em').toList();
-    final memberInfoList = chartZInfoList
-            ?.map((e) => e.text)
-            .whereType<String>()
-            .toList(growable: false) ??
-        [];
+    final memberInfoList = chartZInfoList?.map((e) => e.text).whereType<String>().toList(growable: false) ?? [];
     if (memberInfoList.length >= 3) {
       forumStatus = ForumStatus(
         todayCount: memberInfoList[0],
@@ -374,40 +310,38 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       );
     }
 
-    final welcomeNode = document
-        .querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
+    final welcomeNode = document.querySelector('div#wp.wp div#ct.wp.cl div#chart.bm.bw0.cl div.y');
     final loggedUsername = username ?? '';
-    final loggedUserAvatar = avatarUrl ??
-        document
-            .querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')
-            ?.attributes['src'];
-    final navigateHrefsPairs = welcomeNode
-        ?.querySelectorAll('a')
-        .where((e) => e.attributes.containsKey('href'))
-        .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))
-        .toList();
+    final loggedUserAvatar =
+        avatarUrl ?? document.querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')?.attributes['src'];
+    final navigateHrefsPairs =
+        welcomeNode
+            ?.querySelectorAll('a')
+            .where((e) => e.attributes.containsKey('href'))
+            .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))
+            .toList();
     loggedUserInfo = LoggedUserInfo(
       username: loggedUsername,
       relatedLinkPairList: navigateHrefsPairs ?? [],
       avatarUrl: loggedUserAvatar,
     );
 
-    final navNameList = document
-        .querySelector('td#Kahrpba_nav')
-        ?.children
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
-    final navShowList = document
-        .querySelector('td#Kahrpba_show')
-        ?.children
-        .where((e) => e.id.startsWith('Kahrpba_c'))
-        .whereType<uh.Element>()
-        .toList();
+    final navNameList =
+        document
+            .querySelector('td#Kahrpba_nav')
+            ?.children
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
+    final navShowList =
+        document
+            .querySelector('td#Kahrpba_show')
+            ?.children
+            .where((e) => e.id.startsWith('Kahrpba_c'))
+            .whereType<uh.Element>()
+            .toList();
 
-    if (navNameList != null &&
-        navShowList != null &&
-        navNameList.length == navShowList.length) {
+    if (navNameList != null && navShowList != null && navNameList.length == navShowList.length) {
       if (navNameList.length >= 7) {
         navNameList
           ..swap(4, 6)
@@ -415,15 +349,13 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       }
       final count = navNameList.length;
       for (var i = 0; i < count; i++) {
-        final threadList = navShowList[i]
-            .querySelectorAll('div.Kahrpba_threads')
-            .map(_filterThreadAndAuthors)
-            .whereType<PinnedThread>()
-            .toList();
-        final group = PinnedThreadGroup(
-          title: navNameList[i],
-          threadList: threadList,
-        );
+        final threadList =
+            navShowList[i]
+                .querySelectorAll('div.Kahrpba_threads')
+                .map(_filterThreadAndAuthors)
+                .whereType<PinnedThread>()
+                .toList();
+        final group = PinnedThreadGroup(title: navNameList[i], threadList: threadList);
         pinnedThreadGroupList.add(group);
       }
 
@@ -436,9 +368,7 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       }
     }
     return HomepageState(
-      status: loggedUsername.isNotEmpty
-          ? HomepageStatus.success
-          : HomepageStatus.needLogin,
+      status: loggedUsername.isNotEmpty ? HomepageStatus.success : HomepageStatus.needLogin,
       forumStatus: forumStatus ?? const ForumStatus.empty(),
       loggedUserInfo: loggedUserInfo,
       pinnedThreadGroupList: pinnedThreadGroupList,

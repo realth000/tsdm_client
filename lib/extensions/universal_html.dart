@@ -11,10 +11,7 @@ extension GrepDocumentExtension on Document {
   /// Parse the current page number of current document.
   int? currentPage() {
     // Should call on "this" implicitly.
-    return this
-        .querySelector('div.pg > strong')
-        ?.firstEndDeepText()
-        ?.parseToInt();
+    return this.querySelector('div.pg > strong')?.firstEndDeepText()?.parseToInt();
   }
 
   /// Parse the total pages count in current document.
@@ -26,17 +23,11 @@ extension GrepDocumentExtension on Document {
     if (paginateNode == null) {
       return ret;
     }
-    currentPage = paginateNode
-            .querySelector('strong')
-            ?.firstEndDeepText()
-            ?.parseToInt() ??
-        1;
+    currentPage = paginateNode.querySelector('strong')?.firstEndDeepText()?.parseToInt() ?? 1;
 
     final lastNode = paginateNode.children.lastOrNull;
     final skippedLastNode = paginateNode.querySelector('a.last');
-    if (lastNode != null &&
-        lastNode.nodeType == Node.ELEMENT_NODE &&
-        lastNode.localName == 'strong') {
+    if (lastNode != null && lastNode.nodeType == Node.ELEMENT_NODE && lastNode.localName == 'strong') {
       // Already in the last page.
       ret = currentPage;
     } else if (skippedLastNode != null) {
@@ -114,11 +105,7 @@ extension GrepExtension on Element {
     return _traverseIf(this, this, work) ? ret : null;
   }
 
-  bool _traverseIf(
-    Element? element,
-    Element root,
-    bool Function(Element element) work,
-  ) {
+  bool _traverseIf(Element? element, Element root, bool Function(Element element) work) {
     if (element == null) {
       return true;
     }
@@ -195,16 +182,17 @@ extension GrepExtension on Element {
     } else if (children.length >= 2 && !second) {
       // More than one element.
       // Try remove the first <em> element and return all html code left.
-      value = nodes
-          .skip(1)
-          .map(
-            (e) => switch (e.nodeType) {
-              Node.ELEMENT_NODE => (e as Element).outerHtml,
-              Node.TEXT_NODE => e.text,
-              _ => ''
-            },
-          )
-          .join();
+      value =
+          nodes
+              .skip(1)
+              .map(
+                (e) => switch (e.nodeType) {
+                  Node.ELEMENT_NODE => (e as Element).outerHtml,
+                  Node.TEXT_NODE => e.text,
+                  _ => '',
+                },
+              )
+              .join();
     } else {
       // Expected value is a text node.
       // Use the trimmed text
@@ -235,10 +223,8 @@ extension GrepExtension on Element {
   ///
   /// Return null if no available image url found.
   String? imageUrl() {
-    final str = attributes['zoomfile']?.prependHost() ??
-        attributes['data-original'] ??
-        attributes['src'] ??
-        attributes['file'];
+    final str =
+        attributes['zoomfile']?.prependHost() ?? attributes['data-original'] ?? attributes['src'] ?? attributes['file'];
 
     if (str == null) {
       return null;

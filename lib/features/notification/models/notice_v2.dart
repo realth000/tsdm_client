@@ -4,12 +4,7 @@ part of 'models.dart';
 @MappableClass(ignoreNull: true)
 final class NoticeV2 with NoticeV2Mappable {
   /// Constructor.
-  const NoticeV2({
-    required this.id,
-    required this.timestamp,
-    required this.data,
-    this.alreadyRead = false,
-  });
+  const NoticeV2({required this.id, required this.timestamp, required this.data, this.alreadyRead = false});
 
   /// Notice id.
   final int id;

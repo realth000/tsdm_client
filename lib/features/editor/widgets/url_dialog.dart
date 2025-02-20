@@ -15,23 +15,15 @@ Future<PickUrlResult?> showUrlPicker(
   BuildContext context, {
   required String? url,
   required String? description,
-}) async =>
-    showDialog<PickUrlResult>(
-      context: context,
-      builder: (context) => UrlDialog(
-        initialUrl: url,
-        initialDescription: description,
-      ),
-    );
+}) async => showDialog<PickUrlResult>(
+  context: context,
+  builder: (context) => UrlDialog(initialUrl: url, initialDescription: description),
+);
 
 /// Show a dialog to insert url and description.
 class UrlDialog extends StatefulWidget {
   /// Constructor.
-  const UrlDialog({
-    required this.initialUrl,
-    required this.initialDescription,
-    super.key,
-  });
+  const UrlDialog({required this.initialUrl, required this.initialDescription, super.key});
 
   /// Optional initial url to fill in dialog.
   final String? initialUrl;
@@ -83,24 +75,17 @@ class _UrlDialogState extends State<UrlDialog> {
             ),
             TextFormField(
               controller: urlController,
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.link_outlined),
-                labelText: tr.link,
-              ),
+              decoration: InputDecoration(prefixIcon: const Icon(Icons.link_outlined), labelText: tr.link),
               validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                TextButton(
-                  child: Text(context.t.general.cancel),
-                  onPressed: () => context.pop(),
-                ),
+                TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop()),
                 TextButton(
                   child: Text(context.t.general.ok),
                   onPressed: () async {
-                    if (formKey.currentState == null ||
-                        !(formKey.currentState!).validate()) {
+                    if (formKey.currentState == null || !(formKey.currentState!).validate()) {
                       return;
                     }
                     if (!context.mounted) {

@@ -105,9 +105,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
         return;
       }
       // FIXME: Access provider in top-level components is anti-pattern.
-      await getIt
-          .get<StorageProvider>()
-          .saveOffset(SettingsKeys.windowPosition.name, _windowPosition);
+      await getIt.get<StorageProvider>().saveOffset(SettingsKeys.windowPosition.name, _windowPosition);
     });
   }
 
@@ -123,9 +121,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
         return;
       }
       // FIXME: Access provider in top-level components is anti-pattern.
-      await getIt
-          .get<StorageProvider>()
-          .saveSize(SettingsKeys.windowSize.name, _windowSize);
+      await getIt.get<StorageProvider>().saveSize(SettingsKeys.windowSize.name, _windowSize);
     });
   }
 
@@ -147,56 +143,28 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<NotificationInfoRepository>(
-          create: (_) => NotificationInfoRepository(),
-        ),
-        RepositoryProvider<NotificationRepository>(
-          create: (_) => NotificationRepository(),
-        ),
-        RepositoryProvider<AuthenticationRepository>(
-          create: (_) => AuthenticationRepository(),
-        ),
-        RepositoryProvider<CheckinRepository>(
-          create: (_) => CheckinRepository(storageProvider: getIt()),
-        ),
-        RepositoryProvider<ForumHomeRepository>(
-          create: (_) => ForumHomeRepository(),
-        ),
-        RepositoryProvider<ProfileRepository>(
-          create: (_) => ProfileRepository(),
-        ),
-        RepositoryProvider<FragmentsRepository>(
-          create: (_) => FragmentsRepository(),
-        ),
-        RepositoryProvider<ForumRepository>(
-          create: (_) => ForumRepository(),
-        ),
-        RepositoryProvider<ImageCacheRepository>(
-          create: (_) => ImageCacheRepository(getIt()),
-        ),
-        RepositoryProvider<ImageCacheTriggerCubit>(
-          create: (context) => ImageCacheTriggerCubit(context.repo()),
-        ),
-        RepositoryProvider<ThreadVisitHistoryRepo>(
-          create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>()),
-        ),
-        RepositoryProvider<AutoCheckinRepository>(
-          create: (_) => AutoCheckinRepository(storageProvider: getIt()),
-        ),
+        RepositoryProvider<NotificationInfoRepository>(create: (_) => NotificationInfoRepository()),
+        RepositoryProvider<NotificationRepository>(create: (_) => NotificationRepository()),
+        RepositoryProvider<AuthenticationRepository>(create: (_) => AuthenticationRepository()),
+        RepositoryProvider<CheckinRepository>(create: (_) => CheckinRepository(storageProvider: getIt())),
+        RepositoryProvider<ForumHomeRepository>(create: (_) => ForumHomeRepository()),
+        RepositoryProvider<ProfileRepository>(create: (_) => ProfileRepository()),
+        RepositoryProvider<FragmentsRepository>(create: (_) => FragmentsRepository()),
+        RepositoryProvider<ForumRepository>(create: (_) => ForumRepository()),
+        RepositoryProvider<ImageCacheRepository>(create: (_) => ImageCacheRepository(getIt())),
+        RepositoryProvider<ImageCacheTriggerCubit>(create: (context) => ImageCacheTriggerCubit(context.repo())),
+        RepositoryProvider<ThreadVisitHistoryRepo>(create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>())),
+        RepositoryProvider<AutoCheckinRepository>(create: (_) => AutoCheckinRepository(storageProvider: getIt())),
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider(
-            create: (context) => NotificationStateAutoSyncCubit(context.repo()),
-          ),
+          BlocProvider(create: (context) => NotificationStateAutoSyncCubit(context.repo())),
           BlocProvider(
             create: (_) => RootLocationCubit(),
             // Set lazy to false to react on first location change.
             lazy: false,
           ),
-          BlocProvider(
-            create: (context) => NotificationStateCubit(context.repo()),
-          ),
+          BlocProvider(create: (context) => NotificationStateCubit(context.repo())),
           BlocProvider(
             create: (context) {
               final bloc = AutoNotificationCubit(
@@ -211,30 +179,33 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             },
           ),
           BlocProvider(
-            create: (context) => NotificationBloc(
-              notificationRepository: context.repo(),
-              infoRepository: context.repo(),
-              authRepo: context.repo(),
-              storageProvider: getIt(),
-            ),
+            create:
+                (context) => NotificationBloc(
+                  notificationRepository: context.repo(),
+                  infoRepository: context.repo(),
+                  authRepo: context.repo(),
+                  storageProvider: getIt(),
+                ),
           ),
           BlocProvider(
-            create: (context) => SettingsBloc(
-              fragmentsRepository: context.repo(),
-              settingsRepository: getIt.get<SettingsRepository>(),
-            ),
+            create:
+                (context) => SettingsBloc(
+                  fragmentsRepository: context.repo(),
+                  settingsRepository: getIt.get<SettingsRepository>(),
+                ),
           ),
           BlocProvider(
-            create: (context) => ThreadVisitHistoryBloc(context.repo())
-              ..add(const ThreadVisitHistoryFetchAllRequested()),
+            create:
+                (context) => ThreadVisitHistoryBloc(context.repo())..add(const ThreadVisitHistoryFetchAllRequested()),
           ),
           // Become top-level because of background auto-checkin feature.
           BlocProvider(
-            create: (context) => CheckinBloc(
-              checkinRepository: context.repo(),
-              authenticationRepository: context.repo(),
-              settingsRepository: getIt(),
-            ),
+            create:
+                (context) => CheckinBloc(
+                  checkinRepository: context.repo(),
+                  authenticationRepository: context.repo(),
+                  settingsRepository: getIt(),
+                ),
           ),
           BlocProvider(
             create: (context) {
@@ -250,11 +221,12 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             },
           ),
           BlocProvider(
-            create: (context) => ThemeCubit(
-              accentColor: widget.color >= 0 ? Color(widget.color) : null,
-              themeModeIndex: widget.themeModeIndex,
-              fontFamily: widget.fontFamily,
-            ),
+            create:
+                (context) => ThemeCubit(
+                  accentColor: widget.color >= 0 ? Color(widget.color) : null,
+                  themeModeIndex: widget.themeModeIndex,
+                  fontFamily: widget.fontFamily,
+                ),
           ),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
@@ -265,16 +237,8 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             final themeModeIndex = themeState.themeModeIndex;
             final fontFamily = themeState.fontFamily;
 
-            final lightTheme = AppTheme.makeLight(
-              context,
-              seedColor: accentColor,
-              fontFamily: fontFamily,
-            );
-            final darkTheme = AppTheme.makeDark(
-              context,
-              seedColor: accentColor,
-              fontFamily: fontFamily,
-            );
+            final lightTheme = AppTheme.makeLight(context, seedColor: accentColor, fontFamily: fontFamily);
+            final darkTheme = AppTheme.makeDark(context, seedColor: accentColor, fontFamily: fontFamily);
 
             return MaterialApp.router(
               title: context.t.appName,

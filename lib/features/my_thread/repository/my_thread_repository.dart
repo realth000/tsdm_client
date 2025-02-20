@@ -7,8 +7,6 @@ import 'package:universal_html/parsing.dart';
 /// Repository of MyThread.
 class MyThreadRepository {
   /// Fetch html document from [url].
-  AsyncEither<uh.Document> fetchDocument(String url) => getIt
-      .get<NetClientProvider>()
-      .get(url)
-      .mapHttp((v) => parseHtmlDocument(v.data as String));
+  AsyncEither<uh.Document> fetchDocument(String url) =>
+      getIt.get<NetClientProvider>().get(url).mapHttp((v) => parseHtmlDocument(v.data as String));
 }

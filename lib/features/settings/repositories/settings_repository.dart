@@ -25,30 +25,31 @@ extension _ExtractExt on List<SettingsEntity> {
       return settings.defaultValue;
     }
     return (switch (T) {
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          int => v.intValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          double => v.doubleValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          String => v.stringValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          bool => v.boolValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          DateTime => v.dateTimeValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          Offset => v.offsetValue,
-          // ref: https://github.com/dart-lang/sdk/issues/59334
-          // ignore: type_literal_in_constant_pattern
-          Size => v.sizeValue,
-          _ => null,
-        } ??
-        settings.defaultValue) as T;
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              int => v.intValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              double => v.doubleValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              String => v.stringValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              bool => v.boolValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              DateTime => v.dateTimeValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              Offset => v.offsetValue,
+              // ref: https://github.com/dart-lang/sdk/issues/59334
+              // ignore: type_literal_in_constant_pattern
+              Size => v.sizeValue,
+              _ => null,
+            } ??
+            settings.defaultValue)
+        as T;
   }
 }
 
@@ -113,21 +114,16 @@ final class SettingsRepository with LoggerMixin {
       doublePressExit: s.extract(_SK.doublePressExit),
       threadReverseOrder: s.extract(_SK.threadReverseOrder),
       threadCardInfoRowAlignCenter: s.extract(_SK.threadCardInfoRowAlignCenter),
-      threadCardShowLastReplyAuthor:
-          s.extract(_SK.threadCardShowLastReplyAuthor),
-      threadCardHighlightRecentThread:
-          s.extract(_SK.threadCardHighlightRecentThread),
-      threadCardHighlightAuthorName:
-          s.extract(_SK.threadCardHighlightAuthorName),
+      threadCardShowLastReplyAuthor: s.extract(_SK.threadCardShowLastReplyAuthor),
+      threadCardHighlightRecentThread: s.extract(_SK.threadCardHighlightRecentThread),
+      threadCardHighlightAuthorName: s.extract(_SK.threadCardHighlightAuthorName),
       threadCardHighlightInfoRow: s.extract(_SK.threadCardHighlightInfoRow),
       netClientUseProxy: s.extract(_SK.netClientUseProxy),
       netClientProxy: s.extract(_SK.netClientProxy),
       autoCheckin: s.extract(_SK.autoCheckin),
       showUnreadNoticeBadge: s.extract(_SK.showUnreadNoticeBadge),
-      showUnreadPersonalMessageBadge:
-          s.extract(_SK.showUnreadPersonalMessageBadge),
-      showUnreadBroadcastMessageBadge:
-          s.extract(_SK.showUnreadBroadcastMessageBadge),
+      showUnreadPersonalMessageBadge: s.extract(_SK.showUnreadPersonalMessageBadge),
+      showUnreadBroadcastMessageBadge: s.extract(_SK.showUnreadBroadcastMessageBadge),
       autoSyncNoticeSeconds: s.extract(_SK.autoSyncNoticeSeconds),
       enableDebugOperations: s.extract(_SK.enableDebugOperations),
       fontFamily: s.extract(_SK.fontFamily),
@@ -171,9 +167,9 @@ final class SettingsRepository with LoggerMixin {
       // ignore: type_literal_in_constant_pattern
       Size => _storage.getSize(name),
       _ => () {
-          error('failed to getValue for key $key: unsupported type $T');
-          return null;
-        }()
+        error('failed to getValue for key $key: unsupported type $T');
+        return null;
+      }(),
     };
     return (v ?? key.defaultValue) as T;
   }
@@ -217,9 +213,11 @@ final class SettingsRepository with LoggerMixin {
       // ignore: type_literal_in_constant_pattern
       Size => _storage.saveSize(name, value as Size),
       final t => () {
-          error('failed to save settings for key $key:'
-              ' unsupported type in storage: $t');
-        }(),
+        error(
+          'failed to save settings for key $key:'
+          ' unsupported type in storage: $t',
+        );
+      }(),
     };
 
     _state = _state.copyWithKey(key, value);
@@ -227,15 +225,16 @@ final class SettingsRepository with LoggerMixin {
   }
 
   /// Build a default [Dio] instance from current settings.
-  Dio buildDefaultDio() => Dio()
-    ..options = BaseOptions(
-      headers: <String, String>{
-        HttpHeaders.acceptHeader: _state.netClientAccept,
-        HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
-        HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
-        HttpHeaders.userAgentHeader: _state.netClientUserAgent,
-        // HttpHeaders.hostHeader: baseUrl,
-        // HttpHeaders.pragmaHeader: 'no-cache',
-      },
-    );
+  Dio buildDefaultDio() =>
+      Dio()
+        ..options = BaseOptions(
+          headers: <String, String>{
+            HttpHeaders.acceptHeader: _state.netClientAccept,
+            HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
+            HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
+            HttpHeaders.userAgentHeader: _state.netClientUserAgent,
+            // HttpHeaders.hostHeader: baseUrl,
+            // HttpHeaders.pragmaHeader: 'no-cache',
+          },
+        );
 }

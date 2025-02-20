@@ -2,8 +2,7 @@ part of 'dao.dart';
 
 /// DAO for table [Image].
 @DriftAccessor(tables: [Image])
-final class ImageDao extends DatabaseAccessor<AppDatabase>
-    with _$ImageDaoMixin {
+final class ImageDao extends DatabaseAccessor<AppDatabase> with _$ImageDaoMixin {
   /// Constructor.
   ImageDao(super.db);
 

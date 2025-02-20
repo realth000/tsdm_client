@@ -10,15 +10,7 @@ class TopicsPlaceholder extends StatelessWidget {
     return [
       const Row(
         children: [
-          Expanded(
-            child: Row(
-              children: [
-                sizedW120H40Shimmer,
-                sizedBoxW12H12,
-                sizedW80H40Shimmer,
-              ],
-            ),
-          ),
+          Expanded(child: Row(children: [sizedW120H40Shimmer, sizedBoxW12H12, sizedW80H40Shimmer])),
         ],
       ),
       sizedBoxW24H24,

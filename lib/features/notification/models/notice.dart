@@ -106,8 +106,7 @@ class Notice with NoticeMappable {
   /// This css selector may work in all web page styles.
   static Notice? fromClNode(uh.Element element) {
     final userAvatarUrl = element.querySelector('dd.avt > a > img')?.imageUrl();
-    var userSpaceUrl =
-        element.querySelector('dd.avt > a')?.firstHref()?.prependHost();
+    var userSpaceUrl = element.querySelector('dd.avt > a')?.firstHref()?.prependHost();
 
     final noticeNode = element.querySelector('dt > span > span');
     final noticeTime = noticeNode?.attributes['title']?.parseToDateTimeUtc8();
@@ -159,12 +158,7 @@ class Notice with NoticeMappable {
       noticeType = NoticeType.invite;
     } else if (element.querySelectorAll('dd.ntc_body > a').length == 1) {
       noticeType = NoticeType.newFriend;
-    } else if (element
-            .querySelectorAll('dd.ntc_body > b')
-            .lastOrNull
-            ?.innerText
-            .contains('任务ID') ??
-        false) {
+    } else if (element.querySelectorAll('dd.ntc_body > b').lastOrNull?.innerText.contains('任务ID') ?? false) {
       noticeType = NoticeType.batchRate;
     } else {
       noticeType = NoticeType.reply;
@@ -181,18 +175,12 @@ class Notice with NoticeMappable {
       username = a1Node?.firstEndDeepText();
       noticeThreadUrl = a2Node?.firstHref();
       noticeThreadTitle = a2Node?.firstEndDeepText();
-      redirectUrl = element
-          .querySelector('dd.ntc_body > a:nth-child(3)')
-          ?.firstHref()
-          ?.prependHost();
+      redirectUrl = element.querySelector('dd.ntc_body > a:nth-child(3)')?.firstHref()?.prependHost();
     } else if (noticeType == NoticeType.mention) {
-      final n =
-          element.querySelector('dd.ntc_body')?.nodes.firstOrNull?.text?.trim();
+      final n = element.querySelector('dd.ntc_body')?.nodes.firstOrNull?.text?.trim();
       const usernameBeginOffset = 3;
       final usernameEndOffset = n?.indexOf('邀请');
-      username = usernameEndOffset == null
-          ? ''
-          : n?.substring(usernameBeginOffset, usernameEndOffset);
+      username = usernameEndOffset == null ? '' : n?.substring(usernameBeginOffset, usernameEndOffset);
       redirectUrl = a1Node?.firstHref()?.prependHost();
       quotedMessage = mentionNode!.firstEndDeepText()?.trim();
     } else if (noticeType == NoticeType.newFriend) {
@@ -223,12 +211,8 @@ class Notice with NoticeMappable {
       username = a2Node?.firstEndDeepText();
     }
 
-    final ignoreCount = element
-        .querySelector('dd.xg1.xw0')
-        ?.firstEndDeepText()
-        ?.split(' ')
-        .elementAtOrNull(1)
-        ?.parseToInt();
+    final ignoreCount =
+        element.querySelector('dd.xg1.xw0')?.firstEndDeepText()?.split(' ').elementAtOrNull(1)?.parseToInt();
 
     // Validate
     if (noticeType == NoticeType.mention) {
@@ -241,14 +225,18 @@ class Notice with NoticeMappable {
       }
     } else if (noticeType == NoticeType.newFriend) {
       if (username == null || userSpaceUrl == null) {
-        talker.error('failed to parse new friend notice:'
-            '$username, $userSpaceUrl');
+        talker.error(
+          'failed to parse new friend notice:'
+          '$username, $userSpaceUrl',
+        );
         return null;
       }
     } else if (noticeType == NoticeType.batchRate) {
       if (username == null || userSpaceUrl == null || taskId == null) {
-        talker.error('failed to parse batch rate notice: '
-            '$username, $userSpaceUrl, $taskId');
+        talker.error(
+          'failed to parse batch rate notice: '
+          '$username, $userSpaceUrl, $taskId',
+        );
         return null;
       }
     } else if (username == null ||

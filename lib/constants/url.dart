@@ -31,21 +31,17 @@ const readNoticeUrl = '$baseUrl/home.php?mod=space&do=notice&isread=1';
 const personalMessageUrl = '$baseUrl/home.php?mod=space&do=pm&filter=privatepm';
 
 /// Broadcast messages.
-const broadcastMessageUrl =
-    '$baseUrl/home.php?mod=space&do=pm&filter=announcepm';
+const broadcastMessageUrl = '$baseUrl/home.php?mod=space&do=pm&filter=announcepm';
 
 /// Broadcast message detail page.
-const broadcastMessageDetailUrl =
-    '$baseUrl/home.php?mod=space&do=pm&subop=viewg&pmid=';
+const broadcastMessageDetailUrl = '$baseUrl/home.php?mod=space&do=pm&subop=viewg&pmid=';
 
 /// Page contains all thread published by current logged user.
-const myThreadThreadUrl =
-    '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';
+const myThreadThreadUrl = '$baseUrl/home.php?mod=space&do=thread&view=me&type=thread';
 
 /// Page contains all posts (as replies in threads) published by current logged
 /// user.
-const myThreadReplyUrl =
-    '$baseUrl/home.php?mod=space&do=thread&view=me&type=reply';
+const myThreadReplyUrl = '$baseUrl/home.php?mod=space&do=thread&view=me&type=reply';
 
 /// Page contains credential information of current user.
 ///
@@ -54,8 +50,7 @@ const myThreadReplyUrl =
 /// * Username.
 /// * Uid.
 /// * Email address.
-const modifyUserCredentialUrl =
-    '$baseUrl/home.php?mod=spacecp&ac=profile&op=password';
+const modifyUserCredentialUrl = '$baseUrl/home.php?mod=spacecp&ac=profile&op=password';
 
 /// Use [modifyUserCredentialUrl] to check user status.
 ///
@@ -66,12 +61,10 @@ const modifyUserCredentialUrl =
 const checkAuthenticationStateUrl = modifyUserCredentialUrl;
 
 /// Url to get the latest app on Github.
-const upgradeGithubReleaseUrl =
-    'https://github.com/realth000/tsdm_client/releases/latest';
+const upgradeGithubReleaseUrl = 'https://github.com/realth000/tsdm_client/releases/latest';
 
 /// F-Droid homepage.
-const upgradeFDroidHomepageUrl =
-    'https://f-droid.org/packages/kzs.th000.tsdm_client';
+const upgradeFDroidHomepageUrl = 'https://f-droid.org/packages/kzs.th000.tsdm_client';
 
 /// Target url to post a reply to thread [tid], forum [fid].
 String formatReplyThreadUrl(String fid, String tid) {
@@ -80,8 +73,7 @@ String formatReplyThreadUrl(String fid, String tid) {
 }
 
 /// Prefix in url to get fast reply window to a certain post.
-const replyPostWindowSuffix =
-    '&infloat=yes&handlekey=reply&inajax=1&ajaxtarget=fwin_content_reply';
+const replyPostWindowSuffix = '&infloat=yes&handlekey=reply&inajax=1&ajaxtarget=fwin_content_reply';
 
 /// Target url to post a reply to another post in thread [tid], forum [fid].
 String formatReplyPostUrl(String fid, String tid) {

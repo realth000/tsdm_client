@@ -13,11 +13,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 /// 红包
 class PacketCard extends StatelessWidget {
   /// Constructor.
-  const PacketCard(
-    this.packetUrl, {
-    required this.allTaken,
-    super.key,
-  });
+  const PacketCard(this.packetUrl, {required this.allTaken, super.key});
 
   /// Regexp to parse thread id from [packetUrl].
   ///
@@ -40,64 +36,45 @@ class PacketCard extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => PacketRepository(),
-        ),
+        RepositoryProvider(create: (_) => PacketRepository()),
         BlocProvider<PacketCubit>(
-          create: (context) => PacketCubit(
-            packetRepository: context.repo(),
-            allTaken: allTaken,
-          ),
+          create: (context) => PacketCubit(packetRepository: context.repo(), allTaken: allTaken),
         ),
       ],
       child: BlocListener<PacketCubit, PacketState>(
         listener: (context, state) {
           if (state.status == PacketStatus.failed) {
             if (state.reason != null) {
-              ScaffoldMessenger.of(context)
-                  .showSnackBar(SnackBar(content: Text(state.reason!)));
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.reason!)));
             } else {
-              ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text(tr.failedToOpen)),
-              );
+              ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr.failedToOpen)));
             }
           } else if (state.status == PacketStatus.success) {
-            ScaffoldMessenger.of(context)
-                .showSnackBar(SnackBar(content: Text(state.reason!)));
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.reason!)));
           } else if (state.status == PacketStatus.takenAway) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(tr.allTakenAway)),
-            );
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(tr.allTakenAway)));
           }
         },
         child: BlocBuilder<PacketCubit, PacketState>(
           builder: (context, state) {
             final body = switch (state.status) {
-              PacketStatus.loading =>
-                const Center(child: sizedCircularProgressIndicator),
+              PacketStatus.loading => const Center(child: sizedCircularProgressIndicator),
               PacketStatus.initial ||
               PacketStatus.success ||
               PacketStatus.failed ||
-              PacketStatus.takenAway =>
-                const Icon(FontAwesomeIcons.solidEnvelopeOpen),
+              PacketStatus.takenAway => const Icon(FontAwesomeIcons.solidEnvelopeOpen),
             };
 
             final label = switch (state.status) {
               PacketStatus.loading => const Text(''),
-              PacketStatus.initial ||
-              PacketStatus.success ||
-              PacketStatus.failed =>
-                Text(tr.open),
+              PacketStatus.initial || PacketStatus.success || PacketStatus.failed => Text(tr.open),
               PacketStatus.takenAway => Text(tr.allTakenAway),
             };
 
             final callback = switch (state.status) {
-              PacketStatus.loading ||
-              PacketStatus.success ||
-              PacketStatus.takenAway =>
-                null,
-              PacketStatus.initial || PacketStatus.failed => () async =>
-                  context.read<PacketCubit>().receivePacket(packetUrl),
+              PacketStatus.loading || PacketStatus.success || PacketStatus.takenAway => null,
+              PacketStatus.initial ||
+              PacketStatus.failed => () async => context.read<PacketCubit>().receivePacket(packetUrl),
             };
 
             return Card(
@@ -111,28 +88,18 @@ class PacketCard extends StatelessWidget {
                       children: [
                         Icon(FontAwesomeIcons.coins, color: primaryColor),
                         sizedBoxW8H8,
-                        Text(
-                          tr.title,
-                          style:
-                              Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    color: primaryColor,
-                                  ),
-                        ),
+                        Text(tr.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primaryColor)),
                         // Some spacing.
                         sizedBoxW32H32,
                         sizedBoxW32H32,
                         sizedBoxW32H32,
                         IconButton(
-                          icon: Icon(
-                            Icons.bar_chart_outlined,
-                            color: Theme.of(context).colorScheme.secondary,
-                          ),
-                          onPressed: tid == null
-                              ? null
-                              : () async => context.pushNamed(
-                                    ScreenPaths.packetDetail,
-                                    pathParameters: {'tid': '$tid'},
-                                  ),
+                          icon: Icon(Icons.bar_chart_outlined, color: Theme.of(context).colorScheme.secondary),
+                          onPressed:
+                              tid == null
+                                  ? null
+                                  : () async =>
+                                      context.pushNamed(ScreenPaths.packetDetail, pathParameters: {'tid': '$tid'}),
                         ),
                       ],
                     ),
@@ -141,11 +108,7 @@ class PacketCard extends StatelessWidget {
                     sizedBoxW12H12,
                     SizedBox(
                       width: sizeButtonInCardMinWidth,
-                      child: OutlinedButton.icon(
-                        icon: body,
-                        label: label,
-                        onPressed: callback,
-                      ),
+                      child: OutlinedButton.icon(icon: body, label: label, onPressed: callback),
                     ),
                   ],
                 ),

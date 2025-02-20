@@ -10,11 +10,9 @@ part 'broadcast_message_detail_cubit.mapper.dart';
 part 'broadcast_message_detail_state.dart';
 
 /// Cubit of broadcast message detail page.
-final class BroadcastMessageDetailCubit
-    extends Cubit<BroadcastMessageDetailState> with LoggerMixin {
+final class BroadcastMessageDetailCubit extends Cubit<BroadcastMessageDetailState> with LoggerMixin {
   /// Constructor.
-  BroadcastMessageDetailCubit(this._notificationRepository)
-      : super(const BroadcastMessageDetailState());
+  BroadcastMessageDetailCubit(this._notificationRepository) : super(const BroadcastMessageDetailState());
 
   final NotificationRepository _notificationRepository;
 
@@ -23,36 +21,37 @@ final class BroadcastMessageDetailCubit
     emit(state.copyWith(status: BroadcastMessageDetailStatus.loading));
     await _notificationRepository
         .fetchDocument('$broadcastMessageDetailUrl$pmid')
-        .match((e) {
-      handle(e);
-      error('failed to fetch broadcast message detail: $e');
-      emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
-    }, (v) {
-      final (document, _) = v;
-      final infoNode = document.querySelector('div#pm_ul');
-      final datetime = infoNode
-              ?.querySelector('dl > dd.ptm > span.xg1')
-              ?.innerText
-              .parseToDateTimeUtc8() ??
-          // Recent messages.
-          infoNode
-              ?.querySelector('dl > dd.ptm > span.xg1 > span')
-              ?.title
-              ?.parseToDateTimeUtc8();
-      final messageNode = infoNode?.querySelector('dl > dd > p.pm_smry');
-      if (datetime == null || messageNode == null) {
-        error('failed to build broadcast detail message page: '
-            'datetime=$datetime, messageNode=${messageNode?.innerHtml}');
-        emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
-        return;
-      }
-      emit(
-        state.copyWith(
-          status: BroadcastMessageDetailStatus.success,
-          dateTime: datetime,
-          messageNode: messageNode,
-        ),
-      );
-    }).run();
+        .match(
+          (e) {
+            handle(e);
+            error('failed to fetch broadcast message detail: $e');
+            emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
+          },
+          (v) {
+            final (document, _) = v;
+            final infoNode = document.querySelector('div#pm_ul');
+            final datetime =
+                infoNode?.querySelector('dl > dd.ptm > span.xg1')?.innerText.parseToDateTimeUtc8() ??
+                // Recent messages.
+                infoNode?.querySelector('dl > dd.ptm > span.xg1 > span')?.title?.parseToDateTimeUtc8();
+            final messageNode = infoNode?.querySelector('dl > dd > p.pm_smry');
+            if (datetime == null || messageNode == null) {
+              error(
+                'failed to build broadcast detail message page: '
+                'datetime=$datetime, messageNode=${messageNode?.innerHtml}',
+              );
+              emit(state.copyWith(status: BroadcastMessageDetailStatus.failed));
+              return;
+            }
+            emit(
+              state.copyWith(
+                status: BroadcastMessageDetailStatus.success,
+                dateTime: datetime,
+                messageNode: messageNode,
+              ),
+            );
+          },
+        )
+        .run();
   }
 }

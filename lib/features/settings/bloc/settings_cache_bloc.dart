@@ -10,15 +10,12 @@ part 'settings_cache_state.dart';
 /// Bloc of using cached cubit.
 class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
   /// Constructor.
-  SettingsCacheBloc({
-    required SettingsCacheRepository cacheRepository,
-  })  : _cacheRepository = cacheRepository,
-        super(const SettingsCacheState()) {
+  SettingsCacheBloc({required SettingsCacheRepository cacheRepository})
+    : _cacheRepository = cacheRepository,
+      super(const SettingsCacheState()) {
     on<SettingsCacheCalculateRequested>(_onCacheCalculateRequested);
     on<SettingsCacheClearCacheRequested>(_onCacheClearCacheRequested);
-    on<SettingsCacheUpdateClearInfoRequested>(
-      _onSettingsCacheUpdateClearInfoRequested,
-    );
+    on<SettingsCacheUpdateClearInfoRequested>(_onSettingsCacheUpdateClearInfoRequested);
   }
 
   final SettingsCacheRepository _cacheRepository;
@@ -29,12 +26,7 @@ class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
   ) async {
     emit(state.copyWith(status: SettingsCacheStatus.calculating));
     final storageInfo = await _cacheRepository.calculateCache();
-    emit(
-      state.copyWith(
-        status: SettingsCacheStatus.loaded,
-        storageInfo: storageInfo,
-      ),
-    );
+    emit(state.copyWith(status: SettingsCacheStatus.loaded, storageInfo: storageInfo));
   }
 
   Future<void> _onCacheClearCacheRequested(
@@ -45,12 +37,7 @@ class SettingsCacheBloc extends Bloc<SettingsCacheEvent, SettingsCacheState> {
     await _cacheRepository.clearCache(event.clearInfo);
     emit(state.copyWith(status: SettingsCacheStatus.calculating));
     final storageInfo = await _cacheRepository.calculateCache();
-    emit(
-      state.copyWith(
-        status: SettingsCacheStatus.cleared,
-        storageInfo: storageInfo,
-      ),
-    );
+    emit(state.copyWith(status: SettingsCacheStatus.cleared, storageInfo: storageInfo));
   }
 
   Future<void> _onSettingsCacheUpdateClearInfoRequested(

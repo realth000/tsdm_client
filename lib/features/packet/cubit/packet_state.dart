@@ -22,10 +22,7 @@ enum PacketStatus {
 @MappableClass()
 final class PacketState with PacketStateMappable {
   /// Constructor.
-  const PacketState({
-    this.status = PacketStatus.initial,
-    this.reason,
-  });
+  const PacketState({this.status = PacketStatus.initial, this.reason});
 
   /// Status.
   final PacketStatus status;

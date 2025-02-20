@@ -8,10 +8,7 @@ part of 'models.dart';
 @MappableClass()
 final class SmmsRequest with SmmsRequestMappable {
   /// Constructor.
-  const SmmsRequest({
-    required this.token,
-    required this.data,
-  });
+  const SmmsRequest({required this.token, required this.data});
 
   /// Token to authorize.
   final String token;
@@ -26,12 +23,7 @@ final class SmmsRequest with SmmsRequestMappable {
 @MappableClass()
 final class SmmsResponse with SmmsResponseMappable {
   /// Constructor.
-  const SmmsResponse({
-    required this.success,
-    required this.code,
-    required this.message,
-    required this.data,
-  });
+  const SmmsResponse({required this.success, required this.code, required this.message, required this.data});
 
   /// Succeeded or not.
   final bool success;
@@ -50,11 +42,7 @@ final class SmmsResponse with SmmsResponseMappable {
 @MappableClass()
 final class SmmsResponseData with SmmsResponseDataMappable {
   /// Constructor.
-  const SmmsResponseData({
-    required this.width,
-    required this.height,
-    required this.url,
-  });
+  const SmmsResponseData({required this.width, required this.height, required this.url});
 
   /// Image width.
   final int width;

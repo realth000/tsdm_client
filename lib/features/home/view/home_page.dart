@@ -92,60 +92,50 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
   }
 
   Widget _buildDrawerBody(BuildContext context) => Scaffold(
-        body: Row(
-          children: [
-            if (widget.showNavigationBar)
-              Column(
-                children: [
-                  Container(
-                    color: Theme.of(context).colorScheme.surface,
-                    height: 100,
-                    width: _drawerWidth,
-                    child: Center(
-                      child: Text(
-                        context.t.appName,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              fontWeight: FontWeight.bold,
-                              color: Theme.of(context).colorScheme.secondary,
-                            ),
-                      ),
+    body: Row(
+      children: [
+        if (widget.showNavigationBar)
+          Column(
+            children: [
+              Container(
+                color: Theme.of(context).colorScheme.surface,
+                height: 100,
+                width: _drawerWidth,
+                child: Center(
+                  child: Text(
+                    context.t.appName,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.secondary,
                     ),
                   ),
-                  Expanded(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(
-                        maxWidth: _drawerWidth,
-                      ),
-                      child: const HomeNavigationDrawer(),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            Expanded(child: widget.child),
-          ],
-        ),
-      );
+              Expanded(
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxWidth: _drawerWidth),
+                  child: const HomeNavigationDrawer(),
+                ),
+              ),
+            ],
+          ),
+        Expanded(child: widget.child),
+      ],
+    ),
+  );
 
   Widget _buildContent(BuildContext context) {
     final Widget child;
-    if (ResponsiveBreakpoints.of(context)
-        .largerThan(WindowSize.expanded.name)) {
+    if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {
       child = _buildDrawerBody(context);
-    } else if (ResponsiveBreakpoints.of(context)
-        .largerThan(WindowSize.compact.name)) {
+    } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
       child = Scaffold(
-        body: Row(
-          children: [
-            if (widget.showNavigationBar) const HomeNavigationRail(),
-            Expanded(child: widget.child),
-          ],
-        ),
+        body: Row(children: [if (widget.showNavigationBar) const HomeNavigationRail(), Expanded(child: widget.child)]),
       );
     } else {
       child = Scaffold(
         body: widget.child,
-        bottomNavigationBar:
-            widget.showNavigationBar ? const HomeNavigationBar() : null,
+        bottomNavigationBar: widget.showNavigationBar ? const HomeNavigationBar() : null,
       );
     }
 
@@ -153,8 +143,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
       value: widget._forumHomeRepository,
       child: BackButtonListener(
         onBackButtonPressed: () async {
-          final doublePressExit =
-              getIt.get<SettingsRepository>().currentSettings.doublePressExit;
+          final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
           if (!doublePressExit) {
             // Do NOT handle pop events on double press check is disabled.
             return false;
@@ -170,8 +159,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
           final tr = context.t.home;
           final currentTime = DateTime.now();
           if (lastPopTime == null ||
-              currentTime.difference(lastPopTime!).inMilliseconds >
-                  exitConfirmDuration.inMilliseconds) {
+              currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
             lastPopTime = currentTime;
             ScaffoldMessenger.of(context).hideCurrentSnackBar();
             showSnackBar(context: context, message: tr.confirmExit);
@@ -184,10 +172,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
     );
   }
 
-  Future<void> showLocalNotification(
-    BuildContext context,
-    NotificationAutoSyncInfo info,
-  ) async {
+  Future<void> showLocalNotification(BuildContext context, NotificationAutoSyncInfo info) async {
     final tr = context.t.localNotification;
     final and = AndroidNotificationDetails(
       'newNoticeChannel',
@@ -197,18 +182,10 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
     );
     final nd = NotificationDetails(android: and);
     final noticeData = switch (info) {
-      NotificationAutoSyncInfoNotice(
-        :final msg,
-        :final notice,
-        :final personalMessage,
-        :final broadcastMessage,
-      ) =>
-        tr.notice.detail.notice(
-          noticeCount: notice,
-          pmCount: personalMessage,
-          bmCount: broadcastMessage,
-          msg: msg,
-        ),
+      NotificationAutoSyncInfoNotice(:final msg, :final notice, :final personalMessage, :final broadcastMessage) => tr
+          .notice
+          .detail
+          .notice(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
       NotificationAutoSyncInfoPm(
         :final user,
         :final msg,
@@ -223,35 +200,20 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
           user: user,
           msg: msg,
         ),
-      NotificationAutoSyncInfoBm(
-        :final msg,
-        :final notice,
-        :final personalMessage,
-        :final broadcastMessage,
-      ) =>
-        tr.notice.detail.bm(
-          noticeCount: notice,
-          pmCount: personalMessage,
-          bmCount: broadcastMessage,
-          msg: msg,
-        ),
+      NotificationAutoSyncInfoBm(:final msg, :final notice, :final personalMessage, :final broadcastMessage) => tr
+          .notice
+          .detail
+          .bm(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
     };
     if (isAndroid) {
-      await flnp.show(
-        0,
-        tr.notice.title,
-        noticeData,
-        nd,
-        payload: LocalNoticeKeys.openNotification,
-      );
+      await flnp.show(0, tr.notice.title, noticeData, nd, payload: LocalNoticeKeys.openNotification);
     }
   }
 
   @override
   void initState() {
     super.initState();
-    rootLocationSub =
-        localNoticeStream.stream.listen(_onLocalNoticeStreamEvent);
+    rootLocationSub = localNoticeStream.stream.listen(_onLocalNoticeStreamEvent);
   }
 
   @override
@@ -265,35 +227,25 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
     Translations.of(context);
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
-          create: (_) => HomeCubit(),
-        ),
-        BlocProvider(
-          create: (context) => InitCubit()..deleteV0LegacyData(),
-        ),
+        BlocProvider(create: (_) => HomeCubit()),
+        BlocProvider(create: (context) => InitCubit()..deleteV0LegacyData()),
       ],
       child: MultiBlocListener(
         listeners: [
-          BlocListener<NotificationStateAutoSyncCubit,
-              NotificationAutoSyncInfo?>(
+          BlocListener<NotificationStateAutoSyncCubit, NotificationAutoSyncInfo?>(
             listenWhen: (prev, curr) => curr != null && prev != curr,
             listener: (context, state) async {
               await showLocalNotification(context, state!);
             },
           ),
           BlocListener<InitCubit, InitState>(
-            listenWhen: (prev, curr) =>
-                prev.v0LegacyDataDeleted != curr.v0LegacyDataDeleted,
+            listenWhen: (prev, curr) => prev.v0LegacyDataDeleted != curr.v0LegacyDataDeleted,
             listener: (context, state) {
               if (state.v0LegacyDataDeleted != true) {
                 return;
               }
               final tr = context.t.init.v1DeleteLegacyData;
-              showMessageSingleButtonDialog(
-                context: context,
-                title: tr.title,
-                message: tr.detail,
-              );
+              showMessageSingleButtonDialog(context: context, title: tr.title, message: tr.detail);
             },
           ),
         ],

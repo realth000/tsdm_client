@@ -56,18 +56,13 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
     final tr = context.t.ratePostPage;
     return TextFormField(
       controller: scoreMap![score.id],
-      keyboardType:
-          const TextInputType.numberWithOptions(signed: true, decimal: true),
+      keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
       decoration: InputDecoration(
         labelText: score.name,
         helperText: tr.scoreTodayRemaining(score: score.remaining),
-        helperStyle: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: Theme.of(context).colorScheme.secondary,
-            ),
+        helperStyle: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
         suffixText: '${score.allowedRangeDescription} ',
-        suffixStyle: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.outline,
-            ),
+        suffixStyle: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
       ),
       validator: (v) {
         if (v?.contains('.') ?? true) {
@@ -125,14 +120,10 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
     final tr = context.t.ratePostPage;
 
     if (state.status == RateStatus.gotInfo) {
-      scoreMap ??= Map.fromEntries(
-        state.info!.scoreList
-            .map((e) => MapEntry(e.id, TextEditingController(text: '0'))),
-      );
+      scoreMap ??= Map.fromEntries(state.info!.scoreList.map((e) => MapEntry(e.id, TextEditingController(text: '0'))));
     }
 
-    if (state.status == RateStatus.initial ||
-        state.status == RateStatus.fetchingInfo) {
+    if (state.status == RateStatus.initial || state.status == RateStatus.fetchingInfo) {
       return const Center(child: CircularProgressIndicator());
     }
 
@@ -140,9 +131,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       return const Center(child: CircularProgressIndicator());
     }
 
-    final scoreWidgetList = state.info!.scoreList
-        .map((e) => _buildScoreWidget(context, e))
-        .toList();
+    final scoreWidgetList = state.info!.scoreList.map((e) => _buildScoreWidget(context, e)).toList();
 
     Widget? defaultReasonButton;
     if (state.info?.defaultReasonList.isNotEmpty ?? false) {
@@ -151,28 +140,31 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         descendantsAreFocusable: false,
         child: IconButton(
           icon: const Icon(Icons.arrow_drop_down_outlined),
-          onPressed: () async => showDialog(
-            context: context,
-            builder: (_) => AlertDialog(
-              title: Text(tr.reason),
-              scrollable: true,
-              content: Column(
-                children: state.info!.defaultReasonList
-                    .map(
-                      (e) => ListTile(
-                        title: Text(e),
-                        onTap: () {
-                          context.pop();
-                          setState(() {
-                            reasonController.text = e;
-                          });
-                        },
+          onPressed:
+              () async => showDialog(
+                context: context,
+                builder:
+                    (_) => AlertDialog(
+                      title: Text(tr.reason),
+                      scrollable: true,
+                      content: Column(
+                        children:
+                            state.info!.defaultReasonList
+                                .map(
+                                  (e) => ListTile(
+                                    title: Text(e),
+                                    onTap: () {
+                                      context.pop();
+                                      setState(() {
+                                        reasonController.text = e;
+                                      });
+                                    },
+                                  ),
+                                )
+                                .toList(),
                       ),
-                    )
-                    .toList(),
+                    ),
               ),
-            ),
-          ),
         ),
       );
     }
@@ -189,13 +181,10 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               sizedBoxW12H12,
               Expanded(
                 child: Text(
-                  tr.description(
-                    username: widget.username,
-                    floor: widget.floor,
-                  ),
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        color: Theme.of(context).colorScheme.secondary,
-                      ),
+                  tr.description(username: widget.username, floor: widget.floor),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
                 ),
               ),
               sizedBoxW12H12,
@@ -221,10 +210,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               Expanded(
                 child: TextFormField(
                   controller: reasonController,
-                  decoration: InputDecoration(
-                    labelText: tr.reason,
-                    suffixIcon: defaultReasonButton,
-                  ),
+                  decoration: InputDecoration(labelText: tr.reason, suffixIcon: defaultReasonButton),
                 ),
               ),
               sizedBoxW12H12,
@@ -281,53 +267,32 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
 
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => RateRepository(),
-        ),
+        RepositoryProvider(create: (_) => RateRepository()),
         BlocProvider(
-          create: (context) => RateBloc(rateRepository: context.repo())
-            ..add(
-              RateFetchInfoRequested(
-                pid: widget.pid,
-                rateAction: widget.rateAction,
-              ),
-            ),
+          create:
+              (context) =>
+                  RateBloc(rateRepository: context.repo())
+                    ..add(RateFetchInfoRequested(pid: widget.pid, rateAction: widget.rateAction)),
         ),
       ],
       child: BlocListener<RateBloc, RateState>(
         listener: (context, state) {
           if (state.status == RateStatus.failed) {
             // Show reason and pop back if we should not retry.
-            showSnackBar(
-              context: context,
-              message: state.failedReason ?? tr.failedToRate,
-            );
+            showSnackBar(context: context, message: state.failedReason ?? tr.failedToRate);
             if (state.shouldRetry == false) {
               Navigator.of(context).pop();
               return;
             }
-            context.read<RateBloc>().add(
-                  RateFetchInfoRequested(
-                    pid: widget.pid,
-                    rateAction: widget.rateAction,
-                  ),
-                );
+            context.read<RateBloc>().add(RateFetchInfoRequested(pid: widget.pid, rateAction: widget.rateAction));
           } else if (state.status == RateStatus.success) {
-            showSnackBar(
-              context: context,
-              message: tr.success,
-            );
+            showSnackBar(context: context, message: tr.success);
             Navigator.of(context).pop();
           }
         },
         child: BlocBuilder<RateBloc, RateState>(
           builder: (context, state) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(tr.title),
-              ),
-              body: _buildBody(context, state),
-            );
+            return Scaffold(appBar: AppBar(title: Text(tr.title)), body: _buildBody(context, state));
           },
         ),
       ),

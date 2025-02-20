@@ -29,11 +29,7 @@ enum LoginResult {
   unknown;
 
   factory LoginResult.fromLoginMessageNode(uh.Element messageNode) {
-    final message = messageNode
-        .querySelector('div#messagetext > p')
-        ?.nodes
-        .firstOrNull
-        ?.text;
+    final message = messageNode.querySelector('div#messagetext > p')?.nodes.firstOrNull?.text;
     if (message == null) {
       const message = 'login result message text not found';
       talker.error('failed to check login result: $message');
@@ -53,9 +49,7 @@ enum LoginResult {
 
       // Impossible unless server response page updated and changed these
       // messages.
-      talker.error(
-        'login result check passed but message check maybe outdated: $message',
-      );
+      talker.error('login result check passed but message check maybe outdated: $message');
       return LoginResult.success;
     }
 

@@ -14,8 +14,7 @@ final class InitCubit extends Cubit<InitState> {
 
   /// Delete legacy data used in version v0.x.
   Future<void> deleteV0LegacyData() async {
-    final v0IsarDb =
-        File('${(await getApplicationSupportDirectory()).path}/db/main.isar');
+    final v0IsarDb = File('${(await getApplicationSupportDirectory()).path}/db/main.isar');
     if (!v0IsarDb.existsSync()) {
       return;
     }
@@ -26,8 +25,7 @@ final class InitCubit extends Cubit<InitState> {
       await v0IsarDbLock.delete();
     }
 
-    final v0ImageCacheDir =
-        Directory('${(await getApplicationCacheDirectory()).path}/images');
+    final v0ImageCacheDir = Directory('${(await getApplicationCacheDirectory()).path}/images');
     if (v0ImageCacheDir.existsSync()) {
       await v0ImageCacheDir.list(recursive: true).forEach((e) => e.delete());
     }

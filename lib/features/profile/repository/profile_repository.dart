@@ -13,8 +13,7 @@ import 'package:universal_html/parsing.dart';
 
 /// Repository to get profile page.
 final class ProfileRepository with LoggerMixin {
-  static const _profileV2Target =
-      '$baseUrl/home.php?mobile=yes&tsdmapp=1&mod=space';
+  static const _profileV2Target = '$baseUrl/home.php?mobile=yes&tsdmapp=1&mod=space';
 
   uh.Document? _loggedUserDocument;
 
@@ -39,55 +38,51 @@ final class ProfileRepository with LoggerMixin {
   /// * Try to get the profile page of [uid] or [username] if provided.
   /// * Try to get current logged user profile if no parameter provided.
   /// * Return null if not logged in.
-  AsyncEither<uh.Document> fetchProfile({
-    String? username,
-    String? uid,
-    bool force = false,
-  }) =>
-      AsyncEither(() async {
-        debug('fetch profile page');
-        late final String targetUrl;
-        late final bool isLoggedUserProfile;
-        if (uid != null) {
-          targetUrl = '$uidProfilePage$uid';
-          isLoggedUserProfile = false;
-        } else if (username != null) {
-          targetUrl = '$usernameProfilePage$username';
-          isLoggedUserProfile = false;
-        } else {
-          // Fetching logged user profile.
-          final settings = getIt.get<SettingsRepository>().currentSettings;
-          final loginUsername = settings.loginUsername;
-          final loginUid = settings.loginUid;
-          // TODO: Check if this condition check works during login progress.
-          if (loginUsername.isEmpty || loginUid == 0) {
-            warning('fetch profile: not login, unsatisfied fields: '
-                'name(${loginUsername.isEmpty}), uid(${loginUid == 0})');
-            // Not logged in.
-            return left(ProfileNeedLoginException());
-          }
-          if (!force && _loggedUserDocument != null) {
-            return right(_loggedUserDocument!);
-          }
-          targetUrl = '$uidProfilePage$loginUid';
-          isLoggedUserProfile = true;
-        }
+  AsyncEither<uh.Document> fetchProfile({String? username, String? uid, bool force = false}) => AsyncEither(() async {
+    debug('fetch profile page');
+    late final String targetUrl;
+    late final bool isLoggedUserProfile;
+    if (uid != null) {
+      targetUrl = '$uidProfilePage$uid';
+      isLoggedUserProfile = false;
+    } else if (username != null) {
+      targetUrl = '$usernameProfilePage$username';
+      isLoggedUserProfile = false;
+    } else {
+      // Fetching logged user profile.
+      final settings = getIt.get<SettingsRepository>().currentSettings;
+      final loginUsername = settings.loginUsername;
+      final loginUid = settings.loginUid;
+      // TODO: Check if this condition check works during login progress.
+      if (loginUsername.isEmpty || loginUid == 0) {
+        warning(
+          'fetch profile: not login, unsatisfied fields: '
+          'name(${loginUsername.isEmpty}), uid(${loginUid == 0})',
+        );
+        // Not logged in.
+        return left(ProfileNeedLoginException());
+      }
+      if (!force && _loggedUserDocument != null) {
+        return right(_loggedUserDocument!);
+      }
+      targetUrl = '$uidProfilePage$loginUid';
+      isLoggedUserProfile = true;
+    }
 
-        switch (await getIt.get<NetClientProvider>().get(targetUrl).run()) {
-          case Left(:final value):
-            return left(value);
-          case Right(:final value):
-            final document = parseHtmlDocument(value.data as String);
-            if (isLoggedUserProfile) {
-              _loggedUserDocument = document;
-            }
-            return right(document);
+    switch (await getIt.get<NetClientProvider>().get(targetUrl).run()) {
+      case Left(:final value):
+        return left(value);
+      case Right(:final value):
+        final document = parseHtmlDocument(value.data as String);
+        if (isLoggedUserProfile) {
+          _loggedUserDocument = document;
         }
-      });
+        return right(document);
+    }
+  });
 
   /// Fetch user avatar for current user.
-  AsyncEither<String> fetchAvatarUrl() =>
-      fetchProfileV2().map((v) => v.avatarUrl);
+  AsyncEither<String> fetchAvatarUrl() => fetchProfileV2().map((v) => v.avatarUrl);
 
   /// Fetch user profile through API.
   ///
@@ -116,11 +111,7 @@ final class ProfileRepository with LoggerMixin {
   ///   "values": []
   /// }
   /// ```
-  AsyncEither<UserProfileV2> fetchProfileV2({
-    String? username,
-    String? uid,
-    bool force = false,
-  }) {
+  AsyncEither<UserProfileV2> fetchProfileV2({String? username, String? uid, bool force = false}) {
     return AsyncEither(() async {
       debug('fetch profile page v2');
       late final String targetUrl;
@@ -140,29 +131,26 @@ final class ProfileRepository with LoggerMixin {
         return right(_loggedProfileV2!);
       }
 
-      switch (await NetClientProvider.build(
-        forceDesktop: false,
-      ).get(targetUrl).run()) {
+      switch (await NetClientProvider.build(forceDesktop: false).get(targetUrl).run()) {
         case Left(:final value):
           return left(value);
         case Right(:final value):
-          final jsonMap =
-              jsonDecode(value.data as String) as Map<String, dynamic>;
+          final jsonMap = jsonDecode(value.data as String) as Map<String, dynamic>;
           if (!jsonMap.containsKey('status')) {
             error('failed to fetch profile v2: status not found');
             return left(ProfileStatusNotFoundException());
           }
           final status = jsonMap['status'] as int?;
           if (status == -1) {
-            error('failed to fetch profile v2: '
-                'message=${jsonMap.lookup("message")}');
+            error(
+              'failed to fetch profile v2: '
+              'message=${jsonMap.lookup("message")}',
+            );
             return left(ProfileNeedLoginException());
           }
           if (status != 0) {
             error('failed to fetch profile v2: unknown status $status');
-            return left(
-              ProfileStatusUnknownException(jsonMap['status'].toString()),
-            );
+            return left(ProfileStatusUnknownException(jsonMap['status'].toString()));
           }
           // status is zero
           final userProfile = UserProfileV2Mapper.fromMap(jsonMap);

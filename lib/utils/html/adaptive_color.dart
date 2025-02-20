@@ -25,13 +25,7 @@ const _invertNHueMatrix = [
 
 _Matrix5 _multiplyMatrix(_Matrix5 m1, _Matrix5 m2) {
   _Matrix5 result;
-  result = List.generate(
-    m1.length,
-    (_) => List.generate(
-      m2.length,
-      (_) => 0,
-    ),
-  );
+  result = List.generate(m1.length, (_) => List.generate(m2.length, (_) => 0));
   for (var i = 0, len = m1.length; i < len; i++) {
     result[i] = List.generate(len, (_) => 0);
     for (var j = 0, len2 = m2[0].length; j < len2; j++) {
@@ -57,9 +51,7 @@ List<num> _applyColorMatrix(Color color, _Matrix5 m) {
 
   final result = _multiplyMatrix(m, m5x1);
 
-  return [0, 1, 2]
-      .map((e) => _clamp((result[e][0] * 255).round(), 0, 255))
-      .toList();
+  return [0, 1, 2].map((e) => _clamp((result[e][0] * 255).round(), 0, 255)).toList();
 }
 
 num _clamp(num x, num min, num max) {

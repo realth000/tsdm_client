@@ -12,13 +12,9 @@ sealed class RateEvent with RateEventMappable {
 /// This should be triggered once opened the rate page.
 /// Before this event complete, user should be unable to interact with the page.
 @MappableClass()
-final class RateFetchInfoRequested extends RateEvent
-    with RateFetchInfoRequestedMappable {
+final class RateFetchInfoRequested extends RateEvent with RateFetchInfoRequestedMappable {
   /// Constructor.
-  const RateFetchInfoRequested({
-    required this.pid,
-    required this.rateAction,
-  }) : super();
+  const RateFetchInfoRequested({required this.pid, required this.rateAction}) : super();
 
   /// Post id.
   final String pid;

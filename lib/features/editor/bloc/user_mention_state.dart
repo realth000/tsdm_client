@@ -29,11 +29,11 @@ final class UserMentionState with UserMentionStateMappable {
 
   /// Empty state.
   factory UserMentionState.empty() => const UserMentionState(
-        searchStatus: UserMentionStatus.initial,
-        recommendStatus: UserMentionStatus.initial,
-        searchResult: [],
-        randomFriend: [],
-      );
+    searchStatus: UserMentionStatus.initial,
+    recommendStatus: UserMentionStatus.initial,
+    searchResult: [],
+    randomFriend: [],
+  );
 
   /// Current status of searching user.
   final UserMentionStatus searchStatus;

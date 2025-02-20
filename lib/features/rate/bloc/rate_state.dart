@@ -26,22 +26,14 @@ enum RateStatus {
   /// Is loading data.
   ///
   /// Should block the UI (maybe in different ways) in this state.
-  bool isLoading() =>
-      this == RateStatus.initial ||
-      this == RateStatus.fetchingInfo ||
-      this == RateStatus.rating;
+  bool isLoading() => this == RateStatus.initial || this == RateStatus.fetchingInfo || this == RateStatus.rating;
 }
 
 /// State of rate.
 @MappableClass()
 final class RateState with RateStateMappable {
   /// Constructor.
-  const RateState({
-    this.status = RateStatus.initial,
-    this.info,
-    this.failedReason,
-    this.shouldRetry = true,
-  });
+  const RateState({this.status = RateStatus.initial, this.info, this.failedReason, this.shouldRetry = true});
 
   /// Status.
   final RateStatus status;

@@ -37,12 +37,8 @@ extension DispatchUrl<T> on BuildContext {
       // Push route to the page if is recognized route.
       return pushNamed<T>(
         route.screenPath,
-        pathParameters: route.pathParameters.copyWith(
-          extraPathParameters ?? {},
-        ),
-        queryParameters: route.queryParameters.copyWith(
-          extraPathParameters ?? {},
-        ),
+        pathParameters: route.pathParameters.copyWith(extraPathParameters ?? {}),
+        queryParameters: route.queryParameters.copyWith(extraPathParameters ?? {}),
       );
     }
     // Launch in external browser if is unsupported url.

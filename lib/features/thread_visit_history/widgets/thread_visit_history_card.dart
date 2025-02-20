@@ -20,10 +20,7 @@ class ThreadVisitHistoryCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: () async => context.pushNamed(
-          ScreenPaths.threadV1,
-          queryParameters: {'tid': '${model.threadId}'},
-        ),
+        onTap: () async => context.pushNamed(ScreenPaths.threadV1, queryParameters: {'tid': '${model.threadId}'}),
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(
@@ -31,10 +28,7 @@ class ThreadVisitHistoryCard extends StatelessWidget {
             children: [
               Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                  model.threadTitle,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
+                child: Text(model.threadTitle, style: Theme.of(context).textTheme.titleMedium),
               ),
               sizedBoxW12H12,
               SingleChildScrollView(
@@ -49,10 +43,7 @@ class ThreadVisitHistoryCard extends StatelessWidget {
                     sizedBoxW4H4,
                     Text(model.forumName),
                     sizedBoxW12H12,
-                    const Icon(
-                      Icons.access_time_outlined,
-                      size: smallTextSize,
-                    ),
+                    const Icon(Icons.access_time_outlined, size: smallTextSize),
                     sizedBoxW4H4,
                     Text(model.visitTime.yyyyMMDDHHMMSS()),
                   ],

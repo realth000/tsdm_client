@@ -35,7 +35,7 @@ const _subredditTabIndex = 2;
 class ForumPage extends StatefulWidget {
   /// Constructor.
   const ForumPage({required this.fid, this.title, super.key})
-      : forumUrl = '$baseUrl/forum.php?mod=forumdisplay&fid=$fid';
+    : forumUrl = '$baseUrl/forum.php?mod=forumdisplay&fid=$fid';
 
   /// Forum ID.
   final String fid;
@@ -50,23 +50,17 @@ class ForumPage extends StatefulWidget {
   State<ForumPage> createState() => _ForumPageState();
 }
 
-class _ForumPageState extends State<ForumPage>
-    with SingleTickerProviderStateMixin, LoggerMixin {
+class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMixin, LoggerMixin {
   final _pinnedScrollController = ScrollController();
-  final _pinnedRefreshController =
-      EasyRefreshController(controlFinishRefresh: true);
+  final _pinnedRefreshController = EasyRefreshController(controlFinishRefresh: true);
   final _subredditScrollController = ScrollController();
-  final _subredditRefreshController =
-      EasyRefreshController(controlFinishRefresh: true);
+  final _subredditRefreshController = EasyRefreshController(controlFinishRefresh: true);
 
   /// Controller of thread tab.
   final _threadScrollController = ScrollController();
 
   /// Controller of the [EasyRefresh] in thread tab.
-  final _threadRefreshController = EasyRefreshController(
-    controlFinishRefresh: true,
-    controlFinishLoad: true,
-  );
+  final _threadRefreshController = EasyRefreshController(controlFinishRefresh: true, controlFinishLoad: true);
 
   /// Controller of current tab: thread, subreddit.
   late TabController tabController;
@@ -89,61 +83,39 @@ class _ForumPageState extends State<ForumPage>
   PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
     return ListAppBar(
       title: widget.title ?? state.title,
-      bottom: state.permissionDeniedMessage == null
-          ? TabBar(
-              controller: tabController,
-              tabs: [
-                Tab(
-                  child: Text(
-                    context.t.forumPage.stickThreadTab.title,
-                  ),
-                ),
-                Tab(child: Text(context.t.forumPage.threadTab.title)),
-                Tab(
-                  child: Text(
-                    context.t.forumPage.subredditTab.title,
-                  ),
-                ),
-              ],
-              onTap: (index) {
-                // Here we want to scroll the current tab to the top.
-                // Only scroll to top when user taps on the current
-                // tab, which means index is not changing.
-                if (tabController.indexIsChanging) {
-                  // Do nothing because user tapped another index
-                  // and want to switch to it.
-                  return;
-                }
-                const duration = Duration(milliseconds: 300);
-                const curve = Curves.ease;
-                switch (tabController.index) {
-                  case _pinnedTabIndex:
-                    _pinnedScrollController.animateTo(
-                      0,
-                      duration: duration,
-                      curve: curve,
-                    );
-                  case _threadTabIndex:
-                    _threadScrollController.animateTo(
-                      0,
-                      duration: duration,
-                      curve: curve,
-                    );
-                  case _subredditTabIndex:
-                    _subredditScrollController.animateTo(
-                      0,
-                      duration: duration,
-                      curve: curve,
-                    );
-                }
-              },
-            )
-          : null,
+      bottom:
+          state.permissionDeniedMessage == null
+              ? TabBar(
+                controller: tabController,
+                tabs: [
+                  Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
+                  Tab(child: Text(context.t.forumPage.threadTab.title)),
+                  Tab(child: Text(context.t.forumPage.subredditTab.title)),
+                ],
+                onTap: (index) {
+                  // Here we want to scroll the current tab to the top.
+                  // Only scroll to top when user taps on the current
+                  // tab, which means index is not changing.
+                  if (tabController.indexIsChanging) {
+                    // Do nothing because user tapped another index
+                    // and want to switch to it.
+                    return;
+                  }
+                  const duration = Duration(milliseconds: 300);
+                  const curve = Curves.ease;
+                  switch (tabController.index) {
+                    case _pinnedTabIndex:
+                      _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                    case _threadTabIndex:
+                      _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                    case _subredditTabIndex:
+                      _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                  }
+                },
+              )
+              : null,
       onSearch: () async {
-        await context.pushNamed(
-          ScreenPaths.search,
-          queryParameters: {'fid': widget.fid},
-        );
+        await context.pushNamed(ScreenPaths.search, queryParameters: {'fid': widget.fid});
       },
       onJumpPage: (pageNumber) async {
         if (!mounted) {
@@ -171,16 +143,9 @@ class _ForumPageState extends State<ForumPage>
           case MenuActions.copyUrl:
             await copyToClipboard(context, widget.forumUrl);
           case MenuActions.openInBrowser:
-            await context.dispatchAsUrl(
-              widget.forumUrl,
-              external: true,
-            );
+            await context.dispatchAsUrl(widget.forumUrl, external: true);
           case MenuActions.backToTop:
-            await _threadScrollController.animateTo(
-              0,
-              curve: Curves.ease,
-              duration: const Duration(milliseconds: 500),
-            );
+            await _threadScrollController.animateTo(0, curve: Curves.ease, duration: const Duration(milliseconds: 500));
           case MenuActions.reverseOrder:
             ;
           case MenuActions.debugViewLog:
@@ -227,8 +192,7 @@ class _ForumPageState extends State<ForumPage>
         controller: _pinnedScrollController,
         padding: edgeInsetsL12T4R12,
         itemCount: state.stickThreadList.length,
-        itemBuilder: (context, index) =>
-            NormalThreadCard(state.stickThreadList[index]),
+        itemBuilder: (context, index) => NormalThreadCard(state.stickThreadList[index]),
         separatorBuilder: (context, index) => sizedBoxW4H4,
       );
     } else {
@@ -253,8 +217,7 @@ class _ForumPageState extends State<ForumPage>
     }
 
     return EasyRefresh(
-      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
-          .copyWith(physics: physics, scrollbars: false),
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(),
       controller: _pinnedRefreshController,
       scrollController: _pinnedScrollController,
@@ -268,27 +231,17 @@ class _ForumPageState extends State<ForumPage>
     );
   }
 
-  Widget _buildNormalThreadTab(
-    BuildContext context,
-    List<NormalThread> normalThreadList,
-    ForumState state,
-  ) {
+  Widget _buildNormalThreadTab(BuildContext context, List<NormalThread> normalThreadList, ForumState state) {
     // Use _haveNoThread to ensure we parsed the web page and there really
     // no thread in the forum.
     if (normalThreadList.isEmpty) {
       final emptyContentHint = Center(
-        child: Text(
-          context.t.forumPage.threadTab.noThread,
-          style: Theme.of(context).inputDecorationTheme.hintStyle,
-        ),
+        child: Text(context.t.forumPage.threadTab.noThread, style: Theme.of(context).inputDecorationTheme.hintStyle),
       );
       if (state.filterState.isFiltering()) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildNormalThreadFilterRow(context, state),
-            Expanded(child: emptyContentHint),
-          ],
+          children: [_buildNormalThreadFilterRow(context, state), Expanded(child: emptyContentHint)],
         );
       }
       return emptyContentHint;
@@ -297,8 +250,7 @@ class _ForumPageState extends State<ForumPage>
     _threadRefreshController.finishLoad();
 
     return EasyRefresh.builder(
-      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
-          .copyWith(physics: physics, scrollbars: false),
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(),
       footer: const MaterialFooter(),
       controller: _threadRefreshController,
@@ -320,29 +272,25 @@ class _ForumPageState extends State<ForumPage>
           return;
         }
         // Load the next page.
-        context
-            .read<ForumBloc>()
-            .add(ForumLoadMoreRequested(state.currentPage + 1));
+        context.read<ForumBloc>().add(ForumLoadMoreRequested(state.currentPage + 1));
         // _refreshController.finishLoad();
       },
-      childBuilder: (context, physics) => CustomScrollView(
-        controller: _threadScrollController,
-        physics: physics,
-        slivers: [
-          PinnedHeaderSliver(
-            child: _buildNormalThreadFilterRow(context, state),
+      childBuilder:
+          (context, physics) => CustomScrollView(
+            controller: _threadScrollController,
+            physics: physics,
+            slivers: [
+              PinnedHeaderSliver(child: _buildNormalThreadFilterRow(context, state)),
+              const SliverPadding(padding: edgeInsetsL12T4R12),
+              SliverList.separated(
+                itemCount: normalThreadList.length,
+                itemBuilder:
+                    (context, index) =>
+                        Padding(padding: edgeInsetsL12R12, child: NormalThreadCard(normalThreadList[index])),
+                separatorBuilder: (context, index) => sizedBoxW4H4,
+              ),
+            ],
           ),
-          const SliverPadding(padding: edgeInsetsL12T4R12),
-          SliverList.separated(
-            itemCount: normalThreadList.length,
-            itemBuilder: (context, index) => Padding(
-              padding: edgeInsetsL12R12,
-              child: NormalThreadCard(normalThreadList[index]),
-            ),
-            separatorBuilder: (context, index) => sizedBoxW4H4,
-          ),
-        ],
-      ),
     );
   }
 
@@ -379,20 +327,15 @@ class _ForumPageState extends State<ForumPage>
   Widget _buildBody(BuildContext context, ForumState state) {
     return switch (state.status) {
       ForumStatus.initial || ForumStatus.loading => Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (state.filterState.isFiltering())
-              _buildNormalThreadFilterRow(context, state),
-            const Expanded(
-              child: Center(child: CircularProgressIndicator()),
-            ),
-          ],
-        ),
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (state.filterState.isFiltering()) _buildNormalThreadFilterRow(context, state),
+          const Expanded(child: Center(child: CircularProgressIndicator())),
+        ],
+      ),
       ForumStatus.failure => buildRetryButton(context, () {
-          context
-              .read<ForumBloc>()
-              .add(ForumLoadMoreRequested(state.currentPage));
-        }),
+        context.read<ForumBloc>().add(ForumLoadMoreRequested(state.currentPage));
+      }),
       ForumStatus.success => _buildSuccessContent(context, state),
     };
   }
@@ -403,8 +346,7 @@ class _ForumPageState extends State<ForumPage>
     }
 
     return EasyRefresh(
-      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
-          .copyWith(physics: physics, scrollbars: false),
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(),
       controller: _subredditRefreshController,
       scrollController: _subredditScrollController,
@@ -424,22 +366,17 @@ class _ForumPageState extends State<ForumPage>
     );
   }
 
-  Widget? _buildFloatingActionButton(
-    BuildContext context,
-    ForumState state,
-  ) {
+  Widget? _buildFloatingActionButton(BuildContext context, ForumState state) {
     if (state.status != ForumStatus.success || !_fabVisible) {
       return null;
     }
 
     return FloatingActionButton(
-      onPressed: () async => context.pushNamed(
-        ScreenPaths.editPost,
-        pathParameters: {
-          'editType': '${PostEditType.newThread.index}',
-          'fid': widget.fid,
-        },
-      ),
+      onPressed:
+          () async => context.pushNamed(
+            ScreenPaths.editPost,
+            pathParameters: {'editType': '${PostEditType.newThread.index}', 'fid': widget.fid},
+          ),
       tooltip: context.t.forumPage.tooltip.fab,
       child: const Icon(Icons.add_outlined),
     );
@@ -448,11 +385,8 @@ class _ForumPageState extends State<ForumPage>
   @override
   void initState() {
     super.initState();
-    tabController = TabController(
-      initialIndex: _threadTabIndex,
-      length: _tabsCount,
-      vsync: this,
-    )..addListener(_updateFabVisibilityByTabIndex);
+    tabController = TabController(initialIndex: _threadTabIndex, length: _tabsCount, vsync: this)
+      ..addListener(_updateFabVisibilityByTabIndex);
   }
 
   bool _onBodyScrollNotification(UserScrollNotification notification) {
@@ -465,8 +399,7 @@ class _ForumPageState extends State<ForumPage>
       setState(() {
         _fabVisible = true;
       });
-    } else if (notification.direction == ScrollDirection.reverse &&
-        _fabVisible) {
+    } else if (notification.direction == ScrollDirection.reverse && _fabVisible) {
       setState(() {
         _fabVisible = false;
       });
@@ -491,10 +424,10 @@ class _ForumPageState extends State<ForumPage>
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create: (context) => ForumBloc(
-            fid: widget.fid,
-            forumRepository: RepositoryProvider.of<ForumRepository>(context),
-          )..add(const ForumLoadMoreRequested(1)),
+          create:
+              (context) =>
+                  ForumBloc(fid: widget.fid, forumRepository: RepositoryProvider.of<ForumRepository>(context))
+                    ..add(const ForumLoadMoreRequested(1)),
         ),
         BlocProvider(create: (context) => JumpPageCubit()),
       ],
@@ -510,20 +443,13 @@ class _ForumPageState extends State<ForumPage>
                 state.normalThreadList.isEmpty &&
                 // Do not switch tab if filtering but filtering non result left.
                 !state.filterState.isFiltering()) {
-              tabController.animateTo(
-                _subredditTabIndex,
-                duration: const Duration(milliseconds: 500),
-              );
+              tabController.animateTo(_subredditTabIndex, duration: const Duration(milliseconds: 500));
             }
             // Update jump page state.
-            context.read<JumpPageCubit>().setPageInfo(
-                  currentPage: state.currentPage,
-                  totalPages: state.totalPages,
-                );
+            context.read<JumpPageCubit>().setPageInfo(currentPage: state.currentPage, totalPages: state.totalPages);
 
             // Reset jump page state when every build.
-            if (state.status == ForumStatus.initial ||
-                state.status == ForumStatus.loading) {
+            if (state.status == ForumStatus.initial || state.status == ForumStatus.loading) {
               context.read<JumpPageCubit>().markLoading();
             } else {
               context.read<JumpPageCubit>().markSuccess();

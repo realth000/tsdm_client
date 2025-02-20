@@ -18,8 +18,7 @@ import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:window_manager/window_manager.dart';
 
-Future<void> main(List<String> args) async =>
-    runZonedGuarded(() async => _boot(args), _ensureHandled);
+Future<void> main(List<String> args) async => runZonedGuarded(() async => _boot(args), _ensureHandled);
 
 Future<void> _boot(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,8 +31,7 @@ Future<void> _boot(List<String> args) async {
   final settings = getIt.get<SettingsRepository>().currentSettings;
 
   final settingsLocale = settings.locale;
-  final locale =
-      AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
+  final locale = AppLocale.values.firstWhereOrNull((v) => v.languageTag == settingsLocale);
   if (locale == null) {
     await LocaleSettings.useDeviceLocale();
   } else {
@@ -46,8 +44,7 @@ Future<void> _boot(List<String> args) async {
       await desktopUpdateWindowTitle();
       if (settings.windowInCenter) {
         await windowManager.center();
-      } else if (settings.windowRememberPosition &&
-          settings.windowPosition != Offset.zero) {
+      } else if (settings.windowRememberPosition && settings.windowPosition != Offset.zero) {
         await windowManager.setPosition(settings.windowPosition);
       }
       if (settings.windowRememberSize && settings.windowSize != Size.zero) {
@@ -64,9 +61,7 @@ Future<void> _boot(List<String> args) async {
   final useSystemTheme = settings.accentColorFollowSystem;
 
   final color = switch (useSystemTheme) {
-    true => await SystemTheme.accentColor
-        .load()
-        .then((_) => SystemTheme.accentColor.accent.valueA),
+    true => await SystemTheme.accentColor.load().then((_) => SystemTheme.accentColor.accent.valueA),
     false => settings.accentColor,
   };
   final themeModeIndex = settings.themeMode;
@@ -78,15 +73,12 @@ Future<void> _boot(List<String> args) async {
   flnp = FlutterLocalNotificationsPlugin();
   if (isAndroid) {
     await flnp.initialize(
-      const InitializationSettings(
-        android: AndroidInitializationSettings('@mipmap/ic_launcher'),
-      ),
+      const InitializationSettings(android: AndroidInitializationSettings('@mipmap/ic_launcher')),
       onDidReceiveNotificationResponse: onLocalNotificationOpened,
     );
     if (autoSyncNoticeSeconds > 0) {
       await flnp
-          .resolvePlatformSpecificImplementation<
-              AndroidFlutterLocalNotificationsPlugin>()
+          .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
           ?.requestNotificationsPermission();
     }
   }
@@ -97,9 +89,7 @@ Future<void> _boot(List<String> args) async {
   runApp(
     TranslationProvider(
       child: ResponsiveBreakpoints.builder(
-        breakpoints: WindowSize.values
-            .map((e) => Breakpoint(start: e.start, end: e.end, name: e.name))
-            .toList(),
+        breakpoints: WindowSize.values.map((e) => Breakpoint(start: e.start, end: e.end, name: e.name)).toList(),
         child: App(
           color,
           themeModeIndex,
@@ -112,5 +102,4 @@ Future<void> _boot(List<String> args) async {
   );
 }
 
-void _ensureHandled(Object exception, StackTrace? stackTrace) =>
-    talker.handle(exception, stackTrace);
+void _ensureHandled(Object exception, StackTrace? stackTrace) => talker.handle(exception, stackTrace);

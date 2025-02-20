@@ -4,11 +4,7 @@ part of 'models.dart';
 @MappableClass()
 final class ForumGroup with ForumGroupMappable {
   /// Constructor.
-  const ForumGroup({
-    required this.name,
-    required this.url,
-    required this.forumList,
-  });
+  const ForumGroup({required this.name, required this.url, required this.forumList});
 
   /// Forum name.
   final String name;

@@ -18,8 +18,8 @@ typedef SearchEmitter = Emitter<SearchState>;
 class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
   /// Constructor.
   SearchBloc({required SearchRepository searchRepository})
-      : _searchRepository = searchRepository,
-        super(const SearchState()) {
+    : _searchRepository = searchRepository,
+      super(const SearchState()) {
     on<SearchRequested>(_onSearchRequested);
     on<SearchJumpPageRequested>(_onSearchJumpPageRequested);
     on<SearchGotoNextPageRequested>(_onSearchGotoNextPageRequested);
@@ -28,233 +28,142 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
 
   final SearchRepository _searchRepository;
 
-  Future<void> _onSearchRequested(
-    SearchRequested event,
-    SearchEmitter emit,
-  ) async {
-    emit(
-      state.copyWith(
-        status: SearchStatus.loading,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      ),
-    );
+  Future<void> _onSearchRequested(SearchRequested event, SearchEmitter emit) async {
+    emit(state.copyWith(status: SearchStatus.loading, hasPreviousPage: false, hasNextPage: false));
     await await _searchRepository
-        .searchWithParameters(
-      keyword: event.keyword,
-      fid: event.fid,
-      uid: event.uid,
-      pageNumber: event.pageNumer,
-    )
+        .searchWithParameters(keyword: event.keyword, fid: event.fid, uid: event.uid, pageNumber: event.pageNumer)
         .match(
-      (e) {
-        handle(e);
-        error('failed to search: $e');
-        emit(
-          state.copyWith(
-            status: SearchStatus.failed,
-            hasPreviousPage: false,
-            hasNextPage: false,
-          ),
-        );
-      },
-      (v) async {
-        final document = v;
-        final searchResult = await _parseSearchResult(document);
+          (e) {
+            handle(e);
+            error('failed to search: $e');
+            emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
+          },
+          (v) async {
+            final document = v;
+            final searchResult = await _parseSearchResult(document);
 
-        emit(
-          state.copyWith(
-            status: SearchStatus.success,
-            keyword: event.keyword,
-            fid: event.fid,
-            uid: event.uid,
-            searchResult: searchResult,
-            pageNumber: event.pageNumer,
-            hasPreviousPage: searchResult.currentPage > 1,
-            hasNextPage: searchResult.currentPage < searchResult.totalPages,
-          ),
-        );
-      },
-    ).run();
+            emit(
+              state.copyWith(
+                status: SearchStatus.success,
+                keyword: event.keyword,
+                fid: event.fid,
+                uid: event.uid,
+                searchResult: searchResult,
+                pageNumber: event.pageNumer,
+                hasPreviousPage: searchResult.currentPage > 1,
+                hasNextPage: searchResult.currentPage < searchResult.totalPages,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
-  Future<void> _onSearchJumpPageRequested(
-    SearchJumpPageRequested event,
-    SearchEmitter emit,
-  ) async {
+  Future<void> _onSearchJumpPageRequested(SearchJumpPageRequested event, SearchEmitter emit) async {
     if (state.keyword == null) {
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
+      emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
       return;
     }
 
-    emit(
-      state.copyWith(
-        status: SearchStatus.loading,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      ),
-    );
+    emit(state.copyWith(status: SearchStatus.loading, hasPreviousPage: false, hasNextPage: false));
     await await _searchRepository
-        .searchWithParameters(
-      keyword: state.keyword!,
-      fid: state.fid,
-      uid: state.uid,
-      pageNumber: event.pageNumber,
-    )
+        .searchWithParameters(keyword: state.keyword!, fid: state.fid, uid: state.uid, pageNumber: event.pageNumber)
         .match(
-      (e) {
-        handle(e);
-        error('failed to search: $e');
-        emit(
-          state.copyWith(
-            status: SearchStatus.failed,
-            hasPreviousPage: false,
-            hasNextPage: false,
-          ),
-        );
-      },
-      (v) async {
-        final document = v;
-        final searchResult = await _parseSearchResult(document);
-        emit(
-          state.copyWith(
-            status: SearchStatus.success,
-            pageNumber: event.pageNumber,
-            searchResult: searchResult,
-            hasPreviousPage: searchResult.currentPage > 1,
-            hasNextPage: searchResult.currentPage < searchResult.totalPages,
-          ),
-        );
-      },
-    ).run();
+          (e) {
+            handle(e);
+            error('failed to search: $e');
+            emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
+          },
+          (v) async {
+            final document = v;
+            final searchResult = await _parseSearchResult(document);
+            emit(
+              state.copyWith(
+                status: SearchStatus.success,
+                pageNumber: event.pageNumber,
+                searchResult: searchResult,
+                hasPreviousPage: searchResult.currentPage > 1,
+                hasNextPage: searchResult.currentPage < searchResult.totalPages,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
-  Future<void> _onSearchGotoNextPageRequested(
-    SearchGotoNextPageRequested event,
-    SearchEmitter emit,
-  ) async {
-    emit(
-      state.copyWith(
-        status: SearchStatus.loading,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      ),
-    );
+  Future<void> _onSearchGotoNextPageRequested(SearchGotoNextPageRequested event, SearchEmitter emit) async {
+    emit(state.copyWith(status: SearchStatus.loading, hasPreviousPage: false, hasNextPage: false));
     await await _searchRepository
-        .searchWithParameters(
-      keyword: state.keyword!,
-      fid: state.fid,
-      uid: state.uid,
-      pageNumber: state.pageNumber + 1,
-    )
-        .match((e) {
-      handle(e);
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }, (v) async {
-      final document = v;
-      final searchResult = await _parseSearchResult(document);
-      emit(
-        state.copyWith(
-          status: SearchStatus.success,
-          pageNumber: state.pageNumber + 1,
-          searchResult: searchResult,
-          hasPreviousPage: searchResult.currentPage > 1,
-          hasNextPage: searchResult.currentPage < searchResult.totalPages,
-        ),
-      );
-    }).run();
+        .searchWithParameters(keyword: state.keyword!, fid: state.fid, uid: state.uid, pageNumber: state.pageNumber + 1)
+        .match(
+          (e) {
+            handle(e);
+            error('failed to search: $e');
+            emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
+          },
+          (v) async {
+            final document = v;
+            final searchResult = await _parseSearchResult(document);
+            emit(
+              state.copyWith(
+                status: SearchStatus.success,
+                pageNumber: state.pageNumber + 1,
+                searchResult: searchResult,
+                hasPreviousPage: searchResult.currentPage > 1,
+                hasNextPage: searchResult.currentPage < searchResult.totalPages,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
-  Future<void> _onSearchGotoPreviousPageRequested(
-    SearchGotoPreviousPageRequested event,
-    SearchEmitter emit,
-  ) async {
+  Future<void> _onSearchGotoPreviousPageRequested(SearchGotoPreviousPageRequested event, SearchEmitter emit) async {
     if (state.pageNumber <= 1) {
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
+      emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
       return;
     }
 
-    emit(
-      state.copyWith(
-        status: SearchStatus.loading,
-        hasPreviousPage: false,
-        hasNextPage: false,
-      ),
-    );
+    emit(state.copyWith(status: SearchStatus.loading, hasPreviousPage: false, hasNextPage: false));
     await await _searchRepository
-        .searchWithParameters(
-      keyword: state.keyword!,
-      fid: state.fid,
-      uid: state.uid,
-      pageNumber: state.pageNumber - 1,
-    )
-        .match((e) {
-      handle(e);
-      error('failed to search: $e');
-      emit(
-        state.copyWith(
-          status: SearchStatus.failed,
-          hasPreviousPage: false,
-          hasNextPage: false,
-        ),
-      );
-    }, (v) async {
-      final document = v;
-      final searchResult = await _parseSearchResult(document);
-      emit(
-        state.copyWith(
-          status: SearchStatus.success,
-          pageNumber: state.pageNumber - 1,
-          searchResult: searchResult,
-          hasPreviousPage: searchResult.currentPage > 1,
-          hasNextPage: searchResult.currentPage < searchResult.totalPages,
-        ),
-      );
-    }).run();
+        .searchWithParameters(keyword: state.keyword!, fid: state.fid, uid: state.uid, pageNumber: state.pageNumber - 1)
+        .match(
+          (e) {
+            handle(e);
+            error('failed to search: $e');
+            emit(state.copyWith(status: SearchStatus.failed, hasPreviousPage: false, hasNextPage: false));
+          },
+          (v) async {
+            final document = v;
+            final searchResult = await _parseSearchResult(document);
+            emit(
+              state.copyWith(
+                status: SearchStatus.success,
+                pageNumber: state.pageNumber - 1,
+                searchResult: searchResult,
+                hasPreviousPage: searchResult.currentPage > 1,
+                hasNextPage: searchResult.currentPage < searchResult.totalPages,
+              ),
+            );
+          },
+        )
+        .run();
   }
 
   Future<SearchResult> _parseSearchResult(uh.Document document) async {
-    final threadList = document
-        .querySelectorAll('div#ct > div#ct_shell > div#left_s > div.ts_se_rs')
-        .map(SearchedThread.fromDivNode)
-        .whereType<SearchedThread>()
-        .toList();
+    final threadList =
+        document
+            .querySelectorAll('div#ct > div#ct_shell > div#left_s > div.ts_se_rs')
+            .map(SearchedThread.fromDivNode)
+            .whereType<SearchedThread>()
+            .toList();
 
     /// Filter out "Results about: ".
-    final count = document
-        .querySelector('h3')
-        ?.firstEndDeepText()
-        ?.split(' ')
-        .firstOrNull
-        ?.parseToInt();
+    final count = document.querySelector('h3')?.firstEndDeepText()?.split(' ').firstOrNull?.parseToInt();
 
     final currentPage = document.currentPage() ?? 1;
     final totalPages = document.totalPages() ?? currentPage;
 
-    return SearchResult(
-      currentPage: currentPage,
-      totalPages: totalPages,
-      count: count,
-      data: threadList,
-    );
+    return SearchResult(currentPage: currentPage, totalPages: totalPages, count: count, data: threadList);
   }
 }

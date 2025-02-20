@@ -8,13 +8,11 @@ sealed class ForumEvent with ForumEventMappable {
 
 /// User request to refresh the forum page.
 @MappableClass()
-final class ForumRefreshRequested extends ForumEvent
-    with ForumRefreshRequestedMappable {}
+final class ForumRefreshRequested extends ForumEvent with ForumRefreshRequestedMappable {}
 
 /// User requested to load page [pageNumber].
 @MappableClass()
-final class ForumLoadMoreRequested extends ForumEvent
-    with ForumLoadMoreRequestedMappable {
+final class ForumLoadMoreRequested extends ForumEvent with ForumLoadMoreRequestedMappable {
   /// Constructor.
   const ForumLoadMoreRequested(this.pageNumber) : super();
 
@@ -24,8 +22,7 @@ final class ForumLoadMoreRequested extends ForumEvent
 
 /// User request to jump to another page.
 @MappableClass()
-final class ForumJumpPageRequested extends ForumEvent
-    with ForumJumpPageRequestedMappable {
+final class ForumJumpPageRequested extends ForumEvent with ForumJumpPageRequestedMappable {
   /// Constructor.
   const ForumJumpPageRequested(this.pageNumber) : super();
 

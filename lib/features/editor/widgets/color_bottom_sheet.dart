@@ -6,14 +6,11 @@ import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 
 /// Show a bottom sheet provides all available foreground colors for user to
 /// choose.
-Future<PickColorResult?> showColorPicker(
-  BuildContext context,
-) async =>
-    showCustomBottomSheet<PickColorResult>(
-      title: context.t.bbcodeEditor.foregroundColor.title,
-      context: context,
-      builder: (context) => const _ColorBottomSheet(),
-    );
+Future<PickColorResult?> showColorPicker(BuildContext context) async => showCustomBottomSheet<PickColorResult>(
+  title: context.t.bbcodeEditor.foregroundColor.title,
+  context: context,
+  builder: (context) => const _ColorBottomSheet(),
+);
 
 class _ColorBottomSheet extends StatefulWidget {
   const _ColorBottomSheet();
@@ -41,15 +38,8 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
               // Item for user to pick a color.
               final color = BBCodeEditorColor.values[index].color;
               return GestureDetector(
-                onTap: () =>
-                    Navigator.of(context).pop(PickColorResult.picked(color)),
-                child: Hero(
-                  tag: color.toString(),
-                  child: CircleAvatar(
-                    radius: 15,
-                    backgroundColor: color,
-                  ),
-                ),
+                onTap: () => Navigator.of(context).pop(PickColorResult.picked(color)),
+                child: Hero(tag: color.toString(), child: CircleAvatar(radius: 15, backgroundColor: color)),
               );
             },
           ),
@@ -60,8 +50,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> {
           children: [
             // Clear color.
             TextButton(
-              onPressed: () =>
-                  Navigator.of(context).pop(PickColorResult.clearColor()),
+              onPressed: () => Navigator.of(context).pop(PickColorResult.clearColor()),
               child: Text(context.t.general.reset),
             ),
           ],

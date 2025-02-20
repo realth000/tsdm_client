@@ -61,13 +61,9 @@ class NeedLoginPage extends StatelessWidget {
                       if (!context.mounted) {
                         return;
                       }
-                      context.pushReplacement(
-                        backUri.toString(),
-                      );
+                      context.pushReplacement(backUri.toString());
                     } else {
-                      await context.push(
-                        backUri.toString(),
-                      );
+                      await context.push(backUri.toString());
                     }
                   },
                 ),

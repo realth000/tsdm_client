@@ -24,10 +24,7 @@ class ParseUrlDialogButton extends StatelessWidget {
 /// Open a dialog that let user input and parse a url, if the url is valid
 /// recognized routes in app, redirect to thr relevant route page.
 Future<void> _showParseUrlDialog(BuildContext context) async =>
-    showDialog<void>(
-      context: context,
-      builder: (_) => const _ParseUrlDialog(),
-    );
+    showDialog<void>(context: context, builder: (_) => const _ParseUrlDialog());
 
 /// A dialog let user input a url, try to parse the url into a app route. If is,
 /// redirect to the relevant page.
@@ -69,10 +66,7 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // Text(tr.detail, style: Theme.of(context).textTheme.bodyMedium),
-          Tips(
-            tr.detail,
-            enablePadding: false,
-          ),
+          Tips(tr.detail, enablePadding: false),
           sizedBoxW24H24,
           Form(
             key: formKey,
@@ -80,9 +74,7 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
               controller: urlController,
               autofocus: true,
               keyboardType: TextInputType.url,
-              decoration: InputDecoration(
-                labelText: tr.url,
-              ),
+              decoration: InputDecoration(labelText: tr.url),
               validator: (v) {
                 if (v == null) {
                   return tr.unsupportedUrl;

@@ -95,9 +95,7 @@ enum ThreadStateModel {
   ///
   /// In both usage, [threadElement] is the `<tr>` node parent of the thread
   /// row.
-  static Set<ThreadStateModel> buildSetFromTr(
-    uh.Element threadElement,
-  ) {
+  static Set<ThreadStateModel> buildSetFromTr(uh.Element threadElement) {
     final stateSet = <ThreadStateModel>{};
 
     final threadIconNode = threadElement.querySelector('td > a > img');
@@ -105,12 +103,8 @@ enum ThreadStateModel {
       stateSet.addAll(threadIconNode._parseThreadStateFromImg());
     }
     // Parse thread state from images following title text.
-    final stateList = threadElement
-        .querySelectorAll('th > img')
-        .map((e) => e._parseThreadStateFromImg())
-        .toList()
-        .flattened
-        .toList();
+    final stateList =
+        threadElement.querySelectorAll('th > img').map((e) => e._parseThreadStateFromImg()).toList().flattened.toList();
     stateSet.addAll(stateList);
 
     return stateSet;
@@ -229,8 +223,7 @@ class NormalThread with NormalThreadMappable {
     }
 
     // Allow not found.
-    final threadTypeNode =
-        threadElement.querySelector('tr > th > em > a:nth-child(1)');
+    final threadTypeNode = threadElement.querySelector('tr > th > em > a:nth-child(1)');
     final threadTypeUrl = threadTypeNode?.attributes['href'];
     final threadTypeName = threadTypeNode?.firstEndDeepText();
 
@@ -262,26 +255,17 @@ class NormalThread with NormalThreadMappable {
     // 1. Thread author node. <- need this one.
     // 2. Last reply author node.
     final threadAuthorNode = threadElement.querySelector('tr > td.by');
-    final threadAuthorUrl =
-        threadAuthorNode?.querySelector('cite > a')?.attributes['href'];
+    final threadAuthorUrl = threadAuthorNode?.querySelector('cite > a')?.attributes['href'];
     final threadAuthorUid = threadAuthorUrl?.split('uid=').elementAtOrNull(1);
-    final threadAuthorName =
-        threadAuthorNode?.querySelector('cite > a')?.firstEndDeepText()?.trim();
-    final threadPublishDate = threadAuthorNode
-        ?.querySelector('em > span')
-        ?.firstEndDeepText()
-        ?.trim()
-        .parseToDateTimeUtc8();
+    final threadAuthorName = threadAuthorNode?.querySelector('cite > a')?.firstEndDeepText()?.trim();
+    final threadPublishDate =
+        threadAuthorNode?.querySelector('em > span')?.firstEndDeepText()?.trim().parseToDateTimeUtc8();
 
     // Thread published in 24 hours get highlight on its publish time with
     // css class `xi1`.
-    final isRecentThread =
-        threadAuthorNode?.querySelector('em > span')?.classes.contains('xi1') ??
-            false;
+    final isRecentThread = threadAuthorNode?.querySelector('em > span')?.classes.contains('xi1') ?? false;
 
-    if (threadAuthorUrl == null ||
-        threadAuthorName == null ||
-        threadPublishDate == null) {
+    if (threadAuthorUrl == null || threadAuthorName == null || threadPublishDate == null) {
       talker.error(
         'failed to build thread: invalid author or thread publish '
         'date not found',
@@ -290,41 +274,24 @@ class NormalThread with NormalThreadMappable {
     }
 
     final threadStatisticsNode = threadElement.querySelector('tr > td.num');
-    final threadReplyCount = threadStatisticsNode
-        ?.querySelector('a.xi2')
-        ?.firstEndDeepText()
-        ?.parseToInt();
-    final threadViewCount = threadStatisticsNode
-        ?.querySelector('em')
-        ?.firstEndDeepText()
-        ?.parseToInt();
+    final threadReplyCount = threadStatisticsNode?.querySelector('a.xi2')?.firstEndDeepText()?.parseToInt();
+    final threadViewCount = threadStatisticsNode?.querySelector('em')?.firstEndDeepText()?.parseToInt();
 
     // Two <td class="by"> nodes:
     //
     // 1. Thread author node.
     // 2. Last reply author node. <- need this one.
-    final threadLastReplyNode =
-        threadElement.querySelectorAll('tr > td.by').lastOrNull;
-    final threadLastReplyAuthorUrl =
-        threadLastReplyNode?.querySelector('cite > a')?.attributes['href'];
+    final threadLastReplyNode = threadElement.querySelectorAll('tr > td.by').lastOrNull;
+    final threadLastReplyAuthorUrl = threadLastReplyNode?.querySelector('cite > a')?.attributes['href'];
     // We only have username here.
-    final threadLastReplyAuthorName =
-        threadLastReplyNode?.querySelector('cite > a')?.firstEndDeepText();
+    final threadLastReplyAuthorName = threadLastReplyNode?.querySelector('cite > a')?.firstEndDeepText();
     final threadLastReplyTime =
         // Within 7 days.
-        threadLastReplyNode
-                ?.querySelector('em > a > span')
-                ?.attributes['title']
-                ?.parseToDateTimeUtc8() ??
-            // 7 days ago.
-            threadLastReplyNode
-                ?.querySelector('em > a')
-                ?.firstEndDeepText()
-                ?.parseToDateTimeUtc8();
+        threadLastReplyNode?.querySelector('em > a > span')?.attributes['title']?.parseToDateTimeUtc8() ??
+        // 7 days ago.
+        threadLastReplyNode?.querySelector('em > a')?.firstEndDeepText()?.parseToDateTimeUtc8();
 
-    if (threadLastReplyAuthorName == null ||
-        threadLastReplyAuthorUrl == null ||
-        threadLastReplyTime == null) {
+    if (threadLastReplyAuthorName == null || threadLastReplyAuthorUrl == null || threadLastReplyTime == null) {
       talker.error(
         'failed to build thread: invalid last reply user info or last '
         'reply time not found',
@@ -348,16 +315,9 @@ class NormalThread with NormalThreadMappable {
       title: threadTitle,
       url: threadUrl,
       threadID: threadID,
-      author: User(
-        name: threadAuthorName,
-        uid: threadAuthorUid,
-        url: threadAuthorUrl,
-      ),
+      author: User(name: threadAuthorName, uid: threadAuthorUid, url: threadAuthorUrl),
       publishDate: threadPublishDate,
-      latestReplyAuthor: User(
-        name: threadLastReplyAuthorName,
-        url: threadLastReplyAuthorUrl,
-      ),
+      latestReplyAuthor: User(name: threadLastReplyAuthorName, url: threadLastReplyAuthorUrl),
       latestReplyTime: threadLastReplyTime,
       iconUrl: threadIconUrl,
       threadType: ThreadType.parse(threadTypeName, threadTypeUrl),

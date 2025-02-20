@@ -85,10 +85,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
   /// But only parse once because every page shall have the same thread type.
   String? _threadType;
 
-  final _refreshController = EasyRefreshController(
-    controlFinishRefresh: true,
-    controlFinishLoad: true,
-  );
+  final _refreshController = EasyRefreshController(controlFinishRefresh: true, controlFinishLoad: true);
 
   /// [ScrollController] comes from outside.
   ///
@@ -165,15 +162,10 @@ class _PostListState extends State<PostList> with LoggerMixin {
     super.dispose();
   }
 
-  Widget _buildHeader(
-    BuildContext context,
-    double shrinkOffset,
-    double expandHeight,
-  ) {
-    final infoTextStyle = Theme.of(context)
-        .textTheme
-        .labelLarge
-        ?.copyWith(color: Theme.of(context).colorScheme.outline);
+  Widget _buildHeader(BuildContext context, double shrinkOffset, double expandHeight) {
+    final infoTextStyle = Theme.of(
+      context,
+    ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
     if (_listScrollController.offset <= expandHeight) {
       return Padding(
         padding: edgeInsetsL12R12B12,
@@ -182,48 +174,31 @@ class _PostListState extends State<PostList> with LoggerMixin {
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                if (widget.isDraft)
-                  Text(
-                    '[${context.t.threadPage.draft}]',
-                    style: infoTextStyle,
-                  ),
-                Text(
-                  '[${context.t.threadPage.title} ${widget.threadID ?? ""}]',
-                  style: infoTextStyle,
-                ),
-                if (_threadType != null && _threadType!.isNotEmpty)
-                  Text(
-                    '[${_threadType!}]',
-                    style: infoTextStyle,
-                  ),
+                if (widget.isDraft) Text('[${context.t.threadPage.draft}]', style: infoTextStyle),
+                Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]', style: infoTextStyle),
+                if (_threadType != null && _threadType!.isNotEmpty) Text('[${_threadType!}]', style: infoTextStyle),
               ].insertBetween(sizedBoxW4H4),
             ),
             if (widget.latestModAct != null)
-              Row(
-                children: [
-                  const Spacer(),
-                  Text('${widget.latestModAct}', style: infoTextStyle),
-                ],
-              ),
+              Row(children: [const Spacer(), Text('${widget.latestModAct}', style: infoTextStyle)]),
           ],
         ),
       );
     }
-    final bg = _listScrollController.offset >= expandHeight
-        ? ElevationOverlay.applySurfaceTint(
-            Theme.of(context).colorScheme.surface,
-            Theme.of(context).colorScheme.surfaceTint,
-            Theme.of(context).navigationBarTheme.elevation ?? 3,
-          )
-        : Colors.transparent;
+    final bg =
+        _listScrollController.offset >= expandHeight
+            ? ElevationOverlay.applySurfaceTint(
+              Theme.of(context).colorScheme.surface,
+              Theme.of(context).colorScheme.surfaceTint,
+              Theme.of(context).navigationBarTheme.elevation ?? 3,
+            )
+            : Colors.transparent;
     return ColoredBox(
       color: bg,
       child: Padding(
         padding: edgeInsetsL12R12B12,
         child: Text(
-          _listScrollController.offset > expandHeight
-              ? (widget.title ?? '')
-              : (widget.threadType ?? ''),
+          _listScrollController.offset > expandHeight ? (widget.title ?? '') : (widget.threadType ?? ''),
           style: Theme.of(context).textTheme.titleLarge,
           maxLines: 1,
         ),
@@ -242,8 +217,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
       itemBuilder: (context, index) {
         return widget.widgetBuilder(context, widget.postList[index]);
       },
-      separatorBuilder: (context, index) =>
-          widget.useDivider ? const Divider(thickness: 0.5) : sizedBoxW4H4,
+      separatorBuilder: (context, index) => widget.useDivider ? const Divider(thickness: 0.5) : sizedBoxW4H4,
     );
   }
 
@@ -258,8 +232,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of
         // ScrollConfiguration.of(context)
-        return ERScrollBehavior(physics)
-            .copyWith(physics: physics, scrollbars: false);
+        return ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false);
       },
       header: const MaterialHeader(position: IndicatorPosition.locator),
       footer: const MaterialFooter(),
@@ -280,11 +253,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
           _refreshController.finishLoad();
           return;
         }
-        context.read<ThreadBloc>().add(
-              ThreadLoadMoreRequested(
-                context.read<JumpPageCubit>().state.currentPage + 1,
-              ),
-            );
+        context.read<ThreadBloc>().add(ThreadLoadMoreRequested(context.read<JumpPageCubit>().state.currentPage + 1));
       },
       childBuilder: (context, physics) {
         return CustomScrollView(
@@ -295,11 +264,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
             SliverPersistentHeader(
               floating: true,
               delegate: SliverAppBarPersistentDelegate(
-                buildHeader: (
-                  context,
-                  shrinkOffset, {
-                  required bool overlapsContent,
-                }) {
+                buildHeader: (context, shrinkOffset, {required bool overlapsContent}) {
                   return _buildHeader(context, shrinkOffset, safeHeight);
                 },
                 headerMaxExtent: safeHeight,
@@ -309,10 +274,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
             SliverPadding(
               padding: edgeInsetsL12R12B12,
               sliver: SliverToBoxAdapter(
-                child: Text(
-                  widget.title ?? '',
-                  style: Theme.of(context).textTheme.titleLarge,
-                ),
+                child: Text(widget.title ?? '', style: Theme.of(context).textTheme.titleLarge),
               ),
             ),
             _buildPostList(context),
@@ -338,8 +300,7 @@ class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   });
 
   /// Builder to build the app bar.
-  final Widget Function(BuildContext, double, {required bool overlapsContent})
-      buildHeader;
+  final Widget Function(BuildContext, double, {required bool overlapsContent}) buildHeader;
 
   /// Max extent of top header.
   final double headerMaxExtent;
@@ -348,11 +309,7 @@ class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   final double headerMinExtent;
 
   @override
-  Widget build(
-    BuildContext context,
-    double shrinkOffset,
-    bool overlapsContent,
-  ) {
+  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
     return buildHeader(context, shrinkOffset, overlapsContent: overlapsContent);
   }
 
@@ -363,6 +320,5 @@ class SliverAppBarPersistentDelegate extends SliverPersistentHeaderDelegate {
   double get minExtent => headerMinExtent;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) =>
-      true;
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) => true;
 }

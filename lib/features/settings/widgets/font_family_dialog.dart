@@ -37,14 +37,8 @@ class _FontFamilyDialogState extends State<FontFamilyDialog> {
       scrollable: true,
       content: TextField(controller: _fontController, autofocus: true),
       actions: [
-        TextButton(
-          child: Text(context.t.general.reset),
-          onPressed: () => context.pop(''),
-        ),
-        TextButton(
-          child: Text(context.t.general.ok),
-          onPressed: () => context.pop(_fontController.text),
-        ),
+        TextButton(child: Text(context.t.general.reset), onPressed: () => context.pop('')),
+        TextButton(child: Text(context.t.general.ok), onPressed: () => context.pop(_fontController.text)),
       ],
     );
   }

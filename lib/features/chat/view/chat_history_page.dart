@@ -43,8 +43,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
   Widget _buildContent(BuildContext context, ChatHistoryState state) {
     final messages = state.messages;
     final messageList = EasyRefresh(
-      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics)
-          .copyWith(physics: physics, scrollbars: false),
+      scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       controller: _refreshController,
       scrollController: _scrollController,
       footer: const MaterialFooter(),
@@ -58,12 +57,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           showNoMoreSnackBar(context);
           return;
         }
-        context.read<ChatHistoryBloc>().add(
-              ChatHistoryLoadHistoryRequested(
-                uid: widget.uid,
-                page: state.previousPage,
-              ),
-            );
+        context.read<ChatHistoryBloc>().add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: state.previousPage));
       },
       child: ListView.separated(
         // Reverse the list view and data received from server to let scroll
@@ -80,9 +74,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
 
     return Column(
       children: [
-        Expanded(
-          child: messageList,
-        ),
+        Expanded(child: messageList),
         sizedBoxW12H12,
         ReplyBar(
           controller: _replyBarController,
@@ -98,9 +90,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
   @override
   void initState() {
     super.initState();
-    _refreshController = EasyRefreshController(
-      controlFinishLoad: true,
-    );
+    _refreshController = EasyRefreshController(controlFinishLoad: true);
   }
 
   @override
@@ -115,18 +105,13 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
     final tr = context.t.chatHistoryPage;
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (context) => const ChatRepository(),
-        ),
-        RepositoryProvider(
-          create: (context) => const ReplyRepository(),
-        ),
+        RepositoryProvider(create: (context) => const ChatRepository()),
+        RepositoryProvider(create: (context) => const ReplyRepository()),
+        BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
         BlocProvider(
-          create: (context) => ReplyBloc(replyRepository: context.repo()),
-        ),
-        BlocProvider(
-          create: (context) => ChatHistoryBloc(context.repo())
-            ..add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: null)),
+          create:
+              (context) =>
+                  ChatHistoryBloc(context.repo())..add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: null)),
         ),
       ],
       child: MultiBlocListener(
@@ -142,18 +127,9 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(
-                  context: context,
-                  message: tr.success,
-                  avoidKeyboard: true,
-                );
-              } else if (state.status == ReplyStatus.failure &&
-                  state.failedReason != null) {
-                showSnackBar(
-                  context: context,
-                  message: tr.failed(message: state.failedReason!),
-                  avoidKeyboard: true,
-                );
+                showSnackBar(context: context, message: tr.success, avoidKeyboard: true);
+              } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
+                showSnackBar(context: context, message: tr.failed(message: state.failedReason!), avoidKeyboard: true);
               }
             },
           ),
@@ -162,37 +138,26 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
           builder: (context, state) {
             final body = switch (state.status) {
               ChatHistoryStatus.initial ||
-              ChatHistoryStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
-              ChatHistoryStatus.success ||
-              ChatHistoryStatus.loadingMore =>
-                _buildContent(context, state),
+              ChatHistoryStatus.loading => const Center(child: CircularProgressIndicator()),
+              ChatHistoryStatus.success || ChatHistoryStatus.loadingMore => _buildContent(context, state),
               ChatHistoryStatus.failure => buildRetryButton(
-                  context,
-                  () => context.read<ChatHistoryBloc>().add(
-                        ChatHistoryLoadHistoryRequested(
-                          uid: widget.uid,
-                          page: state.pageNumber,
-                        ),
-                      ),
+                context,
+                () => context.read<ChatHistoryBloc>().add(
+                  ChatHistoryLoadHistoryRequested(uid: widget.uid, page: state.pageNumber),
                 ),
+              ),
             };
 
             PreferredSize? bottom;
-            if ((state.user.username != null || state.user.uid != null) &&
-                state.messageCount > 0) {
+            if ((state.user.username != null || state.user.uid != null) && state.messageCount > 0) {
               bottom = PreferredSize(
-                preferredSize:
-                    const Size(kToolbarHeight / 2, kToolbarHeight / 2),
+                preferredSize: const Size(kToolbarHeight / 2, kToolbarHeight / 2),
                 child: Padding(
                   padding: edgeInsetsL12R12B12,
                   child: Row(
                     children: [
                       SingleLineText(
-                        tr.info(
-                          user: state.user.username ?? state.user.uid ?? '',
-                          count: state.messageCount,
-                        ),
+                        tr.info(user: state.user.username ?? state.user.uid ?? '', count: state.messageCount),
                         style: Theme.of(context).textTheme.labelMedium,
                       ),
                     ],
@@ -204,10 +169,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
             return Scaffold(
               // Required by chat_bottom_container in reply bar.
               resizeToAvoidBottomInset: false,
-              appBar: AppBar(
-                title: Text(tr.title),
-                bottom: bottom,
-              ),
+              appBar: AppBar(title: Text(tr.title), bottom: bottom),
               body: body,
             );
           },

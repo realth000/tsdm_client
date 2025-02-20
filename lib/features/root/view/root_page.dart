@@ -45,9 +45,7 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
     return MultiBlocListener(
       listeners: [
         BlocListener<AutoCheckinBloc, AutoCheckinState>(
-          listenWhen: (prev, curr) =>
-              prev is! AutoCheckinStateFinished &&
-              curr is AutoCheckinStateFinished,
+          listenWhen: (prev, curr) => prev is! AutoCheckinStateFinished && curr is AutoCheckinStateFinished,
           listener: (context, state) {
             if (state is AutoCheckinStateFinished) {
               showSnackBar(
@@ -55,16 +53,14 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
                 message: tr.autoCheckinFinished,
                 action: SnackBarAction(
                   label: tr.viewDetail,
-                  onPressed: () async =>
-                      context.pushNamed(ScreenPaths.autoCheckinDetail),
+                  onPressed: () async => context.pushNamed(ScreenPaths.autoCheckinDetail),
                 ),
               );
             }
           },
         ),
         BlocListener<AutoNotificationCubit, AutoNoticeState>(
-          listenWhen: (prev, curr) =>
-              curr is AutoNoticeStatePending && prev != curr,
+          listenWhen: (prev, curr) => curr is AutoNoticeStatePending && prev != curr,
           listener: (context, state) {
             // Add this check to make dart-analyzer happy.
             if (state is! AutoNoticeStatePending) {

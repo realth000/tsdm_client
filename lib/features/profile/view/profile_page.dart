@@ -105,19 +105,14 @@ class _ProfilePageState extends State<ProfilePage> {
       setState(() {
         _showAppBarTitle = true;
       });
-    } else if (_scrollController.offset < _appBarExpandHeight &&
-        _showAppBarTitle) {
+    } else if (_scrollController.offset < _appBarExpandHeight && _showAppBarTitle) {
       setState(() {
         _showAppBarTitle = false;
       });
     }
   }
 
-  Widget _buildSliverAppBar(
-    BuildContext context,
-    ProfileState state, {
-    required bool logout,
-  }) {
+  Widget _buildSliverAppBar(BuildContext context, ProfileState state, {required bool logout}) {
     final userProfile = state.userProfile!;
 
     if (!context.mounted) {
@@ -160,15 +155,12 @@ class _ProfilePageState extends State<ProfilePage> {
       actions = [
         IconButton(
           icon: const Icon(Icons.email_outlined),
-          onPressed: () async => context.pushNamed(
-            ScreenPaths.chat,
-            pathParameters: {
-              'uid': widget.uid ?? userProfile.uid!,
-            },
-            extra: <String, dynamic>{
-              'username': userProfile.username,
-            },
-          ),
+          onPressed:
+              () async => context.pushNamed(
+                ScreenPaths.chat,
+                pathParameters: {'uid': widget.uid ?? userProfile.uid!},
+                extra: <String, dynamic>{'username': userProfile.username},
+              ),
         ),
       ];
     }
@@ -191,8 +183,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
 
     // Title in app bar.
-    final title =
-        LayoutBuilder(builder: (context, cons) => Row(children: [avatar]));
+    final title = LayoutBuilder(builder: (context, cons) => Row(children: [avatar]));
 
     if (userProfile.avatarUrl != null) {
       flexSpace = Stack(
@@ -236,8 +227,7 @@ class _ProfilePageState extends State<ProfilePage> {
     if (userProfile == null ||
         userProfile.checkinLevel == null ||
         userProfile.checkinDaysCount == null &&
-            (!(userProfile.checkinLevel?.contains('Master') ?? false) ||
-                userProfile.checkinNextLevelDays == null)) {
+            (!(userProfile.checkinLevel?.contains('Master') ?? false) || userProfile.checkinNextLevelDays == null)) {
       return [];
     }
     final tr = context.t.profilePage;
@@ -254,17 +244,12 @@ class _ProfilePageState extends State<ProfilePage> {
       // Max level
       checkinLevelNumber = 11;
     } else {
-      checkinLevelNumber = _checkinLevelNumberRe
-          .firstMatch(userProfile.checkinLevel!)
-          ?.namedGroup('level')
-          ?.parseToInt();
+      checkinLevelNumber =
+          _checkinLevelNumberRe.firstMatch(userProfile.checkinLevel!)?.namedGroup('level')?.parseToInt();
     }
     if (userProfile.checkinNextLevelDays != null) {
-      totalDays =
-          userProfile.checkinDaysCount! + userProfile.checkinNextLevelDays!;
-      if (checkinLevelNumber != null &&
-          checkinLevelNumber >= 0 &&
-          checkinLevelNumber < _checkinNextLevelExp.length) {
+      totalDays = userProfile.checkinDaysCount! + userProfile.checkinNextLevelDays!;
+      if (checkinLevelNumber != null && checkinLevelNumber >= 0 && checkinLevelNumber < _checkinNextLevelExp.length) {
         // If checkin level is recognized, set the checkin progress percentage
         // to (checkin count in current level  /  all days count required to
         // next level).
@@ -272,12 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
         // e.g. From level 5 to level 6 requires (60-30) days and user is 10
         //      days before step into level 6, so the percent is:
         //      1 - 10 / (60 - 30)
-        percent = max(
-          1 -
-              userProfile.checkinNextLevelDays! /
-                  _checkinNextLevelExp[checkinLevelNumber],
-          0,
-        );
+        percent = max(1 - userProfile.checkinNextLevelDays! / _checkinNextLevelExp[checkinLevelNumber], 0);
       } else {
         percent = userProfile.checkinDaysCount! / totalDays;
       }
@@ -290,12 +270,7 @@ class _ProfilePageState extends State<ProfilePage> {
     // Checkin
     return [
       sizedBoxW24H24,
-      Text(
-        tr.checkin.title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
+      Text(tr.checkin.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
       sizedBoxW12H12,
       Column(
         mainAxisSize: MainAxisSize.min,
@@ -304,16 +279,12 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               Text(
                 userProfile.checkinLevel!,
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).primaryColor,
-                    ),
+                style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).primaryColor),
               ),
               sizedBoxW12H12,
               Text(
                 description,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.outline),
               ),
             ],
           ),
@@ -368,12 +339,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final userProfile = state.userProfile!;
 
     // Friends count info.
-    final friendsInfoNode =
-        parseHtmlDocument(userProfile.friendsCount ?? '0').body;
-    final friendsCount =
-        friendsInfoNode?.innerText.split(' ').lastOrNull?.trim() ?? '-';
-    final friendsPage =
-        friendsInfoNode?.querySelector('a')?.attributes['href']?.prependHost();
+    final friendsInfoNode = parseHtmlDocument(userProfile.friendsCount ?? '0').body;
+    final friendsCount = friendsInfoNode?.innerText.split(' ').lastOrNull?.trim() ?? '-';
+    final friendsPage = friendsInfoNode?.querySelector('a')?.attributes['href']?.prependHost();
 
     // Birthday.
     final birthDayText = [
@@ -382,25 +350,15 @@ class _ProfilePageState extends State<ProfilePage> {
       userProfile.birthdayDay,
     ].whereType<String>().join('.');
 
-    final moderatorGroupImg =
-        parseHtmlDocument(userProfile.moderatorGroup ?? '')
-            .body
-            ?.children
-            .lastOrNull
-            ?.imageUrl();
-    final userGroupImg = parseHtmlDocument(userProfile.userGroup ?? '')
-        .body
-        ?.children
-        .lastOrNull
-        ?.imageUrl();
+    final moderatorGroupImg = parseHtmlDocument(userProfile.moderatorGroup ?? '').body?.children.lastOrNull?.imageUrl();
+    final userGroupImg = parseHtmlDocument(userProfile.userGroup ?? '').body?.children.lastOrNull?.imageUrl();
 
     // Introduction.
     //
     // Introduction is captured as raw html code when have multiple lines.
     uh.BodyElement? introductionContent;
     if (userProfile.introduction != null) {
-      introductionContent =
-          parseHtmlDocument(userProfile.introduction ?? '').body;
+      introductionContent = parseHtmlDocument(userProfile.introduction ?? '').body;
     }
     // Signature.
     //
@@ -423,27 +381,21 @@ class _ProfilePageState extends State<ProfilePage> {
             GestureDetector(
               child: SingleLineText(
                 userProfile.username ?? context.t.profilePage.title,
-                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
-              onTap: () async =>
-                  copyToClipboard(context, userProfile.username ?? ''),
+              onTap: () async => copyToClipboard(context, userProfile.username ?? ''),
             ),
             sizedBoxW12H12,
             if (userProfile.uid != null)
               SingleLineText(
                 userProfile.uid!,
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.outline),
               ),
           ],
         ),
       ),
       // Nickname and custom title.
-      if (userProfile.nickname != null || userProfile.customTitle != null)
-        sizedBoxW4H4,
+      if (userProfile.nickname != null || userProfile.customTitle != null) sizedBoxW4H4,
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -452,18 +404,14 @@ class _ProfilePageState extends State<ProfilePage> {
             if (userProfile.nickname != null)
               SingleLineText(
                 userProfile.nickname!,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
               ),
             if (userProfile.nickname != null && userProfile.customTitle != null)
               const SizedBox(width: 20, height: 20, child: VerticalDivider()),
             if (userProfile.customTitle != null)
               SingleLineText(
                 userProfile.customTitle!,
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.outline,
-                    ),
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
               ),
           ],
         ),
@@ -480,9 +428,7 @@ class _ProfilePageState extends State<ProfilePage> {
               IconButton(
                 icon: const Icon(Icons.email_outlined),
                 onPressed: () async {
-                  final content = userProfile.emailVerified ?? false
-                      ? tr.emailVerified
-                      : tr.emailNotVerified;
+                  final content = userProfile.emailVerified ?? false ? tr.emailVerified : tr.emailNotVerified;
                   showSnackBar(context: context, message: content);
                 },
                 isSelected: userProfile.emailVerified ?? false,
@@ -490,9 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
             IconButton(
               icon: const Icon(Icons.photo_camera_outlined),
               onPressed: () async {
-                final content = userProfile.videoVerified ?? false
-                    ? tr.videoVerified
-                    : tr.videoNotVerified;
+                final content = userProfile.videoVerified ?? false ? tr.videoVerified : tr.videoNotVerified;
                 showSnackBar(context: context, message: content);
               },
               isSelected: userProfile.videoVerified ?? false,
@@ -500,17 +444,14 @@ class _ProfilePageState extends State<ProfilePage> {
             TextButton.icon(
               icon: const Icon(Icons.group_outlined),
               label: Text(friendsCount),
-              onPressed: friendsPage != null
-                  ? () async {
-                      await context.dispatchAsUrl(friendsPage);
-                    }
-                  : null,
+              onPressed:
+                  friendsPage != null
+                      ? () async {
+                        await context.dispatchAsUrl(friendsPage);
+                      }
+                      : null,
             ),
-            if (userProfile.gender != null)
-              IconChip(
-                iconData: Icons.face_2_outlined,
-                text: Text(userProfile.gender!),
-              ),
+            if (userProfile.gender != null) IconChip(iconData: Icons.face_2_outlined, text: Text(userProfile.gender!)),
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
@@ -519,16 +460,8 @@ class _ProfilePageState extends State<ProfilePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            if (birthDayText.isNotEmpty)
-              IconChip(
-                iconData: Icons.cake_outlined,
-                text: Text(birthDayText),
-              ),
-            if (userProfile.zodiac != null)
-              IconChip(
-                iconData: MdiIcons.starCrescent,
-                text: Text(userProfile.zodiac!),
-              ),
+            if (birthDayText.isNotEmpty) IconChip(iconData: Icons.cake_outlined, text: Text(birthDayText)),
+            if (userProfile.zodiac != null) IconChip(iconData: MdiIcons.starCrescent, text: Text(userProfile.zodiac!)),
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
@@ -537,11 +470,7 @@ class _ProfilePageState extends State<ProfilePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            if (userProfile.from != null)
-              IconChip(
-                iconData: Icons.location_on_outlined,
-                text: Text(userProfile.from!),
-              ),
+            if (userProfile.from != null) IconChip(iconData: Icons.location_on_outlined, text: Text(userProfile.from!)),
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
@@ -549,17 +478,9 @@ class _ProfilePageState extends State<ProfilePage> {
         scrollDirection: Axis.horizontal,
         child: Row(
           children: <Widget>[
-            if (userProfile.msn != null)
-              IconChip(
-                iconData: Icons.group_outlined,
-                text: Text(userProfile.msn!),
-              ),
+            if (userProfile.msn != null) IconChip(iconData: Icons.group_outlined, text: Text(userProfile.msn!)),
             if (userProfile.qq != null)
-              IconChip(
-                iconData: FontAwesomeIcons.qq,
-                text: Text(userProfile.qq!),
-                iconSize: 14,
-              ),
+              IconChip(iconData: FontAwesomeIcons.qq, text: Text(userProfile.qq!), iconSize: 14),
           ].insertBetween(sizedBoxW4H4),
         ),
       ),
@@ -568,27 +489,11 @@ class _ProfilePageState extends State<ProfilePage> {
       Row(
         children: [
           if (moderatorGroupImg != null)
-            Flexible(
-              child: CachedImage(
-                moderatorGroupImg,
-                maxWidth: 200,
-                maxHeight: _groupAvatarHeight,
-              ),
-            ),
+            Flexible(child: CachedImage(moderatorGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight)),
           if (moderatorGroupImg != null && userGroupImg != null)
-            const SizedBox(
-              width: 20,
-              height: _groupAvatarHeight,
-              child: VerticalDivider(),
-            ),
+            const SizedBox(width: 20, height: _groupAvatarHeight, child: VerticalDivider()),
           if (userGroupImg != null)
-            Flexible(
-              child: CachedImage(
-                userGroupImg,
-                maxWidth: 200,
-                maxHeight: _groupAvatarHeight,
-              ),
-            ),
+            Flexible(child: CachedImage(userGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight)),
         ],
       ),
       if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW12H12,
@@ -597,10 +502,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (introductionContent != null) ...[
         sizedBoxW16H16,
         InputDecorator(
-          decoration: InputDecoration(
-            labelText: tr.introduction,
-            filled: false,
-          ),
+          decoration: InputDecoration(labelText: tr.introduction, filled: false),
           child: munchElement(context, introductionContent),
         ),
       ],
@@ -609,10 +511,7 @@ class _ProfilePageState extends State<ProfilePage> {
       if (signatureContent != null) ...[
         sizedBoxW16H16,
         InputDecorator(
-          decoration: InputDecoration(
-            labelText: tr.signature,
-            filled: false,
-          ),
+          decoration: InputDecoration(labelText: tr.signature, filled: false),
           child: munchElement(context, signatureContent),
         ),
       ],
@@ -622,64 +521,24 @@ class _ProfilePageState extends State<ProfilePage> {
 
       /// Statistics.
       sizedBoxW24H24,
-      Text(
-        tr.statistics.title,
-        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-      ),
+      Text(tr.statistics.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
       sizedBoxW12H12,
       GridView(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
-          mainAxisExtent: 70,
-        ),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: 70),
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         children: [
-          if (userProfile.credits != null)
-            AttrBlock(
-              name: tr.statistics.credits,
-              value: userProfile.credits!,
-            ),
-          if (userProfile.famous != null)
-            AttrBlock(
-              name: tr.statistics.famous,
-              value: userProfile.famous!,
-            ),
-          if (userProfile.coins != null)
-            AttrBlock(
-              name: tr.statistics.coins,
-              value: userProfile.coins!,
-            ),
-          if (userProfile.publicity != null)
-            AttrBlock(
-              name: tr.statistics.publicity,
-              value: userProfile.publicity!,
-            ),
-          if (userProfile.natural != null)
-            AttrBlock(
-              name: tr.statistics.natural,
-              value: userProfile.natural!,
-            ),
-          if (userProfile.scheming != null)
-            AttrBlock(
-              name: tr.statistics.scheming,
-              value: userProfile.scheming!,
-            ),
-          if (userProfile.spirit != null)
-            AttrBlock(
-              name: tr.statistics.spirit,
-              value: userProfile.spirit!,
-            ),
+          if (userProfile.credits != null) AttrBlock(name: tr.statistics.credits, value: userProfile.credits!),
+          if (userProfile.famous != null) AttrBlock(name: tr.statistics.famous, value: userProfile.famous!),
+          if (userProfile.coins != null) AttrBlock(name: tr.statistics.coins, value: userProfile.coins!),
+          if (userProfile.publicity != null) AttrBlock(name: tr.statistics.publicity, value: userProfile.publicity!),
+          if (userProfile.natural != null) AttrBlock(name: tr.statistics.natural, value: userProfile.natural!),
+          if (userProfile.scheming != null) AttrBlock(name: tr.statistics.scheming, value: userProfile.scheming!),
+          if (userProfile.spirit != null) AttrBlock(name: tr.statistics.spirit, value: userProfile.spirit!),
           // Special attr changes over time.
           // Here is dynamic and not translated.
-          if (userProfile.specialAttr != null &&
-              userProfile.specialAttrName != null)
-            AttrBlock(
-              name: userProfile.specialAttrName!,
-              value: userProfile.specialAttr!,
-            ),
+          if (userProfile.specialAttr != null && userProfile.specialAttrName != null)
+            AttrBlock(name: userProfile.specialAttrName!, value: userProfile.specialAttr!),
         ],
       ),
     ];
@@ -702,28 +561,21 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: _refreshController,
       scrollController: _scrollController,
       header: const MaterialHeader(),
-      onRefresh: () => context.read<ProfileBloc>().add(
-            ProfileRefreshRequested(
-              uid: widget.uid,
-              username: widget.username,
-            ),
-          ),
-      childBuilder: (context, physics) => CustomScrollView(
-        controller: _scrollController,
-        physics: physics,
-        slivers: [
-          // Real app bar when data loaded.
-          _buildSliverAppBar(context, state, logout: logout),
-          SliverPadding(
-            padding: edgeInsetsL12T4R12,
-            sliver: SliverList(
-              delegate: SliverChildListDelegate(
-                _buildSliverContent(context, state),
+      onRefresh:
+          () => context.read<ProfileBloc>().add(ProfileRefreshRequested(uid: widget.uid, username: widget.username)),
+      childBuilder:
+          (context, physics) => CustomScrollView(
+            controller: _scrollController,
+            physics: physics,
+            slivers: [
+              // Real app bar when data loaded.
+              _buildSliverAppBar(context, state, logout: logout),
+              SliverPadding(
+                padding: edgeInsetsL12T4R12,
+                sliver: SliverList(delegate: SliverChildListDelegate(_buildSliverContent(context, state))),
               ),
-            ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -745,11 +597,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc(
-        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-        authenticationRepository:
-            RepositoryProvider.of<AuthenticationRepository>(context),
-      )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
+      create:
+          (context) => ProfileBloc(
+            profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+          )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
       child: BlocConsumer<ProfileBloc, ProfileState>(
         listener: (context, state) {
           if (state.status == ProfileStatus.failure) {
@@ -764,43 +616,30 @@ class _ProfilePageState extends State<ProfilePage> {
             ProfileStatus.initial ||
             ProfileStatus.loading ||
             ProfileStatus.needLogin ||
-            ProfileStatus.failure =>
-              AppBar(title: Text(context.t.profilePage.title)),
+            ProfileStatus.failure => AppBar(title: Text(context.t.profilePage.title)),
             ProfileStatus.success || ProfileStatus.loggingOut => null,
           };
 
           // Main content of user profile.
           // Contain a sliver version app bar to show when data loaded.
           final body = switch (state.status) {
-            ProfileStatus.initial ||
-            ProfileStatus.loading =>
-              const Center(child: CircularProgressIndicator()),
+            ProfileStatus.initial || ProfileStatus.loading => const Center(child: CircularProgressIndicator()),
             ProfileStatus.needLogin => NeedLoginPage(
-                backUri: GoRouterState.of(context).uri,
-                needPop: true,
-                popCallback: (context) {
-                  context.read<ProfileBloc>().add(
-                        ProfileRefreshRequested(
-                          uid: widget.uid,
-                          username: widget.username,
-                        ),
-                      );
-                },
-              ),
+              backUri: GoRouterState.of(context).uri,
+              needPop: true,
+              popCallback: (context) {
+                context.read<ProfileBloc>().add(ProfileRefreshRequested(uid: widget.uid, username: widget.username));
+              },
+            ),
             ProfileStatus.failure => buildRetryButton(context, () {
-                context.read<ProfileBloc>().add(
-                      ProfileLoadRequested(
-                        username: widget.username,
-                        uid: widget.uid,
-                      ),
-                    );
-              }),
+              context.read<ProfileBloc>().add(ProfileLoadRequested(username: widget.username, uid: widget.uid));
+            }),
             ProfileStatus.success || ProfileStatus.loggingOut => _buildContent(
-                context,
-                state,
-                failedToLogoutReason: state.failedToLogoutReason,
-                logout: state.status == ProfileStatus.loggingOut,
-              ),
+              context,
+              state,
+              failedToLogoutReason: state.failedToLogoutReason,
+              logout: state.status == ProfileStatus.loggingOut,
+            ),
           };
 
           return Scaffold(

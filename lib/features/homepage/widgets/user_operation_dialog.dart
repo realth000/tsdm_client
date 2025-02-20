@@ -47,19 +47,9 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
     return AlertDialog(
       title: Row(
         children: [
-          HeroUserAvatar(
-            username: username,
-            avatarUrl: avatarUrl,
-            heroTag: username,
-            minRadius: 30,
-          ),
+          HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username, minRadius: 30),
           sizedBoxW12H12,
-          Expanded(
-            child: SingleLineText(
-              username,
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
-          ),
+          Expanded(child: SingleLineText(username, style: Theme.of(context).textTheme.titleLarge)),
         ],
       ),
       scrollable: true,
@@ -89,21 +79,22 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
           ),
           ListTile(
             title: Text(tr.latestThread),
-            onTap: latestThreadUrl == null
-                ? null
-                : () async {
-                    final target = latestThreadUrl!.parseUrlToRoute();
-                    if (target == null) {
-                      error('invalid kahrpba link: $latestThreadUrl');
-                      return;
-                    }
-                    context.pop();
-                    await context.pushNamed(
-                      target.screenPath,
-                      pathParameters: target.pathParameters,
-                      queryParameters: target.queryParameters,
-                    );
-                  },
+            onTap:
+                latestThreadUrl == null
+                    ? null
+                    : () async {
+                      final target = latestThreadUrl!.parseUrlToRoute();
+                      if (target == null) {
+                        error('invalid kahrpba link: $latestThreadUrl');
+                        return;
+                      }
+                      context.pop();
+                      await context.pushNamed(
+                        target.screenPath,
+                        pathParameters: target.pathParameters,
+                        queryParameters: target.queryParameters,
+                      );
+                    },
           ),
         ],
       ),

@@ -14,28 +14,12 @@ final class AutoCheckinInfo with AutoCheckinInfoMappable {
   });
 
   /// Construct an instance with empty data.
-  factory AutoCheckinInfo.empty() => const AutoCheckinInfo(
-        skipped: [],
-        waiting: [],
-        running: [],
-        succeeded: [],
-        failed: [],
-        notAuthed: [],
-      );
+  factory AutoCheckinInfo.empty() =>
+      const AutoCheckinInfo(skipped: [], waiting: [], running: [], succeeded: [], failed: [], notAuthed: []);
 
   /// Construct a instance with starting point values.
-  factory AutoCheckinInfo.start({
-    required List<UserLoginInfo> waiting,
-    required List<UserLoginInfo> running,
-  }) =>
-      AutoCheckinInfo(
-        skipped: [],
-        waiting: waiting,
-        running: running,
-        succeeded: [],
-        failed: [],
-        notAuthed: [],
-      );
+  factory AutoCheckinInfo.start({required List<UserLoginInfo> waiting, required List<UserLoginInfo> running}) =>
+      AutoCheckinInfo(skipped: [], waiting: waiting, running: running, succeeded: [], failed: [], notAuthed: []);
 
   /// Users skipped the checkin progress because of the last checkin time.
   final List<UserLoginInfo> skipped;

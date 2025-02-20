@@ -28,8 +28,7 @@ extension _Regexp on String {
 
 /// Repository of purchasing.
 final class PurchaseRepository with LoggerMixin {
-  static const _purchaseTarget =
-      'https://tsdm39.com/forum.php?mod=misc&action=pay&paysubmit=yes&infloat=yes&inajax=1';
+  static const _purchaseTarget = 'https://tsdm39.com/forum.php?mod=misc&action=pay&paysubmit=yes&infloat=yes&inajax=1';
   static final _valueRe = RegExp(' value="(?<value>.+)" />');
   static final _authorRe = RegExp('<td><a.*>(?<author>.+)</a></td>');
   static final _coinsRe = RegExp(r'<td>(?<coins>\d+).*</td>');
@@ -37,15 +36,9 @@ final class PurchaseRepository with LoggerMixin {
   /// Fetch confirm info before purchase post [pid] in thread [tid].
   ///
   /// MUST call this function before purchase.
-  AsyncEither<PurchaseConfirmInfo> fetchPurchaseConfirmInfo({
-    required String tid,
-    required String pid,
-  }) =>
+  AsyncEither<PurchaseConfirmInfo> fetchPurchaseConfirmInfo({required String tid, required String pid}) =>
       AsyncEither(() async {
-        final respEither = await getIt
-            .get<NetClientProvider>()
-            .get(formatPurchaseDialogUrl(tid, pid))
-            .run();
+        final respEither = await getIt.get<NetClientProvider>().get(formatPurchaseDialogUrl(tid, pid)).run();
         if (respEither.isLeft()) {
           return left(respEither.unwrapErr());
         }
@@ -56,9 +49,7 @@ final class PurchaseRepository with LoggerMixin {
           return left(HttpRequestFailedException(resp.statusCode));
         }
         final dataList = (resp.data as String).split('\n');
-        final inputList = dataList
-            .where((e) => e.startsWith('<input type="hidden"'))
-            .toList();
+        final inputList = dataList.where((e) => e.startsWith('<input type="hidden"')).toList();
         if (inputList.length != 4) {
           error(
             'parse purchase dialog failed: invalid input length '
@@ -70,10 +61,7 @@ final class PurchaseRepository with LoggerMixin {
         final referer = inputList[1].matchValue();
         final tidInDialog = inputList[2].matchValue();
         final handleKey = inputList[3].matchValue();
-        if (formHash == null ||
-            referer == null ||
-            tidInDialog == null ||
-            handleKey == null) {
+        if (formHash == null || referer == null || tidInDialog == null || handleKey == null) {
           error(
             'parse purchase dialog failed: formHash=$formHash, '
             'referer=$referer, tid=$tidInDialog, handleKey=$handleKey',
@@ -83,8 +71,10 @@ final class PurchaseRepository with LoggerMixin {
 
         final tdList = dataList.where((e) => e.startsWith('<td>')).toList();
         if (tdList.length != 4) {
-          error('parse purchase dialog failed: invalid td '
-              'length ${tdList.length}');
+          error(
+            'parse purchase dialog failed: invalid td '
+            'length ${tdList.length}',
+          );
           return left(PurchaseInfoInvalidNoticeException());
         }
 
@@ -112,30 +102,21 @@ final class PurchaseRepository with LoggerMixin {
     required String referer,
     required String tid,
     required String handleKey,
-  }) =>
-      AsyncVoidEither(() async {
-        final body = {
-          'formhash': formHash,
-          'referer': referer,
-          'tid': tid,
-          'handlekey': handleKey,
-        };
-        final respEither = await getIt
-            .get<NetClientProvider>()
-            .postForm(_purchaseTarget, data: body)
-            .run();
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
+  }) => AsyncVoidEither(() async {
+    final body = {'formhash': formHash, 'referer': referer, 'tid': tid, 'handlekey': handleKey};
+    final respEither = await getIt.get<NetClientProvider>().postForm(_purchaseTarget, data: body).run();
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
 
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
 
-        if (!(resp.data as String).contains('购买成功')) {
-          return left(PurchaseActionFailedException());
-        }
-        return rightVoid();
-      });
+    if (!(resp.data as String).contains('购买成功')) {
+      return left(PurchaseActionFailedException());
+    }
+    return rightVoid();
+  });
 }

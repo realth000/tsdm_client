@@ -74,10 +74,10 @@ class CachedImage extends StatefulWidget {
 
 class _CachedImageState extends State<CachedImage> with LoggerMixin {
   Widget _buildPlaceholder(BuildContext context) => Shimmer.fromColors(
-        baseColor: Theme.of(context).colorScheme.primary.withOpacityA(0.3),
-        highlightColor: Theme.of(context).colorScheme.primary.withOpacityA(0.2),
-        child: FallbackPicture(fit: widget.fit),
-      );
+    baseColor: Theme.of(context).colorScheme.primary.withOpacityA(0.3),
+    highlightColor: Theme.of(context).colorScheme.primary.withOpacityA(0.2),
+    child: FallbackPicture(fit: widget.fit),
+  );
 
   StreamSubscription<ImageCacheResponse>? imageSub;
 
@@ -93,11 +93,7 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
     imageSub = getIt
         .get<ImageCacheProvider>()
         .response
-        .where(
-          (e) =>
-              e.respType == ImageCacheResponseType.general &&
-              e.imageId == widget.imageUrl,
-        )
+        .where((e) => e.respType == ImageCacheResponseType.general && e.imageId == widget.imageUrl)
         .listen((resp) async => onImageResponse(resp));
   }
 
@@ -135,10 +131,7 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
             layoutBuilder: (currentChild, previousChildren) {
               return Stack(
                 alignment: Alignment.center,
-                children: <Widget>[
-                  ...previousChildren,
-                  if (currentChild != null) currentChild,
-                ],
+                children: <Widget>[...previousChildren, if (currentChild != null) currentChild],
               );
             },
             // Return the same placeholder until built finished to avoid size

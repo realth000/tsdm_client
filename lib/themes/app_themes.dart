@@ -33,75 +33,62 @@ class AppTheme {
     drawerRadius: 0,
   );
 
-  static CardTheme _buildCardTheme() => const CardTheme(
-        elevation: 0,
-      );
+  static CardTheme _buildCardTheme() => const CardTheme(elevation: 0);
 
-  static ChipThemeData _buildChipTheme() => const ChipThemeData(
-        padding: EdgeInsets.all(2),
-      );
+  static ChipThemeData _buildChipTheme() => const ChipThemeData(padding: EdgeInsets.all(2));
 
   /// Global theme for [ListTile].
   static ListTileThemeData _buildListTileTheme() => const ListTileThemeData(
-        visualDensity: VisualDensity.standard,
-        contentPadding: EdgeInsets.symmetric(horizontal: 10),
-        horizontalTitleGap: 10,
-      );
+    visualDensity: VisualDensity.standard,
+    contentPadding: EdgeInsets.symmetric(horizontal: 10),
+    horizontalTitleGap: 10,
+  );
 
   /// Global theme for [TabBar].
-  static TabBarTheme _buildTabBarTheme() => const TabBarTheme(
-        dividerHeight: 0,
-      );
+  static TabBarTheme _buildTabBarTheme() => const TabBarTheme(dividerHeight: 0);
 
-  static ProgressIndicatorThemeData _buildProcessIndicatorTheme() =>
-      const ProgressIndicatorThemeData(
-        // This flag is deprecated since 3.29 but not default to false yet. Keep
-        // it to false so we have the latest M3 style process indicator.
-        // ignore: deprecated_member_use
-        year2023: false,
-      );
+  static ProgressIndicatorThemeData _buildProcessIndicatorTheme() => const ProgressIndicatorThemeData(
+    // This flag is deprecated since 3.29 but not default to false yet. Keep
+    // it to false so we have the latest M3 style process indicator.
+    // ignore: deprecated_member_use
+    year2023: false,
+  );
 
-  static NavigationDrawerThemeData _buildNavigationDrawerTheme(
-    ColorScheme? colorScheme,
-  ) =>
-      NavigationDrawerThemeData(
-        labelTextStyle: WidgetStateProperty.resolveWith((state) {
-          if (state.contains(WidgetState.selected)) {
-            return TextStyle(color: colorScheme?.primary);
-          }
-          return null;
-        }),
-        iconTheme: WidgetStateProperty.resolveWith((state) {
-          if (state.contains(WidgetState.selected)) {
-            return IconThemeData(color: colorScheme?.primary);
-          }
-          return null;
-        }),
-      );
+  static NavigationDrawerThemeData _buildNavigationDrawerTheme(ColorScheme? colorScheme) => NavigationDrawerThemeData(
+    labelTextStyle: WidgetStateProperty.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return TextStyle(color: colorScheme?.primary);
+      }
+      return null;
+    }),
+    iconTheme: WidgetStateProperty.resolveWith((state) {
+      if (state.contains(WidgetState.selected)) {
+        return IconThemeData(color: colorScheme?.primary);
+      }
+      return null;
+    }),
+  );
 
   /// App light theme.
-  static ThemeData makeLight(
-    BuildContext context, {
-    required Color? seedColor,
-    required String fontFamily,
-  }) {
+  static ThemeData makeLight(BuildContext context, {required Color? seedColor, required String fontFamily}) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
       seedScheme = ColorScheme.fromSeed(seedColor: seedColor);
     }
     return FlexThemeData.light(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors: seedScheme != null
-          ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
-          : null,
+      colors:
+          seedScheme != null
+              ? FlexSchemeColor(
+                primary: seedScheme.primary,
+                primaryContainer: seedScheme.primaryContainer,
+                secondary: seedScheme.secondary,
+                secondaryContainer: seedScheme.secondaryContainer,
+                tertiary: seedScheme.tertiary,
+                tertiaryContainer: seedScheme.tertiaryContainer,
+                error: seedScheme.error,
+              )
+              : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
@@ -121,31 +108,25 @@ class AppTheme {
   }
 
   /// App dark themes.
-  static ThemeData makeDark(
-    BuildContext context, {
-    required Color? seedColor,
-    required String fontFamily,
-  }) {
+  static ThemeData makeDark(BuildContext context, {required Color? seedColor, required String fontFamily}) {
     ColorScheme? seedScheme;
     if (seedColor != null) {
-      seedScheme = ColorScheme.fromSeed(
-        seedColor: seedColor,
-        brightness: Brightness.dark,
-      );
+      seedScheme = ColorScheme.fromSeed(seedColor: seedColor, brightness: Brightness.dark);
     }
     return FlexThemeData.dark(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors: seedScheme != null
-          ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
-          : null,
+      colors:
+          seedScheme != null
+              ? FlexSchemeColor(
+                primary: seedScheme.primary,
+                primaryContainer: seedScheme.primaryContainer,
+                secondary: seedScheme.secondary,
+                secondaryContainer: seedScheme.secondaryContainer,
+                tertiary: seedScheme.tertiary,
+                tertiaryContainer: seedScheme.tertiaryContainer,
+                error: seedScheme.error,
+              )
+              : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
@@ -164,6 +145,7 @@ class AppTheme {
     );
   }
 }
+
 // If you do not have a themeMode switch, uncomment this line
 // to let the device system mode control the theme mode:
 // themeMode: ThemeMode.system,

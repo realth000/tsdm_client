@@ -20,18 +20,14 @@ final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
     required CheckinRepository checkinRepository,
     required AuthenticationRepository authenticationRepository,
     required SettingsRepository settingsRepository,
-  })  : _checkinRepository = checkinRepository,
-        _authenticationRepository = authenticationRepository,
-        _settingsRepository = settingsRepository,
-        super(const CheckinStateInitial()) {
+  }) : _checkinRepository = checkinRepository,
+       _authenticationRepository = authenticationRepository,
+       _settingsRepository = settingsRepository,
+       super(const CheckinStateInitial()) {
     on<CheckinRequested>(_onCheckinRequested);
     on<CheckinAuthChanged>(_onCheckinAuthChanged);
     _authStreamSub = _authenticationRepository.status.listen(
-      (status) => add(
-        CheckinAuthChanged(
-          authed: status is AuthStatusAuthed,
-        ),
-      ),
+      (status) => add(CheckinAuthChanged(authed: status is AuthStatusAuthed)),
     );
   }
 
@@ -41,19 +37,14 @@ final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
   final AuthenticationRepository _authenticationRepository;
   final SettingsRepository _settingsRepository;
 
-  Future<void> _onCheckinRequested(
-    CheckinRequested event,
-    Emitter<CheckinState> emit,
-  ) async {
+  Future<void> _onCheckinRequested(CheckinRequested event, Emitter<CheckinState> emit) async {
     if (_authenticationRepository.currentUser == null) {
       emit(const CheckinStateNeedLogin());
       return;
     }
     emit(const CheckinStateLoading());
-    final checkinFeeling =
-        await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
-    final checkinMessage =
-        await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
+    final checkinFeeling = await _settingsRepository.getValue<String>(SettingsKeys.checkinFeeling);
+    final checkinMessage = await _settingsRepository.getValue<String>(SettingsKeys.checkinMessage);
     final result = await _checkinRepository.checkin(
       _authenticationRepository.currentUser!.uid!,
       CheckinFeeling.from(checkinFeeling),
@@ -66,10 +57,7 @@ final class CheckinBloc extends Bloc<CheckinEvent, CheckinState> {
     emit(CheckinStateFailed(result));
   }
 
-  void _onCheckinAuthChanged(
-    CheckinAuthChanged event,
-    Emitter<CheckinState> emit,
-  ) {
+  void _onCheckinAuthChanged(CheckinAuthChanged event, Emitter<CheckinState> emit) {
     if (event.authed) {
       if (state is CheckinStateLoading) {
         return;

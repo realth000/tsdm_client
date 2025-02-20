@@ -24,29 +24,26 @@ class SearchRepository {
     required String fid,
     required String uid,
     required int pageNumber,
-  }) =>
-      AsyncEither(() async {
-        final queryParameters = <String, String>{
-          'id': 'Kahrpba:search',
-          'query': keyword,
-          'authorid': uid,
-          'fid': fid,
-          'page': '$pageNumber',
-        };
+  }) => AsyncEither(() async {
+    final queryParameters = <String, String>{
+      'id': 'Kahrpba:search',
+      'query': keyword,
+      'authorid': uid,
+      'fid': fid,
+      'page': '$pageNumber',
+    };
 
-        final netClient = getIt.get<NetClientProvider>();
-        final respEither = await netClient
-            .get(_searchUrl, queryParameters: queryParameters)
-            .run();
-        if (respEither.isLeft()) {
-          return left(respEither.unwrapErr());
-        }
-        final resp = respEither.unwrap();
-        if (resp.statusCode != HttpStatus.ok) {
-          return left(HttpRequestFailedException(resp.statusCode));
-        }
+    final netClient = getIt.get<NetClientProvider>();
+    final respEither = await netClient.get(_searchUrl, queryParameters: queryParameters).run();
+    if (respEither.isLeft()) {
+      return left(respEither.unwrapErr());
+    }
+    final resp = respEither.unwrap();
+    if (resp.statusCode != HttpStatus.ok) {
+      return left(HttpRequestFailedException(resp.statusCode));
+    }
 
-        final document = parseHtmlDocument(resp.data as String);
-        return right(document);
-      });
+    final document = parseHtmlDocument(resp.data as String);
+    return right(document);
+  });
 }

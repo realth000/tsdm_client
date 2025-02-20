@@ -21,8 +21,7 @@ sealed class PointsChangelogEvent with PointsChangelogEventMappable {
 
 /// User requested to refresh the points changelog page.
 @MappableClass()
-final class PointsChangelogRefreshRequested extends PointsChangelogEvent
-    with PointsChangelogRefreshRequestedMappable {}
+final class PointsChangelogRefreshRequested extends PointsChangelogEvent with PointsChangelogRefreshRequestedMappable {}
 
 /// User requested to load more page in points changelog page.
 @MappableClass()
@@ -48,8 +47,7 @@ final class PointsChangelogJumpPageRequested extends PointsChangelogEvent
 
 /// User requested to do a query action with given [parameter].
 @MappableClass()
-final class PointsChangelogQueryRequested extends PointsChangelogEvent
-    with PointsChangelogQueryRequestedMappable {
+final class PointsChangelogQueryRequested extends PointsChangelogEvent with PointsChangelogQueryRequestedMappable {
   /// Constructor.
   const PointsChangelogQueryRequested(this.parameter);
 

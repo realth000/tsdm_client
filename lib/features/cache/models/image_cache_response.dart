@@ -59,14 +59,9 @@ sealed class ImageCacheResponse with ImageCacheResponseMappable {
 ///
 /// Data maybe directly loaded from cache, or downloaded from image url.
 @MappableClass()
-final class ImageCacheSuccessResponse extends ImageCacheResponse
-    with ImageCacheSuccessResponseMappable {
+final class ImageCacheSuccessResponse extends ImageCacheResponse with ImageCacheSuccessResponseMappable {
   /// Constructor.
-  const ImageCacheSuccessResponse(
-    super.imageId,
-    super.respType,
-    this.imageData,
-  );
+  const ImageCacheSuccessResponse(super.imageId, super.respType, this.imageData);
 
   /// Binary image data.
   final Uint8List imageData;
@@ -77,8 +72,7 @@ final class ImageCacheSuccessResponse extends ImageCacheResponse
 /// Images in this state do not have a valid cache and is loading from the
 /// given image url.
 @MappableClass()
-final class ImageCacheLoadingResponse extends ImageCacheResponse
-    with ImageCacheLoadingResponseMappable {
+final class ImageCacheLoadingResponse extends ImageCacheResponse with ImageCacheLoadingResponseMappable {
   /// Constructor.
   const ImageCacheLoadingResponse(super.imageId, super.respType);
 }
@@ -89,8 +83,7 @@ final class ImageCacheLoadingResponse extends ImageCacheResponse
 ///
 /// Ready for another retry.
 @MappableClass()
-final class ImageCacheFailedResponse extends ImageCacheResponse
-    with ImageCacheFailedResponseMappable {
+final class ImageCacheFailedResponse extends ImageCacheResponse with ImageCacheFailedResponseMappable {
   /// Constructor.
   const ImageCacheFailedResponse(super.imageId, super.respType);
 }
@@ -102,15 +95,9 @@ final class ImageCacheFailedResponse extends ImageCacheResponse
 ///
 /// Use [ImageCacheStatus2] to tell image cache status.
 @MappableClass()
-final class ImageCacheStatusResponse extends ImageCacheResponse
-    with ImageCacheStatusResponseMappable {
+final class ImageCacheStatusResponse extends ImageCacheResponse with ImageCacheStatusResponseMappable {
   /// Constructor.
-  const ImageCacheStatusResponse(
-    super.imageId,
-    super.respType,
-    this.status,
-    this.imageData,
-  );
+  const ImageCacheStatusResponse(super.imageId, super.respType, this.status, this.imageData);
 
   /// Status of cache.
   final ImageCacheStatus2 status;

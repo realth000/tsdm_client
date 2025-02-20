@@ -35,9 +35,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
       header: const MaterialHeader(),
       footer: const MaterialFooter(),
       onRefresh: () async {
-        context
-            .read<LatestThreadBloc>()
-            .add(LatestThreadRefreshRequested(widget.url));
+        context.read<LatestThreadBloc>().add(LatestThreadRefreshRequested(widget.url));
       },
       onLoad: () async {
         if (state.nextPageUrl == null) {
@@ -60,10 +58,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
   @override
   void initState() {
     super.initState();
-    _refreshController = EasyRefreshController(
-      controlFinishLoad: true,
-      controlFinishRefresh: true,
-    );
+    _refreshController = EasyRefreshController(controlFinishLoad: true, controlFinishRefresh: true);
   }
 
   @override
@@ -76,13 +71,12 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        RepositoryProvider(
-          create: (_) => LatestThreadRepository(),
-        ),
+        RepositoryProvider(create: (_) => LatestThreadRepository()),
         BlocProvider(
-          create: (context) => LatestThreadBloc(
-            latestThreadRepository: context.repo(),
-          )..add(LatestThreadRefreshRequested(widget.url)),
+          create:
+              (context) =>
+                  LatestThreadBloc(latestThreadRepository: context.repo())
+                    ..add(LatestThreadRefreshRequested(widget.url)),
         ),
       ],
       child: BlocListener<LatestThreadBloc, LatestThreadState>(
@@ -95,20 +89,14 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
           builder: (context, state) {
             final body = switch (state.status) {
               LatestThreadStatus.initial ||
-              LatestThreadStatus.loading =>
-                const Center(child: CircularProgressIndicator()),
+              LatestThreadStatus.loading => const Center(child: CircularProgressIndicator()),
               LatestThreadStatus.failed => buildRetryButton(context, () {
-                  context
-                      .read<LatestThreadBloc>()
-                      .add(LatestThreadRefreshRequested(widget.url));
-                }),
+                context.read<LatestThreadBloc>().add(LatestThreadRefreshRequested(widget.url));
+              }),
               LatestThreadStatus.success => _buildBody(context, state),
             };
 
-            return Scaffold(
-              appBar: AppBar(title: Text(context.t.latestThreadPage.title)),
-              body: body,
-            );
+            return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: body);
           },
         ),
       ),

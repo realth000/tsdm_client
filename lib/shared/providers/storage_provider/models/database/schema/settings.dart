@@ -31,8 +31,7 @@ class Settings extends Table {
   /// Ui `Offset` type value.
   ///
   /// Added in v3.
-  TextColumn get offsetValue =>
-      text().map(const OffsetConverter()).nullable()();
+  TextColumn get offsetValue => text().map(const OffsetConverter()).nullable()();
 
   @override
   Set<Column<Object>> get primaryKey => {name};

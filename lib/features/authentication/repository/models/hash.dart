@@ -4,10 +4,7 @@ part of 'models.dart';
 @MappableClass()
 class LoginHash with LoginHashMappable {
   /// Constructor.
-  const LoginHash({
-    required this.formHash,
-    required this.loginHash,
-  });
+  const LoginHash({required this.formHash, required this.loginHash});
 
   /// Form hash.
   final String formHash;

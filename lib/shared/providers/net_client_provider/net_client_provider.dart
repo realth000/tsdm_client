@@ -29,19 +29,13 @@ AppException mapException(Object error, StackTrace st) {
 }
 
 extension _WithFormExt<T> on Dio {
-  AsyncEither<Response<T>> postWithForm(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-  }) =>
+  AsyncEither<Response<T>> postWithForm(String path, {Object? data, Map<String, dynamic>? queryParameters}) =>
       AsyncEither.tryCatch(
         () async => post(
           path,
           data: data,
           queryParameters: queryParameters,
-          options: Options(
-            headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-          ),
+          options: Options(headers: {'Content-Type': 'application/x-www-form-urlencoded'}),
         ),
         mapException,
       );
@@ -62,19 +56,12 @@ final class NetClientProvider with LoggerMixin {
   ///
   /// * Set [forceDesktop] to false when desire server response with a mobile
   ///   layout page.
-  factory NetClientProvider.build({
-    Dio? dio,
-    UserLoginInfo? userLoginInfo,
-    bool forceDesktop = true,
-  }) {
+  factory NetClientProvider.build({Dio? dio, UserLoginInfo? userLoginInfo, bool forceDesktop = true}) {
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     if (!isWeb) {
       talker.debug('build cookie with user info: $userLoginInfo');
       final cookie = getIt.get<CookieProvider>();
-      final cookieJar = PersistCookieJar(
-        ignoreExpires: true,
-        storage: cookie,
-      );
+      final cookieJar = PersistCookieJar(ignoreExpires: true, storage: cookie);
       d.interceptors.add(CookieManager(cookieJar));
       if (forceDesktop) {
         d.interceptors.add(_ForceDesktopLayoutInterceptor());
@@ -88,8 +75,7 @@ final class NetClientProvider with LoggerMixin {
           // Don't trust any certificate just because their root cert is
           // trusted.
           final client = HttpClient(context: SecurityContext())
-            ..badCertificateCallback =
-                (X509Certificate cert, String host, int port) => true;
+            ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
 
           final settings = getIt.get<SettingsRepository>().currentSettings;
           final useProxy = settings.netClientUseProxy;
@@ -117,18 +103,13 @@ final class NetClientProvider with LoggerMixin {
   ///   some actions are required to apply on [cookie] at a specified time.
   /// * Set [forceDesktop] to false when desire server response with a mobile
   ///   layout page.
-  factory NetClientProvider.buildNoCookie({
-    Dio? dio,
-    bool forceDesktop = true,
-    CookieProvider? cookie,
-  }) {
+  factory NetClientProvider.buildNoCookie({Dio? dio, bool forceDesktop = true, CookieProvider? cookie}) {
     talker.debug('build no-cookie with cookie: $cookie');
     final d = dio ?? getIt.get<SettingsRepository>().buildDefaultDio();
     d.interceptors.add(_ErrorHandler());
     final cookieJar = PersistCookieJar(
       ignoreExpires: true,
-      storage:
-          cookie ?? getIt.get<CookieProvider>(instanceName: ServiceKeys.empty),
+      storage: cookie ?? getIt.get<CookieProvider>(instanceName: ServiceKeys.empty),
     );
     d.interceptors.add(CookieManager(cookieJar));
     if (forceDesktop) {
@@ -142,96 +123,66 @@ final class NetClientProvider with LoggerMixin {
   final Dio _dio;
 
   /// Make a GET request to [path].
-  AsyncEither<Response<dynamic>> get(
-    String path, {
-    Map<String, dynamic>? queryParameters,
-  }) =>
-      AsyncEither.tryCatch(
-        () async => _dio.get<dynamic>(path, queryParameters: queryParameters),
-        mapException,
-      );
+  AsyncEither<Response<dynamic>> get(String path, {Map<String, dynamic>? queryParameters}) =>
+      AsyncEither.tryCatch(() async => _dio.get<dynamic>(path, queryParameters: queryParameters), mapException);
 
   /// Make a GET request to the given [uri].
-  AsyncEither<Response<dynamic>> getUri(Uri uri) => AsyncEither.tryCatch(
-        () async => _dio.getUri<dynamic>(uri),
-        mapException,
-      );
+  AsyncEither<Response<dynamic>> getUri(Uri uri) =>
+      AsyncEither.tryCatch(() async => _dio.getUri<dynamic>(uri), mapException);
 
   /// Make a GET request to [path], with options set to image types.
-  AsyncEither<Response<dynamic>> getImage(
-    String path, {
-    Map<String, dynamic>? queryParameters,
-  }) =>
-      AsyncEither.tryCatch(
-        () async {
-          final resp = await _dio.get<dynamic>(
-            path,
-            queryParameters: queryParameters,
-            options: Options(
-              responseType: ResponseType.bytes,
-              headers: {
-                HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-                HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-              },
-            ),
-          );
+  AsyncEither<Response<dynamic>> getImage(String path, {Map<String, dynamic>? queryParameters}) =>
+      AsyncEither.tryCatch(() async {
+        final resp = await _dio.get<dynamic>(
+          path,
+          queryParameters: queryParameters,
+          options: Options(
+            responseType: ResponseType.bytes,
+            headers: {
+              HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+              HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+            },
+          ),
+        );
 
-          if (resp.statusCode != HttpStatus.ok) {
-            throw HttpRequestFailedException(resp.statusCode);
-          }
-          return resp;
-        },
-        mapException,
-      );
+        if (resp.statusCode != HttpStatus.ok) {
+          throw HttpRequestFailedException(resp.statusCode);
+        }
+        return resp;
+      }, mapException);
 
   /// Get a image from the given [uri].
-  AsyncEither<Response<dynamic>> getImageFromUri(Uri uri) =>
-      AsyncEither.tryCatch(
-        () async {
-          final resp = await _dio.getUri<dynamic>(
-            uri,
-            options: Options(
-              responseType: ResponseType.bytes,
-              headers: {
-                HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-                HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-              },
-            ),
-          );
-
-          if (resp.statusCode != HttpStatus.ok) {
-            throw HttpRequestFailedException(resp.statusCode);
-          }
-          return resp;
+  AsyncEither<Response<dynamic>> getImageFromUri(Uri uri) => AsyncEither.tryCatch(() async {
+    final resp = await _dio.getUri<dynamic>(
+      uri,
+      options: Options(
+        responseType: ResponseType.bytes,
+        headers: {
+          HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
         },
-        mapException,
-      );
+      ),
+    );
+
+    if (resp.statusCode != HttpStatus.ok) {
+      throw HttpRequestFailedException(resp.statusCode);
+    }
+    return resp;
+  }, mapException);
 
   /// Post [data] to [path] with [queryParameters].
   ///
   /// When post a form data, use [postForm] instead.
-  AsyncEither<Response<dynamic>> post(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-  }) =>
+  AsyncEither<Response<dynamic>> post(String path, {Object? data, Map<String, dynamic>? queryParameters}) =>
       AsyncEither.tryCatch(
-        () async => _dio.post<dynamic>(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-        ),
+        () async => _dio.post<dynamic>(path, data: data, queryParameters: queryParameters),
         mapException,
       );
 
   /// Post a form [data] to url [path] with [queryParameters].
   ///
   /// Automatically set `Content-Type` to `application/x-www-form-urlencoded`.
-  AsyncEither<Response<dynamic>> postForm(
-    String path, {
-    Object? data,
-    Map<String, dynamic>? queryParameters,
-  }) =>
+  AsyncEither<Response<dynamic>> postForm(String path, {Object? data, Map<String, dynamic>? queryParameters}) =>
       _dio.postWithForm(path, data: data, queryParameters: queryParameters);
 
   /// Post a form [data] to url [path] in `Content-Type` multipart/form-data.
@@ -241,26 +192,24 @@ final class NetClientProvider with LoggerMixin {
     String path, {
     required Map<String, dynamic> data,
     Map<String, String>? header,
-  }) =>
-      AsyncEither.tryCatch(
-        () async => _dio.post<dynamic>(
-          path,
-          options: Options(
-            headers: <String, String>{
-              HttpHeaders.contentTypeHeader:
-                  Headers.multipartFormDataContentType,
-            }.copyWith(header ?? {}),
-            validateStatus: (code) {
-              if (code == 301 || code == 200) {
-                return true;
-              }
-              return false;
-            },
-          ),
-          data: FormData.fromMap(data),
-        ),
-        mapException,
-      );
+  }) => AsyncEither.tryCatch(
+    () async => _dio.post<dynamic>(
+      path,
+      options: Options(
+        headers: <String, String>{
+          HttpHeaders.contentTypeHeader: Headers.multipartFormDataContentType,
+        }.copyWith(header ?? {}),
+        validateStatus: (code) {
+          if (code == 301 || code == 200) {
+            return true;
+          }
+          return false;
+        },
+      ),
+      data: FormData.fromMap(data),
+    ),
+    mapException,
+  );
 
   /// Download the file from url [path] and save to [savePath].
   AsyncVoidEither download(
@@ -273,39 +222,32 @@ final class NetClientProvider with LoggerMixin {
     String lengthHeader = Headers.contentLengthHeader,
     Object? data,
     Options? options,
-  }) =>
-      AsyncVoidEither.tryCatch(
-        () async => _dio.download(
-          path,
-          savePath,
-          onReceiveProgress: onReceiveProgress,
-          queryParameters: queryParameters,
-          cancelToken: cancelToken,
-          deleteOnError: deleteOnError,
-          lengthHeader: lengthHeader,
-          data: data,
-          options: options,
-        ),
-        mapException,
-      );
+  }) => AsyncVoidEither.tryCatch(
+    () async => _dio.download(
+      path,
+      savePath,
+      onReceiveProgress: onReceiveProgress,
+      queryParameters: queryParameters,
+      cancelToken: cancelToken,
+      deleteOnError: deleteOnError,
+      lengthHeader: lengthHeader,
+      data: data,
+      options: options,
+    ),
+    mapException,
+  );
 }
 
 /// Handle exceptions during web request.
 class _ErrorHandler extends Interceptor with LoggerMixin {
   @override
-  void onResponse(
-    Response<dynamic> response,
-    ResponseInterceptorHandler handler,
-  ) {
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
     getIt.get<NetErrorSaver>().clear();
     handler.next(response);
   }
 
   @override
-  void onError(
-    DioException err,
-    ErrorInterceptorHandler handler,
-  ) {
+  void onError(DioException err, ErrorInterceptorHandler handler) {
     error('${err.requestOptions} ${err.type}: ${err.error},${err.message}');
     getIt.get<NetErrorSaver>().save(err.message);
 
@@ -313,8 +255,7 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
       // Till now we can do nothing if encounter a bad response.
     }
 
-    if (err.type == DioExceptionType.unknown &&
-        err.error.runtimeType == HandshakeException) {
+    if (err.type == DioExceptionType.unknown && err.error.runtimeType == HandshakeException) {
       // Likely we have an error in SSL handshake.
     }
 

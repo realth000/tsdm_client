@@ -36,51 +36,34 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
   Widget _buildInfoRow(BuildContext context, List<PacketDetailModel> data) {
     final tr = context.t.packetDetailPage;
     final secondaryColor = Theme.of(context).colorScheme.secondary;
-    final textStyle =
-        Theme.of(context).textTheme.labelLarge?.copyWith(color: secondaryColor);
+    final textStyle = Theme.of(context).textTheme.labelLarge?.copyWith(color: secondaryColor);
 
-    final timeElapsed =
-        data.first.time.difference(data.last.time).readable(context);
+    final timeElapsed = data.first.time.difference(data.last.time).readable(context);
     final userCount = data.length;
     final coinsCount = data.fold(0, (prev, e) => prev + e.coins);
 
     return InkWell(
-      onTap: () async => showMessageSingleButtonDialog(
-        context: context,
-        title: tr.title,
-        message: tr.statistics(
-          users: userCount,
-          coins: coinsCount,
-          time: timeElapsed,
-        ),
-      ),
+      onTap:
+          () async => showMessageSingleButtonDialog(
+            context: context,
+            title: tr.title,
+            message: tr.statistics(users: userCount, coins: coinsCount, time: timeElapsed),
+          ),
       child: Column(
         children: [
           sizedBoxW4H4,
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(
-                Icons.timelapse_outlined,
-                color: secondaryColor,
-                size: 16,
-              ),
+              Icon(Icons.timelapse_outlined, color: secondaryColor, size: 16),
               sizedBoxW4H4,
               Text(timeElapsed, style: textStyle),
               sizedBoxW12H12,
-              Icon(
-                Icons.person_outline,
-                color: secondaryColor,
-                size: 16,
-              ),
+              Icon(Icons.person_outline, color: secondaryColor, size: 16),
               sizedBoxW4H4,
               Text('$userCount', style: textStyle),
               sizedBoxW12H12,
-              Icon(
-                FontAwesomeIcons.coins,
-                color: secondaryColor,
-                size: 16,
-              ),
+              Icon(FontAwesomeIcons.coins, color: secondaryColor, size: 16),
               sizedBoxW4H4,
               Text('$coinsCount', style: textStyle),
               sizedBoxW12H12,
@@ -98,65 +81,51 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
 
     final dataSorted = switch (_sortByCoins) {
       _SortBy.time => data.toList(),
-      _SortBy.coinsLeast =>
-        data.sortedByCompare((e) => e.coins, (lhs, rhs) => lhs - rhs).toList(),
-      _SortBy.coinsMost =>
-        data.sortedByCompare((e) => e.coins, (lhs, rhs) => rhs - lhs).toList(),
+      _SortBy.coinsLeast => data.sortedByCompare((e) => e.coins, (lhs, rhs) => lhs - rhs).toList(),
+      _SortBy.coinsMost => data.sortedByCompare((e) => e.coins, (lhs, rhs) => rhs - lhs).toList(),
     };
 
     return ListView.builder(
       itemCount: data.length,
-      itemBuilder: (context, index) => InkWell(
-        onTap: () async => context.pushNamed(
-          ScreenPaths.profile,
-          queryParameters: {'username': dataSorted[index].username},
-        ),
-        child: Padding(
-          key: ValueKey(dataSorted[index].id),
-          padding: edgeInsetsL12T4R12,
-          child: Row(
-            children: [
-              SizedBox(
-                width: 30,
-                child: Text(
-                  '${dataSorted[index].id}',
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(color: secondaryColor),
-                ),
-              ),
-              Expanded(
-                child: ListTile(
-                  leading: HeroUserAvatar(
-                    username: dataSorted[index].username,
-                    avatarUrl: null,
+      itemBuilder:
+          (context, index) => InkWell(
+            onTap:
+                () async =>
+                    context.pushNamed(ScreenPaths.profile, queryParameters: {'username': dataSorted[index].username}),
+            child: Padding(
+              key: ValueKey(dataSorted[index].id),
+              padding: edgeInsetsL12T4R12,
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 30,
+                    child: Text(
+                      '${dataSorted[index].id}',
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(color: secondaryColor),
+                    ),
                   ),
-                  title: Text(
-                    dataSorted[index].username,
-                    style: TextStyle(color: primaryColor),
-                  ),
-                  subtitle: Text(dataSorted[index].time.yyyyMMDDHHMMSS()),
-                  trailing: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        '${dataSorted[index].coins}',
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelMedium
-                            ?.copyWith(color: secondaryColor),
+                  Expanded(
+                    child: ListTile(
+                      leading: HeroUserAvatar(username: dataSorted[index].username, avatarUrl: null),
+                      title: Text(dataSorted[index].username, style: TextStyle(color: primaryColor)),
+                      subtitle: Text(dataSorted[index].time.yyyyMMDDHHMMSS()),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${dataSorted[index].coins}',
+                            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: secondaryColor),
+                          ),
+                          sizedBoxW4H4,
+                          const Icon(FontAwesomeIcons.coins, size: 12),
+                        ],
                       ),
-                      sizedBoxW4H4,
-                      const Icon(FontAwesomeIcons.coins, size: 12),
-                    ],
+                    ),
                   ),
-                ),
+                ],
               ),
-            ],
+            ),
           ),
-        ),
-      ),
     );
   }
 
@@ -165,35 +134,21 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => PacketRepository()),
-        BlocProvider(
-          create: (context) =>
-              PacketDetailCubit(context.repo())..fetchDetail(widget.tid),
-        ),
+        BlocProvider(create: (context) => PacketDetailCubit(context.repo())..fetchDetail(widget.tid)),
       ],
       child: BlocBuilder<PacketDetailCubit, PacketDetailState>(
         builder: (context, state) {
           final tr = context.t.packetDetailPage;
 
           final (body, infoRow) = switch (state) {
-            PacketDetailInitial() || PacketDetailLoading() => (
-                const Center(child: CircularProgressIndicator()),
-                null
-              ),
+            PacketDetailInitial() || PacketDetailLoading() => (const Center(child: CircularProgressIndicator()), null),
             PacketDetailFailure() => (
-                Center(
-                  child: buildRetryButton(
-                    context,
-                    () async => context
-                        .read<PacketDetailCubit>()
-                        .fetchDetail(widget.tid),
-                  ),
-                ),
-                null
+              Center(
+                child: buildRetryButton(context, () async => context.read<PacketDetailCubit>().fetchDetail(widget.tid)),
               ),
-            PacketDetailSuccess(:final data) => (
-                _buildContent(context, data),
-                _buildInfoRow(context, data),
-              ),
+              null,
+            ),
+            PacketDetailSuccess(:final data) => (_buildContent(context, data), _buildInfoRow(context, data)),
           };
 
           return Scaffold(
@@ -202,22 +157,18 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.sort_outlined),
-                  onPressed: state is PacketDetailSuccess
-                      ? () => setState(
-                            () => _sortByCoins == _SortBy.values.last
-                                ? _sortByCoins = _SortBy.values.first
-                                : _sortByCoins =
-                                    _SortBy.values[_sortByCoins.index + 1],
+                  onPressed:
+                      state is PacketDetailSuccess
+                          ? () => setState(
+                            () =>
+                                _sortByCoins == _SortBy.values.last
+                                    ? _sortByCoins = _SortBy.values.first
+                                    : _sortByCoins = _SortBy.values[_sortByCoins.index + 1],
                           )
-                      : null,
+                          : null,
                 ),
               ],
-              bottom: infoRow == null
-                  ? null
-                  : PreferredSize(
-                      preferredSize: const Size.fromHeight(24),
-                      child: infoRow,
-                    ),
+              bottom: infoRow == null ? null : PreferredSize(preferredSize: const Size.fromHeight(24), child: infoRow),
             ),
             body: body,
           );
