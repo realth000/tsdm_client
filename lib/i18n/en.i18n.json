@@ -641,7 +641,8 @@
         "offline": "Offline"
       }
     },
-    "share": "Copy share link"
+    "share": "Copy share link",
+    "openInBrowser": "Open in browser"
   },
   "packetCard": {
     "title": "Packet",

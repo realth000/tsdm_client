@@ -19,6 +19,7 @@ import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialo
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 /// Actions in post context menu.
 ///
@@ -44,6 +45,11 @@ enum _PostCardActions {
   ///
   /// Share with thread and post id, and 'fromuid=$UID'.
   share,
+
+  /// Open the post link in browser.
+  ///
+  /// Use the anchor not works on mobile UI no matter it always is or originally was `findpost`.
+  openInBrowser,
 }
 
 /// Card for a [Post] model.
@@ -254,7 +260,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       ],
                     ),
                   ),
-                if (widget.post.shareLink != null)
+                if (widget.post.shareLink != null) ...[
                   PopupMenuItem(
                     value: _PostCardActions.share,
                     child: Row(
@@ -265,6 +271,17 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       ],
                     ),
                   ),
+                  PopupMenuItem(
+                    value: _PostCardActions.openInBrowser,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.open_in_browser_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(context.t.postCard.openInBrowser),
+                      ],
+                    ),
+                  ),
+                ],
               ],
           onSelected: (value) async {
             switch (value) {
@@ -291,6 +308,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 );
               case _PostCardActions.share:
                 await copyToClipboard(context, widget.post.shareLink!);
+              case _PostCardActions.openInBrowser:
+                await launchUrl(Uri.parse(widget.post.shareLink!), mode: LaunchMode.externalApplication);
             }
           },
         ),

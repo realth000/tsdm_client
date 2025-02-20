@@ -641,7 +641,8 @@
         "offline": "離線"
       }
     },
-    "share": "複製分享連結"
+    "share": "複製分享連結",
+    "openInBrowser": "在瀏覽器中開啟"
   },
   "packetCard": {
     "title": "紅包",
