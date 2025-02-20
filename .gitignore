@@ -2,6 +2,9 @@
 schema_versions.dart
 /test/data/generated_migrations/*.dart
 
+# Flutter android debug symbol build dir since 3.29
+/android/app/.cxx
+
 # Not bundle drift web artifacts
 /web/drift_worker.dart.js
 /web/sqlite3.debug.wasm
