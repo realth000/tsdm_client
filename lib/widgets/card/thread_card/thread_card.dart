@@ -181,10 +181,18 @@ class _CardLayout extends StatelessWidget {
 
     final TextStyle? timeStyle;
     if (isRecentThread && highlightRecentThread) {
-      timeStyle = TextStyle(color: Theme.of(context).colorScheme.secondary);
+      timeStyle = TextStyle(
+        color: Theme.of(context).colorScheme.secondary,
+        fontSize: Theme.of(context).textTheme.labelMedium?.fontSize,
+      );
     } else {
-      timeStyle = null;
+      timeStyle = Theme.of(context).textTheme.labelMedium;
     }
+
+    final forumNameStyle = TextStyle(
+      color: Theme.of(context).colorScheme.secondary,
+      fontSize: Theme.of(context).textTheme.labelMedium?.fontSize,
+    );
 
     if (author != null) {
       return ListTile(
@@ -198,10 +206,16 @@ class _CardLayout extends StatelessWidget {
               onTap: disableTap ? null : () async => context.dispatchAsUrl(author!.url),
               child: SingleLineText(author!.name, style: authorNameStyle),
             ),
-            Expanded(child: Container()),
+            const Spacer(),
           ],
         ),
-        subtitle: publishTime != null ? SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle) : null,
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (publishTime != null) SingleLineText(publishTime!.yyyyMMDD(), style: timeStyle),
+            if (forum != null) SingleLineText(forum!, style: forumNameStyle),
+          ],
+        ),
         trailing: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           mainAxisSize: MainAxisSize.min,
@@ -338,6 +352,7 @@ class SearchedThreadCard extends StatelessWidget {
     return _CardLayout(
       threadID: '${thread.threadID}',
       title: thread.title,
+      forum: thread.forumName,
       author: thread.author,
       publishTime: thread.publishTime,
     );
