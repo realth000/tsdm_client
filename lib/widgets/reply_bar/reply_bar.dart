@@ -463,7 +463,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   /// set to reply to thread (not any floor).
   Widget _buildHintTextRow(BuildContext context) {
     if (_hintText == null || _closed || !_hasLogin) {
-      return const SizedBox.shrink();
+      // The size here is actually a padding on the top of editor body.
+      // But it's here.
+      return sizedBoxW4H4;
     }
     final outlineColor = Theme.of(context).colorScheme.outline;
     return Padding(
