@@ -140,7 +140,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
           child: PostList(
             threadID: widget.threadID,
             title: state.title ?? widget.title,
-            threadType: widget.threadType,
+            threadType: state.threadType ?? widget.threadType,
             pageNumber: context.read<JumpPageCubit>().state.currentPage,
             initialPostID: widget.findPostID?.parseToInt(),
             scrollController: _listScrollController,
