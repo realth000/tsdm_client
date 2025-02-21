@@ -186,7 +186,7 @@ class _CardLayout extends StatelessWidget {
         fontSize: Theme.of(context).textTheme.labelMedium?.fontSize,
       );
     } else {
-      timeStyle = Theme.of(context).textTheme.labelMedium;
+      timeStyle = TextStyle(fontSize: Theme.of(context).textTheme.labelMedium?.fontSize);
     }
 
     final forumNameStyle = TextStyle(
