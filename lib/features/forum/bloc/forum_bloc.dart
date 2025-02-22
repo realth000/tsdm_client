@@ -8,7 +8,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'forum_bloc.mapper.dart';
+
 part 'forum_event.dart';
+
 part 'forum_state.dart';
 
 /// Emitter
@@ -22,9 +24,9 @@ final _datelineRe = RegExp(r'&dateline=(?<dateline>\d+)');
 /// Bloc of forum page.
 class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
   /// Constructor.
-  ForumBloc({required String fid, required ForumRepository forumRepository})
+  ForumBloc({required String fid, required ForumRepository forumRepository, FilterState? filterState})
     : _forumRepository = forumRepository,
-      super(ForumState(fid: fid)) {
+      super(ForumState(fid: fid, filterState: filterState ?? const FilterState())) {
     on<ForumLoadMoreRequested>(_onForumLoadMoreRequested);
     on<ForumRefreshRequested>(_onForumRefreshRequested);
     on<ForumJumpPageRequested>(_onForumJumpPageRequested);

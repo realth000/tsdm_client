@@ -6,6 +6,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -104,7 +105,7 @@ class ThreadPage extends StatefulWidget {
   ///
   /// Sometimes we do not know the thread type before we load it, redirect from
   /// homepage, for example. So it's a nullable String.
-  final String? threadType;
+  final FilterType? threadType;
 
   /// Only watch the floors posted by the user with uid [onlyVisibleUid].
   final String? onlyVisibleUid;
@@ -138,6 +139,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
       children: [
         Expanded(
           child: PostList(
+            forumID: state.fid,
             threadID: widget.threadID,
             title: state.title ?? widget.title,
             threadType: state.threadType ?? widget.threadType,

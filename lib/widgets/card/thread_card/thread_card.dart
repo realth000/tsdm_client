@@ -72,7 +72,12 @@ class _CardLayout extends StatelessWidget {
                   ScreenPaths.threadV1,
                   // pathParameters: {'id': threadID},
                   // FIXME: Query parameters are not recognized by v2 yet.
-                  queryParameters: {'tid': threadID, 'appBarTitle': title, 'threadType': threadType?.name},
+                  queryParameters: {
+                    'tid': threadID,
+                    'appBarTitle': title,
+                    'threadTypeName': threadType?.name,
+                    'threadTypeID': Uri.tryParse(threadType?.url ?? '')?.queryParameters['typeid'],
+                  },
                 );
               },
       child: child,

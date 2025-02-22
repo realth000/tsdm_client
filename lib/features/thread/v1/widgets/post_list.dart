@@ -4,14 +4,17 @@ import 'package:collection/collection.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/widgets/operation_log_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
@@ -20,6 +23,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 class PostList extends StatefulWidget {
   /// Constructor.
   const PostList({
+    required this.forumID,
     required this.threadID,
     required this.threadType,
     required this.postList,
@@ -41,13 +45,16 @@ class PostList extends StatefulWidget {
   /// Fetch page number "&page=[pageNumber]".
   final int pageNumber;
 
+  /// Forum ID.
+  final int? forumID;
+
   /// Thread ID.
   final String? threadID;
 
   /// Thread type.
   ///
   /// When it is null, confirm it from thread page.
-  final String? threadType;
+  final FilterType? threadType;
 
   /// Build a list of [Widget].
   final Widget Function(BuildContext, Post) widgetBuilder;
@@ -86,7 +93,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
   /// But till now we haven't parse this attr in forum page.
   /// So parse here directly from thread page.
   /// But only parse once because every page shall have the same thread type.
-  String? _threadType;
+  FilterType? _threadType;
 
   final _refreshController = EasyRefreshController(controlFinishRefresh: true, controlFinishLoad: true);
 
@@ -208,7 +215,22 @@ class _PostListState extends State<PostList> with LoggerMixin {
                           ],
                         )
                         .flattenedToList,
-                    if (_threadType != null && _threadType!.isNotEmpty) Text('[${_threadType!}]'),
+                    if (_threadType?.typeID != null && widget.forumID != null)
+                      MouseRegion(
+                        cursor: SystemMouseCursors.click,
+                        child: GestureDetector(
+                          onTap:
+                              () async => context.pushNamed(
+                                ScreenPaths.forum,
+                                pathParameters: {'fid': '${widget.forumID!}'},
+                                queryParameters: {
+                                  'threadTypeName': _threadType!.name,
+                                  'threadTypeID': '${_threadType!.typeID}',
+                                },
+                              ),
+                          child: Text('[${_threadType!.name}]', style: infoTextHighlightStyle),
+                        ),
+                      ),
                     Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
                     if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
                   ].reversed.toList(),
@@ -230,7 +252,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
     return Padding(
       padding: edgeInsetsL12T4R12B4,
       child: Text(
-        _listScrollController.offset > expandHeight ? (widget.title ?? '') : (widget.threadType ?? ''),
+        _listScrollController.offset > expandHeight ? (widget.title ?? '') : (widget.threadType?.name ?? ''),
         style: Theme.of(context).textTheme.titleMedium,
         maxLines: 1,
       ),

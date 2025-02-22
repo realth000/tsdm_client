@@ -3,6 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -10,7 +11,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'thread_bloc.mapper.dart';
+
 part 'thread_event.dart';
+
 part 'thread_state.dart';
 
 /// Emitter.
@@ -243,8 +246,15 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
 
     /// Parse thread type from thread page document.
     /// This should only run once.
-    final node = document.querySelector('div#postlist h1.ts > a');
-    final threadType = node?.firstEndDeepText()?.replaceFirst('[', '').replaceFirst(']', '');
+    final filterTypeNode = document.querySelector('div#postlist h1.ts > a');
+    final threadTypeName = filterTypeNode?.firstEndDeepText()?.replaceFirst('[', '').replaceFirst(']', '');
+    final threadTypeID = Uri.tryParse(filterTypeNode?.attributes['href'] ?? '')?.queryParameters['typeid'];
+    final FilterType? threadType;
+    if (threadTypeName != null) {
+      threadType = FilterType(name: threadTypeName, typeID: threadTypeID);
+    } else {
+      threadType = null;
+    }
 
     // Update reply parameters.
     // These reply parameters should be sent to [ReplyBar] later.

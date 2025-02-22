@@ -8,6 +8,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/forum/repository/forum_repository.dart';
 import 'package:tsdm_client/features/forum/widgets/thread_filter_chip.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
@@ -34,7 +35,7 @@ const _subredditTabIndex = 2;
 /// Page to show all forum status.
 class ForumPage extends StatefulWidget {
   /// Constructor.
-  const ForumPage({required this.fid, this.title, super.key})
+  const ForumPage({required this.fid, this.title, this.threadType, super.key})
     : forumUrl = '$baseUrl/forum.php?mod=forumdisplay&fid=$fid';
 
   /// Forum ID.
@@ -45,6 +46,11 @@ class ForumPage extends StatefulWidget {
 
   /// The url is used to provide features like "open in external browser".
   final String forumUrl;
+
+  /// Optional thread type filter.
+  ///
+  /// The opened page will apply a "filter=typeid&typeid=$threadType" filter on the page.
+  final FilterType? threadType;
 
   @override
   State<ForumPage> createState() => _ForumPageState();
@@ -167,10 +173,10 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
               child: Row(
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
-                  const ThreadTypeChip(),
-                  const ThreadSpecialTypeChip(),
-                  const ThreadDatelineChip(),
-                  const ThreadOrderChip(),
+                  if (state.filterTypeList.isNotEmpty) const ThreadTypeChip(),
+                  if (state.filterSpecialTypeList.isNotEmpty) const ThreadSpecialTypeChip(),
+                  if (state.filterDatelineList.isNotEmpty) const ThreadDatelineChip(),
+                  if (state.filterOrderList.isNotEmpty) const ThreadOrderChip(),
                   const ThreadDigestChip(),
                   const ThreadRecommendedChip(),
                 ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
@@ -424,10 +430,27 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     return MultiBlocProvider(
       providers: [
         BlocProvider(
-          create:
-              (context) =>
-                  ForumBloc(fid: widget.fid, forumRepository: RepositoryProvider.of<ForumRepository>(context))
-                    ..add(const ForumLoadMoreRequested(1)),
+          create: (context) {
+            final FilterState? filterState;
+            if (widget.threadType != null) {
+              filterState = FilterState(
+                filter: 'typeid',
+                filterType: FilterType(
+                  // Name now only used in ThreadChip to show available filters, fine to keep empty here.
+                  name: widget.threadType!.name,
+                  typeID: widget.threadType!.typeID,
+                ),
+              );
+            } else {
+              filterState = null;
+            }
+
+            return ForumBloc(
+              fid: widget.fid,
+              forumRepository: RepositoryProvider.of<ForumRepository>(context),
+              filterState: filterState,
+            )..add(const ForumLoadMoreRequested(1));
+          },
         ),
         BlocProvider(create: (context) => JumpPageCubit()),
       ],

@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/authentication/view/login_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_page.dart';
 import 'package:tsdm_client/features/checkin/view/auto_checkin_page.dart';
+import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
@@ -100,7 +101,15 @@ final router = GoRouter(
       parentNavigatorKey: _rootRouteKey,
       builder: (state) {
         final title = state.uri.queryParameters['appBarTitle'];
-        return ForumPage(title: title, fid: state.pathParameters['fid']!);
+        final threadTypeName = state.uri.queryParameters['threadTypeName'];
+        final threadTypeID = state.uri.queryParameters['threadTypeID'];
+        final FilterType? threadType;
+        if (threadTypeName != null && threadTypeID != null) {
+          threadType = FilterType(name: threadTypeName, typeID: threadTypeID);
+        } else {
+          threadType = null;
+        }
+        return ForumPage(title: title, fid: state.pathParameters['fid']!, threadType: threadType);
       },
     ),
     AppRoute(
@@ -108,7 +117,16 @@ final router = GoRouter(
       parentNavigatorKey: _rootRouteKey,
       builder: (state) {
         final title = state.uri.queryParameters['appBarTitle'];
-        final threadType = state.uri.queryParameters['threadType'];
+
+        final threadTypeName = state.uri.queryParameters['threadTypeName'];
+        final threadTypeID = state.uri.queryParameters['threadTypeID'];
+        final FilterType? threadType;
+        if (threadTypeName != null && threadTypeID != null) {
+          threadType = FilterType(name: threadTypeName, typeID: threadTypeID);
+        } else {
+          threadType = null;
+        }
+
         final tid = state.uri.queryParameters['tid'];
         final pid = state.uri.queryParameters['pid'];
         final onlyVisibleUid = state.uri.queryParameters['onlyVisibleUid'];

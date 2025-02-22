@@ -46,7 +46,24 @@ extension ParseUrl on String {
     final mod = queryParameters['mod'];
 
     if (mod == 'forumdisplay' && queryParameters.containsKey('fid')) {
-      return RecognizedRoute(ScreenPaths.forum, pathParameters: {'fid': "${queryParameters['fid']}"});
+      // Apply supported filter, if any.
+      final String? threadTypeID;
+      if (queryParameters['filter'] == 'typeid') {
+        threadTypeID = queryParameters['typeid'];
+      } else {
+        threadTypeID = null;
+      }
+      return RecognizedRoute(
+        ScreenPaths.forum,
+        pathParameters: {'fid': "${queryParameters['fid']}"},
+        queryParameters: {
+          if (threadTypeID != null) 'threadTypeID': threadTypeID,
+          // FIXME: The FilterType originally is for showing the thread type name, but now the name is unknown when
+          // parsing route in url. For now it's safe to add empty thread type name to let the page apply initial filter
+          // state. If the name field not present, typeid is also discarded, this is the more one we we dont want.
+          if (threadTypeID != null) 'threadTypeName': '-',
+        },
+      );
     }
 
     if (mod == 'viewthread' && queryParameters.containsKey('tid')) {

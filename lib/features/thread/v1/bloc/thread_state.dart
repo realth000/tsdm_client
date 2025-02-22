@@ -113,7 +113,7 @@ class ThreadState with ThreadStateMappable {
   /// Thread type.
   ///
   /// Usually a thread belongs to a fixed of list of thread types in the current subreddit. But some are not.
-  final String? threadType;
+  final FilterType? threadType;
 
   /// Indicating only show posts published by the user who has the given uid
   /// in current thread.
