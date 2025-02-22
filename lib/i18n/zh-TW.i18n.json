@@ -777,5 +777,10 @@
   "packetDetailPage": {
     "title": "紅包詳情",
     "statistics": "在 ${time: String} 中有 ${users: int} 名用戶獲得共 ${coins: int} 個天使幣"
+  },
+  "pollCard": {
+    "title": "投票",
+    "detail": "此樓層包含投票，在瀏覽器中開啟以參加投票",
+    "openInBrowser": "在瀏覽器中開啟"
   }
 }

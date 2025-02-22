@@ -15,6 +15,7 @@ import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/card/lock_card/locked_card.dart';
 import 'package:tsdm_client/widgets/card/packet_card.dart';
+import 'package:tsdm_client/widgets/card/poll_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialog.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
@@ -339,6 +340,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         _buildPostBody(context),
         // 红包 if any.
         if (widget.post.locked.isNotEmpty) ...widget.post.locked.where((e) => e.isValid()).map(LockedCard.new),
+        if (widget.post.hasPoll) PollCard(widget.post.postID),
         if (widget.post.packetUrl != null) ...[
           sizedBoxW12H12,
           PacketCard(widget.post.packetUrl!, allTaken: widget.post.packetAllTaken),

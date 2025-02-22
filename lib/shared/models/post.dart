@@ -36,6 +36,7 @@ class Post with PostMappable {
     this.packetUrl,
     this.editUrl,
     this.userBriefProfile,
+    this.hasPoll = false,
   });
 
   /// Post ID.
@@ -113,6 +114,9 @@ class Post with PostMappable {
   /// Draft post only can be a first floor, equivalent to editing a thread that
   /// not published yet.
   final bool isDraft;
+
+  /// Poll is not supported, leave a message instead.
+  final bool hasPoll;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element, int page) {
@@ -201,6 +205,8 @@ class Post with PostMappable {
               ),
             )
             .toList();
+
+    final hasPoll = postDataNode?.querySelector('form#poll') != null;
 
     final postFloor = postDataNode?.querySelector('div.pi > strong > a > em')?.firstEndDeepText()?.parseToInt();
 
@@ -296,6 +302,7 @@ class Post with PostMappable {
       shareLink: shareLink,
       page: page,
       isDraft: isDraft,
+      hasPoll: hasPoll,
     );
   }
 
