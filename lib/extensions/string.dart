@@ -182,6 +182,10 @@ extension ParseUrl on String {
       return RecognizedRoute(ScreenPaths.chatHistory, pathParameters: {'uid': queryParameters['touid']!});
     }
 
+    if (mod == null && queryParameters.containsKey('gid')) {
+      return RecognizedRoute(ScreenPaths.forumGroup, pathParameters: {'gid': queryParameters['gid']!});
+    }
+
     return null;
   }
 

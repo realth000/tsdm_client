@@ -1,10 +1,13 @@
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
+import 'package:tsdm_client/features/forum/utils/group.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -60,4 +63,13 @@ class ForumRepository {
 
     return Uri.https('tsdm39.com', '/forum.php', queryMap);
   }
+
+  /// Fetch the page data on a forum group specified by group id [gid].
+  AsyncEither<ForumGroup?> fetchForumGroup(String gid) => getIt
+      .get<NetClientProvider>()
+      .get('$baseUrl/forum.php?gid=$gid')
+      .mapHttp((v) => v.data as String)
+      .map(parseHtmlDocument)
+      .map(buildGroupListFromDocument)
+      .map((v) => v.firstOrNull);
 }

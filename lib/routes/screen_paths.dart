@@ -19,6 +19,11 @@ class ScreenPaths {
   /// Need to specify forum id (fid).
   static const String forum = '/forum/:fid';
 
+  /// Forum group page.
+  ///
+  /// Show the group specified by group id `gid`.
+  static const String forumGroup = '/forumGroup/:gid';
+
   /// Homepage: "https://www.tsdm39.com/forum.php"
   ///
   /// Only the very first part of page.

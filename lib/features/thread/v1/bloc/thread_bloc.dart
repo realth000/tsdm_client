@@ -296,8 +296,10 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     final breadcrumbs =
         document
             .querySelectorAll('div#pt > div.z > a')
-            .skipWhile((e) => !(e.attributes['href'] ?? '').contains('?gid='))
-            .map((e) => ThreadBreadcrumb(description: e.innerText, link: e.attributes['href']!.prependHost()))
+            .map((e) => (e.innerText, Uri.tryParse(e.attributes['href']!.prependHost())))
+            .whereType<(String, Uri)>()
+            .skipWhile((e) => !e.$2.queryParameters.containsKey('gid'))
+            .map((e) => ThreadBreadcrumb(description: e.$1, link: e.$2))
             .toList();
     if (breadcrumbs.isNotEmpty) {
       breadcrumbs.removeLast();

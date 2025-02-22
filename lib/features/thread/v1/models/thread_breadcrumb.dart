@@ -18,5 +18,5 @@ final class ThreadBreadcrumb with ThreadBreadcrumbMappable {
   final String description;
 
   /// Url link that can navigate to.
-  final String link;
+  final Uri link;
 }

@@ -185,6 +185,33 @@ class _PostListState extends State<PostList> with LoggerMixin {
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary);
 
     if (_listScrollController.offset <= expandHeight) {
+      final breadFrags =
+          breadcrumbs
+              .map(
+                (e) => [
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () async {
+                        final gid = e.link.queryParameters['gid'];
+                        if (gid != null) {
+                          await context.pushNamed(
+                            ScreenPaths.forumGroup,
+                            pathParameters: {'gid': gid},
+                            queryParameters: {'title': e.description},
+                          );
+                          return;
+                        }
+                        await context.dispatchAsUrl(e.link.toString());
+                      },
+                      child: Text(e.description, style: infoTextHighlightStyle),
+                    ),
+                  ),
+                  const Text(' > '),
+                ],
+              )
+              .flattenedToList;
+
       return Padding(
         padding: edgeInsetsL12T4R12B4,
         child: DefaultTextStyle.merge(
@@ -196,25 +223,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
               reverse: true,
               children:
                   <Widget>[
-                    ...breadcrumbs
-                        .map(
-                          (e) => [
-                            // TODO: Group not supported yet.
-                            if (e.link.contains('?gid='))
-                              // TODO: Group not supported yet.
-                              Text(e.description)
-                            else
-                              MouseRegion(
-                                cursor: SystemMouseCursors.click,
-                                child: GestureDetector(
-                                  onTap: () async => context.dispatchAsUrl(e.link),
-                                  child: Text(e.description, style: infoTextHighlightStyle),
-                                ),
-                              ),
-                            const Text(' > '),
-                          ],
-                        )
-                        .flattenedToList,
+                    ...breadFrags,
                     if (_threadType?.typeID != null && widget.forumID != null)
                       MouseRegion(
                         cursor: SystemMouseCursors.click,

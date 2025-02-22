@@ -7,6 +7,7 @@ import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_page.dart';
 import 'package:tsdm_client/features/checkin/view/auto_checkin_page.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
+import 'package:tsdm_client/features/forum/view/forum_group_page.dart';
 import 'package:tsdm_client/features/forum/view/forum_page.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
 import 'package:tsdm_client/features/home/view/home_page.dart';
@@ -110,6 +111,16 @@ final router = GoRouter(
           threadType = null;
         }
         return ForumPage(title: title, fid: state.pathParameters['fid']!, threadType: threadType);
+      },
+    ),
+    AppRoute(
+      path: ScreenPaths.forumGroup,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (state) {
+        final gid = state.pathParameters['gid'];
+        final title = state.uri.queryParameters['title'];
+
+        return ForumGroupPage(gid: gid!, title: title);
       },
     ),
     AppRoute(
