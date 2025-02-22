@@ -6,6 +6,8 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.2.0] - 2025-02-23
+
 ### Added
 
 - 私信：在私信聊天页面显示对方的离线/在线状态。
