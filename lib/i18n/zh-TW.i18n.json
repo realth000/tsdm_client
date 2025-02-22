@@ -366,7 +366,10 @@
     "needLogin": "需要登入",
     "replySuccess": "回覆成功",
     "replyFailed": "回覆失敗：$err",
-    "draft": "草稿"
+    "draft": "草稿",
+    "operationLog": {
+      "title": "操作記錄"
+    }
   },
   "noticePage": {
     "title": "通知",

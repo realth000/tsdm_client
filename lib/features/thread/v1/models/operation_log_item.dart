@@ -14,7 +14,9 @@ final class OperationLogItem with OperationLogItemMappable {
     }
 
     final username = element.querySelector('a')?.innerText;
-    final time = tds[1].innerText.parseToDateTimeUtc8();
+    final time =
+        tds[1].querySelector('span')?.attributes['title']?.parseToDateTimeUtc8() ??
+        tds[1].firstEndDeepText()?.parseToDateTimeUtc8();
     final action = tds[2].innerText;
     String? duration = tds[3].innerText;
     if (duration.isEmpty) {

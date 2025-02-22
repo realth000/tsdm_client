@@ -366,7 +366,10 @@
     "needLogin": "Need login",
     "replySuccess": "Reply success",
     "replyFailed": "Failed to reply: $err",
-    "draft": "Draft"
+    "draft": "Draft",
+    "operationLog": {
+      "title": "Operation Log"
+    }
   },
   "noticePage": {
     "title": "Notifications",

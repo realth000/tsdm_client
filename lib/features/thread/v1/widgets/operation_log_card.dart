@@ -6,15 +6,16 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
+  final tr = context.t.threadPage.operationLog;
   await showDialog<void>(
     context: context,
     builder: (_) {
       return AlertDialog(
-        title: const Text('Operation log'),
-        scrollable: true,
+        title: Text(tr.title),
         content: FutureBuilder(
           future: context.read<ThreadRepository>().fetchOperationLog(tid).run(),
           builder: (context, snapshot) {
@@ -23,7 +24,7 @@ Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
             }
 
             if (!snapshot.hasData) {
-              return const Center(child: CircularProgressIndicator());
+              return const SizedBox(width: 50, height: 50, child: Align(child: CircularProgressIndicator()));
             }
 
             final actions = snapshot.data!;
@@ -31,25 +32,24 @@ Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
               return Text(context.t.general.failedToLoad);
             }
 
-            final content =
-                actions
-                    .unwrap()
-                    .map(
-                      (e) => [
-                        ListTile(
-                          title: Text(e.username),
-                          subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SingleLineText(e.time.yyyyMMDDHHMMSS()),
-                              if (e.duration != null) Text(e.action) else Text('${e.action} ? ${e.duration}'),
-                            ],
-                          ),
-                        ),
-                      ],
-                    )
-                    .flattenedToList;
-            return Column(children: content);
+            final content = actions.unwrap().map(
+              (e) => ListTile(
+                isThreeLine: true,
+                leading: HeroUserAvatar(username: e.username, avatarUrl: null, disableHero: true),
+                title: Text(e.username),
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SingleLineText(e.time.yyyyMMDDHHMMSS()),
+                    SingleLineText(
+                      '${e.action}${e.duration != null ? "（${e.duration}）" : ""}',
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            );
+            return SingleChildScrollView(child: Column(children: content.toList()));
           },
         ),
       );
