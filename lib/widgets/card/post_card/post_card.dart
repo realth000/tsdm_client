@@ -131,12 +131,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
           ),
           sizedBoxW4H4,
           if (widget.post.userBriefProfile?.nickname != null)
-            Text(
-              widget.post.userBriefProfile!.nickname!,
-              style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
-              maxLines: 1,
-            ),
-          const Spacer(),
+            Expanded(
+              child: Text(
+                widget.post.userBriefProfile!.nickname!,
+                style: Theme.of(context).textTheme.labelSmall?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                overflow: TextOverflow.ellipsis,
+                maxLines: 1,
+              ),
+            )
+          else
+            const Spacer(),
         ],
       ),
       subtitle: Column(
