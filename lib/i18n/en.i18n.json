@@ -560,7 +560,8 @@
   "lockedCard": {
     "points": {
       "title": "Some content requires enough points to be visible",
-      "detail(rich)": "$requiredPoints points are required, but you only have $points points"
+      "detail": "${requiredPoints: int} points are required, but you only have ${points: int} points",
+      "detailPassed": "${requiredPoints: int} points are required"
     },
     "purchase": {
       "title": "Some content requires purchase",

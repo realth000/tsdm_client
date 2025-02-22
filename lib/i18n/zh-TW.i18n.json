@@ -560,7 +560,8 @@
   "lockedCard": {
     "points": {
       "title": "部分內容要求積分足夠才可見",
-      "detail(rich)": "需要 $requiredPoints 積分，但你只有 $points 積分"
+      "detail": "需要 ${requiredPoints: int} 積分，但你只有 ${points: int} 積分",
+      "detailPassed": "需要 ${requiredPoints: int} 積分"
     },
     "purchase": {
       "title": "部分內容需要購買才可瀏覽",

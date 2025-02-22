@@ -135,11 +135,10 @@ class _LockedCardState extends State<LockedCard> {
     if (widget.locked.lockedWithPoints) {
       title = Text(tr.points.title, style: primaryStyle);
       widgets.addAll([
-        Text.rich(
-          tr.points.detail(
-            requiredPoints: _buildUnderlineText(context, '${widget.locked.requiredPoints!}'),
-            points: _buildUnderlineText(context, '${widget.locked.points!}'),
-          ),
+        Text(
+          widget.locked.points != null
+              ? tr.points.detail(requiredPoints: widget.locked.requiredPoints!, points: widget.locked.points!)
+              : tr.points.detailPassed(requiredPoints: widget.locked.requiredPoints!),
           style: secondaryStyle,
         ),
       ]);

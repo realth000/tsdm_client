@@ -3,7 +3,7 @@ part of 'models.dart';
 sealed class _LockedInfo extends Equatable {
   const _LockedInfo._();
 
-  const factory _LockedInfo.points({required int requiredPoints, required int points}) = _LockedWithPoints;
+  const factory _LockedInfo.points({required int requiredPoints, required int? points}) = _LockedWithPoints;
 
   const factory _LockedInfo.purchase({
     required int price,
@@ -30,7 +30,7 @@ final class _LockedWithPoints extends _LockedInfo {
   final int requiredPoints;
 
   /// Points current user has.
-  final int points;
+  final int? points;
 
   @override
   List<Object?> get props => [requiredPoints, points];
@@ -236,11 +236,11 @@ class Locked extends Equatable {
       }
 
       /// Points type;
-      final re = RegExp(r'高于 (?<requiredPoints>\d+).+当前积分为 (?<points>\d+)');
+      final re = RegExp(r'高于 (?<requiredPoints>\d+) 才可浏览(，您当前积分为 (?<points>\d+))?');
       final match = re.firstMatch(element.innerText);
       final requiredPoints = match?.namedGroup('requiredPoints')?.parseToInt();
       final points = match?.namedGroup('points')?.parseToInt();
-      if (requiredPoints == null || points == null) {
+      if (requiredPoints == null) {
         return null;
       }
       return _LockedInfo.points(requiredPoints: requiredPoints, points: points);
