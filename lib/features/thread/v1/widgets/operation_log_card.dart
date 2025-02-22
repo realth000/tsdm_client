@@ -35,6 +35,7 @@ Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
 
             final content = actions.unwrap().map(
               (e) => ListTile(
+                contentPadding: EdgeInsets.zero,
                 isThreeLine: true,
                 leading: GestureDetector(
                   onTap: () async => context.pushNamed(ScreenPaths.profile, queryParameters: {'username': e.username}),
@@ -47,10 +48,12 @@ Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
                 subtitle: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SingleLineText(e.time.yyyyMMDDHHMMSS()),
+                    SingleLineText(e.time.yyyyMMDDHHMMSS(), style: Theme.of(context).textTheme.labelMedium),
                     SingleLineText(
                       '${e.action}${e.duration != null ? "（${e.duration}）" : ""}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
                     ),
                   ],
                 ),
@@ -88,9 +91,15 @@ class OperationLogCard extends StatelessWidget {
             children: [
               sizedBoxW12H12,
               Icon(Icons.manage_history_outlined, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
-              Padding(
-                padding: edgeInsetsL12T4R12B4,
-                child: Text(latestAction, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              Expanded(
+                child: Padding(
+                  padding: edgeInsetsL12T4R12B4,
+                  child: Text(
+                    latestAction,
+                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
               ),
             ],
           ),
