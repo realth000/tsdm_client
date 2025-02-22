@@ -10,6 +10,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/models/models.dart';
+import 'package:tsdm_client/features/thread/v1/widgets/operation_log_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -165,73 +166,73 @@ class _PostListState extends State<PostList> with LoggerMixin {
   }
 
   Widget _buildHeader(BuildContext context, List<ThreadBreadcrumb> breadcrumbs, double expandHeight) {
+    if (!_listController.isAttached) {
+      return sizedBoxEmpty;
+    }
     final infoTextStyle = Theme.of(
       context,
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
+
+    final infoTextHighlightStyle = Theme.of(
+      context,
+    ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary);
+
     if (_listScrollController.offset <= expandHeight) {
       return Padding(
-        padding: edgeInsetsL12R12B12,
-        child: Column(
-          children: [
-            SizedBox(
-              height: 20,
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                reverse: true,
-                children:
-                    <Widget>[
-                      ...breadcrumbs
-                          .map(
-                            (e) => [
+        padding: edgeInsetsL12T4R12B4,
+        child: DefaultTextStyle.merge(
+          style: infoTextStyle,
+          child: SizedBox(
+            height: 20,
+            child: ListView(
+              scrollDirection: Axis.horizontal,
+              reverse: true,
+              children:
+                  <Widget>[
+                    ...breadcrumbs
+                        .map(
+                          (e) => [
+                            // TODO: Group not supported yet.
+                            if (e.link.contains('?gid='))
                               // TODO: Group not supported yet.
-                              if (e.link.contains('?gid='))
-                                // TODO: Group not supported yet.
-                                Text(e.description, style: infoTextStyle)
-                              else
-                                MouseRegion(
-                                  cursor: SystemMouseCursors.click,
-                                  child: GestureDetector(
-                                    onTap: () async => context.dispatchAsUrl(e.link),
-                                    child: Text(
-                                      e.description,
-                                      style: infoTextStyle?.copyWith(decoration: TextDecoration.underline),
-                                    ),
-                                  ),
+                              Text(e.description)
+                            else
+                              MouseRegion(
+                                cursor: SystemMouseCursors.click,
+                                child: GestureDetector(
+                                  onTap: () async => context.dispatchAsUrl(e.link),
+                                  child: Text(e.description, style: infoTextHighlightStyle),
                                 ),
-                              const Text(' > '),
-                            ],
-                          )
-                          .flattenedToList,
-                      if (_threadType != null && _threadType!.isNotEmpty)
-                        Text('[${_threadType!}]', style: infoTextStyle),
-                      Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]', style: infoTextStyle),
-                      if (widget.isDraft) Text('[${context.t.threadPage.draft}]', style: infoTextStyle),
-                    ].reversed.toList(),
-              ),
+                              ),
+                            const Text(' > '),
+                          ],
+                        )
+                        .flattenedToList,
+                    if (_threadType != null && _threadType!.isNotEmpty) Text('[${_threadType!}]'),
+                    Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
+                    if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
+                  ].reversed.toList(),
             ),
-            if (widget.latestModAct != null)
-              Row(children: [const Spacer(), Text('${widget.latestModAct}', style: infoTextStyle)]),
-          ],
+          ),
         ),
       );
     }
-    final bg =
-        _listScrollController.offset >= expandHeight
-            ? ElevationOverlay.applySurfaceTint(
-              Theme.of(context).colorScheme.surface,
-              Theme.of(context).colorScheme.surfaceTint,
-              Theme.of(context).navigationBarTheme.elevation ?? 3,
-            )
-            : Colors.transparent;
-    return ColoredBox(
-      color: bg,
-      child: Padding(
-        padding: edgeInsetsL12R12B12,
-        child: Text(
-          _listScrollController.offset > expandHeight ? (widget.title ?? '') : (widget.threadType ?? ''),
-          style: Theme.of(context).textTheme.titleLarge,
-          maxLines: 1,
-        ),
+
+    // The color to simulate app bar background color.
+    // final bg =
+    //     _listScrollController.offset >= expandHeight
+    //         ? ElevationOverlay.applySurfaceTint(
+    //           Theme.of(context).colorScheme.surface,
+    //           Theme.of(context).colorScheme.surfaceTint,
+    //           Theme.of(context).navigationBarTheme.elevation ?? 3,
+    //         )
+    //         : Colors.transparent;
+    return Padding(
+      padding: edgeInsetsL12T4R12B4,
+      child: Text(
+        _listScrollController.offset > expandHeight ? (widget.title ?? '') : (widget.threadType ?? ''),
+        style: Theme.of(context).textTheme.titleMedium,
+        maxLines: 1,
       ),
     );
   }
@@ -252,12 +253,11 @@ class _PostListState extends State<PostList> with LoggerMixin {
   }
 
   Widget _buildBody(BuildContext context, ThreadState state) {
-    const safeHeight = 60.0;
+    const safeHeight = 40.0;
 
     _refreshController.finishLoad();
 
     _threadType ??= state.threadType;
-
     return EasyRefresh.builder(
       scrollBehaviorBuilder: (physics) {
         // Should use ERScrollBehavior instead of
@@ -295,14 +295,26 @@ class _PostListState extends State<PostList> with LoggerMixin {
               floating: true,
               delegate: SliverAppBarPersistentDelegate(
                 buildHeader: (context, shrinkOffset, {required bool overlapsContent}) {
-                  return _buildHeader(context, state.breadcrumbs, safeHeight);
+                  return AppBar(
+                    titleSpacing: 0,
+                    automaticallyImplyLeading: false,
+                    primary: false,
+                    title: _buildHeader(context, state.breadcrumbs, safeHeight),
+                  );
                 },
                 headerMaxExtent: safeHeight,
                 headerMinExtent: safeHeight,
               ),
             ),
+            if (widget.latestModAct != null && widget.latestModAct!.isNotEmpty && widget.threadID != null)
+              SliverToBoxAdapter(
+                child: Align(
+                  alignment: Alignment.bottomRight,
+                  child: OperationLogCard(latestAction: widget.latestModAct!, tid: widget.threadID!),
+                ),
+              ),
             SliverPadding(
-              padding: edgeInsetsL12R12B12,
+              padding: edgeInsetsL12T4R12B4,
               sliver: SliverToBoxAdapter(
                 child: Text(widget.title ?? '', style: Theme.of(context).textTheme.titleLarge),
               ),
