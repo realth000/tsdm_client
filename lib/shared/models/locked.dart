@@ -7,7 +7,7 @@ sealed class _LockedInfo extends Equatable {
 
   const factory _LockedInfo.purchase({
     required int price,
-    required int purchasedCount,
+    required int? purchasedCount,
     required String tid,
     required String pid,
   }) = _LockedWithPurchase;
@@ -51,7 +51,9 @@ final class _LockedWithPurchase extends _LockedInfo {
   final int price;
 
   /// How many people have purchased.
-  final int purchasedCount;
+  ///
+  /// May be null.
+  final int? purchasedCount;
 
   @override
   List<Object?> get props => [tid, pid, price, purchasedCount];
@@ -225,7 +227,7 @@ class Locked extends Equatable {
     final tid = match?.namedGroup('tid');
     final pid = match?.namedGroup('pid');
 
-    if (tid == null || pid == null || price == null || purchasedCount == null) {
+    if (tid == null || pid == null || price == null) {
       if (allowWithBlocked && element.innerText.contains('该帖被管理员或版主屏蔽')) {
         return const _LockedInfo.banned();
       }

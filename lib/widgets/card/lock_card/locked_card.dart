@@ -145,10 +145,11 @@ class _LockedCardState extends State<LockedCard> {
     } else if (widget.locked.lockedWithPurchase) {
       title = Text(tr.purchase.title, style: primaryStyle);
       widgets.addAll([
-        Text.rich(
-          tr.purchase.purchasedInfo(num: _buildUnderlineText(context, '${widget.locked.purchasedCount!}')),
-          style: secondaryStyle,
-        ),
+        if (widget.locked.purchasedCount != null)
+          Text.rich(
+            tr.purchase.purchasedInfo(num: _buildUnderlineText(context, '${widget.locked.purchasedCount!}')),
+            style: secondaryStyle,
+          ),
         sizedBoxW4H4,
         _buildPurchaseBody(context),
       ]);
