@@ -209,6 +209,40 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
     );
   }
 
+  String? _validateAuthorUid(BuildContext context, String? v) {
+    // Allow empty value because the default parameter in searching
+    // is zero.
+    if (v!.isEmpty) {
+      setState(() {
+        authorUidController.text = '0';
+        unlimitedAuthorUid = true;
+      });
+      return null;
+    }
+    final i = int.tryParse(v);
+    if (i == null || i < 0) {
+      return context.t.searchPage.form.authorUidInvalid;
+    }
+    return null;
+  }
+
+  String? _validateFid(BuildContext context, String? v) {
+    // Allow empty value because the default parameter in searching
+    // is zero.
+    if (v!.isEmpty) {
+      setState(() {
+        fidController.text = '0';
+        unlimitedFid = true;
+      });
+      return null;
+    }
+    final i = int.tryParse(v);
+    if (i == null || i < 0) {
+      return context.t.searchPage.form.fidInvalid;
+    }
+    return null;
+  }
+
   Widget _buildSearchForm(BuildContext context, SearchState state) {
     return Form(
       key: formKey,
@@ -222,7 +256,19 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
               labelText: context.t.searchPage.form.keyword,
             ),
             validator: (v) {
-              if (v!.isEmpty) {
+              // FIXME: Extra validation not graceful at all.
+              // Purpose is to skip keyword validation when both author uid and forum id are valid and not `any`.
+              // The server allows searching without keyword when author uid or forum id is set.
+
+              // If author uid or forum id is not valid, it's unnecessary to validate keyword.
+              if (_validateAuthorUid(context, authorUidController.text) != null ||
+                  _validateFid(context, fidController.text) != null) {
+                return null;
+              }
+
+              // Validation only fails when running with keyword field, in other words author uid and forum id are `any`.
+              // It's fine to have an empty keyword when author uid or forum id is not `any`.
+              if (v == null || v.isEmpty && authorUidController.text == '0' && fidController.text == '0') {
                 return context.t.searchPage.form.keywordEmpty;
               }
               if (v.contains('%')) {
@@ -244,22 +290,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
                 unlimitedAuthorUid = v == '0';
               });
             },
-            validator: (v) {
-              // Allow empty value because the default parameter in searching
-              // is zero.
-              if (v!.isEmpty) {
-                setState(() {
-                  authorUidController.text = '0';
-                  unlimitedAuthorUid = true;
-                });
-                return null;
-              }
-              final i = int.tryParse(v);
-              if (i == null || i < 0) {
-                return context.t.searchPage.form.authorUidInvalid;
-              }
-              return null;
-            },
+            validator: (v) => _validateAuthorUid(context, v),
           ),
           TextFormField(
             controller: fidController,
@@ -274,22 +305,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
                 unlimitedFid = fidController.text == '0';
               });
             },
-            validator: (v) {
-              // Allow empty value because the default parameter in searching
-              // is zero.
-              if (v!.isEmpty) {
-                setState(() {
-                  fidController.text = '0';
-                  unlimitedFid = true;
-                });
-                return null;
-              }
-              final i = int.tryParse(v);
-              if (i == null || i < 0) {
-                return context.t.searchPage.form.fidInvalid;
-              }
-              return null;
-            },
+            validator: (v) => _validateFid(context, v),
           ),
           _buildSearchButton(context, state),
         ].insertBetween(sizedBoxW12H12),
