@@ -55,12 +55,7 @@
     "title": "設定",
     "accountSection": {
       "title": "帳號",
-      "mgmt": "帳號管理",
-      "switchAccount": "切換帳號",
-      "switchSuccess": "切換成功",
-      "loginAnother": "登入其他帳號",
-      "logout": "退出登入",
-      "online": "線上"
+      "mgmt": "管理帳戶"
     },
     "appearanceSection": {
       "title": "外觀",
@@ -784,5 +779,15 @@
     "title": "投票",
     "detail": "此樓層包含投票，在瀏覽器中開啟以參加投票",
     "openInBrowser": "在瀏覽器中開啟"
+  },
+  "manageAccountPage": {
+    "title": "管理帳戶",
+    "switchAccount": {
+      "title": "切換帳戶",
+      "success": "切換成功"
+    },
+    "loginAnother": "登入其他帳號",
+    "logout": "退出登入",
+    "online": "線上"
   }
 }

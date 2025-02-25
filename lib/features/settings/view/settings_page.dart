@@ -29,7 +29,6 @@ import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/font_family_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
-import 'package:tsdm_client/features/settings/widgets/switch_account_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -97,13 +96,8 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionTitleText(tr.title),
       SectionListTile(
         leading: const Icon(Icons.account_circle_outlined),
-        title: Text(tr.switchAccount),
-        onTap:
-            () async => showDialog<void>(
-              context: context,
-              builder: (_) => const SwitchAccountDialog(),
-              barrierDismissible: false,
-            ),
+        title: Text(tr.mgmt),
+        onTap: () async => context.pushNamed(ScreenPaths.manageAccount),
       ),
     ];
   }

@@ -55,12 +55,7 @@
     "title": "Settings",
     "accountSection": {
       "title": "Account",
-      "mgmt": "Account management",
-      "switchAccount": "Switch account",
-      "switchSuccess": "Switch success",
-      "loginAnother": "Login another account",
-      "logout": "Logout",
-      "online": "Online"
+      "mgmt": "Manage account"
     },
     "appearanceSection": {
       "title": "Appearance",
@@ -784,5 +779,15 @@
     "title": "Poll",
     "detail": "This floor contains poll, open in browser to participate in",
     "openInBrowser": "Open in browser"
+  },
+  "manageAccountPage": {
+    "title": "Manage account",
+    "switchAccount": {
+      "title": "Switch account",
+      "success": "Switch success"
+    },
+    "loginAnother": "Login another account",
+    "logout": "Logout",
+    "online": "Online"
   }
 }

@@ -197,6 +197,9 @@ class ScreenPaths {
 
   /// Page to show packet statistics detail info of a thread.
   static const String packetDetail = '/packetDetail/:tid';
+
+  /// Page to manage user account for multi-user target.
+  static const String manageAccount = '/manageAccount';
 }
 
 /// Route path for a screen.

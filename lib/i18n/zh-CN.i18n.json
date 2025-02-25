@@ -55,12 +55,7 @@
     "title": "设置",
     "accountSection": {
       "title": "账号",
-      "mgmt": "账号管理",
-      "switchAccount": "切换账号",
-      "switchSuccess": "切换成功",
-      "loginAnother": "登录其他账号",
-      "logout": "退出登录",
-      "online": "在线"
+      "mgmt": "管理账户"
     },
     "appearanceSection": {
       "title": "外观",
@@ -784,5 +779,15 @@
     "title": "投票",
     "detail": "此楼层包含投票，在浏览器中打开以参加投票",
     "openInBrowser": "在浏览器中打开"
+  },
+  "manageAccountPage": {
+    "title": "管理账户",
+    "switchAccount": {
+      "title": "切换账户",
+      "success": "切换成功"
+    },
+    "loginAnother": "登录其他账户",
+    "logout": "退出登录",
+    "online": "在线"
   }
 }

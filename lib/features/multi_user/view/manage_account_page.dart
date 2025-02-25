@@ -8,7 +8,6 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
-import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -23,40 +22,29 @@ final class _LoggingInCubit extends Cubit<bool> {
   void setNotLoggingIn() => emit(false);
 }
 
-/// Dialog to switch user account.
-class SwitchAccountDialog extends StatefulWidget with LoggerMixin {
+/// Page to manage user account for multi-user target.
+class ManageAccountPage extends StatefulWidget {
   /// Constructor.
-  const SwitchAccountDialog({super.key});
+  const ManageAccountPage({super.key});
 
   @override
-  State<SwitchAccountDialog> createState() => _SwitchAccountDialogState();
+  State<ManageAccountPage> createState() => _ManageAccountPageState();
 }
 
-class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
+class _ManageAccountPageState extends State<ManageAccountPage> {
   /// Flag indicating is logging in or not.
   final loggingIn = false;
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final tr = context.t.settingsPage.accountSection;
+    final tr = context.t.manageAccountPage;
     return BlocProvider(
       create: (_) => _LoggingInCubit(),
       child: BlocBuilder<_LoggingInCubit, bool>(
         builder: (context, state) {
-          return AlertDialog(
-            scrollable: true,
-            title: Row(
-              children: [
-                Text(tr.switchAccount),
-                if (state) ...[sizedBoxW8H8, sizedCircularProgressIndicator],
-              ],
-            ),
-            content: FutureBuilder(
+          final body = switch (state) {
+            true => const Row(children: [sizedBoxW8H8, sizedCircularProgressIndicator]),
+            false => FutureBuilder(
               future: getIt.get<StorageProvider>().getAllUsers(),
               builder: (context, snapshot) {
                 if (snapshot.hasError) {
@@ -82,23 +70,35 @@ class _SwitchAccountDialogState extends State<SwitchAccountDialog> {
                 return const Center(child: CircularProgressIndicator());
               },
             ),
-            actions: [
-              TextButton(onPressed: state ? null : () async => context.pop(), child: Text(context.t.general.cancel)),
-              TextButton(
-                onPressed:
-                    state
-                        ? null
-                        : () async {
-                          await context.pushNamed(ScreenPaths.login);
-                          if (!context.mounted) {
-                            return;
-                          }
-                          context.pop();
-                        },
-                child: Text(tr.loginAnother),
-              ),
-            ],
-          );
+          };
+
+          return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(child: body));
+
+          // return AlertDialog(
+          //   scrollable: true,
+          //   title: Row(
+          //     children: [
+          //       Text(tr.title),
+          //       if (state) ...[sizedBoxW8H8, sizedCircularProgressIndicator],
+          //     ],
+          //   ),
+          //   actions: [
+          //     TextButton(onPressed: state ? null : () async => context.pop(), child: Text(context.t.general.cancel)),
+          //     TextButton(
+          //       onPressed:
+          //           state
+          //               ? null
+          //               : () async {
+          //                 await context.pushNamed(ScreenPaths.login);
+          //                 if (!context.mounted) {
+          //                   return;
+          //                 }
+          //                 context.pop();
+          //               },
+          //       child: Text(tr.loginAnother),
+          //     ),
+          //   ],
+          // );
         },
       ),
     );
@@ -146,14 +146,14 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
     if (!context.mounted) {
       return;
     }
-    showSnackBar(context: context, message: context.t.settingsPage.accountSection.switchSuccess);
+    showSnackBar(context: context, message: context.t.manageAccountPage.switchAccount.success);
     context.read<_LoggingInCubit>().setNotLoggingIn();
     context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    final tr = context.t.settingsPage.accountSection;
+    final tr = context.t.manageAccountPage;
     final isCurrentUser = userInfo.uid! == currentUserInfo?.uid;
 
     return BlocBuilder<_LoggingInCubit, bool>(
