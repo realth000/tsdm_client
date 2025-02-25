@@ -225,7 +225,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
               ],
               bottom: _PreferredSizeComponentBottom(_tabController),
             ),
-            body: body,
+            body: SafeArea(child: body),
           );
         },
       ),

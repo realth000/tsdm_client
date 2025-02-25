@@ -155,7 +155,7 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
               // Some server enforced situation.
               bottom: state.forumGroupList.isNotEmpty ? tabBar : null,
             ),
-            body: AnimatedSwitcher(duration: duration200, child: body),
+            body: SafeArea(left: false, top: false, child: AnimatedSwitcher(duration: duration200, child: body)),
           );
         },
       ),

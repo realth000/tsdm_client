@@ -791,19 +791,23 @@ class _SettingsPageState extends State<SettingsPage> {
       builder: (context, state) {
         return Scaffold(
           appBar: AppBar(title: Text(context.t.navigation.settings)),
-          body: ListView(
-            controller: scrollController,
-            children: [
-              ..._buildAccountSection(context, state),
-              ..._buildAppearanceSection(context, state),
-              if (isDesktop) ..._buildWindowSection(context, state),
-              ..._buildBehaviorSection(context, state),
-              ..._buildCheckinSection(context, state),
-              ..._buildStorageSection(context, state),
-              ..._buildAdvanceSection(context, state),
-              ..._buildDebugSection(context, state),
-              ..._buildOtherSection(context),
-            ],
+          body: SafeArea(
+            left: false,
+            top: false,
+            child: ListView(
+              controller: scrollController,
+              children: [
+                ..._buildAccountSection(context, state),
+                ..._buildAppearanceSection(context, state),
+                if (isDesktop) ..._buildWindowSection(context, state),
+                ..._buildBehaviorSection(context, state),
+                ..._buildCheckinSection(context, state),
+                ..._buildStorageSection(context, state),
+                ..._buildAdvanceSection(context, state),
+                ..._buildDebugSection(context, state),
+                ..._buildOtherSection(context),
+              ],
+            ),
           ),
         );
       },

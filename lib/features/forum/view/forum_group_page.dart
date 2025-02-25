@@ -56,7 +56,7 @@ class _ForumGroupPageState extends State<ForumGroupPage> {
             title = null;
           }
 
-          return Scaffold(appBar: AppBar(title: Text(title ?? widget.title ?? '')), body: body);
+          return Scaffold(appBar: AppBar(title: Text(title ?? widget.title ?? '')), body: SafeArea(child: body));
         },
       ),
     );

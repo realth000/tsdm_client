@@ -411,6 +411,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
                 ),
               ],
             ),
+            // FIXME: Support android landscape orientation.
             body: _buildBody(context, state),
           );
         },

@@ -18,7 +18,7 @@ final class ImageDetailPage extends StatelessWidget {
     final tr = context.t.imageDetailPage;
     return Scaffold(
       appBar: AppBar(title: Text(tr.title)),
-      body: WidgetZoom(heroAnimationTag: 'imageUrl', zoomWidget: NetworkIndicatorImage(imageUrl)),
+      body: SafeArea(child: WidgetZoom(heroAnimationTag: 'imageUrl', zoomWidget: NetworkIndicatorImage(imageUrl))),
     );
   }
 }

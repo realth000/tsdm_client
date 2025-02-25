@@ -482,7 +482,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
               appBar: _buildListAppBar(context, state),
               body: NotificationListener<UserScrollNotification>(
                 onNotification: _onBodyScrollNotification,
-                child: _buildBody(context, state),
+                child: SafeArea(child: _buildBody(context, state)),
               ),
               floatingActionButton: _buildFloatingActionButton(context, state),
             );

@@ -74,7 +74,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
                   ),
                 ],
               ),
-              body: body,
+              body: SafeArea(child: body),
             );
           },
         ),

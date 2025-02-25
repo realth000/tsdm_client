@@ -220,9 +220,13 @@ class _HomepagePageState extends State<HomepagePage> {
                   ),
                 ],
               ),
-              body: NotificationListener<UserScrollNotification>(
-                onNotification: _handleScrollNotification,
-                child: AnimatedSwitcher(duration: duration200, child: body),
+              body: SafeArea(
+                left: false,
+                top: false,
+                child: NotificationListener<UserScrollNotification>(
+                  onNotification: _handleScrollNotification,
+                  child: AnimatedSwitcher(duration: duration200, child: body),
+                ),
               ),
               floatingActionButton: _buildFloatingActionButton(context, state),
             );

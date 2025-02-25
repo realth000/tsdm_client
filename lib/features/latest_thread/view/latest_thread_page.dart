@@ -96,7 +96,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
               LatestThreadStatus.success => _buildBody(context, state),
             };
 
-            return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: body);
+            return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: SafeArea(child: body));
           },
         ),
       ),

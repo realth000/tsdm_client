@@ -292,7 +292,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         },
         child: BlocBuilder<RateBloc, RateState>(
           builder: (context, state) {
-            return Scaffold(appBar: AppBar(title: Text(tr.title)), body: _buildBody(context, state));
+            return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(child: _buildBody(context, state)));
           },
         ),
       ),

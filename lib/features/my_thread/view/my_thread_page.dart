@@ -149,9 +149,11 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
                 ],
               ),
             ),
-            body: TabBarView(
-              controller: _tabController,
-              children: [_buildThreadTab(context, state), _buildReplyTab(context, state)],
+            body: SafeArea(
+              child: TabBarView(
+                controller: _tabController,
+                children: [_buildThreadTab(context, state), _buildReplyTab(context, state)],
+              ),
             ),
           );
         },

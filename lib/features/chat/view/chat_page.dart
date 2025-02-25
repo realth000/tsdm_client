@@ -175,7 +175,7 @@ final class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
               ),
-              body: body,
+              body: SafeArea(child: body),
             );
           },
         ),

@@ -644,10 +644,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
           return Scaffold(
             appBar: appBar,
-            body: ColoredBox(
-              // FIXME: Remove workaround for page background issue.
-              color: Theme.of(context).colorScheme.surface,
-              child: body,
+            body: SafeArea(
+              child: ColoredBox(
+                // FIXME: Remove workaround for page background issue.
+                color: Theme.of(context).colorScheme.surface,
+                child: body,
+              ),
             ),
           );
         },

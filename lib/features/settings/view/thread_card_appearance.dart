@@ -72,58 +72,60 @@ class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardApp
 
     return Scaffold(
       appBar: AppBar(title: Text(tr.title)),
-      body: Column(
-        children: [
-          _buildExampleRow(context),
-          sizedBoxW12H12,
-          Expanded(
-            child: ListView(
-              shrinkWrap: true,
-              children: [
-                SectionSwitchListTile(
-                  title: Text(tr.infoRowAlignCenter),
-                  value: settings.threadCardInfoRowAlignCenter,
-                  onChanged:
-                      (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(SettingsKeys.threadCardInfoRowAlignCenter, v),
-                      ),
-                ),
-                SectionSwitchListTile(
-                  title: Text(tr.showLastReplyAuthor),
-                  value: settings.threadCardShowLastReplyAuthor,
-                  onChanged:
-                      (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(SettingsKeys.threadCardShowLastReplyAuthor, v),
-                      ),
-                ),
-                SectionSwitchListTile(
-                  title: Text(tr.highlightRecentThread),
-                  value: settings.threadCardHighlightRecentThread,
-                  onChanged:
-                      (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(SettingsKeys.threadCardHighlightRecentThread, v),
-                      ),
-                ),
-                SectionSwitchListTile(
-                  title: Text(tr.highlightAuthorName),
-                  value: settings.threadCardHighlightAuthorName,
-                  onChanged:
-                      (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(SettingsKeys.threadCardHighlightAuthorName, v),
-                      ),
-                ),
-                SectionSwitchListTile(
-                  title: Text(tr.highlightInfoRow),
-                  value: settings.threadCardHighlightInfoRow,
-                  onChanged:
-                      (v) => context.read<SettingsBloc>().add(
-                        SettingsValueChanged(SettingsKeys.threadCardHighlightInfoRow, v),
-                      ),
-                ),
-              ],
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildExampleRow(context),
+            sizedBoxW12H12,
+            Expanded(
+              child: ListView(
+                shrinkWrap: true,
+                children: [
+                  SectionSwitchListTile(
+                    title: Text(tr.infoRowAlignCenter),
+                    value: settings.threadCardInfoRowAlignCenter,
+                    onChanged:
+                        (v) => context.read<SettingsBloc>().add(
+                          SettingsValueChanged(SettingsKeys.threadCardInfoRowAlignCenter, v),
+                        ),
+                  ),
+                  SectionSwitchListTile(
+                    title: Text(tr.showLastReplyAuthor),
+                    value: settings.threadCardShowLastReplyAuthor,
+                    onChanged:
+                        (v) => context.read<SettingsBloc>().add(
+                          SettingsValueChanged(SettingsKeys.threadCardShowLastReplyAuthor, v),
+                        ),
+                  ),
+                  SectionSwitchListTile(
+                    title: Text(tr.highlightRecentThread),
+                    value: settings.threadCardHighlightRecentThread,
+                    onChanged:
+                        (v) => context.read<SettingsBloc>().add(
+                          SettingsValueChanged(SettingsKeys.threadCardHighlightRecentThread, v),
+                        ),
+                  ),
+                  SectionSwitchListTile(
+                    title: Text(tr.highlightAuthorName),
+                    value: settings.threadCardHighlightAuthorName,
+                    onChanged:
+                        (v) => context.read<SettingsBloc>().add(
+                          SettingsValueChanged(SettingsKeys.threadCardHighlightAuthorName, v),
+                        ),
+                  ),
+                  SectionSwitchListTile(
+                    title: Text(tr.highlightInfoRow),
+                    value: settings.threadCardHighlightInfoRow,
+                    onChanged:
+                        (v) => context.read<SettingsBloc>().add(
+                          SettingsValueChanged(SettingsKeys.threadCardHighlightInfoRow, v),
+                        ),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

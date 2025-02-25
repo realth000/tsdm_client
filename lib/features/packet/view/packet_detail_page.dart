@@ -170,7 +170,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               ],
               bottom: infoRow == null ? null : PreferredSize(preferredSize: const Size.fromHeight(24), child: infoRow),
             ),
-            body: body,
+            body: SafeArea(child: body),
           );
         },
       ),

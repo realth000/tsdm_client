@@ -173,12 +173,14 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
             tabs: [Tab(text: tr.statisticsTab.title), Tab(text: tr.changelogTab.title)],
           ),
         ),
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            BlocBuilder<PointsStatisticsBloc, PointsStatisticsState>(builder: _buildStatisticsTab),
-            BlocBuilder<PointsChangelogBloc, PointsChangelogState>(builder: _buildChangelogTab),
-          ],
+        body: SafeArea(
+          child: TabBarView(
+            controller: _tabController,
+            children: [
+              BlocBuilder<PointsStatisticsBloc, PointsStatisticsState>(builder: _buildStatisticsTab),
+              BlocBuilder<PointsChangelogBloc, PointsChangelogState>(builder: _buildChangelogTab),
+            ],
+          ),
         ),
       ),
     );
