@@ -172,9 +172,9 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                 notificationRepository: context.repo(),
                 storageProvider: getIt(),
               );
-              // if (widget.autoSyncNoticeSeconds > 0) {
-              //   bloc.start(Duration(seconds: widget.autoSyncNoticeSeconds));
-              // }
+              if (widget.autoSyncNoticeSeconds > 0) {
+                bloc.start(Duration(seconds: widget.autoSyncNoticeSeconds));
+              }
               return bloc;
             },
           ),

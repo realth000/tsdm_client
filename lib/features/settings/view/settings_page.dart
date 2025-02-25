@@ -16,10 +16,13 @@ import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/color.dart';
+import 'package:tsdm_client/extensions/duration.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/settings/view/debug_showcase_page.dart';
+import 'package:tsdm_client/features/settings/widgets/auto_sync_notice_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
@@ -378,12 +381,12 @@ class _SettingsPageState extends State<SettingsPage> {
     final tr = context.t.settingsPage.behaviorSection;
     final doublePressExit = state.settingsMap.doublePressExit;
     final threadReverseOrder = state.settingsMap.threadReverseOrder;
-    // // Duration in seconds.
-    // final autoSyncNoticeSeconds = state.settingsMap.autoSyncNoticeSeconds;
-    // Duration? autoSyncNoticeDuration;
-    // if (autoSyncNoticeSeconds > 0) {
-    //   autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
-    // }
+    // Duration in seconds.
+    final autoSyncNoticeSeconds = state.settingsMap.autoSyncNoticeSeconds;
+    Duration? autoSyncNoticeDuration;
+    if (autoSyncNoticeSeconds > 0) {
+      autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
+    }
 
     return [
       SectionTitleText(tr.title),
@@ -405,41 +408,30 @@ class _SettingsPageState extends State<SettingsPage> {
         onChanged:
             (v) async => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
       ),
-      // SectionListTile(
-      //   leading: const Icon(Icons.sync_outlined),
-      //   title: Text(tr.autoSyncNotice.title),
-      //   subtitle: Text(tr.autoSyncNotice.detail),
-      //   trailing: Text(
-      //     autoSyncNoticeDuration?.readable(context) ??
-      //     context.t.general.never,
-      //     style: Theme.of(context)
-      //         .textTheme
-      //         .labelMedium
-      //         ?.copyWith(color: Theme.of(context).colorScheme.secondary),
-      //   ),
-      //   onTap: () async {
-      //     final seconds = await showDialog<int>(
-      //       context: context,
-      //       builder: (_) => AutoSyncNoticeDialog(autoSyncNoticeSeconds),
-      //     );
-      //     if (seconds == null || !context.mounted) {
-      //       return;
-      //     }
-      //     if (seconds > 0) {
-      //       context
-      //           .read<AutoNotificationCubit>()
-      //           .start(Duration(seconds: seconds));
-      //     } else {
-      //       context.read<AutoNotificationCubit>().stop();
-      //     }
-      //     context.read<SettingsBloc>().add(
-      //           SettingsValueChanged(
-      //             SettingsKeys.autoSyncNoticeSeconds,
-      //             seconds,
-      //           ),
-      //         );
-      //   },
-      // ),
+      SectionListTile(
+        leading: const Icon(Icons.sync_outlined),
+        title: Text(tr.autoSyncNotice.title),
+        subtitle: Text(tr.autoSyncNotice.detail),
+        trailing: Text(
+          autoSyncNoticeDuration?.readable(context) ?? context.t.general.never,
+          style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+        ),
+        onTap: () async {
+          final seconds = await showDialog<int>(
+            context: context,
+            builder: (_) => AutoSyncNoticeDialog(autoSyncNoticeSeconds),
+          );
+          if (seconds == null || !context.mounted) {
+            return;
+          }
+          if (seconds > 0) {
+            context.read<AutoNotificationCubit>().start(Duration(seconds: seconds));
+          } else {
+            context.read<AutoNotificationCubit>().stop();
+          }
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.autoSyncNoticeSeconds, seconds));
+        },
+      ),
     ];
   }
 
