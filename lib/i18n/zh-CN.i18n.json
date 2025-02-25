@@ -265,7 +265,8 @@
       "uid": "UID",
       "email": "邮箱"
     },
-    "signUpHint": "没有账号？点此注册"
+    "signUpHint": "没有账号？点此注册",
+    "perhapsExpired": "登录失败，可能身份已过期，请重新登录"
   },
   "rootPage": {
     "initFailed": "初始化失败: $err",

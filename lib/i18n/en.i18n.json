@@ -265,7 +265,8 @@
       "uid": "UID",
       "email": "Email"
     },
-    "signUpHint": "Do not have an account? Sign up here"
+    "signUpHint": "Do not have an account? Sign up here",
+    "perhapsExpired": "Login failed, perhaps identity expired, please login again"
   },
   "rootPage": {
     "initFailed": "Init failed: $err",

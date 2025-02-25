@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
@@ -124,7 +125,21 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
         return;
       }
       context.read<_LoggingInCubit>().setNotLoggingIn();
-      showSnackBar(context: context, message: '${ret.unwrapErr()}');
+
+      final errorText = switch (ret.unwrapErr()) {
+        LoginInvalidFormHashException() => context.t.loginPage.failedToGetFormHash,
+        LoginMessageNotFoundException() => context.t.loginPage.failedToLoginMessageNodeNotFound,
+        LoginIncorrectCaptchaException() => context.t.loginPage.loginResultIncorrectCaptcha,
+        LoginInvalidCredentialException() => context.t.loginPage.loginResultIncorrectUsernameOrPassword,
+        LoginIncorrectSecurityQuestionException() => context.t.loginPage.loginResultIncorrectQuestionOrAnswer,
+        LoginAttemptLimitException() => context.t.loginPage.loginResultTooManyLoginAttempts,
+        // When failed to login with cookie, user info not found indicating a cookie expired state.
+        LoginUserInfoNotFoundException() => context.t.loginPage.perhapsExpired,
+        LoginOtherErrorException() => context.t.loginPage.loginResultOtherErrors,
+        LoginFormHashNotFoundException() => context.t.loginPage.hashValueNotFound,
+        _ => context.t.general.failedToLoad,
+      };
+      showSnackBar(context: context, message: errorText);
       context.pop();
       return;
     }
