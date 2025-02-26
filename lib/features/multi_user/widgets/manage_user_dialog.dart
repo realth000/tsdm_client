@@ -5,6 +5,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/multi_user/bloc/switch_user_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -72,7 +73,20 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
                 context.pop();
               },
             ),
-            ListTile(title: Text(tr.loginAgain.title), subtitle: Text(tr.loginAgain.detail)),
+            ListTile(
+              title: Text(tr.loginAgain.title),
+              subtitle: Text(tr.loginAgain.detail),
+              onTap: () async {
+                await context.pushNamed(
+                  ScreenPaths.login,
+                  queryParameters: {if (userInfo.username != null) 'username': '${userInfo.username}'},
+                );
+                if (!context.mounted) {
+                  return;
+                }
+                context.pop();
+              },
+            ),
           ],
         ),
       ),

@@ -224,12 +224,13 @@ final router = GoRouter(
       path: ScreenPaths.login,
       parentNavigatorKey: _rootRouteKey,
       builder: (state) {
+        final username = state.uri.queryParameters['username'];
         if (state.extra == null) {
-          return const LoginPage();
+          return LoginPage(username: username);
         }
         final loginArgsMap = state.extra! as Map<String, dynamic>;
         final redirectBackState = loginArgsMap['redirectBackState'] as GoRouterState;
-        return LoginPage(redirectBackState: redirectBackState);
+        return LoginPage(redirectBackState: redirectBackState, username: username);
       },
     ),
     AppRoute(

@@ -11,10 +11,13 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// Page of user to login.
 class LoginPage extends StatefulWidget {
   /// Constructor.
-  const LoginPage({this.redirectBackState, super.key});
+  const LoginPage({this.redirectBackState, this.username, super.key});
 
   /// The redirect back route that navigator will push when logged in succeed.
   final GoRouterState? redirectBackState;
+
+  /// Optional autofilled username field in login form.
+  final String? username;
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -58,6 +61,7 @@ class _LoginPageState extends State<LoginPage> {
                   redirectPath: widget.redirectBackState?.fullPath,
                   redirectPathParameters: widget.redirectBackState?.pathParameters,
                   redirectExtra: widget.redirectBackState?.extra,
+                  username: widget.username,
                 ),
               ),
             ),

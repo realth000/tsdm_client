@@ -17,7 +17,7 @@ final _loginQuestions = ['无安全问题', '母亲的名字', '爷爷的名字'
 /// Form for user to fill login info.
 class LoginForm extends StatefulWidget {
   /// Constructor.
-  const LoginForm({this.redirectPath, this.redirectPathParameters, this.redirectExtra, super.key});
+  const LoginForm({this.redirectPath, this.redirectPathParameters, this.redirectExtra, this.username, super.key});
 
   /// The url path to redirect back once login succeed.
   final String? redirectPath;
@@ -27,6 +27,9 @@ class LoginForm extends StatefulWidget {
 
   /// The extra object of url to redirect back.
   final Object? redirectExtra;
+
+  /// Optional autofilled username.
+  final String? username;
 
   @override
   State<LoginForm> createState() => _LoginFormState();
@@ -47,6 +50,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
   LoginField loginField = LoginField.username;
 
   late final FocusNode loginFieldFocus;
+  late final FocusNode passwordFieldFocus;
 
   Future<void> _login(BuildContext context, LoginField loginField, AuthenticationState state) async {
     if (formKey.currentState == null || !(formKey.currentState!).validate()) {
@@ -80,7 +84,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           Center(child: Text(tr.login, style: Theme.of(context).textTheme.titleLarge)),
           sizedBoxW12H12,
           TextFormField(
-            autofocus: true,
+            autofocus: widget.username == null,
             focusNode: loginFieldFocus,
             controller: usernameController,
             decoration: InputDecoration(
@@ -118,6 +122,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
           sizedBoxW12H12,
           TextFormField(
             controller: passwordController,
+            focusNode: passwordFieldFocus,
             decoration: InputDecoration(
               prefixIcon: const Icon(Icons.password),
               labelText: tr.password,
@@ -210,12 +215,17 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
   @override
   void initState() {
     super.initState();
-    usernameController = TextEditingController();
+    usernameController = TextEditingController(text: widget.username);
     passwordController = TextEditingController();
     answerController = TextEditingController();
     verifyCodeController = TextEditingController();
     loginFieldFocus = FocusNode();
+    passwordFieldFocus = FocusNode();
     captchaImageController = CaptchaImageController();
+
+    if (widget.username != null) {
+      WidgetsBinding.instance.addPostFrameCallback((_) => passwordFieldFocus.requestFocus());
+    }
   }
 
   @override
@@ -225,6 +235,7 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
     answerController.dispose();
     verifyCodeController.dispose();
     loginFieldFocus.dispose();
+    passwordFieldFocus.dispose();
     captchaImageController.dispose();
     super.dispose();
   }
