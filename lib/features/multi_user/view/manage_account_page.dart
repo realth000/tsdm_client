@@ -3,24 +3,18 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
-import 'package:tsdm_client/extensions/fp.dart';
-import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/multi_user/bloc/switch_user_bloc.dart';
+import 'package:tsdm_client/features/multi_user/widgets/manage_user_dialog.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-
-/// Cubit keep logging in state.
-final class _LoggingInCubit extends Cubit<bool> {
-  _LoggingInCubit() : super(false);
-
-  void setLoggingIn() => emit(true);
-
-  void setNotLoggingIn() => emit(false);
-}
+import 'package:tsdm_client/widgets/heroes.dart';
 
 /// Page to manage user account for multi-user target.
 class ManageAccountPage extends StatefulWidget {
@@ -32,73 +26,83 @@ class ManageAccountPage extends StatefulWidget {
 }
 
 class _ManageAccountPageState extends State<ManageAccountPage> {
-  /// Flag indicating is logging in or not.
-  final loggingIn = false;
-
   @override
   Widget build(BuildContext context) {
     final tr = context.t.manageAccountPage;
     return BlocProvider(
-      create: (_) => _LoggingInCubit(),
-      child: BlocBuilder<_LoggingInCubit, bool>(
+      create: (context) => SwitchUserBloc(context.repo()),
+      child: BlocConsumer<SwitchUserBloc, SwitchUserBaseState>(
+        listener: (context, state) {
+          if (state case SwitchUserFailure(:final reason)) {
+            final errorText = switch (reason) {
+              SwitchUserNotAuthedException() => context.t.loginPage.perhapsExpired,
+              _ => context.t.general.failedToLoad,
+            };
+            showSnackBar(context: context, message: errorText);
+          } else if (state case SwitchUserSuccess()) {
+            showSnackBar(context: context, message: context.t.manageAccountPage.switchAccount.success);
+          }
+        },
         builder: (context, state) {
-          final body = switch (state) {
-            true => const Row(children: [sizedBoxW8H8, sizedCircularProgressIndicator]),
-            false => FutureBuilder(
-              future: getIt.get<StorageProvider>().getAllUsers(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  // Unreachable.
-                  return Center(child: Text('${snapshot.error}'));
-                }
-                if (snapshot.hasData) {
-                  final currentUser = context.read<AuthenticationRepository>().currentUser;
-                  final users = snapshot.data!;
+          final body = Scaffold(
+            appBar: AppBar(title: Text(tr.title)),
+            body: SafeArea(
+              child: SingleChildScrollView(
+                child: FutureBuilder(
+                  future: getIt.get<StorageProvider>().getAllUsers(),
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      // Unreachable.
+                      return Center(child: Text('${snapshot.error}'));
+                    }
+                    if (!snapshot.hasData) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                  return SingleChildScrollView(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children:
-                          users
-                              .where((e) => e.username != null && e.username!.isNotEmpty && e.uid != null && e.uid != 0)
-                              .map((e) => _UserInfoListTile(userInfo: e, currentUserInfo: currentUser))
-                              .toList(),
-                    ),
-                  );
-                }
+                    final tr = context.t.manageAccountPage;
 
-                return const Center(child: CircularProgressIndicator());
-              },
+                    final currentUser = context.read<AuthenticationRepository>().currentUser;
+                    final users = snapshot.data!;
+                    return Padding(
+                      padding: edgeInsetsL12T4R12B4,
+                      child: Card(
+                        margin: EdgeInsets.zero,
+                        child: Padding(
+                          padding: edgeInsetsL12T12R12B12,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  Text(tr.allUsers, style: Theme.of(context).textTheme.titleMedium),
+                                  if (state is SwitchUserLoading) ...[sizedBoxW12H12, sizedCircularProgressIndicator],
+                                ],
+                              ),
+                              sizedBoxW4H4,
+                              // List all recorded users.
+                              ...users
+                                  .where(
+                                    (e) => e.username != null && e.username!.isNotEmpty && e.uid != null && e.uid != 0,
+                                  )
+                                  .map((e) => _UserInfoListTile(userInfo: e, currentUserInfo: currentUser)),
+                              ListTile(
+                                leading: const Icon(Icons.add_outlined),
+                                title: Text(tr.addUser),
+                                enabled: state is! SwitchUserLoading,
+                                onTap: () async => context.pushNamed(ScreenPaths.login),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ),
-          };
-
-          return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(child: body));
-
-          // return AlertDialog(
-          //   scrollable: true,
-          //   title: Row(
-          //     children: [
-          //       Text(tr.title),
-          //       if (state) ...[sizedBoxW8H8, sizedCircularProgressIndicator],
-          //     ],
-          //   ),
-          //   actions: [
-          //     TextButton(onPressed: state ? null : () async => context.pop(), child: Text(context.t.general.cancel)),
-          //     TextButton(
-          //       onPressed:
-          //           state
-          //               ? null
-          //               : () async {
-          //                 await context.pushNamed(ScreenPaths.login);
-          //                 if (!context.mounted) {
-          //                   return;
-          //                 }
-          //                 context.pop();
-          //               },
-          //       child: Text(tr.loginAnother),
-          //     ),
-          //   ],
-          // );
+          );
+          return body;
         },
       ),
     );
@@ -114,54 +118,17 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
   /// Current login user.
   final UserLoginInfo? currentUserInfo;
 
-  Future<void> _callback(BuildContext context) async {
-    info('switch user to uid ${"${userInfo.uid}".obscured(4)}');
-    context.read<_LoggingInCubit>().setLoggingIn();
-    final ret = await context.read<AuthenticationRepository>().switchUser(userInfo).run();
-
-    if (ret.isLeft()) {
-      handle(ret.unwrapErr());
-      if (!context.mounted) {
-        return;
-      }
-      context.read<_LoggingInCubit>().setNotLoggingIn();
-
-      final errorText = switch (ret.unwrapErr()) {
-        LoginInvalidFormHashException() => context.t.loginPage.failedToGetFormHash,
-        LoginMessageNotFoundException() => context.t.loginPage.failedToLoginMessageNodeNotFound,
-        LoginIncorrectCaptchaException() => context.t.loginPage.loginResultIncorrectCaptcha,
-        LoginInvalidCredentialException() => context.t.loginPage.loginResultIncorrectUsernameOrPassword,
-        LoginIncorrectSecurityQuestionException() => context.t.loginPage.loginResultIncorrectQuestionOrAnswer,
-        LoginAttemptLimitException() => context.t.loginPage.loginResultTooManyLoginAttempts,
-        // When failed to login with cookie, user info not found indicating a cookie expired state.
-        LoginUserInfoNotFoundException() => context.t.loginPage.perhapsExpired,
-        LoginOtherErrorException() => context.t.loginPage.loginResultOtherErrors,
-        LoginFormHashNotFoundException() => context.t.loginPage.hashValueNotFound,
-        _ => context.t.general.failedToLoad,
-      };
-      showSnackBar(context: context, message: errorText);
-      context.pop();
-      return;
-    }
-    if (!context.mounted) {
-      return;
-    }
-    showSnackBar(context: context, message: context.t.manageAccountPage.switchAccount.success);
-    context.read<_LoggingInCubit>().setNotLoggingIn();
-    context.pop();
-  }
-
   @override
   Widget build(BuildContext context) {
     final tr = context.t.manageAccountPage;
     final isCurrentUser = userInfo.uid! == currentUserInfo?.uid;
 
-    return BlocBuilder<_LoggingInCubit, bool>(
+    return BlocBuilder<SwitchUserBloc, SwitchUserBaseState>(
       builder: (context, state) {
+        final loading = state is SwitchUserLoading;
         return ListTile(
-          enabled: !state,
-          // TODO: Update user avatar.
-          leading: CircleAvatar(child: Text(userInfo.username![0])),
+          enabled: !loading,
+          leading: HeroUserAvatar(username: userInfo.username!, avatarUrl: null, heroTag: userInfo.username),
           title: Text(userInfo.username!),
           subtitle: Text('${userInfo.uid!}'),
           trailing:
@@ -177,7 +144,10 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
                     ),
                   )
                   : null,
-          onTap: (state || isCurrentUser) ? null : () async => _callback(context),
+          onTap:
+              (loading || isCurrentUser)
+                  ? null
+                  : () async => openManageUserDialog(context: context, userInfo: userInfo, heroTag: userInfo.username!),
         );
       },
     );

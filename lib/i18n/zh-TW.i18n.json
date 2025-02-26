@@ -784,8 +784,21 @@
     "title": "管理帳戶",
     "switchAccount": {
       "title": "切換帳戶",
-      "success": "切換成功"
+      "success": "切換成功",
+      "dialog": {
+        "switchAccount": "切換到這個帳號",
+        "clearLoginStatus": {
+          "title": "清除登入記錄",
+          "detail": "清除在軟體內的登入記錄，不會向伺服器要求登出登入"
+        },
+        "loginAgain": {
+          "title": "再次登入",
+          "detail": "手動用密碼登入一次"
+        }
+      }
     },
+    "allUsers": "所有使用者",
+    "addUser": "新增使用者",
     "loginAnother": "登入其他帳號",
     "logout": "退出登入",
     "online": "線上"

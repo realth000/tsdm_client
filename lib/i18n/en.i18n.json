@@ -784,8 +784,21 @@
     "title": "Manage account",
     "switchAccount": {
       "title": "Switch account",
-      "success": "Switch success"
+      "success": "Switch success",
+      "dialog": {
+        "switchAccount": "Switch to this account",
+        "clearLoginStatus": {
+          "title": "Clear login status",
+          "detail": "Clear the account info in app, without logout from server"
+        },
+        "loginAgain": {
+          "title": "Login again",
+          "detail": "Manually login again with password"
+        }
+      }
     },
+    "allUsers": "All users",
+    "addUser": "Add user",
     "loginAnother": "Login another account",
     "logout": "Logout",
     "online": "Online"

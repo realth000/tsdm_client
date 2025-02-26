@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:fpdart/fpdart.dart';
@@ -8,6 +9,7 @@ import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+
 // import 'package:tsdm_client/features/authentication/repository/internal/login_result.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -39,6 +41,9 @@ class AuthenticationRepository with LoggerMixin {
       '$baseUrl/member.php?mod=logging&action=login&infloat=yes&frommessage&inajax=1&ajaxtarget=messagelogin';
   static final _layerLoginRe = RegExp(r'layer_login_(?<Hash>\w+)');
   static final _formHashRe = RegExp(r'formhash" value="(?<FormHash>\w+)"');
+
+  /// Url to check authentication status using v2 API.
+  static const _checkAuthUrlV2 = '$baseUrl/home.php?mobile=yes&tsdmapp=1&mod=space&do=profile';
 
   // static String _buildLoginUrl(String formHash) {
   //   return '$_loginBaseUrl$formHash';
@@ -218,20 +223,23 @@ class AuthenticationRepository with LoggerMixin {
   });
 
   /// Switch to another user described in [userInfo].
+  ///
+  /// Return [SwitchUserNotAuthedException] if failed.
   AsyncVoidEither switchUser(UserLoginInfo userInfo) => AsyncVoidEither(() async {
     if (!await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo)) {
       return left(LoginInvalidCredentialException());
     }
-    final resp =
-        await getIt
-            .get<NetClientProvider>()
-            .get(homePage)
-            .flatMap((e) => loginWithDocument(parseHtmlDocument(e.data as String)))
-            .run();
+    final resp = await getIt.get<NetClientProvider>().get(_checkAuthUrlV2).run();
     if (resp.isLeft()) {
       return left(resp.unwrapErr());
     }
-    return rightVoid();
+
+    final result = jsonDecode(resp.unwrap().data as String) as Map<String, dynamic>;
+    if (result['status'] == 0) {
+      return rightVoid();
+    }
+
+    return left(SwitchUserNotAuthedException());
   });
 
   /// Parse html [document], find current logged in user uid in it.

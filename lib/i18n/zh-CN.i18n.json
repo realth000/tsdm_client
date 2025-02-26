@@ -784,8 +784,21 @@
     "title": "管理账户",
     "switchAccount": {
       "title": "切换账户",
-      "success": "切换成功"
+      "success": "切换成功",
+      "dialog": {
+        "switchAccount": "切换到这个账户",
+        "clearLoginStatus": {
+          "title": "清除登录记录",
+          "detail": "清除在软件内的登录记录，不会向服务器请求退出登录"
+        },
+        "loginAgain": {
+          "title": "再次登录",
+          "detail": "手动用密码登录一次"
+        }
+      }
     },
+    "allUsers": "所有用户",
+    "addUser": "添加用户",
     "loginAnother": "登录其他账户",
     "logout": "退出登录",
     "online": "在线"

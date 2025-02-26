@@ -166,6 +166,10 @@ final class LoginOtherErrorException extends AppException with LoginOtherErrorEx
 @MappableClass()
 final class LoginUserInfoIncompleteException extends AppException with LoginUserInfoIncompleteExceptionMappable {}
 
+/// Failed to switch to user.
+@MappableClass()
+final class SwitchUserNotAuthedException extends AppException with SwitchUserNotAuthedExceptionMappable {}
+
 /// The form hash used to logout is not found.
 @MappableClass()
 final class LogoutFormHashNotFoundException extends AppException with LogoutFormHashNotFoundExceptionMappable {}
