@@ -21,11 +21,10 @@ final class CookieDao extends DatabaseAccessor<AppDatabase> with _$CookieDaoMixi
     return (select(cookie)..where((e) => e.uid.equals(uid))).getSingleOrNull();
   }
 
-  // /// Get cookie by [email].
-  // Future<CookieEntity?> selectCookieByEmail(String email) async {
-  //   return (select(cookie)..where((e) => e.email.equals(email)))
-  //       .getSingleOrNull();
-  // }
+  /// Watch the stream of all users.
+  Stream<List<CookieEntity>> watchAll() {
+    return select(cookie).watch();
+  }
 
   /// Insert or update cookie from [cookieCompanion].
   Future<int> upsertCookie(CookieCompanion cookieCompanion) async {

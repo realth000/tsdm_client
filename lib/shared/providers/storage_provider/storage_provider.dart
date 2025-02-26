@@ -85,6 +85,13 @@ class StorageProvider with LoggerMixin {
   /// MUST update during image cache setter calls.
   final Map<String, ImageEntity> _imageCache;
 
+  /// Get the stream of all users in storage.
+  Stream<List<UserLoginInfo>> allUsersStream() {
+    return CookieDao(
+      _db,
+    ).watchAll().map((e) => e.map((entity) => UserLoginInfo(username: entity.username, uid: entity.uid)).toList());
+  }
+
   /*             User             */
 
   /// Get all recorded login user.
@@ -103,6 +110,11 @@ class StorageProvider with LoggerMixin {
     final cookies = await CookieDao(_db).selectAll();
 
     return cookies.map((e) => (UserLoginInfo(username: e.username, uid: e.uid), e.lastCheckin)).toList();
+  }
+
+  /// Delete the user login info for the user specified by [uid].
+  Future<int> deleteUserLoginInfo(int uid) async {
+    return CookieDao(_db).deleteCookieByUid(uid);
   }
 
   /*             cookie             */

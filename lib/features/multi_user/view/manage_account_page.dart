@@ -48,8 +48,8 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
             appBar: AppBar(title: Text(tr.title)),
             body: SafeArea(
               child: SingleChildScrollView(
-                child: FutureBuilder(
-                  future: getIt.get<StorageProvider>().getAllUsers(),
+                child: StreamBuilder(
+                  stream: getIt.get<StorageProvider>().allUsersStream(),
                   builder: (context, snapshot) {
                     if (snapshot.hasError) {
                       // Unreachable.

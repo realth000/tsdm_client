@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/multi_user/bloc/switch_user_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
@@ -58,7 +60,18 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
                 context.pop();
               },
             ),
-            ListTile(title: Text(tr.clearLoginStatus.title), subtitle: Text(tr.clearLoginStatus.detail)),
+            ListTile(
+              title: Text(tr.clearLoginStatus.title),
+              subtitle: Text(tr.clearLoginStatus.detail),
+              enabled: userInfo.uid != null,
+              onTap: () async {
+                await getIt.get<StorageProvider>().deleteCookieByUid(userInfo.uid!);
+                if (!context.mounted) {
+                  return;
+                }
+                context.pop();
+              },
+            ),
             ListTile(title: Text(tr.loginAgain.title), subtitle: Text(tr.loginAgain.detail)),
           ],
         ),
