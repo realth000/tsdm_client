@@ -7,6 +7,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/multi_user/bloc/switch_user_bloc.dart';
 import 'package:tsdm_client/features/multi_user/widgets/manage_user_dialog.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -39,8 +40,10 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
               _ => context.t.general.failedToLoad,
             };
             showSnackBar(context: context, message: errorText);
+            context.read<AutoNotificationCubit>().resume('switch user');
           } else if (state case SwitchUserSuccess()) {
             showSnackBar(context: context, message: context.t.manageAccountPage.switchAccount.success);
+            context.read<AutoNotificationCubit>().resume('switch user');
           }
         },
         builder: (context, state) {

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/multi_user/bloc/switch_user_bloc.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -57,6 +58,16 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
             ListTile(
               title: Text(tr.switchAccount),
               onTap: () async {
+                var times = 10;
+                while (context.read<AutoNotificationCubit>().pause('switch user')) {
+                  info('switch user is waiting for auto sync lock... $times');
+                  times -= 1;
+                  await Future<void>.delayed(const Duration(milliseconds: 300));
+                  if (times <= 0 || !context.mounted) {
+                    info('auto sync lock timeout or canceled, do not switch user');
+                    return;
+                  }
+                }
                 context.read<SwitchUserBloc>().add(SwitchUserStartRequested(userInfo));
                 context.pop();
               },

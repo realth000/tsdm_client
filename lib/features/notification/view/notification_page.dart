@@ -254,6 +254,11 @@ class _PreferredSizeComponentBottom extends StatelessWidget implements Preferred
                 minHeight: 2,
               ),
               AutoNoticeStatePending() => const LinearProgressIndicator(minHeight: 2),
+              AutoNoticeStatePaused(:final total, :final remain) => LinearProgressIndicator(
+                value: math.max(1 - remain.inSeconds / total.inSeconds, 0),
+                minHeight: 2,
+                color: Theme.of(context).colorScheme.outline,
+              ),
             };
           },
         ),

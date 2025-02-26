@@ -11,6 +11,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'auto_notification_cubit.mapper.dart';
+
 part 'auto_notification_state.dart';
 
 /// Cubit of auto notification feature.
@@ -25,6 +26,15 @@ part 'auto_notification_state.dart';
 /// cubit SHOULD only be ca optional trigger of notification state update, all
 /// data handling logic and presentation state update logic are implemented in
 /// `NotificationBloc`.
+///
+/// Note that it's the pandora box when frequently fetching notification while
+/// using the app, because many other actions will cause some unstable, or race
+/// condition especially user account related features:
+///
+/// * Login, logout.
+/// * User switching.
+///
+/// Now we try to solve the chaos by adding mutex and state flag.
 final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixin {
   /// Constructor.
   AutoNotificationCubit({
@@ -49,6 +59,12 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
 
   /// Timer calculating fetch actions.
   Timer? _timer;
+
+  /// Check is fetching the task or not.
+  ///
+  /// Fetching means doing the fetch action, so other conflict actions shall waiting for the sync process till it
+  /// finishes.
+  bool get isPending => state is AutoNoticeStatePending;
 
   AsyncVoidEither _emitDataState(int uid) {
     return AsyncVoidEither(() async {
@@ -77,7 +93,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
 
   /// Do the auto fetch action when timeout.
   Future<void> _onTimeout() async {
-    if (state is AutoNoticeStateStopped) {
+    if (state is AutoNoticeStateStopped || state is AutoNoticeStatePaused) {
       // Do nothing if already stopped.
       // Not intend to happen because the timer is canceled when stop but check
       // to make sure of that.
@@ -154,6 +170,53 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
     _timer = null;
     _remainingTick = Duration.zero;
     emit(const AutoNoticeStateStopped());
+  }
+
+  /// Pause the auto fetch process if running.
+  ///
+  /// If not running, do nothing.
+  ///
+  /// Return `true` if the cubit is pending data. The caller shall only enter the critical section when return `false`.
+  bool pause(String reason) {
+    if (state is AutoNoticeStatePending) {
+      return true;
+    }
+
+    if (state case AutoNoticeStateTicking(:final total, :final remain)) {
+      info('auto fetch paused at total=$total remain=$remain reason=$reason');
+      _timer?.cancel();
+      _timer = null;
+      emit(AutoNoticeStatePaused(total: total, remain: remain));
+      return false;
+    }
+
+    return false;
+  }
+
+  /// Continue the paused fetch process.
+  ///
+  /// If not paused, do nothing.
+  void resume(String reason) {
+    if (state case AutoNoticeStatePaused(:final total, :final remain)) {
+      info('auto fetch resumes with total=$total remain=$remain reason=$reason');
+      _timer?.cancel();
+      _timer = null;
+
+      _remainingTick = remain;
+      duration = total;
+
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
+        _remainingTick -= const Duration(seconds: 1);
+        emit(AutoNoticeStateTicking(total: duration, remain: _remainingTick));
+        if (_remainingTick.inSeconds > 0) {
+          return;
+        }
+
+        // Timeout, reset.
+        _remainingTick = duration;
+        await _onTimeout();
+      });
+    }
   }
 
   @override

@@ -39,3 +39,20 @@ final class AutoNoticeStatePending extends AutoNoticeState with AutoNoticeStateP
   /// Constructor.
   const AutoNoticeStatePending();
 }
+
+/// Paused state.
+///
+/// A paused state indicates some other user related actions is running and the auto fetch process
+/// shall pause for a while, otherwise some race condition may cause data lose, incorrect data info
+/// and more.
+@MappableClass()
+final class AutoNoticeStatePaused extends AutoNoticeState with AutoNoticeStatePausedMappable {
+  /// Constructor.
+  const AutoNoticeStatePaused({required this.total, required this.remain});
+
+  /// Total scheduled time.
+  final Duration total;
+
+  /// Remaining time till next fetch.
+  final Duration remain;
+}

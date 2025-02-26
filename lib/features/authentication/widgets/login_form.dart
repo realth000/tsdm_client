@@ -7,6 +7,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/bloc/authentication_bloc.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/authentication/widgets/captcha_image.dart';
+import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
@@ -69,6 +70,17 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               : SecurityQuestion(questionId: '${_loginQuestions.indexOf(_question)}', answer: answerController.text),
     );
 
+    var times = 10;
+    while (context.read<AutoNotificationCubit>().pause('login')) {
+      info('login is waiting for auto sync lock... $times');
+      times -= 1;
+      await Future<void>.delayed(const Duration(milliseconds: 300));
+      if (times <= 0 || !context.mounted) {
+        info('auto sync lock timeout or canceled, do not login');
+        return;
+      }
+    }
+    context.read<AutoNotificationCubit>().pause('login');
     context.read<AuthenticationBloc>().add(AuthenticationLoginRequested(credential));
   }
 
@@ -260,9 +272,11 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
               extra: widget.redirectExtra,
             );
           }
+          context.read<AutoNotificationCubit>().resume('login success');
         } else if (state.status == AuthenticationStatus.failure) {
           captchaImageController.reload();
           verifyCodeController.clear();
+          context.read<AutoNotificationCubit>().resume('login failure');
         }
       },
       child: BlocBuilder<AuthenticationBloc, AuthenticationState>(builder: _buildForm),
