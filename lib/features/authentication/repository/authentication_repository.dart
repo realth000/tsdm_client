@@ -235,11 +235,22 @@ class AuthenticationRepository with LoggerMixin {
     }
 
     final result = jsonDecode(resp.unwrap().data as String) as Map<String, dynamic>;
-    if (result['status'] == 0) {
-      return rightVoid();
+    if (result['status'] != 0) {
+      error(
+        'failed to switch user to uid=${"${userInfo.uid}".obscured(4)}, '
+        'status=${result["status"]}, '
+        'message=${result["message"]}',
+      );
+      return left(SwitchUserNotAuthedException());
     }
 
-    return left(SwitchUserNotAuthedException());
+    // Succeed.
+    // Here we get complete user info.
+    await getIt.get<CookieProvider>().saveCookieToStorage();
+    await _markAuthenticated(userInfo);
+
+    debug('login with document: user $userInfo');
+    return rightVoid();
   });
 
   /// Parse html [document], find current logged in user uid in it.
