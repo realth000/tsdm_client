@@ -8,7 +8,12 @@ part of 'models.dart';
 @MappableClass()
 sealed class NotificationAutoSyncInfo with NotificationAutoSyncInfoMappable {
   /// Constructor.
-  const NotificationAutoSyncInfo({required this.notice, required this.personalMessage, required this.broadcastMessage});
+  const NotificationAutoSyncInfo({
+    required this.notice,
+    required this.personalMessage,
+    required this.broadcastMessage,
+    required this.timestamp,
+  });
 
   /// Count of unread notice.
   final int notice;
@@ -18,6 +23,9 @@ sealed class NotificationAutoSyncInfo with NotificationAutoSyncInfoMappable {
 
   /// Count of unread broadcast message.
   final int broadcastMessage;
+
+  /// Timestamp happened.
+  final int timestamp;
 }
 
 /// Received notice in auto sync notice actions.
@@ -32,6 +40,7 @@ final class NotificationAutoSyncInfoNotice extends NotificationAutoSyncInfo
     required super.notice,
     required super.personalMessage,
     required super.broadcastMessage,
+    required super.timestamp,
   });
 
   /// String msg
@@ -48,6 +57,7 @@ final class NotificationAutoSyncInfoPm extends NotificationAutoSyncInfo with Not
     required super.notice,
     required super.personalMessage,
     required super.broadcastMessage,
+    required super.timestamp,
   });
 
   /// Username of the message sender.
@@ -66,6 +76,7 @@ final class NotificationAutoSyncInfoBm extends NotificationAutoSyncInfo with Not
     required super.notice,
     required super.personalMessage,
     required super.broadcastMessage,
+    required super.timestamp,
   });
 
   /// Preview of message.

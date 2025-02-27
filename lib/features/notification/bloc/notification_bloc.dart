@@ -16,7 +16,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/parsing.dart';
 
 part 'notification_bloc.mapper.dart';
+
 part 'notification_event.dart';
+
 part 'notification_state.dart';
 
 /// Emitter
@@ -254,6 +256,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
           notice: info.noticeList.length,
           personalMessage: info.personalMessageList.length,
           broadcastMessage: info.broadcastMessageList.length,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     } else if (info.broadcastMessageList.isNotEmpty) {
@@ -263,6 +266,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
           notice: info.noticeList.length,
           personalMessage: info.personalMessageList.length,
           broadcastMessage: info.broadcastMessageList.length,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     } else if (info.noticeList.isNotEmpty) {
@@ -272,6 +276,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
           notice: info.noticeList.length,
           personalMessage: info.personalMessageList.length,
           broadcastMessage: info.broadcastMessageList.length,
+          timestamp: DateTime.now().millisecondsSinceEpoch,
         ),
       );
     }
