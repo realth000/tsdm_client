@@ -131,7 +131,7 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
         final loading = state is SwitchUserLoading;
         return ListTile(
           enabled: !loading,
-          leading: HeroUserAvatar(username: userInfo.username!, avatarUrl: null, heroTag: userInfo.username),
+          leading: HeroUserAvatar(username: userInfo.username!, avatarUrl: null, disableHero: true),
           title: Text(userInfo.username!),
           subtitle: Text('${userInfo.uid!}'),
           trailing:
@@ -150,7 +150,7 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
           onTap:
               (loading || isCurrentUser)
                   ? null
-                  : () async => openManageUserDialog(context: context, userInfo: userInfo, heroTag: userInfo.username!),
+                  : () async => openManageUserDialog(context: context, userInfo: userInfo, heroTag: ''),
         );
       },
     );

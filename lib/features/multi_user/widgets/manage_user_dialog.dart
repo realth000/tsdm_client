@@ -47,7 +47,7 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
       clipBehavior: Clip.hardEdge,
       title: Row(
         children: [
-          HeroUserAvatar(username: userInfo.username!, avatarUrl: null, heroTag: heroTag, minRadius: 30),
+          HeroUserAvatar(username: userInfo.username!, avatarUrl: null, disableHero: true, minRadius: 30),
           sizedBoxW12H12,
           Expanded(child: SingleLineText(userInfo.username!, style: Theme.of(context).textTheme.titleLarge)),
         ],
