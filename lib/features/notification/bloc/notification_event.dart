@@ -14,7 +14,13 @@ final class NotificationUpdateAllRequested extends NotificationEvent with Notifi
 /// storage.
 @MappableClass()
 final class NotificationRecordFetchTimeRequested extends NotificationEvent
-    with NotificationRecordFetchTimeRequestedMappable {}
+    with NotificationRecordFetchTimeRequestedMappable {
+  /// Constructor.
+  const NotificationRecordFetchTimeRequested(this.time);
+
+  /// The timestamp of latest notice.
+  final DateTime time;
+}
 
 /// Mark a message as read.
 @MappableClass()

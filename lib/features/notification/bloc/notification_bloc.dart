@@ -40,7 +40,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
     on<NotificationEvent>(
       (e, emit) => switch (e) {
         NotificationUpdateAllRequested() => _onUpdateAllRequested(emit),
-        NotificationRecordFetchTimeRequested() => _onRecordFetchTimeRequested(),
+        NotificationRecordFetchTimeRequested(:final time) => _onRecordFetchTimeRequested(time),
         NotificationMarkReadRequested(:final recordMark) => _onMarkReadRequested(emit, recordMark),
         NotificationInfoFetched(:final info) => _onNoticeInfoFetched(emit, info),
         NotificationMarkTypeReadRequested(:final markAsRead, :final markType) => _onMarkTypeReadRequested(
@@ -117,11 +117,14 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
 
     emit(state.copyWith(status: NotificationStatus.loading));
 
+    final latestMessageTime = info.latestTimestamp();
+
     // Save fetched notice.
     debug(
       'saving notification: notice=${info.noticeList.length} '
       'personalMessage=${info.personalMessageList.length} '
-      'broadcastMessage=${info.broadcastMessageList.length}',
+      'broadcastMessage=${info.broadcastMessageList.length} '
+      'latestTime=${latestMessageTime?.yyyyMMDDHHMMSS()}',
     );
     // Save fetched notifications.
     await _storageProvider
@@ -287,6 +290,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
         noticeList: allNotice,
         personalMessageList: allPersonalMessage,
         broadcastMessageList: allBroadcastMessage,
+        latestTime: latestMessageTime,
       ),
     );
   }
@@ -315,15 +319,19 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
     }
   }
 
-  Future<void> _onRecordFetchTimeRequested() async {
+  Future<void> _onRecordFetchTimeRequested(DateTime time) async {
+    if (time.year < 2025) {
+      warning('not going to record fetch time as we are in 2025, at least');
+      return;
+    }
+
     final uid = _authRepo.currentUser?.uid;
     if (uid == null) {
       error('failed to update last fetch notice time: uid not found');
       return;
     }
-    final now = DateTime.now();
-    debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
-    await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+    debug('update last fetch notification time to ${time.yyyyMMDDHHMMSS()}');
+    await _storageProvider.updateLastFetchNoticeTime(uid, time).run();
   }
 
   /// The event handler of marking some kind of notice as read or unread.

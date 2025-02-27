@@ -94,8 +94,11 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
             personalMessageCount: pm,
             broadcastMessageCount: bm,
           );
+
           // Update last fetch notification time.
-          context.read<NotificationBloc>().add(NotificationRecordFetchTimeRequested());
+          if (state.latestTime != null) {
+            context.read<NotificationBloc>().add(NotificationRecordFetchTimeRequested(state.latestTime!));
+          }
         }
       },
       child: BlocBuilder<NotificationBloc, NotificationState>(

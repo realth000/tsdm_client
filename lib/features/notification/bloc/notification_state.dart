@@ -24,6 +24,7 @@ class NotificationState with NotificationStateMappable {
     this.noticeList = const [],
     this.personalMessageList = const [],
     this.broadcastMessageList = const [],
+    this.latestTime,
   });
 
   /// Notice tab status.
@@ -37,4 +38,11 @@ class NotificationState with NotificationStateMappable {
 
   /// All fetched [BroadcastMessageV2].
   final List<BroadcastMessageV2> broadcastMessageList;
+
+  /// The timestamp of latest notification.
+  ///
+  /// This field stores the latest timestamp of notification.
+  /// For a complete and consist notification fetch time, use this field for the next fetch since it's just continue
+  /// since the latest fetched notification confirmed by the server side.
+  final DateTime? latestTime;
 }
