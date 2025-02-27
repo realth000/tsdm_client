@@ -334,8 +334,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
   /// back to the presentation layer, it handles by itself.
   Future<void> _onMarkReadRequested(_Emit emit, RecordMark recordMark) async {
     debug('mark notice: $recordMark');
-    final now = DateTime.now();
-    late final int currentUid;
     final task = switch (recordMark) {
       RecordMarkNotice(:final uid, :final nid, alreadyRead: final read) => () {
         final targetIndex = state.noticeList.indexWhere((e) => e.id == nid);
@@ -347,7 +345,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
         final list = state.noticeList.toList();
         list[targetIndex] = target.copyWith(alreadyRead: read);
         emit(state.copyWith(noticeList: list));
-        currentUid = uid;
         return _storageProvider.markNoticeAsRead(uid: uid, nid: nid, read: read);
       }(),
       RecordMarkPersonalMessage(:final uid, :final peerUid, alreadyRead: final read) => () {
@@ -356,7 +353,6 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
         final list = state.personalMessageList.toList();
         list[targetIndex] = target.copyWith(alreadyRead: read);
         emit(state.copyWith(personalMessageList: list));
-        currentUid = uid;
         return _storageProvider.markPersonalMessageAsRead(uid: uid, peerUid: peerUid, read: read);
       }(),
       RecordMarkBroadcastMessage(:final uid, :final timestamp, alreadyRead: final read) => () {
@@ -365,14 +361,10 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
         final list = state.broadcastMessageList.toList();
         list[targetIndex] = target.copyWith(alreadyRead: read);
         emit(state.copyWith(broadcastMessageList: list));
-        currentUid = uid;
         return _storageProvider.markBroadcastMessageAsRead(uid: uid, timestamp: timestamp, read: read);
       }(),
     };
-    await task
-        .andThen(() => TaskEither.fromTask(_storageProvider.updateLastFetchNoticeTime(currentUid, now)))
-        .mapLeft((e) => error('failed to mark read: $e'))
-        .run();
+    await task.run();
   }
 
   Future<void> _onDeleteNotice(_Emit emit, {required int uid, required int nid}) async {
