@@ -163,6 +163,15 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
     });
   }
 
+  /// Restart the ticking process.
+  void restart() {
+    if (state is! AutoNoticeStateTicking) {
+      return;
+    }
+    stop();
+    start(duration);
+  }
+
   /// Stop the auto fetch scheduler.
   void stop() {
     info('stop auto fetch with duration $duration');

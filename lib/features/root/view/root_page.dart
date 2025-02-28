@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/features/checkin/bloc/auto_checkin_bloc.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/root/models/models.dart';
 import 'package:tsdm_client/features/root/stream/root_location_stream.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -67,6 +68,16 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
               return;
             }
             debug('auto fetch got notice');
+          },
+        ),
+        BlocListener<NotificationBloc, NotificationState>(
+          listenWhen: (_, curr) => curr.status == NotificationStatus.loading,
+          listener: (context, _) {
+            final autoSyncState = context.read<AutoNotificationCubit>();
+            if (autoSyncState.state is AutoNoticeStateTicking) {
+              // Restart the auto notification sync process.
+              context.read<AutoNotificationCubit>().restart();
+            }
           },
         ),
       ],
