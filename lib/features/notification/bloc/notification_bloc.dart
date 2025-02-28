@@ -88,7 +88,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
     if (lastFetchTimeEither.isRight()) {
       final datetime = lastFetchTimeEither.unwrap();
       if (datetime != null) {
-        timestamp = datetime.millisecondsSinceEpoch ~/ 1000;
+        timestamp = datetime.millisecondsSinceEpoch ~/ 1000 + 1;
       }
       debug('fetch notification since ${datetime?.yyyyMMDDHHMMSS()}');
     } else {
