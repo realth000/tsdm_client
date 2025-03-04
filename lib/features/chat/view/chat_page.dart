@@ -1,6 +1,7 @@
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/chat/bloc/chat_bloc.dart';
@@ -126,9 +127,13 @@ final class _ChatPageState extends State<ChatPage> {
             listenWhen: (prev, curr) => prev.status != curr.status,
             listener: (context, state) {
               if (state.status == ReplyStatus.success) {
-                showSnackBar(context: context, message: tr.success, avoidKeyboard: true);
+                showSnackBar(context: context, message: tr.success);
+                // Close the reply bar when sent success.
+                if (_replyBarController.showingEditor) {
+                  context.pop();
+                }
               } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
-                showSnackBar(context: context, message: tr.failed(message: state.failedReason!), avoidKeyboard: true);
+                showSnackBar(context: context, message: tr.failed(message: state.failedReason!));
               }
             },
           ),
