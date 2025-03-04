@@ -140,19 +140,27 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       onTapCallback = showEditor;
     }
 
-    return ColoredBox(
-      color: Theme.of(context).colorScheme.surfaceContainerLow,
-      child: Padding(
-        padding: edgeInsetsL12T12R12B12,
-        child: TextField(
-          controller: controller,
-          readOnly: true,
-          enabled: onTapCallback != null,
-          decoration: InputDecoration(
-            hintText: context.t.threadPage.sendReplyHint,
-            border: const UnderlineInputBorder(),
+    return BlocListener<ReplyBloc, ReplyState>(
+      listener: (_, state) {
+        // Clear the outer controller text.
+        if (state.status == ReplyStatus.success) {
+          controller.clear();
+        }
+      },
+      child: ColoredBox(
+        color: Theme.of(context).colorScheme.surfaceContainerLow,
+        child: Padding(
+          padding: edgeInsetsL12T12R12B12,
+          child: TextField(
+            controller: controller,
+            readOnly: true,
+            enabled: onTapCallback != null,
+            decoration: InputDecoration(
+              hintText: context.t.threadPage.sendReplyHint,
+              border: const UnderlineInputBorder(),
+            ),
+            onTap: onTapCallback,
           ),
-          onTap: onTapCallback,
         ),
       ),
     );
@@ -664,7 +672,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
       listener: (context, state) {
         // Clear text one time when user send request succeed.
         if (state.status == ReplyStatus.success && state.needClearText) {
-          _replyRichController.clear();
+          _replyRichController.clearWithoutRequestingFocus();
           // Reset flag because we only want to clear the sent text.
           context.read<ReplyBloc>().add(ReplyResetClearTextStateTriggered());
           _clearTextAndHint();
