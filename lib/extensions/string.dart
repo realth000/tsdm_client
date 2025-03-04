@@ -234,7 +234,7 @@ extension EnhanceModification on String {
 
   /// Prepend host url.
   String prependHost() {
-    if (startsWith('https://') || startsWith('http://')) {
+    if (startsWith('https://') || startsWith('http://') || startsWith('mailto:')) {
       return this;
     }
     return '$baseUrl/$this';
