@@ -37,7 +37,10 @@ final class AutoNoticeStateTicking extends AutoNoticeState with AutoNoticeStateT
 @MappableClass()
 final class AutoNoticeStatePending extends AutoNoticeState with AutoNoticeStatePendingMappable {
   /// Constructor.
-  const AutoNoticeStatePending();
+  const AutoNoticeStatePending(this.startedTime);
+
+  /// Time started pending.
+  final DateTime startedTime;
 }
 
 /// Paused state.

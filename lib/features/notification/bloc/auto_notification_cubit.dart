@@ -69,19 +69,21 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
   AsyncVoidEither _emitDataState(int uid) {
     return AsyncVoidEither(() async {
       debug('auto fetch finished with data');
-      emit(const AutoNoticeStatePending());
-
-      // Code below is synced from _onRecordFetchTimeRequested in
-      // NotificationBloc.
-      //
-      // NotificationBloc only exists in notice page so can not trigger actions
-      // below by adding events to it.
-      final now = DateTime.now();
-      debug('update last fetch notification time to ${now.yyyyMMDDHHMMSS()}');
-      await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
-
+      if (state case AutoNoticeStatePending(:final startedTime)) {
+        // Code below is synced from _onRecordFetchTimeRequested in
+        // NotificationBloc.
+        //
+        // NotificationBloc only exists in notice page so can not trigger actions
+        // below by adding events to it.
+        debug('update last fetch notification time to started time $startedTime');
+        await _storageProvider.updateLastFetchNoticeTime(uid, startedTime).run();
+      } else {
+        // Unreachable.
+        final now = DateTime.now();
+        warning('update last fetch notification time to current time ${now.yyyyMMDDHHMMSS()}');
+        await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
+      }
       emit(AutoNoticeStateTicking(total: duration, remain: _remainingTick));
-
       return rightVoid();
     });
   }
@@ -103,7 +105,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
     debug('running auto fetch...');
 
     // Mark as pending data.
-    emit(const AutoNoticeStatePending());
+    emit(AutoNoticeStatePending(DateTime.now()));
 
     final uid = _authenticationRepository.currentUser?.uid;
     if (uid == null) {
