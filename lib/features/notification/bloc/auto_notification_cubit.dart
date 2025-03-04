@@ -81,6 +81,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
         // Unreachable.
         final now = DateTime.now();
         warning('update last fetch notification time to current time ${now.yyyyMMDDHHMMSS()}');
+        warning('current state: $state');
         await _storageProvider.updateLastFetchNoticeTime(uid, now).run();
       }
       emit(AutoNoticeStateTicking(total: duration, remain: _remainingTick));
@@ -122,6 +123,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
         lastFetchTime = t.millisecondsSinceEpoch ~/ 1000;
       }
     }
+    debug('auto fetch since $lastFetchTime');
     await _notificationRepository
         .fetchNotificationV2(uid: uid, timestamp: lastFetchTime)
         .andThen(() => _emitDataState(uid))
@@ -153,6 +155,9 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
       _timer?.cancel();
     }
     _timer = Timer.periodic(const Duration(seconds: 1), (_) async {
+      if (state is AutoNoticeStatePending) {
+        return;
+      }
       _remainingTick -= const Duration(seconds: 1);
       emit(AutoNoticeStateTicking(total: this.duration, remain: _remainingTick));
       if (_remainingTick.inSeconds > 0) {
