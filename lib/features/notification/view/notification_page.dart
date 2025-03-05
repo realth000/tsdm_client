@@ -81,7 +81,6 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
   Widget build(BuildContext context) {
     final tr = context.t.noticePage;
     return BlocListener<NotificationBloc, NotificationState>(
-      listenWhen: (prev, curr) => prev.status != curr.status,
       listener: (context, state) {
         if (state.status == NotificationStatus.failure) {
           showFailedToLoadSnackBar(context);
@@ -94,11 +93,6 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
             personalMessageCount: pm,
             broadcastMessageCount: bm,
           );
-
-          // Update last fetch notification time.
-          if (state.latestTime != null) {
-            context.read<NotificationBloc>().add(NotificationRecordFetchTimeRequested(state.latestTime!));
-          }
         }
       },
       child: BlocBuilder<NotificationBloc, NotificationState>(
