@@ -892,7 +892,7 @@ final class _Muncher with LoggerMixin {
       }(), // Unreachable but handle it.
     };
 
-    return [TextSpan(text: leading), ...ret, emptySpan];
+    return [TextSpan(text: leading), ...ret];
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
