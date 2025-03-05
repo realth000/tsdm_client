@@ -120,7 +120,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
     if (lastFetchTimeEither.isRight()) {
       final t = lastFetchTimeEither.unwrap();
       if (t != null) {
-        lastFetchTime = t.millisecondsSinceEpoch ~/ 1000;
+        lastFetchTime = t.millisecondsSinceEpoch ~/ 1000 + 1;
       }
     }
     debug('auto fetch since $lastFetchTime');
