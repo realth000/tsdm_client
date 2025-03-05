@@ -60,16 +60,6 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
             }
           },
         ),
-        BlocListener<AutoNotificationCubit, AutoNoticeState>(
-          listenWhen: (prev, curr) => curr is AutoNoticeStatePending && prev != curr,
-          listener: (context, state) {
-            // Add this check to make dart-analyzer happy.
-            if (state is! AutoNoticeStatePending) {
-              return;
-            }
-            debug('auto fetch got notice');
-          },
-        ),
         BlocListener<NotificationBloc, NotificationState>(
           listener: (context, state) {
             if (state.status == NotificationStatus.loading) {
