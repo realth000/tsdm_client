@@ -769,10 +769,17 @@ final class _Muncher with LoggerMixin {
     if (url.isUserSpaceUrl && !element.innerText.contains('@')) {
       content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
     } else {
+      final IconData prefixIcon;
+      if (url.startsWith('mailto:')) {
+        prefixIcon = Icons.email_outlined;
+      } else {
+        prefixIcon = Icons.link;
+      }
+
       content = Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.link, size: state.fontSizeStack.lastOrNull ?? 18, color: Theme.of(context).colorScheme.primary),
+          Icon(prefixIcon, size: state.fontSizeStack.lastOrNull ?? 18, color: Theme.of(context).colorScheme.primary),
           const SizedBox(width: 2),
         ],
       );
