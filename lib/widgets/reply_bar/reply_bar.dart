@@ -145,6 +145,8 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
         // Clear the outer controller text.
         if (state.status == ReplyStatus.success) {
           controller.clear();
+          widget.controller._hintText = null;
+          widget.controller._replyAction = null;
         }
       },
       child: ColoredBox(
