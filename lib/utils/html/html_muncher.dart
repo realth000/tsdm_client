@@ -582,7 +582,9 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildBlockCode(uh.Element element) {
-    final text = element.querySelector('div')?.innerText.trim() ?? '';
+    // Usually each line in the block code is ended with `<br>` tag, but rarely it does not.
+    // To ensure each line is wrapped correctly, extract each line (contents in each `<div>`) and manually place them.
+    final text = element.querySelectorAll('div ol li').map((e) => e.innerText.trim()).join('\n');
     state
       ..headingBrNodePassed = true
       ..elevation += _elevationStep;
