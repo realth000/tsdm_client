@@ -112,47 +112,53 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
             NotificationStatus.success => TabBarView(
               controller: _tabController,
               children: [
-                EasyRefresh(
+                EasyRefresh.builder(
                   controller: _noticeRefreshController,
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
-                  child:
-                      n.isEmpty
-                          ? _buildEmptyBody(context)
-                          : ListView.separated(
-                            padding: edgeInsetsL12T4R12B4,
-                            itemCount: n.length,
-                            itemBuilder: (_, idx) => NoticeCardV2(n.elementAt(idx)),
-                            separatorBuilder: (_, __) => sizedBoxW4H4,
-                          ),
+                  childBuilder:
+                      (context, physics) =>
+                          n.isEmpty
+                              ? _buildEmptyBody(context)
+                              : ListView.separated(
+                                physics: physics,
+                                padding: edgeInsetsL12T4R12B4,
+                                itemCount: n.length,
+                                itemBuilder: (_, idx) => NoticeCardV2(n.elementAt(idx)),
+                                separatorBuilder: (_, __) => sizedBoxW4H4,
+                              ),
                 ),
-                EasyRefresh(
+                EasyRefresh.builder(
                   controller: _personalMessageRefreshController,
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
-                  child:
-                      pm.isEmpty
-                          ? _buildEmptyBody(context)
-                          : ListView.separated(
-                            padding: edgeInsetsL12T4R12B4,
-                            itemCount: pm.length,
-                            itemBuilder: (_, idx) => PersonalMessageCardV2(pm.elementAt(idx)),
-                            separatorBuilder: (_, __) => sizedBoxW4H4,
-                          ),
+                  childBuilder:
+                      (context, physics) =>
+                          pm.isEmpty
+                              ? _buildEmptyBody(context)
+                              : ListView.separated(
+                                physics: physics,
+                                padding: edgeInsetsL12T4R12B4,
+                                itemCount: pm.length,
+                                itemBuilder: (_, idx) => PersonalMessageCardV2(pm.elementAt(idx)),
+                                separatorBuilder: (_, __) => sizedBoxW4H4,
+                              ),
                 ),
-                EasyRefresh(
+                EasyRefresh.builder(
                   controller: _broadcastMessageRefreshController,
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
-                  child:
-                      bm.isEmpty
-                          ? _buildEmptyBody(context)
-                          : ListView.separated(
-                            padding: edgeInsetsL12T4R12B4,
-                            itemCount: bm.length,
-                            itemBuilder: (_, idx) => BroadcastMessageCardV2(bm.elementAt(idx)),
-                            separatorBuilder: (_, __) => sizedBoxW4H4,
-                          ),
+                  childBuilder:
+                      (context, physics) =>
+                          bm.isEmpty
+                              ? _buildEmptyBody(context)
+                              : ListView.separated(
+                                physics: physics,
+                                padding: edgeInsetsL12T4R12B4,
+                                itemCount: bm.length,
+                                itemBuilder: (_, idx) => BroadcastMessageCardV2(bm.elementAt(idx)),
+                                separatorBuilder: (_, __) => sizedBoxW4H4,
+                              ),
                 ),
               ],
             ),
