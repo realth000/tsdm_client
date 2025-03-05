@@ -212,6 +212,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     final threadLink = document.querySelector('head > link')?.attributes['href'];
     final tid = Uri.parse(threadLink ?? '').queryParameters['tid'];
 
+    final threadSoftClosed = document.querySelector('div#postlist h1.ts img[title="关闭"]') != null;
     final threadClosed = document.querySelector('form#fastpostform') == null;
     final threadDataNode = document.querySelector('div#postlist');
     final postList = Post.buildListFromThreadDataNode(threadDataNode, document.currentPage() ?? 1);
@@ -319,6 +320,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       havePermission: havePermission,
       permissionDeniedMessage: permissionDeniedMessage,
       needLogin: needLogin,
+      threadSoftClosed: threadSoftClosed,
       threadClosed: threadClosed,
       postList: [...state.postList, ...postList],
       threadType: threadType,

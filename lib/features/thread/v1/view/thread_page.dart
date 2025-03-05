@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -135,6 +136,8 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
   }
 
   Widget _buildContent(BuildContext context, ThreadState state) {
+    final tr = context.t.threadPage;
+
     return Column(
       children: [
         Expanded(
@@ -154,6 +157,25 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             latestModAct: state.latestModAct,
           ),
         ),
+        if (state.threadSoftClosed && !state.threadClosed)
+          ColoredBox(
+            color: Theme.of(context).colorScheme.secondaryContainer,
+            child: Padding(
+              padding: edgeInsetsL12T4R12B4,
+              child: Row(
+                children: [
+                  Icon(Icons.lock_outline, size: 16, color: Theme.of(context).colorScheme.onSecondaryContainer),
+                  sizedBoxW4H4,
+                  Expanded(
+                    child: Text(
+                      tr.softCloseHint,
+                      style: TextStyle(color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
         _buildReplyBar(context, state),
       ],
     );

@@ -365,7 +365,8 @@
     "draft": "Draft",
     "operationLog": {
       "title": "Operation Log"
-    }
+    },
+    "softCloseHint": "Thread is closed, be attention before posting"
   },
   "noticePage": {
     "title": "Notifications",

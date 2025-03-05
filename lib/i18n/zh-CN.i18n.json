@@ -365,7 +365,8 @@
     "draft": "草稿",
     "operationLog": {
       "title": "操作记录"
-    }
+    },
+    "softCloseHint": "帖子已关闭，回复前请注意"
   },
   "noticePage": {
     "title": "通知",

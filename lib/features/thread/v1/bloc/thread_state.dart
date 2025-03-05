@@ -32,6 +32,7 @@ class ThreadState with ThreadStateMappable {
     this.havePermission = true,
     this.permissionDeniedMessage,
     this.needLogin = false,
+    this.threadSoftClosed = false,
     this.threadClosed = false,
     this.postList = const [],
     this.replyParameters,
@@ -98,6 +99,15 @@ class ThreadState with ThreadStateMappable {
   ///
   /// Only works when no user logged.
   final bool needLogin;
+
+  /// A soft closed state only means the thread is locked.
+  ///
+  /// Like soft lock, soft closed is a state where the thread is closed but the user may still has write permission
+  /// (For example, user is the moderator of current subreddit).
+  ///
+  /// In this state we shall keep the post functionality as the prerequisites are still satisfied, but give a tip that
+  /// the thread is closed and maybe it's not proper to post again.
+  final bool threadSoftClosed;
 
   /// Indicating current thread is closed or not.
   final bool threadClosed;
