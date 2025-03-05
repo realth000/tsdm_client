@@ -140,7 +140,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       onTapCallback = showEditor;
     }
 
-    return BlocListener<ReplyBloc, ReplyState>(
+    return BlocConsumer<ReplyBloc, ReplyState>(
       listener: (_, state) {
         // Clear the outer controller text.
         if (state.status == ReplyStatus.success) {
@@ -149,22 +149,27 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
           widget.controller._replyAction = null;
         }
       },
-      child: ColoredBox(
-        color: Theme.of(context).colorScheme.surfaceContainerLow,
-        child: Padding(
-          padding: edgeInsetsL12T12R12B12,
-          child: TextField(
-            controller: controller,
-            readOnly: true,
-            enabled: onTapCallback != null,
-            decoration: InputDecoration(
-              hintText: context.t.threadPage.sendReplyHint,
-              border: const UnderlineInputBorder(),
+      buildWhen: (prev, curr) => prev.status != curr.status,
+      builder: (context, state) {
+        final loading = state.status == ReplyStatus.loading;
+        return ColoredBox(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          child: Padding(
+            padding: edgeInsetsL12T12R12B12,
+            child: TextField(
+              controller: controller,
+              readOnly: true,
+              enabled: onTapCallback != null,
+              decoration: InputDecoration(
+                hintText: context.t.threadPage.sendReplyHint,
+                border: const UnderlineInputBorder(),
+                suffix: loading ? sizedCircularProgressIndicator : null,
+              ),
+              onTap: onTapCallback,
             ),
-            onTap: onTapCallback,
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
