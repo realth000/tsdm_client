@@ -85,23 +85,19 @@ class OperationLogCard extends StatelessWidget {
       child: Card(
         margin: EdgeInsets.zero,
         shape: const OutlineInputBorder(borderSide: BorderSide.none),
-        child: InkWell(
-          onTap: () async => _showOperationLogDialog(context, tid),
-          child: Row(
-            children: [
-              sizedBoxW12H12,
-              Icon(Icons.manage_history_outlined, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
-              Expanded(
-                child: Padding(
-                  padding: edgeInsetsL12T4R12B4,
-                  child: Text(
-                    latestAction,
-                    style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant),
-                    overflow: TextOverflow.ellipsis,
-                  ),
+        child: Padding(
+          padding: edgeInsetsL12T4R12B4,
+          child: InkWell(
+            onTap: () async => _showOperationLogDialog(context, tid),
+            child: Row(
+              children: [
+                Icon(Icons.manage_history_outlined, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+                sizedBoxW8H8,
+                Expanded(
+                  child: Text(latestAction, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
