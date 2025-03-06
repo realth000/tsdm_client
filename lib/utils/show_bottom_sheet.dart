@@ -66,71 +66,69 @@ Future<void> showImageActionBottomSheet({
     context: context,
     builder: (context) {
       final tr = context.t.imageBottomSheet;
-      return Scaffold(
-        appBar: AppBar(
-          title: Text(tr.title, style: Theme.of(context).textTheme.titleMedium),
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-        ),
-        body: Column(
-          children: [
-            Align(
-              child: ColoredBox(
-                color: Theme.of(context).colorScheme.surfaceContainerLow,
-                child: ConstrainedBox(
-                  constraints: const BoxConstraints(maxHeight: 100),
-                  child: Padding(padding: edgeInsetsT4B4, child: NetworkIndicatorImage(imageUrl)),
-                ),
+
+      return Column(
+        children: [
+          sizedBoxW12H12,
+          Center(child: Text(tr.title, style: Theme.of(context).textTheme.titleMedium)),
+          sizedBoxW12H12,
+          Align(
+            child: ColoredBox(
+              color: Theme.of(context).colorScheme.surfaceContainerLow,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxHeight: 100),
+                child: Padding(padding: edgeInsetsT4B4, child: NetworkIndicatorImage(imageUrl)),
               ),
             ),
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
+          ),
+          sizedBoxW12H12,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  ListTile(
+                    leading: const Icon(Icons.fullscreen_outlined),
+                    title: Text(tr.checkDetail),
+                    onTap: () async {
+                      await context.pushNamed(ScreenPaths.imageDetail, pathParameters: {'imageUrl': imageUrl});
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.copy_outlined),
+                    title: Text(tr.copyImageUrl),
+                    subtitle: Text(imageUrl),
+                    onTap: () async {
+                      await copyToClipboard(context, imageUrl);
+                      if (context.mounted) {
+                        context.pop();
+                      }
+                    },
+                  ),
+                  ListTile(
+                    leading: const Icon(Icons.refresh_outlined),
+                    title: Text(tr.reloadImage),
+                    onTap: () => context.read<ImageCacheTriggerCubit>().updateImageCache(imageUrl, force: true),
+                  ),
+                  if (hrefUrl != null)
                     ListTile(
-                      leading: const Icon(Icons.fullscreen_outlined),
-                      title: Text(tr.checkDetail),
+                      leading: const Icon(Icons.link_outlined),
+                      title: Text(tr.openLink),
+                      subtitle: Text(hrefUrl),
                       onTap: () async {
-                        await context.pushNamed(ScreenPaths.imageDetail, pathParameters: {'imageUrl': imageUrl});
+                        await context.dispatchAsUrl(hrefUrl);
                         if (context.mounted) {
                           context.pop();
                         }
                       },
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.copy_outlined),
-                      title: Text(tr.copyImageUrl),
-                      subtitle: Text(imageUrl),
-                      onTap: () async {
-                        await copyToClipboard(context, imageUrl);
-                        if (context.mounted) {
-                          context.pop();
-                        }
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.refresh_outlined),
-                      title: Text(tr.reloadImage),
-                      onTap: () => context.read<ImageCacheTriggerCubit>().updateImageCache(imageUrl, force: true),
-                    ),
-                    if (hrefUrl != null)
-                      ListTile(
-                        leading: const Icon(Icons.link_outlined),
-                        title: Text(tr.openLink),
-                        subtitle: Text(hrefUrl),
-                        onTap: () async {
-                          await context.dispatchAsUrl(hrefUrl);
-                          if (context.mounted) {
-                            context.pop();
-                          }
-                        },
-                      ),
-                  ],
-                ),
+                ],
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     },
   );
