@@ -73,7 +73,7 @@ class _UserBriefProfileDialog extends StatelessWidget {
                     ),
               ),
               IconButton(
-                icon: const Icon(Icons.info_outline),
+                icon: const Icon(Icons.person_outlined),
                 onPressed: () async => context.dispatchAsUrl(userSpaceUrl),
               ),
             ],
