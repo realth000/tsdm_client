@@ -20,6 +20,7 @@ import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/view/broadcast_message_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_page.dart';
+import 'package:tsdm_client/features/notification/view/notification_search_page.dart';
 import 'package:tsdm_client/features/packet/view/packet_detail_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
@@ -210,6 +211,11 @@ final router = GoRouter(
         final noticeTypeIndex = state.uri.queryParameters['noticeType']!.parseToInt()!;
         return NoticeDetailPage(url: target, noticeType: NoticeType.values[noticeTypeIndex]);
       },
+    ),
+    AppRoute(
+      path: ScreenPaths.noticeSearch,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const NotificationSearchPage(),
     ),
     AppRoute(path: ScreenPaths.myThread, parentNavigatorKey: _rootRouteKey, builder: (_) => const MyThreadPage()),
     AppRoute(

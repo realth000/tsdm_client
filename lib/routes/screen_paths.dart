@@ -106,6 +106,9 @@ class ScreenPaths {
   /// Show all notice and private messages on current user.
   static const String notice = '/notice';
 
+  /// Search notice.
+  static const String noticeSearch = '/noticeSearch';
+
   /// Reply page.
   ///
   /// Reply to a notice or message.

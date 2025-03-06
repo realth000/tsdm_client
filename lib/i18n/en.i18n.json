@@ -411,6 +411,19 @@
       "copyRawContent": "Copy raw content"
     }
   },
+  "noticeSearchPage": {
+    "title": "Search notice",
+    "filter": "Filter",
+    "time": "Time",
+    "user": "User",
+    "text": "Content",
+    "clearAll": "Clear all",
+    "type": {
+      "notice": "Notice",
+      "bm": "Broadcast message",
+      "pm": "Personal message"
+    }
+  },
   "searchPage": {
     "title": "Search",
     "noThreadFound": "No thread found",

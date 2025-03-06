@@ -411,6 +411,19 @@
       "copyRawContent": "拷貝原始內容"
     }
   },
+  "noticeSearchPage": {
+    "title": "搜尋訊息",
+    "filter": "篩選",
+    "time": "時間",
+    "user": "使用者",
+    "text": "文字內容",
+    "clearAll": "清除全部",
+    "type": {
+      "notice": "提醒",
+      "bm": "私人訊息",
+      "pm": "公用訊息"
+    }
+  },
   "searchPage": {
     "title": "搜尋",
     "noThreadFound": "結果為空",

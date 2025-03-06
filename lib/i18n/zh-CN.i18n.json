@@ -411,6 +411,19 @@
       "copyRawContent": "拷贝原始内容"
     }
   },
+  "noticeSearchPage": {
+    "title": "搜索消息",
+    "filter": "筛选",
+    "time": "时间",
+    "user": "用户",
+    "text": "文本内容",
+    "clearAll": "清除全部",
+    "type": {
+      "notice": "提醒",
+      "bm": "私人消息",
+      "pm": "公共消息"
+    }
+  },
   "searchPage": {
     "title": "搜索",
     "noThreadFound": "结果为空",
