@@ -704,7 +704,9 @@
       "height": "高度",
       "errorInvalidNumber": "無效的數字",
       "autoFillSize": "自動填入大小",
-      "autoFillSizeDetail": "填寫圖片的實際大小"
+      "autoFillSizeDetail": "填寫圖片的實際大小",
+      "auto": "自動",
+      "autoSingleDirectionSize": "如果想根據圖片大小比例自動設定圖片的長或寬，勾選長或寬右邊的方框"
     },
     "userMention": {
       "title": "提醒使用者（@）",

@@ -704,7 +704,9 @@
       "height": "Height",
       "errorInvalidNumber": "Invalid number",
       "autoFillSize": "Auto fill size",
-      "autoFillSizeDetail": "Fill size with image real size"
+      "autoFillSizeDetail": "Fill size with image real size",
+      "auto": "Auto",
+      "autoSingleDirectionSize": "If would like a auto decided width or height according to image size, check boxes right to width or height above."
     },
     "userMention": {
       "title": "Mention Someone",

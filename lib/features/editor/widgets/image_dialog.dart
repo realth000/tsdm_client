@@ -14,6 +14,7 @@ import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_pr
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
+import 'package:tsdm_client/widgets/tips.dart';
 
 /// Show a picture dialog to add picture into editor.
 Future<BBCodeImageInfo?> showImagePicker(BuildContext context, {String? url, int? width, int? height}) async =>
@@ -71,6 +72,20 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
   ///
   /// So fill with original image size is fine.
   bool autoFillSize = true;
+
+  /// Automatically determine the width.
+  ///
+  /// Fill a zero value in bbcode.
+  ///
+  /// This can not be true when [autoScaleHeight] is true.
+  bool autoScaleWidth = false;
+
+  /// Automatically determine the height.
+  ///
+  /// Fill a zero value in bbcode.
+  ///
+  /// This can not be true when [autoScaleWidth] is true.
+  bool autoScaleHeight = false;
 
   /// Flag indicating in auto-fill-size progress.
   bool fillingSize = false;
@@ -284,41 +299,94 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
                 // _buildSmmsField(context),
               ],
             ),
-            TextFormField(
-              controller: widthController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
-              decoration: InputDecoration(
-                prefixIcon: const Icon(Icons.horizontal_distribute_outlined),
-                labelText: tr.width,
-              ),
-              validator: (v) {
-                if (v == null || v.trim().isEmpty) {
-                  return tr.errorEmpty;
-                }
-                final vv = double.tryParse(v);
-                if (vv == null || vv <= 0) {
-                  return tr.errorInvalidNumber;
-                }
-                return null;
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: widthController,
+                    enabled: !autoScaleWidth,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
+                    decoration: InputDecoration(
+                      prefixIcon: const Icon(Icons.horizontal_distribute_outlined),
+                      labelText: tr.width,
+                    ),
+                    validator: (v) {
+                      if (autoScaleWidth) {
+                        return null;
+                      }
+                      if (v == null || v.trim().isEmpty) {
+                        return tr.errorEmpty;
+                      }
+                      final vv = double.tryParse(v);
+                      if (vv == null || vv <= 0) {
+                        return tr.errorInvalidNumber;
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Checkbox(
+                  value: autoScaleWidth,
+                  onChanged: (v) {
+                    if (v == null) {
+                      return;
+                    }
+
+                    setState(() {
+                      if (autoScaleHeight) {
+                        autoScaleHeight = false;
+                      }
+                      autoScaleWidth = v;
+                    });
+                  },
+                ),
+                Text(tr.auto),
+              ],
             ),
-            TextFormField(
-              controller: heightController,
-              keyboardType: TextInputType.number,
-              inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
-              decoration: InputDecoration(prefixIcon: const Icon(Icons.add), labelText: tr.height),
-              validator: (v) {
-                if (v == null || v.trim().isEmpty) {
-                  return tr.errorEmpty;
-                }
-                final vv = double.tryParse(v);
-                if (vv == null || vv <= 0) {
-                  return tr.errorInvalidNumber;
-                }
-                return null;
-              },
+            Row(
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    controller: heightController,
+                    enabled: !autoScaleHeight,
+                    keyboardType: TextInputType.number,
+                    inputFormatters: [FilteringTextInputFormatter.allow(RegExp('[0-9]+'))],
+                    decoration: InputDecoration(prefixIcon: const Icon(Icons.add), labelText: tr.height),
+                    validator: (v) {
+                      if (autoScaleHeight) {
+                        return null;
+                      }
+                      if (v == null || v.trim().isEmpty) {
+                        return tr.errorEmpty;
+                      }
+                      final vv = double.tryParse(v);
+                      if (vv == null || vv <= 0) {
+                        return tr.errorInvalidNumber;
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                Checkbox(
+                  value: autoScaleHeight,
+                  onChanged: (v) {
+                    if (v == null) {
+                      return;
+                    }
+
+                    setState(() {
+                      if (autoScaleWidth) {
+                        autoScaleWidth = false;
+                      }
+                      autoScaleHeight = v;
+                    });
+                  },
+                ),
+                Text(tr.auto),
+              ],
             ),
+            Tips(tr.autoSingleDirectionSize),
             SectionSwitchListTile(
               title: Text(tr.autoFillSize),
               subtitle: Text(tr.autoFillSizeDetail),
@@ -342,12 +410,16 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
               return;
             }
 
-            final width = int.parse(widthController.text);
-            final height = int.parse(heightController.text);
-            assert(width != 0, 'image width should >= zero');
-            assert(height != 0, 'image height should >= zero');
+            final width = int.tryParse(widthController.text);
+            final height = int.tryParse(heightController.text);
 
-            context.pop(BBCodeImageInfo(urlController.text, width: width, height: height));
+            context.pop(
+              BBCodeImageInfo(
+                urlController.text,
+                width: autoScaleWidth ? 0 : width,
+                height: autoScaleHeight ? 0 : height,
+              ),
+            );
           },
         ),
       ],

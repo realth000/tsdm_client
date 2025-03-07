@@ -60,16 +60,35 @@ class RichEditor extends StatelessWidget {
       autoFocus: autoFocus,
       scrollController: scrollController,
       imageProvider: (context, url, width, height) {
+        // Requirements:
+        //
+        // 1. If width is not larger than max width, keep the original width and height.
+        // 2. If width is larger than max width, set width to max width and scale height down to the same ratio.
+        // 3. Width and height can not be 0 at the same time.
+
         final w = width?.toDouble();
         final h = height?.toDouble();
         double? maxHeight;
-        if (w != null && h != null && w > _imageMaxWidth) {
-          maxHeight = h * (_imageMaxWidth / w);
+        if (w != null && h != null) {
+          if (w == 0) {
+            // Auto width, do not limit max height.
+            maxHeight = h;
+          } else if (w > _imageMaxWidth && h != 0) {
+            // Width too large, it will be set to max allowed width, scale down the height.
+            maxHeight = h * (_imageMaxWidth / w);
+          } else if (h == 0) {
+            // Auto height.
+            maxHeight = double.infinity;
+          } else {
+            // Normal height.
+            maxHeight = h;
+          }
         }
+
         return CachedImage(
           url,
-          width: w,
-          height: maxHeight == null ? h : null,
+          width: (w == null || w <= 0) ? null : w,
+          height: maxHeight == null ? maxHeight : null,
           maxWidth: _imageMaxWidth,
           maxHeight: maxHeight,
         );
