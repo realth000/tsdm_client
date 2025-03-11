@@ -4,3 +4,6 @@
 [submodule "packages/flutter_avif"]
 	path = packages/flutter_avif
 	url = https://github.com/realth000/flutter_avif.git
+[submodule "packages/dart_bbcode_parser"]
+	path = packages/dart_bbcode_parser
+	url = https://github.com/realth000/dart_bbcode_parser.git

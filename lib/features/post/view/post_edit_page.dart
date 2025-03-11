@@ -1,4 +1,5 @@
 import 'package:chat_bottom_container/chat_bottom_container.dart';
+import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -11,6 +12,7 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
+import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/post/bloc/post_edit_bloc.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
@@ -629,7 +631,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             if (!initialized) {
               final data = state.content?.data;
               if (data != null) {
-                bbcodeController.setDocumentFromRawText(data);
+                // bbcodeController.setDocumentFromRawText(data);
+                final delta = parseBBCodeTextToDelta(data);
+                bbcodeController.setDocumentFromDelta(delta);
               }
               initialized = true;
             }
