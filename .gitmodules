@@ -9,4 +9,4 @@
 	url = https://github.com/realth000/dart_bbcode_parser.git
 [submodule "packages/dart_bbcode_web_colors"]
 	path = packages/dart_bbcode_web_colors
-	url = git@github.com:realth000/dart_bbcode_web_colors.git
+	url = https://github.com/realth000/dart_bbcode_web_colors.git
