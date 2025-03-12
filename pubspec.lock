@@ -312,6 +312,13 @@ packages:
       relative: true
     source: path
     version: "0.1.0"
+  dart_bbcode_web_colors:
+    dependency: "direct main"
+    description:
+      path: "packages/dart_bbcode_web_colors"
+      relative: true
+    source: path
+    version: "1.0.0"
   dart_mappable:
     dependency: "direct main"
     description:
@@ -336,6 +343,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.8.3"
+  dart_quill_delta_simplify:
+    dependency: transitive
+    description:
+      name: dart_quill_delta_simplify
+      sha256: "8ea335d1d9897ee7a5a43c3634fa887eef5080a5c9383e48def0599cdfc1f0cf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.8.7"
   dart_style:
     dependency: transitive
     description:

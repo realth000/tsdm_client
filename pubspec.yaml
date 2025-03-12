@@ -21,6 +21,8 @@ dependencies:
   cookie_jar: ^4.0.8
   dart_bbcode_parser:
     path: ./packages/dart_bbcode_parser
+  dart_bbcode_web_colors:
+    path: ./packages/dart_bbcode_web_colors
   dart_mappable: ^4.4.0
   dio: ^5.8.0+1
   dio_brotli_transformer: ^2.0.0

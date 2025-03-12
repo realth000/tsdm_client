@@ -1,9 +1,7 @@
 import 'dart:ui';
 
+import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/utils/html/web_colors.dart';
-
-final _colorRe = RegExp(r'^(#)?[0-9a-fA-F]{1,6}$');
 
 /// Parse a [String] of css to [CssTypes].
 ///
@@ -59,45 +57,4 @@ FontWeight? _parseFontWeight(String data) {
   }
 
   return (cssPart.substring(0, separateIndex), cssPart.substring(separateIndex + 1));
-}
-
-/// Extension to convert nullable string to [Color].
-extension StringToColorExt on String? {
-  /// Parse nullable color string to [Color].
-  ///
-  /// * If `this` is null, return null.
-  /// * Parse `this` in style `#COLOR_VALUE` or `COLOR_NAME` where COLOR_NAME is
-  ///   hit in [WebColors].
-  Color? toColor() {
-    int? colorValue;
-    // Parse as color value.
-    if (this != null && _colorRe.hasMatch(this!)) {
-      if (this!.startsWith('#')) {
-        if (this!.length == 4) {
-          // #abc format short hand for #aabbcc.
-          colorValue = int.tryParse(
-            '${this![1]}${this![1]}${this![2]}'
-            '${this![2]}${this![3]}${this![3]}',
-            radix: 16,
-          );
-        } else {
-          // Normal #aabbcc format.
-          colorValue = int.tryParse(this!.substring(1), radix: 16);
-        }
-      } else {
-        colorValue = int.tryParse(this!, radix: 16);
-      }
-    }
-    if (colorValue != null) {
-      colorValue += 0xFF000000;
-      return Color(colorValue);
-    } else {
-      // If color not in format #aabcc, try parse as color name.
-      final webColor = WebColors.fromString(this);
-      if (webColor.isValid) {
-        return webColor.color;
-      }
-    }
-    return null;
-  }
 }
