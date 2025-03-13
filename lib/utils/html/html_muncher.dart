@@ -766,9 +766,14 @@ final class _Muncher with LoggerMixin {
       // Do NOT show url prefix.
       return ret;
     }
-    final Widget content;
-    if (url.isUserSpaceUrl && !element.innerText.contains('@')) {
-      content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
+    final Widget? content;
+    if (url.isUserSpaceUrl) {
+      if (element.innerText.contains('@')) {
+        // Text already has the label, do not add duplicate one.
+        content = null;
+      } else {
+        content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
+      }
     } else {
       final IconData prefixIcon;
       if (url.startsWith('mailto:')) {
@@ -789,7 +794,8 @@ final class _Muncher with LoggerMixin {
     return [
       TextSpan(
         children: [
-          WidgetSpan(
+          if (content != null)
+            WidgetSpan(
             child: MouseRegion(
               cursor: SystemMouseCursors.click,
               child: GestureDetector(onTap: () async => context.dispatchAsUrl(url), child: content),
