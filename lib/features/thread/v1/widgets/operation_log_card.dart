@@ -80,24 +80,22 @@ class OperationLogCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: edgeInsetsL12T4R12B4,
-      child: Card(
-        margin: EdgeInsets.zero,
-        shape: const OutlineInputBorder(borderSide: BorderSide.none),
+    return Card(
+      margin: EdgeInsets.zero,
+      clipBehavior: Clip.hardEdge,
+      shape: const OutlineInputBorder(borderSide: BorderSide.none),
+      child: InkWell(
+        onTap: () async => _showOperationLogDialog(context, tid),
         child: Padding(
           padding: edgeInsetsL12T4R12B4,
-          child: InkWell(
-            onTap: () async => _showOperationLogDialog(context, tid),
-            child: Row(
-              children: [
-                Icon(Icons.manage_history_outlined, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
-                sizedBoxW8H8,
-                Expanded(
-                  child: Text(latestAction, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
-                ),
-              ],
-            ),
+          child: Row(
+            children: [
+              Icon(Icons.manage_history_outlined, size: 16, color: Theme.of(context).colorScheme.onSurfaceVariant),
+              sizedBoxW8H8,
+              Expanded(
+                child: Text(latestAction, style: TextStyle(color: Theme.of(context).colorScheme.onSurfaceVariant)),
+              ),
+            ],
           ),
         ),
       ),
