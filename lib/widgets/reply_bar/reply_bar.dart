@@ -651,7 +651,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     _replyFocusNode.dispose();
     _authStatusSub.cancel();
     final text = _replyRichController.toBBCode();
-    if (text.trim().isNotEmpty && _canSyncBBCodeOnDispose) {
+    if (_canSyncBBCodeOnDispose) {
       // Only save text that intend to reply when that text is not empty.
       //
       // Only send text to outside controller if could do so: In some situation
