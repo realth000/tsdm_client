@@ -143,7 +143,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
         Expanded(
           child: PostList(
             forumID: state.fid,
-            threadID: widget.threadID,
+            threadID: state.tid ?? widget.threadID,
             title: state.title ?? widget.title,
             threadType: state.threadType ?? widget.threadType,
             pageNumber: context.read<JumpPageCubit>().state.currentPage,
