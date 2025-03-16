@@ -22,9 +22,15 @@ CssTypes? parseCssString(String css) {
       case 'font-weight':
         fontWeight = _parseFontWeight(value);
       case 'color':
-        color = value.toColor();
+        color = switch (value.toColor()) {
+          null => null,
+          final int colorValue => Color(colorValue),
+        };
       case 'background-color':
-        backgroundColor = value.toColor();
+        backgroundColor = switch (value.toColor()) {
+          null => null,
+          final int colorValue => Color(colorValue),
+        };
       default:
         continue;
     }

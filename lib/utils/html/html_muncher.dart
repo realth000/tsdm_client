@@ -1124,9 +1124,9 @@ final class _Muncher with LoggerMixin {
     final color = attr.toColor();
     if (color != null) {
       if (Theme.of(context).brightness == Brightness.dark) {
-        state.colorStack.add(color.adaptiveDark());
+        state.colorStack.add(Color(color).adaptiveDark());
       } else {
-        state.colorStack.add(color);
+        state.colorStack.add(Color(color));
       }
       return true;
     }
