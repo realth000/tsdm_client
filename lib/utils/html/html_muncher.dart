@@ -365,6 +365,7 @@ final class _Muncher with LoggerMixin {
             'iframe' => _buildIframe(node),
             'table' when node.classes.contains('cgtl') => _buildNewcomerReport(node),
             'table' => _buildTable(node),
+            'sup' => _buildSup(node),
             'ignore_js_op' ||
             'table' ||
             'tbody' ||
@@ -799,11 +800,11 @@ final class _Muncher with LoggerMixin {
         children: [
           if (content != null)
             WidgetSpan(
-            child: MouseRegion(
-              cursor: SystemMouseCursors.click,
-              child: GestureDetector(onTap: () async => context.dispatchAsUrl(url), child: content),
+              child: MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(onTap: () async => context.dispatchAsUrl(url), child: content),
+              ),
             ),
-          ),
           ...ret,
         ],
       ),
@@ -1111,6 +1112,12 @@ final class _Muncher with LoggerMixin {
           ),
         ),
       ),
+    ];
+  }
+
+  List<InlineSpan> _buildSup(uh.Element element) {
+    return [
+      TextSpan(text: element.innerText, style: const TextStyle(fontFeatures: [FontFeature.superscripts()])),
     ];
   }
 
