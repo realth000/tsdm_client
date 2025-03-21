@@ -213,31 +213,19 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         richMessage: tr.warningBeforePost.body(
           forumName: TextSpan(
             text: state.forumName ?? '<unknown>',
-            style: TextStyle(color: Theme
-                .of(context)
-                .colorScheme
-                .primary),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           threadTitle: TextSpan(
             text: threadTitleController.text,
-            style: TextStyle(color: Theme
-                .of(context)
-                .colorScheme
-                .primary),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           threadType: TextSpan(
             text: threadTypeController.text,
-            style: TextStyle(color: Theme
-                .of(context)
-                .colorScheme
-                .primary),
+            style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           warning: TextSpan(
             text: tr.warningBeforePost.warning,
-            style: TextStyle(color: Theme
-                .of(context)
-                .colorScheme
-                .error),
+            style: TextStyle(color: Theme.of(context).colorScheme.error),
           ),
         ),
       );
@@ -250,44 +238,42 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     }
 
     final event = switch (widget.editType) {
-      PostEditType.editPost || PostEditType.editDraft =>
-          PostEditCompleteEditRequested(
-            formHash: state.content!.formHash,
-            postTime: state.content!.postTime,
-            delattachop: state.content?.delattachop ?? '0',
-            page: state.content!.page!,
-            wysiwyg: state.content!.wysiwyg,
-            fid: widget.fid,
-            // Not null when editing post
-            tid: widget.tid!,
-            // Not null when editing post
-            pid: widget.pid!,
-            threadType: threadType,
-            threadTitle: threadTitleController.text,
-            data: bbcodeController.toBBCode(),
-            options: additionalOptionsMap?.values.toList() ?? [],
-            save: saveDraft ? '1' : '',
-            perm: perm,
-            price: price,
-          ),
-      PostEditType.newThread =>
-          ThreadPubPostThread(
-            ThreadPublishInfo(
-              formHash: state.content!.formHash,
-              postTime: state.content!.postTime,
-              delAttachOp: state.content?.delattachop ?? '0',
-              wysiwyg: state.content?.wysiwyg ?? '0',
-              fid: widget.fid,
-              threadType: threadType!,
-              checkbox: '0',
-              subject: threadTitleController.text,
-              message: bbcodeController.toBBCode(),
-              perm: perm,
-              price: price,
-              save: saveDraft ? '1' : '',
-              options: additionalOptionsMap?.values.toList() ?? [],
-            ),
-          ),
+      PostEditType.editPost || PostEditType.editDraft => PostEditCompleteEditRequested(
+        formHash: state.content!.formHash,
+        postTime: state.content!.postTime,
+        delattachop: state.content?.delattachop ?? '0',
+        page: state.content!.page!,
+        wysiwyg: state.content!.wysiwyg,
+        fid: widget.fid,
+        // Not null when editing post
+        tid: widget.tid!,
+        // Not null when editing post
+        pid: widget.pid!,
+        threadType: threadType,
+        threadTitle: threadTitleController.text,
+        data: bbcodeController.toBBCode(),
+        options: additionalOptionsMap?.values.toList() ?? [],
+        save: saveDraft ? '1' : '',
+        perm: perm,
+        price: price,
+      ),
+      PostEditType.newThread => ThreadPubPostThread(
+        ThreadPublishInfo(
+          formHash: state.content!.formHash,
+          postTime: state.content!.postTime,
+          delAttachOp: state.content?.delattachop ?? '0',
+          wysiwyg: state.content?.wysiwyg ?? '0',
+          fid: widget.fid,
+          threadType: threadType!,
+          checkbox: '0',
+          subject: threadTitleController.text,
+          message: bbcodeController.toBBCode(),
+          perm: perm,
+          price: price,
+          save: saveDraft ? '1' : '',
+          options: additionalOptionsMap?.values.toList() ?? [],
+        ),
+      ),
     };
     if (saveDraft) {
       uploadMethod = _UploadMethod.saveDraft;
@@ -308,16 +294,13 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           null => sizedBoxEmpty,
           _BottomPanelType.none => sizedBoxEmpty,
           _BottomPanelType.keyboard => sizedBoxEmpty,
-          _BottomPanelType.toolbar =>
-              Align(
-                child: EditorToolbar(
-                  bbcodeController: bbcodeController,
-                  disabledFeatures: fullScreen
-                      ? defaultFullScreenDisabledEditorFeatures
-                      : defaultEditorDisabledFeatures,
-                  editorFocusNode: focusNode,
-                ),
-              ),
+          _BottomPanelType.toolbar => Align(
+            child: EditorToolbar(
+              bbcodeController: bbcodeController,
+              disabledFeatures: fullScreen ? defaultFullScreenDisabledEditorFeatures : defaultEditorDisabledFeatures,
+              editorFocusNode: focusNode,
+            ),
+          ),
         };
       },
       onPanelTypeChange: (p, data) {
@@ -354,10 +337,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             }
         }
       },
-      panelBgColor: Theme
-          .of(context)
-          .colorScheme
-          .surfaceContainerLow,
+      panelBgColor: Theme.of(context).colorScheme.surfaceContainerLow,
     );
   }
 
@@ -371,20 +351,19 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       title: context.t.postEditPage.editPostTitle,
       childrenBuilder:
           (context) =>
-          state.content!.threadTypeList!
-              .map(
-                (e) =>
-                ListTile(
-                  title: Text(e.name),
-                  trailing: e.name == threadTypeController.text ? const Icon(Icons.check_outlined) : null,
-                  onTap: () {
-                    threadType = e;
-                    threadTypeController.text = e.name;
-                    context.pop();
-                  },
-                ),
-          )
-              .toList(),
+              state.content!.threadTypeList!
+                  .map(
+                    (e) => ListTile(
+                      title: Text(e.name),
+                      trailing: e.name == threadTypeController.text ? const Icon(Icons.check_outlined) : null,
+                      onTap: () {
+                        threadType = e;
+                        threadTypeController.text = e.name;
+                        context.pop();
+                      },
+                    ),
+                  )
+                  .toList(),
     );
   }
 
@@ -400,26 +379,24 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       title: context.t.postEditPage.additionalOptions,
       childrenBuilder:
           (context) =>
-          additionalOptionsMap!.values
-              .map(
-                (e) =>
-                StatefulBuilder(
-                  builder: (context, setState) {
-                    return SectionSwitchListTile(
-                      title: Text(e.readableName),
-                      value: additionalOptionsMap![e.name]!.checked,
-                      onChanged:
-                      e.disabled
-                          ? null
-                          : (value) =>
-                          setState(() {
-                            additionalOptionsMap![e.name] = e.copyWith(checked: value);
-                          }),
-                    );
-                  },
-                ),
-          )
-              .toList(),
+              additionalOptionsMap!.values
+                  .map(
+                    (e) => StatefulBuilder(
+                      builder: (context, setState) {
+                        return SectionSwitchListTile(
+                          title: Text(e.readableName),
+                          value: additionalOptionsMap![e.name]!.checked,
+                          onChanged:
+                              e.disabled
+                                  ? null
+                                  : (value) => setState(() {
+                                    additionalOptionsMap![e.name] = e.copyWith(checked: value);
+                                  }),
+                        );
+                      },
+                    ),
+                  )
+                  .toList(),
     );
   }
 
@@ -517,9 +494,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 if (isMobile)
                   IconButton(
                     icon: const Icon(Icons.expand),
-                    selectedIcon: Icon(Icons.expand_outlined, color: Theme
-                        .of(context)
-                        .primaryColor),
+                    selectedIcon: Icon(Icons.expand_outlined, color: Theme.of(context).primaryColor),
                     isSelected: fullScreen,
                     onPressed: () {
                       setState(() {
@@ -585,22 +560,22 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         if (widget.editType.isEditingDraft) ...[
           FilledButton.tonal(
             onPressed:
-            state.status == PostEditStatus.uploading
-                ? null
-                : () async => _onFinish(context, state, saveDraft: true),
+                state.status == PostEditStatus.uploading
+                    ? null
+                    : () async => _onFinish(context, state, saveDraft: true),
             child:
-            state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
-                ? sizedCircularProgressIndicator
-                : Text(context.t.postEditPage.saveAsDraft),
+                state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
+                    ? sizedCircularProgressIndicator
+                    : Text(context.t.postEditPage.saveAsDraft),
           ),
           sizedBoxW8H8,
         ],
         FilledButton(
           onPressed: state.status == PostEditStatus.uploading ? null : () async => _onFinish(context, state),
           child:
-          state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
-              ? sizedCircularProgressIndicator
-              : Row(children: [const Icon(Icons.send), sizedBoxW4H4, Text(context.t.postEditPage.publish)]),
+              state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
+                  ? sizedCircularProgressIndicator
+                  : Row(children: [const Icon(Icons.send), sizedBoxW4H4, Text(context.t.postEditPage.publish)]),
         ),
       ],
     );
@@ -615,10 +590,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             final bloc = PostEditBloc(postEditRepository: context.repo());
 
             final event = switch (widget.editType) {
-              PostEditType.editPost || PostEditType.editDraft =>
-                  PostEditLoadDataRequested(
-                    _formatDataUrl(fid: widget.fid, tid: widget.tid!, pid: widget.pid!),
-                  ),
+              PostEditType.editPost || PostEditType.editDraft => PostEditLoadDataRequested(
+                _formatDataUrl(fid: widget.fid, tid: widget.tid!, pid: widget.pid!),
+              ),
               PostEditType.newThread => ThreadPubFetchInfoRequested(fid: widget.fid),
             };
             bloc.add(event);
@@ -657,11 +631,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             if (!initialized) {
               final data = state.content?.data;
               if (data != null) {
-                if (context
-                    .read<SettingsBloc>()
-                    .state
-                    .settingsMap
-                    .enableEditorBBCodeParser) {
+                if (context.read<SettingsBloc>().state.settingsMap.enableEditorBBCodeParser) {
                   final delta = parseBBCodeTextToDelta(data);
                   bbcodeController.setDocumentFromDelta(delta);
                 } else {
@@ -684,15 +654,12 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                   ),
                 ),
                 if (isDesktop)
-                // Expand and can not replace with Align.
+                  // Expand and can not replace with Align.
                   Row(
                     children: [
                       Expanded(
                         child: ColoredBox(
-                          color: Theme
-                              .of(context)
-                              .colorScheme
-                              .surfaceContainerLow,
+                          color: Theme.of(context).colorScheme.surfaceContainerLow,
                           child: Padding(
                             padding: edgeInsetsL4R4.add(edgeInsetsT4),
                             child: EditorToolbar(
@@ -706,10 +673,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     ],
                   ),
                 ColoredBox(
-                  color: Theme
-                      .of(context)
-                      .colorScheme
-                      .surfaceContainerLow,
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
                   child: Padding(padding: edgeInsetsR4.add(edgeInsetsB4), child: _buildControlRow(context, state)),
                 ),
                 if (isMobile) _buildMobileToolbar(context, state),
@@ -759,7 +723,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       // Bytes of chars for title in utf-8 encoding.
       threadTitleRestLength =
           (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength) -
-              threadTitleController.text.parseUtf8Length;
+          threadTitleController.text.parseUtf8Length;
       dataController.text = state.content?.data ?? '';
       if (state.content?.options != null) {
         additionalOptionsMap = Map.fromEntries(state.content!.options!.map((e) => MapEntry(e.name, e)));
@@ -774,20 +738,14 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         // value.
         threadType ??= state.content?.threadTypeList?.firstOrNull;
         threadTypeController.text = threadType?.name ?? '';
-        perm = state.content?.permList
-            ?.where((e) => e.selected)
-            .lastOrNull
-            ?.perm;
+        perm = state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
         price = state.content?.price;
       });
 
       init = true;
     } else if (state.status == PostEditStatus.editing) {
       setState(() {
-        perm = state.content?.permList
-            ?.where((e) => e.selected)
-            .lastOrNull
-            ?.perm;
+        perm = state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
         price = state.content?.price;
       });
     }
@@ -798,7 +756,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     super.initState();
     debug(
       'enter post edit page: '
-          'editType=${widget.editType}, fid=${widget.fid}',
+      'editType=${widget.editType}, fid=${widget.fid}',
     );
     bbcodeController = buildBBCodeEditorController();
     fullScreen = isDesktop;

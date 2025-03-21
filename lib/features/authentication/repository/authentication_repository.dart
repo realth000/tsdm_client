@@ -130,45 +130,49 @@ class AuthenticationRepository with LoggerMixin {
       return left(HttpRequestFailedException(resp.statusCode));
     }
 
-    return Option.tryCatch(() =>
-        LoginResultMapper.fromJson(resp.data as String)
-    ).match(() {
-      // Can not convert to regular login success result.
-      final json = jsonDecode(resp.data as String) as Map<String, dynamic>?;
-      final message = json?['message'] as String?;
+    return Option.tryCatch(() => LoginResultMapper.fromJson(resp.data as String)).match(
+      () {
+        // Can not convert to regular login success result.
+        final json = jsonDecode(resp.data as String) as Map<String, dynamic>?;
+        final message = json?['message'] as String?;
 
-      if (message == null) {
-        return left(LoginOtherErrorException('message not found'));
-      }
+        if (message == null) {
+          return left(LoginOtherErrorException('message not found'));
+        }
 
-      final err = switch (message) {
-        'login_invalid' => LoginInvalidCredentialException(),
-        'login_strike' => LoginAttemptLimitException(),
-        'err_login_captcha_invalid' => LoginIncorrectCaptchaException(),
-        final String v => LoginOtherErrorException('unknown error message $v'),
-      };
-      return left(err);
-    }, (loginResult) async {
-      if (loginResult.status != 0) {
-        error('failed to login: $loginResult}');
-        return left(LoginOtherErrorException('login failed, status=${loginResult.status}'));
-      }
+        final err = switch (message) {
+          'login_invalid' => LoginInvalidCredentialException(),
+          'login_strike' => LoginAttemptLimitException(),
+          'err_login_captcha_invalid' => LoginIncorrectCaptchaException(),
+          final String v => LoginOtherErrorException('unknown error message $v'),
+        };
+        return left(err);
+      },
+      (loginResult) async {
+        if (loginResult.status != 0) {
+          error('failed to login: $loginResult}');
+          return left(LoginOtherErrorException('login failed, status=${loginResult.status}'));
+        }
 
-      // Here we get complete user info.
-      final userInfo = UserLoginInfo(username: loginResult.values!.username, uid: int.parse(loginResult.values!.uid!));
-      // First combine user info and cookie together.
-      await cookie.updateUserInfo(userInfo);
-      // Second, save credential in storage.
-      await cookie.saveCookieToStorage();
-      // Refresh the cookie in global cookie provider.
-      await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo);
-      // Finally save authed user info and update authentication status to
-      // let auth stream subscribers update their status.
-      await _markAuthenticated(userInfo);
-      debug('end login with success');
+        // Here we get complete user info.
+        final userInfo = UserLoginInfo(
+          username: loginResult.values!.username,
+          uid: int.parse(loginResult.values!.uid!),
+        );
+        // First combine user info and cookie together.
+        await cookie.updateUserInfo(userInfo);
+        // Second, save credential in storage.
+        await cookie.saveCookieToStorage();
+        // Refresh the cookie in global cookie provider.
+        await getIt.get<CookieProvider>().loadCookieFromStorage(userInfo);
+        // Finally save authed user info and update authentication status to
+        // let auth stream subscribers update their status.
+        await _markAuthenticated(userInfo);
+        debug('end login with success');
 
-      return rightVoid();
-    });
+        return rightVoid();
+      },
+    );
   });
 
   /// Parse logged user info from html [document].

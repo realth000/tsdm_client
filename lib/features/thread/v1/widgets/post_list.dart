@@ -341,8 +341,10 @@ class _PostListState extends State<PostList> with LoggerMixin {
               SliverToBoxAdapter(
                 child: Align(
                   alignment: Alignment.bottomRight,
-                  child: Padding(padding: edgeInsetsL12T4R12B4,
-                      child: OperationLogCard(latestAction: widget.latestModAct!, tid: widget.threadID!)),
+                  child: Padding(
+                    padding: edgeInsetsL12T4R12B4,
+                    child: OperationLogCard(latestAction: widget.latestModAct!, tid: widget.threadID!),
+                  ),
                 ),
               ),
             SliverPadding(
