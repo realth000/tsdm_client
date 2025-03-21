@@ -3,7 +3,27 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+
+/// Link prefix, originally in quill_flutter.
+const _linkPrefixes = [
+  'mailto:', // email
+  'tel:', // telephone
+  'sms:', // SMS
+  'callto:',
+  'wtai:',
+  'market:',
+  'geopoint:',
+  'ymsgr:',
+  'msnim:',
+  'gtalk:', // Google Talk
+  'skype:',
+  'sip:', // Lync
+  'whatsapp:',
+  'http',
+  'https',
+];
 
 /// Show a url dialog.
 ///
@@ -43,8 +63,19 @@ class _UrlDialogState extends State<UrlDialog> {
   @override
   void initState() {
     super.initState();
-    descController = TextEditingController(text: widget.initialDescription);
-    urlController = TextEditingController(text: widget.initialUrl);
+
+    // Because initial description may be the selected text in editor, when initial url is empty and description is
+    // valid url or recognized app route, consider `initialDescription` to be the url.
+    if (widget.initialDescription != null &&
+        widget.initialUrl == null &&
+        (_linkPrefixes.any((e) => widget.initialDescription!.startsWith('$e://')) ||
+            widget.initialDescription?.prependHost().parseUrlToRoute() != null)) {
+      descController = TextEditingController();
+      urlController = TextEditingController(text: widget.initialDescription);
+    } else {
+      descController = TextEditingController(text: widget.initialDescription);
+      urlController = TextEditingController(text: widget.initialUrl);
+    }
   }
 
   @override
