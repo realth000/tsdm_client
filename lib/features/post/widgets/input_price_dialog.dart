@@ -67,7 +67,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
             }
             final iv = int.tryParse(v);
             // Price shall no more than max price nor less than 0.
-            if (iv == null || iv < 0 || (widget.maxPrice != null && iv >= widget.maxPrice!)) {
+            if (iv == null || iv < 0 || (widget.maxPrice != null && iv > widget.maxPrice!)) {
               return tr.invalidPrice;
             }
             currentPrice = iv;
