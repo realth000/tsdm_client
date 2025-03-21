@@ -523,7 +523,7 @@
     "priceDialog": {
       "title": "Set price",
       "entryTooltip": "Set thread price",
-      "maximum": "Maximum value 65535",
+      "maximum": "Maximum value ${maxPrice: int}",
       "invalidPrice": "invalid price"
     }
   },

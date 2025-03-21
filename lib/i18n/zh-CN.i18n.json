@@ -523,7 +523,7 @@
     "priceDialog": {
       "title": "设置售价",
       "entryTooltip": "设置帖子售价",
-      "maximum": "最高价格65535",
+      "maximum": "最高价格 ${maxPrice: int}",
       "invalidPrice": "价格无效"
     }
   },

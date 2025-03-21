@@ -544,7 +544,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                       isSelected: price != null && price != 0,
                       onPressed: () async {
                         // TODO: show a dialog to set price.
-                        final inputPrice = await showInputPriceDialog(context, price);
+                        final inputPrice = await showInputPriceDialog(context, price, state.content?.maxPrice);
                         if (inputPrice != null) {
                           setState(() {
                             price = inputPrice;

@@ -5,16 +5,19 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 /// Show a dialog to let user input a price for current thread.
 ///
 /// Only use this when setting price for thread.
-Future<int?> showInputPriceDialog(BuildContext context, int? initialPrice) async =>
-    showDialog<int>(context: context, builder: (_) => _InputPriceDialog(initialPrice));
+Future<int?> showInputPriceDialog(BuildContext context, int? initialPrice, int? maxPrice) async =>
+    showDialog<int>(context: context, builder: (_) => _InputPriceDialog(initialPrice, maxPrice));
 
 class _InputPriceDialog extends StatefulWidget {
-  const _InputPriceDialog(this.initialPrice);
+  const _InputPriceDialog(this.initialPrice, this.maxPrice);
 
   /// Initial value of price.
   ///
   /// Maybe some price is set before editing current thread.
   final int? initialPrice;
+
+  /// Maximum value of price.
+  final int? maxPrice;
 
   @override
   State<_InputPriceDialog> createState() => _InputPriceDialogState();
@@ -51,7 +54,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
         child: TextFormField(
           controller: priceController,
           autofocus: true,
-          decoration: InputDecoration(helperText: tr.maximum),
+          decoration: InputDecoration(helperText: tr.maximum(maxPrice: widget.maxPrice ?? 65535)),
           keyboardType: const TextInputType.numberWithOptions(decimal: true),
           validator: (v) {
             if (v == null) {
@@ -63,8 +66,8 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
               return null;
             }
             final iv = int.tryParse(v);
-            // 65535 is the maximum price value.
-            if (iv == null || iv < 0 || iv >= 65535) {
+            // Price shall no more than max price nor less than 0.
+            if (iv == null || iv < 0 || (widget.maxPrice != null && iv >= widget.maxPrice!)) {
               return tr.invalidPrice;
             }
             currentPrice = iv;

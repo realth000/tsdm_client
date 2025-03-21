@@ -523,7 +523,7 @@
     "priceDialog": {
       "title": "設定售價",
       "entryTooltip": "設定貼文售價",
-      "maximum": "最高價65535",
+      "maximum": "最高價 ${maxPrice: int}",
       "invalidPrice": "價格無效"
     }
   },

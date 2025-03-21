@@ -95,6 +95,7 @@ final class PostEditContent with PostEditContentMappable {
     required this.options,
     required this.permList,
     required this.price,
+    required this.maxPrice,
   });
 
   /// Build a instance of [PostEditContent] from [document].
@@ -226,6 +227,9 @@ final class PostEditContent with PostEditContentMappable {
       price = null;
     }
 
+    final maxPrice =
+        rootNode?.querySelector('div#extra_price_c > span.xg1')?.innerText.split(' ').elementAtOrNull(1)?.parseToInt();
+
     return PostEditContent(
       threadType: threadType,
       threadTypeList: threadTypeList,
@@ -243,6 +247,7 @@ final class PostEditContent with PostEditContentMappable {
       options: options,
       permList: permList,
       price: price,
+      maxPrice: maxPrice,
     );
   }
 
@@ -326,4 +331,7 @@ final class PostEditContent with PostEditContentMappable {
   ///
   /// A 0 value will be here if it can but not set yet.
   final int? price;
+
+  /// Maximum allowed price parsed from thread page.
+  final int? maxPrice;
 }
