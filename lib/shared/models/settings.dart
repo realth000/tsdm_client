@@ -32,8 +32,7 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   netClientUserAgent<String>(
     name: 'dioUserAgent',
     type: String,
-    defaultValue:
-        'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/127.0.0.0 Safari/537.36',
+    defaultValue: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:136.0) Gecko/20100101 Firefox/136.0',
   ),
 
   /// Remember window size after window size changed on desktop platforms.
