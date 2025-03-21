@@ -381,6 +381,7 @@ class _SettingsPageState extends State<SettingsPage> {
     if (autoSyncNoticeSeconds > 0) {
       autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
     }
+    final enableBBCodeParser = state.settingsMap.enableEditorBBCodeParser;
 
     return [
       SectionTitleText(tr.title),
@@ -425,6 +426,15 @@ class _SettingsPageState extends State<SettingsPage> {
           }
           context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.autoSyncNoticeSeconds, seconds));
         },
+      ),
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.code_outlined),
+        title: Text(tr.editorBBCodeParser.title),
+        subtitle: Text(tr.editorBBCodeParser.detail),
+        value: enableBBCodeParser,
+        onChanged:
+            (v) async =>
+                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableEditorBBCodeParser, v)),
       ),
     ];
   }

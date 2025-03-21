@@ -129,6 +129,7 @@ final class SettingsRepository with LoggerMixin {
       autoSyncNoticeSeconds: s.extract(_SK.autoSyncNoticeSeconds),
       enableDebugOperations: s.extract(_SK.enableDebugOperations),
       fontFamily: s.extract(_SK.fontFamily),
+      enableEditorBBCodeParser: s.extract(_SK.enableEditorBBCodeParser),
     );
   }
 

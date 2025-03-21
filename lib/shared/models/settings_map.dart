@@ -44,6 +44,7 @@ class SettingsMap with SettingsMapMappable {
     required this.autoSyncNoticeSeconds,
     required this.enableDebugOperations,
     required this.fontFamily,
+    required this.enableEditorBBCodeParser,
   });
 
   final String netClientAccept;
@@ -82,6 +83,7 @@ class SettingsMap with SettingsMapMappable {
   final int autoSyncNoticeSeconds;
   final bool enableDebugOperations;
   final String fontFamily;
+  final bool enableEditorBBCodeParser;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -127,6 +129,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.autoSyncNoticeSeconds => copyWith(autoSyncNoticeSeconds: value as int?),
       SettingsKeys.enableDebugOperations => copyWith(enableDebugOperations: value as bool?),
       SettingsKeys.fontFamily => copyWith(fontFamily: value as String?),
+      SettingsKeys.enableEditorBBCodeParser => copyWith(enableEditorBBCodeParser: value as bool?),
     };
   }
 }

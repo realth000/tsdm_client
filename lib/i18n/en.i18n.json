@@ -143,6 +143,10 @@
       "autoSyncNotice": {
         "title": "Auto sync notice",
         "detail": "Duration of auto sync notice from server"
+      },
+      "editorBBCodeParser": {
+        "title": "Enable bbcode parser (experimental)",
+        "detail": "Achieve WYSIWYG when editing thread content"
       }
     },
     "checkinSection": {

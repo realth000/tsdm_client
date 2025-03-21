@@ -161,7 +161,13 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   enableDebugOperations<bool>(name: 'enableDebugOperations', type: bool, defaultValue: false),
 
   /// APP font family.
-  fontFamily<String>(name: 'fontFamily', type: String, defaultValue: '');
+  fontFamily<String>(name: 'fontFamily', type: String, defaultValue: ''),
+
+  /// Enable experimental BBCode parser for editor.
+  ///
+  /// The editor will try to parse raw bbcode text into quill delta and provide WYSIWYG experience, it is not considered
+  /// to be stable but... give it a chance.
+  enableEditorBBCodeParser<bool>(name: 'enableEditorBBCodeParser', type: bool, defaultValue: true);
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

@@ -17,6 +17,7 @@ import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/features/post/widgets/input_price_dialog.dart';
 import 'package:tsdm_client/features/post/widgets/select_perm_dialog.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -630,9 +631,12 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             if (!initialized) {
               final data = state.content?.data;
               if (data != null) {
-                // bbcodeController.setDocumentFromRawText(data);
-                final delta = parseBBCodeTextToDelta(data);
-                bbcodeController.setDocumentFromDelta(delta);
+                if (context.read<SettingsBloc>().state.settingsMap.enableEditorBBCodeParser) {
+                  final delta = parseBBCodeTextToDelta(data);
+                  bbcodeController.setDocumentFromDelta(delta);
+                } else {
+                  bbcodeController.setDocumentFromRawText(data);
+                }
               }
               initialized = true;
             }

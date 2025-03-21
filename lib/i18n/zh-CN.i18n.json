@@ -143,6 +143,10 @@
       "autoSyncNotice": {
         "title": "自动同步消息",
         "detail": "每隔一段时间，自动从服务器同步消息和提醒"
+      },
+      "editorBBCodeParser": {
+        "title": "启用BBCode parser（实验性）",
+        "detail": "启用后，在编辑帖子时也会所见即所得"
       }
     },
     "checkinSection": {
