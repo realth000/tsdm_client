@@ -10,3 +10,6 @@
 [submodule "packages/dart_bbcode_web_colors"]
 	path = packages/dart_bbcode_web_colors
 	url = https://github.com/realth000/dart_bbcode_web_colors.git
+[submodule "packages/rhttp"]
+	path = packages/rhttp
+	url = https://github.com/realth000/rhttp.git
