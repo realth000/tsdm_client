@@ -6,6 +6,12 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.4.1] - 2025-03-23
+
+### Fixed
+
+- app：回到之前版本的http client以修复handshake failed的问题。
+
 ## [1.4.0] - 2025-03-22
 
 ### Added
