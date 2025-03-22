@@ -2,7 +2,6 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/io.dart';
 import 'package:dio_brotli_transformer/dio_brotli_transformer.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
@@ -67,26 +66,6 @@ final class NetClientProvider with LoggerMixin {
         d.interceptors.add(_ForceDesktopLayoutInterceptor());
       }
 
-      // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
-      // certificate" error.
-      // ref: https://stackoverflow.com/a/77005574
-      d.httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          // Don't trust any certificate just because their root cert is
-          // trusted.
-          final client = HttpClient(context: SecurityContext())
-            ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
-
-          final settings = getIt.get<SettingsRepository>().currentSettings;
-          final useProxy = settings.netClientUseProxy;
-          final proxy = settings.netClientProxy;
-          if (useProxy && proxy.isNotEmpty) {
-            client.findProxy = (uri) => 'PROXY $proxy';
-          }
-
-          return client;
-        },
-      );
       d.interceptors.add(_ErrorHandler());
       // decode br content-type.
       d.transformer = DioBrotliTransformer();
