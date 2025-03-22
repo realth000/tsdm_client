@@ -4,6 +4,8 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_compatibility_layer/dio_compatibility_layer.dart';
+import 'package:rhttp/rhttp.dart' show RhttpCompatibleClient;
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
@@ -228,6 +230,7 @@ final class SettingsRepository with LoggerMixin {
   /// Build a default [Dio] instance from current settings.
   Dio buildDefaultDio() =>
       Dio()
+        ..httpClientAdapter = ConversionLayerAdapter(RhttpCompatibleClient.createSync())
         ..options = BaseOptions(
           headers: <String, String>{
             HttpHeaders.acceptHeader: _state.netClientAccept,

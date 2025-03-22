@@ -4,6 +4,7 @@ import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:rhttp/rhttp.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/app.dart';
 import 'package:tsdm_client/cmd.dart';
@@ -22,7 +23,7 @@ Future<void> main(List<String> args) async => runZonedGuarded(() async => _boot(
 
 Future<void> _boot(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  await Rhttp.init();
   parseCmdArgs(args);
 
   talker.debug('start app...');
