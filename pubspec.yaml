@@ -26,7 +26,6 @@ dependencies:
   dart_mappable: ^4.4.0
   dio: ^5.8.0+1
   dio_brotli_transformer: ^2.0.0
-  dio_compatibility_layer: ^0.1.0
   dio_cookie_manager: ^3.2.0
   drift: ^2.25.1
   # For drift
@@ -62,8 +61,6 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   responsive_framework: ^1.5.1
-  rhttp:
-    path: packages/rhttp/rhttp
   rxdart: ^0.28.0
   shimmer: ^3.0.0
   slang: ^4.4.1

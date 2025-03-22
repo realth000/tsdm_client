@@ -4,10 +4,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_compatibility_layer/dio_compatibility_layer.dart';
-import 'package:rhttp/rhttp.dart' show ClientSettings, ProxySettings, RhttpCompatibleClient;
 import 'package:rxdart/rxdart.dart';
-import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
@@ -229,32 +226,16 @@ final class SettingsRepository with LoggerMixin {
   }
 
   /// Build a default [Dio] instance from current settings.
-  Dio buildDefaultDio() {
-    final settings = getIt.get<SettingsRepository>().currentSettings;
-    final useProxy = settings.netClientUseProxy;
-    final proxy = settings.netClientProxy;
-
-    final ProxySettings? proxySettings;
-
-    if (useProxy && proxy.isNotEmpty) {
-      proxySettings = ProxySettings.proxy('http://$proxy');
-    } else {
-      proxySettings = null;
-    }
-
-    return Dio()
-      ..httpClientAdapter = ConversionLayerAdapter(
-        RhttpCompatibleClient.createSync(settings: ClientSettings(proxySettings: proxySettings)),
-      )
-      ..options = BaseOptions(
-        headers: <String, String>{
-          HttpHeaders.acceptHeader: _state.netClientAccept,
-          HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
-          HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
-          HttpHeaders.userAgentHeader: _state.netClientUserAgent,
-          // HttpHeaders.hostHeader: baseUrl,
-          // HttpHeaders.pragmaHeader: 'no-cache',
-        },
-      );
-  }
+  Dio buildDefaultDio() =>
+      Dio()
+        ..options = BaseOptions(
+          headers: <String, String>{
+            HttpHeaders.acceptHeader: _state.netClientAccept,
+            HttpHeaders.acceptEncodingHeader: _state.netClientAcceptEncoding,
+            HttpHeaders.acceptLanguageHeader: _state.netClientAcceptLanguage,
+            HttpHeaders.userAgentHeader: _state.netClientUserAgent,
+            // HttpHeaders.hostHeader: baseUrl,
+            // HttpHeaders.pragmaHeader: 'no-cache',
+          },
+        );
 }

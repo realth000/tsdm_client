@@ -67,6 +67,26 @@ final class NetClientProvider with LoggerMixin {
         d.interceptors.add(_ForceDesktopLayoutInterceptor());
       }
 
+      // Handle "CERTIFICATE_VERIFY_FAILED: unable to get local issuer
+      // certificate" error.
+      // ref: https://stackoverflow.com/a/77005574
+      d.httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          // Don't trust any certificate just because their root cert is
+          // trusted.
+          final client = HttpClient(context: SecurityContext())
+            ..badCertificateCallback = (X509Certificate cert, String host, int port) => true;
+
+          final settings = getIt.get<SettingsRepository>().currentSettings;
+          final useProxy = settings.netClientUseProxy;
+          final proxy = settings.netClientProxy;
+          if (useProxy && proxy.isNotEmpty) {
+            client.findProxy = (uri) => 'PROXY $proxy';
+          }
+
+          return client;
+        },
+      );
       d.interceptors.add(_ErrorHandler());
       // decode br content-type.
       d.transformer = DioBrotliTransformer();
