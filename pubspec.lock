@@ -1451,10 +1451,9 @@ packages:
   rhttp:
     dependency: "direct main"
     description:
-      name: rhttp
-      sha256: "037e9b59a68bb4ba664db1cbb4601e878cf5a2fc1cb3d0a9c58e3776609dec4d"
-      url: "https://pub.dev"
-    source: hosted
+      path: "packages/rhttp/rhttp"
+      relative: true
+    source: path
     version: "0.11.0"
   rxdart:
     dependency: "direct main"

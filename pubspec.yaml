@@ -62,7 +62,8 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: ^11.3.1
   responsive_framework: ^1.5.1
-  rhttp: ^0.11.0
+  rhttp:
+    path: packages/rhttp/rhttp
   rxdart: ^0.28.0
   shimmer: ^3.0.0
   slang: ^4.4.1
