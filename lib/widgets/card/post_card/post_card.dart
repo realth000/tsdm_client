@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -200,11 +201,21 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     final onlyVisibleUid = threadBloc?.state.onlyVisibleUid;
 
     return Row(
-      mainAxisAlignment: MainAxisAlignment.end,
       children: [
+        const Spacer(),
         PopupMenuButton(
           itemBuilder:
               (context) => [
+                PopupMenuItem<_PostCardActions>(
+                  enabled: false,
+                  height: 32,
+                  child: Text(
+                    '${widget.post.author.name.truncate(10, ellipsis: true)} #${widget.post.postFloor}',
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                  ),
+                ),
                 PopupMenuItem(
                   value: _PostCardActions.reply,
                   child: Row(
@@ -318,6 +329,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             }
           },
         ),
+        sizedBoxW8H8,
       ],
     );
   }
