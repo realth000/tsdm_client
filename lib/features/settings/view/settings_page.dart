@@ -15,6 +15,7 @@ import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/extensions/duration.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
@@ -714,6 +715,11 @@ class _SettingsPageState extends State<SettingsPage> {
               pinnedWidget: Tips(tr.update.fDroidTip, sizePreferred: true),
               childrenBuilder:
                   (context) => [
+                    ListTile(
+                      leading: const Icon(Icons.campaign_outlined),
+                      title: Text(tr.update.announcementThread),
+                      onTap: () async => context.dispatchAsUrl('forum.php?mod=viewthread&tid=628244'),
+                    ),
                     ListTile(
                       leading: Icon(MdiIcons.github),
                       title: const Text('GitHub'),

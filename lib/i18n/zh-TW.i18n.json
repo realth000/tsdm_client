@@ -214,7 +214,8 @@
       "about": "關於",
       "update": {
         "title": "取得更新",
-        "fDroidTip": "如果這個應用程式是從F-Droid安裝的，建議仍然走F-Droid升級"
+        "fDroidTip": "如果這個應用程式是從F-Droid安裝的，建議仍然走F-Droid升級",
+        "announcementThread": "公告帖"
       },
       "changelog": "變更記錄"
     }

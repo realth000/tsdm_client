@@ -214,7 +214,8 @@
       "about": "About",
       "update": {
         "title": "Get updates",
-        "fDroidTip": "It is recommended to upgrade this app through F-Droid if you installed from there"
+        "fDroidTip": "It is recommended to upgrade this app through F-Droid if you installed from there",
+        "announcementThread": "Announcement thread"
       },
       "changelog": "Changelog"
     }
