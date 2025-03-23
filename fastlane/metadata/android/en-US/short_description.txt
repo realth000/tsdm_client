@@ -1,1 +1,1 @@
-Thrid-party client for tsdm.love forum
+Official client for tsdm39.com forum

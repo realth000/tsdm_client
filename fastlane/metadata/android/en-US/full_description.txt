@@ -14,7 +14,6 @@
 <li>User info</li>
 <li>Notification</li>
 <li>Friends</li>
-<li>In-app update</li>
 <li>Favorite</li>
 <li>Multi-user</li>
 <li>Multilingual</li>
