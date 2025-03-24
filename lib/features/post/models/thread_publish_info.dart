@@ -31,7 +31,6 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
       'formhash': formHash,
       'posttime': postTime,
       'wysiwyg': wysiwyg,
-      'typeid': threadType.typeID ?? '0',
       'checkbox': '0',
       'subject': subject,
       'message': message,
@@ -44,6 +43,10 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
     }
     if (perm != null) {
       body['readperm'] = perm!;
+    }
+    final typeId = threadType?.typeID;
+    if (typeId != null) {
+      body['typeid'] = typeId;
     }
 
     return body;
@@ -75,7 +78,7 @@ final class ThreadPublishInfo with ThreadPublishInfoMappable {
   /// Thread type id.
   ///
   /// Provided by server, selected by user.
-  final PostEditThreadType threadType;
+  final PostEditThreadType? threadType;
 
   /// Checkbox?
   ///

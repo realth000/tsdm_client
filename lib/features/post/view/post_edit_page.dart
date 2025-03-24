@@ -264,7 +264,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           delAttachOp: state.content?.delattachop ?? '0',
           wysiwyg: state.content?.wysiwyg ?? '0',
           fid: widget.fid,
-          threadType: threadType!,
+          threadType: threadType,
           checkbox: '0',
           subject: threadTitleController.text,
           message: bbcodeController.toBBCode(),
@@ -435,43 +435,44 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         ),
       );
     }
-    if (state.content?.threadTypeList?.isNotEmpty ?? false) {
-      ret.add(
-        Expanded(
-          child: TextFormField(
-            controller: threadTitleController,
-            autofocus: true,
-            decoration: InputDecoration(
-              labelText: context.t.postEditPage.threadTitle,
-              suffixText: ' $threadTitleRestLength',
-            ),
-            onChanged: (value) {
-              setState(() {
-                threadTitleRestLength =
-                    (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength) - value.parseUtf8Length;
-              });
-            },
-            validator: (v) {
-              if (widget.editType.isEditingPost) {
-                // Skip check when editing post, post have no thread type.
-                return null;
-              }
-              if (v == null) {
-                return context.t.postEditPage.titleShouldNotBeEmpty;
-              }
-              final titleLength = v.parseUtf8Length;
-              if (titleLength <= 0) {
-                return context.t.postEditPage.titleShouldNotBeEmpty;
-              }
-              if (titleLength >= (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength)) {
-                return context.t.postEditPage.titleTooLong;
-              }
-              return null;
-            },
+
+    // Always add title no matter thread type presents or not.
+    // All thread floors have a legal "subject" here.
+    ret.add(
+      Expanded(
+        child: TextFormField(
+          controller: threadTitleController,
+          autofocus: true,
+          decoration: InputDecoration(
+            labelText: context.t.postEditPage.threadTitle,
+            suffixText: ' $threadTitleRestLength',
           ),
+          onChanged: (value) {
+            setState(() {
+              threadTitleRestLength =
+                  (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength) - value.parseUtf8Length;
+            });
+          },
+          validator: (v) {
+            if (widget.editType.isEditingPost) {
+              // Skip check when editing post, post have no thread type.
+              return null;
+            }
+            if (v == null) {
+              return context.t.postEditPage.titleShouldNotBeEmpty;
+            }
+            final titleLength = v.parseUtf8Length;
+            if (titleLength <= 0) {
+              return context.t.postEditPage.titleShouldNotBeEmpty;
+            }
+            if (titleLength >= (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength)) {
+              return context.t.postEditPage.titleTooLong;
+            }
+            return null;
+          },
         ),
-      );
-    }
+      ),
+    );
     if (ret.isEmpty) {
       return Container();
     }
