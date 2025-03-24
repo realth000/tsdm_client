@@ -442,7 +442,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       Expanded(
         child: TextFormField(
           controller: threadTitleController,
-          autofocus: true,
           decoration: InputDecoration(
             labelText: context.t.postEditPage.threadTitle,
             suffixText: ' $threadTitleRestLength',
@@ -648,10 +647,11 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 _buildTitleRow(context, state),
                 sizedBoxW4H4,
                 // Post data editor.
+                // Now we don't restrict the thread type and thread title, so it's better to focus on content area.
                 Expanded(
                   child: Padding(
                     padding: isMobile ? edgeInsetsL16R16 : edgeInsetsL4R4,
-                    child: RichEditor(controller: bbcodeController, editorFocusNode: focusNode),
+                    child: RichEditor(autoFocus: true, controller: bbcodeController, editorFocusNode: focusNode),
                   ),
                 ),
                 if (isDesktop)
