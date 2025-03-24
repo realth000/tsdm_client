@@ -496,7 +496,7 @@
     "newThreadTitle": "New Thread",
     "newPostTitle": "New Post",
     "threadType": "Thread Type",
-    "threadTitle": "Thread Title",
+    "title": "Title",
     "body": "Post",
     "additionalOptions": "Additional Options",
     "publish": "Publish",
@@ -526,6 +526,10 @@
       "entryTooltip": "Set thread price",
       "maximum": "Maximum value ${maxPrice: int}",
       "invalidPrice": "invalid price"
+    },
+    "whyTitleDialog": {
+      "title": "Why here is a thread title?",
+      "detail": "Not weired to have a title here when drafting a new thread or editing the first floor of the thread.\nBut it always presents because other floors also have \"subject\" fields to add some <h2> style text ahead of the body of post."
     }
   },
   "chatHistoryPage": {

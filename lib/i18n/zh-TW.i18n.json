@@ -496,7 +496,7 @@
     "newThreadTitle": "新貼文",
     "newPostTitle": "新回覆",
     "threadType": "貼文分類",
-    "threadTitle": "貼文標題",
+    "title": "標題",
     "body": "正文",
     "additionalOptions": "附加選項",
     "publish": "發布",
@@ -526,6 +526,10 @@
       "entryTooltip": "設定貼文售價",
       "maximum": "最高價 ${maxPrice: int}",
       "invalidPrice": "價格無效"
+    },
+    "whyTitleDialog": {
+      "title": "為什麼這有個標題？",
+      "detail": "如果在發布新帖子或編輯帖子一樓，有個標題很正常。\n但實際上其他樓層也都有個“標題”，可以在樓層正文之前加些<h2>樣式的文字"
     }
   },
   "chatHistoryPage": {

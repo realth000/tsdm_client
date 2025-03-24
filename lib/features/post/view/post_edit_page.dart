@@ -401,6 +401,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   }
 
   Widget _buildTitleRow(BuildContext context, PostEditState state) {
+    final tr = context.t.postEditPage;
+
     final ret = <Widget>[];
     if (state.content?.threadTypeList?.isNotEmpty ?? false) {
       ret.add(
@@ -409,10 +411,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           child: TextFormField(
             key: formKey,
             controller: threadTypeController,
-            decoration: InputDecoration(
-              labelText: context.t.postEditPage.threadType,
-              suffixIcon: const Icon(Icons.arrow_drop_down),
-            ),
+            decoration: InputDecoration(labelText: tr.threadType, suffixIcon: const Icon(Icons.arrow_drop_down)),
             readOnly: true,
             onTap: () async => _showSelectThreadTypeBottomSheet(context, state),
             // Only auto focus to title field when writing new thread.
@@ -427,7 +426,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                   threadType == null ||
                   threadType!.typeID == null ||
                   ((threadType!.typeID?.parseToInt() ?? -1) <= 0)) {
-                return context.t.postEditPage.threadTypeShouldNotBeEmpty;
+                return tr.threadTypeShouldNotBeEmpty;
               }
               return null;
             },
@@ -443,8 +442,17 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         child: TextFormField(
           controller: threadTitleController,
           decoration: InputDecoration(
-            labelText: context.t.postEditPage.threadTitle,
+            labelText: tr.title,
             suffixText: ' $threadTitleRestLength',
+            suffixIcon: IconButton(
+              icon: const Icon(Icons.info_outline),
+              onPressed:
+                  () async => showMessageSingleButtonDialog(
+                    context: context,
+                    title: tr.whyTitleDialog.title,
+                    message: tr.whyTitleDialog.detail,
+                  ),
+            ),
           ),
           onChanged: (value) {
             setState(() {
@@ -458,14 +466,14 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               return null;
             }
             if (v == null) {
-              return context.t.postEditPage.titleShouldNotBeEmpty;
+              return tr.titleShouldNotBeEmpty;
             }
             final titleLength = v.parseUtf8Length;
             if (titleLength <= 0) {
-              return context.t.postEditPage.titleShouldNotBeEmpty;
+              return tr.titleShouldNotBeEmpty;
             }
             if (titleLength >= (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength)) {
-              return context.t.postEditPage.titleTooLong;
+              return tr.titleTooLong;
             }
             return null;
           },
