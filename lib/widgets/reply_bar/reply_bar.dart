@@ -87,7 +87,6 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
     final c = showBottomSheet(
       context: context,
-      shape: InputBorder.none,
       builder:
           (_) => _ReplyBar(
             controller: widget.controller,
@@ -480,7 +479,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     if (_hintText == null || _closed || !_hasLogin) {
       // The size here is actually a padding on the top of editor body.
       // But it's here.
-      return sizedBoxW4H4;
+      return sizedBoxW12H12;
     }
     final outlineColor = Theme.of(context).colorScheme.outline;
     return Padding(
@@ -564,7 +563,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
-    return Column(
+    final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         // Reply hint row.
@@ -626,6 +625,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         ),
         _buildMobileToolbar(context, state),
       ],
+    );
+
+    return ClipRRect(
+      borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+      child: content,
     );
   }
 

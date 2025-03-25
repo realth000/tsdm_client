@@ -18,30 +18,31 @@ Future<T?> showCustomBottomSheet<T>({
   List<Widget> Function(BuildContext context)? childrenBuilder,
   Widget Function(BuildContext context)? builder,
   BoxConstraints? constraints,
+  bool useExpand = true,
 }) async {
   assert(builder != null || childrenBuilder != null, 'must provide builder or childrenBuilder');
   final Widget content;
   if (builder != null) {
     content = builder.call(context);
   } else {
-    content = Column(
-      children: [Expanded(child: SingleChildScrollView(child: Column(children: childrenBuilder!(context))))],
-    );
+    content = SingleChildScrollView(child: Column(children: childrenBuilder!(context)));
   }
   final ret = await showModalBottomSheet<T>(
     context: context,
     constraints: constraints,
+    showDragHandle: true,
     builder: (_) {
-      return Scaffold(
-        appBar: AppBar(
-          forceMaterialTransparency: true,
-          title: Text(title),
-          automaticallyImplyLeading: false,
-          centerTitle: true,
-          bottom: pinnedWidget,
+      return Padding(
+        padding: edgeInsetsL12T4R12B12,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(title, style: Theme.of(context).textTheme.titleLarge),
+            if (pinnedWidget != null) ...[sizedBoxW8H8, pinnedWidget],
+            sizedBoxW12H12,
+            if (useExpand) Expanded(child: content) else content,
+          ],
         ),
-        body: Padding(padding: edgeInsetsL16T16R16B16, child: content),
-        primary: false,
       );
     },
   );
@@ -64,71 +65,73 @@ Future<void> showImageActionBottomSheet({
 }) async {
   await showModalBottomSheet<void>(
     context: context,
+    showDragHandle: true,
     builder: (context) {
       final tr = context.t.imageBottomSheet;
-
-      return Column(
-        children: [
-          sizedBoxW12H12,
-          Center(child: Text(tr.title, style: Theme.of(context).textTheme.titleMedium)),
-          sizedBoxW12H12,
-          Align(
-            child: ColoredBox(
-              color: Theme.of(context).colorScheme.surfaceContainerLow,
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxHeight: 100),
-                child: Padding(padding: edgeInsetsT4B4, child: NetworkIndicatorImage(imageUrl)),
+      return Padding(
+        padding: edgeInsetsL12T4R12B12,
+        child: Column(
+          children: [
+            Center(child: Text(tr.title, style: Theme.of(context).textTheme.titleLarge)),
+            sizedBoxW12H12,
+            Align(
+              child: ColoredBox(
+                color: Theme.of(context).colorScheme.surfaceContainerLow,
+                child: ConstrainedBox(
+                  constraints: const BoxConstraints(maxHeight: 100),
+                  child: Padding(padding: edgeInsetsT4B4, child: NetworkIndicatorImage(imageUrl)),
+                ),
               ),
             ),
-          ),
-          sizedBoxW12H12,
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  ListTile(
-                    leading: const Icon(Icons.fullscreen_outlined),
-                    title: Text(tr.checkDetail),
-                    onTap: () async {
-                      await context.pushNamed(ScreenPaths.imageDetail, pathParameters: {'imageUrl': imageUrl});
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.copy_outlined),
-                    title: Text(tr.copyImageUrl),
-                    subtitle: Text(imageUrl),
-                    onTap: () async {
-                      await copyToClipboard(context, imageUrl);
-                      if (context.mounted) {
-                        context.pop();
-                      }
-                    },
-                  ),
-                  ListTile(
-                    leading: const Icon(Icons.refresh_outlined),
-                    title: Text(tr.reloadImage),
-                    onTap: () => context.read<ImageCacheTriggerCubit>().updateImageCache(imageUrl, force: true),
-                  ),
-                  if (hrefUrl != null)
+            sizedBoxW12H12,
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
                     ListTile(
-                      leading: const Icon(Icons.link_outlined),
-                      title: Text(tr.openLink),
-                      subtitle: Text(hrefUrl),
+                      leading: const Icon(Icons.fullscreen_outlined),
+                      title: Text(tr.checkDetail),
                       onTap: () async {
-                        await context.dispatchAsUrl(hrefUrl);
+                        await context.pushNamed(ScreenPaths.imageDetail, pathParameters: {'imageUrl': imageUrl});
                         if (context.mounted) {
                           context.pop();
                         }
                       },
                     ),
-                ],
+                    ListTile(
+                      leading: const Icon(Icons.copy_outlined),
+                      title: Text(tr.copyImageUrl),
+                      subtitle: Text(imageUrl),
+                      onTap: () async {
+                        await copyToClipboard(context, imageUrl);
+                        if (context.mounted) {
+                          context.pop();
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.refresh_outlined),
+                      title: Text(tr.reloadImage),
+                      onTap: () => context.read<ImageCacheTriggerCubit>().updateImageCache(imageUrl, force: true),
+                    ),
+                    if (hrefUrl != null)
+                      ListTile(
+                        leading: const Icon(Icons.link_outlined),
+                        title: Text(tr.openLink),
+                        subtitle: Text(hrefUrl),
+                        onTap: () async {
+                          await context.dispatchAsUrl(hrefUrl);
+                          if (context.mounted) {
+                            context.pop();
+                          }
+                        },
+                      ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       );
     },
   );

@@ -79,6 +79,9 @@ const edgeInsetsL16T12R16B12 = EdgeInsets.only(left: 16, top: 12, right: 16, bot
 /// An [EdgeInsets] with 12 at left, top and right.
 const edgeInsetsL12T12R12 = EdgeInsets.only(left: 12, top: 12, right: 12);
 
+/// An [EdgeInsets] with 4 at top, 12 at left, right and bottom.
+const edgeInsetsL12T4R12B12 = EdgeInsets.only(left: 12, top: 4, right: 12, bottom: 12);
+
 /// An [EdgeInsets] with 12 at left, top, right and bottom.
 const edgeInsetsL12T12R12B12 = EdgeInsets.all(12);
 

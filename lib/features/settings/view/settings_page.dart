@@ -710,7 +710,6 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap:
             () async => showCustomBottomSheet<void>(
               context: context,
-              constraints: const BoxConstraints(maxHeight: 300),
               title: tr.update.title,
               pinnedWidget: Tips(tr.update.fDroidTip, sizePreferred: true),
               childrenBuilder:
@@ -735,6 +734,7 @@ class _SettingsPageState extends State<SettingsPage> {
                               launchUrl(Uri.parse(upgradeFDroidHomepageUrl), mode: LaunchMode.externalApplication),
                     ),
                   ],
+              useExpand: false,
             ),
       ),
 
