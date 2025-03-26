@@ -642,6 +642,13 @@
     "edit": "编辑",
     "lastEditInfo": "本帖最后由 $username 于 $time 编辑",
     "profileDialog": {
+      "tabName": {
+        "info": "信息",
+        "medals": "勋章",
+        "signature": "签名"
+      },
+      "noMedal": "没有勋章",
+      "noSig": "没有签名",
       "group": "用户组",
       "title": "头衔",
       "nickname": "昵称",

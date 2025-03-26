@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/models/medal.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
@@ -89,6 +91,27 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     final avatarHeroTag = 'Avatar-${widget.post.author.uid}-${widget.post.postFloor}';
     final nameHeroTag = 'Name-${widget.post.author.name}-${widget.post.postFloor}';
 
+    final knownMedals = context.read<ThreadBloc>().state.postMedals;
+
+    final medals =
+        widget.post.postMedals
+            ?.map((userMedal) {
+              final foundMedal = knownMedals.firstWhereOrNull((e) => e.id == userMedal.menuItemId);
+              if (foundMedal == null) {
+                return null;
+              }
+
+              return Medal(
+                name: foundMedal.name,
+                description: foundMedal.description,
+                image: userMedal.image,
+                alter: userMedal.alter,
+              );
+            })
+            .whereType<Medal>()
+            .toList() ??
+        [];
+
     return ListTile(
       leading: GestureDetector(
         onTap: () async {
@@ -99,6 +122,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               widget.post.author.url,
               avatarHeroTag: avatarHeroTag,
               nameHeroTag: nameHeroTag,
+              medals: medals,
+              badge: widget.post.badge,
+              secondBadge: widget.post.secondBadge,
+              signature: widget.post.signature,
             );
           }
         },
@@ -120,6 +147,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   widget.post.author.url,
                   avatarHeroTag: avatarHeroTag,
                   nameHeroTag: nameHeroTag,
+                  medals: medals,
+                  badge: widget.post.badge,
+                  secondBadge: widget.post.secondBadge,
+                  signature: widget.post.signature,
                 );
               }
             },

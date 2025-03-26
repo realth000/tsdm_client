@@ -43,6 +43,7 @@ class ThreadState with ThreadStateMappable {
     this.isDraft = false,
     this.latestModAct,
     this.breadcrumbs = const [],
+    this.postMedals = const [],
   });
 
   /// Status.
@@ -153,4 +154,7 @@ class ThreadState with ThreadStateMappable {
   ///
   /// It's ordered so held by a list and more right side more deep.
   final List<ThreadBreadcrumb> breadcrumbs;
+
+  /// All available in post medal.
+  final List<PostMedalMenuItem> postMedals;
 }

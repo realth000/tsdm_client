@@ -642,6 +642,13 @@
     "edit": "Edit",
     "lastEditInfo": "Last edited by $username at $time",
     "profileDialog": {
+      "tabName": {
+        "info": "Info",
+        "medals": "Medals",
+        "signature": "Sig"
+      },
+      "noMedal": "No medals",
+      "noSig": "No signature",
       "group": "Group",
       "title": "Title",
       "nickname": "Nickname",

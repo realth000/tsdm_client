@@ -37,6 +37,10 @@ class Post with PostMappable {
     this.editUrl,
     this.userBriefProfile,
     this.hasPoll = false,
+    this.postMedals,
+    this.badge,
+    this.secondBadge,
+    this.signature,
   });
 
   /// Post ID.
@@ -118,6 +122,21 @@ class Post with PostMappable {
   /// Poll is not supported, leave a message instead.
   final bool hasPoll;
 
+  /// User medals in current post.
+  ///
+  /// All medals are belong to the current post's author. But medals here are only images without text info which shall
+  /// be completed by the thread page level hidden medal menu in thread page.
+  final List<PostMedal>? postMedals;
+
+  /// The image url of the main badge, usually the user group.
+  final String? badge;
+
+  /// The image url of the optional second badge, user group or user purchased badge.
+  final String? secondBadge;
+
+  /// Html format signature.
+  final String? signature;
+
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element, int page) {
     final trRootNode = element.querySelector('table > tbody > tr');
@@ -126,8 +145,9 @@ class Post with PostMappable {
       talker.error('failed to build post: empty post ID');
       return null;
     }
+    final avatarId = 'ts_avatar_$postID';
     // <td class="pls">
-    final postInfoNode = trRootNode?.querySelector('td:nth-child(1) > div#ts_avatar_$postID');
+    final postInfoNode = trRootNode?.querySelector('td:nth-child(1) > div#$avatarId');
     // <td class="plc tsdm_ftc">
     final postAuthorName = postInfoNode?.querySelector('div')?.firstEndDeepText();
     final postAuthorUrl = postInfoNode?.querySelector('div.avatar > a')?.attributes['href'];
@@ -283,6 +303,15 @@ class Post with PostMappable {
 
     final isDraft = element.querySelector('a.psave') != null;
 
+    // Medals used by the current posts' author.
+    final postMedals =
+        element.querySelectorAll('div.md_ctrl > a > img').map(PostMedal.fromImg).whereType<PostMedal>().toList();
+
+    // User group badge and optional second badge.
+    final badge = element.querySelector('div#$avatarId > div.tsdm_norm_title > img')?.imageUrl();
+    final secondBadge = element.querySelector('div.tsdm_statbar > a > img.tsdmtitles')?.imageUrl();
+    final signature = element.querySelector('div.sign_inner')?.innerHtml;
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -303,6 +332,10 @@ class Post with PostMappable {
       page: page,
       isDraft: isDraft,
       hasPoll: hasPoll,
+      postMedals: postMedals,
+      badge: badge,
+      secondBadge: secondBadge,
+      signature: signature,
     );
   }
 

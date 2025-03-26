@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/card/post_card/post_medal_menu_info.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'thread_bloc.mapper.dart';
@@ -306,6 +307,14 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       breadcrumbs.removeLast();
     }
 
+    // Parse available medals. and designation-card
+    final medalsAvailable =
+        document
+            .querySelectorAll(r'div[id^="md_"][id$="_menu"]')
+            .map(PostMedalMenuItem.fromDiv)
+            .whereType<PostMedalMenuItem>()
+            .toList();
+
     final threadState = ThreadState(
       tid: tid,
       pid: state.pid,
@@ -330,6 +339,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       isDraft: isDraft ?? false,
       latestModAct: latestModAct,
       breadcrumbs: breadcrumbs,
+      postMedals: medalsAvailable,
     );
 
     return threadState;

@@ -103,6 +103,9 @@ const edgeInsetsL24R24B12 = EdgeInsets.only(left: 24, right: 24, bottom: 12);
 /// An [EdgeInsets] with 24 at left and right, 16 at top and bottom.
 const edgeInsetsL24T12R24B12 = EdgeInsets.symmetric(horizontal: 24, vertical: 12);
 
+/// An [EdgeInsets] with 24 at left, top, right and bottom.
+const edgeInsetsL24T24R24B24 = EdgeInsets.all(24);
+
 /// An [EdgeInsets] with 12 at left, 4 at top and 4 at bottom.
 const edgeInsetsL12T4R4B4 = EdgeInsets.only(left: 12, top: 4, right: 4, bottom: 4);
 
