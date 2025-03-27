@@ -76,7 +76,11 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
   Widget _buildPlaceholder(BuildContext context) => Shimmer.fromColors(
     baseColor: Theme.of(context).colorScheme.primary.withOpacityA(0.3),
     highlightColor: Theme.of(context).colorScheme.primary.withOpacityA(0.2),
-    child: FallbackPicture(fit: widget.fit),
+    child: FallbackPicture(
+      fit: widget.fit,
+      width: widget.width ?? widget.maxWidth,
+      height: widget.height ?? widget.maxHeight,
+    ),
   );
 
   StreamSubscription<ImageCacheResponse>? imageSub;
@@ -107,7 +111,11 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
   Widget build(BuildContext context) {
     final Widget body;
     if (widget.imageUrl.isEmpty) {
-      body = FallbackPicture(fit: widget.fit);
+      body = FallbackPicture(
+        fit: widget.fit,
+        width: widget.width ?? widget.maxWidth,
+        height: widget.height ?? widget.maxHeight,
+      );
     } else {
       body = Image(
         image: widget._imageProvider,
@@ -116,7 +124,11 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
         height: widget.height,
         errorBuilder: (context, e, st) {
           handleRaw(e, st);
-          return FallbackPicture(fit: widget.fit);
+          return FallbackPicture(
+            fit: widget.fit,
+            width: widget.width ?? widget.maxWidth,
+            height: widget.height ?? widget.maxHeight,
+          );
         },
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) {

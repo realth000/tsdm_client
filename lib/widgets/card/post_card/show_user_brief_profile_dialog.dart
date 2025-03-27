@@ -21,6 +21,15 @@ import 'package:tsdm_client/widgets/card/post_card/pokemon.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
+/// Width of badge image.
+const _badgeWidth = 184.0;
+
+/// Height of badge image.
+const _badgeHeight = 100.0;
+
+/// Medal size: 34 x 55.
+const _medalWidth = 34.0;
+
 /// Medal size: 34 x 55.
 const _medalHeight = 55.0;
 
@@ -29,6 +38,9 @@ const _pokemonImagePrimarySize = 90.0;
 
 /// Other pokemon not the primary one, 32 x 32.
 const _pokemonImageNormalSize = 32.0;
+
+/// Size of feeling image, 60 x 60.
+const _feelingImageSize = 60.0;
 
 /// Show a dialog to display user brief profile.
 ///
@@ -254,7 +266,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                 children: [
                   SizedBox(width: 20, child: Text('${idx + 1}'.padLeft(2), style: nameStyle)),
                   sizedBoxW8H8,
-                  CachedImage(e.image, maxHeight: _medalHeight),
+                  CachedImage(e.image, width: _medalWidth, height: _medalHeight),
                   sizedBoxW8H8,
                   Expanded(
                     child: Column(
@@ -287,15 +299,25 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
     if (widget.badge != null && widget.secondBadge != null) {
       return Row(
         children: [
-          Expanded(child: CachedImage(widget.badge!)),
+          Expanded(child: CachedImage(widget.badge!, width: _badgeWidth, height: _badgeHeight)),
           const VerticalDivider(),
-          Expanded(child: CachedImage(widget.secondBadge!)),
+          Expanded(child: CachedImage(widget.secondBadge!, width: _badgeWidth, height: _badgeHeight)),
         ],
       );
     } else if (widget.badge != null) {
-      return Row(children: [Expanded(child: CachedImage(widget.badge!)), const Spacer()]);
+      return Row(
+        children: [
+          Expanded(child: CachedImage(widget.badge!, width: _badgeWidth, height: _badgeHeight)),
+          const Spacer(),
+        ],
+      );
     } else if (widget.secondBadge != null) {
-      return Row(children: [Expanded(child: CachedImage(widget.secondBadge!)), const Spacer()]);
+      return Row(
+        children: [
+          Expanded(child: CachedImage(widget.secondBadge!, width: _badgeWidth, height: _badgeHeight)),
+          const Spacer(),
+        ],
+      );
     }
 
     return sizedBoxEmpty;
@@ -352,7 +374,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
           else ...[
             Row(
               children: [
-                CachedImage(checkin.feelingImage),
+                CachedImage(checkin.feelingImage, width: _feelingImageSize, height: _feelingImageSize),
                 sizedBoxW8H8,
                 Expanded(child: Text(checkin.feelingName, style: Theme.of(context).textTheme.displaySmall)),
               ],
