@@ -24,9 +24,8 @@ class RateCard extends StatelessWidget {
     // The first column is user info and last column is always "rate reason",
     // these two columns should have a flex column width.
     // The rest columns are always short enough to constrains in fixed width.
-    final fixedColumnWidths = List.filled(rate.attrList.length - 1, 50);
     final columnWidths = <int, TableColumnWidth>{
-      for (final (i, v) in fixedColumnWidths.indexed) i + 1: FixedColumnWidth(v.toDouble()),
+      for (final i in List.generate(rate.attrList.length - 1, (v) => v)) i + 1: const IntrinsicColumnWidth(),
     };
     columnWidths[0] = const FixedColumnWidth(150);
     columnWidths[rate.attrList.length + 1] = const FixedColumnWidth(200);
@@ -34,7 +33,15 @@ class RateCard extends StatelessWidget {
     // ,
     final tableHeaders =
         [context.t.rateCard.user, ...rate.attrList]
-            .map<Widget>((e) => Text(e, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: secondaryColor)))
+            .map<Widget>(
+              (e) => Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(e, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: secondaryColor)),
+                  sizedBoxW8H8,
+                ],
+              ),
+            )
             .toList();
 
     final bottom = Text(
@@ -66,16 +73,19 @@ class RateCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      sizedBoxW4H4,
+                      sizedBoxW8H8,
                       Expanded(
                         child: GestureDetector(
                           onTap: () async => context.dispatchAsUrl(e.user.url),
-                          child: Row(children: [Text(e.user.name, textAlign: TextAlign.left)]),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(e.user.name, textAlign: TextAlign.left),
+                          ),
                         ),
                       ),
                     ],
                   ),
-                  ...e.attrValueList.map(Text.new),
+                  ...e.attrValueList.map((e) => Row(mainAxisSize: MainAxisSize.min, children: [Text(e), sizedBoxW8H8])),
                 ],
               ),
             )
