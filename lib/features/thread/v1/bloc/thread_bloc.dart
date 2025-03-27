@@ -315,6 +315,22 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             .whereType<PostMedalMenuItem>()
             .toList();
 
+    final statisticsInfo =
+        document
+            .querySelectorAll('div#postlist > table:nth-child(1) span.xi1')
+            .map((e) => e.firstEndDeepText()?.parseToInt())
+            .whereType<int>();
+    final int? viewCount;
+    final int? replyCount;
+
+    if (statisticsInfo.length == 2) {
+      viewCount = statisticsInfo.first;
+      replyCount = statisticsInfo.elementAt(1);
+    } else {
+      viewCount = null;
+      replyCount = null;
+    }
+
     final threadState = ThreadState(
       tid: tid,
       pid: state.pid,
@@ -340,6 +356,8 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
       latestModAct: latestModAct,
       breadcrumbs: breadcrumbs,
       postMedals: medalsAvailable,
+      viewCount: viewCount,
+      replyCount: replyCount,
     );
 
     return threadState;

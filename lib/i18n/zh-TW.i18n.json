@@ -371,7 +371,8 @@
     "operationLog": {
       "title": "操作記錄"
     },
-    "softCloseHint": "帖子已关闭，回复前请注意"
+    "softCloseHint": "帖子已关闭，回复前请注意",
+    "statistics": "${view: int} 查看 ${reply: int} 回覆"
   },
   "noticePage": {
     "title": "通知",
@@ -644,11 +645,20 @@
     "profileDialog": {
       "tabName": {
         "info": "訊息",
-        "medals": "勳章",
-        "signature": "簽名"
+        "medalsAndBadges": "勳章&牌子",
+        "signature": "簽名",
+        "pokemonAndCheckin": "寵物&簽到"
       },
+      "pmTooltip": "私訊我",
+      "profileTooltip": "查看資料",
+      "medals": "勳章",
+      "badges": "牌子",
+      "pokemon": "寵物",
+      "checkin": "簽到",
       "noMedal": "沒有勳章",
       "noSig": "沒有簽名",
+      "noCheckin": "沒有簽到訊息",
+      "noPokemon": "沒有寵物資訊",
       "group": "使用者群組",
       "title": "頭銜",
       "recommended": "精華",

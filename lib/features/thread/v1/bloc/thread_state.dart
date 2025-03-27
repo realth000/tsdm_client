@@ -44,6 +44,8 @@ class ThreadState with ThreadStateMappable {
     this.latestModAct,
     this.breadcrumbs = const [],
     this.postMedals = const [],
+    this.viewCount,
+    this.replyCount,
   });
 
   /// Status.
@@ -157,4 +159,10 @@ class ThreadState with ThreadStateMappable {
 
   /// All available in post medal.
   final List<PostMedalMenuItem> postMedals;
+
+  /// Total count of views on current thread.
+  final int? viewCount;
+
+  /// Total count of replies in thread.
+  final int? replyCount;
 }

@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -14,14 +16,19 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/card/post_card/checkin.dart';
+import 'package:tsdm_client/widgets/card/post_card/pokemon.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Medal size: 34 x 55.
 const _medalHeight = 55.0;
 
-/// Badge size: 186 x 85.
-const _badgeHeight = 75.0;
+/// The large size of pokemon, usually the primary one, 90 x 90.
+const _pokemonImagePrimarySize = 90.0;
+
+/// Other pokemon not the primary one, 32 x 32.
+const _pokemonImageNormalSize = 32.0;
 
 /// Show a dialog to display user brief profile.
 ///
@@ -38,6 +45,8 @@ Future<void> showUserBriefProfileDialog(
   required String? badge,
   required String? secondBadge,
   required String? signature,
+  required PostFloorPokemon? pokemon,
+  required PostCheckinStatus? checkin,
 }) async {
   await showHeroDialog<void>(
     context,
@@ -50,6 +59,8 @@ Future<void> showUserBriefProfileDialog(
       badge,
       secondBadge,
       signature,
+      pokemon,
+      checkin,
     ),
   );
 }
@@ -64,6 +75,8 @@ class _UserBriefProfileDialog extends StatefulWidget {
     this.badge,
     this.secondBadge,
     this.signature,
+    this.pokemon,
+    this.checkin,
   );
 
   final UserBriefProfile profile;
@@ -85,6 +98,12 @@ class _UserBriefProfileDialog extends StatefulWidget {
   /// Html format user signature.
   final String? signature;
 
+  /// Pokemon info.
+  final PostFloorPokemon? pokemon;
+
+  /// Checkin info.
+  final PostCheckinStatus? checkin;
+
   @override
   State<_UserBriefProfileDialog> createState() => _UserBriefProfileDialogState();
 }
@@ -96,6 +115,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
     final tr = context.t.postCard.profileDialog;
 
     return ListView(
+      padding: edgeInsetsT4,
       children: <Widget>[
         _UserProfilePair(
           Icons.group_outlined,
@@ -203,47 +223,55 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
     );
   }
 
-  Widget _buildMedalsTab(BuildContext context) {
-    if (widget.medals.isEmpty) {
-      return Center(
-        child: Text(
-          context.t.postCard.profileDialog.noMedal,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-        ),
-      );
-    }
+  Widget _buildMedalsAndBadgesTab(BuildContext context) {
+    final tr = context.t.postCard.profileDialog;
 
     final nameStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary);
     final descriptionStyle = Theme.of(context).textTheme.labelMedium;
+    final labelStyle = Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary);
 
     return SingleChildScrollView(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         spacing: 4,
-        children:
-            widget.medals
-                .mapIndexed(
-                  (idx, e) => Row(
-                    children: [
-                      Text('${idx + 1}', style: nameStyle),
-                      sizedBoxW8H8,
-                      CachedImage(e.image, maxHeight: _medalHeight),
-                      sizedBoxW8H8,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [Text(e.name, style: nameStyle), Text(e.description, style: descriptionStyle)],
-                        ),
-                      ),
-                    ],
+        children: [
+          Text(tr.badges, style: labelStyle),
+          sizedBoxW4H4,
+          _buildBadgeRow(),
+          sizedBoxW4H4,
+          Text(tr.medals, style: labelStyle),
+          sizedBoxW4H4,
+          if (widget.medals.isEmpty)
+            Center(
+              child: Text(
+                context.t.postCard.profileDialog.noMedal,
+                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+              ),
+            )
+          else
+            ...widget.medals.mapIndexed(
+              (idx, e) => Row(
+                children: [
+                  SizedBox(width: 20, child: Text('${idx + 1}'.padLeft(2), style: nameStyle)),
+                  sizedBoxW8H8,
+                  CachedImage(e.image, maxHeight: _medalHeight),
+                  sizedBoxW8H8,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [Text(e.name, style: nameStyle), Text(e.description, style: descriptionStyle)],
+                    ),
                   ),
-                )
-                .toList(),
+                ],
+              ),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildSignature(BuildContext context) {
+  Widget _buildSignatureTab(BuildContext context) {
     if (widget.signature == null) {
       return Center(
         child: Text(
@@ -273,10 +301,77 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
     return sizedBoxEmpty;
   }
 
+  Widget _buildPokemonAndCheckinTab(BuildContext context) {
+    final tr = context.t.postCard.profileDialog;
+    final labelStyle = Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary);
+    final emptyStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
+    final pokemon = widget.pokemon;
+    final checkin = widget.checkin;
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        spacing: 4,
+        children: [
+          Text(tr.pokemon, style: labelStyle),
+          sizedBoxW4H4,
+          if (pokemon == null)
+            Center(child: Text(tr.noPokemon, style: emptyStyle))
+          else ...[
+            CachedImage(
+              pokemon.primaryPokemon.image,
+              width: _pokemonImagePrimarySize,
+              height: _pokemonImagePrimarySize,
+            ),
+            Text(
+              pokemon.primaryPokemon.name,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+            ),
+            if (pokemon.otherPokemon != null)
+              ListView(
+                padding: edgeInsetsT4,
+                shrinkWrap: true,
+                children:
+                    pokemon.otherPokemon!
+                        .map(
+                          (e) => Row(
+                            children: [
+                              CachedImage(e.image, width: _pokemonImageNormalSize, height: _pokemonImageNormalSize),
+                              Text(e.name),
+                            ],
+                          ),
+                        )
+                        .toList(),
+              ),
+          ],
+          sizedBoxW4H4,
+          Text(tr.checkin, style: labelStyle),
+          sizedBoxW4H4,
+          if (checkin == null)
+            Center(child: Text(tr.noCheckin, style: emptyStyle))
+          else ...[
+            Row(
+              children: [
+                CachedImage(checkin.feelingImage),
+                sizedBoxW8H8,
+                Expanded(child: Text(checkin.feelingName, style: Theme.of(context).textTheme.displaySmall)),
+              ],
+            ),
+            Text(
+              checkin.words,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+            ),
+            Text(checkin.statistics),
+          ],
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
-    tabController = TabController(length: 3, vsync: this);
+    tabController = TabController(length: 4, vsync: this);
   }
 
   @override
@@ -295,7 +390,10 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
       child: Padding(
         padding: edgeInsetsL24T24R24B24,
         child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: size.width * 0.7, maxHeight: size.height * 0.7),
+          constraints: BoxConstraints(
+            maxWidth: math.min(size.width * 0.7, 400),
+            maxHeight: math.min(size.height * 0.7, 600),
+          ),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -315,6 +413,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                   const Spacer(),
                   IconButton(
                     icon: const Icon(Icons.email_outlined),
+                    tooltip: tr.pmTooltip,
                     onPressed:
                         () => context.pushNamed(
                           ScreenPaths.chat,
@@ -324,6 +423,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                   ),
                   IconButton(
                     icon: const Icon(Icons.person_outlined),
+                    tooltip: tr.profileTooltip,
                     onPressed: () async => context.dispatchAsUrl(widget.userSpaceUrl),
                   ),
                 ],
@@ -344,16 +444,24 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                 style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
               ),
               sizedBoxW4H4,
-              SizedBox(height: _badgeHeight, child: _buildBadgeRow()),
-              sizedBoxW4H4,
               TabBar(
-                tabs: [Tab(text: tr.tabName.info), Tab(text: tr.tabName.medals), Tab(text: tr.tabName.signature)],
+                tabs: [
+                  Tab(text: tr.tabName.info),
+                  Tab(text: tr.tabName.medalsAndBadges),
+                  Tab(text: tr.tabName.signature),
+                  Tab(text: tr.tabName.pokemonAndCheckin),
+                ],
                 controller: tabController,
               ),
               Expanded(
                 child: TabBarView(
                   controller: tabController,
-                  children: [_buildInfoTab(context), _buildMedalsTab(context), _buildSignature(context)],
+                  children: [
+                    _buildInfoTab(context),
+                    _buildMedalsAndBadgesTab(context),
+                    _buildSignatureTab(context),
+                    _buildPokemonAndCheckinTab(context),
+                  ],
                 ),
               ),
             ],

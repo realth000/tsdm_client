@@ -126,6 +126,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               badge: widget.post.badge,
               secondBadge: widget.post.secondBadge,
               signature: widget.post.signature,
+              pokemon: widget.post.pokemon,
+              checkin: widget.post.checkin,
             );
           }
         },
@@ -151,6 +153,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   badge: widget.post.badge,
                   secondBadge: widget.post.secondBadge,
                   signature: widget.post.signature,
+                  pokemon: widget.post.pokemon,
+                  checkin: widget.post.checkin,
                 );
               }
             },

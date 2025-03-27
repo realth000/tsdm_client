@@ -371,7 +371,8 @@
     "operationLog": {
       "title": "Operation Log"
     },
-    "softCloseHint": "Thread is closed, be attention before posting"
+    "softCloseHint": "Thread is closed, be attention before posting",
+    "statistics": "${view: int} views ${reply: int} count"
   },
   "noticePage": {
     "title": "Notifications",
@@ -644,11 +645,20 @@
     "profileDialog": {
       "tabName": {
         "info": "Info",
-        "medals": "Medals",
-        "signature": "Sig"
+        "medalsAndBadges": "Medals&Badges",
+        "signature": "Sig",
+        "pokemonAndCheckin": "Pokemon&Check-in"
       },
+      "pmTooltip": "PM me",
+      "profileTooltip": "View profile",
+      "medals": "Medals",
+      "badges": "Badges",
+      "pokemon": "Pokemon",
+      "checkin": "Checkin",
       "noMedal": "No medals",
       "noSig": "No signature",
+      "noCheckin": "No checkin info",
+      "noPokemon": "No pokemon info",
       "group": "Group",
       "title": "Title",
       "nickname": "Nickname",

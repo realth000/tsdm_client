@@ -172,7 +172,13 @@ class _PostListState extends State<PostList> with LoggerMixin {
     super.dispose();
   }
 
-  Widget _buildHeader(BuildContext context, List<ThreadBreadcrumb> breadcrumbs, double expandHeight) {
+  Widget _buildHeader(
+    BuildContext context,
+    List<ThreadBreadcrumb> breadcrumbs,
+    double expandHeight,
+    int? viewCount,
+    int? replyCount,
+  ) {
     if (!_listController.isAttached) {
       return sizedBoxEmpty;
     }
@@ -241,6 +247,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
                         ),
                       ),
                     Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
+                    Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
                     if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
                   ].reversed.toList(),
             ),
@@ -330,7 +337,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
                     titleSpacing: 0,
                     automaticallyImplyLeading: false,
                     primary: false,
-                    title: _buildHeader(context, state.breadcrumbs, safeHeight),
+                    title: _buildHeader(context, state.breadcrumbs, safeHeight, state.viewCount, state.replyCount),
                   );
                 },
                 headerMaxExtent: safeHeight,

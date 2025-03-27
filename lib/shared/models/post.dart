@@ -41,6 +41,8 @@ class Post with PostMappable {
     this.badge,
     this.secondBadge,
     this.signature,
+    this.pokemon,
+    this.checkin,
   });
 
   /// Post ID.
@@ -136,6 +138,12 @@ class Post with PostMappable {
 
   /// Html format signature.
   final String? signature;
+
+  /// Pokemon in floor.
+  final PostFloorPokemon? pokemon;
+
+  /// Author checkin status.
+  final PostCheckinStatus? checkin;
 
   /// Build [Post] from [element] that has attribute id "post_$postID".
   static Post? fromPostNode(uh.Element element, int page) {
@@ -312,6 +320,22 @@ class Post with PostMappable {
     final secondBadge = element.querySelector('div.tsdm_statbar > a > img.tsdmtitles')?.imageUrl();
     final signature = element.querySelector('div.sign_inner')?.innerHtml;
 
+    final PostFloorPokemon? pokemon;
+    final pokemonNode = element.querySelector('div.tsdm_pokemon');
+    if (pokemonNode != null) {
+      pokemon = PostFloorPokemon.fromDiv(pokemonNode);
+    } else {
+      pokemon = null;
+    }
+
+    final PostCheckinStatus? checkin;
+    final checkinNode = element.querySelector('div.qdsmile');
+    if (checkinNode != null) {
+      checkin = PostCheckinStatus.fromDiv(checkinNode);
+    } else {
+      checkin = null;
+    }
+
     return Post(
       postID: postID,
       postFloor: postFloor,
@@ -336,6 +360,8 @@ class Post with PostMappable {
       badge: badge,
       secondBadge: secondBadge,
       signature: signature,
+      pokemon: pokemon,
+      checkin: checkin,
     );
   }
 
