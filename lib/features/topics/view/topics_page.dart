@@ -10,7 +10,6 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 
 /// App topic page.
@@ -100,12 +99,7 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
           (_) =>
               TopicsBloc(forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context))
                 ..add(TopicsLoadRequested()),
-      child: BlocConsumer<TopicsBloc, TopicsState>(
-        listener: (context, state) {
-          if (state.status == TopicsStatus.failed) {
-            showFailedToLoadSnackBar(context);
-          }
-        },
+      child: BlocBuilder<TopicsBloc, TopicsState>(
         builder: (context, state) {
           final body = switch (state.status) {
             TopicsStatus.loading || TopicsStatus.initial => EasyRefresh(

@@ -7,7 +7,6 @@ import 'package:tsdm_client/features/latest_thread/bloc/latest_thread_bloc.dart'
 import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 
 /// Page to show info about latest thread page.
@@ -79,26 +78,19 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
                     ..add(LatestThreadRefreshRequested(widget.url)),
         ),
       ],
-      child: BlocListener<LatestThreadBloc, LatestThreadState>(
-        listener: (context, state) {
-          if (state.status == LatestThreadStatus.failed) {
-            showFailedToLoadSnackBar(context);
-          }
-        },
-        child: BlocBuilder<LatestThreadBloc, LatestThreadState>(
-          builder: (context, state) {
-            final body = switch (state.status) {
-              LatestThreadStatus.initial ||
-              LatestThreadStatus.loading => const Center(child: CircularProgressIndicator()),
-              LatestThreadStatus.failed => buildRetryButton(context, () {
-                context.read<LatestThreadBloc>().add(LatestThreadRefreshRequested(widget.url));
-              }),
-              LatestThreadStatus.success => _buildBody(context, state),
-            };
+      child: BlocBuilder<LatestThreadBloc, LatestThreadState>(
+        builder: (context, state) {
+          final body = switch (state.status) {
+            LatestThreadStatus.initial ||
+            LatestThreadStatus.loading => const Center(child: CircularProgressIndicator()),
+            LatestThreadStatus.failed => buildRetryButton(context, () {
+              context.read<LatestThreadBloc>().add(LatestThreadRefreshRequested(widget.url));
+            }),
+            LatestThreadStatus.success => _buildBody(context, state),
+          };
 
-            return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: SafeArea(child: body));
-          },
-        ),
+          return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: SafeArea(child: body));
+        },
       ),
     );
   }

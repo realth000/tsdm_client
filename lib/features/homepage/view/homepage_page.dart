@@ -17,7 +17,6 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 
@@ -125,12 +124,7 @@ class _HomepagePageState extends State<HomepagePage> {
             },
           ),
         ],
-        child: BlocConsumer<HomepageBloc, HomepageState>(
-          listener: (context, state) {
-            if (state.status == HomepageStatus.failure) {
-              showFailedToLoadSnackBar(context);
-            }
-          },
+        child: BlocBuilder<HomepageBloc, HomepageState>(
           builder: (context, state) {
             final body = switch (state.status) {
               HomepageStatus.initial || HomepageStatus.loading => EasyRefresh(

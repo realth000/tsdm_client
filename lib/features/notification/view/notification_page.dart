@@ -11,7 +11,6 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/notice_card_v2.dart';
 
 enum _Actions { markAllNoticeAsRead, markAllPersonalMessageAsRead, markAllBroadcastMessageAsRead }
@@ -82,9 +81,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
     final tr = context.t.noticePage;
     return BlocListener<NotificationBloc, NotificationState>(
       listener: (context, state) {
-        if (state.status == NotificationStatus.failure) {
-          showFailedToLoadSnackBar(context);
-        } else if (state.status == NotificationStatus.success) {
+        if (state.status == NotificationStatus.success) {
           final n = state.noticeList.where((e) => !e.alreadyRead).length;
           final pm = state.personalMessageList.where((e) => !e.alreadyRead).length;
           final bm = state.broadcastMessageList.where((e) => !e.alreadyRead).length;

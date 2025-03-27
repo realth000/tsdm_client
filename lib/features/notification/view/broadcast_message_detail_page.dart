@@ -9,7 +9,6 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Detail page of a `BroadcastMessage`.
@@ -47,37 +46,30 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
         RepositoryProvider(create: (_) => NotificationRepository()),
         BlocProvider(create: (context) => BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid)),
       ],
-      child: BlocListener<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
-        listener: (context, state) {
-          if (state.status == BroadcastMessageDetailStatus.failed) {
-            showFailedToLoadSnackBar(context);
-          }
-        },
-        child: BlocBuilder<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
-          builder: (context, state) {
-            final body = switch (state.status) {
-              BroadcastMessageDetailStatus.initial ||
-              BroadcastMessageDetailStatus.loading => const Center(child: CircularProgressIndicator()),
-              BroadcastMessageDetailStatus.success => _buildBody(context, state),
-              BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
-                context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
-              }),
-            };
+      child: BlocBuilder<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
+        builder: (context, state) {
+          final body = switch (state.status) {
+            BroadcastMessageDetailStatus.initial ||
+            BroadcastMessageDetailStatus.loading => const Center(child: CircularProgressIndicator()),
+            BroadcastMessageDetailStatus.success => _buildBody(context, state),
+            BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
+              context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
+            }),
+          };
 
-            return Scaffold(
-              appBar: AppBar(
-                title: Text(context.t.noticePage.broadcastMessageTab.title),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.open_in_new_outlined),
-                    onPressed: () async => context.dispatchAsUrl('$broadcastMessageDetailUrl$pmid', external: true),
-                  ),
-                ],
-              ),
-              body: SafeArea(child: body),
-            );
-          },
-        ),
+          return Scaffold(
+            appBar: AppBar(
+              title: Text(context.t.noticePage.broadcastMessageTab.title),
+              actions: [
+                IconButton(
+                  icon: const Icon(Icons.open_in_new_outlined),
+                  onPressed: () async => context.dispatchAsUrl('$broadcastMessageDetailUrl$pmid', external: true),
+                ),
+              ],
+            ),
+            body: SafeArea(child: body),
+          );
+        },
       ),
     );
   }

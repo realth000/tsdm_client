@@ -602,12 +602,7 @@ class _ProfilePageState extends State<ProfilePage> {
             profileRepository: RepositoryProvider.of<ProfileRepository>(context),
             authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
           )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
-      child: BlocConsumer<ProfileBloc, ProfileState>(
-        listener: (context, state) {
-          if (state.status == ProfileStatus.failure) {
-            showFailedToLoadSnackBar(context);
-          }
-        },
+      child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           // Default AppBar only use when loading data or failed to load data.
           // Keep this widget so that user can go back to the previous page in

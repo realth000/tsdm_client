@@ -96,25 +96,14 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
           create: (context) => NotificationDetailCubit(notificationRepository: context.repo())..fetchDetail(widget.url),
         ),
       ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<NotificationDetailCubit, NotificationDetailState>(
-            listener: (context, state) {
-              if (state.status == NotificationDetailStatus.failed) {
-                showFailedToLoadSnackBar(context);
-              }
-            },
-          ),
-          BlocListener<ReplyBloc, ReplyState>(
-            // Drop only needClearText changed changes.
-            listenWhen: (prev, curr) => prev.status != curr.status,
-            listener: (context, state) {
-              if (state.status == ReplyStatus.success) {
-                showSnackBar(context: context, message: context.t.threadPage.replySuccess);
-              }
-            },
-          ),
-        ],
+      child: BlocListener<ReplyBloc, ReplyState>(
+        // Drop only needClearText changed changes.
+        listenWhen: (prev, curr) => prev.status != curr.status,
+        listener: (context, state) {
+          if (state.status == ReplyStatus.success) {
+            showSnackBar(context: context, message: context.t.threadPage.replySuccess);
+          }
+        },
         child: BlocBuilder<NotificationDetailCubit, NotificationDetailState>(
           builder: (context, state) {
             final body = switch (state.status) {

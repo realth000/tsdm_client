@@ -264,9 +264,8 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
               } else {
                 context.read<ReplyBloc>().add(const ReplyThreadClosed(closed: false));
               }
-              if (state.status == ThreadStatus.failure) {
-                showFailedToLoadSnackBar(context);
-              } else if (state.status == ThreadStatus.success) {
+
+              if (state.status == ThreadStatus.success) {
                 // Record thread visit history.
                 final currentUser = context.read<AuthenticationRepository>().currentUser;
                 if (currentUser == null) {

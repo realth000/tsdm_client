@@ -454,40 +454,33 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         ),
         BlocProvider(create: (context) => JumpPageCubit()),
       ],
-      child: BlocListener<ForumBloc, ForumState>(
-        listener: (context, state) {
-          if (state.status == ForumStatus.failure) {
-            showFailedToLoadSnackBar(context);
+      child: BlocBuilder<ForumBloc, ForumState>(
+        builder: (context, state) {
+          if (state.status == ForumStatus.success &&
+              state.normalThreadList.isEmpty &&
+              // Do not switch tab if filtering but filtering non result left.
+              !state.filterState.isFiltering()) {
+            tabController.animateTo(_subredditTabIndex, duration: const Duration(milliseconds: 500));
           }
+          // Update jump page state.
+          context.read<JumpPageCubit>().setPageInfo(currentPage: state.currentPage, totalPages: state.totalPages);
+
+          // Reset jump page state when every build.
+          if (state.status == ForumStatus.initial || state.status == ForumStatus.loading) {
+            context.read<JumpPageCubit>().markLoading();
+          } else {
+            context.read<JumpPageCubit>().markSuccess();
+          }
+
+          return Scaffold(
+            appBar: _buildListAppBar(context, state),
+            body: NotificationListener<UserScrollNotification>(
+              onNotification: _onBodyScrollNotification,
+              child: SafeArea(child: _buildBody(context, state)),
+            ),
+            floatingActionButton: _buildFloatingActionButton(context, state),
+          );
         },
-        child: BlocBuilder<ForumBloc, ForumState>(
-          builder: (context, state) {
-            if (state.status == ForumStatus.success &&
-                state.normalThreadList.isEmpty &&
-                // Do not switch tab if filtering but filtering non result left.
-                !state.filterState.isFiltering()) {
-              tabController.animateTo(_subredditTabIndex, duration: const Duration(milliseconds: 500));
-            }
-            // Update jump page state.
-            context.read<JumpPageCubit>().setPageInfo(currentPage: state.currentPage, totalPages: state.totalPages);
-
-            // Reset jump page state when every build.
-            if (state.status == ForumStatus.initial || state.status == ForumStatus.loading) {
-              context.read<JumpPageCubit>().markLoading();
-            } else {
-              context.read<JumpPageCubit>().markSuccess();
-            }
-
-            return Scaffold(
-              appBar: _buildListAppBar(context, state),
-              body: NotificationListener<UserScrollNotification>(
-                onNotification: _onBodyScrollNotification,
-                child: SafeArea(child: _buildBody(context, state)),
-              ),
-              floatingActionButton: _buildFloatingActionButton(context, state),
-            );
-          },
-        ),
       ),
     );
   }
