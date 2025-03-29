@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
@@ -20,27 +21,6 @@ import 'package:tsdm_client/widgets/card/post_card/checkin.dart';
 import 'package:tsdm_client/widgets/card/post_card/pokemon.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
-
-/// Width of badge image.
-const _badgeWidth = 184.0;
-
-/// Height of badge image.
-const _badgeHeight = 100.0;
-
-/// Medal size: 34 x 55.
-const _medalWidth = 34.0;
-
-/// Medal size: 34 x 55.
-const _medalHeight = 55.0;
-
-/// The large size of pokemon, usually the primary one, 90 x 90.
-const _pokemonImagePrimarySize = 90.0;
-
-/// Other pokemon not the primary one, 32 x 32.
-const _pokemonImageNormalSize = 32.0;
-
-/// Size of feeling image, 60 x 60.
-const _feelingImageSize = 60.0;
 
 /// Show a dialog to display user brief profile.
 ///
@@ -266,7 +246,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                 children: [
                   SizedBox(width: 20, child: Text('${idx + 1}'.padLeft(2), style: nameStyle)),
                   sizedBoxW8H8,
-                  CachedImage(e.image, width: _medalWidth, height: _medalHeight),
+                  CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
                   sizedBoxW8H8,
                   Expanded(
                     child: Column(
@@ -299,22 +279,22 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
     if (widget.badge != null && widget.secondBadge != null) {
       return Row(
         children: [
-          Expanded(child: CachedImage(widget.badge!, width: _badgeWidth, height: _badgeHeight)),
+          Expanded(child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height)),
           const VerticalDivider(),
-          Expanded(child: CachedImage(widget.secondBadge!, width: _badgeWidth, height: _badgeHeight)),
+          Expanded(child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height)),
         ],
       );
     } else if (widget.badge != null) {
       return Row(
         children: [
-          Expanded(child: CachedImage(widget.badge!, width: _badgeWidth, height: _badgeHeight)),
+          Expanded(child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height)),
           const Spacer(),
         ],
       );
     } else if (widget.secondBadge != null) {
       return Row(
         children: [
-          Expanded(child: CachedImage(widget.secondBadge!, width: _badgeWidth, height: _badgeHeight)),
+          Expanded(child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height)),
           const Spacer(),
         ],
       );
@@ -342,8 +322,8 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
           else ...[
             CachedImage(
               pokemon.primaryPokemon.image,
-              width: _pokemonImagePrimarySize,
-              height: _pokemonImagePrimarySize,
+              width: pokemonPrimaryImageSize.width,
+              height: pokemonPrimaryImageSize.height,
             ),
             Text(
               pokemon.primaryPokemon.name,
@@ -358,7 +338,11 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                         .map(
                           (e) => Row(
                             children: [
-                              CachedImage(e.image, width: _pokemonImageNormalSize, height: _pokemonImageNormalSize),
+                              CachedImage(
+                                e.image,
+                                width: pokemonNotPrimaryImageSize.width,
+                                height: pokemonNotPrimaryImageSize.height,
+                              ),
                               Text(e.name),
                             ],
                           ),
@@ -374,7 +358,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
           else ...[
             Row(
               children: [
-                CachedImage(checkin.feelingImage, width: _feelingImageSize, height: _feelingImageSize),
+                CachedImage(checkin.feelingImage, width: feelingImageSize.width, height: feelingImageSize.height),
                 sizedBoxW8H8,
                 Expanded(child: Text(checkin.feelingName, style: Theme.of(context).textTheme.displaySmall)),
               ],

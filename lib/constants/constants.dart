@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:ui';
 
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/utils/git_info.dart';
@@ -93,3 +94,18 @@ const defaultFullScreenDisabledEditorFeatures = {
   EditorFeatures.copy,
   EditorFeatures.paste,
 };
+
+/// Medal image size fixed to 34 x 55
+const medalImageSize = Size(34, 55);
+
+/// Badge image size fixed to 184 x 100
+const badgeImageSize = Size(184, 100);
+
+/// Primary pokemon image size, height is less 100 and not fixed.
+const pokemonPrimaryImageSize = Size(90, 90);
+
+/// Not primary size fixed to 32 x 32.
+const pokemonNotPrimaryImageSize = Size(32, 32);
+
+/// Feeling image size fixed to 60 x 60.
+const feelingImageSize = Size(60, 60);
