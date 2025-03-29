@@ -9,7 +9,6 @@ import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
-import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/medal.dart';
@@ -100,306 +99,32 @@ class _UserBriefProfileDialog extends StatefulWidget {
   State<_UserBriefProfileDialog> createState() => _UserBriefProfileDialogState();
 }
 
-class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with SingleTickerProviderStateMixin {
-  late TabController tabController;
-
-  Widget _buildInfoTab(BuildContext context) {
-    final tr = context.t.postCard.profileDialog;
-
-    return ListView(
-      padding: edgeInsetsT4,
-      children: <Widget>[
-        _UserProfilePair(
-          Icons.group_outlined,
-          tr.group,
-          widget.profile.userGroup,
-          style: _UserProfileAttrStyle.primary,
-        ),
-        if (widget.profile.title != null)
-          _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title, style: _UserProfileAttrStyle.primary),
-        _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, style: _UserProfileAttrStyle.primary),
-        _UserProfilePair(
-          Icons.thumb_up_outlined,
-          tr.recommended,
-          widget.profile.recommended,
-          style: _UserProfileAttrStyle.primary,
-        ),
-        _UserProfilePair(
-          Icons.book_outlined,
-          tr.thread,
-          widget.profile.threadCount,
-          style: _UserProfileAttrStyle.primary,
-        ),
-        _UserProfilePair(
-          MdiIcons.commentEditOutline,
-          tr.post,
-          widget.profile.postCount,
-          style: _UserProfileAttrStyle.primary,
-        ),
-        _UserProfilePair(
-          Icons.emoji_people_outlined,
-          tr.famous,
-          widget.profile.famous,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        _UserProfilePair(
-          FontAwesomeIcons.coins,
-          tr.coins,
-          widget.profile.coins,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        _UserProfilePair(
-          Icons.campaign_outlined,
-          tr.publicity,
-          widget.profile.publicity,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        _UserProfilePair(
-          Icons.water_drop_outlined,
-          tr.natural,
-          widget.profile.natural,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        _UserProfilePair(
-          MdiIcons.dominoMask,
-          tr.scheming,
-          widget.profile.scheming,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        _UserProfilePair(
-          Icons.stream_outlined,
-          tr.spirit,
-          widget.profile.spirit,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        // Special attr, dynamic and not translated.
-        _UserProfilePair(
-          MdiIcons.heartOutline,
-          widget.profile.specialAttrName,
-          widget.profile.specialAttr,
-          style: _UserProfileAttrStyle.secondary,
-        ),
-        if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
-          _UserProfilePair(
-            Icons.diversity_1_outlined,
-            tr.cp,
-            widget.profile.couple,
-            style: _UserProfileAttrStyle.tertiary,
-          ),
-        _UserProfilePair(
-          Icons.feedback_outlined,
-          tr.privilege,
-          widget.profile.privilege,
-          style: _UserProfileAttrStyle.tertiary,
-        ),
-        _UserProfilePair(
-          Icons.event_note_outlined,
-          tr.registration,
-          widget.profile.registrationDate,
-          style: _UserProfileAttrStyle.tertiary,
-        ),
-        if (widget.profile.comeFrom != null)
-          _UserProfilePair(
-            Icons.pin_drop_outlined,
-            tr.from,
-            widget.profile.comeFrom,
-            style: _UserProfileAttrStyle.tertiary,
-          ),
-        _UserProfilePair(
-          Icons.online_prediction_outlined,
-          tr.status.title,
-          widget.profile.online ? tr.status.online : tr.status.offline,
-          style: _UserProfileAttrStyle.tertiary,
-        ),
-      ].insertBetween(sizedBoxW4H4),
-    );
-  }
-
-  Widget _buildMedalsAndBadgesTab(BuildContext context) {
-    final tr = context.t.postCard.profileDialog;
-
-    final nameStyle = Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary);
-    final descriptionStyle = Theme.of(context).textTheme.labelMedium;
-    final labelStyle = Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary);
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 4,
-        children: [
-          Text(tr.badges, style: labelStyle),
-          sizedBoxW4H4,
-          _buildBadgeRow(),
-          sizedBoxW4H4,
-          Text(tr.medals, style: labelStyle),
-          sizedBoxW4H4,
-          if (widget.medals.isEmpty)
-            Center(
-              child: Text(
-                context.t.postCard.profileDialog.noMedal,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-              ),
-            )
-          else
-            ...widget.medals.mapIndexed(
-              (idx, e) => Row(
-                children: [
-                  SizedBox(width: 20, child: Text('${idx + 1}'.padLeft(2), style: nameStyle)),
-                  sizedBoxW8H8,
-                  CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
-                  sizedBoxW8H8,
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [Text(e.name, style: nameStyle), Text(e.description, style: descriptionStyle)],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSignatureTab(BuildContext context) {
-    if (widget.signature == null) {
-      return Center(
-        child: Text(
-          context.t.postCard.profileDialog.noSig,
-          style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-        ),
-      );
-    }
-    return SingleChildScrollView(child: munchElement(context, parseHtmlDocument(widget.signature!).body!));
-  }
-
-  Widget _buildBadgeRow() {
-    if (widget.badge != null && widget.secondBadge != null) {
-      return Row(
-        children: [
-          Expanded(child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height)),
-          const VerticalDivider(),
-          Expanded(child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height)),
-        ],
-      );
-    } else if (widget.badge != null) {
-      return Row(
-        children: [
-          Expanded(child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height)),
-          const Spacer(),
-        ],
-      );
-    } else if (widget.secondBadge != null) {
-      return Row(
-        children: [
-          Expanded(child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height)),
-          const Spacer(),
-        ],
-      );
-    }
-
-    return sizedBoxEmpty;
-  }
-
-  Widget _buildPokemonAndCheckinTab(BuildContext context) {
-    final tr = context.t.postCard.profileDialog;
-    final labelStyle = Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary);
-    final emptyStyle = Theme.of(context).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
-    final pokemon = widget.pokemon;
-    final checkin = widget.checkin;
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        spacing: 4,
-        children: [
-          Text(tr.pokemon, style: labelStyle),
-          sizedBoxW4H4,
-          if (pokemon == null)
-            Center(child: Text(tr.noPokemon, style: emptyStyle))
-          else ...[
-            CachedImage(
-              pokemon.primaryPokemon.image,
-              width: pokemonPrimaryImageSize.width,
-              height: pokemonPrimaryImageSize.height,
-            ),
-            Text(
-              pokemon.primaryPokemon.name,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
-            ),
-            if (pokemon.otherPokemon != null)
-              ListView(
-                padding: edgeInsetsT4,
-                shrinkWrap: true,
-                children:
-                    pokemon.otherPokemon!
-                        .map(
-                          (e) => Row(
-                            children: [
-                              CachedImage(
-                                e.image,
-                                width: pokemonNotPrimaryImageSize.width,
-                                height: pokemonNotPrimaryImageSize.height,
-                              ),
-                              Text(e.name),
-                            ],
-                          ),
-                        )
-                        .toList(),
-              ),
-          ],
-          sizedBoxW4H4,
-          Text(tr.checkin, style: labelStyle),
-          sizedBoxW4H4,
-          if (checkin == null)
-            Center(child: Text(tr.noCheckin, style: emptyStyle))
-          else ...[
-            Row(
-              children: [
-                CachedImage(checkin.feelingImage, width: feelingImageSize.width, height: feelingImageSize.height),
-                sizedBoxW8H8,
-                Expanded(child: Text(checkin.feelingName, style: Theme.of(context).textTheme.displaySmall)),
-              ],
-            ),
-            Text(
-              checkin.words,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
-            ),
-            Text(checkin.statistics),
-          ],
-        ],
-      ),
-    );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    tabController = TabController(length: 4, vsync: this);
-  }
-
-  @override
-  void dispose() {
-    tabController.dispose();
-    super.dispose();
-  }
-
+class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.postCard.profileDialog;
+    final colorScheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+
+    final primaryColor = colorScheme.primary;
+    final sectionTitleStyle = textTheme.titleSmall?.copyWith(color: primaryColor);
+    final nameStyle = textTheme.bodyMedium?.copyWith();
+    final descriptionStyle = textTheme.labelSmall;
     final size = MediaQuery.sizeOf(context);
+    final emptyStyle = textTheme.bodyLarge?.copyWith(color: colorScheme.outline);
+    final pokemon = widget.pokemon;
+    final checkin = widget.checkin;
+    const emptyContentTipHeight = 40.0;
+
+    const sectionSeparator = sizedBoxW24H24;
+    const titleContentSeparator = sizedBoxW8H8;
 
     return Dialog(
       clipBehavior: Clip.antiAlias,
       child: Padding(
         padding: edgeInsetsL24T24R24B24,
         child: ConstrainedBox(
-          constraints: BoxConstraints(
-            maxWidth: math.min(size.width * 0.7, 400),
-            maxHeight: math.min(size.height * 0.7, 600),
-          ),
+          constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.7),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -434,7 +159,8 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                   ),
                 ],
               ),
-              sizedBoxW16H16,
+              sizedBoxW12H12,
+
               // Fix text style lost.
               // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
               Hero(
@@ -442,32 +168,273 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
                 flightShuttleBuilder:
                     (_, __, ___, ____, toHeroContext) =>
                         DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
-                child: Text(widget.profile.username, style: Theme.of(context).textTheme.titleLarge),
+                child: Text(widget.profile.username, style: textTheme.titleLarge?.copyWith(color: primaryColor)),
               ),
               sizedBoxW4H4,
-              Text(
-                'UID ${widget.profile.uid}',
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
-              ),
-              sizedBoxW4H4,
-              TabBar(
-                tabs: [
-                  Tab(text: tr.tabName.info),
-                  Tab(text: tr.tabName.medalsAndBadges),
-                  Tab(text: tr.tabName.signature),
-                  Tab(text: tr.tabName.pokemonAndCheckin),
-                ],
-                controller: tabController,
-              ),
+              Text('UID ${widget.profile.uid}', style: textTheme.labelMedium?.copyWith(color: colorScheme.outline)),
+
+              const Divider(height: 12, thickness: 1),
+
+              // Scrollable contents.
               Expanded(
-                child: TabBarView(
-                  controller: tabController,
-                  children: [
-                    _buildInfoTab(context),
-                    _buildMedalsAndBadgesTab(context),
-                    _buildSignatureTab(context),
-                    _buildPokemonAndCheckinTab(context),
-                  ],
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Basic user info.
+                      Text(tr.tabName.info, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      _UserProfilePair(Icons.group_outlined, tr.group, widget.profile.userGroup),
+                      if (widget.profile.title != null)
+                        _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title),
+                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname),
+                      _UserProfilePair(Icons.thumb_up_outlined, tr.recommended, widget.profile.recommended),
+                      _UserProfilePair(Icons.book_outlined, tr.thread, widget.profile.threadCount),
+                      _UserProfilePair(MdiIcons.commentEditOutline, tr.post, widget.profile.postCount),
+                      _UserProfilePair(Icons.emoji_people_outlined, tr.famous, widget.profile.famous),
+                      _UserProfilePair(FontAwesomeIcons.coins, tr.coins, widget.profile.coins),
+                      _UserProfilePair(Icons.campaign_outlined, tr.publicity, widget.profile.publicity),
+                      _UserProfilePair(Icons.water_drop_outlined, tr.natural, widget.profile.natural),
+                      _UserProfilePair(MdiIcons.dominoMask, tr.scheming, widget.profile.scheming),
+                      _UserProfilePair(Icons.stream_outlined, tr.spirit, widget.profile.spirit),
+                      // Special attr, dynamic and not translated.
+                      _UserProfilePair(
+                        MdiIcons.heartOutline,
+                        widget.profile.specialAttrName,
+                        widget.profile.specialAttr,
+                      ),
+                      if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
+                        _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple),
+                      _UserProfilePair(Icons.feedback_outlined, tr.privilege, widget.profile.privilege),
+                      _UserProfilePair(Icons.event_note_outlined, tr.registration, widget.profile.registrationDate),
+                      if (widget.profile.comeFrom != null)
+                        _UserProfilePair(Icons.pin_drop_outlined, tr.from, widget.profile.comeFrom),
+                      _UserProfilePair(
+                        Icons.online_prediction_outlined,
+                        tr.status.title,
+                        widget.profile.online ? tr.status.online : tr.status.offline,
+                      ),
+
+                      sectionSeparator,
+
+                      // Badge
+                      Text(tr.badges, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      // Both the primary the secondary badge presents.
+                      if (widget.badge != null && widget.secondBadge != null)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CachedImage(
+                                widget.badge!,
+                                width: badgeImageSize.width,
+                                height: badgeImageSize.height,
+                              ),
+                            ),
+                            Expanded(
+                              child: CachedImage(
+                                widget.secondBadge!,
+                                width: badgeImageSize.width,
+                                height: badgeImageSize.height,
+                              ),
+                            ),
+                          ],
+                        )
+                      // Only the primary badge.
+                      else if (widget.badge != null)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CachedImage(
+                                widget.badge!,
+                                width: badgeImageSize.width,
+                                height: badgeImageSize.height,
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        )
+                      // Only the secondary badge.
+                      else if (widget.secondBadge != null)
+                        Row(
+                          children: [
+                            Expanded(
+                              child: CachedImage(
+                                widget.secondBadge!,
+                                width: badgeImageSize.width,
+                                height: badgeImageSize.height,
+                              ),
+                            ),
+                            const Spacer(),
+                          ],
+                        )
+                      // No badges at all, theoretically unreachable.
+                      else
+                        sizedBoxEmpty,
+
+                      sectionSeparator,
+
+                      // Medal
+                      Text(tr.medals, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      if (widget.medals.isEmpty)
+                        Center(
+                          child: SizedBox(
+                            height: emptyContentTipHeight,
+                            child: Text(
+                              context.t.postCard.profileDialog.noMedal,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                            ),
+                          ),
+                        )
+                      else
+                        ...widget.medals.mapIndexed(
+                          (idx, e) => Row(
+                            children: [
+                              SizedBox(
+                                width: 20,
+                                child: Text(
+                                  '${idx + 1}'.padLeft(2),
+                                  style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                                ),
+                              ),
+                              sizedBoxW8H8,
+                              CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
+                              sizedBoxW8H8,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(e.name, style: nameStyle),
+                                    Text(e.description, style: descriptionStyle),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+
+                      sectionSeparator,
+
+                      // Signature, if any. Size is unpredicted.
+                      Text(tr.tabName.signature, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      if (widget.signature == null)
+                        Center(
+                          child: SizedBox(
+                            height: emptyContentTipHeight,
+                            child: Text(
+                              context.t.postCard.profileDialog.noSig,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
+                            ),
+                          ),
+                        )
+                      else
+                        munchElement(context, parseHtmlDocument(widget.signature!).body!),
+
+                      sectionSeparator,
+
+                      // Pokemon
+                      Text(tr.pokemon, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      if (pokemon == null)
+                        Center(
+                          child: SizedBox(height: emptyContentTipHeight, child: Text(tr.noPokemon, style: emptyStyle)),
+                        )
+                      else ...[
+                        CachedImage(
+                          pokemon.primaryPokemon.image,
+                          width: pokemonPrimaryImageSize.width,
+                          height: pokemonPrimaryImageSize.height,
+                        ),
+                        Text(
+                          pokemon.primaryPokemon.name,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                        ),
+                        if (pokemon.otherPokemon != null)
+                          ListView(
+                            padding: edgeInsetsT4,
+                            shrinkWrap: true,
+                            children:
+                                pokemon.otherPokemon!
+                                    .map(
+                                      (e) => Row(
+                                        children: [
+                                          CachedImage(
+                                            e.image,
+                                            width: pokemonNotPrimaryImageSize.width,
+                                            height: pokemonNotPrimaryImageSize.height,
+                                          ),
+                                          sizedBoxW4H4,
+                                          Text(e.name),
+                                        ],
+                                      ),
+                                    )
+                                    .toList(),
+                          ),
+                      ],
+
+                      sectionSeparator,
+
+                      // Checkin status.
+                      Text(tr.checkin, style: sectionTitleStyle),
+                      titleContentSeparator,
+                      if (checkin == null)
+                        Center(
+                          child: SizedBox(height: emptyContentTipHeight, child: Text(tr.noCheckin, style: emptyStyle)),
+                        )
+                      else ...[
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                CachedImage(
+                                  checkin.feelingImage,
+                                  width: feelingImageSize.width,
+                                  height: feelingImageSize.height,
+                                ),
+                                sizedBoxW4H4,
+                                Text(
+                                  checkin.feelingName,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                                ),
+                              ],
+                            ),
+                            sizedBoxW8H8,
+                            CustomPaint(
+                              painter: _SpecialChatBubbleThree(
+                                color: Theme.of(context).colorScheme.surfaceContainer,
+                                alignment: Alignment.topLeft,
+                                tail: true,
+                              ),
+                              child: Container(
+                                margin: const EdgeInsets.fromLTRB(14, 7, 7, 7),
+                                child: Text(
+                                  checkin.words,
+                                  style: Theme.of(
+                                    context,
+                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        sizedBoxW4H4,
+                        // Checkin statistics info.
+                        Text(checkin.statistics),
+                      ],
+                    ],
+                  ),
                 ),
               ),
             ],
@@ -478,34 +445,173 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> with S
   }
 }
 
-enum _UserProfileAttrStyle { primary, secondary, tertiary, normal }
-
 class _UserProfilePair extends StatelessWidget {
-  const _UserProfilePair(this.iconData, this.name, this.value, {this.style = _UserProfileAttrStyle.normal});
+  const _UserProfilePair(this.iconData, this.name, this.value);
 
   final IconData iconData;
   final String name;
   final String? value;
-  final _UserProfileAttrStyle style;
 
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
-    final color = switch (style) {
-      _UserProfileAttrStyle.primary => colorScheme.primary,
-      _UserProfileAttrStyle.secondary => colorScheme.secondary,
-      _UserProfileAttrStyle.tertiary => colorScheme.tertiary,
-      _UserProfileAttrStyle.normal => null,
-    };
-
     return Row(
       children: [
-        Icon(iconData, size: 18, color: color),
+        Icon(iconData, size: 18, color: colorScheme.secondary),
         sizedBoxW4H4,
-        Text(name, style: TextStyle(color: color)),
+        Text(name, style: TextStyle(color: colorScheme.secondary)),
         sizedBoxW12H12,
-        Expanded(child: Text(value ?? '', style: TextStyle(color: color))),
+        Expanded(child: Text(value ?? '')),
       ],
     );
+  }
+}
+
+//custom painter use to create the shape of the chat bubble
+///
+/// [color],[alignment] and [tail] can be changed
+
+class _SpecialChatBubbleThree extends CustomPainter {
+  const _SpecialChatBubbleThree({required this.color, required this.alignment, required this.tail});
+
+  final Color color;
+  final Alignment alignment;
+  final bool tail;
+
+  static const double _radius = 10;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final h = size.height;
+    final w = size.width;
+    if (alignment == Alignment.topRight) {
+      if (tail) {
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 2, 0)
+              /// top-left corner
+              ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
+              /// left line
+              ..lineTo(0, h - _radius * 1.5)
+              /// bottom-left corner
+              ..quadraticBezierTo(0, h, _radius * 2, h)
+              /// bottom line
+              ..lineTo(w - _radius * 3, h)
+              /// bottom-right bubble curve
+              ..quadraticBezierTo(w - _radius * 1.5, h, w - _radius * 1.5, h - _radius * 0.6)
+              /// bottom-right tail curve 1
+              ..quadraticBezierTo(w - _radius * 1, h, w, h)
+              /// bottom-right tail curve 2
+              ..quadraticBezierTo(w - _radius * 0.8, h, w - _radius, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w - _radius, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
+
+        canvas
+          ..clipPath(path)
+          ..drawRRect(
+            RRect.fromLTRBR(0, 0, w, h, Radius.zero),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill,
+          );
+      } else {
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 2, 0)
+              /// top-left corner
+              ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
+              /// left line
+              ..lineTo(0, h - _radius * 1.5)
+              /// bottom-left corner
+              ..quadraticBezierTo(0, h, _radius * 2, h)
+              /// bottom line
+              ..lineTo(w - _radius * 3, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w - _radius, h, w - _radius, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w - _radius, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
+
+        canvas
+          ..clipPath(path)
+          ..drawRRect(
+            RRect.fromLTRBR(0, 0, w, h, Radius.zero),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill,
+          );
+      }
+    } else {
+      if (tail) {
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 3, 0)
+              /// top-left corner
+              ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
+              /// left line
+              ..lineTo(_radius, h - _radius * 1.5)
+              // bottom-right tail curve 1
+              ..quadraticBezierTo(_radius * .8, h, 0, h)
+              /// bottom-right tail curve 2
+              ..quadraticBezierTo(_radius * 1, h, _radius * 1.5, h - _radius * 0.6)
+              /// bottom-left bubble curve
+              ..quadraticBezierTo(_radius * 1.5, h, _radius * 3, h)
+              /// bottom line
+              ..lineTo(w - _radius * 2, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
+        canvas
+          ..clipPath(path)
+          ..drawRRect(
+            RRect.fromLTRBR(0, 0, w, h, Radius.zero),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill,
+          );
+      } else {
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 3, 0)
+              /// top-left corner
+              ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
+              /// left line
+              ..lineTo(_radius, h - _radius * 1.5)
+              /// bottom-left curve
+              ..quadraticBezierTo(_radius, h, _radius * 3, h)
+              /// bottom line
+              ..lineTo(w - _radius * 2, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
+
+        canvas
+          ..clipPath(path)
+          ..drawRRect(
+            RRect.fromLTRBR(0, 0, w, h, Radius.zero),
+            Paint()
+              ..color = color
+              ..style = PaintingStyle.fill,
+          );
+      }
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
   }
 }
