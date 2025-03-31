@@ -121,6 +121,9 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
     const sectionSeparator = sizedBoxW24H24;
     const titleContentSeparator = sizedBoxW8H8;
 
+    final inDarkTheme = Theme.of(context).brightness == Brightness.dark;
+    final colorOffset = inDarkTheme ? 300 : 700;
+
     return Dialog(
       clipBehavior: Clip.antiAlias,
       child: Padding(
@@ -190,73 +193,108 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                         Icons.group_outlined,
                         tr.group,
                         widget.profile.userGroup,
-                        widget.profile.userGroupColor?.adaptiveDark(),
+                        inDarkTheme ? widget.profile.userGroupColor?.adaptiveDark() : widget.profile.userGroupColor,
                       ),
                       if (widget.profile.title != null)
-                        _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title, Colors.blue[300]),
-                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, Colors.blue[300]),
+                        _UserProfilePair(
+                          Icons.badge_outlined,
+                          tr.title,
+                          widget.profile.title,
+                          Colors.blue[colorOffset],
+                        ),
+                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, Colors.blue[colorOffset]),
                       _UserProfilePair(
                         Icons.thumb_up_outlined,
                         tr.recommended,
                         widget.profile.recommended,
-                        Colors.red[300],
+                        Colors.red[colorOffset],
                       ),
-                      _UserProfilePair(Icons.book_outlined, tr.thread, widget.profile.threadCount, Colors.green[300]),
+                      _UserProfilePair(
+                        Icons.book_outlined,
+                        tr.thread,
+                        widget.profile.threadCount,
+                        Colors.green[colorOffset],
+                      ),
                       _UserProfilePair(
                         MdiIcons.commentEditOutline,
                         tr.post,
                         widget.profile.postCount,
-                        Colors.cyan[300],
+                        Colors.cyan[colorOffset],
                       ),
                       _UserProfilePair(
                         Icons.emoji_people_outlined,
                         tr.famous,
                         widget.profile.famous,
-                        Colors.purple[300],
+                        Colors.purple[colorOffset],
                       ),
-                      _UserProfilePair(FontAwesomeIcons.coins, tr.coins, widget.profile.coins, Colors.purple[300]),
+                      _UserProfilePair(
+                        FontAwesomeIcons.coins,
+                        tr.coins,
+                        widget.profile.coins,
+                        Colors.purple[colorOffset],
+                      ),
                       _UserProfilePair(
                         Icons.campaign_outlined,
                         tr.publicity,
                         widget.profile.publicity,
-                        Colors.purple[300],
+                        Colors.purple[colorOffset],
                       ),
                       _UserProfilePair(
                         Icons.water_drop_outlined,
                         tr.natural,
                         widget.profile.natural,
-                        Colors.purple[300],
+                        Colors.purple[colorOffset],
                       ),
-                      _UserProfilePair(MdiIcons.dominoMask, tr.scheming, widget.profile.scheming, Colors.purple[300]),
-                      _UserProfilePair(Icons.stream_outlined, tr.spirit, widget.profile.spirit, Colors.purple[300]),
+                      _UserProfilePair(
+                        MdiIcons.dominoMask,
+                        tr.scheming,
+                        widget.profile.scheming,
+                        Colors.purple[colorOffset],
+                      ),
+                      _UserProfilePair(
+                        Icons.stream_outlined,
+                        tr.spirit,
+                        widget.profile.spirit,
+                        Colors.purple[colorOffset],
+                      ),
                       // Special attr, dynamic and not translated.
                       _UserProfilePair(
                         MdiIcons.heartOutline,
                         widget.profile.specialAttrName,
                         widget.profile.specialAttr,
-                        Colors.purple[300],
+                        Colors.purple[colorOffset],
                       ),
                       if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
-                        _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple, Colors.pink[300]),
+                        _UserProfilePair(
+                          Icons.diversity_1_outlined,
+                          tr.cp,
+                          widget.profile.couple,
+                          Colors.pink[colorOffset],
+                        ),
                       _UserProfilePair(
                         Icons.feedback_outlined,
                         tr.privilege,
                         widget.profile.privilege,
-                        Colors.yellow[300],
+                        Colors.orange[colorOffset],
                       ),
                       _UserProfilePair(
                         Icons.event_note_outlined,
                         tr.registration,
                         widget.profile.registrationDate,
-                        Colors.blue[300],
+                        Colors.blue[colorOffset],
                       ),
                       if (widget.profile.comeFrom != null)
-                        _UserProfilePair(Icons.pin_drop_outlined, tr.from, widget.profile.comeFrom, Colors.amber[300]),
+                        _UserProfilePair(
+                          Icons.pin_drop_outlined,
+                          tr.from,
+                          widget.profile.comeFrom,
+                          Colors.teal[colorOffset],
+                        ),
                       _UserProfilePair(
                         Icons.online_prediction_outlined,
                         tr.status.title,
                         widget.profile.online ? tr.status.online : tr.status.offline,
-                        widget.profile.online ? Colors.green[300] : Colors.grey,
+                        widget.profile.online ? Colors.green[colorOffset] : Colors.grey,
                       ),
 
                       sectionSeparator,
@@ -507,11 +545,12 @@ class _UserProfilePair extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
-        Icon(iconData, size: 18),
+        Icon(iconData, size: 18, color: colorScheme.secondary),
         sizedBoxW4H4,
-        Text(name),
+        Text(name, style: TextStyle(color: colorScheme.secondary)),
         sizedBoxW12H12,
         Expanded(child: Text(value ?? '', style: TextStyle(color: valueColor))),
       ],
