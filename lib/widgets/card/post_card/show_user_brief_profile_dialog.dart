@@ -13,6 +13,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/medal.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/bubble.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
@@ -185,35 +186,77 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                       // Basic user info.
                       Text(tr.tabName.info, style: sectionTitleStyle),
                       titleContentSeparator,
-                      _UserProfilePair(Icons.group_outlined, tr.group, widget.profile.userGroup),
+                      _UserProfilePair(
+                        Icons.group_outlined,
+                        tr.group,
+                        widget.profile.userGroup,
+                        widget.profile.userGroupColor?.adaptiveDark(),
+                      ),
                       if (widget.profile.title != null)
-                        _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title),
-                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname),
-                      _UserProfilePair(Icons.thumb_up_outlined, tr.recommended, widget.profile.recommended),
-                      _UserProfilePair(Icons.book_outlined, tr.thread, widget.profile.threadCount),
-                      _UserProfilePair(MdiIcons.commentEditOutline, tr.post, widget.profile.postCount),
-                      _UserProfilePair(Icons.emoji_people_outlined, tr.famous, widget.profile.famous),
-                      _UserProfilePair(FontAwesomeIcons.coins, tr.coins, widget.profile.coins),
-                      _UserProfilePair(Icons.campaign_outlined, tr.publicity, widget.profile.publicity),
-                      _UserProfilePair(Icons.water_drop_outlined, tr.natural, widget.profile.natural),
-                      _UserProfilePair(MdiIcons.dominoMask, tr.scheming, widget.profile.scheming),
-                      _UserProfilePair(Icons.stream_outlined, tr.spirit, widget.profile.spirit),
+                        _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title, Colors.blue[300]),
+                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, Colors.blue[300]),
+                      _UserProfilePair(
+                        Icons.thumb_up_outlined,
+                        tr.recommended,
+                        widget.profile.recommended,
+                        Colors.red[300],
+                      ),
+                      _UserProfilePair(Icons.book_outlined, tr.thread, widget.profile.threadCount, Colors.green[300]),
+                      _UserProfilePair(
+                        MdiIcons.commentEditOutline,
+                        tr.post,
+                        widget.profile.postCount,
+                        Colors.cyan[300],
+                      ),
+                      _UserProfilePair(
+                        Icons.emoji_people_outlined,
+                        tr.famous,
+                        widget.profile.famous,
+                        Colors.purple[300],
+                      ),
+                      _UserProfilePair(FontAwesomeIcons.coins, tr.coins, widget.profile.coins, Colors.purple[300]),
+                      _UserProfilePair(
+                        Icons.campaign_outlined,
+                        tr.publicity,
+                        widget.profile.publicity,
+                        Colors.purple[300],
+                      ),
+                      _UserProfilePair(
+                        Icons.water_drop_outlined,
+                        tr.natural,
+                        widget.profile.natural,
+                        Colors.purple[300],
+                      ),
+                      _UserProfilePair(MdiIcons.dominoMask, tr.scheming, widget.profile.scheming, Colors.purple[300]),
+                      _UserProfilePair(Icons.stream_outlined, tr.spirit, widget.profile.spirit, Colors.purple[300]),
                       // Special attr, dynamic and not translated.
                       _UserProfilePair(
                         MdiIcons.heartOutline,
                         widget.profile.specialAttrName,
                         widget.profile.specialAttr,
+                        Colors.purple[300],
                       ),
                       if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
-                        _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple),
-                      _UserProfilePair(Icons.feedback_outlined, tr.privilege, widget.profile.privilege),
-                      _UserProfilePair(Icons.event_note_outlined, tr.registration, widget.profile.registrationDate),
+                        _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple, Colors.pink[300]),
+                      _UserProfilePair(
+                        Icons.feedback_outlined,
+                        tr.privilege,
+                        widget.profile.privilege,
+                        Colors.yellow[300],
+                      ),
+                      _UserProfilePair(
+                        Icons.event_note_outlined,
+                        tr.registration,
+                        widget.profile.registrationDate,
+                        Colors.blue[300],
+                      ),
                       if (widget.profile.comeFrom != null)
-                        _UserProfilePair(Icons.pin_drop_outlined, tr.from, widget.profile.comeFrom),
+                        _UserProfilePair(Icons.pin_drop_outlined, tr.from, widget.profile.comeFrom, Colors.amber[300]),
                       _UserProfilePair(
                         Icons.online_prediction_outlined,
                         tr.status.title,
                         widget.profile.online ? tr.status.online : tr.status.offline,
+                        widget.profile.online ? Colors.green[300] : Colors.grey,
                       ),
 
                       sectionSeparator,
@@ -291,31 +334,41 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                           ),
                         )
                       else
-                        ...widget.medals.mapIndexed(
-                          (idx, e) => Row(
-                            children: [
-                              SizedBox(
-                                width: 20,
-                                child: Text(
-                                  '${idx + 1}'.padLeft(2),
-                                  style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                                ),
-                              ),
-                              sizedBoxW8H8,
-                              CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
-                              sizedBoxW8H8,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(e.name, style: nameStyle),
-                                    Text(e.description, style: descriptionStyle),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                        Column(
+                          spacing: 8,
+                          children:
+                              widget.medals
+                                  .mapIndexed(
+                                    (idx, e) => Row(
+                                      children: [
+                                        SizedBox(
+                                          width: 20,
+                                          child: Text(
+                                            '${idx + 1}'.padLeft(2),
+                                            style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                                          ),
+                                        ),
+                                        sizedBoxW8H8,
+                                        CachedImage(
+                                          e.image,
+                                          width: medalImageSize.width,
+                                          height: medalImageSize.height,
+                                        ),
+                                        sizedBoxW8H8,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Text(e.name, style: nameStyle),
+                                              Text(e.description, style: descriptionStyle),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                  .toList(),
                         ),
 
                       sectionSeparator,
@@ -355,9 +408,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                         ),
                         Text(
                           pokemon.primaryPokemon.name,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                          style: textTheme.titleSmall?.copyWith(color: colorScheme.secondary),
                         ),
                         if (pokemon.otherPokemon != null)
                           ListView(
@@ -412,19 +463,19 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                               ],
                             ),
                             sizedBoxW8H8,
-                            CustomPaint(
-                              painter: BubblePainter(
-                                color: Theme.of(context).colorScheme.surfaceContainer,
-                                alignment: Alignment.topLeft,
-                                tail: true,
-                              ),
-                              child: Container(
-                                margin: const EdgeInsets.fromLTRB(14, 7, 7, 7),
-                                child: Text(
-                                  checkin.words,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.onSurface),
+                            Flexible(
+                              child: CustomPaint(
+                                painter: BubblePainter(
+                                  color: Theme.of(context).colorScheme.primaryContainer,
+                                  alignment: Alignment.topLeft,
+                                  tail: true,
+                                ),
+                                child: Container(
+                                  margin: const EdgeInsets.fromLTRB(14, 7, 7, 7),
+                                  child: Text(
+                                    checkin.words,
+                                    style: textTheme.bodyMedium?.copyWith(color: colorScheme.onPrimaryContainer),
+                                  ),
                                 ),
                               ),
                             ),
@@ -447,22 +498,22 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
 }
 
 class _UserProfilePair extends StatelessWidget {
-  const _UserProfilePair(this.iconData, this.name, this.value);
+  const _UserProfilePair(this.iconData, this.name, this.value, this.valueColor);
 
   final IconData iconData;
   final String name;
   final String? value;
+  final Color? valueColor;
 
   @override
   Widget build(BuildContext context) {
-    final colorScheme = Theme.of(context).colorScheme;
     return Row(
       children: [
-        Icon(iconData, size: 18, color: colorScheme.secondary),
+        Icon(iconData, size: 18),
         sizedBoxW4H4,
-        Text(name, style: TextStyle(color: colorScheme.secondary)),
+        Text(name),
         sizedBoxW12H12,
-        Expanded(child: Text(value ?? '')),
+        Expanded(child: Text(value ?? '', style: TextStyle(color: valueColor))),
       ],
     );
   }

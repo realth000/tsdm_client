@@ -10,6 +10,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
     required this.uid,
     required this.nickname,
     required this.userGroup,
+    required this.userGroupColor,
     required this.title,
     required this.recommended,
     required this.threadCount,
@@ -53,6 +54,11 @@ final class UserBriefProfile with UserBriefProfileMappable {
   ///
   /// 用户组
   final String userGroup;
+
+  /// Additional color on user group.
+  ///
+  /// Presents or not.
+  final Color? userGroupColor;
 
   /// Custom user title.
   ///
@@ -173,6 +179,15 @@ final class UserBriefProfile with UserBriefProfileMappable {
       return null;
     }
     final userGroup = statBarNode.children.firstOrNull?.innerText.trim();
+    final userGroupColorRaw = WebColors.fromString(
+      statBarNode.children.firstOrNull?.querySelector('font')?.attributes['color'],
+    );
+    final Color? userGroupColor;
+    if (userGroupColorRaw.isValid) {
+      userGroupColor = Color(userGroupColorRaw.colorValue);
+    } else {
+      userGroupColor = null;
+    }
 
     String? uid;
     String? title;
@@ -249,6 +264,7 @@ final class UserBriefProfile with UserBriefProfileMappable {
       uid: uid ?? '',
       nickname: nickname,
       userGroup: userGroup ?? '',
+      userGroupColor: userGroupColor,
       title: title,
       recommended: recommended ?? '',
       threadCount: threadCount ?? '',
