@@ -11,6 +11,9 @@ enum SwitchUserGroupStatus {
   /// Waiting for user to trigger switch action.
   waitingSwitchAction,
 
+  /// Doing the switch action.
+  switching,
+
   /// Switch succeeded.
   success,
 

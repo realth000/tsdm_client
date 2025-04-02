@@ -38,16 +38,18 @@ final class SwitchUserGroupBloc extends Bloc<SwitchUserGroupBaseEvent, SwitchUse
     }, (v) => _updateFromInfoDocument(emit, v)).run();
   }
 
-  Future<void> _onRunSwitch(_Emit emit, String name, int gid, String formHash) async =>
-      _repo
-          .submitSwitchRequest(gid, formHash)
-          .mapLeft((e) {
-            handle(e);
-            // Rollback to waiting state.
-            emit(state.copyWith(status: SwitchUserGroupStatus.failure));
-          })
-          .map((_) => emit(state.copyWith(status: SwitchUserGroupStatus.success, destination: name)))
-          .run();
+  Future<void> _onRunSwitch(_Emit emit, String name, int gid, String formHash) async {
+    emit(state.copyWith(status: SwitchUserGroupStatus.switching));
+    await _repo
+        .submitSwitchRequest(gid, formHash)
+        .mapLeft((e) {
+          handle(e);
+          // Rollback to waiting state.
+          emit(state.copyWith(status: SwitchUserGroupStatus.failure));
+        })
+        .map((_) => emit(state.copyWith(status: SwitchUserGroupStatus.success, destination: name)))
+        .run();
+  }
 
   void _updateFromInfoDocument(_Emit emit, uh.Document document) {
     // The name of current user group is the in the trailing part of `p.tbmu` and there's no better to grep it.

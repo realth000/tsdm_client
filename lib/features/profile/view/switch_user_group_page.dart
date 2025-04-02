@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/profile/bloc/switch_user_group_bloc.dart';
 import 'package:tsdm_client/features/profile/repository/switch_user_group_repository.dart';
@@ -31,7 +32,10 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
       children: [
         SectionTitleText(tr.currentGroup),
         SectionListTile(title: Text(state.currentUserGroup, style: bodyTheme?.copyWith(color: colorScheme.secondary))),
-        SectionTitleText(tr.availableGroups),
+        if (state.status == SwitchUserGroupStatus.switching)
+          Row(children: [SectionTitleText(tr.availableGroups), sizedCircularProgressIndicator])
+        else
+          SectionTitleText(tr.availableGroups),
         if (state.availableGroups.isEmpty)
           SectionListTile(title: Text(tr.nonAvailable, style: bodyTheme?.copyWith(color: colorScheme.outline)))
         else
@@ -39,6 +43,7 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
             (e) => SectionListTile(
               title: Text(e.name),
               subtitle: Text('GID: ${e.gid}'),
+              enabled: state.status != SwitchUserGroupStatus.switching,
               onTap: () async {
                 final confirmed = await showQuestionDialog(
                   context: context,
@@ -83,7 +88,9 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
           final body = switch (state.status) {
             SwitchUserGroupStatus.initial ||
             SwitchUserGroupStatus.loadingInfo => const Center(child: CircularProgressIndicator()),
-            SwitchUserGroupStatus.waitingSwitchAction || SwitchUserGroupStatus.success => _buildContent(context, state),
+            SwitchUserGroupStatus.waitingSwitchAction ||
+            SwitchUserGroupStatus.switching ||
+            SwitchUserGroupStatus.success => _buildContent(context, state),
             SwitchUserGroupStatus.failure => buildRetryButton(
               context,
               () => context.read<SwitchUserGroupBloc>().add(SwitchUserGroupLoadInfoRequested()),
