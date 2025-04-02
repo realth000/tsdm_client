@@ -397,3 +397,10 @@ final class ServerRespFailure extends AppException with ServerRespFailureMappabl
   /// Non zero status code.
   final int? status;
 }
+
+/// Failed to do the switch user group action.
+@MappableClass()
+final class SwitchUserGroupFailed extends AppException with SwitchUserGroupFailedMappable {
+  /// Constructor.
+  SwitchUserGroupFailed(String message) : super(message: message);
+}

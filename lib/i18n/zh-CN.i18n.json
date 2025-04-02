@@ -844,5 +844,15 @@
     "loginAnother": "登录其他账户",
     "logout": "退出登录",
     "online": "在线"
+  },
+  "switchUserGroupPage": {
+    "title": "切换用户组",
+    "currentGroup": "当前用户组",
+    "availableGroups": "可选的用户组",
+    "nonAvailable": "没有其他用户组",
+    "switch": "切换",
+    "confirmMessage": "你确定要从 ${from: String} 切换到 ${to: String} 吗？",
+    "switchFailed": "切换失败",
+    "switchSucceeded": "已切换至 ${to: String}"
   }
 }

@@ -59,6 +59,9 @@ class ScreenPaths {
   /// When both are available, use uid in advance.
   static const String profile = '/profile';
 
+  /// Page to switch current user's user group.
+  static const String switchUserGroup = '/switchUserGroup';
+
   /// App settings page.
   static const settings = NestedPath._('/settings');
 

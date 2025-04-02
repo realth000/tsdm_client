@@ -124,7 +124,13 @@ class _ProfilePageState extends State<ProfilePage> {
       // Current is current logged user's profile page.
       actions = [
         IconButton(
+          icon: const Icon(Icons.published_with_changes_outlined),
+          tooltip: context.t.switchUserGroupPage.title,
+          onPressed: logout ? null : () async => context.pushNamed(ScreenPaths.switchUserGroup),
+        ),
+        IconButton(
           icon: const Icon(Icons.show_chart_outlined),
+          tooltip: context.t.profilePage.statistics.title,
           onPressed: () async {
             await context.pushNamed(ScreenPaths.points);
           },
@@ -133,6 +139,7 @@ class _ProfilePageState extends State<ProfilePage> {
         const CheckinButton(),
         DebounceIconButton(
           icon: const Icon(Icons.logout_outlined),
+          tooltip: context.t.profilePage.logout,
           shouldDebounce: logout,
           onPressed: () async {
             final logout = await showQuestionDialog(

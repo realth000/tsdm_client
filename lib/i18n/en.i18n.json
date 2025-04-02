@@ -844,5 +844,15 @@
     "loginAnother": "Login another account",
     "logout": "Logout",
     "online": "Online"
+  },
+  "switchUserGroupPage": {
+    "title": "Switch user group",
+    "currentGroup": "Current group",
+    "availableGroups": "Available groups",
+    "nonAvailable": "No other groups",
+    "switch": "Switch",
+    "confirmMessage": "Are you sure to switch to user group ${to: String} from ${from: String}",
+    "switchFailed": "Switch failed",
+    "switchSucceeded": "Switched to ${to: String}"
   }
 }

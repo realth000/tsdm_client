@@ -78,13 +78,22 @@ class DebounceFilledButton extends StatelessWidget {
 /// Debounce button in [IconButton] style.
 class DebounceIconButton extends StatelessWidget {
   /// Constructor.
-  const DebounceIconButton({required this.icon, required this.shouldDebounce, required this.onPressed, super.key});
+  const DebounceIconButton({
+    required this.icon,
+    required this.shouldDebounce,
+    required this.tooltip,
+    required this.onPressed,
+    super.key,
+  });
 
   /// Should in debounce state.
   final bool shouldDebounce;
 
   /// Icon.
   final Widget icon;
+
+  /// Additional tooltip.
+  final String tooltip;
 
   /// Callback when pressed the button.
   final FutureVoidCallback onPressed;
@@ -93,6 +102,7 @@ class DebounceIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       icon: shouldDebounce ? sizedCircularProgressIndicator : icon,
+      tooltip: tooltip,
       onPressed: shouldDebounce ? null : () async => onPressed(),
     );
   }

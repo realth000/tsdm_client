@@ -26,6 +26,7 @@ import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
+import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
@@ -251,6 +252,11 @@ final router = GoRouter(
         // When both are provided, use uid in advance.
         return ProfilePage(uid: uid, username: username, heroTag: heroTag);
       },
+    ),
+    AppRoute(
+      path: ScreenPaths.switchUserGroup,
+      parentNavigatorKey: _rootRouteKey,
+      builder: (_) => const SwitchUserGroupPage(),
     ),
     AppRoute(
       path: ScreenPaths.ratePost,
