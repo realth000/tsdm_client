@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 /// Display some info text with an icon.
 final class IconChip extends StatelessWidget {
   /// Constructor.
-  const IconChip({required this.iconData, required this.text, this.iconSize, super.key});
+  const IconChip({required this.iconData, required this.text, this.iconSize, this.backgroundColor, super.key});
 
   /// Icon widget.
   final IconData iconData;
@@ -14,6 +14,9 @@ final class IconChip extends StatelessWidget {
   /// Text widget.
   final Widget text;
 
+  /// Background color of chip.
+  final Color? backgroundColor;
+
   @override
   Widget build(BuildContext context) {
     return Chip(
@@ -23,7 +26,7 @@ final class IconChip extends StatelessWidget {
       label: text,
       side: BorderSide.none,
       // FIXME: Fix background color in bright and dark mode.
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: backgroundColor,
       iconTheme: IconThemeData(color: Theme.of(context).colorScheme.primary),
     );
   }

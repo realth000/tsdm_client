@@ -109,3 +109,8 @@ const pokemonNotPrimaryImageSize = Size(32, 32);
 
 /// Feeling image size fixed to 60 x 60.
 const feelingImageSize = Size(60, 60);
+
+/// The maximum width of html content.
+///
+/// Server side render it with this boundary in browser.
+const htmlContentMaxWidth = 712.0;

@@ -206,7 +206,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   value: _ProfileActions.switchUserGroup,
                   child: Row(
                     children: [
-                      const Icon(Icons.published_with_changes_outlined),
+                      const Icon(Symbols.change_circle),
                       sizedBoxPopupMenuItemIconSpacing,
                       Text(context.t.switchUserGroupPage.title),
                     ],
@@ -236,6 +236,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
         IconButton(
           icon: const Icon(Icons.email_outlined),
+          tooltip: context.t.postCard.profileDialog.pmTooltip,
           onPressed:
               () async => context.pushNamed(
                 ScreenPaths.chat,
@@ -511,6 +512,8 @@ class _ProfilePageState extends State<ProfilePage> {
       signatureContent = parseHtmlDocument(userProfile.signature ?? '').body;
     }
 
+    final iconChipBackgroundColor = Theme.of(context).colorScheme.surfaceContainerLowest;
+
     // All content widgets in profile main sliver list.
     return [
       // Username and uid
@@ -562,6 +565,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Wrap(
         spacing: 8,
         runSpacing: 8,
+        crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           if (userProfile.uid != null)
             // Email verify state.
@@ -591,13 +595,39 @@ class _ProfilePageState extends State<ProfilePage> {
                     }
                     : null,
           ),
-          if (userProfile.gender != null) IconChip(iconData: Icons.face_2_outlined, text: Text(userProfile.gender!)),
-          if (birthDayText.isNotEmpty) IconChip(iconData: Icons.cake_outlined, text: Text(birthDayText)),
-          if (userProfile.zodiac != null) IconChip(iconData: MdiIcons.starCrescent, text: Text(userProfile.zodiac!)),
-          if (userProfile.from != null) IconChip(iconData: Icons.location_on_outlined, text: Text(userProfile.from!)),
-          if (userProfile.msn != null) IconChip(iconData: Icons.group_outlined, text: Text(userProfile.msn!)),
+          if (userProfile.gender != null)
+            IconChip(
+              iconData: Icons.face_2_outlined,
+              text: Text(userProfile.gender!),
+              backgroundColor: iconChipBackgroundColor,
+            ),
+          if (birthDayText.isNotEmpty)
+            IconChip(iconData: Icons.cake_outlined, text: Text(birthDayText), backgroundColor: iconChipBackgroundColor),
+          if (userProfile.zodiac != null)
+            IconChip(
+              iconData: MdiIcons.starCrescent,
+              text: Text(userProfile.zodiac!),
+              backgroundColor: iconChipBackgroundColor,
+            ),
+          if (userProfile.from != null)
+            IconChip(
+              iconData: Icons.location_on_outlined,
+              text: Text(userProfile.from!),
+              backgroundColor: iconChipBackgroundColor,
+            ),
+          if (userProfile.msn != null)
+            IconChip(
+              iconData: Icons.group_outlined,
+              text: Text(userProfile.msn!),
+              backgroundColor: iconChipBackgroundColor,
+            ),
           if (userProfile.qq != null)
-            IconChip(iconData: FontAwesomeIcons.qq, text: Text(userProfile.qq!), iconSize: 14),
+            IconChip(
+              iconData: FontAwesomeIcons.qq,
+              text: Text(userProfile.qq!),
+              iconSize: 14,
+              backgroundColor: iconChipBackgroundColor,
+            ),
         ],
       ),
 
@@ -871,7 +901,10 @@ class _SectionTitle extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         sizedBoxW24H24,
-        Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        Text(
+          title,
+          style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
+        ),
         sizedBoxW12H12,
       ],
     );

@@ -111,10 +111,8 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
     final primaryColor = colorScheme.primary;
     final sectionTitleStyle = textTheme.titleSmall?.copyWith(color: primaryColor);
     final size = MediaQuery.sizeOf(context);
-    final emptyStyle = textTheme.bodyLarge?.copyWith(color: colorScheme.outline);
     final pokemon = widget.pokemon;
     final checkin = widget.checkin;
-    const emptyContentTipHeight = 40.0;
 
     const sectionSeparator = sizedBoxW24H24;
     const titleContentSeparator = sizedBoxW8H8;
@@ -355,53 +353,25 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                       sectionSeparator,
 
                       // Medal
-                      Text(tr.medals, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      if (widget.medals.isEmpty)
-                        Center(
-                          child: SizedBox(
-                            height: emptyContentTipHeight,
-                            child: Text(
-                              context.t.postCard.profileDialog.noMedal,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-                            ),
-                          ),
-                        )
-                      else
+                      if (widget.medals.isNotEmpty) ...[
+                        Text(tr.medals, style: sectionTitleStyle),
+                        titleContentSeparator,
                         MedalGroupView(widget.medals),
-
-                      sectionSeparator,
+                        sectionSeparator,
+                      ],
 
                       // Signature, if any. Size is unpredicted.
-                      Text(tr.tabName.signature, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      if (widget.signature == null)
-                        Center(
-                          child: SizedBox(
-                            height: emptyContentTipHeight,
-                            child: Text(
-                              context.t.postCard.profileDialog.noSig,
-                              style: Theme.of(
-                                context,
-                              ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.outline),
-                            ),
-                          ),
-                        )
-                      else
+                      if (widget.signature != null) ...[
+                        Text(tr.tabName.signature, style: sectionTitleStyle),
+                        titleContentSeparator,
                         munchElement(context, parseHtmlDocument(widget.signature!).body!),
-
-                      sectionSeparator,
+                        sectionSeparator,
+                      ],
 
                       // Pokemon
-                      Text(tr.pokemon, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      if (pokemon == null)
-                        Center(
-                          child: SizedBox(height: emptyContentTipHeight, child: Text(tr.noPokemon, style: emptyStyle)),
-                        )
-                      else ...[
+                      if (pokemon != null) ...[
+                        Text(tr.pokemon, style: sectionTitleStyle),
+                        titleContentSeparator,
                         CachedImage(
                           pokemon.primaryPokemon.image,
                           width: pokemonPrimaryImageSize.width,
@@ -432,18 +402,13 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                                     )
                                     .toList(),
                           ),
+                        sectionSeparator,
                       ],
 
-                      sectionSeparator,
-
                       // Checkin status.
-                      Text(tr.checkin, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      if (checkin == null)
-                        Center(
-                          child: SizedBox(height: emptyContentTipHeight, child: Text(tr.noCheckin, style: emptyStyle)),
-                        )
-                      else ...[
+                      if (checkin != null) ...[
+                        Text(tr.checkin, style: sectionTitleStyle),
+                        titleContentSeparator,
                         Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [

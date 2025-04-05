@@ -2,6 +2,7 @@ import 'package:collection/collection.dart';
 import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -31,8 +32,6 @@ const emptySpan = TextSpan(text: '\n');
 
 /// Step when elevation changes.
 const _elevationStep = 0.2;
-
-const _maxWidth = 712.0;
 
 /// List type composes `<ol>` and `<ul>`
 sealed class _ListType {}
@@ -77,7 +76,7 @@ Widget munchElement(
   // page width.
   // Currently is 712.
   return ConstrainedBox(
-    constraints: const BoxConstraints(maxWidth: _maxWidth),
+    constraints: const BoxConstraints(maxWidth: htmlContentMaxWidth),
     child: Text.rich(TextSpan(children: ret)),
   );
 }
@@ -1105,7 +1104,7 @@ final class _Muncher with LoggerMixin {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Table(
-            defaultColumnWidth: const MaxIntrinsicColumnWidth(maxWidth: _maxWidth),
+            defaultColumnWidth: const MaxIntrinsicColumnWidth(maxWidth: htmlContentMaxWidth),
             defaultVerticalAlignment: TableCellVerticalAlignment.middle,
             children: tableRows,
             border: TableBorder.all(color: Theme.of(context).colorScheme.surfaceContainer),
