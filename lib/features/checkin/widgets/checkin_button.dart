@@ -9,7 +9,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// Widget provides ability to checkin.
 class CheckinButton extends StatelessWidget {
   /// Constructor.
-  const CheckinButton({this.enableSnackBar = false, super.key});
+  const CheckinButton({this.enableSnackBar = false, this.useIcon = false, super.key});
 
   /// Enable snack bar feedback after checkin action.
   ///
@@ -17,6 +17,11 @@ class CheckinButton extends StatelessWidget {
   /// bloc consumer, multiple snackbar may shown if nested pages are here..
   /// Only a workaround.
   final bool enableSnackBar;
+
+  /// Use icon widget instead of button.
+  ///
+  /// Enabling this field will make the widget not pressable.
+  final bool useIcon;
 
   Future<void> _showCheckinFailedSnackBar(BuildContext context, CheckinResult result) async {
     if (!context.mounted) {
@@ -43,7 +48,14 @@ class CheckinButton extends StatelessWidget {
           final tooltip = context.t.homepage.welcome.checkin;
 
           if (state is CheckinStateLoading) {
+            if (useIcon) {
+              return sizedCircularProgressIndicator;
+            }
             return IconButton(icon: sizedCircularProgressIndicator, tooltip: tooltip, onPressed: null);
+          }
+
+          if (useIcon) {
+            return const Icon(Icons.domain_verification_outlined);
           }
 
           if (state is CheckinStateNeedLogin) {

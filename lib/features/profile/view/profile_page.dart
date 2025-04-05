@@ -17,6 +17,7 @@ import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/checkin/bloc/checkin_bloc.dart';
 import 'package:tsdm_client/features/checkin/widgets/checkin_button.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
@@ -42,9 +43,11 @@ import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
+/// Padding is (kToolbarHeight * 0.8).floor().toDouble();
+const _appBarBackgroundTopPadding = 44.0;
 const _appBarBackgroundImageHeight = 80.0;
 const _appBarAvatarHeight = 80.0;
-const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight;
+const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight + _appBarBackgroundTopPadding;
 
 const _groupAvatarHeight = 100.0;
 
@@ -78,6 +81,8 @@ const _checkinNextLevelExp = [
   250 - 200,
   300 - 250,
 ];
+
+enum _ProfileActions { viewNotification, checkin, viewPoints, switchUserGroup, logout }
 
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
@@ -128,6 +133,8 @@ class _ProfilePageState extends State<ProfilePage> {
       return sizedBoxEmpty;
     }
 
+    final inCheckin = context.read<CheckinBloc>().state is CheckinStateLoading;
+
     late final List<Widget> actions;
     if (widget.username == null && widget.uid == null) {
       // Current is current logged user's profile page.
@@ -137,43 +144,96 @@ class _ProfilePageState extends State<ProfilePage> {
           tooltip: tr.searchAsThreadAuthor,
           onPressed: () async => context.pushNamed(ScreenPaths.search, queryParameters: {'authorUid': userProfile.uid}),
         ),
-        IconButton(
-          icon: const Icon(Icons.published_with_changes_outlined),
-          tooltip: context.t.switchUserGroupPage.title,
-          onPressed: logout ? null : () async => context.pushNamed(ScreenPaths.switchUserGroup),
-        ),
-        IconButton(
-          icon: const Icon(Icons.show_chart_outlined),
-          tooltip: context.t.profilePage.statistics.title,
-          onPressed: () async {
-            await context.pushNamed(ScreenPaths.points);
-          },
-        ),
-        const NoticeButton(),
-        const CheckinButton(),
-        DebounceIconButton(
-          icon: const Icon(Icons.logout_outlined),
-          tooltip: context.t.profilePage.logout,
-          shouldDebounce: logout,
-          onPressed: () async {
-            final logout = await showQuestionDialog(
-              context: context,
-              title: context.t.profilePage.logout,
-              message: context.t.profilePage.areYouSureToLogout,
-            );
-            if (!context.mounted) {
-              return;
+        PopupMenuButton<_ProfileActions>(
+          onSelected: (action) async {
+            switch (action) {
+              case _ProfileActions.viewNotification:
+                await context.pushNamed(ScreenPaths.notice);
+              case _ProfileActions.checkin:
+                context.read<CheckinBloc>().add(const CheckinRequested());
+              case _ProfileActions.viewPoints:
+                await context.pushNamed(ScreenPaths.points);
+              case _ProfileActions.switchUserGroup:
+                if (logout) {
+                  return;
+                }
+                await context.pushNamed(ScreenPaths.switchUserGroup);
+              case _ProfileActions.logout:
+                final logout = await showQuestionDialog(
+                  context: context,
+                  title: tr.logout,
+                  message: tr.areYouSureToLogout,
+                );
+                if (!context.mounted) {
+                  return;
+                }
+                if (logout == null || !logout) {
+                  return;
+                }
+                context.read<ProfileBloc>().add(ProfileLogoutRequested());
             }
-            if (logout == null || !logout) {
-              return;
-            }
-            context.read<ProfileBloc>().add(ProfileLogoutRequested());
           },
+          itemBuilder:
+              (context) => [
+                PopupMenuItem(
+                  value: _ProfileActions.viewNotification,
+                  child: Row(
+                    children: [const NoticeIcon(), sizedBoxPopupMenuItemIconSpacing, Text(context.t.noticePage.title)],
+                  ),
+                ),
+                PopupMenuItem(
+                  enabled: !inCheckin,
+                  value: _ProfileActions.checkin,
+                  child: Row(
+                    children: [
+                      const CheckinButton(useIcon: true),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.checkin.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.viewPoints,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.show_chart_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.statistics.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.switchUserGroup,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.published_with_changes_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(context.t.switchUserGroupPage.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  enabled: !logout,
+                  value: _ProfileActions.logout,
+                  child: Row(
+                    children: [
+                      DebounceIcon(icon: const Icon(Icons.logout_outlined), shouldDebounce: logout),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.logout),
+                    ],
+                  ),
+                ),
+              ],
         ),
       ];
     } else {
       // Other user's profile page.
       actions = [
+        IconButton(
+          icon: const Icon(Icons.person_search_outlined),
+          tooltip: tr.searchAsThreadAuthor,
+          onPressed: () async => context.pushNamed(ScreenPaths.search, queryParameters: {'authorUid': userProfile.uid}),
+        ),
         IconButton(
           icon: const Icon(Icons.email_outlined),
           onPressed:
@@ -193,7 +253,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     final Widget avatar = CircleAvatar(
       radius: _appBarAvatarHeight / 2 + 3,
-      backgroundColor: Theme.of(context).colorScheme.surface,
+      backgroundColor: Theme.of(context).colorScheme.surfaceContainerLowest,
       child: HeroUserAvatar(
         username: userProfile.username ?? '',
         avatarUrl: userProfile.avatarUrl ?? noAvatarUrl,
@@ -209,12 +269,15 @@ class _ProfilePageState extends State<ProfilePage> {
         clipBehavior: Clip.none,
         children: [
           // Background blurred image.
-          Positioned(
+          Positioned.fill(
             // Why we can not add padding here?
             child: Column(
               children: [
                 // The height of color box is decided by the sigma in image filtered.
-                Container(color: Theme.of(context).colorScheme.surface, height: kToolbarHeight),
+                Container(
+                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
+                  height: _appBarBackgroundTopPadding,
+                ),
                 Expanded(
                   child: Row(
                     children: [
@@ -239,7 +302,7 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Expanded(
                   child: ColoredBox(
-                    color: Theme.of(context).colorScheme.surface,
+                    color: Theme.of(context).colorScheme.surfaceContainerLowest,
                     // Add 4 here because the avatar row (Positioned() below) has 4 padding at bottom.
                     child: const SizedBox(height: _appBarAvatarHeight / 2 + 4),
                   ),
@@ -327,9 +390,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
     // Checkin
     return [
-      sizedBoxW24H24,
-      Text(tr.checkin.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-      sizedBoxW12H12,
+      _SectionTitle(tr.checkin.title),
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -351,49 +412,37 @@ class _ProfilePageState extends State<ProfilePage> {
 
           // General info
           if (userProfile.checkinDaysCount != null)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              minTileHeight: 0,
+            _ProfileSectionListTile(
               leading: const Icon(Icons.calendar_month_outlined),
               title: Text(tr.checkinDaysCount),
               subtitle: Text('${userProfile.checkinDaysCount}'),
             ),
           if (userProfile.checkinThisMonthCount != null)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              minTileHeight: 0,
+            _ProfileSectionListTile(
               leading: const Icon(Icons.calendar_today_outlined),
               title: Text(tr.checkinDaysInThisMonth),
               subtitle: Text(userProfile.checkinThisMonthCount!),
             ),
           if (userProfile.checkinRecentTime != null)
-            ListTile(
-              minTileHeight: 0,
-              contentPadding: EdgeInsets.zero,
+            _ProfileSectionListTile(
               leading: const Icon(Icons.history_outlined),
               title: Text(tr.checkinRecentTime),
               subtitle: Text(userProfile.checkinRecentTime!),
             ),
           if (userProfile.checkinAllCoins != null)
-            ListTile(
-              minTileHeight: 0,
-              contentPadding: EdgeInsets.zero,
+            _ProfileSectionListTile(
               leading: const Icon(FontAwesomeIcons.coins),
               title: Text(tr.checkinAllCoins),
               subtitle: Text(userProfile.checkinAllCoins!),
             ),
           if (userProfile.checkinLastTimeCoin != null)
-            ListTile(
-              minTileHeight: 0,
-              contentPadding: EdgeInsets.zero,
+            _ProfileSectionListTile(
               leading: const Icon(Icons.monetization_on_outlined),
               title: Text(tr.checkinLastTimeCoins),
               subtitle: Text(userProfile.checkinLastTimeCoin!),
             ),
           if (userProfile.checkinTodayStatus != null)
-            ListTile(
-              minTileHeight: 0,
-              contentPadding: EdgeInsets.zero,
+            _ProfileSectionListTile(
               leading: const Icon(Icons.today_outlined),
               title: Text(tr.checkinTodayStatus),
               subtitle: Text(userProfile.checkinTodayStatus ?? '-'),
@@ -487,11 +536,11 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      // Nickname and custom title.
-      if (userProfile.nickname != null || userProfile.customTitle != null) sizedBoxW4H4,
+      sizedBoxW12H12,
       SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
+          mainAxisSize: MainAxisSize.min,
           children: [
             sizedBoxW12H12,
             if (userProfile.nickname != null)
@@ -509,73 +558,47 @@ class _ProfilePageState extends State<ProfilePage> {
           ],
         ),
       ),
-      sizedBoxW4H4,
-      // email/video verify state, friends, gender
-      // This row always exists.
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            if (userProfile.uid != null)
-              // Email verify state.
-              IconButton(
-                icon: const Icon(Icons.email_outlined),
-                onPressed: () async {
-                  final content = userProfile.emailVerified ?? false ? tr.emailVerified : tr.emailNotVerified;
-                  showSnackBar(context: context, message: content);
-                },
-                isSelected: userProfile.emailVerified ?? false,
-              ),
+      sizedBoxW12H12,
+      Wrap(
+        spacing: 8,
+        runSpacing: 8,
+        children: [
+          if (userProfile.uid != null)
+            // Email verify state.
             IconButton(
-              icon: const Icon(Icons.photo_camera_outlined),
+              icon: const Icon(Icons.email_outlined),
               onPressed: () async {
-                final content = userProfile.videoVerified ?? false ? tr.videoVerified : tr.videoNotVerified;
+                final content = userProfile.emailVerified ?? false ? tr.emailVerified : tr.emailNotVerified;
                 showSnackBar(context: context, message: content);
               },
-              isSelected: userProfile.videoVerified ?? false,
+              isSelected: userProfile.emailVerified ?? false,
             ),
-            TextButton.icon(
-              icon: const Icon(Icons.group_outlined),
-              label: Text(friendsCount),
-              onPressed:
-                  friendsPage != null
-                      ? () async {
-                        await context.dispatchAsUrl(friendsPage);
-                      }
-                      : null,
-            ),
-            if (userProfile.gender != null) IconChip(iconData: Icons.face_2_outlined, text: Text(userProfile.gender!)),
-          ].insertBetween(sizedBoxW4H4),
-        ),
-      ),
-      // Birthday, zodiac,
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            if (birthDayText.isNotEmpty) IconChip(iconData: Icons.cake_outlined, text: Text(birthDayText)),
-            if (userProfile.zodiac != null) IconChip(iconData: MdiIcons.starCrescent, text: Text(userProfile.zodiac!)),
-          ].insertBetween(sizedBoxW4H4),
-        ),
-      ),
-      // Location.
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            if (userProfile.from != null) IconChip(iconData: Icons.location_on_outlined, text: Text(userProfile.from!)),
-          ].insertBetween(sizedBoxW4H4),
-        ),
-      ),
-      SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: <Widget>[
-            if (userProfile.msn != null) IconChip(iconData: Icons.group_outlined, text: Text(userProfile.msn!)),
-            if (userProfile.qq != null)
-              IconChip(iconData: FontAwesomeIcons.qq, text: Text(userProfile.qq!), iconSize: 14),
-          ].insertBetween(sizedBoxW4H4),
-        ),
+          IconButton(
+            icon: const Icon(Icons.photo_camera_outlined),
+            onPressed: () async {
+              final content = userProfile.videoVerified ?? false ? tr.videoVerified : tr.videoNotVerified;
+              showSnackBar(context: context, message: content);
+            },
+            isSelected: userProfile.videoVerified ?? false,
+          ),
+          TextButton.icon(
+            icon: const Icon(Icons.group_outlined),
+            label: Text(friendsCount),
+            onPressed:
+                friendsPage != null
+                    ? () async {
+                      await context.dispatchAsUrl(friendsPage);
+                    }
+                    : null,
+          ),
+          if (userProfile.gender != null) IconChip(iconData: Icons.face_2_outlined, text: Text(userProfile.gender!)),
+          if (birthDayText.isNotEmpty) IconChip(iconData: Icons.cake_outlined, text: Text(birthDayText)),
+          if (userProfile.zodiac != null) IconChip(iconData: MdiIcons.starCrescent, text: Text(userProfile.zodiac!)),
+          if (userProfile.from != null) IconChip(iconData: Icons.location_on_outlined, text: Text(userProfile.from!)),
+          if (userProfile.msn != null) IconChip(iconData: Icons.group_outlined, text: Text(userProfile.msn!)),
+          if (userProfile.qq != null)
+            IconChip(iconData: FontAwesomeIcons.qq, text: Text(userProfile.qq!), iconSize: 14),
+        ],
       ),
 
       // Self introduction.
@@ -598,9 +621,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       // User group
       if (moderatorGroupImg != null || userGroupImg != null) ...[
-        sizedBoxW24H24,
-        Text(tr.userGroup, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-        sizedBoxW12H12,
+        _SectionTitle(tr.userGroup),
         Row(
           children: [
             if (moderatorGroupImg != null)
@@ -633,9 +654,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       /// Medals, if any.
       if (userProfile.profileMedals?.isNotEmpty ?? false) ...[
-        sizedBoxW24H24,
-        Text(tr.medals, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-        sizedBoxW12H12,
+        _SectionTitle(tr.medals),
         MedalGroupView(
           userProfile.profileMedals!
               .map((e) => Medal(name: e.name, image: e.image, alter: e.alter, description: e.description))
@@ -644,9 +663,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
 
       if (userProfile.mangedForums?.isNotEmpty ?? false) ...[
-        sizedBoxW24H24,
-        Text(tr.mangedForum, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-        sizedBoxW12H12,
+        _SectionTitle(tr.mangedForum),
         Wrap(
           spacing: 8,
           runSpacing: 8,
@@ -666,53 +683,39 @@ class _ProfilePageState extends State<ProfilePage> {
       ..._buildCheckinInfoRow(context, state),
 
       /// Activity
-      sizedBoxW24H24,
-      Text(tr.activityStatus, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-      sizedBoxW12H12,
+      _SectionTitle(tr.activityStatus),
       if (userProfile.onlineTime != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: const Icon(Icons.timelapse_outlined),
           title: Text(tr.onlineTime),
           subtitle: Text(userProfile.onlineTime!),
         ),
       if (userProfile.registerTime != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: Icon(MdiIcons.timelineAlertOutline),
           title: Text(tr.registerTime),
           subtitle: Text(userProfile.registerTime!.yyyyMMDDHHMM()),
         ),
       if (userProfile.lastVisitTime != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: Icon(MdiIcons.timelineClockOutline),
           title: Text(tr.lastVisitTime),
           subtitle: Text(userProfile.lastVisitTime!.yyyyMMDDHHMM()),
         ),
       if (userProfile.lastActiveTime != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: Icon(MdiIcons.timelineCheckOutline),
           title: Text(tr.lastActiveTime),
           subtitle: Text(userProfile.lastActiveTime!.yyyyMMDDHHMM()),
         ),
       if (userProfile.lastPostTime != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: Icon(MdiIcons.timelinePlusOutline),
           title: Text(tr.lastPostTime),
           subtitle: Text(userProfile.lastPostTime!.yyyyMMDDHHMM()),
         ),
       if (userProfile.timezone != null)
-        ListTile(
-          contentPadding: EdgeInsets.zero,
-          minTileHeight: 0,
+        _ProfileSectionListTile(
           leading: const Icon(Symbols.globe_location_pin),
           title: Text(tr.timezone),
           subtitle: Text(userProfile.timezone!),
@@ -735,9 +738,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
 
       /// Statistics.
-      sizedBoxW24H24,
-      Text(tr.statistics.title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
-      sizedBoxW12H12,
+      _SectionTitle(tr.statistics.title),
       GridView(
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, mainAxisExtent: 70),
         shrinkWrap: true,
@@ -852,12 +853,52 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           };
 
-          return Scaffold(
-            appBar: appBar,
-            body: ColoredBox(color: Theme.of(context).colorScheme.surface, child: SafeArea(top: false, child: body)),
-          );
+          return Scaffold(appBar: appBar, body: SafeArea(top: false, child: body));
         },
       ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.title);
+
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        sizedBoxW24H24,
+        Text(title, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        sizedBoxW12H12,
+      ],
+    );
+  }
+}
+
+class _ProfileSectionListTile extends StatelessWidget {
+  /// Constructor.
+  const _ProfileSectionListTile({required this.leading, required this.title, required this.subtitle});
+
+  /// [ListTile.leading].
+  final Widget? leading;
+
+  /// [ListTile.title].
+  final Widget? title;
+
+  /// [ListTile.subtitle].
+  final Widget? subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListTile(
+      minTileHeight: 0,
+      contentPadding: EdgeInsets.zero,
+      leading: leading,
+      title: title,
+      subtitle: subtitle,
     );
   }
 }

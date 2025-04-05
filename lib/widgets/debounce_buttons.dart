@@ -107,3 +107,20 @@ class DebounceIconButton extends StatelessWidget {
     );
   }
 }
+
+/// Debouncing event action.
+class DebounceIcon extends StatelessWidget {
+  /// Constructor.
+  const DebounceIcon({required this.shouldDebounce, required this.icon, super.key});
+
+  /// Should in debounce state.
+  final bool shouldDebounce;
+
+  /// Icon.
+  final Widget icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return shouldDebounce ? sizedCircularProgressIndicator : icon;
+  }
+}
