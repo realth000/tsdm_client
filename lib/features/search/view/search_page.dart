@@ -68,6 +68,12 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
         unlimitedFid = false;
       });
     }
+    if (widget.authorUid != null) {
+      setState(() {
+        authorUidController.text = widget.authorUid!;
+        unlimitedAuthorUid = true;
+      });
+    }
   }
 
   @override

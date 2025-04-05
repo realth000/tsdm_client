@@ -6,7 +6,9 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 
 part 'home_navigation_bar.dart';
+
 part 'home_navigation_drawer.dart';
+
 part 'home_navigation_rail.dart';
 
 /// Bar item in app navigator.

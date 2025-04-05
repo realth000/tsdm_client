@@ -1,14 +1,18 @@
-import 'dart:math';
+import 'dart:math' as math;
+import 'dart:ui';
 
+import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
@@ -19,7 +23,9 @@ import 'package:tsdm_client/features/profile/bloc/profile_bloc.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/models/medal.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
+import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -29,7 +35,9 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
+import 'package:tsdm_client/widgets/medal_group_view.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
+import 'package:tsdm_client/widgets/obscure_list_tile.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -113,6 +121,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget _buildSliverAppBar(BuildContext context, ProfileState state, {required bool logout}) {
+    final tr = context.t.profilePage;
     final userProfile = state.userProfile!;
 
     if (!context.mounted) {
@@ -123,6 +132,11 @@ class _ProfilePageState extends State<ProfilePage> {
     if (widget.username == null && widget.uid == null) {
       // Current is current logged user's profile page.
       actions = [
+        IconButton(
+          icon: const Icon(Icons.person_search_outlined),
+          tooltip: tr.searchAsThreadAuthor,
+          onPressed: () async => context.pushNamed(ScreenPaths.search, queryParameters: {'authorUid': userProfile.uid}),
+        ),
         IconButton(
           icon: const Icon(Icons.published_with_changes_outlined),
           tooltip: context.t.switchUserGroupPage.title,
@@ -189,14 +203,33 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
     );
 
-    // Title in app bar.
-    final title = LayoutBuilder(builder: (context, cons) => Row(children: [avatar]));
-
     if (userProfile.avatarUrl != null) {
       flexSpace = Stack(
         // Disable clip, let profile avatar show outside the stack.
         clipBehavior: Clip.none,
         children: [
+          // Background blurred image.
+          Positioned(
+            // Why we can not add padding here?
+            child: Column(
+              children: [
+                // The height of color box is decided by the sigma in image filtered.
+                Container(color: Theme.of(context).colorScheme.surface, height: kToolbarHeight),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: ImageFiltered(
+                          imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                          child: CachedImage(userProfile.avatarUrl!, fit: BoxFit.cover, enableAnimation: false),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
           // Background color under avatar, height is half of avatar height.
           Positioned(
             bottom: 0,
@@ -207,14 +240,32 @@ class _ProfilePageState extends State<ProfilePage> {
                 Expanded(
                   child: ColoredBox(
                     color: Theme.of(context).colorScheme.surface,
-                    child: const SizedBox(height: _appBarAvatarHeight / 2),
+                    // Add 4 here because the avatar row (Positioned() below) has 4 padding at bottom.
+                    child: const SizedBox(height: _appBarAvatarHeight / 2 + 4),
                   ),
                 ),
               ],
             ),
           ),
           // Avatar and user info.
-          Positioned(bottom: 0, left: 15, child: title),
+          Positioned(
+            bottom: 4,
+            left: 15,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                avatar,
+                Tooltip(
+                  message: tr.online,
+                  child: Icon(
+                    Icons.circle,
+                    size: 16,
+                    color: Theme.of(context).brightness == Brightness.dark ? Colors.green[400] : Colors.green[700],
+                  ),
+                ),
+              ],
+            ),
+          ),
         ],
       );
     }
@@ -244,9 +295,9 @@ class _ProfilePageState extends State<ProfilePage> {
     final String description;
 
     // Parse checkin level number.
-    int? checkinLevelNumber;
+    final int? checkinLevelNumber;
     if (userProfile.checkinLevel == null) {
-      // Not found.
+      checkinLevelNumber = null;
     } else if (userProfile.checkinLevel!.contains('Master')) {
       // Max level
       checkinLevelNumber = 11;
@@ -264,7 +315,7 @@ class _ProfilePageState extends State<ProfilePage> {
         // e.g. From level 5 to level 6 requires (60-30) days and user is 10
         //      days before step into level 6, so the percent is:
         //      1 - 10 / (60 - 30)
-        percent = max(1 - userProfile.checkinNextLevelDays! / _checkinNextLevelExp[checkinLevelNumber], 0);
+        percent = math.max(1 - userProfile.checkinNextLevelDays! / _checkinNextLevelExp[checkinLevelNumber], 0);
       } else {
         percent = userProfile.checkinDaysCount! / totalDays;
       }
@@ -282,6 +333,7 @@ class _ProfilePageState extends State<ProfilePage> {
       Column(
         mainAxisSize: MainAxisSize.min,
         children: [
+          // Checkin level.
           Row(
             children: [
               Text(
@@ -296,11 +348,21 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           LinearProgressIndicator(value: percent),
-          if (userProfile.checkinThisMonthCount != null)
+
+          // General info
+          if (userProfile.checkinDaysCount != null)
             ListTile(
               contentPadding: EdgeInsets.zero,
               minTileHeight: 0,
               leading: const Icon(Icons.calendar_month_outlined),
+              title: Text(tr.checkinDaysCount),
+              subtitle: Text('${userProfile.checkinDaysCount}'),
+            ),
+          if (userProfile.checkinThisMonthCount != null)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              minTileHeight: 0,
+              leading: const Icon(Icons.calendar_today_outlined),
               title: Text(tr.checkinDaysInThisMonth),
               subtitle: Text(userProfile.checkinThisMonthCount!),
             ),
@@ -357,8 +419,32 @@ class _ProfilePageState extends State<ProfilePage> {
       userProfile.birthdayDay,
     ].whereType<String>().join('.');
 
-    final moderatorGroupImg = parseHtmlDocument(userProfile.moderatorGroup ?? '').body?.children.lastOrNull?.imageUrl();
-    final userGroupImg = parseHtmlDocument(userProfile.userGroup ?? '').body?.children.lastOrNull?.imageUrl();
+    final inDark = Theme.of(context).brightness == Brightness.dark;
+
+    final moderatorGroupDoc = parseHtmlDocument(userProfile.moderatorGroup ?? '').body;
+    final moderatorGroupImg = moderatorGroupDoc?.children.lastOrNull?.imageUrl();
+    final moderatorGroupName = moderatorGroupDoc?.firstEndDeepText()?.trim();
+    final Color? moderatorGroupNameColor;
+    final moderatorColorValue = WebColors.fromString(
+      moderatorGroupDoc?.querySelector('font')?.attributes['color'] ?? '',
+    );
+    if (moderatorColorValue.isValid) {
+      moderatorGroupNameColor =
+          inDark ? Color(moderatorColorValue.colorValue).adaptiveDark() : Color(moderatorColorValue.colorValue);
+    } else {
+      moderatorGroupNameColor = null;
+    }
+
+    final userGroupDoc = parseHtmlDocument(userProfile.userGroup ?? '').body;
+    final userGroupImg = userGroupDoc?.children.lastOrNull?.imageUrl();
+    final userGroupName = userGroupDoc?.firstEndDeepText()?.trim();
+    final Color? userGroupNameColor;
+    final userColorValue = WebColors.fromString(userGroupDoc?.querySelector('font')?.attributes['color'] ?? '');
+    if (userColorValue.isValid) {
+      userGroupNameColor = inDark ? Color(userColorValue.colorValue).adaptiveDark() : Color(userColorValue.colorValue);
+    } else {
+      userGroupNameColor = null;
+    }
 
     // Introduction.
     //
@@ -492,19 +578,6 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ),
 
-      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW12H12,
-      Row(
-        children: [
-          if (moderatorGroupImg != null)
-            Flexible(child: CachedImage(moderatorGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight)),
-          if (moderatorGroupImg != null && userGroupImg != null)
-            const SizedBox(width: 20, height: _groupAvatarHeight, child: VerticalDivider()),
-          if (userGroupImg != null)
-            Flexible(child: CachedImage(userGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight)),
-        ],
-      ),
-      if (moderatorGroupImg != null && userGroupImg != null) sizedBoxW12H12,
-
       // Self introduction.
       if (introductionContent != null) ...[
         sizedBoxW16H16,
@@ -523,8 +596,143 @@ class _ProfilePageState extends State<ProfilePage> {
         ),
       ],
 
+      // User group
+      if (moderatorGroupImg != null || userGroupImg != null) ...[
+        sizedBoxW24H24,
+        Text(tr.userGroup, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        sizedBoxW12H12,
+        Row(
+          children: [
+            if (moderatorGroupImg != null)
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CachedImage(moderatorGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight),
+                    sizedBoxW4H4,
+                    Text(moderatorGroupName ?? '', style: TextStyle(color: moderatorGroupNameColor)),
+                  ],
+                ),
+              ),
+            if (moderatorGroupImg != null && userGroupImg != null)
+              const SizedBox(width: 20, height: _groupAvatarHeight, child: VerticalDivider()),
+            if (userGroupImg != null)
+              Flexible(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    CachedImage(userGroupImg, maxWidth: 200, maxHeight: _groupAvatarHeight),
+                    sizedBoxW4H4,
+                    Text(userGroupName ?? '-', style: TextStyle(color: userGroupNameColor)),
+                  ],
+                ),
+              ),
+          ],
+        ),
+      ],
+
+      /// Medals, if any.
+      if (userProfile.profileMedals?.isNotEmpty ?? false) ...[
+        sizedBoxW24H24,
+        Text(tr.medals, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        sizedBoxW12H12,
+        MedalGroupView(
+          userProfile.profileMedals!
+              .map((e) => Medal(name: e.name, image: e.image, alter: e.alter, description: e.description))
+              .toList(),
+        ),
+      ],
+
+      if (userProfile.mangedForums?.isNotEmpty ?? false) ...[
+        sizedBoxW24H24,
+        Text(tr.mangedForum, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+        sizedBoxW12H12,
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children:
+              userProfile.mangedForums!
+                  .map(
+                    (e) => ActionChip(
+                      label: Text(e.name),
+                      onPressed: () async => context.pushNamed(ScreenPaths.forum, pathParameters: {'fid': '${e.fid}'}),
+                    ),
+                  )
+                  .toList(),
+        ),
+      ],
+
       /// Checkin level.
       ..._buildCheckinInfoRow(context, state),
+
+      /// Activity
+      sizedBoxW24H24,
+      Text(tr.activityStatus, style: Theme.of(context).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold)),
+      sizedBoxW12H12,
+      if (userProfile.onlineTime != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: const Icon(Icons.timelapse_outlined),
+          title: Text(tr.onlineTime),
+          subtitle: Text(userProfile.onlineTime!),
+        ),
+      if (userProfile.registerTime != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: Icon(MdiIcons.timelineAlertOutline),
+          title: Text(tr.registerTime),
+          subtitle: Text(userProfile.registerTime!.yyyyMMDDHHMM()),
+        ),
+      if (userProfile.lastVisitTime != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: Icon(MdiIcons.timelineClockOutline),
+          title: Text(tr.lastVisitTime),
+          subtitle: Text(userProfile.lastVisitTime!.yyyyMMDDHHMM()),
+        ),
+      if (userProfile.lastActiveTime != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: Icon(MdiIcons.timelineCheckOutline),
+          title: Text(tr.lastActiveTime),
+          subtitle: Text(userProfile.lastActiveTime!.yyyyMMDDHHMM()),
+        ),
+      if (userProfile.lastPostTime != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: Icon(MdiIcons.timelinePlusOutline),
+          title: Text(tr.lastPostTime),
+          subtitle: Text(userProfile.lastPostTime!.yyyyMMDDHHMM()),
+        ),
+      if (userProfile.timezone != null)
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: const Icon(Symbols.globe_location_pin),
+          title: Text(tr.timezone),
+          subtitle: Text(userProfile.timezone!),
+        ),
+      if (userProfile.registerIP != null)
+        ObscureListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: const Icon(Symbols.add_location_alt),
+          title: Text(tr.registerIP),
+          subtitle: Text(userProfile.registerIP!),
+        ),
+      if (userProfile.lastVisitIP != null)
+        ObscureListTile(
+          contentPadding: EdgeInsets.zero,
+          minTileHeight: 0,
+          leading: const Icon(Symbols.moved_location),
+          title: Text(tr.lastVisitIP),
+          subtitle: Text(userProfile.lastVisitIP!),
+        ),
 
       /// Statistics.
       sizedBoxW24H24,

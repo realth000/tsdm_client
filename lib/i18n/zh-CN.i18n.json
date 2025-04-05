@@ -330,7 +330,22 @@
       "natural": "天然",
       "scheming": "腹黑",
       "spirit": "精灵"
-    }
+    },
+    "userGroup": "用户组",
+    "activityStatus": "活动",
+    "online": "在线",
+    "offline": "离线",
+    "searchAsThreadAuthor": "搜索发布的主题",
+    "medals": "勋章",
+    "mangedForum": "管理的版块",
+    "onlineTime": "在线时间",
+    "registerTime": "注册时间",
+    "lastVisitTime": "上次访问时间",
+    "lastActiveTime": "上次活动时间",
+    "lastPostTime": "上次发表时间",
+    "registerIP": "注册IP",
+    "lastVisitIP": "上次访问IP",
+    "timezone": "所在时区"
   },
   "forumPage": {
     "rulesTab": {

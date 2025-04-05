@@ -10,7 +10,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'chat_history_bloc.mapper.dart';
+
 part 'chat_history_event.dart';
+
 part 'chat_history_state.dart';
 
 typedef _Emit = Emitter<ChatHistoryState>;

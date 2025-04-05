@@ -9,7 +9,9 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 
 part 'auto_checkin_bloc.mapper.dart';
+
 part 'auto_checkin_event.dart';
+
 part 'auto_checkin_state.dart';
 
 typedef _Emit = Emitter<AutoCheckinState>;

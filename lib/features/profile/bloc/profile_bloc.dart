@@ -5,7 +5,9 @@ import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
+import 'package:tsdm_client/features/profile/models/managed_forum.dart';
 import 'package:tsdm_client/features/profile/models/models.dart';
+import 'package:tsdm_client/features/profile/models/profile_medal.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
@@ -150,6 +152,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     String? customTitle;
     String? signature;
     String? friendsCount;
+    final online = profileRootNode.querySelector('h2.mbn > img.vm[alt="online"]') != null;
 
     ///////////  Some other basic status ///////////
 
@@ -209,6 +212,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
           qq = attr.$2;
       }
     }
+
+    final profileMedals =
+        profileRootNode.querySelectorAll('p.md_ctrl img').map(ProfileMedal.fromImg).whereType<ProfileMedal>().toList();
+
+    final managedForums =
+        profileRootNode
+            .querySelector('ul#pbbs')
+            ?.parent
+            ?.previousElementSibling
+            ?.querySelectorAll('a')
+            .map(ManagedForum.fromA)
+            .whereType<ManagedForum>()
+            .toList();
 
     // Check in status
     final checkinNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
@@ -348,6 +364,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       customTitle: customTitle,
       signature: signature,
       friendsCount: friendsCount,
+      online: online,
       birthdayYear: birthdayYear,
       birthdayMonth: birthdayMonth,
       birthdayDay: birthdayDay,
@@ -358,6 +375,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       gender: gender,
       from: from,
       qq: qq,
+      profileMedals: profileMedals,
+      mangedForums: managedForums,
 
       ///////////  Checkin status ///////////
       checkinDaysCount: checkinDaysCount == 0 ? null : checkinDaysCount,

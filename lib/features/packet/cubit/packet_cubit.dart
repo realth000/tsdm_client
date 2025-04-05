@@ -4,6 +4,7 @@ import 'package:tsdm_client/features/packet/repository/packet_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'packet_cubit.mapper.dart';
+
 part 'packet_state.dart';
 
 /// Cubit of read packets.

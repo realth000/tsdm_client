@@ -9,6 +9,13 @@ extension DateTimeExtension on DateTime {
         '${day.toString().padLeft(2, '0')}';
   }
 
+  /// Format [DateTime] to format yyyy-MM-DD hh:mm
+  String yyyyMMDDHHMM() {
+    return '$year-${month.toString().padLeft(2, '0')}-'
+        '${day.toString().padLeft(2, '0')} ${hour.toString().padLeft(2, '0')}:'
+        '${minute.toString().padLeft(2, '0')}';
+  }
+
   /// Format [DateTime] to format yyyy-MM-DD hh:mm:ss
   String yyyyMMDDHHMMSS() {
     return '$year-${month.toString().padLeft(2, '0')}-'

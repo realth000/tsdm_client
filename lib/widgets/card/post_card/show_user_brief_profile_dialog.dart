@@ -1,6 +1,5 @@
 import 'dart:math' as math;
 
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -21,6 +20,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/post_card/checkin.dart';
 import 'package:tsdm_client/widgets/card/post_card/pokemon.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/medal_group_view.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Show a dialog to display user brief profile.
@@ -110,8 +110,6 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
 
     final primaryColor = colorScheme.primary;
     final sectionTitleStyle = textTheme.titleSmall?.copyWith(color: primaryColor);
-    final nameStyle = textTheme.bodyMedium?.copyWith();
-    final descriptionStyle = textTheme.labelSmall;
     final size = MediaQuery.sizeOf(context);
     final emptyStyle = textTheme.bodyLarge?.copyWith(color: colorScheme.outline);
     final pokemon = widget.pokemon;
@@ -372,42 +370,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                           ),
                         )
                       else
-                        Column(
-                          spacing: 8,
-                          children:
-                              widget.medals
-                                  .mapIndexed(
-                                    (idx, e) => Row(
-                                      children: [
-                                        SizedBox(
-                                          width: 20,
-                                          child: Text(
-                                            '${idx + 1}'.padLeft(2),
-                                            style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                                          ),
-                                        ),
-                                        sizedBoxW8H8,
-                                        CachedImage(
-                                          e.image,
-                                          width: medalImageSize.width,
-                                          height: medalImageSize.height,
-                                        ),
-                                        sizedBoxW8H8,
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            mainAxisSize: MainAxisSize.min,
-                                            children: [
-                                              Text(e.name, style: nameStyle),
-                                              Text(e.description, style: descriptionStyle),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  )
-                                  .toList(),
-                        ),
+                        MedalGroupView(widget.medals),
 
                       sectionSeparator,
 

@@ -16,5 +16,7 @@ import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 part 'homepage_placeholder.dart';
+
 part 'pin_section.dart';
+
 part 'welcome_section.dart';

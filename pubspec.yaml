@@ -57,6 +57,7 @@ dependencies:
   image_picker: ^1.1.2
   json_annotation: ^4.9.0
   material_design_icons_flutter: ^7.0.7296
+  material_symbols_icons: ^4.2811.0
   path: any
   path_provider: ^2.1.5
   permission_handler: ^11.3.1

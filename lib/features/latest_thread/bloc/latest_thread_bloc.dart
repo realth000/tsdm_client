@@ -8,7 +8,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'latest_thread_bloc.mapper.dart';
+
 part 'latest_thread_event.dart';
+
 part 'latest_thread_state.dart';
 
 /// Emitter

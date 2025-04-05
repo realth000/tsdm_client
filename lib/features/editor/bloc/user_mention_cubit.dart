@@ -5,6 +5,7 @@ import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'user_mention_cubit.mapper.dart';
+
 part 'user_mention_state.dart';
 
 /// Cubit of user mention.

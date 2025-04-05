@@ -10,7 +10,9 @@ import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_r
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'settings_bloc.mapper.dart';
+
 part 'settings_event.dart';
+
 part 'settings_state.dart';
 
 /// Emitter.

@@ -7,6 +7,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'notification_detail_cubit.mapper.dart';
+
 part 'notification_detail_state.dart';
 
 /// Cubit of the notification detail page.

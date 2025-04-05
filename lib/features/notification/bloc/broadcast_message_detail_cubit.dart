@@ -7,6 +7,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'broadcast_message_detail_cubit.mapper.dart';
+
 part 'broadcast_message_detail_state.dart';
 
 /// Cubit of broadcast message detail page.

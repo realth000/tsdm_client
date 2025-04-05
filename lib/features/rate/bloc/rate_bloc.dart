@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'rate_bloc.mapper.dart';
+
 part 'rate_event.dart';
 
 part 'rate_state.dart';

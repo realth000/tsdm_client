@@ -330,7 +330,22 @@
       "natural": "天然",
       "scheming": "腹黑",
       "spirit": "精靈"
-    }
+    },
+    "userGroup": "使用者群組",
+    "activityStatus": "活動",
+    "online": "線上",
+    "offline": "離線",
+    "searchAsThreadAuthor": "搜尋發佈的主題",
+    "medals": "勳章",
+    "mangedForum": "管理的版塊",
+    "onlineTime": "線上時間",
+    "registerTime": "註冊時間",
+    "lastVisitTime": "上次造訪時間",
+    "lastActiveTime": "上次活動時間",
+    "lastPostTime": "上次發佈時間",
+    "registerIP": "註冊IP",
+    "lastVisitIP": "上次造訪IP",
+    "timezone": "所在時區"
   },
   "forumPage": {
     "rulesTab": {

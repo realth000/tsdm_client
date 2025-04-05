@@ -8,7 +8,9 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'points_bloc.mapper.dart';
+
 part 'points_event.dart';
+
 part 'points_state.dart';
 
 /// Statistics emitter.

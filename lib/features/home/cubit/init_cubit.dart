@@ -5,6 +5,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:path_provider/path_provider.dart';
 
 part 'init_cubit.mapper.dart';
+
 part 'init_state.dart';
 
 /// Cubit to do some initializing work during app start.

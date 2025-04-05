@@ -14,6 +14,8 @@ class ObscureListTile extends StatefulWidget {
     this.subtitle,
     this.obscureWidget,
     this.initialVisibility = false,
+    this.contentPadding,
+    this.minTileHeight,
     super.key,
   });
 
@@ -31,6 +33,12 @@ class ObscureListTile extends StatefulWidget {
 
   /// Whether content is visible when first build this widget.
   final bool initialVisibility;
+
+  /// [ListTile.contentPadding].
+  final EdgeInsets? contentPadding;
+
+  /// [ListTile.minTileHeight].
+  final double? minTileHeight;
 
   @override
   State<ObscureListTile> createState() => _ObscureListTile();
@@ -68,6 +76,13 @@ class _ObscureListTile extends State<ObscureListTile> {
       );
     }
 
-    return ListTile(leading: widget.leading, title: widget.title, subtitle: subtitleWidget, trailing: trailingWidget);
+    return ListTile(
+      leading: widget.leading,
+      title: widget.title,
+      subtitle: subtitleWidget,
+      trailing: trailingWidget,
+      contentPadding: widget.contentPadding,
+      minTileHeight: widget.minTileHeight,
+    );
   }
 }

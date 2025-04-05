@@ -4,7 +4,9 @@ import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 
 part 'settings_cache_bloc.mapper.dart';
+
 part 'settings_cache_event.dart';
+
 part 'settings_cache_state.dart';
 
 /// Bloc of using cached cubit.

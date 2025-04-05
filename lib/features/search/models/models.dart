@@ -6,6 +6,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'models.mapper.dart';
+
 part 'search_result.dart';
 
 part 'searched_thread.dart';

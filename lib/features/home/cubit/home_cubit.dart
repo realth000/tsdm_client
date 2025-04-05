@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 
 part 'home_cubit.mapper.dart';
+
 part 'home_state.dart';
 
 /// Cubit of the home page of the app.

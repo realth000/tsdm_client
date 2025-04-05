@@ -13,6 +13,7 @@ class UserProfile with UserProfileMappable {
     required this.customTitle,
     required this.signature,
     required this.friendsCount,
+    required this.online,
     required this.birthdayYear,
     required this.birthdayMonth,
     required this.birthdayDay,
@@ -23,6 +24,8 @@ class UserProfile with UserProfileMappable {
     required this.gender,
     required this.from,
     required this.qq,
+    required this.profileMedals,
+    required this.mangedForums,
     required this.checkinDaysCount,
     required this.checkinThisMonthCount,
     required this.checkinRecentTime,
@@ -87,6 +90,9 @@ class UserProfile with UserProfileMappable {
   /// Should be a widget redirect to user friends page.
   final String? friendsCount;
 
+  /// User currently online or not.
+  final bool online;
+
   ///////////  Some other basic status ///////////
 
   /// Year of birthday.
@@ -118,6 +124,14 @@ class UserProfile with UserProfileMappable {
 
   /// QQ number.
   final String? qq;
+
+  /// Medal info formatted in profile page.
+  final List<ProfileMedal>? profileMedals;
+
+  /// All managed forums.
+  ///
+  /// Have moderator permission.
+  final List<ManagedForum>? mangedForums;
 
   ///////////  Checkin status ///////////
 
@@ -154,12 +168,16 @@ class UserProfile with UserProfileMappable {
 
   ///////////  User group status ///////////
 
-  /// Group of moderator.
+  /// Info about group of moderator.
+  ///
+  /// Html format.
   ///
   /// May be null if user is not any kind of moderator.
   final String? moderatorGroup;
 
-  /// Normal user group.
+  /// Info about normal user group.
+  ///
+  /// Html format.
   ///
   /// Generally not null.
   final String? userGroup;

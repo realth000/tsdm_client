@@ -4,4 +4,5 @@ import 'package:tsdm_client/instance.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'models.mapper.dart';
+
 part 'rate_window_info.dart';

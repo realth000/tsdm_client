@@ -330,7 +330,22 @@
       "natural": "Natural",
       "scheming": "Scheming",
       "spirit": "Spirit"
-    }
+    },
+    "userGroup": "User group",
+    "activityStatus": "Activity",
+    "online": "Online",
+    "offline": "Offline",
+    "searchAsThreadAuthor": "Search published thread",
+    "medals": "Medals",
+    "mangedForum": "Managed subreddits",
+    "onlineTime": "Online time",
+    "registerTime": "Registration time",
+    "lastVisitTime": "Last visit time",
+    "lastActiveTime": "Last active time",
+    "lastPostTime": "Last post time",
+    "registerIP": "Registration IP",
+    "lastVisitIP": "Last visit IP",
+    "timezone": "Timezone"
   },
   "forumPage": {
     "rulesTab": {

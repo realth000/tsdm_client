@@ -5,7 +5,9 @@ import 'package:tsdm_client/features/thread/v2/repository/thread_repository_v2.d
 import 'package:tsdm_client/shared/models/models.dart';
 
 part 'thread_bloc_v2.mapper.dart';
+
 part 'thread_event_v2.dart';
+
 part 'thread_state_v2.dart';
 
 typedef _Emit = Emitter<ThreadStateV2>;

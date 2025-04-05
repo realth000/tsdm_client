@@ -10,7 +10,9 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/shared/models/models.dart';
 
 part 'checkin_bloc.mapper.dart';
+
 part 'checkin_event.dart';
+
 part 'checkin_state.dart';
 
 /// Bloc of checkin.

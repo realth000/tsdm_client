@@ -7,7 +7,9 @@ import 'package:tsdm_client/features/post/repository/post_edit_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'post_edit_bloc.mapper.dart';
+
 part 'post_edit_event.dart';
+
 part 'post_edit_state.dart';
 
 /// Emitter for post edit.
