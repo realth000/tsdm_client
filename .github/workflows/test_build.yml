@@ -152,6 +152,7 @@ jobs:
           name: tsdm_client-apk-arm64_v8a
           path: |
             build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk
+            build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk
   build-windows:
     name: Build Windows
     if: ${{ github.event_name == 'push' || inputs.build_windows }}
