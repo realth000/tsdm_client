@@ -120,7 +120,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
       // If lastKeyword is not empty, indicates there is a valid last search.
       // User want to jump to another page so use the last used parameters
       // and parameter page.
-      if (lastKeyword.isNotEmpty) {
+      if (lastKeyword.isNotEmpty || unlimitedAuthorUid || unlimitedFid) {
         await _doSearch(context, keyword: lastKeyword, authorUid: lastAuthorUid, fid: lastFid, page: page);
       }
       return;
