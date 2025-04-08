@@ -563,7 +563,15 @@
     "offline": "[Offline]"
   },
   "imageDetailPage": {
-    "title": "Image Detail"
+    "title": "Image detail",
+    "statistics": "Detail statistic",
+    "failedToLoadWithReason": "Failed to load image: ${reason: String}",
+    "failedToLoad": "Failed to load",
+    "url": "Url: ${url: String}",
+    "size": "Size: ${width: int} x ${height: int}",
+    "cacheName": "Cache name: ${name: String}",
+    "cacheSize": "Cache size: ${size: String}",
+    "usage": "Usage: ${usage: String}"
   },
   "forumCard": {
     "links": "Links",

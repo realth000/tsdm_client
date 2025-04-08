@@ -3,17 +3,21 @@ import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/painting.dart' as painting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_avif/flutter_avif.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/fp.dart';
+import 'package:tsdm_client/extensions/int.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/features/settings/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/models/image_cache_info.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
@@ -498,5 +502,31 @@ final class ImageCacheProvider with LoggerMixin {
     // Make cache.
     final cache = File(fileName);
     await cache.writeAsBytes(imageData);
+  }
+
+  /// Return the full cache info of image referred to `url`.
+  ///
+  /// Including image property like cache file size and image pixel size.
+  ///
+  /// Ensures the url is cache if cache is invalid.
+  Future<ImageCacheInfo?> getEnsureCachedFullInfo(String url) async {
+    final imageData = await getOrMakeCache(ImageCacheGeneralRequest(url));
+    final uiImage = await painting.decodeImageFromList(imageData);
+    final cacheInfo = getCacheInfo(url);
+    if (cacheInfo == null) {
+      return null;
+    }
+
+    return ImageCacheInfo(
+      url: url,
+      fileName: cacheInfo.fileName,
+      lastCachedTime: cacheInfo.lastCachedTime,
+      lastUsedTime: cacheInfo.lastUsedTime,
+      usage: cacheInfo.usage,
+      width: uiImage.width,
+      height: uiImage.height,
+      cacheSize:
+          File('${_imageCacheDirectory.path}${path.separator}${cacheInfo.fileName}').statSync().size.withSizeHint(),
+    );
   }
 }

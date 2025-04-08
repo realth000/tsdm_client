@@ -563,7 +563,15 @@
     "offline": "[离线]"
   },
   "imageDetailPage": {
-    "title": "图片详情"
+    "title": "图片详情",
+    "statistics": "详细数据",
+    "failedToLoadWithReason": "无法加载图片: ${reason: String}",
+    "failedToLoad": "无法加载图片",
+    "url": "Url：${url: String}",
+    "size": "图片大小：${width: int} x ${height: int}",
+    "cacheName": "缓存名称：${name: String}",
+    "cacheSize": "缓存大小：${size: String}",
+    "usage": "用途: ${usage: String}"
   },
   "forumCard": {
     "links": "链接",

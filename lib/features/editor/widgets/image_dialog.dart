@@ -3,11 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
-import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -93,17 +91,12 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
   /// Current tab index.
   int index = 0;
 
-  Future<void> _fillImageSize(BuildContext context, String url) async {
+  Future<void> _fillImageSize(String url) async {
     try {
-      final cacheInfo = getIt.get<ImageCacheProvider>().getCacheInfo(url);
-      if (cacheInfo == null) {
-        // Not cached
-        // FIXME: SO CONFUSING
-        if (context.mounted) {
-          await context.read<ImageCacheRepository>().updateImageCache(url);
-        }
-      }
-      final imageData = await getIt.get<ImageCacheProvider>().getOrMakeCache(ImageCacheGeneralRequest(url));
+      final imageData = await getIt.get<ImageCacheProvider>().getOrMakeCache(
+        ImageCacheGeneralRequest(url),
+        force: true,
+      );
       final uiImage = await decodeImageFromList(imageData);
       if (!mounted) {
         return;
@@ -143,7 +136,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
         setState(() {
           fillingSize = true;
         });
-        await _fillImageSize(context, v);
+        await _fillImageSize(v);
         if (!mounted) {
           return;
         }
@@ -153,92 +146,6 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
       },
     );
   }
-
-  // Widget _buildSmmsField(BuildContext context) {
-  //   final tr = context.t.bbcodeEditor.image;
-  //   return Column(
-  //     children: [
-  //       TextFormField(
-  //         readOnly: true,
-  //         key: smmsFieldKey,
-  //         controller: urlController,
-  //         autofocus: true,
-  //         decoration: InputDecoration(
-  //           prefixIcon: const Icon(Icons.add_outlined),
-  //           labelText: tr.link,
-  //         ),
-  //         validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
-  //         onChanged: (v) async {
-  //           // Try fill image size from image file.
-  //           if (!autoFillSize) {
-  //             return;
-  //           }
-  //           final cs = smmsFieldKey.currentState;
-  //           if (cs == null || !cs.validate()) {
-  //             return;
-  //           }
-  //           // Try get image size when image url changes.
-  //           setState(() {
-  //             fillingSize = true;
-  //           });
-  //           await _fillImageSize(context, v);
-  //           if (!mounted) {
-  //             return;
-  //           }
-  //           setState(() {
-  //             fillingSize = false;
-  //           });
-  //         },
-  //       ),
-  //       sizedBoxW8H8,
-  //       Row(
-  //         mainAxisAlignment: MainAxisAlignment.spaceAround,
-  //         children: [
-  //           FilledButton.tonal(
-  //             onPressed: () async {
-  //               final result =
-  //                   await ImagePicker().pickImage
-  //                   (source: ImageSource.gallery);
-  //               if (result == null) {
-  //                 return;
-  //               }
-
-  //               pathController.text = result.path;
-  //               imageData = await result.readAsBytes();
-  //             },
-  //             child: Text('select'),
-  //           ),
-  //           FilledButton(
-  //             onPressed: () async {
-  //               final repo = ImageUploadRepository(getIt());
-  //               final r = await repo
-  //                   .uploadToSmms(
-  //                     SmmsRequest(
-  //                       token: 'FVVlXkfKtSSNDMfqTfMAMwT8fo6lmMxW',
-  //                       data: imageData,
-  //                     ),
-  //                   )
-  //                   .run();
-
-  //               if (!context.mounted) {
-  //                 return;
-  //               }
-  //               if (r.isLeft()) {
-  //                 showSnackBar(
-  //                     context: context, message: 'Failed to upload image');
-  //                 return;
-  //               }
-  //               final url = r.unwrap();
-  //               print('>>> url is $url');
-  //               await _fillImageSize(context, url);
-  //             },
-  //             child: Text('upload'),
-  //           ),
-  //         ],
-  //       ),
-  //     ],
-  //   );
-  // }
 
   @override
   void initState() {

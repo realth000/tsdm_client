@@ -1,10 +1,9 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/int.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -30,15 +29,6 @@ class _ClearCacheBottomSheet extends StatefulWidget {
 }
 
 class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
-  Widget _buildCacheHint(BuildContext context, int v) {
-    const suffixes = ['B', 'KB', 'MB', 'GB', 'TB'];
-    if (v == 0) {
-      return Text('0 ${suffixes[0]}');
-    }
-    final i = (log(v) / log(1024)).floor();
-    return Text('${(v / pow(1024, i)).toStringAsFixed(2)} ${suffixes[i]}');
-  }
-
   @override
   Widget build(BuildContext context) {
     final tr = context.t.settingsPage.storageSection;
@@ -66,7 +56,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                   CheckboxListTile(
                     secondary: const Icon(Icons.image_outlined),
                     title: Text(tr.images),
-                    subtitle: _buildCacheHint(context, state.storageInfo!.imageSize),
+                    subtitle: Text(state.storageInfo!.imageSize.withSizeHint()),
                     value: state.clearInfo.clearImage,
                     onChanged:
                         (v) => context.read<SettingsCacheBloc>().add(
@@ -76,7 +66,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                   CheckboxListTile(
                     secondary: const Icon(Icons.emoji_emotions_outlined),
                     title: Text(tr.emoji),
-                    subtitle: _buildCacheHint(context, state.storageInfo!.emojiSize),
+                    subtitle: Text(state.storageInfo!.emojiSize.withSizeHint()),
                     value: state.clearInfo.clearEmoji,
                     onChanged:
                         (v) => context.read<SettingsCacheBloc>().add(

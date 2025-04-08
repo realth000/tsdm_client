@@ -563,7 +563,15 @@
     "offline": "[離線]"
   },
   "imageDetailPage": {
-    "title": "圖片詳情"
+    "title": "圖片詳情",
+    "statistics": "詳細資料",
+    "failedToLoadWithReason": "無法載入圖片: ${reason: String}",
+    "failedToLoad": "無法載入圖片",
+    "url": "Url：${url: String}",
+    "size": "圖片大小：${width: int} x ${height: int}",
+    "cacheName": "快取名稱：${name: String}",
+    "cacheSize": "快取大小：${size: String}",
+    "usage": "用途: ${usage: String}"
   },
   "forumCard": {
     "links": "連結",
