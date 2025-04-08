@@ -317,7 +317,10 @@ class Post with PostMappable {
 
     // User group badge and optional second badge.
     final badge = element.querySelector('div#$avatarId > div.tsdm_norm_title > img')?.imageUrl();
-    final secondBadge = element.querySelector('div.tsdm_statbar > a > img.tsdmtitles')?.imageUrl();
+    // We can not use `:is(.tsdmtitles, .tsdm_lv_title)` here.
+    final secondBadge =
+        element.querySelector('div.tsdm_statbar > a > img.tsdmtitles')?.imageUrl() ??
+        element.querySelector('div.tsdm_statbar > a > img.tsdm_lv_title')?.imageUrl();
     final signature = element.querySelector('div.sign_inner')?.innerHtml;
 
     final PostFloorPokemon? pokemon;

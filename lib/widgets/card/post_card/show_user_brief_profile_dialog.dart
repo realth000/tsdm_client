@@ -382,9 +382,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                           style: textTheme.titleSmall?.copyWith(color: colorScheme.secondary),
                         ),
                         if (pokemon.otherPokemon != null)
-                          ListView(
-                            padding: edgeInsetsT4,
-                            shrinkWrap: true,
+                          Column(
                             children:
                                 pokemon.otherPokemon!
                                     .map(
