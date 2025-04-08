@@ -57,10 +57,9 @@ final class ImageDetailPage extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
-                                    mainAxisSize: MainAxisSize.min,
                                     spacing: 8,
                                     children: [
-                                      Text(tr.url(url: data.url)),
+                                      Expanded(child: Text(tr.url(url: data.url))),
                                       IconButton(
                                         icon: const Icon(Icons.copy_outlined),
                                         onPressed: () async => copyToClipboard(context, data.url),
@@ -69,9 +68,8 @@ final class ImageDetailPage extends StatelessWidget {
                                   ),
                                   Row(
                                     spacing: 8,
-                                    mainAxisSize: MainAxisSize.min,
                                     children: [
-                                      Text(tr.cacheName(name: data.fileName)),
+                                      Expanded(child: Text(tr.cacheName(name: data.fileName))),
                                       IconButton(
                                         icon: const Icon(Icons.copy_outlined),
                                         onPressed: () async => copyToClipboard(context, data.fileName),
@@ -95,17 +93,11 @@ final class ImageDetailPage extends StatelessWidget {
           imageProvider: CachedImageProvider(imageUrl),
           maxScale: 3.0,
           minScale: 0.3,
+          initialScale: PhotoViewComputedScale.contained,
           backgroundDecoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerLowest),
           loadingBuilder: (_, _) => const Center(child: CircularProgressIndicator()),
         ),
       ),
-      // body: InteractiveViewer(
-      //   panEnabled: false,
-      //   boundaryMargin: EdgeInsets.all(100),
-      //   minScale: 0.5,
-      //   maxScale: 2,
-      //   child: CachedImage(imageUrl),
-      // ),
     );
   }
 }
