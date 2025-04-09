@@ -50,6 +50,7 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
           final body = Scaffold(
             appBar: AppBar(title: Text(tr.title)),
             body: SafeArea(
+              bottom: false,
               child: SingleChildScrollView(
                 child: StreamBuilder(
                   stream: getIt.get<StorageProvider>().allUsersStream(),
@@ -71,7 +72,7 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
                       child: Card(
                         margin: EdgeInsets.zero,
                         child: Padding(
-                          padding: edgeInsetsL12T12R12B12,
+                          padding: edgeInsetsL12T12R12.add(context.safePadding()),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisSize: MainAxisSize.min,

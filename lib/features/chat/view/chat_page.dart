@@ -180,7 +180,7 @@ final class _ChatPageState extends State<ChatPage> {
                   ),
                 ),
               ),
-              body: SafeArea(child: body),
+              body: SafeArea(bottom: false, child: body),
             );
           },
         ),

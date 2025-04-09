@@ -4,6 +4,7 @@ import 'package:easy_refresh/easy_refresh.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.dart';
@@ -119,7 +120,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                               ? _buildEmptyBody(context)
                               : ListView.separated(
                                 physics: physics,
-                                padding: edgeInsetsL12T4R12B4,
+                                padding: edgeInsetsL12T4R12.add(context.safePadding()),
                                 itemCount: n.length,
                                 itemBuilder: (_, idx) => NoticeCardV2(n.elementAt(idx)),
                                 separatorBuilder: (_, __) => sizedBoxW4H4,
@@ -135,7 +136,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                               ? _buildEmptyBody(context)
                               : ListView.separated(
                                 physics: physics,
-                                padding: edgeInsetsL12T4R12B4,
+                                padding: edgeInsetsL12T4R12.add(context.safePadding()),
                                 itemCount: pm.length,
                                 itemBuilder: (_, idx) => PersonalMessageCardV2(pm.elementAt(idx)),
                                 separatorBuilder: (_, __) => sizedBoxW4H4,
@@ -151,7 +152,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                               ? _buildEmptyBody(context)
                               : ListView.separated(
                                 physics: physics,
-                                padding: edgeInsetsL12T4R12B4,
+                                padding: edgeInsetsL12T4R12.add(context.safePadding()),
                                 itemCount: bm.length,
                                 itemBuilder: (_, idx) => BroadcastMessageCardV2(bm.elementAt(idx)),
                                 separatorBuilder: (_, __) => sizedBoxW4H4,
@@ -230,7 +231,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
               ],
               bottom: _PreferredSizeComponentBottom(_tabController),
             ),
-            body: SafeArea(child: body),
+            body: SafeArea(bottom: false, child: body),
           );
         },
       ),

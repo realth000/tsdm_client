@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -73,6 +74,7 @@ class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardApp
     return Scaffold(
       appBar: AppBar(title: Text(tr.title)),
       body: SafeArea(
+        bottom: false,
         child: Column(
           children: [
             _buildExampleRow(context),
@@ -124,6 +126,7 @@ class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardApp
                 ],
               ),
             ),
+            Padding(padding: context.safePadding()),
           ],
         ),
       ),

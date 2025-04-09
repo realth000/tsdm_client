@@ -383,7 +383,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                   }
                 },
               ),
-              body: SafeArea(child: _buildBody(context, state)),
+              body: SafeArea(bottom: false, child: _buildBody(context, state)),
             );
           },
         ),

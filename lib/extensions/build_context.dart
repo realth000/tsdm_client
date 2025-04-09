@@ -65,4 +65,7 @@ extension AccessContext on BuildContext {
 
   /// Get the repository on current context.
   T repo<T>() => RepositoryProvider.of<T>(this);
+
+  /// Return the safe padding here.
+  EdgeInsets safePadding() => MediaQuery.paddingOf(this).copyWith(top: 0, left: 0, right: 0);
 }

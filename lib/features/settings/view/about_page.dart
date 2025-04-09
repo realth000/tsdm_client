@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
@@ -40,7 +41,7 @@ class AboutPage extends StatelessWidget {
         ],
       ),
       body: ListView(
-        padding: edgeInsetsT8,
+        padding: edgeInsetsT8.add(context.safePadding()),
         children: [
           SvgPicture.asset(assetsLogoSvgPath, width: 192, height: 192),
           sizedBoxW12H12,

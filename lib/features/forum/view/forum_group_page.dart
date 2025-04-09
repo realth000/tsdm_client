@@ -27,7 +27,7 @@ class ForumGroupPage extends StatefulWidget {
 class _ForumGroupPageState extends State<ForumGroupPage> {
   Widget _buildContent(BuildContext context, ForumGroup forumGroup) {
     return ListView.separated(
-      padding: edgeInsetsL12T4R12,
+      padding: edgeInsetsL12T4R12.add(context.safePadding()),
       itemCount: forumGroup.forumList.length,
       itemBuilder: (_, index) => ForumCard(forumGroup.forumList[index]),
       separatorBuilder: (_, _) => sizedBoxW4H4,
@@ -56,7 +56,10 @@ class _ForumGroupPageState extends State<ForumGroupPage> {
             title = null;
           }
 
-          return Scaffold(appBar: AppBar(title: Text(title ?? widget.title ?? '')), body: SafeArea(child: body));
+          return Scaffold(
+            appBar: AppBar(title: Text(title ?? widget.title ?? '')),
+            body: SafeArea(bottom: false, child: body),
+          );
         },
       ),
     );

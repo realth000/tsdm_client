@@ -47,7 +47,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
       child: SingleChildScrollView(
         controller: _statisticsScrollController,
         child: Padding(
-          padding: edgeInsetsL12T4R12B4,
+          padding: edgeInsetsL12T4R12.add(context.safePadding()),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -109,7 +109,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
         },
         child: ListView.separated(
           shrinkWrap: true,
-          padding: edgeInsetsL12T4R12B4,
+          padding: edgeInsetsL12T4R12.add(context.safePadding()),
           itemCount: state.fullChangelog.length,
           itemBuilder: (_, index) => PointsChangeCard(state.fullChangelog[index]),
           separatorBuilder: (_, __) => sizedBoxW4H4,
@@ -174,6 +174,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
           ),
         ),
         body: SafeArea(
+          bottom: false,
           child: TabBarView(
             controller: _tabController,
             children: [

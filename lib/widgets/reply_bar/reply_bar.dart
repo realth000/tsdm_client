@@ -6,6 +6,7 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/chat/models/models.dart';
@@ -154,7 +155,7 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
         return ColoredBox(
           color: Theme.of(context).colorScheme.surfaceContainerLow,
           child: Padding(
-            padding: edgeInsetsL12T12R12B12,
+            padding: edgeInsetsL12T12R12.add(context.safePadding()),
             child: TextField(
               controller: controller,
               readOnly: true,

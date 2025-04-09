@@ -883,7 +883,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           };
 
-          return Scaffold(appBar: appBar, body: SafeArea(top: false, child: body));
+          return Scaffold(appBar: appBar, body: SafeArea(top: false, bottom: false, child: body));
         },
       ),
     );

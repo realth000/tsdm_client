@@ -204,7 +204,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     } else {
       content = ListView.separated(
         controller: _pinnedScrollController,
-        padding: edgeInsetsL12T4R12,
+        padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: state.stickThreadList.length + 1,
         itemBuilder: (context, index) {
           // TODO: Do NOT add leading rules card by checking index value.
@@ -295,6 +295,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                         Padding(padding: edgeInsetsL12R12, child: NormalThreadCard(normalThreadList[index])),
                 separatorBuilder: (context, index) => sizedBoxW4H4,
               ),
+              SliverPadding(padding: context.safePadding()),
             ],
           ),
     );
@@ -364,7 +365,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       },
       child: ListView.separated(
         controller: _subredditScrollController,
-        padding: edgeInsetsL12T4R12,
+        padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: subredditList.length,
         itemBuilder: (context, index) => ForumCard(subredditList[index]),
         separatorBuilder: (context, index) => sizedBoxW4H4,
@@ -476,7 +477,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
             appBar: _buildListAppBar(context, state),
             body: NotificationListener<UserScrollNotification>(
               onNotification: _onBodyScrollNotification,
-              child: SafeArea(child: _buildBody(context, state)),
+              child: SafeArea(bottom: false, child: _buildBody(context, state)),
             ),
             floatingActionButton: _buildFloatingActionButton(context, state),
           );

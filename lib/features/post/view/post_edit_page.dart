@@ -805,7 +805,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         // Required by chat_bottom_container in the reply bar.
         resizeToAvoidBottomInset: false,
         appBar: AppBar(title: Text(title)),
-        body: SafeArea(child: _buildBody(context)),
+        body: SafeArea(bottom: false, child: _buildBody(context)),
       ),
     );
   }

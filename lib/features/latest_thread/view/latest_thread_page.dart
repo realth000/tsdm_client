@@ -44,7 +44,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
         context.read<LatestThreadBloc>().add(LatestThreadLoadMoreRequested());
       },
       child: ListView.separated(
-        padding: edgeInsetsL12T4R12,
+        padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: state.threadList.length,
         itemBuilder: (context, index) {
           return LatestThreadCard(state.threadList[index]);
@@ -89,7 +89,10 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
             LatestThreadStatus.success => _buildBody(context, state),
           };
 
-          return Scaffold(appBar: AppBar(title: Text(context.t.latestThreadPage.title)), body: SafeArea(child: body));
+          return Scaffold(
+            appBar: AppBar(title: Text(context.t.latestThreadPage.title)),
+            body: SafeArea(bottom: false, child: body),
+          );
         },
       ),
     );

@@ -97,7 +97,7 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
               message: tr.switchFailed,
             ),
           };
-          return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(child: body));
+          return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(bottom: false, child: body));
         },
       ),
     );

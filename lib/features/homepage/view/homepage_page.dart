@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/checkin/widgets/checkin_button.dart';
 import 'package:tsdm_client/features/home/cubit/home_cubit.dart';
@@ -159,7 +160,7 @@ class _HomepagePageState extends State<HomepagePage> {
                     (context, physics) => ListView(
                       physics: physics,
                       controller: _scrollController,
-                      padding: edgeInsetsL12T4R12B4,
+                      padding: edgeInsetsL12T4R12.add(context.safePadding()),
                       children: [
                         WelcomeSection(
                           forumStatus: state.forumStatus,
@@ -217,6 +218,7 @@ class _HomepagePageState extends State<HomepagePage> {
               body: SafeArea(
                 left: false,
                 top: false,
+                bottom: false,
                 child: NotificationListener<UserScrollNotification>(
                   onNotification: _handleScrollNotification,
                   child: AnimatedSwitcher(duration: duration200, child: body),

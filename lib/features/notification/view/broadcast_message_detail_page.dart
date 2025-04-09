@@ -22,7 +22,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
   Widget _buildBody(BuildContext context, BroadcastMessageDetailState state) {
     return SingleChildScrollView(
       child: Padding(
-        padding: edgeInsetsL12R12B12,
+        padding: edgeInsetsL12R12B12.add(context.safePadding()),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -67,7 +67,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
                 ),
               ],
             ),
-            body: SafeArea(child: body),
+            body: SafeArea(top: false, bottom: false, child: body),
           );
         },
       ),

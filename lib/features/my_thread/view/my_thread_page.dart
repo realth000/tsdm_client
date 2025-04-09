@@ -40,7 +40,7 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
       );
     } else {
       child = ListView.separated(
-        padding: edgeInsetsL12T4R12,
+        padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: state.threadList.length,
         itemBuilder: (context, index) {
           return MyThreadCard(state.threadList[index]);
@@ -83,7 +83,7 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
       );
     } else {
       child = ListView.separated(
-        padding: edgeInsetsL12T4R12,
+        padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: state.replyList.length,
         itemBuilder: (context, index) {
           return MyThreadCard(state.replyList[index]);
@@ -150,6 +150,7 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
               ),
             ),
             body: SafeArea(
+              bottom: false,
               child: TabBarView(
                 controller: _tabController,
                 children: [_buildThreadTab(context, state), _buildReplyTab(context, state)],

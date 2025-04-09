@@ -239,7 +239,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               sizedBoxW12H12,
             ],
           ),
-          sizedBoxW12H12,
+          Padding(padding: context.safePadding()),
         ],
       ),
     );
@@ -292,7 +292,10 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         },
         child: BlocBuilder<RateBloc, RateState>(
           builder: (context, state) {
-            return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(child: _buildBody(context, state)));
+            return Scaffold(
+              appBar: AppBar(title: Text(tr.title)),
+              body: SafeArea(bottom: false, child: _buildBody(context, state)),
+            );
           },
         ),
       ),

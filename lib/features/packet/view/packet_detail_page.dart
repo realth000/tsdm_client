@@ -94,7 +94,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
                     context.pushNamed(ScreenPaths.profile, queryParameters: {'username': dataSorted[index].username}),
             child: Padding(
               key: ValueKey(dataSorted[index].id),
-              padding: edgeInsetsL12T4R12,
+              padding: edgeInsetsL12T4R12.add(context.safePadding()),
               child: Row(
                 children: [
                   SizedBox(
@@ -170,7 +170,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               ],
               bottom: infoRow == null ? null : PreferredSize(preferredSize: const Size.fromHeight(24), child: infoRow),
             ),
-            body: SafeArea(child: body),
+            body: SafeArea(bottom: false, child: body),
           );
         },
       ),

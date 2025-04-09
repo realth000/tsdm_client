@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/checkin/bloc/auto_checkin_bloc.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
@@ -44,8 +45,9 @@ class _AutoCheckinPageState extends State<AutoCheckinPage> {
         return Scaffold(
           appBar: AppBar(title: Text(tr.title)),
           body: SafeArea(
+            bottom: false,
             child: ListView(
-              padding: edgeInsetsL12T4R12B4,
+              padding: edgeInsetsL12T4R12.add(context.safePadding()),
               children: <Widget>[
                 Tips(tr.detail, enablePadding: false),
                 ...runningList.map((e) => AutoCheckinUserCard(e, tr.user.running)),
