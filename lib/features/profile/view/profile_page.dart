@@ -563,8 +563,8 @@ class _ProfilePageState extends State<ProfilePage> {
       ),
       sizedBoxW12H12,
       Wrap(
-        spacing: 8,
-        runSpacing: 8,
+        spacing: 4,
+        runSpacing: 4,
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
           if (userProfile.uid != null)
@@ -695,12 +695,13 @@ class _ProfilePageState extends State<ProfilePage> {
       if (userProfile.mangedForums?.isNotEmpty ?? false) ...[
         _SectionTitle(tr.mangedForum),
         Wrap(
-          spacing: 8,
-          runSpacing: 8,
+          spacing: 4,
+          runSpacing: 4,
           children:
               userProfile.mangedForums!
                   .map(
                     (e) => ActionChip(
+                      visualDensity: VisualDensity.compact,
                       label: Text(e.name),
                       onPressed: () async => context.pushNamed(ScreenPaths.forum, pathParameters: {'fid': '${e.fid}'}),
                     ),
