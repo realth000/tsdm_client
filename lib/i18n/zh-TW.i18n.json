@@ -212,11 +212,7 @@
     "othersSection": {
       "title": "其他",
       "about": "關於",
-      "update": {
-        "title": "取得更新",
-        "fDroidTip": "如果這個應用程式是從F-Droid安裝的，建議仍然走F-Droid升級",
-        "announcementThread": "公告帖"
-      },
+      "update": "取得更新",
       "changelog": "變更記錄"
     }
   },
@@ -888,5 +884,18 @@
     "clearAvatarTip": "提交一個空連結可以清除目前使用的頭像",
     "avatarUpdated": "頭像已更新",
     "viewSharedAvatars": "查看公共頭像"
+  },
+  "updatePage": {
+    "title": "取得更新",
+    "fDroidTip": "如果這個應用程式是從F-Droid安裝的，建議仍然走F-Droid升級",
+    "announcementThread": "公告帖",
+    "checkLatest": "偵測最新版本",
+    "availableDialog": {
+      "title": "有新版可用",
+      "version": "版本：${version: String}",
+      "changelog": "更新日誌"
+    },
+    "alreadyLatest": "已是最新版本",
+    "failed": "偵測更新失敗"
   }
 }

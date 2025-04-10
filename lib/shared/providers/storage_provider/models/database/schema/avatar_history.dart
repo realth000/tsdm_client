@@ -4,7 +4,7 @@ part of 'schema.dart';
 ///
 /// All user submitted external avatar url are saved here.
 @DataClassName('AvatarHistoryEntity')
-final class AvatarHistory extends Table {
+class AvatarHistory extends Table {
   /// Uid of the user last used the avatar.
   IntColumn get lastUsedUserId => integer()();
 

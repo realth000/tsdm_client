@@ -7,7 +7,7 @@ part of 'schema.dart';
 /// Most columns in this is not going to change so we do not use English words to name them because the fields in
 /// database is far much better to be consist through time, not like variable names or translations.
 @DataClassName('FastRateTemplateEntity')
-final class FastRateTemplate extends Table {
+class FastRateTemplate extends Table {
   /// Id of the user holding the template.
   IntColumn get uid => integer()();
 

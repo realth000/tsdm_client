@@ -4,7 +4,7 @@ part of 'schema.dart';
 ///
 /// Each template is a text using it.
 @DataClassName('FastReplyTemplateEntity')
-final class FastReplyTemplate extends Table {
+class FastReplyTemplate extends Table {
   /// User holding the template.
   IntColumn get uid => integer()();
 

@@ -212,11 +212,7 @@
     "othersSection": {
       "title": "Others",
       "about": "About",
-      "update": {
-        "title": "Get updates",
-        "fDroidTip": "It is recommended to upgrade this app through F-Droid if you installed from there",
-        "announcementThread": "Announcement thread"
-      },
+      "update": "Get updates",
       "changelog": "Changelog"
     }
   },
@@ -888,5 +884,18 @@
     "clearAvatarTip": "Submit an empty url to remove the avatar",
     "avatarUpdated": "Avatar updated",
     "viewSharedAvatars": "View shared avatars"
+  },
+  "updatePage": {
+    "title": "Get updates",
+    "fDroidTip": "It is recommended to upgrade this app through F-Droid if you installed from there",
+    "announcementThread": "Announcement thread",
+    "checkLatest": "Check latest version",
+    "availableDialog": {
+      "title": "New version available",
+      "version": "Version: ${version: String}",
+      "changelog": "Changelog"
+    },
+    "alreadyLatest": "Already latest version",
+    "failed": "Failed to check update"
   }
 }

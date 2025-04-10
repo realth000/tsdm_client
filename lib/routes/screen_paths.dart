@@ -209,6 +209,9 @@ class ScreenPaths {
 
   /// Page to manage user account for multi-user target.
   static const String manageAccount = '/manageAccount';
+
+  /// Page to get app updates.
+  static const String update = '/update';
 }
 
 /// Route path for a screen.

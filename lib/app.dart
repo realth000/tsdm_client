@@ -25,6 +25,7 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
 import 'package:tsdm_client/features/thread_visit_history/repository/thread_visit_history_repository.dart';
+import 'package:tsdm_client/features/update/cubit/update_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/app_routes.dart';
@@ -228,6 +229,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                   fontFamily: widget.fontFamily,
                 ),
           ),
+          BlocProvider(create: (context) => UpdateCubit()..checkUpdate()),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (prev, curr) => prev != curr,
