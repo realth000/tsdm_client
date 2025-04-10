@@ -1,4 +1,4 @@
-import 'package:drift_dev/api/migrations.dart';
+import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 
@@ -49,23 +49,27 @@ void main() {
   //   dart:async                                                                                                 new Future.sync
   //   package:drift/native.dart 378:19                                                                           _NativeDelegate.runCustom
   //   package:drift/src/runtime/executor/helpers/engines.dart 115:19                                             _BaseExecutor.runCustom.<fn>
-  test(
-    'upgrade from 5 to 6',
-    () async {
-      final verifier = SchemaVerifier(GeneratedHelper());
-      final connection = await verifier.startAt(5);
-      final db = AppDatabase(connection);
-      await verifier.migrateAndValidate(db, 6);
-      await db.close();
-    },
-    skip: true,
-  );
+  test('upgrade from 5 to 6', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(5);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 6);
+    await db.close();
+  }, skip: true);
 
   test('upgrade from 6 to 7', () async {
     final verifier = SchemaVerifier(GeneratedHelper());
     final connection = await verifier.startAt(6);
     final db = AppDatabase(connection);
     await verifier.migrateAndValidate(db, 7);
+    await db.close();
+  });
+
+  test('upgrade from 7 to 8', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(7);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 8);
     await db.close();
   });
 }

@@ -12,14 +12,26 @@ part 'database.g.dart';
 
 /// 数据库定义
 @DriftDatabase(
-  tables: [BroadcastMessage, Cookie, Image, Notice, PersonalMessage, Settings, ThreadVisitHistory, UserAvatar],
+  tables: [
+    AvatarHistory,
+    BroadcastMessage,
+    Cookie,
+    FastRateTemplate,
+    FastReplyTemplate,
+    Image,
+    Notice,
+    PersonalMessage,
+    Settings,
+    ThreadVisitHistory,
+    UserAvatar,
+  ],
 )
 final class AppDatabase extends _$AppDatabase with LoggerMixin {
   /// Constructor.
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -89,7 +101,16 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
         info('migrating database schema from 5 to 6... ok!');
       },
       from6To7: (m, schema) async {
+        info('migrating database schema from 6 to 7...');
         await m.addColumn(schema.userAvatar, schema.userAvatar.imageUrl);
+        info('migrating database schema from 6 to 7... ok!');
+      },
+      from7To8: (m, schema) async {
+        info('migrating database schema from 7 to 8...');
+        await m.create(schema.avatarHistory);
+        await m.create(schema.fastRateTemplate);
+        await m.create(schema.fastReplyTemplate);
+        info('migrating database schema from 7 to 8... ok!');
       },
     ),
   );
