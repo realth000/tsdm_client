@@ -14,6 +14,7 @@ import 'package:universal_html/parsing.dart';
 /// Repository to get profile page.
 final class ProfileRepository with LoggerMixin {
   static const _profileV2Target = '$baseUrl/home.php?mobile=yes&tsdmapp=1&mod=space';
+  static const _editAvatarPage = '$baseUrl/home.php?mod=spacecp&ac=avatar';
 
   uh.Document? _loggedUserDocument;
 
@@ -163,4 +164,28 @@ final class ProfileRepository with LoggerMixin {
       }
     });
   }
+
+  /// Load the current using avatar url from server.
+  AsyncEither<(String, String)> loadAvatarUrl() => getIt
+      .get<NetClientProvider>()
+      .get(_editAvatarPage)
+      .mapHttp((v) => parseHtmlDocument(v.data as String))
+      .map(
+        (v) => (
+          v.querySelector('input[name="headedit"]')?.attributes['value'],
+          v.querySelector('input[name="formhash"]')?.attributes['value'],
+        ),
+      )
+      .flatMap(
+        (v) => switch (v) {
+          (final String avatarUrl, final String formHash) => TaskEither.right((avatarUrl, formHash)),
+          (_, _) => TaskEither.left(EditAvatarUrlNotFound()),
+        },
+      );
+
+  /// Upload the new avatar [url] to server.
+  AsyncVoidEither uploadAvatarUrl({required String url, required String formHash}) => getIt
+      .get<NetClientProvider>()
+      .postForm(_editAvatarPage, data: <String, String>{'headedit': url, 'formhash': formHash, 'headsubmit': '提交'})
+      .mapHttp((v) => v);
 }

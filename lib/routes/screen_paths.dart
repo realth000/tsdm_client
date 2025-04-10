@@ -59,6 +59,9 @@ class ScreenPaths {
   /// When both are available, use uid in advance.
   static const String profile = '/profile';
 
+  /// Edit user avatar.
+  static const String editAvatar = '/editAvatar';
+
   /// Page to switch current user's user group.
   static const String switchUserGroup = '/switchUserGroup';
 

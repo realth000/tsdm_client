@@ -877,5 +877,16 @@
     "confirmMessage": "Are you sure to switch to user group ${to: String} from ${from: String}",
     "switchFailed": "Switch failed",
     "switchSucceeded": "Switched to ${to: String}"
+  },
+  "editAvatarPage": {
+    "title": "Edit avatar",
+    "currentAvatar": "Current avatar",
+    "avatarUrl": "Avatar url",
+    "noAvatar": "No avatar",
+    "preview": "Preview",
+    "submit": "Submit",
+    "clearAvatarTip": "Submit an empty url to remove the avatar",
+    "avatarUpdated": "Avatar updated",
+    "viewSharedAvatars": "View shared avatars"
   }
 }

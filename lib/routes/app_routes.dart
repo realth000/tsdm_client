@@ -25,6 +25,7 @@ import 'package:tsdm_client/features/packet/view/packet_detail_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
+import 'package:tsdm_client/features/profile/view/edit_avatar_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
@@ -253,6 +254,7 @@ final router = GoRouter(
         return ProfilePage(uid: uid, username: username, heroTag: heroTag);
       },
     ),
+    AppRoute(path: ScreenPaths.editAvatar, parentNavigatorKey: _rootRouteKey, builder: (_) => const EditAvatarPage()),
     AppRoute(
       path: ScreenPaths.switchUserGroup,
       parentNavigatorKey: _rootRouteKey,

@@ -404,3 +404,10 @@ final class SwitchUserGroupFailed extends AppException with SwitchUserGroupFaile
   /// Constructor.
   SwitchUserGroupFailed(String message) : super(message: message);
 }
+
+/// Failed to find the avatar url.
+@MappableClass()
+final class EditAvatarUrlNotFound extends AppException with EditAvatarUrlNotFoundMappable {
+  /// Constructor.
+  EditAvatarUrlNotFound() : super(message: 'avatar url not found');
+}

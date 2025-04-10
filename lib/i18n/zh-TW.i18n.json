@@ -877,5 +877,16 @@
     "confirmMessage": "你確定要從 ${from: String} 切換到 ${to: String} 嗎？",
     "switchFailed": "切換失敗",
     "switchSucceeded": "已切換至 ${to: String}"
+  },
+  "editAvatarPage": {
+    "title": "編輯頭像",
+    "currentAvatar": "目前頭像",
+    "avatarUrl": "頭像外鏈",
+    "noAvatar": "沒有頭像",
+    "preview": "預覽",
+    "submit": "提交",
+    "clearAvatarTip": "提交一個空連結可以清除目前使用的頭像",
+    "avatarUpdated": "頭像已更新",
+    "viewSharedAvatars": "查看公共頭像"
   }
 }

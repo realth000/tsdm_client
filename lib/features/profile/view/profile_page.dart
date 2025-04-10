@@ -82,7 +82,7 @@ const _checkinNextLevelExp = [
   300 - 250,
 ];
 
-enum _ProfileActions { viewNotification, checkin, viewPoints, switchUserGroup, logout }
+enum _ProfileActions { viewNotification, checkin, viewPoints, switchUserGroup, logout, editAvatar }
 
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
@@ -171,6 +171,8 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 context.read<ProfileBloc>().add(ProfileLogoutRequested());
+              case _ProfileActions.editAvatar:
+                await context.pushNamed(ScreenPaths.editAvatar);
             }
           },
           itemBuilder:
@@ -189,6 +191,16 @@ class _ProfilePageState extends State<ProfilePage> {
                       const CheckinButton(useIcon: true),
                       sizedBoxPopupMenuItemIconSpacing,
                       Text(tr.checkin.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.editAvatar,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.edit_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(context.t.editAvatarPage.title),
                     ],
                   ),
                 ),
