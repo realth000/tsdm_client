@@ -893,6 +893,7 @@
     "availableDialog": {
       "title": "有新版可用",
       "version": "版本：${version: String}",
+      "versionUpgrade": "${oldVersion: String} -> ${newVersion: String}",
       "changelog": "更新日誌"
     },
     "alreadyLatest": "已是最新版本",

@@ -391,7 +391,7 @@ Widget _middleSingletonBuilder(BuildContext context, Widget child) {
               builder: (context) {
                 final size = MediaQuery.sizeOf(context);
                 return AlertDialog(
-                  title: Text(tr.availableDialog.changelog),
+                  title: Text(tr.availableDialog.title),
                   content: SizedBox(
                     width: size.width * 0.7,
                     height: size.height * 0.7,
@@ -402,9 +402,9 @@ Widget _middleSingletonBuilder(BuildContext context, Widget child) {
                           tr.availableDialog.version(version: info.version),
                           style: Theme.of(
                             context,
-                          ).textTheme.bodyLarge?.copyWith(color: Theme.of(context).colorScheme.primary),
+                          ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
                         ),
-                        sizedBoxW12H12,
+                        sizedBoxW8H8,
                         Expanded(child: Markdown(data: info.changelog)),
                       ],
                     ),

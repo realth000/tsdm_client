@@ -33,7 +33,7 @@ class _UpdatePageState extends State<UpdatePage> {
             builder:
                 (context, state) => IconButton(
                   icon: state ? sizedCircularProgressIndicator : const Icon(Icons.refresh_outlined),
-                  tooltip: tr.title,
+                  tooltip: tr.checkLatest,
                   onPressed: state ? null : () async => context.read<UpdateCubit>().checkUpdate(),
                 ),
           ),

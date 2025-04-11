@@ -893,6 +893,7 @@
     "availableDialog": {
       "title": "New version available",
       "version": "Version: ${version: String}",
+      "versionUpgrade": "${oldVersion: String} -> ${newVersion: String}",
       "changelog": "Changelog"
     },
     "alreadyLatest": "Already latest version",
