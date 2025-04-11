@@ -34,7 +34,6 @@ class HomePage extends StatefulWidget {
     required ForumHomeRepository forumHomeRepository,
     required this.showNavigationBar,
     required this.child,
-    required this.inHome,
     super.key,
   }) : _forumHomeRepository = forumHomeRepository;
 
@@ -45,11 +44,6 @@ class HomePage extends StatefulWidget {
 
   /// Child widget, or call it the body widget.
   final Widget child;
-
-  /// Flag indicating whether in home tab or not.
-  ///
-  /// This flag is consumed by homepage widget.
-  final bool? inHome;
 
   final ForumHomeRepository _forumHomeRepository;
 
