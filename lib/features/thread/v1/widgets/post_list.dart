@@ -247,7 +247,8 @@ class _PostListState extends State<PostList> with LoggerMixin {
                         ),
                       ),
                     Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
-                    Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
+                    if (viewCount != null || replyCount != null)
+                      Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
                     if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
                   ].reversed.toList(),
             ),
