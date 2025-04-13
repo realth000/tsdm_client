@@ -48,6 +48,7 @@ class App extends StatefulWidget {
     required this.autoCheckin,
     required this.autoSyncNoticeSeconds,
     required this.fontFamily,
+    required this.checkUpdate,
     super.key,
   });
 
@@ -65,6 +66,9 @@ class App extends StatefulWidget {
 
   /// Font family.
   final String fontFamily;
+
+  /// Check update on app startup.
+  final bool checkUpdate;
 
   @override
   State<App> createState() => _AppState();
@@ -230,7 +234,15 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                   fontFamily: widget.fontFamily,
                 ),
           ),
-          BlocProvider(create: (context) => UpdateCubit()..checkUpdate()),
+          BlocProvider(
+            create: (context) {
+              final cubit = UpdateCubit();
+              if (widget.checkUpdate) {
+                cubit.checkUpdate(delay: const Duration(seconds: 1));
+              }
+              return cubit;
+            },
+          ),
           BlocProvider(create: (_) => PointsChangesCubit()),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(

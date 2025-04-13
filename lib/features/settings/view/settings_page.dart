@@ -686,8 +686,10 @@ class _SettingsPageState extends State<SettingsPage> {
     ];
   }
 
-  List<Widget> _buildOtherSection(BuildContext context) {
+  List<Widget> _buildOtherSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.othersSection;
+    final enableUpdateCheckOnStartup = state.settingsMap.enableUpdateCheckOnStartup;
+
     return [
       SectionTitleText(tr.title),
       // About
@@ -697,6 +699,14 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: () async {
           await context.pushNamed(ScreenPaths.about);
         },
+      ),
+
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.cloud_done_outlined),
+        title: Text(tr.updateCheckOnStartup),
+        value: enableUpdateCheckOnStartup,
+        onChanged:
+            (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableUpdateCheckOnStartup, v)),
       ),
 
       /// Update
@@ -766,7 +776,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 ..._buildStorageSection(context, state),
                 ..._buildAdvanceSection(context, state),
                 ..._buildDebugSection(context, state),
-                ..._buildOtherSection(context),
+                ..._buildOtherSection(context, state),
               ],
             ),
           ),

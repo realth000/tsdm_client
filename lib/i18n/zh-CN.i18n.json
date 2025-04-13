@@ -213,6 +213,7 @@
       "title": "其他",
       "about": "关于",
       "update": "获取更新",
+      "updateCheckOnStartup": "应用启动时检查更新",
       "changelog": "更新日志"
     }
   },

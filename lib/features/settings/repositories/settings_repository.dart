@@ -130,6 +130,7 @@ final class SettingsRepository with LoggerMixin {
       enableDebugOperations: s.extract(_SK.enableDebugOperations),
       fontFamily: s.extract(_SK.fontFamily),
       enableEditorBBCodeParser: s.extract(_SK.enableEditorBBCodeParser),
+      enableUpdateCheckOnStartup: s.extract(_SK.enableUpdateCheckOnStartup),
     );
   }
 

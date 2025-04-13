@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -156,8 +157,8 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
                   return AlertDialog(
                     title: Text(tr.availableDialog.title),
                     content: SizedBox(
-                      width: size.width * 0.7,
-                      height: size.height * 0.7,
+                      width: math.min(size.width * 0.8, 800),
+                      height: math.min(size.height * 0.6, 600),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [

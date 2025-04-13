@@ -213,6 +213,7 @@
       "title": "Others",
       "about": "About",
       "update": "Get updates",
+      "updateCheckOnStartup": "Check update when app startup",
       "changelog": "Changelog"
     }
   },

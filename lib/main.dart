@@ -86,6 +86,9 @@ Future<void> _boot(List<String> args) async {
   // Load font family.
   final fontFamily = settings.fontFamily;
 
+  // Check update when app startup.
+  final checkUpdate = settings.enableUpdateCheckOnStartup;
+
   runApp(
     TranslationProvider(
       child: ResponsiveBreakpoints.builder(
@@ -96,6 +99,7 @@ Future<void> _boot(List<String> args) async {
           autoCheckin: autoCheckin,
           autoSyncNoticeSeconds: autoSyncNoticeSeconds,
           fontFamily: fontFamily,
+          checkUpdate: checkUpdate,
         ),
       ),
     ),

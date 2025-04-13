@@ -11,7 +11,7 @@ import 'package:universal_html/parsing.dart';
 part 'update_cubit.mapper.dart';
 
 /// Url checking for updates.
-const updateInfoUrl = '$baseUrl/forum.php?mod=redirect&goto=findpost&ptid=1233425&pid=75311834&fromuid=2029802';
+const updateInfoUrl = '$baseUrl/forum.php?mod=redirect&goto=findpost&ptid=1233425&pid=75311834';
 
 /// The id of node holding latest version info.
 const updatePostDomId = 'postmessage_75311834';
@@ -35,8 +35,12 @@ final class UpdateCubit extends Cubit<UpdateCubitState> with LoggerMixin {
   UpdateCubit() : super(const UpdateCubitState());
 
   /// Check app update.
-  Future<void> checkUpdate() async {
+  Future<void> checkUpdate({Duration? delay}) async {
     emit(state.copyWith(loading: true, latestVersionInfo: null));
+    if (delay != null) {
+      await Future<void>.delayed(delay);
+    }
+
     await getIt
         .get<NetClientProvider>()
         .get(updateInfoUrl)
