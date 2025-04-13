@@ -36,7 +36,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
   late final StreamSubscription<String> _pointsChangesSub;
 
   /// The same value in flutter/lib/src/material/snack_bar.dart;
-  static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000 - 2000);
+  static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000 - 1000);
 
   /// Act on points changes events.
   ///
