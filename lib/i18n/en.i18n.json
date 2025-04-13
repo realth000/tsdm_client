@@ -898,5 +898,17 @@
     },
     "alreadyLatest": "Already latest version",
     "failed": "Failed to check update"
+  },
+  "pointsChangesDialog": {
+    "sep": ",",
+    "points": {
+      "ww": "ww ${value: String}",
+      "tsb": "tsb ${value: String}",
+      "xc": "xc ${value: String}",
+      "tr": "tr ${value: String}",
+      "fh": "fh ${value: String}",
+      "jl": "jl ${value: String}",
+      "specialAttr": "special points ${value: String}"
+    }
   }
 }

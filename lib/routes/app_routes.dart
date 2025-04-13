@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/view/login_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_history_page.dart';
 import 'package:tsdm_client/features/chat/view/chat_page.dart';
-import 'package:tsdm_client/features/checkin/bloc/auto_checkin_bloc.dart';
 import 'package:tsdm_client/features/checkin/view/auto_checkin_page.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/forum/view/forum_group_page.dart';
@@ -18,8 +15,6 @@ import 'package:tsdm_client/features/image/view/image_detail_page.dart';
 import 'package:tsdm_client/features/latest_thread/view/latest_thread_page.dart';
 import 'package:tsdm_client/features/multi_user/view/manage_account_page.dart';
 import 'package:tsdm_client/features/my_thread/view/my_thread_page.dart';
-import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
-import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/notification/view/broadcast_message_detail_page.dart';
 import 'package:tsdm_client/features/notification/view/notification_detail_page.dart';
@@ -33,8 +28,8 @@ import 'package:tsdm_client/features/profile/view/edit_avatar_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
-import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
+import 'package:tsdm_client/features/root/view/singleton.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/debug_log_page.dart';
@@ -45,18 +40,14 @@ import 'package:tsdm_client/features/thread/v1/view/thread_page.dart';
 import 'package:tsdm_client/features/thread/v2/view/thread_page_v2.dart';
 import 'package:tsdm_client/features/thread_visit_history/view/thread_visit_history_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
-import 'package:tsdm_client/features/update/cubit/update_cubit.dart';
 import 'package:tsdm_client/features/update/view/update_page.dart';
-import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
-import 'package:tsdm_client/utils/git_info.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
 
 /// App router instance wrapped with global singleton widgets.
 final router = GoRouter(
   initialLocation: ScreenPaths.homepage,
-  routes: [ShellRoute(builder: (context, _, child) => _middleSingletonBuilder(context, child), routes: _appRoutes)],
+  routes: [ShellRoute(builder: (_, _, child) => RootSingleton(child), routes: _appRoutes)],
 );
 
 /// All named routes in app.
@@ -326,106 +317,4 @@ class AppRoute extends GoRoute {
              (context, state) =>
                  MaterialPage<void>(name: path, arguments: state.pathParameters, child: RootPage(path, builder(state))),
        );
-}
-
-/// Wrap singleton on on routes.
-///
-/// Unlike [RootPage], widgets in this function are singletons only build an instance app wide.
-Widget _middleSingletonBuilder(BuildContext context, Widget child) {
-  final tr = context.t.globalStatePage;
-  return MultiBlocListener(
-    listeners: [
-      BlocListener<AutoCheckinBloc, AutoCheckinState>(
-        listenWhen: (prev, curr) => prev is! AutoCheckinStateFinished && curr is AutoCheckinStateFinished,
-        listener: (context, state) {
-          if (state is AutoCheckinStateFinished) {
-            showSnackBar(
-              context: context,
-              message: tr.autoCheckinFinished,
-              action: SnackBarAction(
-                label: tr.viewDetail,
-                onPressed: () async => context.pushNamed(ScreenPaths.autoCheckinDetail),
-              ),
-            );
-          }
-        },
-      ),
-      BlocListener<NotificationBloc, NotificationState>(
-        listener: (context, state) {
-          if (state.status == NotificationStatus.loading) {
-            final autoSyncState = context.read<AutoNotificationCubit>();
-            if (autoSyncState.state is AutoNoticeStateTicking) {
-              // Restart the auto notification sync process.
-              context.read<AutoNotificationCubit>().restart();
-            }
-          } else if (state.status == NotificationStatus.success) {
-            // Update last fetch notification time.
-            // We do it here because it's a global action lives in the entire lifetime of the app, not only when
-            // the notification page is live. This fixes the critical issue where time not updated.
-            if (state.latestTime != null) {
-              context.read<NotificationBloc>().add(NotificationRecordFetchTimeRequested(state.latestTime!));
-            }
-          }
-        },
-      ),
-      BlocListener<UpdateCubit, UpdateCubitState>(
-        listenWhen: (prev, curr) => curr.loading == false && prev.loading == true,
-        listener: (context, state) async {
-          final info = state.latestVersionInfo;
-          final tr = context.t.updatePage;
-          if (info == null) {
-            showSnackBar(context: context, message: tr.failed);
-            return;
-          }
-
-          final inUpdatePage = context.read<RootLocationCubit>().isIn(ScreenPaths.update);
-
-          if (info.versionCode <= appVersion.split('+').last.parseToInt()!) {
-            // Only show the already latest message in update page.
-            if (inUpdatePage) {
-              showSnackBar(context: context, message: tr.alreadyLatest);
-            }
-          } else {
-            final gotoUpdatePage = await showDialog<bool>(
-              context: context,
-              builder: (context) {
-                final size = MediaQuery.sizeOf(context);
-                return AlertDialog(
-                  title: Text(tr.availableDialog.title),
-                  content: SizedBox(
-                    width: size.width * 0.7,
-                    height: size.height * 0.7,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          tr.availableDialog.version(version: info.version),
-                          style: Theme.of(
-                            context,
-                          ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
-                        ),
-                        sizedBoxW8H8,
-                        Expanded(child: Markdown(data: info.changelog)),
-                      ],
-                    ),
-                  ),
-                  actions: [
-                    TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop(false)),
-                    TextButton(
-                      child: Text(context.t.settingsPage.othersSection.update),
-                      onPressed: () => context.pop(true),
-                    ),
-                  ],
-                );
-              },
-            );
-            if (true == gotoUpdatePage && context.mounted && !inUpdatePage) {
-              await context.pushNamed(ScreenPaths.update);
-            }
-          }
-        },
-      ),
-    ],
-    child: child,
-  );
 }

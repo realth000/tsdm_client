@@ -4,8 +4,11 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio_brotli_transformer/dio_brotli_transformer.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
+import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/map.dart';
+import 'package:tsdm_client/features/points/stream.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -67,6 +70,7 @@ final class NetClientProvider with LoggerMixin {
       }
 
       d.interceptors.add(_ErrorHandler());
+      d.interceptors.add(_PointsChangesChecker());
       // decode br content-type.
       d.transformer = DioBrotliTransformer();
     }
@@ -253,5 +257,47 @@ class _ForceDesktopLayoutInterceptor extends Interceptor with LoggerMixin {
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     options.queryParameters['mobile'] = 'no';
     handler.next(options);
+  }
+}
+
+/// Check user points changes.
+///
+/// In user actions' result, points (or call it credit) may change, and the changes info is stored in cookie by the
+/// `set-cookie` header in response. Here we should check for those points changes and parse them into points change
+/// event which can be sent to user side later.
+///
+/// Two reasons why we do it here, not in cookie provider:
+///
+/// 1. We need to identify which action caused the points change event, for some reason we already have result messages
+///   on user actions but it only contains success or failure info, without the points change if it exists. If we want
+///   to combine the original info result (succeed or not) and the points change (if any), the request side shall have
+///   some access to the relevant points change event produced by the request, impossible in cookie provider.
+/// 2. It's more expensive to decode and parse points changes in cookie provider because there is literally the storage
+///   layer, cookie are passed in format friendly to store but not operating.
+final class _PointsChangesChecker extends Interceptor {
+  static const _creditNotice = '${cookiePrefix}_creditnotice';
+
+  static final _creditNoticeRe = RegExp('$_creditNotice=(?<value>[^ ;]+)');
+
+  /// Filter credit notice cookie values from cookie strings.
+  Option<List<String>> _filterCreditNotice(List<String> cookie) {
+    final filtered =
+        cookie.filter((v) => v.contains(_creditNotice)).map(_creditNoticeRe.firstMatch).whereType<RegExpMatch>();
+    if (filtered.isEmpty) {
+      return const None();
+    }
+
+    return Option.of(filtered.map((v) => v.namedGroup('value')!).toList());
+  }
+
+  @override
+  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
+    response.headers.map
+        .lookup('set-cookie')
+        .filterMap(_filterCreditNotice)
+        // All notice changes cookie value.
+        .map((x) => x.forEach(pointsChangesStream.add));
+
+    handler.next(response);
   }
 }

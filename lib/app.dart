@@ -19,6 +19,7 @@ import 'package:tsdm_client/features/notification/bloc/notification_state_cubit.
 import 'package:tsdm_client/features/notification/repository/notification_info_repository.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
+import 'package:tsdm_client/features/root/bloc/points_changes_cubit.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
@@ -230,6 +231,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                 ),
           ),
           BlocProvider(create: (context) => UpdateCubit()..checkUpdate()),
+          BlocProvider(create: (_) => PointsChangesCubit()),
         ],
         child: BlocBuilder<ThemeCubit, ThemeState>(
           buildWhen: (prev, curr) => prev != curr,

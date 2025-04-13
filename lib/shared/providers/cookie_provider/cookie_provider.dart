@@ -1,4 +1,5 @@
 import 'package:cookie_jar/cookie_jar.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
@@ -147,7 +148,7 @@ final class CookieProvider with LoggerMixin implements Storage {
     }
 
     // Only save authed cookie into storage.
-    if (!_cookieMap.values.any((e) => e.contains('s_gkr8_682f_auth'))) {
+    if (!_cookieMap.values.any((e) => e.contains('${cookiePrefix}_auth'))) {
       return false;
     }
 
@@ -228,11 +229,43 @@ final class CookieProvider with LoggerMixin implements Storage {
   @override
   Future<void> write(String key, String value) async {
     // Do not update authed cookie with not authed one.
-    if ((_cookieMap[key]?.contains('s_gkr8_682f_auth') ?? false) && !value.contains('s_gkr8_682f_auth')) {
+    //
+    // TODO: Key is always ".domains" or ".index"
+    if ((_cookieMap[key]?.contains('${cookiePrefix}_auth') ?? false) && !value.contains('${cookiePrefix}_auth')) {
       return;
     }
     _cookieMap[key] = value;
     await _syncCookie();
+
+    // Check points changes events.
+    if (key == '.domains') {
+      // The following code are not used because we do it in `NetClientProvider` interceptors.
+      //
+      // Here is the storage layer of the cookie where it's hard to know the response state and also not possible to
+      // tell the difference between all these requests, make it impossible to combine the action result message we used
+      // before and the points changes together.
+      //
+      // // The value of ".domains" is expected to be:
+      // //
+      // // "$DOMAIN": {
+      // //     "$PATH": {
+      // //         "$COOKIE_NAME": "$COOKIE_VALUE",
+      // //     }
+      // // }
+      // Option.fromPredicate(jsonDecode(value), (v) => v is Map<String, dynamic>)
+      //     .map((x) => x as Map<String, dynamic>)
+      //     // Assume only one domain.
+      //     .flatMap((x) => x.values.firstOption)
+      //     .filterMap((x) => x is Map<String, dynamic> ? Option.fromNullable(x.values.firstOrNull) : const None())
+      //     // Assume only one path.
+      //     .filterMap((x) => x is Map<String, dynamic> ? Option.of(x) : const None())
+      //     // Here we get all cookie pairs.
+      //     .filterMap((x) => x.containsKey(_creditNotice) ? Option.of(x[_creditNotice]) : const None())
+      //     .filterMap((x) => x is String ? Option.of(_creditNoticeRe.firstMatch(x)) : const None())
+      //     .filterMap((x) => x != null ? Option.of(x.namedGroup('value')) : const None())
+      //     // Add to cookie stream.
+      //     .map((v) => pointsChangesStream.add(v!));
+    }
   }
 
   @override

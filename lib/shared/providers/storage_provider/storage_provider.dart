@@ -4,6 +4,7 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:drift/drift.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/models/notification_type.dart';
@@ -167,7 +168,7 @@ class StorageProvider with LoggerMixin {
     final userInfo = UserLoginInfo(username: username, uid: uid /*, email: email*/);
     _cookieCache[userInfo] = allCookie;
 
-    if (!allCookie.toString().contains('s_gkr8_682f_auth')) {
+    if (!allCookie.toString().contains('${cookiePrefix}_auth')) {
       // Only save cookie when cookie is authed.
       info('refuse to save not authed cookie');
       return;

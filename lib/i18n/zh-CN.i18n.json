@@ -898,5 +898,17 @@
     },
     "alreadyLatest": "已是最新版本",
     "failed": "检测更新失败"
+  },
+  "pointsChangesDialog": {
+    "sep": "，",
+    "points": {
+      "ww": "威望 ${value: String}",
+      "tsb": "天使币 ${value: String}",
+      "xc": "宣传 ${value: String}",
+      "tr": "天然 ${value: String}",
+      "fh": "腹黑 ${value: String}",
+      "jl": "精灵 ${value: String}",
+      "specialAttr": "特殊积分 ${value: String}"
+    }
   }
 }

@@ -114,3 +114,6 @@ const feelingImageSize = Size(60, 60);
 ///
 /// Server side render it with this boundary in browser.
 const htmlContentMaxWidth = 712.0;
+
+/// Prefix of all cookie.
+const cookiePrefix = 's_gkr8_682f';
