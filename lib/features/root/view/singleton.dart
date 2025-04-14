@@ -220,7 +220,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
               kinds.join(tr.sep),
               context: context,
               duration: _snackBarDisplayDuration,
-              position: StyledToastPosition.top,
+              position: const StyledToastPosition(align: Alignment.topCenter, offset: kToolbarHeight),
               textStyle: Theme.of(context).snackBarTheme.contentTextStyle,
               backgroundColor: Theme.of(context).snackBarTheme.backgroundColor,
             );
