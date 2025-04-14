@@ -35,6 +35,7 @@ dependencies:
   equatable: ^2.0.7
   extended_nested_scroll_view: ^6.2.1
   file_picker: ^9.0.0
+  flex_color_picker: ^3.7.0
   flex_color_scheme: ^8.1.1
   flutter:
     sdk: flutter

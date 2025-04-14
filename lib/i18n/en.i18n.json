@@ -651,7 +651,23 @@
     "expandLess": "Expand Less"
   },
   "colorPickerDialog": {
-    "title": "Choose Color"
+    "title": "Choose Color",
+    "tabs": {
+      "normal": {
+        "title": "Normal"
+      },
+      "advanced": {
+        "title": "Advanced",
+        "selectColor": "Select color",
+        "selectColorShade": "Select color shade"
+      },
+      "custom": {
+        "title": "Custom",
+        "colorValue": "Color value",
+        "invalidColor": "Invalid color",
+        "formatTip": "Enter color name (e.g. darkorange, DarkOrange) or hex color value (e.g. f0c, ff00cc, 14d084)"
+      }
+    }
   },
   "postCard": {
     "reply": "Reply",

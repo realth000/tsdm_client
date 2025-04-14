@@ -651,7 +651,23 @@
     "expandLess": "折叠"
   },
   "colorPickerDialog": {
-    "title": "选择颜色"
+    "title": "选择颜色",
+    "tabs": {
+      "normal": {
+        "title": "简单"
+      },
+      "advanced": {
+        "title": "高级",
+        "selectColor": "选择颜色",
+        "selectColorShade": "选择颜色色调"
+      },
+      "custom": {
+        "title": "自定义",
+        "colorValue": "颜色",
+        "invalidColor": "无效的颜色",
+        "formatTip": "输入颜色的名字（例如darkorange、DarkOrange）或者hex形式的颜色数值（例如f0c、ff00cc、14d084）"
+      }
+    }
   },
   "postCard": {
     "reply": "回复",

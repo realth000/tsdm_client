@@ -112,8 +112,8 @@ class RichEditor extends StatelessWidget {
       urlLauncher: (url) async => context.dispatchAsUrl(url),
       userMentionHandler: (username) => context.dispatchAsUrl('$usernameProfilePage$username'),
       emojiPicker: (context) async => showEmojiPicker(context),
-      colorPicker: (context) async => showColorPicker(context),
-      backgroundColorPicker: (context) async => showColorPicker(context),
+      colorPicker: (context, initialColor) async => showColorPicker(context, initialColor),
+      backgroundColorPicker: (context, initialColor) async => showColorPicker(context, initialColor),
       urlPicker: (context, url, description) async => showUrlPicker(context, url: url, description: description),
     );
   }
