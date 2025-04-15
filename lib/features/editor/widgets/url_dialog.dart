@@ -5,6 +5,8 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
+import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 
 /// Link prefix, originally in quill_flutter.
 const _linkPrefixes = [
@@ -60,6 +62,11 @@ class _UrlDialogState extends State<UrlDialog> {
   late final TextEditingController descController;
   late final TextEditingController urlController;
 
+  /// Regex to capture url and description in bilibili share text content.
+  final _bilibiliShareRe = RegExp(r'^【(?<desc>.+)】 (?<url>https://www\.bilibili\.com/video/\w+)');
+
+  var _bilibiliTipExpanded = false;
+
   @override
   void initState() {
     super.initState();
@@ -95,6 +102,7 @@ class _UrlDialogState extends State<UrlDialog> {
         key: formKey,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             TextFormField(
               controller: descController,
@@ -108,6 +116,47 @@ class _UrlDialogState extends State<UrlDialog> {
               controller: urlController,
               decoration: InputDecoration(prefixIcon: const Icon(Icons.link_outlined), labelText: tr.link),
               validator: (v) => v!.trim().isNotEmpty ? null : tr.errorEmpty,
+            ),
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    TextButton(
+                      child: Text(tr.autoPaste.tip),
+                      onPressed: () async {
+                        final bilibiliText = await getPlainTextFromClipboard();
+                        if (bilibiliText == null) {
+                          return;
+                        }
+
+                        final reMatch = _bilibiliShareRe.firstMatch(bilibiliText);
+                        if (reMatch == null) {
+                          return;
+                        }
+
+                        final desc = reMatch.namedGroup('desc')!;
+                        final url = reMatch.namedGroup('url')!;
+                        setState(() {
+                          descController.text = desc;
+                          urlController.text = url;
+                        });
+                      },
+                    ),
+                    const Spacer(),
+                    IconButton(
+                      icon: const Icon(Icons.info_outline),
+                      onPressed: () => setState(() => _bilibiliTipExpanded = !_bilibiliTipExpanded),
+                    ),
+                  ],
+                ),
+                AnimatedVisibility(
+                  visible: _bilibiliTipExpanded,
+                  duration: duration200,
+                  child: Text(tr.autoPaste.detail, style: Theme.of(context).textTheme.labelSmall),
+                ),
+              ],
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,

@@ -749,7 +749,11 @@
       "title": "插入链接",
       "description": "描述",
       "link": "链接",
-      "errorEmpty": "不能为空"
+      "errorEmpty": "不能为空",
+      "autoPaste": {
+        "tip": "粘贴b站分享链接",
+        "detail": "从剪切板粘贴b站分享链接。\n格式为【视频名】 https://www.bilibili.com/BV号或AV号"
+      }
     },
     "foregroundColor": {
       "title": "字体颜色"
