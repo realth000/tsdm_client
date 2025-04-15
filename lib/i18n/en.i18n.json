@@ -749,7 +749,11 @@
       "title": "Insert Url",
       "description": "Url description",
       "link": "Url link",
-      "errorEmpty": "Should not be empty"
+      "errorEmpty": "Should not be empty",
+      "autoPaste": {
+        "tip": "Paste bilibili share link",
+        "detail": "Paste bilibili video share link from clipboard. \nFormat is 【VIDEO_NAME】 https://www.bilibili.com/VIDEO_ID"
+      }
     },
     "foregroundColor": {
       "title": "Font Color"

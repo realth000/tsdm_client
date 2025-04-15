@@ -14,3 +14,9 @@ Future<void> copyToClipboard(BuildContext context, String data, {bool showSnackB
     toast.showSnackBar(context: context, message: context.t.general.copiedToClipboard);
   }
 }
+
+/// Get the plain text content in system clipboard.
+Future<String?> getPlainTextFromClipboard() async {
+  final data = await Clipboard.getData('text/plain');
+  return data?.text;
+}
