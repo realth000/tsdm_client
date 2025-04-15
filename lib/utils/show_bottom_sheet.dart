@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -31,17 +33,23 @@ Future<T?> showCustomBottomSheet<T>({
     context: context,
     constraints: constraints,
     showDragHandle: true,
-    builder: (_) {
-      return Padding(
-        padding: edgeInsetsL12T4R12B12,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(title, style: Theme.of(context).textTheme.titleLarge),
-            if (pinnedWidget != null) ...[sizedBoxW8H8, pinnedWidget],
-            sizedBoxW12H12,
-            if (useExpand) Expanded(child: content) else content,
-          ],
+    isScrollControlled: true,
+    builder: (context) {
+      final size = MediaQuery.sizeOf(context);
+      final viewInsets = MediaQuery.viewInsetsOf(context);
+      return SizedBox(
+        height: math.min(size.height / 2 + viewInsets.bottom, size.height - viewInsets.top),
+        child: Padding(
+          padding: edgeInsetsL12T4R12B12.add(MediaQuery.viewInsetsOf(context)),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(title, style: Theme.of(context).textTheme.titleLarge),
+              if (pinnedWidget != null) ...[sizedBoxW8H8, pinnedWidget],
+              sizedBoxW12H12,
+              if (useExpand) Expanded(child: content) else content,
+            ],
+          ),
         ),
       );
     },
