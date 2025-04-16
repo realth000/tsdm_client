@@ -34,7 +34,7 @@ class QuotedText extends StatelessWidget {
     final spanTail = TextSpan(children: [WidgetSpan(child: iconTail)]);
 
     if (text != null) {
-      return Text.rich(TextSpan(children: [spanHead, TextSpan(text: ' $text '), spanTail]));
+      return SelectableText.rich(TextSpan(children: [spanHead, TextSpan(text: ' $text '), spanTail]));
     }
 
     if (span != null) {
@@ -45,10 +45,10 @@ class QuotedText extends StatelessWidget {
       return Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text.rich(WidgetSpan(child: Align(child: iconHead))),
+          SelectableText.rich(TextSpan(children: [WidgetSpan(child: Align(child: iconHead))])),
           sizedBoxW4H4,
           Expanded(
-            child: Text.rich(
+            child: SelectableText.rich(
               TextSpan(
                 children: [
                   // Add a line feed to ensure the child content is lower than
