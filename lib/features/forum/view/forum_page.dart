@@ -189,7 +189,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
   }
 
   Widget _buildStickThreadTab(BuildContext context, ForumState state) {
-    if (state.stickThreadList.isEmpty) {
+    if (state.stickThreadList.isEmpty && state.rulesElement == null) {
       return Center(child: Text(context.t.forumPage.stickThreadTab.noThread));
     }
     late final Widget content;
