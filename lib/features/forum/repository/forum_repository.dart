@@ -42,9 +42,6 @@ class ForumRepository {
       queryMap['recommend'] = '1';
       queryMap['orderby'] = 'recommends';
     }
-    if (filterState.filter != null) {
-      queryMap['filter'] = filterState.filter!;
-    }
     if (filterState.filterType?.typeID != null) {
       queryMap['typeid'] = filterState.filterType!.typeID!;
     }
@@ -59,6 +56,11 @@ class ForumRepository {
     }
     if (filterState.filterDigest.digest) {
       queryMap['digest'] = '1';
+    }
+
+    // Only set 'filter' query parameter when the filter is actually applied.
+    if (filterState.filter != null && queryMap.containsKey(filterState.filter)) {
+      queryMap['filter'] = filterState.filter!;
     }
 
     return Uri.https('tsdm39.com', '/forum.php', queryMap);

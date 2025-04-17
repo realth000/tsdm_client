@@ -8,9 +8,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'forum_bloc.mapper.dart';
-
 part 'forum_event.dart';
-
 part 'forum_state.dart';
 
 /// Emitter
@@ -91,21 +89,19 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     List<Forum>? subredditList;
     final normalThreadList = _buildThreadList<NormalThread>(document, 'tsdm_normalthread', NormalThread.fromTBody);
 
-    // When jump to other pages, pinned thread and subreddits should be
-    // reserved in state.
-    // Only the first page has pinned threads and subreddits.
+    // Always parse the latest result of pinned contents.
+    // As we allow direct access from url and thread page header, where has no complete pinned contents recorded
+    // before first visit, it becomes much more complex if we still want to preserve the old behavior which reserved
+    // the complete result when accessing without filters.
     //
-    // If any filter options applied on current state, ignore the pinned thread
-    // result in fetched dom because none may found.
-    if (pageNumber == 1 && !state.hasFilter) {
-      stickThreadList = _buildThreadList<StickThread>(document, 'tsdm_stickthread', StickThread.fromTBody);
-      subredditList = _buildForumList(document, state.fid);
-    }
+    // Always parse it and use it if necessary.
+    stickThreadList = _buildThreadList<StickThread>(document, 'tsdm_stickthread', StickThread.fromTBody);
+    subredditList = _buildForumList(document, state.fid);
 
     var needLogin = false;
     var havePermission = true;
     uh.Element? permissionDeniedMessage;
-    if (normalThreadList.isEmpty && (subredditList?.isEmpty ?? true)) {
+    if (normalThreadList.isEmpty && (subredditList.isEmpty)) {
       // Here both normal thread list and subreddit is empty, check permission.
       final docMessage = document.getElementById('messagetext');
       final docLogin = document.getElementById('messagelogin');
@@ -178,7 +174,7 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
             )
             .toList();
 
-    var anotherState = state.copyWith(
+    var producedState = state.copyWith(
       status: ForumStatus.success,
       title: title,
       normalThreadList: allNormalThread,
@@ -194,17 +190,16 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
       filterDatelineList: filterDatelineList,
     );
 
+    if (stickThreadList.isNotEmpty) {
+      producedState = producedState.copyWith(stickThreadList: stickThreadList);
+    }
     if (rulesElement != null) {
-      anotherState = anotherState.copyWith(rulesElement: rulesElement);
+      producedState = producedState.copyWith(rulesElement: rulesElement);
     }
-    if (stickThreadList != null) {
-      anotherState = anotherState.copyWith(stickThreadList: stickThreadList);
+    if (subredditList.isNotEmpty) {
+      producedState = producedState.copyWith(subredditList: subredditList);
     }
-    if (subredditList != null) {
-      anotherState = anotherState.copyWith(subredditList: subredditList);
-    }
-
-    return anotherState;
+    return producedState;
   }
 
   /// Build a list of thread from given html [document].
