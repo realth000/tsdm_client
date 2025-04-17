@@ -77,7 +77,7 @@ Widget munchElement(
   // Currently is 712.
   return ConstrainedBox(
     constraints: const BoxConstraints(maxWidth: htmlContentMaxWidth),
-    child: SelectableText.rich(TextSpan(children: ret)),
+    child: Text.rich(TextSpan(children: ret)),
   );
 }
 
@@ -485,9 +485,7 @@ final class _Muncher with LoggerMixin {
 
     if (align != null) {
       ret2 = [
-        WidgetSpan(
-          child: Row(children: [Expanded(child: SelectableText.rich(TextSpan(children: ret), textAlign: align))]),
-        ),
+        WidgetSpan(child: Row(children: [Expanded(child: Text.rich(TextSpan(children: ret), textAlign: align))])),
       ];
 
       // Restore text align.
@@ -777,7 +775,7 @@ final class _Muncher with LoggerMixin {
         // Text already has the label, do not add duplicate one.
         content = null;
       } else {
-        content = SelectableText('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
+        content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
       }
     } else {
       final IconData prefixIcon;
@@ -933,7 +931,7 @@ final class _Muncher with LoggerMixin {
         color: Theme.of(context).colorScheme.onSecondary,
         shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(5))),
         margin: EdgeInsets.zero,
-        child: SelectableText.rich(TextSpan(children: ret)),
+        child: Text.rich(TextSpan(children: ret)),
       ),
     );
     state.elevation -= _elevationStep;
@@ -1079,7 +1077,7 @@ final class _Muncher with LoggerMixin {
       final tableRowContent = <Widget>[];
       final tds = tr.querySelectorRootAll('td');
       for (final td in tds) {
-        tableRowContent.add(SelectableText.rich(TextSpan(children: _buildTd(td))));
+        tableRowContent.add(Text.rich(TextSpan(children: _buildTd(td))));
       }
       if (tds.length > columnMaxCount) {
         columnMaxCount = tds.length;
