@@ -112,9 +112,6 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
               pathParameters: currentRoute!.pathParameters,
               queryParameters: currentRoute!.queryParameters,
             );
-            if (!context.mounted) {
-              return;
-            }
           },
         ),
       ],
