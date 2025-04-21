@@ -29,7 +29,6 @@ import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
-import 'package:tsdm_client/features/root/view/singleton.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/debug_log_page.dart';
@@ -45,10 +44,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 
 /// App router instance wrapped with global singleton widgets.
-final router = GoRouter(
-  initialLocation: ScreenPaths.homepage,
-  routes: [ShellRoute(builder: (_, _, child) => RootSingleton(child), routes: _appRoutes)],
-);
+final router = GoRouter(initialLocation: ScreenPaths.homepage, routes: _appRoutes);
 
 /// All named routes in app.
 final _appRoutes = [
