@@ -12,6 +12,9 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
+const _avatarMaxWidth = 100.0;
+const _avatarMaxHeight = 150.0;
+
 /// Page to edit user avatar.
 class EditAvatarPage extends StatefulWidget {
   /// Constructor.
@@ -34,7 +37,10 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
       children: [
         SectionTitleText(tr.currentAvatar),
         if (state.avatarUrl?.isNotEmpty ?? false) ...[
-          Padding(padding: edgeInsetsL12R12, child: CachedImage(state.avatarUrl!, maxWidth: 180, maxHeight: 220)),
+          Padding(
+            padding: edgeInsetsL12R12,
+            child: CachedImage(state.avatarUrl!, maxWidth: _avatarMaxWidth, maxHeight: _avatarMaxHeight),
+          ),
           sizedBoxW12H12,
         ] else ...[
           ConstrainedBox(
@@ -95,7 +101,10 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
 
         if (_previewUrl != null) ...[
           SectionTitleText(tr.preview),
-          Padding(padding: edgeInsetsL12R12, child: CachedImage(_previewUrl!, maxWidth: 180, maxHeight: 220)),
+          Padding(
+            padding: edgeInsetsL12R12,
+            child: CachedImage(_previewUrl!, maxWidth: _avatarMaxWidth, maxHeight: _avatarMaxHeight),
+          ),
         ],
       ],
     );
