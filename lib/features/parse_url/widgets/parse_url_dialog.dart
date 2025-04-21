@@ -103,15 +103,15 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
               return;
             }
 
-            // Pop before we push.
-            // Well the reason why it's before pushing the route is not clear, since when the `await` waits for the
-            // new route pop.
-            context.pop();
             await context.pushNamed(
               currentRoute!.screenPath,
               pathParameters: currentRoute!.pathParameters,
               queryParameters: currentRoute!.queryParameters,
             );
+            if (!context.mounted) {
+              return;
+            }
+            context.pop();
           },
         ),
       ],
