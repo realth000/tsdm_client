@@ -24,10 +24,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// The app wide singleton stands on top of all other pages to act on different events in app.
 class RootSingleton extends StatefulWidget {
   /// Constructor.
-  const RootSingleton(this.child, {super.key});
-
-  /// Child widget.
-  final Widget child;
+  const RootSingleton({super.key});
 
   @override
   State<RootSingleton> createState() => _RootSingletonState();
@@ -227,7 +224,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
           },
         ),
       ],
-      child: widget.child,
+      child: const SizedBox.shrink(),
     );
   }
 }
