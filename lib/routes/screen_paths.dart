@@ -2,7 +2,7 @@
 class ScreenPaths {
   ScreenPaths._();
 
-  /// Root page to load [homepage].
+  /// Root page to load `RootSingleton` page.
   static const String root = '/';
 
   /// App about page.

@@ -21,7 +21,6 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/root/bloc/points_changes_cubit.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
-import 'package:tsdm_client/features/root/view/singleton.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
@@ -258,11 +257,6 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             final darkTheme = AppTheme.makeDark(context, seedColor: accentColor, fontFamily: fontFamily);
 
             return MaterialApp.router(
-              builder: (context, child) {
-                // TODO: If is proper usage?
-                // The builder literally is a transition builder but we wrap a global singleton here.
-                return RootSingleton(child ?? const SizedBox.shrink());
-              },
               title: context.t.appName,
               routerConfig: router,
               locale: TranslationProvider.of(context).flutterLocale,
