@@ -1,3 +1,4 @@
+import 'package:dart_quill_delta/dart_quill_delta.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -21,6 +22,16 @@ class RichEditor extends StatelessWidget {
     this.autoFocus = false,
     super.key,
   });
+
+  /// The readonly constructor.
+  RichEditor.readonly({
+    String? initialText,
+    Delta? initialDelta,
+    this.scrollController,
+    this.editorFocusNode,
+    this.autoFocus = false,
+    super.key,
+  }) : controller = buildBBCodeEditorController(readOnly: true, initialText: initialText, initialDelta: initialDelta);
 
   /// Editor controller.
   final BBCodeEditorController controller;
