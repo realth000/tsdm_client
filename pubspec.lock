@@ -344,7 +344,7 @@ packages:
     source: hosted
     version: "4.5.0"
   dart_quill_delta:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: dart_quill_delta
       sha256: bddb0b2948bd5b5a328f1651764486d162c59a8ccffd4c63e8b2c5e44be1dac4
@@ -766,7 +766,7 @@ packages:
       path: "packages/flutter_bbcode_editor/packages/flutter-quill"
       relative: true
     source: path
-    version: "11.0.0"
+    version: "11.4.0"
   flutter_quill_delta_from_html:
     dependency: transitive
     description:
