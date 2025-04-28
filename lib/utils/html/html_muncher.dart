@@ -11,7 +11,6 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
 import 'package:tsdm_client/utils/html/munch_options.dart';
-import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 
 // Netease card
 import 'package:tsdm_client/utils/html/netease_card.dart';
