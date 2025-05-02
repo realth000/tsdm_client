@@ -718,7 +718,8 @@
       }
     },
     "share": "複製分享連結",
-    "openInBrowser": "在瀏覽器中開啟"
+    "openInBrowser": "在瀏覽器中開啟",
+    "copyText": "複製文字"
   },
   "packetCard": {
     "title": "紅包",

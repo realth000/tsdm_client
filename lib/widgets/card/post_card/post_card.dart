@@ -23,6 +23,7 @@ import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialo
 import 'package:tsdm_client/widgets/card/rate_card.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/parsing.dart';
+import 'package:universal_html/html.dart' as uh;
 import 'package:url_launcher/url_launcher.dart';
 
 /// Actions in post context menu.
@@ -54,6 +55,9 @@ enum _PostCardActions {
   ///
   /// Use the anchor not works on mobile UI no matter it always is or originally was `findpost`.
   openInBrowser,
+
+  /// Open the dialog to copy contents.
+  openAndCopy,
 }
 
 /// Card for a [Post] model.
@@ -332,6 +336,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                       ],
                     ),
                   ),
+                  PopupMenuItem(
+                    value: _PostCardActions.openAndCopy,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.copy_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(context.t.postCard.copyText),
+                      ],
+                    ),
+                  ),
                 ],
               ],
           onSelected: (value) async {
@@ -361,6 +375,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                 await copyToClipboard(context, widget.post.shareLink!);
               case _PostCardActions.openInBrowser:
                 await launchUrl(Uri.parse(widget.post.shareLink!), mode: LaunchMode.externalApplication);
+              case _PostCardActions.openAndCopy:
+                await showCopyContentMenu(context);
             }
           },
         ),
@@ -368,6 +384,43 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       ],
     );
   }
+
+  Future<void> showCopyContentMenu(BuildContext context) async => showDialog<void>(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        scrollable: true,
+        title: Text(context.t.postCard.copyText),
+        content: SelectableText(
+          parseHtmlDocument(widget.post.data).body?.childNodes
+                  .map(
+                    (e) => switch (e.nodeType) {
+                      uh.Node.TEXT_NODE => e.text!.trim(),
+                      uh.Node.ELEMENT_NODE => () {
+                        final x = e as uh.Element;
+                        if (x.tagName.toLowerCase() == 'script') {
+                          return null;
+                        }
+                        return x.innerText.trim();
+                      }(),
+                      _ => null,
+                    },
+                  )
+                  .whereType<String>()
+                  .join() ??
+              '',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(context.t.general.ok),
+          ),
+        ],
+      );
+    },
+  );
 
   // TODO: Handle better.
   // FIXME: Fix rebuild when interacting with widgets inside.

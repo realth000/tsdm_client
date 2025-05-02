@@ -718,7 +718,8 @@
       }
     },
     "share": "Copy share link",
-    "openInBrowser": "Open in browser"
+    "openInBrowser": "Open in browser",
+    "copyText": "Copy Text"
   },
   "packetCard": {
     "title": "Packet",
