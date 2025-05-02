@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
@@ -145,8 +147,10 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
           if (!context.mounted) {
             return false;
           }
-
-          if (context.canPop()) {
+          final location = GoRouter.of(context).state.uri.toString();
+          if (location != ScreenPaths.homepage &&
+              location != ScreenPaths.topic &&
+              location != ScreenPaths.settings.path) {
             // Do NOT handle pop events on other pages.
             return false;
           }
@@ -159,6 +163,14 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
             showSnackBar(context: context, message: tr.confirmExit);
             return true;
           }
+          // Close the app.
+          if (isAndroid || isIOS) {
+            await SystemNavigator.pop(animated: true);
+          } else {
+            // CAUTION: unsafe operation.
+            exit(0);
+          }
+          // Unreachable
           return false;
         },
         child: child,
