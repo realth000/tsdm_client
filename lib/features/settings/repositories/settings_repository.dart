@@ -149,23 +149,23 @@ final class SettingsRepository with LoggerMixin {
     final name = key.name;
     final Object? v;
     if (T == int) {
-      v = _storage.getInt(name);
+      v = await _storage.getInt(name);
     } else if (T == double) {
-      v = _storage.getDouble(name);
+      v = await _storage.getDouble(name);
     } else if (T == String) {
-      v = _storage.getString(name);
+      v = await _storage.getString(name);
     } else if (T == bool) {
-      v = _storage.getBool(name);
+      v = await _storage.getBool(name);
     } else if (T == DateTime) {
-      v = _storage.getDateTime(name);
+      v = await _storage.getDateTime(name);
     } else if (T == Offset) {
-      v = _storage.getOffset(name);
+      v = await _storage.getOffset(name);
     } else if (T == Size) {
-      v = _storage.getSize(name);
+      v = await _storage.getSize(name);
     } else if (T == List<String>) {
-      v = _storage.getStringList(name);
+      v = await _storage.getStringList(name);
     } else if (T == List<int>) {
-      v = _storage.getIntList(name);
+      v = await _storage.getIntList(name);
     } else {
       error('failed to getValue for key $key: unsupported type $T');
       v = null;
