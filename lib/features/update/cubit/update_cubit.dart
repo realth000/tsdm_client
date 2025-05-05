@@ -20,10 +20,13 @@ const updatePostDomId = 'postmessage_75311834';
 @MappableClass()
 final class UpdateCubitState with UpdateCubitStateMappable {
   /// Constructor.
-  const UpdateCubitState({this.loading = false, this.latestVersionInfo});
+  const UpdateCubitState({this.loading = false, this.notice = false, this.latestVersionInfo});
 
   /// Loading or not.
   final bool loading;
+
+  /// Trigger notice when failed or not.
+  final bool notice;
 
   /// Data.
   final LatestVersionInfo? latestVersionInfo;
@@ -35,7 +38,9 @@ final class UpdateCubit extends Cubit<UpdateCubitState> with LoggerMixin {
   UpdateCubit() : super(const UpdateCubitState());
 
   /// Check app update.
-  Future<void> checkUpdate({Duration? delay}) async {
+  ///
+  /// Set [notice] to false if do not want the snackbar notice when failed to do check update.
+  Future<void> checkUpdate({Duration? delay, bool notice = true}) async {
     emit(state.copyWith(loading: true, latestVersionInfo: null));
     if (delay != null) {
       await Future<void>.delayed(delay);
@@ -49,20 +54,20 @@ final class UpdateCubit extends Cubit<UpdateCubitState> with LoggerMixin {
         .handle(
           (e) {
             error('failed to check latest version: $e');
-            emit(state.copyWith(loading: false, latestVersionInfo: null));
+            emit(state.copyWith(loading: false, latestVersionInfo: null, notice: notice));
           },
           (v) {
             if (v == null) {
-              emit(state.copyWith(loading: false, latestVersionInfo: null));
+              emit(state.copyWith(loading: false, latestVersionInfo: null, notice: notice));
               return;
             }
 
             try {
               final latestVersionInfo = LatestVersionInfoMapper.fromJson(v);
-              emit(state.copyWith(loading: false, latestVersionInfo: latestVersionInfo));
+              emit(state.copyWith(loading: false, latestVersionInfo: latestVersionInfo, notice: false));
             } on Exception catch (e) {
               error('failed to deserialize latest version info: $e');
-              emit(state.copyWith(loading: false, latestVersionInfo: null));
+              emit(state.copyWith(loading: false, latestVersionInfo: null, notice: notice));
             }
           },
         );

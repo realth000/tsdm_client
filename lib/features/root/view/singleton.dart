@@ -135,7 +135,10 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
             final info = state.latestVersionInfo;
             final tr = context.t.updatePage;
             if (info == null) {
-              showSnackBar(context: context, message: tr.failed);
+              error('failed to check update state');
+              if (state.notice) {
+                showSnackBar(context: context, message: tr.failed);
+              }
               return;
             }
 
