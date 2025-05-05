@@ -238,7 +238,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             create: (context) {
               final cubit = UpdateCubit();
               if (widget.checkUpdate) {
-                cubit.checkUpdate(delay: const Duration(seconds: 1));
+                cubit.checkUpdate(delay: const Duration(seconds: 1), notice: false);
               }
               return cubit;
             },
