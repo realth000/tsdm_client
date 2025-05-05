@@ -26,32 +26,30 @@ extension _ExtractExt on List<SettingsEntity> {
     if (v == null) {
       return settings.defaultValue;
     }
-    return (switch (T) {
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              int => v.intValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              double => v.doubleValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              String => v.stringValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              bool => v.boolValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              DateTime => v.dateTimeValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              Offset => v.offsetValue,
-              // ref: https://github.com/dart-lang/sdk/issues/59334
-              // ignore: type_literal_in_constant_pattern
-              Size => v.sizeValue,
-              _ => null,
-            } ??
-            settings.defaultValue)
-        as T;
+    final Object? value;
+    if (T == int) {
+      value = v.intValue;
+    } else if (T == double) {
+      value = v.doubleValue;
+    } else if (T == String) {
+      value = v.stringValue;
+    } else if (T == bool) {
+      value = v.boolValue;
+    } else if (T == DateTime) {
+      value = v.dateTimeValue;
+    } else if (T == Offset) {
+      value = v.offsetValue;
+    } else if (T == Size) {
+      value = v.sizeValue;
+    } else if (T == List<String>) {
+      value = v.stringListValue;
+    } else if (T == List<int>) {
+      value = v.intListValue;
+    } else {
+      talker.error('failed to extract settings: unsupported settings type $T');
+      value = null;
+    }
+    return (value ?? settings.defaultValue) as T;
   }
 }
 
@@ -91,6 +89,7 @@ final class SettingsRepository with LoggerMixin {
   /// Some settings use default value directly.
   Future<SettingsMap> _initMap() async {
     final s = await _storage.getAllSettings();
+    print('>>> color???? ${s.extract(_SK.editorRecentUsedCustomColors)}');
 
     return SettingsMap(
       netClientAccept: s.extract(_SK.netClientAccept),
@@ -131,6 +130,7 @@ final class SettingsRepository with LoggerMixin {
       fontFamily: s.extract(_SK.fontFamily),
       enableEditorBBCodeParser: s.extract(_SK.enableEditorBBCodeParser),
       enableUpdateCheckOnStartup: s.extract(_SK.enableUpdateCheckOnStartup),
+      editorRecentUsedCustomColors: s.extract(_SK.editorRecentUsedCustomColors),
     );
   }
 
