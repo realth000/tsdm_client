@@ -89,7 +89,6 @@ final class SettingsRepository with LoggerMixin {
   /// Some settings use default value directly.
   Future<SettingsMap> _initMap() async {
     final s = await _storage.getAllSettings();
-    print('>>> color???? ${s.extract(_SK.editorRecentUsedCustomColors)}');
 
     return SettingsMap(
       netClientAccept: s.extract(_SK.netClientAccept),

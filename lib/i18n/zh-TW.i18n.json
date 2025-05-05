@@ -665,7 +665,8 @@
         "title": "自訂",
         "colorValue": "顏色",
         "invalidColor": "無效的顏色",
-        "formatTip": "輸入顏色的名字（例如darkorange、DarkOrange）或hex形式的顏色數值（例如f0c、ff00cc、14d084）"
+        "formatTip": "輸入顏色的名字（例如darkorange、DarkOrange）或hex形式的顏色數值（例如f0c、ff00cc、14d084）",
+        "recentColor": "最近使用"
       }
     }
   },

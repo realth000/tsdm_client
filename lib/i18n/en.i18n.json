@@ -665,7 +665,8 @@
         "title": "Custom",
         "colorValue": "Color value",
         "invalidColor": "Invalid color",
-        "formatTip": "Enter color name (e.g. darkorange, DarkOrange) or hex color value (e.g. f0c, ff00cc, 14d084)"
+        "formatTip": "Enter color name (e.g. darkorange, DarkOrange) or hex color value (e.g. f0c, ff00cc, 14d084)",
+        "recentColor": "Recent color"
       }
     }
   },

@@ -46,6 +46,7 @@ class SettingsMap with SettingsMapMappable {
     required this.fontFamily,
     required this.enableEditorBBCodeParser,
     required this.enableUpdateCheckOnStartup,
+    required this.editorRecentUsedCustomColors,
   });
 
   final String netClientAccept;
@@ -86,6 +87,7 @@ class SettingsMap with SettingsMapMappable {
   final String fontFamily;
   final bool enableEditorBBCodeParser;
   final bool enableUpdateCheckOnStartup;
+  final List<int> editorRecentUsedCustomColors;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -133,6 +135,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.fontFamily => copyWith(fontFamily: value as String?),
       SettingsKeys.enableEditorBBCodeParser => copyWith(enableEditorBBCodeParser: value as bool?),
       SettingsKeys.enableUpdateCheckOnStartup => copyWith(enableUpdateCheckOnStartup: value as bool?),
+      SettingsKeys.editorRecentUsedCustomColors => copyWith(editorRecentUsedCustomColors: value as List<int>?),
     };
   }
 }

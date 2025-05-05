@@ -117,3 +117,6 @@ const htmlContentMaxWidth = 712.0;
 
 /// Prefix of all cookie.
 const cookiePrefix = 's_gkr8_682f';
+
+/// The maximum count of recent used custom colors in editor.
+const editorRecentUsedCustomColorsMaxCount = 8;
