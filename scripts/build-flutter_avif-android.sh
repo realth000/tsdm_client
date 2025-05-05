@@ -2,24 +2,24 @@
 
 set -ex
 
-export ANDROID_HOME='/usr/local/lib/android/sdk'
-export ANDROID_NDK='/usr/local/lib/android/sdk/ndk/28.0.13004108'
-export ANDROID_NDK_HOME='/usr/local/lib/android/sdk/ndk/28.0.13004108'
-export ANDROID_NDK_LATEST_HOME='/usr/local/lib/android/sdk/ndk/28.0.13004108'
-export ANDROID_NDK_ROOT='/usr/local/lib/android/sdk/ndk/28.0.13004108'
-export ANDROID_SDK_ROOT='/usr/local/lib/android/sdk'
+# /opt/hostedtoolcache/ndk/${NDK_VERSION_NAME_R28}/x64
+#
+# The following envs are injected by CI.
+# export ANDROID_NDK='/usr/local/lib/android/sdk/ndk/28.0.13004108'
+# export ANDROID_NDK_HOME='/usr/local/lib/android/sdk/ndk/28.0.13004108'
+# export ANDROID_NDK_LATEST_HOME='/usr/local/lib/android/sdk/ndk/28.0.13004108'
+# export ANDROID_NDK_ROOT='/usr/local/lib/android/sdk/ndk/28.0.13004108'
 
-if [ -d '/usr/local/lib/android/sdk/ndk/28.0.13004108' ];then
-  echo "NDK r28 exists"
+if [ -d "$ANDROID_NDK_HOME" ];then
+  echo "NDK exists"
 else
-  echo "NDK r28 NOT EXISTS"
+  echo "NDK NOT EXISTS"
   exit 1
 fi
 
-if [ -d '/usr/local/lib/android/sdk/ndk/27.2.12479018' ];then
-  echo "NDK r27c exists"
-  echo "delete r27c"
-  mv '/usr/local/lib/android/sdk/ndk/27.2.12479018' '/usr/local/lib/android/sdk/ndk/27.2.12479018.bak'
+if [ -d '/usr/local/lib/android/sdk/ndk/' ];then
+  echo "Default NDKs: "
+  ls '/usr/local/lib/android/sdk/ndk/'
 fi
 
 AVIF_ROOT="packages/flutter_avif"
