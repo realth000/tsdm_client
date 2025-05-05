@@ -50,6 +50,22 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
 
   List<Color> _recentCustomColors = [];
 
+  void _updateCustomColorPreview(String? v) {
+    final tr = context.t.colorPickerDialog.tabs.custom;
+
+    final colorValue = v.toColor();
+    if (colorValue == null) {
+      setState(() {
+        _customTabErrorText = tr.invalidColor;
+      });
+      return;
+    }
+    setState(() {
+      _customTabErrorText = null;
+      _customTabColor = Color(colorValue);
+    });
+  }
+
   Widget _buildNormalTab() {
     return GridView.builder(
       shrinkWrap: true,
@@ -142,19 +158,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
                       child: TextField(
                         controller: _customColorValueController,
                         decoration: InputDecoration(errorText: _customTabErrorText, labelText: tr.colorValue),
-                        onChanged: (v) {
-                          final colorValue = v.toColor();
-                          if (colorValue == null) {
-                            setState(() {
-                              _customTabErrorText = tr.invalidColor;
-                            });
-                            return;
-                          }
-                          setState(() {
-                            _customTabErrorText = null;
-                            _customTabColor = Color(colorValue);
-                          });
-                        },
+                        onChanged: _updateCustomColorPreview,
                       ),
                     ),
                     sizedBoxW12H12,
@@ -179,7 +183,12 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
                       _recentCustomColors
                           .map(
                             (e) => GestureDetector(
-                              onTap: () => setState(() => _customColorValueController.text = e.hex.toLowerCase()),
+                              onTap:
+                                  () => setState(() {
+                                    final value = e.hex.toLowerCase();
+                                    _updateCustomColorPreview(value);
+                                    _customColorValueController.text = value;
+                                  }),
                               child: Container(
                                 width: 40,
                                 height: 40,
