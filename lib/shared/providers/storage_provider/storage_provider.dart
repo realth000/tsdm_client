@@ -327,6 +327,19 @@ class StorageProvider with LoggerMixin {
   /// Save [Size] type value of specified key.
   Future<void> saveSize(String key, Size value) async => SettingsDao(_db).setValue<Size>(key, value);
 
+  /// Get [List] of [String] type value of specified key.
+  Future<List<String>?> getStringList(String key) async => SettingsDao(_db).getValueByName(key);
+
+  /// Save [List] of [String] type value of specified key.
+  Future<void> saveStringList(String key, List<String> value) async =>
+      SettingsDao(_db).setValue<List<String>>(key, value);
+
+  /// Get [List] of [int] type value of specified key.
+  Future<List<int>?> getIntList(String key) async => SettingsDao(_db).getValueByName(key);
+
+  /// Save [List] of [int] type value of specified key.
+  Future<void> saveIntList(String key, List<int> value) async => SettingsDao(_db).setValue<List<int>>(key, value);
+
   /// Delete the given record from database.
   Future<void> deleteKey(String key) async {
     await SettingsDao(_db).deleteByName(key);

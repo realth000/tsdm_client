@@ -148,33 +148,30 @@ final class SettingsRepository with LoggerMixin {
     );
 
     final name = key.name;
-    final v = await switch (T) {
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      int => _storage.getInt(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      double => _storage.getDouble(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      String => _storage.getString(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      bool => _storage.getBool(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      DateTime => _storage.getDateTime(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      Offset => _storage.getOffset(name),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      Size => _storage.getSize(name),
-      _ => () {
-        error('failed to getValue for key $key: unsupported type $T');
-        return null;
-      }(),
-    };
+    final Object? v;
+    if (T == int) {
+      v = _storage.getInt(name);
+    } else if (T == double) {
+      v = _storage.getDouble(name);
+    } else if (T == String) {
+      v = _storage.getString(name);
+    } else if (T == bool) {
+      v = _storage.getBool(name);
+    } else if (T == DateTime) {
+      v = _storage.getDateTime(name);
+    } else if (T == Offset) {
+      v = _storage.getOffset(name);
+    } else if (T == Size) {
+      v = _storage.getSize(name);
+    } else if (T == List<String>) {
+      v = _storage.getStringList(name);
+    } else if (T == List<int>) {
+      v = _storage.getIntList(name);
+    } else {
+      error('failed to getValue for key $key: unsupported type $T');
+      v = null;
+    }
+
     return (v ?? key.defaultValue) as T;
   }
 
@@ -194,35 +191,30 @@ final class SettingsRepository with LoggerMixin {
     );
 
     final name = key.name;
-    final _ = await switch (T) {
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      int => _storage.saveInt(name, value as int),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      double => _storage.saveDouble(name, value as double),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      String => _storage.saveString(name, value as String),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      bool => _storage.saveBool(name, value: value as bool),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      DateTime => _storage.saveDateTime(name, value as DateTime),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      Offset => _storage.saveOffset(name, value as Offset),
-      // ref: https://github.com/dart-lang/sdk/issues/59334
-      // ignore: type_literal_in_constant_pattern
-      Size => _storage.saveSize(name, value as Size),
-      final t => () {
-        error(
-          'failed to save settings for key $key:'
-          ' unsupported type in storage: $t',
-        );
-      }(),
-    };
+    if (T == int) {
+      await _storage.saveInt(name, value as int);
+    } else if (T == double) {
+      await _storage.saveDouble(name, value as double);
+    } else if (T == String) {
+      await _storage.saveString(name, value as String);
+    } else if (T == bool) {
+      await _storage.saveBool(name, value: value as bool);
+    } else if (T == DateTime) {
+      await _storage.saveDateTime(name, value as DateTime);
+    } else if (T == Offset) {
+      await _storage.saveOffset(name, value as Offset);
+    } else if (T == Size) {
+      await _storage.saveSize(name, value as Size);
+    } else if (T == List<String>) {
+      await _storage.saveStringList(name, value as List<String>);
+    } else if (T == List<int>) {
+      await _storage.saveIntList(name, value as List<int>);
+    } else {
+      error(
+        'failed to save settings for key $key:'
+        ' unsupported type in storage: $T',
+      );
+    }
 
     _state = _state.copyWithKey(key, value);
     _controller.add(_state);
