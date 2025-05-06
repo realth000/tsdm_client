@@ -170,7 +170,12 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   enableEditorBBCodeParser<bool>(name: 'enableEditorBBCodeParser', type: bool, defaultValue: true),
 
   /// Enable the update check when app startup.
-  enableUpdateCheckOnStartup<bool>(name: 'enableUpdateCheckOnStartup', type: bool, defaultValue: true);
+  enableUpdateCheckOnStartup<bool>(name: 'enableUpdateCheckOnStartup', type: bool, defaultValue: true),
+
+  /// Recent used custom colors in editor.
+  ///
+  /// The length of the list is determined to .
+  editorRecentUsedCustomColors<List<int>>(name: 'editorRecentUsedCustomColors', type: List<int>, defaultValue: []);
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

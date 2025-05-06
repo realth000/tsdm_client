@@ -33,6 +33,16 @@ class Settings extends Table {
   /// Added in v3.
   TextColumn get offsetValue => text().map(const OffsetConverter()).nullable()();
 
+  /// List of string.
+  ///
+  /// Added in v9.
+  TextColumn get stringListValue => text().map(const StringListConverter()).nullable()();
+
+  /// List of int.
+  ///
+  /// Added in v9.
+  TextColumn get intListValue => text().map(const IntListConverter()).nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => {name};
 }

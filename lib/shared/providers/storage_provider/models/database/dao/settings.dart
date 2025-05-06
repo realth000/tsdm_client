@@ -22,6 +22,8 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDao
   /// * [DateTime]
   /// * [Offset]
   /// * [Size]
+  /// * [List] of [String]
+  /// * [List] of int
   Future<T?> getValueByName<T>(String name) async {
     final value = await (select(settings)..where((e) => e.name.equals(name))).getSingleOrNull();
     if (value == null) {
@@ -42,6 +44,10 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDao
       return value.offsetValue! as T;
     } else if (T == Size) {
       return value.sizeValue! as T;
+    } else if (T == List<String>) {
+      return value.stringListValue! as T;
+    } else if (T == List<int>) {
+      return value.intListValue! as T;
     }
     error('failed to get value by name "$name": unsupported type $T');
     return null;
@@ -58,6 +64,8 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDao
   /// * [DateTime]
   /// * [Offset]
   /// * [Size]
+  /// * [List] of [String]
+  /// * [List] of int
   Future<void> setValue<T>(String name, T value) async {
     final SettingsCompanion companion;
     if (T == String) {
@@ -74,6 +82,10 @@ final class SettingsDao extends DatabaseAccessor<AppDatabase> with _$SettingsDao
       companion = SettingsCompanion(name: Value(name), offsetValue: Value(value as Offset));
     } else if (T == Size) {
       companion = SettingsCompanion(name: Value(name), sizeValue: Value(value as Size));
+    } else if (T == List<String>) {
+      companion = SettingsCompanion(name: Value(name), stringListValue: Value(value as List<String>));
+    } else if (T == List<int>) {
+      companion = SettingsCompanion(name: Value(name), intListValue: Value(value as List<int>));
     } else {
       // Unsupported types.
       error(

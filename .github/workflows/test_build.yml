@@ -125,6 +125,11 @@ jobs:
           sudo apt install -y make meson nasm
           cargo install cargo-ndk@3.5.4 --locked
           ./scripts/build-flutter_avif-android.sh
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_LATEST_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: Precompile
         run: |
           flutter pub get
