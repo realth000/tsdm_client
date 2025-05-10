@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -502,6 +503,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 if (isMobile)
                   IconButton(
                     icon: const Icon(Icons.expand),
+                    tooltip: context.t.bbcodeEditor.toolbar,
                     selectedIcon: Icon(Icons.expand_outlined, color: Theme.of(context).primaryColor),
                     isSelected: fullScreen,
                     onPressed: () {
@@ -518,17 +520,19 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 if (additionalOptionsMap != null)
                   IconButton(
                     icon: const Icon(Icons.settings_outlined),
+                    tooltip: context.t.bbcodeEditor.additionalOptions,
                     onPressed: () async => _showAdditionalOptionBottomSheet(context, state),
                   ),
                 if (state.content?.permList?.isNotEmpty ?? false)
                   Badge(
                     label: Text('$perm'),
-                    offset: const Offset(-1, -1),
+                    offset: const Offset(-4, 4),
                     isLabelVisible: perm != null && perm!.isNotEmpty,
                     child: IconButton(
                       icon: const Icon(Icons.lock_open_outlined),
                       selectedIcon: const Icon(Icons.lock_outline),
                       isSelected: perm != null && perm!.isNotEmpty,
+                      tooltip: context.t.bbcodeEditor.readPerm,
                       onPressed: () async {
                         final selectedPerm = await showSelectPermDialog(context, state.content!.permList!, perm);
                         if (selectedPerm == null || !context.mounted) {
@@ -543,7 +547,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 if (price != null)
                   Badge(
                     label: Text('$price'),
-                    offset: const Offset(-1, -1),
+                    textStyle: Theme.of(context).textTheme.labelSmall,
+                    offset: const Offset(-4, 4),
                     isLabelVisible: price != null && price != 0,
                     child: IconButton(
                       icon: const Icon(Icons.money_off_outlined),
@@ -561,136 +566,91 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                       },
                     ),
                   ),
+                sizedBoxW4H4,
               ],
             ),
           ),
-        ),
-        if (widget.editType.isEditingDraft) ...[
-          FilledButton.tonal(
-            onPressed:
-                state.status == PostEditStatus.uploading
-                    ? null
-                    : () async => _onFinish(context, state, saveDraft: true),
-            child:
-                state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
-                    ? sizedCircularProgressIndicator
-                    : Text(context.t.postEditPage.saveAsDraft),
-          ),
-          sizedBoxW8H8,
-        ],
-        FilledButton(
-          onPressed: state.status == PostEditStatus.uploading ? null : () async => _onFinish(context, state),
-          child:
-              state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
-                  ? sizedCircularProgressIndicator
-                  : Row(children: [const Icon(Icons.send), sizedBoxW4H4, Text(context.t.postEditPage.publish)]),
         ),
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        RepositoryProvider(create: (_) => PostEditRepository()),
-        BlocProvider(
-          create: (context) {
-            final bloc = PostEditBloc(postEditRepository: context.repo());
-
-            final event = switch (widget.editType) {
-              PostEditType.editPost || PostEditType.editDraft => PostEditLoadDataRequested(
-                _formatDataUrl(fid: widget.fid, tid: widget.tid!, pid: widget.pid!),
+  Widget _buildBody(BuildContext context, PostEditState state) {
+    if (state.status == PostEditStatus.initial || state.status == PostEditStatus.loading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    if (state.status == PostEditStatus.failedToLoad) {
+      return buildRetryButton(context, () {
+        switch (widget.editType) {
+          case PostEditType.editPost || PostEditType.editDraft:
+            context.read<PostEditBloc>().add(
+              PostEditLoadDataRequested(
+                _formatDataUrl(
+                  fid: widget.fid,
+                  // Not null when editing post
+                  tid: widget.tid!,
+                  // Not null when editing post
+                  pid: widget.pid!,
+                ),
               ),
-              PostEditType.newThread => ThreadPubFetchInfoRequested(fid: widget.fid),
-            };
-            bloc.add(event);
-            return bloc;
-          },
-        ),
-      ],
-      child: BlocListener<PostEditBloc, PostEditState>(
-        listener: (context, state) async => _onListen(context, state),
-        child: BlocBuilder<PostEditBloc, PostEditState>(
-          builder: (context, state) {
-            if (state.status == PostEditStatus.initial || state.status == PostEditStatus.loading) {
-              return const Center(child: CircularProgressIndicator());
-            }
-            if (state.status == PostEditStatus.failedToLoad) {
-              return buildRetryButton(context, () {
-                switch (widget.editType) {
-                  case PostEditType.editPost || PostEditType.editDraft:
-                    context.read<PostEditBloc>().add(
-                      PostEditLoadDataRequested(
-                        _formatDataUrl(
-                          fid: widget.fid,
-                          // Not null when editing post
-                          tid: widget.tid!,
-                          // Not null when editing post
-                          pid: widget.pid!,
-                        ),
-                      ),
-                    );
-                  case PostEditType.newThread:
-                    context.read<PostEditBloc>().add(ThreadPubFetchInfoRequested(fid: widget.fid));
-                }
-              });
-            }
-
-            if (!initialized) {
-              final data = state.content?.data;
-              if (data != null) {
-                if (context.read<SettingsBloc>().state.settingsMap.enableEditorBBCodeParser) {
-                  final delta = parseBBCodeTextToDelta(data);
-                  bbcodeController.setDocumentFromDelta(delta);
-                } else {
-                  bbcodeController.setDocumentFromRawText(data);
-                }
-              }
-              initialized = true;
-            }
-
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                _buildTitleRow(context, state),
-                sizedBoxW4H4,
-                // Post data editor.
-                // Now we don't restrict the thread type and thread title, so it's better to focus on content area.
-                Expanded(
-                  child: Padding(
-                    padding: isMobile ? edgeInsetsL16R16 : edgeInsetsL4R4,
-                    child: RichEditor(autoFocus: true, controller: bbcodeController, editorFocusNode: focusNode),
-                  ),
-                ),
-                if (isDesktop)
-                  // Expand and can not replace with Align.
-                  Row(
-                    children: [
-                      Expanded(
-                        child: ColoredBox(
-                          color: Theme.of(context).colorScheme.surfaceContainerLow,
-                          child: Padding(
-                            padding: edgeInsetsL4R4.add(edgeInsetsT4),
-                            child: EditorToolbar(
-                              bbcodeController: bbcodeController,
-                              disabledFeatures: defaultFullScreenDisabledEditorFeatures,
-                              editorFocusNode: focusNode,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ColoredBox(
-                  color: Theme.of(context).colorScheme.surfaceContainerLow,
-                  child: Padding(padding: edgeInsetsR4.add(edgeInsetsB4), child: _buildControlRow(context, state)),
-                ),
-                if (isMobile) _buildMobileToolbar(context, state),
-              ],
             );
-          },
+          case PostEditType.newThread:
+            context.read<PostEditBloc>().add(ThreadPubFetchInfoRequested(fid: widget.fid));
+        }
+      });
+    }
+
+    if (!initialized) {
+      final data = state.content?.data;
+      if (data != null) {
+        if (context.read<SettingsBloc>().state.settingsMap.enableEditorBBCodeParser) {
+          final delta = parseBBCodeTextToDelta(data);
+          bbcodeController.setDocumentFromDelta(delta);
+        } else {
+          bbcodeController.setDocumentFromRawText(data);
+        }
+      }
+      initialized = true;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildTitleRow(context, state),
+        sizedBoxW4H4,
+        // Post data editor.
+        // Now we don't restrict the thread type and thread title, so it's better to focus on content area.
+        Expanded(
+          child: Padding(
+            padding: isMobile ? edgeInsetsL16R16 : edgeInsetsL4R4,
+            child: RichEditor(autoFocus: true, controller: bbcodeController, editorFocusNode: focusNode),
+          ),
         ),
-      ),
+        if (isDesktop)
+          // Expand and can not replace with Align.
+          Row(
+            children: [
+              Expanded(
+                child: ColoredBox(
+                  color: Theme.of(context).colorScheme.surfaceContainerLow,
+                  child: Padding(
+                    padding: edgeInsetsL4R4.add(edgeInsetsT4),
+                    child: EditorToolbar(
+                      bbcodeController: bbcodeController,
+                      disabledFeatures: defaultFullScreenDisabledEditorFeatures,
+                      editorFocusNode: focusNode,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ColoredBox(
+          color: Theme.of(context).colorScheme.surfaceContainerLow,
+          child: Padding(padding: edgeInsetsR4.add(edgeInsetsB4), child: _buildControlRow(context, state)),
+        ),
+        if (isMobile) _buildMobileToolbar(context, state),
+      ],
     );
   }
 
@@ -787,6 +747,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       PostEditType.newThread => context.t.postEditPage.newThreadTitle,
       PostEditType.editPost || PostEditType.editDraft => context.t.postEditPage.editPostTitle,
     };
+
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, _) {
@@ -801,11 +762,60 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         // * If possible save the edit content into draft.
         context.pop();
       },
-      child: Scaffold(
-        // Required by chat_bottom_container in the reply bar.
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(title: Text(title)),
-        body: SafeArea(bottom: false, child: _buildBody(context)),
+      child: MultiBlocProvider(
+        providers: [
+          RepositoryProvider(create: (_) => PostEditRepository()),
+          BlocProvider(
+            create: (context) {
+              final bloc = PostEditBloc(postEditRepository: context.repo());
+
+              final event = switch (widget.editType) {
+                PostEditType.editPost || PostEditType.editDraft => PostEditLoadDataRequested(
+                  _formatDataUrl(fid: widget.fid, tid: widget.tid!, pid: widget.pid!),
+                ),
+                PostEditType.newThread => ThreadPubFetchInfoRequested(fid: widget.fid),
+              };
+              bloc.add(event);
+              return bloc;
+            },
+          ),
+        ],
+        child: BlocConsumer<PostEditBloc, PostEditState>(
+          listener: (context, state) async => _onListen(context, state),
+          builder: (context, state) {
+            return Scaffold(
+              // Required by chat_bottom_container in the reply bar.
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                title: Text(title),
+                actions: [
+                  if (!widget.editType.isEditingDraft) ...[
+                    IconButton(
+                      onPressed:
+                          state.status == PostEditStatus.uploading
+                              ? null
+                              : () async => _onFinish(context, state, saveDraft: true),
+                      icon:
+                          state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
+                              ? sizedCircularProgressIndicator
+                              : Icon(MdiIcons.contentSaveEditOutline, color: Theme.of(context).colorScheme.secondary),
+                      tooltip: context.t.postEditPage.saveAsDraft,
+                    ),
+                  ],
+                  IconButton(
+                    tooltip: context.t.postEditPage.publish,
+                    icon:
+                        state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
+                            ? sizedCircularProgressIndicator
+                            : const Icon(Icons.send),
+                    onPressed: state.status == PostEditStatus.uploading ? null : () async => _onFinish(context, state),
+                  ),
+                ],
+              ),
+              body: SafeArea(bottom: false, child: _buildBody(context, state)),
+            );
+          },
+        ),
       ),
     );
   }
