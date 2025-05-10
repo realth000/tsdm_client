@@ -3,6 +3,7 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
@@ -211,7 +212,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
   IO<ThreadState> _parseFromDocument(uh.Document document, int pageNumber, {bool? clearOnlyVisibleUid}) => IO(() {
     // Reset the thread id from document.
     final threadLink = document.querySelector('head > link')?.attributes['href'];
-    final tid = Uri.parse(threadLink ?? '').queryParameters['tid'];
+    final tid = threadLink?.tryParseAsUri()?.tryGetQueryParameters()?['tid'];
 
     final threadSoftClosed = document.querySelector('div#postlist h1.ts img[title="关闭"]') != null;
     final threadClosed = document.querySelector('form#fastpostform') == null;
@@ -250,7 +251,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     /// This should only run once.
     final filterTypeNode = document.querySelector('div#postlist h1.ts > a');
     final threadTypeName = filterTypeNode?.firstEndDeepText()?.replaceFirst('[', '').replaceFirst(']', '');
-    final threadTypeID = Uri.tryParse(filterTypeNode?.attributes['href'] ?? '')?.queryParameters['typeid'];
+    final threadTypeID = filterTypeNode?.attributes['href']?.tryParseAsUri()?.tryGetQueryParameters()?['typeid'];
     final FilterType? threadType;
     if (threadTypeName != null) {
       threadType = FilterType(name: threadTypeName, typeID: threadTypeID);
@@ -300,7 +301,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             .querySelectorAll('div#pt > div.z > a')
             .map((e) => (e.innerText, Uri.tryParse(e.attributes['href']!.prependHost())))
             .whereType<(String, Uri)>()
-            .skipWhile((e) => !e.$2.queryParameters.containsKey('gid'))
+            .skipWhile((e) => !(e.$2.tryGetQueryParameters()?.containsKey('gid') ?? false))
             .map((e) => ThreadBreadcrumb(description: e.$1, link: e.$2))
             .toList();
     if (breadcrumbs.isNotEmpty) {

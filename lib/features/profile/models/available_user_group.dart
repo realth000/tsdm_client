@@ -1,4 +1,5 @@
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:universal_html/html.dart' as uh;
 
@@ -36,7 +37,7 @@ final class AvailableUserGroup {
     final nameNode = element.querySelector('td:nth-child(1) > a');
     final name = nameNode?.innerText.trim();
     final infoUrl = nameNode?.attributes['href'];
-    final gid = Uri.tryParse(infoUrl ?? '')?.queryParameters['gid']?.parseToInt();
+    final gid = infoUrl?.tryParseAsUri()?.tryGetQueryParameters()?['gid']?.parseToInt();
 
     if (name == null || infoUrl == null || gid == null) {
       talker.error('failed to parse avaiable user group: name=$name, infoUrl=$infoUrl, gid=$gid');

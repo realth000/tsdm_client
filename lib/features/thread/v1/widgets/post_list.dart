@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:super_sliver_list/super_sliver_list.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
@@ -199,7 +200,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
                     cursor: SystemMouseCursors.click,
                     child: GestureDetector(
                       onTap: () async {
-                        final gid = e.link.queryParameters['gid'];
+                        final gid = e.link.tryGetQueryParameters()?['gid'];
                         if (gid != null) {
                           await context.pushNamed(
                             ScreenPaths.forumGroup,
