@@ -789,7 +789,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               appBar: AppBar(
                 title: Text(title),
                 actions: [
-                  if (!widget.editType.isEditingDraft) ...[
+                  if (widget.editType.isEditingDraft) ...[
                     IconButton(
                       onPressed:
                           state.status == PostEditStatus.uploading
