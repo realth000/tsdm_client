@@ -7,11 +7,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
 import 'package:system_theme/system_theme.dart';
-import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/extensions/duration.dart';
@@ -731,32 +729,7 @@ class _SettingsPageState extends State<SettingsPage> {
       SectionListTile(
         leading: const Icon(Icons.history_outlined),
         title: Text(tr.changelog),
-        onTap:
-            () async => Navigator.push(
-              context,
-              MaterialPageRoute<void>(
-                builder: (_) {
-                  return Scaffold(
-                    appBar: AppBar(title: Text(tr.changelog)),
-                    body: FutureBuilder(
-                      future: compute(readChangelogContent, ''),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          // Unreachable.
-                          return Text('error: ${snapshot.error}');
-                        }
-
-                        if (!snapshot.hasData) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        return Markdown(data: snapshot.data!);
-                      },
-                    ),
-                  );
-                },
-              ),
-            ),
+        onTap: () async => context.pushNamed(ScreenPaths.localChangelog),
       ),
     ];
   }
