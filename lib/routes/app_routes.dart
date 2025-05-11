@@ -40,6 +40,7 @@ import 'package:tsdm_client/features/thread/v1/view/thread_page.dart';
 import 'package:tsdm_client/features/thread/v2/view/thread_page_v2.dart';
 import 'package:tsdm_client/features/thread_visit_history/view/thread_visit_history_page.dart';
 import 'package:tsdm_client/features/topics/view/topics_page.dart';
+import 'package:tsdm_client/features/update/view/local_changelog_page.dart';
 import 'package:tsdm_client/features/update/view/update_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
@@ -298,6 +299,7 @@ final _appRoutes = [
   ),
   AppRoute(path: ScreenPaths.manageAccount, builder: (_) => const ManageAccountPage()),
   AppRoute(path: ScreenPaths.update, builder: (_) => const UpdatePage()),
+  AppRoute(path: ScreenPaths.localChangelog, builder: (_) => const LocalChangelogPage()),
 ];
 
 /// Refer from wondrous app.

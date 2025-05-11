@@ -198,6 +198,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
         key: urlForm,
         child: Column(
           mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             IndexedStack(
               index: index,

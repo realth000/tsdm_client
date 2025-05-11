@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/color.dart';
-import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
 
 const _colorBoxSize = 55.0;
@@ -21,40 +19,25 @@ final class ColorPickerDialog extends StatelessWidget {
   Widget _buildBottomSheetContent(BuildContext context) {
     const items = Colors.primaries;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          child: GridView.builder(
-            shrinkWrap: true,
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: _colorBoxSize,
-              mainAxisSpacing: 20,
-              crossAxisSpacing: 10,
-              mainAxisExtent: _colorBoxSize,
-            ),
-            itemBuilder:
-                (context, index) => GestureDetector(
-                  onTap: () async => context.pop((Color(items[index].valueA), false)),
-                  child: ColorPalette(color: items[index], selected: items[index].valueA == currentColorValue),
-                ),
-            itemCount: items.length,
+    return GridView.builder(
+      shrinkWrap: true,
+      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: _colorBoxSize,
+        mainAxisSpacing: 20,
+        crossAxisSpacing: 10,
+        mainAxisExtent: _colorBoxSize,
+      ),
+      itemBuilder:
+          (context, index) => GestureDetector(
+            onTap: () async => context.pop((Color(items[index].valueA), false)),
+            child: ColorPalette(color: items[index], selected: items[index].valueA == currentColorValue),
           ),
-        ),
-        sizedBoxW24H24,
-        TextButton(
-          child: Text(context.t.general.reset),
-          onPressed: () async {
-            context.pop((null, true));
-          },
-        ),
-        sizedBoxW12H12,
-      ],
+      itemCount: items.length,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return _buildBottomSheetContent(context);
+    return ConstrainedBox(constraints: const BoxConstraints(maxHeight: 400), child: _buildBottomSheetContent(context));
   }
 }

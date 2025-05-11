@@ -1128,6 +1128,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  navigator_resizable:
+    dependency: transitive
+    description:
+      name: navigator_resizable
+      sha256: ec1abf6f4b804ad5d4dc1fab3c914d6290543ee7b8a34095168c8726dbe38312
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   nested:
     dependency: transitive
     description:
@@ -1605,6 +1613,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.7.0"
+  smooth_sheets:
+    dependency: "direct main"
+    description:
+      name: smooth_sheets
+      sha256: bd704a2e4f8ba3eab748de2bd379e094875d83d2c058a5bba71c27c79e2ef2c4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.11.4"
   source_gen:
     dependency: transitive
     description:

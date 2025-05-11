@@ -83,7 +83,9 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
           message: '${BBCodeEditorColor.values[index].name}(${color.hex})',
           child: GestureDetector(
             onTap: () => Navigator.of(context).pop(PickColorResult.picked(color)),
-            child: Container(decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: color)),
+            child: Container(
+              decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(15)), color: color),
+            ),
           ),
         );
       },
@@ -283,28 +285,35 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   Widget build(BuildContext context) {
     final tr = context.t.colorPickerDialog;
 
-    return Column(
-      children: [
-        TabBar(
-          controller: _tabController,
-          tabs: [Tab(text: tr.tabs.normal.title), Tab(text: tr.tabs.advanced.title), Tab(text: tr.tabs.custom.title)],
-        ),
-        sizedBoxW4H4,
-        Expanded(
-          child: TabBarView(
+    return ConstrainedBox(
+      constraints: const BoxConstraints(maxHeight: 700),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          TabBar(
             controller: _tabController,
-            children: [_buildNormalTab(), _buildAdvancedTab(), _buildCustomTab(context)],
+            tabs: [Tab(text: tr.tabs.normal.title), Tab(text: tr.tabs.advanced.title), Tab(text: tr.tabs.custom.title)],
           ),
-        ),
-        sizedBoxW4H4,
-        Align(
-          alignment: Alignment.centerRight,
-          child: TextButton(
-            onPressed: () => Navigator.of(context).pop(PickColorResult.clearColor()),
-            child: Text(context.t.general.reset),
+          sizedBoxW4H4,
+          Expanded(
+            child: Padding(
+              padding: edgeInsetsL12R12,
+              child: TabBarView(
+                controller: _tabController,
+                children: [_buildNormalTab(), _buildAdvancedTab(), _buildCustomTab(context)],
+              ),
+            ),
           ),
-        ),
-      ],
+          sizedBoxW4H4,
+          Align(
+            alignment: Alignment.centerRight,
+            child: TextButton(
+              onPressed: () => Navigator.of(context).pop(PickColorResult.clearColor()),
+              child: Text(context.t.general.reset),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

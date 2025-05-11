@@ -212,6 +212,9 @@ class ScreenPaths {
 
   /// Page to get app updates.
   static const String update = '/update';
+
+  /// Page to show the changelog bundled with app.
+  static const String localChangelog = '/localChangelog';
 }
 
 /// Route path for a screen.

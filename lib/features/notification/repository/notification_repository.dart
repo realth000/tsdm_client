@@ -4,6 +4,7 @@ import 'package:fpdart/fpdart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -43,7 +44,10 @@ final class NotificationRepository with LoggerMixin {
     () async => switch (await getIt.get<NetClientProvider>().get(url).run()) {
       Left(:final value) => left(value),
       Right(:final value) when value.statusCode != HttpStatus.ok => left(HttpRequestFailedException(value.statusCode)),
-      Right(:final value) => right((parseHtmlDocument(value.data as String), value.realUri.queryParameters['page'])),
+      Right(:final value) => right((
+        parseHtmlDocument(value.data as String),
+        value.realUri.tryGetQueryParameters()?['page'],
+      )),
     },
   );
 

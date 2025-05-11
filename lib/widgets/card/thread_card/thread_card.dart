@@ -7,6 +7,8 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/features/latest_thread/models/latest_thread.dart';
 import 'package:tsdm_client/features/my_thread/models/models.dart';
 import 'package:tsdm_client/features/search/models/models.dart';
@@ -76,7 +78,7 @@ class _CardLayout extends StatelessWidget {
                     'tid': threadID,
                     'appBarTitle': title,
                     'threadTypeName': threadType?.name,
-                    'threadTypeID': Uri.tryParse(threadType?.url ?? '')?.queryParameters['typeid'],
+                    'threadTypeID': threadType?.url.tryParseAsUri()?.tryGetQueryParameters()?['typeid'],
                   },
                 );
               },
