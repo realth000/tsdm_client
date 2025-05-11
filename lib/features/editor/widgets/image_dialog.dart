@@ -6,8 +6,10 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -18,7 +20,7 @@ import 'package:tsdm_client/widgets/tips.dart';
 Future<BBCodeImageInfo?> showImagePicker(BuildContext context, {String? url, int? width, int? height}) async =>
     showDialog<BBCodeImageInfo>(
       context: context,
-      builder: (context) => _ImageDialog(url: url, width: width, height: height),
+      builder: (context) => RootPage(DialogPaths.imagePicker, _ImageDialog(url: url, width: width, height: height)),
     );
 
 /// Show a dialog to insert picture and description.

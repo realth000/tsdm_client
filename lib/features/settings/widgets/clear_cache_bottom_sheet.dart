@@ -4,9 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/int.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_cache_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_cache_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 
@@ -16,7 +18,7 @@ Future<void> showClearCacheBottomSheet({required BuildContext context}) async {
   await showCustomBottomSheet<void>(
     title: context.t.settingsPage.storageSection.clearCache,
     context: context,
-    builder: (context) => const _ClearCacheBottomSheet(),
+    builder: (context) => const RootPage(DialogPaths.clearCache, _ClearCacheBottomSheet()),
   );
 }
 

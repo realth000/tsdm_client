@@ -6,6 +6,7 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/editor/bloc/user_mention_cubit.dart';
 import 'package:tsdm_client/features/editor/repository/editor_repository.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -37,8 +38,10 @@ class _UsernameText extends StatelessWidget {
 ///
 /// This dialog wrapped extra functionality more than the original one in editor
 /// package so that user could do the same quick search as what server provides.
-Future<String?> showUsernamePickerDialog(BuildContext context, {String? username}) async =>
-    showDialog<String>(context: context, builder: (_) => _UsernamePickerDialog(username));
+Future<String?> showUsernamePickerDialog(BuildContext context, {String? username}) async => showDialog<String>(
+  context: context,
+  builder: (_) => RootPage(DialogPaths.usernamePicker, _UsernamePickerDialog(username)),
+);
 
 /// A dialog to let user pick user to mention.
 ///

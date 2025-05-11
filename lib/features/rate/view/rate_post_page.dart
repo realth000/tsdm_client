@@ -7,7 +7,9 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
@@ -144,24 +146,27 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
               () async => showDialog(
                 context: context,
                 builder:
-                    (_) => AlertDialog(
-                      title: Text(tr.reason),
-                      scrollable: true,
-                      content: Column(
-                        children:
-                            state.info!.defaultReasonList
-                                .map(
-                                  (e) => ListTile(
-                                    title: Text(e),
-                                    onTap: () {
-                                      context.pop();
-                                      setState(() {
-                                        reasonController.text = e;
-                                      });
-                                    },
-                                  ),
-                                )
-                                .toList(),
+                    (_) => RootPage(
+                      DialogPaths.selectRateReason,
+                      AlertDialog(
+                        title: Text(tr.reason),
+                        scrollable: true,
+                        content: Column(
+                          children:
+                              state.info!.defaultReasonList
+                                  .map(
+                                    (e) => ListTile(
+                                      title: Text(e),
+                                      onTap: () {
+                                        context.pop();
+                                        setState(() {
+                                          reasonController.text = e;
+                                        });
+                                      },
+                                    ),
+                                  )
+                                  .toList(),
+                        ),
                       ),
                     ),
               ),
