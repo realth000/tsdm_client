@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
 
@@ -39,7 +41,7 @@ Future<PickUrlResult?> showUrlPicker(
   required String? description,
 }) async => showDialog<PickUrlResult>(
   context: context,
-  builder: (context) => UrlDialog(initialUrl: url, initialDescription: description),
+  builder: (context) => RootPage(DialogPaths.urlPicker, UrlDialog(initialUrl: url, initialDescription: description)),
 );
 
 /// Show a dialog to insert url and description.

@@ -217,6 +217,86 @@ class ScreenPaths {
   static const String localChangelog = '/localChangelog';
 }
 
+/// Route paths for all temporary dialogs and bottom sheets in app.
+///
+/// These paths are used for tracking current locations with dialog routes support.
+/// All dialogs shall specify these paths with wrapped `RootPage`.
+class DialogPaths {
+  const DialogPaths._();
+
+  /// Dialog to select language.
+  static const String selectLanguage = '/dialog/selectLanguage';
+
+  /// Dialog to pick image.
+  static const String imagePicker = '/dialog/imagePicker';
+
+  /// Dialog to pick url.
+  static const String urlPicker = '/dialog/urlPicker';
+
+  /// Dialog to pick username.
+  static const String usernamePicker = '/dialog/usernamePicker';
+
+  /// Dialog to show image detail.
+  static const String imageDetail = '/dialog/imageDetail';
+
+  /// Dialog to manage logged user.
+  static const String manageUser = '/dialog/manageUser';
+
+  /// Dialog to parse user input url into app known targets.
+  static const String parseUrl = '/dialog/parseUrl';
+
+  /// Dialog to let user input thread price.
+  static const String inputPrice = '/dialog/inputThreadPrice';
+
+  /// Dialog to let user select thread read perm.
+  static const String selectPerm = '/dialog/selectPerm';
+
+  /// Dialog to let user select reason why rate the post.
+  static const String selectRateReason = '/dialog/selectRateReason';
+
+  /// Dialog to notice user that newer version is available.
+  static const String updateNotice = '/dialog/updateNotice';
+
+  /// Dialog to let user select all pages in thread could jump to.
+  static const String jumpPage = '/dialog/jumpPage';
+
+  /// Dialog to let user picker a font.
+  static const String fontPicker = '/dialog/fontPicker';
+
+  /// Dialog to let user select the duration between auto syncing notice events.
+  static const String selectAutoSyncDuration = '/dialog/selectAutoSyncDuration';
+
+  /// Dialog to let user select checkin feeling.
+  static const String selectCheckinFeeling = '/dialog/selectCheckinFeeling';
+
+  /// Dialog to let user select checkin message.
+  static const String selectCheckinMessage = '/dialog/selectCheckinMessage';
+
+  /// Dialog to let user manage proxy settings.
+  static const String setupProxy = '/dialog/setupProxy';
+
+  /// Dialog to show thread operation log.
+  static const String showOperationLog = '/dialog/showOperationLog';
+
+  /// Common dialog to show message with only one button in action.
+  static const String messageSingleButton = '/dialog/messageSingleButton';
+
+  /// Common dialog to show question.
+  static const String question = '/dialog/question';
+
+  /// Dialog to let user copy contents.
+  static const String copyContent = '/dialog/copyContent';
+
+  /// Bottom sheet to let user pick color.
+  static const String colorPicker = '/dialog/colorPicker';
+
+  /// Bottom sheet to let user pick emoji.
+  static const String emojiPicker = '/dialog/emojiPicker';
+
+  /// Bottom sheet provide options to clear cache.
+  static const String clearCache = '/dialog/clearCache';
+}
+
 /// Route path for a screen.
 final class NestedPath {
   const NestedPath._(this._path, [this._parent]);

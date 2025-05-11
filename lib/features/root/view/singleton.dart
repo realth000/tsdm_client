@@ -14,6 +14,7 @@ import 'package:tsdm_client/features/notification/bloc/notification_bloc.dart';
 import 'package:tsdm_client/features/points/stream.dart';
 import 'package:tsdm_client/features/root/bloc/points_changes_cubit.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/update/cubit/update_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -154,32 +155,35 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
                 context: context,
                 builder: (context) {
                   final size = MediaQuery.sizeOf(context);
-                  return AlertDialog(
-                    title: Text(tr.availableDialog.title),
-                    content: SizedBox(
-                      width: math.min(size.width * 0.8, 800),
-                      height: math.min(size.height * 0.6, 600),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            tr.availableDialog.version(version: info.version),
-                            style: Theme.of(
-                              context,
-                            ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
-                          ),
-                          sizedBoxW8H8,
-                          Expanded(child: Markdown(data: info.changelog)),
-                        ],
+                  return RootPage(
+                    DialogPaths.updateNotice,
+                    AlertDialog(
+                      title: Text(tr.availableDialog.title),
+                      content: SizedBox(
+                        width: math.min(size.width * 0.8, 800),
+                        height: math.min(size.height * 0.6, 600),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              tr.availableDialog.version(version: info.version),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
+                            ),
+                            sizedBoxW8H8,
+                            Expanded(child: Markdown(data: info.changelog)),
+                          ],
+                        ),
                       ),
+                      actions: [
+                        TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop(false)),
+                        TextButton(
+                          child: Text(context.t.settingsPage.othersSection.update),
+                          onPressed: () => context.pop(true),
+                        ),
+                      ],
                     ),
-                    actions: [
-                      TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop(false)),
-                      TextButton(
-                        child: Text(context.t.settingsPage.othersSection.update),
-                        onPressed: () => context.pop(true),
-                      ),
-                    ],
                   );
                 },
               );

@@ -5,9 +5,11 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
 import 'package:tsdm_client/features/parse_url/widgets/parse_url_dialog.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/bloc/search_bloc.dart';
 import 'package:tsdm_client/features/search/repository/search_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
@@ -167,8 +169,10 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
     final page = await showDialog<int>(
       context: context,
       builder:
-          (context) =>
-              JumpPageDialog(min: 1, current: state.searchResult!.currentPage, max: state.searchResult!.totalPages),
+          (context) => RootPage(
+            DialogPaths.jumpPage,
+            JumpPageDialog(min: 1, current: state.searchResult!.currentPage, max: state.searchResult!.totalPages),
+          ),
     );
     if (page == null || page == state.searchResult!.currentPage) {
       return;

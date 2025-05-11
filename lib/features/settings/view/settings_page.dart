@@ -15,6 +15,7 @@ import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/extensions/duration.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/settings/view/debug_showcase_page.dart';
@@ -65,7 +66,10 @@ class _SettingsPageState extends State<SettingsPage> {
   /// * Return (null, true) if user chose to use system locale.
   /// * Return (locale, false) if user chose to use specified locale.
   Future<(AppLocale?, bool)?> selectLanguageDialog(BuildContext context, String currentLocale) async {
-    return showDialog<(AppLocale?, bool)>(context: context, builder: (context) => LanguageDialog(currentLocale));
+    return showDialog<(AppLocale?, bool)>(
+      context: context,
+      builder: (context) => RootPage(DialogPaths.selectLanguage, LanguageDialog(currentLocale)),
+    );
   }
 
   /// Show a dialog to let user select accent color.
@@ -81,7 +85,9 @@ class _SettingsPageState extends State<SettingsPage> {
     return showCustomBottomSheet<(Color?, bool)>(
       title: context.t.colorPickerDialog.title,
       context: context,
-      builder: (context) => ColorPickerDialog(currentColorValue: colorValue, blocContext: context),
+      builder:
+          (context) =>
+              RootPage(DialogPaths.colorPicker, ColorPickerDialog(currentColorValue: colorValue, blocContext: context)),
       bottomBar: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -328,7 +334,10 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.fontFamily.title),
         subtitle: fontFamily.isEmpty ? null : Text(fontFamily),
         onTap: () async {
-          final selectedFont = await showDialog<String>(context: context, builder: (_) => FontFamilyDialog(fontFamily));
+          final selectedFont = await showDialog<String>(
+            context: context,
+            builder: (_) => RootPage(DialogPaths.fontPicker, FontFamilyDialog(fontFamily)),
+          );
           if (selectedFont == null || !context.mounted) {
             return;
           }
@@ -420,7 +429,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap: () async {
           final seconds = await showDialog<int>(
             context: context,
-            builder: (_) => AutoSyncNoticeDialog(autoSyncNoticeSeconds),
+            builder: (_) => RootPage(DialogPaths.selectAutoSyncDuration, AutoSyncNoticeDialog(autoSyncNoticeSeconds)),
           );
           if (seconds == null || !context.mounted) {
             return;
@@ -446,11 +455,17 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<String?> _showSetCheckinFeelingDialog(BuildContext context, String defaultFeeling) async {
-    return showDialog<String>(context: context, builder: (context) => CheckinFeelingDialog(defaultFeeling));
+    return showDialog<String>(
+      context: context,
+      builder: (context) => RootPage(DialogPaths.selectCheckinFeeling, CheckinFeelingDialog(defaultFeeling)),
+    );
   }
 
   Future<String?> _showSetCheckinMessageDialog(BuildContext context, String defaultMessage) async {
-    return showDialog<String>(context: context, builder: (context) => CheckinMessageDialog(defaultMessage));
+    return showDialog<String>(
+      context: context,
+      builder: (context) => RootPage(DialogPaths.selectCheckinMessage, CheckinMessageDialog(defaultMessage)),
+    );
   }
 
   List<Widget> _buildCheckinSection(BuildContext context, SettingsState state) {
@@ -569,7 +584,7 @@ class _SettingsPageState extends State<SettingsPage> {
         onTap:
             () async => showDialog<void>(
               context: context,
-              builder: (context) => ProxySettingsDialog(host: host, port: port),
+              builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),
               barrierDismissible: false,
             ),
       ),

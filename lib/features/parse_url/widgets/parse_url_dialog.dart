@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
 /// A button provides a dialog that let user input a url and parse it, if that
@@ -24,7 +26,7 @@ class ParseUrlDialogButton extends StatelessWidget {
 /// Open a dialog that let user input and parse a url, if the url is valid
 /// recognized routes in app, redirect to thr relevant route page.
 Future<void> _showParseUrlDialog(BuildContext context) async =>
-    showDialog<void>(context: context, builder: (_) => const _ParseUrlDialog());
+    showDialog<void>(context: context, builder: (_) => const RootPage(DialogPaths.parseUrl, _ParseUrlDialog()));
 
 /// A dialog let user input a url, try to parse the url into a app route. If is,
 /// redirect to the relevant page.

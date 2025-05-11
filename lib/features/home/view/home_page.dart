@@ -147,7 +147,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
           if (!context.mounted) {
             return false;
           }
-          final location = GoRouter.of(context).state.uri.toString();
+          final location = context.read<RootLocationCubit>().current;
           if (location != ScreenPaths.homepage &&
               location != ScreenPaths.topic &&
               location != ScreenPaths.settings.path) {
