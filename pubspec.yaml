@@ -71,6 +71,7 @@ dependencies:
   slang: ^4.7.1
   slang_flutter: ^4.7.0
   # For drift
+  smooth_sheets: ^0.11.4
   sqlite3: ^2.7.5
   # For drift
   sqlite3_flutter_libs: ^0.5.32

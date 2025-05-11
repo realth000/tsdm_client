@@ -109,7 +109,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
             EmojiStatus.success => _buildEmojiTab(context, state),
           };
 
-          return body;
+          return ConstrainedBox(constraints: const BoxConstraints(maxHeight: 400), child: body);
         },
       ),
     );

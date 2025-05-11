@@ -7,6 +7,7 @@ import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
+import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 
 /// Construct a chip that controlling and mutating thread filter state.
 class ThreadChip extends StatelessWidget {
@@ -77,19 +78,19 @@ class ThreadTypeChip extends StatelessWidget {
           return sizedBoxEmpty;
         }
 
+        final currFilter = state.filterState.filterType?.name;
+
         return ThreadChip(
-          chipLabel:
-              state.filterState.filterType?.name ??
-              state.filterTypeList.firstWhereOrNull((e) => e.typeID == null)?.name ??
-              '',
+          chipLabel: currFilter ?? state.filterTypeList.firstWhereOrNull((e) => e.typeID == null)?.name ?? '',
           chipSelected: state.filterState.filterType?.typeID != null,
           sheetTitle: context.t.forumPage.threadTab.threadType,
           sheetItemBuilder:
               (context, state) =>
                   state.filterTypeList
                       .map(
-                        (e) => ListTile(
+                        (e) => SelectableListTile(
                           title: Text(e.name),
+                          selected: e.name == currFilter,
                           onTap: () {
                             context.read<ForumBloc>().add(
                               ForumChangeThreadFilterStateRequested(
@@ -120,19 +121,19 @@ class ThreadSpecialTypeChip extends StatelessWidget {
         if (state.filterSpecialTypeList.isEmpty) {
           return sizedBoxEmpty;
         }
+        final currFilter = state.filterState.filterSpecialType?.name;
 
         return ThreadChip(
           chipLabel:
-              state.filterState.filterSpecialType?.name ??
-              state.filterSpecialTypeList.firstWhereOrNull((e) => e.specialType == null)?.name ??
-              '',
+              currFilter ?? state.filterSpecialTypeList.firstWhereOrNull((e) => e.specialType == null)?.name ?? '',
           chipSelected: state.filterState.filterSpecialType?.specialType != null,
           sheetTitle: context.t.forumPage.threadTab.threadSpecialType,
           sheetItemBuilder:
               (context, state) =>
                   state.filterSpecialTypeList
                       .map(
-                        (e) => ListTile(
+                        (e) => SelectableListTile(
+                          selected: e.name == currFilter,
                           title: Text(e.name),
                           onTap: () {
                             context.read<ForumBloc>().add(
@@ -165,19 +166,19 @@ class ThreadDatelineChip extends StatelessWidget {
           return sizedBoxEmpty;
         }
 
+        final currFilter = state.filterState.filterDateline?.name;
+
         return ThreadChip(
-          chipLabel:
-              state.filterState.filterDateline?.name ??
-              state.filterDatelineList.firstWhereOrNull((e) => e.dateline == null)?.name ??
-              '',
+          chipLabel: currFilter ?? state.filterDatelineList.firstWhereOrNull((e) => e.dateline == null)?.name ?? '',
           chipSelected: state.filterState.filterDateline?.dateline != null,
           sheetTitle: context.t.forumPage.threadTab.threadDateline,
           sheetItemBuilder:
               (context, state) =>
                   state.filterDatelineList
                       .map(
-                        (e) => ListTile(
+                        (e) => SelectableListTile(
                           title: Text(e.name),
+                          selected: e.name == currFilter,
                           onTap: () {
                             context.read<ForumBloc>().add(
                               ForumChangeThreadFilterStateRequested(
@@ -209,19 +210,19 @@ class ThreadOrderChip extends StatelessWidget {
           return sizedBoxEmpty;
         }
 
+        final currFilter = state.filterState.filterOrder?.name;
+
         return ThreadChip(
-          chipLabel:
-              state.filterState.filterOrder?.name ??
-              state.filterOrderList.firstWhereOrNull((e) => e.orderBy == null)?.name ??
-              '',
+          chipLabel: currFilter ?? state.filterOrderList.firstWhereOrNull((e) => e.orderBy == null)?.name ?? '',
           chipSelected: state.filterState.filterOrder?.orderBy != null,
           sheetTitle: context.t.forumPage.threadTab.threadOrder,
           sheetItemBuilder:
               (context, state) =>
                   state.filterOrderList
                       .map(
-                        (e) => ListTile(
+                        (e) => SelectableListTile(
                           title: Text(e.name),
+                          selected: e.name == currFilter,
                           onTap: () {
                             context.read<ForumBloc>().add(
                               ForumChangeThreadFilterStateRequested(

@@ -84,6 +84,17 @@ class _SettingsPageState extends State<SettingsPage> {
       title: context.t.colorPickerDialog.title,
       context: context,
       builder: (context) => ColorPickerDialog(currentColorValue: colorValue, blocContext: context),
+      bottomBar: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          TextButton(
+            child: Text(context.t.general.reset),
+            onPressed: () async {
+              context.pop((null, true));
+            },
+          ),
+        ],
+      ),
     );
   }
 

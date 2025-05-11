@@ -16,7 +16,6 @@ Future<void> showClearCacheBottomSheet({required BuildContext context}) async {
   await showCustomBottomSheet<void>(
     title: context.t.settingsPage.storageSection.clearCache,
     context: context,
-    constraints: const BoxConstraints(maxHeight: 300),
     builder: (context) => const _ClearCacheBottomSheet(),
   );
 }
@@ -80,8 +79,9 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
           };
 
           return Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(child: body),
+              body,
               Row(
                 children: [
                   Expanded(

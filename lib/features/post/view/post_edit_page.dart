@@ -29,6 +29,7 @@ import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
+import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 
 /// Default thread title text length (bytes size in utf-8 encoding).
 ///
@@ -354,9 +355,9 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           (context) =>
               state.content!.threadTypeList!
                   .map(
-                    (e) => ListTile(
+                    (e) => SelectableListTile(
                       title: Text(e.name),
-                      trailing: e.name == threadTypeController.text ? const Icon(Icons.check_outlined) : null,
+                      selected: e.name == threadTypeController.text,
                       onTap: () {
                         threadType = e;
                         threadTypeController.text = e.name;
