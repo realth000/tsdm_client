@@ -301,23 +301,6 @@ final class _Muncher with LoggerMixin {
             return null;
           }
 
-          // Base text style.
-          final color =
-              state.colorStack.lastOrNull ?? (state.tapUrl != null ? Theme.of(context).colorScheme.primary : null);
-          final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: color,
-            fontWeight: state.bold ? FontWeight.w600 : null,
-            fontSize: state.fontSizeStack.lastOrNull,
-            backgroundColor: state.backgroundColorStack.lastOrNull,
-            decorationColor: color,
-            decoration: TextDecoration.combine([
-              if (state.underline) TextDecoration.underline,
-              if (state.lineThrough) TextDecoration.lineThrough,
-            ]),
-            fontStyle: state.italic ? FontStyle.italic : null,
-            decorationThickness: 1.5,
-          );
-
           // Attach url to open when `onTap`.
           TapGestureRecognizer? recognizer;
           if (state.tapUrl != null) {
@@ -339,7 +322,7 @@ final class _Muncher with LoggerMixin {
           // state.wrapInWord ? text?.split('').join('\u200B') : text;
 
           // TODO: Support text-shadow.
-          return [TextSpan(text: wrapText, recognizer: recognizer, style: style)];
+          return [TextSpan(text: wrapText, recognizer: recognizer, style: _buildTextStyle())];
         }
 
       case uh.Node.ELEMENT_NODE:
@@ -933,7 +916,14 @@ final class _Muncher with LoggerMixin {
       }(), // Unreachable but handle it.
     };
 
-    return [TextSpan(text: leading), ...ret];
+    if (!(ret.lastOrNull?.toPlainText().endsWith('\n') ?? false)) {
+      // Append a trailing <br> if not have it.
+      // This is a render issue on the server side, same bbcode may produce different result, with or without trailing
+      // line break.
+      return [TextSpan(text: leading), ...ret, emptySpan];
+    } else {
+      return [TextSpan(text: leading), ...ret];
+    }
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
@@ -1138,7 +1128,10 @@ final class _Muncher with LoggerMixin {
 
   List<InlineSpan> _buildSup(uh.Element element) {
     return [
-      TextSpan(text: element.innerText, style: const TextStyle(fontFeatures: [FontFeature.superscripts()])),
+      TextSpan(
+        text: element.innerText,
+        style: _buildTextStyle()?.copyWith(fontFeatures: [const FontFeature.superscripts()]),
+      ),
     ];
   }
 
@@ -1191,5 +1184,25 @@ final class _Muncher with LoggerMixin {
       state.fontSizeStack.add(fontSize.value());
     }
     return fontSize.isValid;
+  }
+
+  /// Function to build text style, where you could run it everywhere and don't have to carry all style member logic.
+  TextStyle? _buildTextStyle() {
+    final color = state.colorStack.lastOrNull ?? (state.tapUrl != null ? Theme.of(context).colorScheme.primary : null);
+    final style = Theme.of(context).textTheme.bodyMedium?.copyWith(
+      color: color,
+      fontWeight: state.bold ? FontWeight.w600 : null,
+      fontSize: state.fontSizeStack.lastOrNull,
+      backgroundColor: state.backgroundColorStack.lastOrNull,
+      decorationColor: color,
+      decoration: TextDecoration.combine([
+        if (state.underline) TextDecoration.underline,
+        if (state.lineThrough) TextDecoration.lineThrough,
+      ]),
+      fontStyle: state.italic ? FontStyle.italic : null,
+      decorationThickness: 1.5,
+    );
+
+    return style;
   }
 }
