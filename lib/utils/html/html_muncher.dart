@@ -933,7 +933,14 @@ final class _Muncher with LoggerMixin {
       }(), // Unreachable but handle it.
     };
 
-    return [TextSpan(text: leading), ...ret];
+    if (!(ret.lastOrNull?.toPlainText().endsWith('\n') ?? false)) {
+      // Append a trailing <br> if not have it.
+      // This is a render issue on the server side, same bbcode may produce different result, with or without trailing
+      // line break.
+      return [TextSpan(text: leading), ...ret, emptySpan];
+    } else {
+      return [TextSpan(text: leading), ...ret];
+    }
   }
 
   /// <code>xxx</code> tags. Mainly for github.com
