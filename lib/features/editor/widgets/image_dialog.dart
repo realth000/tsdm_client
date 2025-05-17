@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
+import 'package:fpdart/fpdart.dart' as fp;
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/list.dart';
@@ -95,10 +96,13 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
 
   Future<void> _fillImageSize(String url) async {
     try {
-      final imageData = await getIt.get<ImageCacheProvider>().getOrMakeCache(
+      final imageData = (await getIt.get<ImageCacheProvider>().getOrMakeCache(
         ImageCacheGeneralRequest(url),
         force: true,
-      );
+      )).getOrElse(() => Uint8List(0));
+      if (imageData.isEmpty) {
+        return;
+      }
       final uiImage = await decodeImageFromList(imageData);
       if (!mounted) {
         return;

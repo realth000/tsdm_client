@@ -6,6 +6,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/painting.dart' as painting;
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:flutter_avif/flutter_avif.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:rxdart/rxdart.dart';
@@ -132,7 +133,7 @@ final class ImageCacheProvider with LoggerMixin {
   /// Get the cache image data related to [req].
   ///
   /// Only return the image data.
-  Future<Uint8List> getOrMakeCache(ImageCacheRequest req, {bool force = false}) async {
+  Future<Option<Uint8List>> getOrMakeCache(ImageCacheRequest req, {bool force = false}) async {
     final respType = switch (req) {
       ImageCacheGeneralRequest() => ImageCacheResponseType.general,
       ImageCacheUserAvatarRequest() => ImageCacheResponseType.userAvatar,
@@ -173,12 +174,12 @@ final class ImageCacheProvider with LoggerMixin {
             }
           }
 
-          return imageData;
+          return Option.of(imageData);
         }
       }
     }
     if (imageUrl.isEmpty) {
-      return Future.error('failed to load image for $req: empty image url');
+      return const Option.none();
     }
 
     if (_loadingImages.contains(imageUrl)) {
@@ -187,9 +188,9 @@ final class ImageCacheProvider with LoggerMixin {
         (e) => e.imageId == imageUrl && (e is ImageCacheSuccessResponse || e is ImageCacheFailedResponse),
       );
       return switch (x) {
-        ImageCacheSuccessResponse(:final imageData) => imageData,
-        ImageCacheFailedResponse() => Future.error('failed to load image'),
-        final v => throw Exception('impossible image response type $v'),
+        ImageCacheSuccessResponse(:final imageData) => Option.of(imageData),
+        ImageCacheFailedResponse() => const Option.none(),
+        final _ => const Option.none(),
       };
     }
 
@@ -251,14 +252,14 @@ final class ImageCacheProvider with LoggerMixin {
 
       await updateCache(imageUrl, imageData, usage: usage);
       _controller.add(ImageCacheSuccessResponse(imageId, respType, imageData));
-      return imageData;
-    } catch (e) {
+      return Option.of(imageData);
+    } on Exception catch (e) {
       warning(
         'exception thrown when trying to update image cache: $e, '
         'for url: $imageUrl',
       );
       _controller.add(ImageCacheFailedResponse(imageId, respType));
-      return Future.error('failed to load image $imageUrl: $e');
+      return const Option.none();
     } finally {
       // Leave loading state.
       _loadingImages.remove(imageUrl);
@@ -266,19 +267,21 @@ final class ImageCacheProvider with LoggerMixin {
   }
 
   /// Get the cached user avatar data of user [username].
-  Future<Uint8List> getUserAvatarCache({required String username, required String? imageUrl}) async {
+  Future<Option<Uint8List>> getUserAvatarCache({required String username, required String? imageUrl}) async {
     final url = imageUrl == null || imageUrl.isEmpty ? null : imageUrl;
     final cacheInfo = await getIt.get<StorageProvider>().getUserAvatarEntityCache(username: username, imageUrl: url);
     if (cacheInfo == null) {
-      return Future.error('$username user avatar cache file not found');
+      // error('$username user avatar cache file not found');
+      return const Option.none();
     }
 
     final cacheFile = getCacheFile(cacheInfo.cacheName);
     if (!cacheFile.existsSync()) {
-      return Future.error('$username user avatar cache file not exists');
+      error('$username user avatar cache file not exists');
+      return const Option.none();
     }
 
-    return cacheFile.readAsBytes();
+    return Option.of(await cacheFile.readAsBytes());
   }
 
   /// Get the cached file with [fileName] synchronously.
@@ -510,7 +513,13 @@ final class ImageCacheProvider with LoggerMixin {
   ///
   /// Ensures the url is cache if cache is invalid.
   Future<ImageCacheInfo?> getEnsureCachedFullInfo(String url) async {
-    final imageData = await getOrMakeCache(ImageCacheGeneralRequest(url));
+    final imageData = switch (await getOrMakeCache(ImageCacheGeneralRequest(url))) {
+      Some<Uint8List>(:final value) => value,
+      None() => null,
+    };
+    if (imageData == null) {
+      return null;
+    }
     final uiImage = await painting.decodeImageFromList(imageData);
     final cacheInfo = getCacheInfo(url);
     if (cacheInfo == null) {
