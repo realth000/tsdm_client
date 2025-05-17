@@ -39,6 +39,11 @@ const assetEmojiDir = './assets/images/emoji/';
 /// Bundled emoji.
 const assetEmojiInfoPath = './assets/images/emoji/emoji.json';
 
+/// Tiny placeholder image.
+///
+/// As part of workaround for the image data.
+const assetPlaceholderImagePath = './assets/images/placeholder.png';
+
 /// Changelog till publish.
 ///
 /// Add argument to make `compute` happy.
