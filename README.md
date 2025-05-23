@@ -15,7 +15,7 @@
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/release/realth000/tsdm_client?label=release" alt="release"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/badge/platform-Android_%7C_iOS_%7C_Linux_%7C_macOS_%7C_Windows-19A6E6" alt="platforms"></a>
   <a href="https://github.com/realth000/tsdm_client/releases"><img src="https://img.shields.io/github/downloads/realth000/tsdm_client/total" alt="download_total"></a>
-  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.32-19A6E6?logo=flutter" alt="flutter_version"></a>
+  <a href="https://flutter.dev/"><img src="https://img.shields.io/badge/Flutter-3.29-19A6E6?logo=flutter" alt="flutter_version"></a>
   <a href="https://dart.dev/"><img src="https://img.shields.io/github/languages/top/realth000/tsdm_client?logo=dart" alt="dart_percentage"/></a>
 </p>
 
