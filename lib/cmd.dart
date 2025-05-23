@@ -40,10 +40,9 @@ class CmdArgs {
 
 /// Parse cmdline [args] into global variable [cmdArgs].
 void parseCmdArgs(List<String> args) {
-  final parser =
-      ArgParser()
-        ..addFlag(Flags.noWindowConfigs, negatable: false)
-        ..addFlag(Flags.noWindowChangeRecords, negatable: false);
+  final parser = ArgParser()
+    ..addFlag(Flags.noWindowConfigs, negatable: false)
+    ..addFlag(Flags.noWindowChangeRecords, negatable: false);
   final argsResult = parser.parse(args);
 
   var noWindowConfig = argsResult.flag(Flags.noWindowConfigs);

@@ -146,12 +146,11 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                   IconButton(
                     icon: const Icon(Icons.email_outlined),
                     tooltip: tr.pmTooltip,
-                    onPressed:
-                        () => context.pushNamed(
-                          ScreenPaths.chat,
-                          pathParameters: {'uid': widget.profile.uid},
-                          extra: <String, dynamic>{'username': widget.profile.username},
-                        ),
+                    onPressed: () => context.pushNamed(
+                      ScreenPaths.chat,
+                      pathParameters: {'uid': widget.profile.uid},
+                      extra: <String, dynamic>{'username': widget.profile.username},
+                    ),
                   ),
                   IconButton(
                     icon: const Icon(Icons.person_outlined),
@@ -166,9 +165,8 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
               // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
               Hero(
                 tag: widget.nameHeroTag,
-                flightShuttleBuilder:
-                    (_, __, ___, ____, toHeroContext) =>
-                        DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
+                flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+                    DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
                 child: Text(widget.profile.username, style: textTheme.titleLarge?.copyWith(color: primaryColor)),
               ),
               sizedBoxW4H4,
@@ -383,22 +381,21 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
                         ),
                         if (pokemon.otherPokemon != null)
                           Column(
-                            children:
-                                pokemon.otherPokemon!
-                                    .map(
-                                      (e) => Row(
-                                        children: [
-                                          CachedImage(
-                                            e.image,
-                                            width: pokemonNotPrimaryImageSize.width,
-                                            height: pokemonNotPrimaryImageSize.height,
-                                          ),
-                                          sizedBoxW4H4,
-                                          Text(e.name),
-                                        ],
+                            children: pokemon.otherPokemon!
+                                .map(
+                                  (e) => Row(
+                                    children: [
+                                      CachedImage(
+                                        e.image,
+                                        width: pokemonNotPrimaryImageSize.width,
+                                        height: pokemonNotPrimaryImageSize.height,
                                       ),
-                                    )
-                                    .toList(),
+                                      sizedBoxW4H4,
+                                      Text(e.name),
+                                    ],
+                                  ),
+                                )
+                                .toList(),
                           ),
                         sectionSeparator,
                       ],
@@ -478,7 +475,9 @@ class _UserProfilePair extends StatelessWidget {
         sizedBoxW4H4,
         Text(name, style: TextStyle(color: colorScheme.secondary)),
         sizedBoxW12H12,
-        Expanded(child: Text(value ?? '', style: TextStyle(color: valueColor))),
+        Expanded(
+          child: Text(value ?? '', style: TextStyle(color: valueColor)),
+        ),
       ],
     );
   }

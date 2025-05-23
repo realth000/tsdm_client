@@ -11,8 +11,26 @@ final class ThreadVisitHistoryRepo {
 
   /// Fetch all history from storage.
   AsyncEither<List<ThreadVisitHistoryModel>> fetchAllHistory() => _storageProvider.fetchAllThreadVisitHistory().map(
-    (e) =>
-        e
+    (e) => e
+        .map(
+          (entity) => ThreadVisitHistoryModel(
+            uid: entity.uid,
+            threadId: entity.tid,
+            forumId: entity.fid,
+            username: entity.username,
+            threadTitle: entity.threadTitle,
+            forumName: entity.forumName,
+            visitTime: entity.visitTime,
+          ),
+        )
+        .toList(),
+  );
+
+  /// Fetch all history on user [uid].
+  AsyncEither<List<ThreadVisitHistoryModel>> fetchHistoryByUid(int uid) => _storageProvider
+      .fetchThreadVisitHistoryByUid(uid)
+      .map(
+        (e) => e
             .map(
               (entity) => ThreadVisitHistoryModel(
                 uid: entity.uid,
@@ -25,26 +43,6 @@ final class ThreadVisitHistoryRepo {
               ),
             )
             .toList(),
-  );
-
-  /// Fetch all history on user [uid].
-  AsyncEither<List<ThreadVisitHistoryModel>> fetchHistoryByUid(int uid) => _storageProvider
-      .fetchThreadVisitHistoryByUid(uid)
-      .map(
-        (e) =>
-            e
-                .map(
-                  (entity) => ThreadVisitHistoryModel(
-                    uid: entity.uid,
-                    threadId: entity.tid,
-                    forumId: entity.fid,
-                    username: entity.username,
-                    threadTitle: entity.threadTitle,
-                    forumName: entity.forumName,
-                    visitTime: entity.visitTime,
-                  ),
-                )
-                .toList(),
       );
 
   /// Save history in [model] to storage.

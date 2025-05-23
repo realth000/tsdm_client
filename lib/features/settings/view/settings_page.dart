@@ -85,9 +85,8 @@ class _SettingsPageState extends State<SettingsPage> {
     return showCustomBottomSheet<(Color?, bool)>(
       title: context.t.colorPickerDialog.title,
       context: context,
-      builder:
-          (context) =>
-              RootPage(DialogPaths.colorPicker, ColorPickerDialog(currentColorValue: colorValue, blocContext: context)),
+      builder: (context) =>
+          RootPage(DialogPaths.colorPicker, ColorPickerDialog(currentColorValue: colorValue, blocContext: context)),
       bottomBar: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
@@ -298,9 +297,8 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notifications_active_outlined),
         title: Text(tr.unreadPersonalMessageBadge),
         value: showUnreadPersonalMessageBadge,
-        onChanged:
-            (v) =>
-                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadPersonalMessageBadge, v)),
+        onChanged: (v) =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadPersonalMessageBadge, v)),
       ),
 
       // Unread broadcast message badge.
@@ -308,9 +306,8 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.notification_important_outlined),
         title: Text(tr.unreadBroadcastMessageBadge),
         value: showUnreadBroadcastMessageBadge,
-        onChanged:
-            (v) =>
-                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadBroadcastMessageBadge, v)),
+        onChanged: (v) =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.showUnreadBroadcastMessageBadge, v)),
       ),
 
       Padding(padding: edgeInsetsT4B4, child: Tips(tr.unreadBadgeLimitation)),
@@ -372,8 +369,8 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.windowRememberPosition.title),
         subtitle: Text(tr.windowRememberPosition.detail),
         value: windowRememberPosition,
-        onChanged:
-            (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.windowRememberPosition, v)),
+        onChanged: (v) =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.windowRememberPosition, v)),
       ),
       SectionSwitchListTile(
         secondary: const Icon(Icons.filter_center_focus_outlined),
@@ -415,8 +412,8 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.threadReverseOrder.title),
         subtitle: Text(tr.threadReverseOrder.detail),
         value: threadReverseOrder,
-        onChanged:
-            (v) async => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
+        onChanged: (v) async =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.threadReverseOrder, v)),
       ),
       SectionListTile(
         leading: const Icon(Icons.sync_outlined),
@@ -447,9 +444,8 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(tr.editorBBCodeParser.title),
         subtitle: Text(tr.editorBBCodeParser.detail),
         value: enableBBCodeParser,
-        onChanged:
-            (v) async =>
-                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableEditorBBCodeParser, v)),
+        onChanged: (v) async =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableEditorBBCodeParser, v)),
       ),
     ];
   }
@@ -581,12 +577,11 @@ class _SettingsPageState extends State<SettingsPage> {
         leading: const Icon(Icons.network_locked_outlined),
         title: Text(tr.proxySettings.title),
         subtitle: proxyOptionHint,
-        onTap:
-            () async => showDialog<void>(
-              context: context,
-              builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),
-              barrierDismissible: false,
-            ),
+        onTap: () async => showDialog<void>(
+          context: context,
+          builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),
+          barrierDismissible: false,
+        ),
       ),
 
       // Export data.
@@ -729,8 +724,8 @@ class _SettingsPageState extends State<SettingsPage> {
         secondary: const Icon(Icons.cloud_done_outlined),
         title: Text(tr.updateCheckOnStartup),
         value: enableUpdateCheckOnStartup,
-        onChanged:
-            (v) => context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableUpdateCheckOnStartup, v)),
+        onChanged: (v) =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableUpdateCheckOnStartup, v)),
       ),
 
       /// Update

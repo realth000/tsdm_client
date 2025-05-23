@@ -54,12 +54,11 @@ final class SwitchUserGroupBloc extends Bloc<SwitchUserGroupBaseEvent, SwitchUse
   void _updateFromInfoDocument(_Emit emit, uh.Document document) {
     // The name of current user group is the in the trailing part of `p.tbmu` and there's no better to grep it.
     final currentUserGroup = document.querySelector('div#ct_shell p.tbmu')?.innerText.split(' ').lastOrNull;
-    final availableUserGroups =
-        document
-            .querySelectorAll('div#ct_shell table.dt.mtm.mbm > tbody:nth-child(2) > tr')
-            .map(AvailableUserGroup.fromTr)
-            .whereType<AvailableUserGroup>()
-            .toList();
+    final availableUserGroups = document
+        .querySelectorAll('div#ct_shell table.dt.mtm.mbm > tbody:nth-child(2) > tr')
+        .map(AvailableUserGroup.fromTr)
+        .whereType<AvailableUserGroup>()
+        .toList();
 
     final formHash = document.querySelector('input[name="formhash"]')?.attributes['value'];
     if (formHash == null) {

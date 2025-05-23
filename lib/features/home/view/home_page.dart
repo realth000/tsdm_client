@@ -126,7 +126,12 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
       child = _buildDrawerBody(context);
     } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
       child = Scaffold(
-        body: Row(children: [if (widget.showNavigationBar) const HomeNavigationRail(), Expanded(child: widget.child)]),
+        body: Row(
+          children: [
+            if (widget.showNavigationBar) const HomeNavigationRail(),
+            Expanded(child: widget.child),
+          ],
+        ),
       );
     } else {
       child = Scaffold(
@@ -188,10 +193,8 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
     );
     final nd = NotificationDetails(android: and);
     final noticeData = switch (info) {
-      NotificationAutoSyncInfoNotice(:final msg, :final notice, :final personalMessage, :final broadcastMessage) => tr
-          .notice
-          .detail
-          .notice(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
+      NotificationAutoSyncInfoNotice(:final msg, :final notice, :final personalMessage, :final broadcastMessage) =>
+        tr.notice.detail.notice(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
       NotificationAutoSyncInfoPm(
         :final user,
         :final msg,
@@ -206,10 +209,8 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
           user: user,
           msg: msg,
         ),
-      NotificationAutoSyncInfoBm(:final msg, :final notice, :final personalMessage, :final broadcastMessage) => tr
-          .notice
-          .detail
-          .bm(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
+      NotificationAutoSyncInfoBm(:final msg, :final notice, :final personalMessage, :final broadcastMessage) =>
+        tr.notice.detail.bm(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
     };
     if (isAndroid) {
       await flnp.show(0, tr.notice.title, noticeData, nd, payload: LocalNoticeKeys.openNotification);

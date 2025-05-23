@@ -16,7 +16,13 @@ typedef _Emit = Emitter<ThreadStateV2>;
 final class ThreadBlocV2 extends Bloc<ThreadV2Event, ThreadStateV2> {
   /// Constructor.
   ThreadBlocV2(this._repo, {required String threadId, int page = 1, String? forumId})
-    : super(ThreadStateV2(threadId: threadId, pageRange: PageRange(start: page, end: page), forumId: forumId)) {
+    : super(
+        ThreadStateV2(
+          threadId: threadId,
+          pageRange: PageRange(start: page, end: page),
+          forumId: forumId,
+        ),
+      ) {
     on<ThreadV2Event>(
       (event, emit) => switch (event) {
         ThreadV2LoadPrevPageRequested() => _onLoadPrevPage(emit),

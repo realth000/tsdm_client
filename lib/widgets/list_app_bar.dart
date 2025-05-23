@@ -82,8 +82,8 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     }
     final page = await showDialog<int>(
       context: context,
-      builder:
-          (context) => RootPage(DialogPaths.jumpPage, JumpPageDialog(min: 1, current: currentPage, max: totalPages)),
+      builder: (context) =>
+          RootPage(DialogPaths.jumpPage, JumpPageDialog(min: 1, current: currentPage, max: totalPages)),
     );
     if (page == null || page == currentPage) {
       return;
@@ -121,75 +121,70 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
             child: Text('${canJumpPage ? currentPage : "-"}'),
           ),
         PopupMenuButton(
-          itemBuilder:
-              (context) => [
-                PopupMenuItem(
-                  value: MenuActions.refresh,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.refresh_outlined),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(context.t.networkList.actionRefresh),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: MenuActions.copyUrl,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.copy_outlined),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(context.t.networkList.actionCopyUrl),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: MenuActions.openInBrowser,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.open_in_browser),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(context.t.networkList.actionOpenInBrowser),
-                    ],
-                  ),
-                ),
-                PopupMenuItem(
-                  value: MenuActions.backToTop,
-                  child: Row(
-                    children: [
-                      const Icon(Icons.vertical_align_top_outlined),
-                      sizedBoxPopupMenuItemIconSpacing,
-                      Text(context.t.networkList.actionBackToTop),
-                    ],
-                  ),
-                ),
-                if (showReverseOrderAction)
-                  PopupMenuItem(
-                    value: MenuActions.reverseOrder,
-                    child: Row(
-                      children: [
-                        Icon(reverseOrder ? Icons.align_vertical_bottom_outlined : Icons.align_vertical_top_outlined),
-                        sizedBoxPopupMenuItemIconSpacing,
-                        Text(
-                          reverseOrder
-                              ? context.t.networkList.actionForwardOrder
-                              : context.t.networkList.actionReverseOrder,
-                        ),
-                      ],
-                    ),
-                  ),
-                if (context
-                    .read<SettingsBloc>()
-                    .state
-                    .settingsMap
-                    .enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    value: MenuActions.debugViewLog,
-                    child: Text(context.t.settingsPage.debugSection.viewLog.title),
-                  ),
+          itemBuilder: (context) => [
+            PopupMenuItem(
+              value: MenuActions.refresh,
+              child: Row(
+                children: [
+                  const Icon(Icons.refresh_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.networkList.actionRefresh),
                 ],
-              ],
+              ),
+            ),
+            PopupMenuItem(
+              value: MenuActions.copyUrl,
+              child: Row(
+                children: [
+                  const Icon(Icons.copy_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.networkList.actionCopyUrl),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: MenuActions.openInBrowser,
+              child: Row(
+                children: [
+                  const Icon(Icons.open_in_browser),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.networkList.actionOpenInBrowser),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: MenuActions.backToTop,
+              child: Row(
+                children: [
+                  const Icon(Icons.vertical_align_top_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.networkList.actionBackToTop),
+                ],
+              ),
+            ),
+            if (showReverseOrderAction)
+              PopupMenuItem(
+                value: MenuActions.reverseOrder,
+                child: Row(
+                  children: [
+                    Icon(reverseOrder ? Icons.align_vertical_bottom_outlined : Icons.align_vertical_top_outlined),
+                    sizedBoxPopupMenuItemIconSpacing,
+                    Text(
+                      reverseOrder
+                          ? context.t.networkList.actionForwardOrder
+                          : context.t.networkList.actionReverseOrder,
+                    ),
+                  ],
+                ),
+              ),
+            if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
+              const PopupMenuDivider(),
+              PopupMenuItem(
+                value: MenuActions.debugViewLog,
+                child: Text(context.t.settingsPage.debugSection.viewLog.title),
+              ),
+            ],
+          ],
           onSelected: onSelected,
         ),
       ],

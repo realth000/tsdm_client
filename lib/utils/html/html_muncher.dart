@@ -306,12 +306,11 @@ final class _Muncher with LoggerMixin {
           if (state.tapUrl != null) {
             // Copy to save the url.
             final url = state.tapUrl;
-            recognizer =
-                TapGestureRecognizer()
-                  ..onTap = () {
-                    context.dispatchAsUrl(url!);
-                    options.onUrlLaunched?.call();
-                  };
+            recognizer = TapGestureRecognizer()
+              ..onTap = () {
+                context.dispatchAsUrl(url!);
+                options.onUrlLaunched?.call();
+              };
           }
           state
             ..headingBrNodePassed = true
@@ -490,7 +489,15 @@ final class _Muncher with LoggerMixin {
 
     if (align != null) {
       ret2 = [
-        WidgetSpan(child: Row(children: [Expanded(child: Text.rich(TextSpan(children: ret), textAlign: align))])),
+        WidgetSpan(
+          child: Row(
+            children: [
+              Expanded(
+                child: Text.rich(TextSpan(children: ret), textAlign: align),
+              ),
+            ],
+          ),
+        ),
       ];
 
       // Restore text align.
@@ -503,16 +510,15 @@ final class _Muncher with LoggerMixin {
   }
 
   List<InlineSpan>? _buildSpan(uh.Element element) {
-    final styleEntries =
-        element.attributes['style']
-            ?.split(';')
-            .map((e) {
-              final x = e.trim().split(':');
-              return (x.firstOrNull?.trim(), x.lastOrNull?.trim());
-            })
-            .whereType<(String, String)>()
-            .map((e) => MapEntry(e.$1, e.$2))
-            .toList();
+    final styleEntries = element.attributes['style']
+        ?.split(';')
+        .map((e) {
+          final x = e.trim().split(':');
+          return (x.firstOrNull?.trim(), x.lastOrNull?.trim());
+        })
+        .whereType<(String, String)>()
+        .map((e) => MapEntry(e.$1, e.$2))
+        .toList();
     if (styleEntries == null) {
       final ret = _munch(element);
       if (ret == null) {
@@ -597,7 +603,9 @@ final class _Muncher with LoggerMixin {
     state
       ..headingBrNodePassed = true
       ..elevation += _elevationStep;
-    final ret = WidgetSpan(child: CodeCard(code: text, elevation: state.elevation));
+    final ret = WidgetSpan(
+      child: CodeCard(code: text, elevation: state.elevation),
+    );
     state.elevation -= _elevationStep;
     return [ret];
   }
@@ -628,7 +636,11 @@ final class _Muncher with LoggerMixin {
     //     ?.attributes['title']
     //     ?.parseToDateTimeUtc8();
 
-    return [WidgetSpan(child: ReviewCard(name: name ?? '', content: content ?? '', avatarUrl: avatarUrl))];
+    return [
+      WidgetSpan(
+        child: ReviewCard(name: name ?? '', content: content ?? '', avatarUrl: avatarUrl),
+      ),
+    ];
   }
 
   /// Spoiler is a button with an area of contents.
@@ -652,7 +664,11 @@ final class _Muncher with LoggerMixin {
     }
     state.headingBrNodePassed = true;
     final ret = WidgetSpan(
-      child: SpoilerCard(title: TextSpan(text: title), content: TextSpan(children: content), elevation: elevation),
+      child: SpoilerCard(
+        title: TextSpan(text: title),
+        content: TextSpan(children: content),
+        elevation: elevation,
+      ),
     );
     return [ret, emptySpan];
   }
@@ -1061,13 +1077,12 @@ final class _Muncher with LoggerMixin {
     //
     // </tbody>
     // </table>
-    final data =
-        element
-            .querySelectorRootAll('tbody > tr')
-            .map((e) => (e.querySelector('th')?.innerText.trim(), e.querySelector('td')?.innerText.trim()))
-            .whereType<(String, String)>()
-            .map((e) => NewcomerReportInfo(title: e.$1, data: e.$2))
-            .toList();
+    final data = element
+        .querySelectorRootAll('tbody > tr')
+        .map((e) => (e.querySelector('th')?.innerText.trim(), e.querySelector('td')?.innerText.trim()))
+        .whereType<(String, String)>()
+        .map((e) => NewcomerReportInfo(title: e.$1, data: e.$2))
+        .toList();
 
     return [WidgetSpan(child: NewcomerReportCard(data))];
   }

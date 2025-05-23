@@ -34,7 +34,15 @@ class QuotedText extends StatelessWidget {
     final spanTail = TextSpan(children: [WidgetSpan(child: iconTail)]);
 
     if (text != null) {
-      return Text.rich(TextSpan(children: [spanHead, TextSpan(text: ' $text '), spanTail]));
+      return Text.rich(
+        TextSpan(
+          children: [
+            spanHead,
+            TextSpan(text: ' $text '),
+            spanTail,
+          ],
+        ),
+      );
     }
 
     if (span != null) {

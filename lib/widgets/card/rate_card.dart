@@ -31,65 +31,63 @@ class RateCard extends StatelessWidget {
     columnWidths[rate.attrList.length + 1] = const FixedColumnWidth(200);
 
     // ,
-    final tableHeaders =
-        [context.t.rateCard.user, ...rate.attrList]
-            .map<Widget>(
-              (e) => Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(e, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: secondaryColor)),
-                  sizedBoxW8H8,
-                ],
-              ),
-            )
-            .toList();
+    final tableHeaders = [context.t.rateCard.user, ...rate.attrList]
+        .map<Widget>(
+          (e) => Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(e, style: Theme.of(context).textTheme.titleSmall?.copyWith(color: secondaryColor)),
+              sizedBoxW8H8,
+            ],
+          ),
+        )
+        .toList();
 
     final bottom = Text(
       context.t.rateCard.total(total: rate.rateStatus ?? '-'),
       style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: secondaryColor),
     );
 
-    final tableContent =
-        rate.records
-            .mapIndexed(
-              (idx, e) => TableRow(
-                decoration: BoxDecoration(color: idx.isOdd ? Theme.of(context).colorScheme.surfaceContainerHigh : null),
+    final tableContent = rate.records
+        .mapIndexed(
+          (idx, e) => TableRow(
+            decoration: BoxDecoration(color: idx.isOdd ? Theme.of(context).colorScheme.surfaceContainerHigh : null),
+            children: [
+              Row(
                 children: [
-                  Row(
-                    children: [
-                      SizedBox(
-                        height: 50,
-                        child: Center(
-                          child: GestureDetector(
-                            onTap: () async => context.dispatchAsUrl(e.user.url),
-                            // TODO: Add hero here.
-                            child: CircleAvatar(
-                              backgroundImage: CachedImageProvider(
-                                e.user.avatarUrl ?? noAvatarUrl,
-                                fallbackImageUrl: noAvatarUrl,
-                                usage: ImageUsageInfoUserAvatar(e.user.name),
-                              ),
-                            ),
+                  SizedBox(
+                    height: 50,
+                    child: Center(
+                      child: GestureDetector(
+                        onTap: () async => context.dispatchAsUrl(e.user.url),
+                        // TODO: Add hero here.
+                        child: CircleAvatar(
+                          backgroundImage: CachedImageProvider(
+                            e.user.avatarUrl ?? noAvatarUrl,
+                            fallbackImageUrl: noAvatarUrl,
+                            usage: ImageUsageInfoUserAvatar(e.user.name),
                           ),
                         ),
                       ),
-                      sizedBoxW8H8,
-                      Expanded(
-                        child: GestureDetector(
-                          onTap: () async => context.dispatchAsUrl(e.user.url),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Text(e.user.name, textAlign: TextAlign.left),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
-                  ...e.attrValueList.map((e) => Row(mainAxisSize: MainAxisSize.min, children: [Text(e), sizedBoxW8H8])),
+                  sizedBoxW8H8,
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () async => context.dispatchAsUrl(e.user.url),
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(e.user.name, textAlign: TextAlign.left),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            )
-            .toList();
+              ...e.attrValueList.map((e) => Row(mainAxisSize: MainAxisSize.min, children: [Text(e), sizedBoxW8H8])),
+            ],
+          ),
+        )
+        .toList();
 
     return Card(
       child: Padding(
@@ -116,7 +114,10 @@ class RateCard extends StatelessWidget {
                 defaultColumnWidth: const IntrinsicColumnWidth(),
                 columnWidths: columnWidths,
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children: [TableRow(children: tableHeaders), ...tableContent],
+                children: [
+                  TableRow(children: tableHeaders),
+                  ...tableContent,
+                ],
               ),
             ),
             sizedBoxW12H12,

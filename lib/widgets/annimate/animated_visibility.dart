@@ -18,9 +18,8 @@ class AnimatedVisibility extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AnimatedSwitcher(
-      transitionBuilder:
-          (Widget child, Animation<double> animation) =>
-              SizeTransition(sizeFactor: animation, axisAlignment: 1, child: child),
+      transitionBuilder: (Widget child, Animation<double> animation) =>
+          SizeTransition(sizeFactor: animation, axisAlignment: 1, child: child),
       duration: duration ?? duration100,
       child: visible ? child : null,
     );

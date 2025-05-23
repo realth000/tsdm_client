@@ -38,7 +38,9 @@ class _LockedCardState extends State<LockedCard> {
   WidgetSpan _buildUnderlineText(BuildContext context, String text) {
     return WidgetSpan(
       child: DecoratedBox(
-        decoration: BoxDecoration(border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface))),
+        decoration: BoxDecoration(
+          border: Border(bottom: BorderSide(color: Theme.of(context).colorScheme.onSurface)),
+        ),
         child: Text(text, style: Theme.of(context).textTheme.bodySmall),
       ),
     );
@@ -183,7 +185,11 @@ class _LockedCardState extends State<LockedCard> {
           children: [
             Row(
               mainAxisSize: MainAxisSize.min,
-              children: [Icon(Icons.lock_outlined, color: Theme.of(context).colorScheme.primary), sizedBoxW8H8, title],
+              children: [
+                Icon(Icons.lock_outlined, color: Theme.of(context).colorScheme.primary),
+                sizedBoxW8H8,
+                title,
+              ],
             ),
             sizedBoxW8H8,
             ...widgets.insertBetween(sizedBoxW8H8),

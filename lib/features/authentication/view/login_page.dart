@@ -29,10 +29,8 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(title: Text(context.t.loginPage.title)),
       body: BlocProvider(
-        create:
-            (context) =>
-                AuthenticationBloc(authenticationRepository: context.repo())
-                  ..add(AuthenticationFetchLoginHashRequested()),
+        create: (context) =>
+            AuthenticationBloc(authenticationRepository: context.repo())..add(AuthenticationFetchLoginHashRequested()),
         child: BlocListener<AuthenticationBloc, AuthenticationState>(
           listener: (context, state) {
             if (state.status == AuthenticationStatus.failure) {

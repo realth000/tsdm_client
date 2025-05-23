@@ -25,53 +25,57 @@ class MedalGroupView extends StatelessWidget {
     if (expand) {
       return Column(
         spacing: 8,
-        children:
-            medals
-                .mapIndexed(
-                  (idx, e) => Row(
-                    children: [
-                      SizedBox(
-                        width: 20,
-                        child: Text(
-                          '${idx + 1}'.padLeft(2),
-                          style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                        ),
-                      ),
-                      sizedBoxW8H8,
-                      CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
-                      sizedBoxW8H8,
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize: MainAxisSize.min,
-                          children: [Text(e.name, style: nameStyle), Text(e.description, style: descriptionStyle)],
-                        ),
-                      ),
-                    ],
+        children: medals
+            .mapIndexed(
+              (idx, e) => Row(
+                children: [
+                  SizedBox(
+                    width: 20,
+                    child: Text(
+                      '${idx + 1}'.padLeft(2),
+                      style: nameStyle?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                    ),
                   ),
-                )
-                .toList(),
+                  sizedBoxW8H8,
+                  CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
+                  sizedBoxW8H8,
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(e.name, style: nameStyle),
+                        Text(e.description, style: descriptionStyle),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+            .toList(),
       );
     }
 
     return Wrap(
       runSpacing: 4,
       spacing: 4,
-      children:
-          medals
-              .map(
-                (e) => Tooltip(
-                  richMessage: WidgetSpan(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [Text(e.name, style: nameStyle), Text(e.description, style: descriptionStyle)],
-                    ),
-                  ),
-                  child: CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
+      children: medals
+          .map(
+            (e) => Tooltip(
+              richMessage: WidgetSpan(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(e.name, style: nameStyle),
+                    Text(e.description, style: descriptionStyle),
+                  ],
                 ),
-              )
-              .toList(),
+              ),
+              child: CachedImage(e.image, width: medalImageSize.width, height: medalImageSize.height),
+            ),
+          )
+          .toList(),
     );
   }
 }

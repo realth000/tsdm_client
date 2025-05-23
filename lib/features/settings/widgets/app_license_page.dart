@@ -16,7 +16,10 @@ class AppLicensePage extends StatelessWidget {
       future: rootBundle.loadString(assetsLicensePath),
       builder: (context, snapshot) {
         if (snapshot.hasError) {
-          return Scaffold(appBar: AppBar(), body: Center(child: Text(snapshot.error.toString())));
+          return Scaffold(
+            appBar: AppBar(),
+            body: Center(child: Text(snapshot.error.toString())),
+          );
         }
         if (snapshot.hasData) {
           return LicensePage(
