@@ -47,8 +47,12 @@ final class PersonalMessage with PersonalMessageMappable {
     }
 
     // Parse N from "共 N 条"
-    final count =
-        element.querySelector('dd.y.mtm.pm_o > span.xg1')?.innerText.split(' ').elementAtOrNull(1)?.parseToInt();
+    final count = element
+        .querySelector('dd.y.mtm.pm_o > span.xg1')
+        ?.innerText
+        .split(' ')
+        .elementAtOrNull(1)
+        ?.parseToInt();
 
     final avatarUrl = element.querySelector('dd.m.avt > a > img')?.imageUrl();
     final spaceUrl = element.querySelector('dd.m.avt > a')?.attributes['href'];
@@ -74,8 +78,13 @@ final class PersonalMessage with PersonalMessageMappable {
         // Recent messages.
         element.querySelector('dd:nth-child(3) > span.xg1 > span')?.title?.parseToDateTimeUtc8();
     final chatUrl = element.querySelector('a#pmlist_${messageId}_a')?.attributes['href']?.unescapeHtml()?.prependHost();
-    final message =
-        element.querySelector('dd:nth-child(3) > span.xg1')?.previousNode?.text?.split(':').elementAtOrNull(1)?.trim();
+    final message = element
+        .querySelector('dd:nth-child(3) > span.xg1')
+        ?.previousNode
+        ?.text
+        ?.split(':')
+        .elementAtOrNull(1)
+        ?.trim();
     if (username == null || lastMessageTime == null || chatUrl == null || message == null) {
       talker.error(
         'failed to parse private message: '

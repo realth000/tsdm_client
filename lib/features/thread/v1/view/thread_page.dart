@@ -238,15 +238,14 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
         RepositoryProvider<ThreadRepository>(create: (_) => ThreadRepository()),
         RepositoryProvider<ReplyRepository>(create: (_) => const ReplyRepository()),
         BlocProvider(
-          create:
-              (context) => ThreadBloc(
-                tid: widget.threadID,
-                pid: widget.findPostID,
-                onlyVisibleUid: widget.onlyVisibleUid,
-                threadRepository: context.repo(),
-                reverseOrder: widget.overrideReverseOrder ? threadReverseOrder : null,
-                exactOrder: widget.overrideWithExactOrder,
-              )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
+          create: (context) => ThreadBloc(
+            tid: widget.threadID,
+            pid: widget.findPostID,
+            onlyVisibleUid: widget.onlyVisibleUid,
+            threadRepository: context.repo(),
+            reverseOrder: widget.overrideReverseOrder ? threadReverseOrder : null,
+            exactOrder: widget.overrideWithExactOrder,
+          )..add(ThreadLoadMoreRequested(int.tryParse(widget.pageNumber) ?? 1)),
         ),
         BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
         BlocProvider(create: (context) => JumpPageCubit()),

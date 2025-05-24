@@ -440,44 +440,41 @@ class StorageProvider with LoggerMixin {
   /// Save a group of notice for user [uid] into storage.
   VoidTask saveNotification({required int uid, required NotificationGroup notificationGroup}) => VoidTask(() async {
     await NotificationDao(_db).insertManyNotice(
-      noticeList:
-          notificationGroup.noticeList
-              .map(
-                (e) => NoticeCompanion(
-                  uid: Value(uid),
-                  timestamp: Value(e.timestamp),
-                  data: Value(e.data),
-                  nid: Value(e.nid),
-                  alreadyRead: Value(e.alreadyRead),
-                ),
-              )
-              .toList(),
-      personalMessageList:
-          notificationGroup.personalMessageList
-              .map(
-                (e) => PersonalMessageCompanion(
-                  uid: Value(uid),
-                  timestamp: Value(e.timestamp),
-                  data: Value(e.data),
-                  peerUid: Value(e.peerUid),
-                  peerUsername: Value(e.peerUsername),
-                  sender: Value(e.sender),
-                  alreadyRead: Value(e.alreadyRead),
-                ),
-              )
-              .toList(),
-      broadcastMessageList:
-          notificationGroup.broadcastMessageList
-              .map(
-                (e) => BroadcastMessageCompanion(
-                  uid: Value(uid),
-                  timestamp: Value(e.timestamp),
-                  data: Value(e.data),
-                  pmid: Value(e.pmid),
-                  alreadyRead: Value(e.alreadyRead),
-                ),
-              )
-              .toList(),
+      noticeList: notificationGroup.noticeList
+          .map(
+            (e) => NoticeCompanion(
+              uid: Value(uid),
+              timestamp: Value(e.timestamp),
+              data: Value(e.data),
+              nid: Value(e.nid),
+              alreadyRead: Value(e.alreadyRead),
+            ),
+          )
+          .toList(),
+      personalMessageList: notificationGroup.personalMessageList
+          .map(
+            (e) => PersonalMessageCompanion(
+              uid: Value(uid),
+              timestamp: Value(e.timestamp),
+              data: Value(e.data),
+              peerUid: Value(e.peerUid),
+              peerUsername: Value(e.peerUsername),
+              sender: Value(e.sender),
+              alreadyRead: Value(e.alreadyRead),
+            ),
+          )
+          .toList(),
+      broadcastMessageList: notificationGroup.broadcastMessageList
+          .map(
+            (e) => BroadcastMessageCompanion(
+              uid: Value(uid),
+              timestamp: Value(e.timestamp),
+              data: Value(e.data),
+              pmid: Value(e.pmid),
+              alreadyRead: Value(e.alreadyRead),
+            ),
+          )
+          .toList(),
     );
   });
 

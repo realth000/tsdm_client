@@ -78,11 +78,10 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
       chunkEvents: chunkEvents.stream,
       scale: key.scale,
       debugLabel: key.url,
-      informationCollector:
-          () => <DiagnosticsNode>[
-            DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
-            DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
-          ],
+      informationCollector: () => <DiagnosticsNode>[
+        DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
+        DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
+      ],
     );
   }
 

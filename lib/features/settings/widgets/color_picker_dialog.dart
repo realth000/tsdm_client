@@ -27,11 +27,10 @@ final class ColorPickerDialog extends StatelessWidget {
         crossAxisSpacing: 10,
         mainAxisExtent: _colorBoxSize,
       ),
-      itemBuilder:
-          (context, index) => GestureDetector(
-            onTap: () async => context.pop((Color(items[index].valueA), false)),
-            child: ColorPalette(color: items[index], selected: items[index].valueA == currentColorValue),
-          ),
+      itemBuilder: (context, index) => GestureDetector(
+        onTap: () async => context.pop((Color(items[index].valueA), false)),
+        child: ColorPalette(color: items[index], selected: items[index].valueA == currentColorValue),
+      ),
       itemCount: items.length,
     );
   }

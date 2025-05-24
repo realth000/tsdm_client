@@ -26,13 +26,12 @@ class SearchedThread with SearchedThreadMappable {
     final username = userNode?.firstEndDeepText();
     final userUrl = userNode?.firstHref();
 
-    final publishTime =
-        element
-            .querySelector('p:nth-child(2) > span.dateshow')
-            ?.firstEndDeepText()
-            ?.trim()
-            .substring(2)
-            .parseToDateTimeUtc8();
+    final publishTime = element
+        .querySelector('p:nth-child(2) > span.dateshow')
+        ?.firstEndDeepText()
+        ?.trim()
+        .substring(2)
+        .parseToDateTimeUtc8();
 
     final forumNode = element.querySelector('p:nth-child(2) > span.fid > a.forum_l');
     final forumName = forumNode?.firstEndDeepText();

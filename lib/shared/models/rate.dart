@@ -67,8 +67,11 @@ class Rate with RateMappable {
       talker.error('failed to build rate: detail url not found');
       return null;
     }
-    final attrList =
-        rateHeaders.skip(1).map((e) => e.querySelector('i')?.firstEndDeepText()?.trim()).whereType<String>().toList();
+    final attrList = rateHeaders
+        .skip(1)
+        .map((e) => e.querySelector('i')?.firstEndDeepText()?.trim())
+        .whereType<String>()
+        .toList();
     if (attrList.isEmpty) {
       talker.error('failed to build rate: rate attr list is empty');
       return null;
@@ -117,6 +120,9 @@ class Rate with RateMappable {
     if (url == null || name == null) {
       return null;
     }
-    return SingleRate(user: User(name: name, url: url, avatarUrl: avatarUrl), attrValueList: attrValueList);
+    return SingleRate(
+      user: User(name: name, url: url, avatarUrl: avatarUrl),
+      attrValueList: attrValueList,
+    );
   }
 }

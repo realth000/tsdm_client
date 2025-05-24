@@ -70,8 +70,10 @@ class _NeteaseCardState extends State<NeteaseCard> with LoggerMixin {
             ),
             sizedBoxW12H12,
             FutureBuilder(
-              future:
-                  getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie).get('$urlPrefix${widget.id}').run(),
+              future: getIt
+                  .get<NetClientProvider>(instanceName: ServiceKeys.noCookie)
+                  .get('$urlPrefix${widget.id}')
+                  .run(),
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   return switch (snapshot.data!) {

@@ -130,13 +130,12 @@ final class PostEditContent with PostEditContentMappable {
     //   </div>
     // </div>
     // ```
-    final threadTypeList =
-        postBoxNode
-            ?.querySelector('div select#typeid')
-            ?.querySelectorAll('option')
-            .where((e) => e.attributes['value'] != null && e.innerText.trim().isNotEmpty)
-            .map((e) => PostEditThreadType(name: e.innerText.trim(), typeID: e.attributes['value']))
-            .toList();
+    final threadTypeList = postBoxNode
+        ?.querySelector('div select#typeid')
+        ?.querySelectorAll('option')
+        .where((e) => e.attributes['value'] != null && e.innerText.trim().isNotEmpty)
+        .map((e) => PostEditThreadType(name: e.innerText.trim(), typeID: e.attributes['value']))
+        .toList();
 
     // Current thread type.
     PostEditThreadType? threadType;
@@ -151,14 +150,13 @@ final class PostEditContent with PostEditContentMappable {
     // Thread title.
     // Max length is 210 bytes (utf-8).
     final threadTitle = postBoxNode?.querySelector('div.z > span > input')?.attributes['value'];
-    final threadTitleMaxLength =
-        postBoxNode
-            ?.querySelector('div.z > span > input')
-            ?.attributes['onkeyup']
-            ?.split(' ')
-            .lastOrNull
-            ?.replaceFirst(');', '')
-            .parseToInt();
+    final threadTitleMaxLength = postBoxNode
+        ?.querySelector('div.z > span > input')
+        ?.attributes['onkeyup']
+        ?.split(' ')
+        .lastOrNull
+        ?.replaceFirst(');', '')
+        .parseToInt();
 
     // Parse response parameters.
     final formHash = rootNode?.querySelector('input[name="formhash"]')?.attributes['value'];
@@ -191,23 +189,22 @@ final class PostEditContent with PostEditContentMappable {
     }
 
     // Additional options;
-    final options =
-        rootNode
-            ?.querySelectorAll('div#psd p.mbn')
-            .where((e) => e.querySelector('input') != null && e.querySelector('label') != null)
-            .map((e) {
-              final input = e.querySelector('input')!;
-              final label = e.querySelector('label')!;
+    final options = rootNode
+        ?.querySelectorAll('div#psd p.mbn')
+        .where((e) => e.querySelector('input') != null && e.querySelector('label') != null)
+        .map((e) {
+          final input = e.querySelector('input')!;
+          final label = e.querySelector('label')!;
 
-              return PostEditContentOption(
-                name: input.id,
-                readableName: label.innerText,
-                disabled: input.attributes.containsKey('disabled'),
-                checked: input.attributes.containsKey('checked'),
-                value: input.attributes['value']!,
-              );
-            })
-            .toList();
+          return PostEditContentOption(
+            name: input.id,
+            readableName: label.innerText,
+            disabled: input.attributes.containsKey('disabled'),
+            checked: input.attributes.containsKey('checked'),
+            value: input.attributes['value']!,
+          );
+        })
+        .toList();
 
     final permListNode = rootNode?.querySelector('select#readperm');
     List<ThreadPerm>? permList;
@@ -227,8 +224,12 @@ final class PostEditContent with PostEditContentMappable {
       price = null;
     }
 
-    final maxPrice =
-        rootNode?.querySelector('div#extra_price_c > span.xg1')?.innerText.split(' ').elementAtOrNull(1)?.parseToInt();
+    final maxPrice = rootNode
+        ?.querySelector('div#extra_price_c > span.xg1')
+        ?.innerText
+        .split(' ')
+        .elementAtOrNull(1)
+        ?.parseToInt();
 
     return PostEditContent(
       threadType: threadType,

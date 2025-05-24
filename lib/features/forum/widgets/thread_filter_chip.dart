@@ -43,21 +43,19 @@ class ThreadChip extends StatelessWidget {
         return FilterChip(
           label: Text(chipLabel),
           selected: chipSelected,
-          onSelected:
-              state.status.isLoading()
-                  ? null
-                  : (v) async {
-                    // bottom sheet.
-                    await showCustomBottomSheet<void>(
-                      title: sheetTitle,
-                      context: context,
-                      builder:
-                          (_) => BlocProvider.value(
-                            value: context.read<ForumBloc>(),
-                            child: BlocBuilder<ForumBloc, ForumState>(builder: _buildContent),
-                          ),
-                    );
-                  },
+          onSelected: state.status.isLoading()
+              ? null
+              : (v) async {
+                  // bottom sheet.
+                  await showCustomBottomSheet<void>(
+                    title: sheetTitle,
+                    context: context,
+                    builder: (_) => BlocProvider.value(
+                      value: context.read<ForumBloc>(),
+                      child: BlocBuilder<ForumBloc, ForumState>(builder: _buildContent),
+                    ),
+                  );
+                },
         );
       },
     );
@@ -84,24 +82,22 @@ class ThreadTypeChip extends StatelessWidget {
           chipLabel: currFilter ?? state.filterTypeList.firstWhereOrNull((e) => e.typeID == null)?.name ?? '',
           chipSelected: state.filterState.filterType?.typeID != null,
           sheetTitle: context.t.forumPage.threadTab.threadType,
-          sheetItemBuilder:
-              (context, state) =>
-                  state.filterTypeList
-                      .map(
-                        (e) => SelectableListTile(
-                          title: Text(e.name),
-                          selected: e.name == currFilter,
-                          onTap: () {
-                            context.read<ForumBloc>().add(
-                              ForumChangeThreadFilterStateRequested(
-                                state.filterState.copyWith(filter: e.filterName, filterType: e),
-                              ),
-                            );
-                            context.pop();
-                          },
-                        ),
-                      )
-                      .toList(),
+          sheetItemBuilder: (context, state) => state.filterTypeList
+              .map(
+                (e) => SelectableListTile(
+                  title: Text(e.name),
+                  selected: e.name == currFilter,
+                  onTap: () {
+                    context.read<ForumBloc>().add(
+                      ForumChangeThreadFilterStateRequested(
+                        state.filterState.copyWith(filter: e.filterName, filterType: e),
+                      ),
+                    );
+                    context.pop();
+                  },
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -128,24 +124,22 @@ class ThreadSpecialTypeChip extends StatelessWidget {
               currFilter ?? state.filterSpecialTypeList.firstWhereOrNull((e) => e.specialType == null)?.name ?? '',
           chipSelected: state.filterState.filterSpecialType?.specialType != null,
           sheetTitle: context.t.forumPage.threadTab.threadSpecialType,
-          sheetItemBuilder:
-              (context, state) =>
-                  state.filterSpecialTypeList
-                      .map(
-                        (e) => SelectableListTile(
-                          selected: e.name == currFilter,
-                          title: Text(e.name),
-                          onTap: () {
-                            context.read<ForumBloc>().add(
-                              ForumChangeThreadFilterStateRequested(
-                                state.filterState.copyWith(filter: e.filterName, filterSpecialType: e),
-                              ),
-                            );
-                            context.pop();
-                          },
-                        ),
-                      )
-                      .toList(),
+          sheetItemBuilder: (context, state) => state.filterSpecialTypeList
+              .map(
+                (e) => SelectableListTile(
+                  selected: e.name == currFilter,
+                  title: Text(e.name),
+                  onTap: () {
+                    context.read<ForumBloc>().add(
+                      ForumChangeThreadFilterStateRequested(
+                        state.filterState.copyWith(filter: e.filterName, filterSpecialType: e),
+                      ),
+                    );
+                    context.pop();
+                  },
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -172,24 +166,22 @@ class ThreadDatelineChip extends StatelessWidget {
           chipLabel: currFilter ?? state.filterDatelineList.firstWhereOrNull((e) => e.dateline == null)?.name ?? '',
           chipSelected: state.filterState.filterDateline?.dateline != null,
           sheetTitle: context.t.forumPage.threadTab.threadDateline,
-          sheetItemBuilder:
-              (context, state) =>
-                  state.filterDatelineList
-                      .map(
-                        (e) => SelectableListTile(
-                          title: Text(e.name),
-                          selected: e.name == currFilter,
-                          onTap: () {
-                            context.read<ForumBloc>().add(
-                              ForumChangeThreadFilterStateRequested(
-                                state.filterState.copyWith(filter: e.filterName, filterDateline: e),
-                              ),
-                            );
-                            context.pop();
-                          },
-                        ),
-                      )
-                      .toList(),
+          sheetItemBuilder: (context, state) => state.filterDatelineList
+              .map(
+                (e) => SelectableListTile(
+                  title: Text(e.name),
+                  selected: e.name == currFilter,
+                  onTap: () {
+                    context.read<ForumBloc>().add(
+                      ForumChangeThreadFilterStateRequested(
+                        state.filterState.copyWith(filter: e.filterName, filterDateline: e),
+                      ),
+                    );
+                    context.pop();
+                  },
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -216,24 +208,22 @@ class ThreadOrderChip extends StatelessWidget {
           chipLabel: currFilter ?? state.filterOrderList.firstWhereOrNull((e) => e.orderBy == null)?.name ?? '',
           chipSelected: state.filterState.filterOrder?.orderBy != null,
           sheetTitle: context.t.forumPage.threadTab.threadOrder,
-          sheetItemBuilder:
-              (context, state) =>
-                  state.filterOrderList
-                      .map(
-                        (e) => SelectableListTile(
-                          title: Text(e.name),
-                          selected: e.name == currFilter,
-                          onTap: () {
-                            context.read<ForumBloc>().add(
-                              ForumChangeThreadFilterStateRequested(
-                                state.filterState.copyWith(filter: e.filterName, filterOrder: e),
-                              ),
-                            );
-                            context.pop();
-                          },
-                        ),
-                      )
-                      .toList(),
+          sheetItemBuilder: (context, state) => state.filterOrderList
+              .map(
+                (e) => SelectableListTile(
+                  title: Text(e.name),
+                  selected: e.name == currFilter,
+                  onTap: () {
+                    context.read<ForumBloc>().add(
+                      ForumChangeThreadFilterStateRequested(
+                        state.filterState.copyWith(filter: e.filterName, filterOrder: e),
+                      ),
+                    );
+                    context.pop();
+                  },
+                ),
+              )
+              .toList(),
         );
       },
     );
@@ -252,19 +242,18 @@ class ThreadDigestChip extends StatelessWidget {
         return FilterChip(
           label: Text(context.t.forumPage.threadTab.threadDigested),
           selected: state.filterState.filterDigest.digest,
-          onSelected:
-              state.status.isLoading()
-                  ? null
-                  : (v) async {
-                    context.read<ForumBloc>().add(
-                      ForumChangeThreadFilterStateRequested(
-                        state.filterState.copyWith(
-                          filter: state.filterState.filterDigest.filterName,
-                          filterDigest: FilterDigest(digest: v),
-                        ),
+          onSelected: state.status.isLoading()
+              ? null
+              : (v) async {
+                  context.read<ForumBloc>().add(
+                    ForumChangeThreadFilterStateRequested(
+                      state.filterState.copyWith(
+                        filter: state.filterState.filterDigest.filterName,
+                        filterDigest: FilterDigest(digest: v),
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
         );
       },
     );
@@ -283,21 +272,20 @@ class ThreadRecommendedChip extends StatelessWidget {
         return FilterChip(
           label: Text(context.t.forumPage.threadTab.threadRecommended),
           selected: state.filterState.filterRecommend.recommend,
-          onSelected:
-              state.status.isLoading()
-                  ? null
-                  : state.status.isLoading()
-                  ? null
-                  : (v) async {
-                    context.read<ForumBloc>().add(
-                      ForumChangeThreadFilterStateRequested(
-                        state.filterState.copyWith(
-                          filter: state.filterState.filterRecommend.filterName,
-                          filterRecommend: FilterRecommend(recommend: v),
-                        ),
+          onSelected: state.status.isLoading()
+              ? null
+              : state.status.isLoading()
+              ? null
+              : (v) async {
+                  context.read<ForumBloc>().add(
+                    ForumChangeThreadFilterStateRequested(
+                      state.filterState.copyWith(
+                        filter: state.filterState.filterRecommend.filterName,
+                        filterRecommend: FilterRecommend(recommend: v),
                       ),
-                    );
-                  },
+                    ),
+                  );
+                },
         );
       },
     );

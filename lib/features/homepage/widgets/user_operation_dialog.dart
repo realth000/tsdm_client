@@ -79,22 +79,21 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
           ),
           ListTile(
             title: Text(tr.latestThread),
-            onTap:
-                latestThreadUrl == null
-                    ? null
-                    : () async {
-                      final target = latestThreadUrl!.parseUrlToRoute();
-                      if (target == null) {
-                        error('invalid kahrpba link: $latestThreadUrl');
-                        return;
-                      }
-                      context.pop();
-                      await context.pushNamed(
-                        target.screenPath,
-                        pathParameters: target.pathParameters,
-                        queryParameters: target.queryParameters,
-                      );
-                    },
+            onTap: latestThreadUrl == null
+                ? null
+                : () async {
+                    final target = latestThreadUrl!.parseUrlToRoute();
+                    if (target == null) {
+                      error('invalid kahrpba link: $latestThreadUrl');
+                      return;
+                    }
+                    context.pop();
+                    await context.pushNamed(
+                      target.screenPath,
+                      pathParameters: target.pathParameters,
+                      queryParameters: target.queryParameters,
+                    );
+                  },
           ),
         ],
       ),

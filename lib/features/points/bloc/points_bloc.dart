@@ -156,25 +156,22 @@ final class PointsChangelogBloc extends Bloc<PointsChangelogEvent, PointsChangel
     //   <option value="TRC">Task</option>
     //   ...
     // </select>
-    final extTypeList =
-        document
-            .querySelectorAll('select#exttype > option')
-            .where((e) => e.attributes['value'] != null)
-            .map((e) => ChangelogPointsType(name: e.innerText.trim(), extType: e.attributes['value']!))
-            .toList();
-    final optTypeList =
-        document
-            .querySelectorAll('select#optype > option')
-            .where((e) => e.attributes['value'] != null)
-            .map((e) => ChangelogOperationType(name: e.innerText.trim(), operation: e.attributes['value']!))
-            .toList();
+    final extTypeList = document
+        .querySelectorAll('select#exttype > option')
+        .where((e) => e.attributes['value'] != null)
+        .map((e) => ChangelogPointsType(name: e.innerText.trim(), extType: e.attributes['value']!))
+        .toList();
+    final optTypeList = document
+        .querySelectorAll('select#optype > option')
+        .where((e) => e.attributes['value'] != null)
+        .map((e) => ChangelogOperationType(name: e.innerText.trim(), operation: e.attributes['value']!))
+        .toList();
 
-    final changeTypeList =
-        document
-            .querySelectorAll('select#income > option')
-            .where((e) => e.attributes['value'] != null)
-            .map((e) => ChangelogChangeType(name: e.innerText.trim(), changeType: e.attributes['value']!))
-            .toList();
+    final changeTypeList = document
+        .querySelectorAll('select#income > option')
+        .where((e) => e.attributes['value'] != null)
+        .map((e) => ChangelogChangeType(name: e.innerText.trim(), changeType: e.attributes['value']!))
+        .toList();
 
     return ChangelogAllParameters(
       extTypeList: extTypeList,
@@ -207,12 +204,11 @@ final class PointsChangelogBloc extends Bloc<PointsChangelogEvent, PointsChangel
 
 /// Build a list of [PointsChange] from <table class="dt">
 List<PointsChange> _buildChangeListFromTable(uh.Element element) {
-  final ret =
-      element
-          .querySelectorAll('table > tbody > tr')
-          .skip(1)
-          .map(PointsChange.fromTrNode)
-          .whereType<PointsChange>()
-          .toList();
+  final ret = element
+      .querySelectorAll('table > tbody > tr')
+      .skip(1)
+      .map(PointsChange.fromTrNode)
+      .whereType<PointsChange>()
+      .toList();
   return ret;
 }

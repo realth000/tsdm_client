@@ -60,8 +60,11 @@ final class ChatBloc extends Bloc<ChatEvent, ChatState> with LoggerMixin {
 
     // TODO: Parse and save message send date time.
     // Here we ignored message send time.
-    final messagelist =
-        document.querySelectorAll('ul#msglist > li').map(ChatMessage.fromLi).whereType<ChatMessage>().toList();
+    final messagelist = document
+        .querySelectorAll('ul#msglist > li')
+        .map(ChatMessage.fromLi)
+        .whereType<ChatMessage>()
+        .toList();
 
     final formNode = document.querySelector('div.pmfm > form');
     if (formNode == null) {

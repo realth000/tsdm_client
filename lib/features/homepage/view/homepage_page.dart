@@ -100,12 +100,11 @@ class _HomepagePageState extends State<HomepagePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (context) => HomepageBloc(
-            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
-            forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context),
-            profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-          )..add(HomepageLoadRequested()),
+      create: (context) => HomepageBloc(
+        authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+        forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context),
+        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+      )..add(HomepageLoadRequested()),
       child: MultiBlocListener(
         listeners: [
           BlocListener<HomeCubit, HomeState>(
@@ -156,21 +155,20 @@ class _HomepagePageState extends State<HomepagePage> {
                 onRefresh: () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 },
-                childBuilder:
-                    (context, physics) => ListView(
-                      physics: physics,
-                      controller: _scrollController,
-                      padding: edgeInsetsL12T4R12.add(context.safePadding()),
-                      children: [
-                        WelcomeSection(
-                          forumStatus: state.forumStatus,
-                          loggedUserInfo: state.loggedUserInfo,
-                          swiperUrlList: state.swiperUrlList,
-                        ),
-                        sizedBoxW12H12,
-                        PinSection(state.pinnedThreadGroupList),
-                      ],
+                childBuilder: (context, physics) => ListView(
+                  physics: physics,
+                  controller: _scrollController,
+                  padding: edgeInsetsL12T4R12.add(context.safePadding()),
+                  children: [
+                    WelcomeSection(
+                      forumStatus: state.forumStatus,
+                      loggedUserInfo: state.loggedUserInfo,
+                      swiperUrlList: state.swiperUrlList,
                     ),
+                    sizedBoxW12H12,
+                    PinSection(state.pinnedThreadGroupList),
+                  ],
+                ),
               ),
             };
 
@@ -190,18 +188,17 @@ class _HomepagePageState extends State<HomepagePage> {
                         height: 32,
                         child: HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username),
                       ),
-                      onPressed:
-                          () async => showHeroDialog(
-                            context,
-                            (context, _, __) => UserOperationDialog(
-                              username: username,
-                              avatarUrl: avatarUrl,
-                              heroTag: username,
-                              // Ok to use record.
-                              // ignore: avoid_positional_fields_in_records
-                              latestThreadUrl: state.loggedUserInfo?.relatedLinkPairList.lastOrNull?.$2,
-                            ),
-                          ),
+                      onPressed: () async => showHeroDialog(
+                        context,
+                        (context, _, __) => UserOperationDialog(
+                          username: username,
+                          avatarUrl: avatarUrl,
+                          heroTag: username,
+                          // Ok to use record.
+                          // ignore: avoid_positional_fields_in_records
+                          latestThreadUrl: state.loggedUserInfo?.relatedLinkPairList.lastOrNull?.$2,
+                        ),
+                      ),
                     ),
                     const NoticeButton(),
                     const CheckinButton(enableSnackBar: true),

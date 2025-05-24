@@ -89,49 +89,44 @@ class _NoticeCardV2State extends State<NoticeCardV2> {
               DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
             ),
             trailing: PopupMenuButton(
-              itemBuilder:
-                  (_) => [
-                    if (!widget.data.alreadyRead)
-                      PopupMenuItem(
-                        value: _Actions.markAsRead,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.mark_chat_read_outlined),
-                            sizedBoxPopupMenuItemIconSpacing,
-                            Text(tr.markAsRead),
-                          ],
-                        ),
-                      ),
-                    if (widget.data.alreadyRead)
-                      PopupMenuItem(
-                        value: _Actions.markAsUnread,
-                        child: Row(
-                          children: [
-                            const Icon(Icons.mark_chat_unread_outlined),
-                            sizedBoxPopupMenuItemIconSpacing,
-                            Text(tr.markAsUnread),
-                          ],
-                        ),
-                      ),
-                    PopupMenuItem(
-                      value: _Actions.deleteItem,
-                      child: Row(
-                        children: [
-                          Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
-                          sizedBoxPopupMenuItemIconSpacing,
-                          Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                        ],
-                      ),
+              itemBuilder: (_) => [
+                if (!widget.data.alreadyRead)
+                  PopupMenuItem(
+                    value: _Actions.markAsRead,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.mark_chat_read_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.markAsRead),
+                      ],
                     ),
-                    if (context
-                        .read<SettingsBloc>()
-                        .state
-                        .settingsMap
-                        .enableDebugOperations) ...<PopupMenuEntry<_Actions>>[
-                      const PopupMenuDivider(),
-                      PopupMenuItem(value: _Actions.copyRawContent, child: Text(tr.copyRawContent)),
+                  ),
+                if (widget.data.alreadyRead)
+                  PopupMenuItem(
+                    value: _Actions.markAsUnread,
+                    child: Row(
+                      children: [
+                        const Icon(Icons.mark_chat_unread_outlined),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.markAsUnread),
+                      ],
+                    ),
+                  ),
+                PopupMenuItem(
+                  value: _Actions.deleteItem,
+                  child: Row(
+                    children: [
+                      Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
                     ],
-                  ],
+                  ),
+                ),
+                if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<_Actions>>[
+                  const PopupMenuDivider(),
+                  PopupMenuItem(value: _Actions.copyRawContent, child: Text(tr.copyRawContent)),
+                ],
+              ],
               onSelected: (value) async {
                 switch (value) {
                   case _Actions.markAsRead:
@@ -237,18 +232,16 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
           children: [
             ListTile(
               leading: GestureDetector(
-                onTap:
-                    () async =>
-                        context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
+                onTap: () async =>
+                    context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
                 child: Badge(
                   isLabelVisible: showBadge && !widget.data.alreadyRead,
                   child: HeroUserAvatar(username: widget.data.peerUsername, avatarUrl: null, disableHero: true),
                 ),
               ),
               title: GestureDetector(
-                onTap:
-                    () async =>
-                        context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
+                onTap: () async =>
+                    context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': '${widget.data.peerUid}'}),
                 child: Align(alignment: Alignment.centerLeft, child: Text(widget.data.peerUsername)),
               ),
               subtitle: Text(
@@ -256,41 +249,40 @@ class _PersonalMessageCardV2State extends State<PersonalMessageCardV2> {
                 DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
               ),
               trailing: PopupMenuButton(
-                itemBuilder:
-                    (_) => [
-                      if (!widget.data.alreadyRead)
-                        PopupMenuItem(
-                          value: _Actions.markAsRead,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.mark_chat_read_outlined),
-                              sizedBoxPopupMenuItemIconSpacing,
-                              Text(tr.markAsRead),
-                            ],
-                          ),
-                        ),
-                      if (widget.data.alreadyRead)
-                        PopupMenuItem(
-                          value: _Actions.markAsUnread,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.mark_chat_unread_outlined),
-                              sizedBoxPopupMenuItemIconSpacing,
-                              Text(tr.markAsUnread),
-                            ],
-                          ),
-                        ),
-                      PopupMenuItem(
-                        value: _Actions.deleteItem,
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
-                            sizedBoxPopupMenuItemIconSpacing,
-                            Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                          ],
-                        ),
+                itemBuilder: (_) => [
+                  if (!widget.data.alreadyRead)
+                    PopupMenuItem(
+                      value: _Actions.markAsRead,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.mark_chat_read_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.markAsRead),
+                        ],
                       ),
-                    ],
+                    ),
+                  if (widget.data.alreadyRead)
+                    PopupMenuItem(
+                      value: _Actions.markAsUnread,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.mark_chat_unread_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.markAsUnread),
+                        ],
+                      ),
+                    ),
+                  PopupMenuItem(
+                    value: _Actions.deleteItem,
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                      ],
+                    ),
+                  ),
+                ],
                 onSelected: (value) async {
                   switch (value) {
                     case _Actions.markAsRead:
@@ -394,41 +386,40 @@ class _BroadcastMessageCardV2State extends State<BroadcastMessageCardV2> {
                 DateTime.fromMillisecondsSinceEpoch(widget.data.timestamp * 1000).yyyyMMDDHHMMSS(),
               ),
               trailing: PopupMenuButton(
-                itemBuilder:
-                    (_) => [
-                      if (!widget.data.alreadyRead)
-                        PopupMenuItem(
-                          value: _Actions.markAsRead,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.mark_chat_read_outlined),
-                              sizedBoxPopupMenuItemIconSpacing,
-                              Text(tr.markAsRead),
-                            ],
-                          ),
-                        ),
-                      if (widget.data.alreadyRead)
-                        PopupMenuItem(
-                          value: _Actions.markAsUnread,
-                          child: Row(
-                            children: [
-                              const Icon(Icons.mark_chat_unread_outlined),
-                              sizedBoxPopupMenuItemIconSpacing,
-                              Text(tr.markAsUnread),
-                            ],
-                          ),
-                        ),
-                      PopupMenuItem(
-                        value: _Actions.deleteItem,
-                        child: Row(
-                          children: [
-                            Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
-                            sizedBoxPopupMenuItemIconSpacing,
-                            Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
-                          ],
-                        ),
+                itemBuilder: (_) => [
+                  if (!widget.data.alreadyRead)
+                    PopupMenuItem(
+                      value: _Actions.markAsRead,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.mark_chat_read_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.markAsRead),
+                        ],
                       ),
-                    ],
+                    ),
+                  if (widget.data.alreadyRead)
+                    PopupMenuItem(
+                      value: _Actions.markAsUnread,
+                      child: Row(
+                        children: [
+                          const Icon(Icons.mark_chat_unread_outlined),
+                          sizedBoxPopupMenuItemIconSpacing,
+                          Text(tr.markAsUnread),
+                        ],
+                      ),
+                    ),
+                  PopupMenuItem(
+                    value: _Actions.deleteItem,
+                    child: Row(
+                      children: [
+                        Icon(Icons.delete_forever_outlined, color: Theme.of(context).colorScheme.error),
+                        sizedBoxPopupMenuItemIconSpacing,
+                        Text(tr.delete.title, style: TextStyle(color: Theme.of(context).colorScheme.error)),
+                      ],
+                    ),
+                  ),
+                ],
                 onSelected: (value) async {
                   switch (value) {
                     case _Actions.markAsRead:

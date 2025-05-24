@@ -88,17 +88,16 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
 
     final c = showBottomSheet(
       context: context,
-      builder:
-          (_) => _ReplyBar(
-            controller: widget.controller,
-            outerTextController: controller,
-            replyType: widget.replyType,
-            chatHistorySendTarget: widget.chatHistorySendTarget,
-            chatSendTarget: widget.chatSendTarget,
-            disabledEditorFeatures: widget.disabledEditorFeatures,
-            fullScreenDisabledEditorFeatures: widget.fullScreenDisabledEditorFeatures,
-            fullScreen: widget.fullScreen,
-          ),
+      builder: (_) => _ReplyBar(
+        controller: widget.controller,
+        outerTextController: controller,
+        replyType: widget.replyType,
+        chatHistorySendTarget: widget.chatHistorySendTarget,
+        chatSendTarget: widget.chatSendTarget,
+        disabledEditorFeatures: widget.disabledEditorFeatures,
+        fullScreenDisabledEditorFeatures: widget.fullScreenDisabledEditorFeatures,
+        fullScreen: widget.fullScreen,
+      ),
     );
 
     widget.controller._showingEditor = true;
@@ -489,7 +488,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
         children: [
           Text(_hintText!, style: Theme.of(context).textTheme.labelLarge?.copyWith(color: outlineColor)),
           const Spacer(),
-          IconButton(icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16), onPressed: _clearTextAndHint),
+          IconButton(
+            icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16),
+            onPressed: _clearTextAndHint,
+          ),
         ],
       ),
     );
@@ -578,12 +580,12 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               onPointerUp:
                   // Only collapse editor toolbar on mobile platforms.
                   isMobile
-                      ? (_) {
-                        setState(() {
-                          fullScreen = false;
-                        });
-                      }
-                      : null,
+                  ? (_) {
+                      setState(() {
+                        fullScreen = false;
+                      });
+                    }
+                  : null,
               child: _buildRichEditor(context),
             ),
           ),
@@ -617,8 +619,9 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               sizedBoxW8H8,
               // Send Button
               FilledButton(
-                onPressed:
-                    (canSendReply && !isSendingReply && !_closed && _hasLogin) ? () async => _sendMessage() : null,
+                onPressed: (canSendReply && !isSendingReply && !_closed && _hasLogin)
+                    ? () async => _sendMessage()
+                    : null,
                 child: isSendingReply ? sizedCircularProgressIndicator : const Icon(Icons.send),
               ),
             ],
