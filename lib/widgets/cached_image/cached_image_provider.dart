@@ -104,7 +104,10 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
         ),
       };
 
-      final bytes = (await f.onError((_, __) => _onImageError())).getOrElse(() => Uint8List(0));
+      final bytes =
+          await TaskOption(
+            () => f,
+          ).orElse<Uint8List>(() => TaskOption(_onImageError)).getOrElse(() => Uint8List(0)).run();
       if (bytes.lengthInBytes == 0) {
         return ui.instantiateImageCodecFromBuffer(await getPlaceholderImageData());
       }
