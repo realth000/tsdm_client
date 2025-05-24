@@ -8,6 +8,8 @@ analyzer:
     - custom_lint
   errors:
     depend_on_referenced_packages: error
+    # Ignore till the lint rule runs well on Dart >= 3.7.
+    require_trailing_commas: ignore
     # Now we adjust the maximum line to 120
     lines_longer_than_80_chars: ignore
   exclude:

@@ -58,10 +58,7 @@ class _DebugShowcasePageState extends State<DebugShowcasePage> with SingleTicker
           ),
         ],
       ),
-      body: TabBarView(
-        controller: tabController,
-        children: const [SingleChildScrollView(child: _HtmlFragment())],
-      ),
+      body: TabBarView(controller: tabController, children: const [SingleChildScrollView(child: _HtmlFragment())]),
     );
   }
 }

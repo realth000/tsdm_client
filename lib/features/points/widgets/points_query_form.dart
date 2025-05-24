@@ -137,18 +137,19 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
   List<Widget> _buildContent(BuildContext context, PointsChangelogState state) {
     VoidCallback? queryCallback;
     if (pointsType != null && operationType != null && changeType != null && state.status != PointsStatus.loading) {
-      queryCallback = () => context.read<PointsChangelogBloc>().add(
-        PointsChangelogQueryRequested(
-          ChangelogParameter(
-            extType: pointsType!.extType,
-            operation: operationType!.operation,
-            changeType: changeType!.changeType,
-            startTime: startTime,
-            endTime: endTime,
-            pageNumber: 1,
-          ),
-        ),
-      );
+      queryCallback =
+          () => context.read<PointsChangelogBloc>().add(
+            PointsChangelogQueryRequested(
+              ChangelogParameter(
+                extType: pointsType!.extType,
+                operation: operationType!.operation,
+                changeType: changeType!.changeType,
+                startTime: startTime,
+                endTime: endTime,
+                pageNumber: 1,
+              ),
+            ),
+          );
     }
 
     return [
@@ -207,9 +208,7 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
       ),
       Row(
         children: [
-          Expanded(
-            child: FilledButton(onPressed: queryCallback, child: Text(context.t.pointsPage.changelogTab.query)),
-          ),
+          Expanded(child: FilledButton(onPressed: queryCallback, child: Text(context.t.pointsPage.changelogTab.query))),
         ],
       ),
     ];
@@ -239,9 +238,8 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
                 Text(context.t.pointsPage.changelogTab.query, style: Theme.of(context).textTheme.titleMedium),
                 const Spacer(),
                 IconButton(
-                  icon: showQueryFilter
-                      ? const Icon(Icons.expand_less_outlined)
-                      : const Icon(Icons.expand_more_outlined),
+                  icon:
+                      showQueryFilter ? const Icon(Icons.expand_less_outlined) : const Icon(Icons.expand_more_outlined),
                   onPressed: () {
                     setState(() {
                       showQueryFilter = !showQueryFilter;

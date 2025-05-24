@@ -31,17 +31,13 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
     return ListView(
       children: [
         SectionTitleText(tr.currentGroup),
-        SectionListTile(
-          title: Text(state.currentUserGroup, style: bodyTheme?.copyWith(color: colorScheme.secondary)),
-        ),
+        SectionListTile(title: Text(state.currentUserGroup, style: bodyTheme?.copyWith(color: colorScheme.secondary))),
         if (state.status == SwitchUserGroupStatus.switching)
           Row(children: [SectionTitleText(tr.availableGroups), sizedCircularProgressIndicator])
         else
           SectionTitleText(tr.availableGroups),
         if (state.availableGroups.isEmpty)
-          SectionListTile(
-            title: Text(tr.nonAvailable, style: bodyTheme?.copyWith(color: colorScheme.outline)),
-          )
+          SectionListTile(title: Text(tr.nonAvailable, style: bodyTheme?.copyWith(color: colorScheme.outline)))
         else
           ...state.availableGroups.map(
             (e) => SectionListTile(
@@ -79,10 +75,7 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
           final tr = context.t.switchUserGroupPage;
           if (state.status == SwitchUserGroupStatus.success) {
             if (state.destination != null) {
-              showSnackBar(
-                context: context,
-                message: tr.switchSucceeded(to: state.destination!),
-              );
+              showSnackBar(context: context, message: tr.switchSucceeded(to: state.destination!));
             } else {
               warning('switch user group succeeded but the destination null. Did you forget to set it?');
             }
@@ -104,10 +97,7 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
               message: tr.switchFailed,
             ),
           };
-          return Scaffold(
-            appBar: AppBar(title: Text(tr.title)),
-            body: SafeArea(bottom: false, child: body),
-          );
+          return Scaffold(appBar: AppBar(title: Text(tr.title)), body: SafeArea(bottom: false, child: body));
         },
       ),
     );

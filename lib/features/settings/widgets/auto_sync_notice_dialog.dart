@@ -55,9 +55,8 @@ class _AutoSyncNoticeDialogState extends State<AutoSyncNoticeDialog> {
   @override
   void initState() {
     super.initState();
-    _choiceIndex = allTimes.contains(widget.currentSeconds)
-        ? allTimes.indexOf(widget.currentSeconds).toDouble()
-        : 600.0;
+    _choiceIndex =
+        allTimes.contains(widget.currentSeconds) ? allTimes.indexOf(widget.currentSeconds).toDouble() : 600.0;
   }
 
   @override

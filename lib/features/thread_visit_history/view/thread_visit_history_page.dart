@@ -39,9 +39,7 @@ class _ThreadVisitHistoryPageState extends State<ThreadVisitHistoryPage> {
 
           return Scaffold(
             appBar: AppBar(title: Text(tr.title), bottom: Tips(tr.localOnlyTip, sizePreferred: true)),
-            body: SafeArea(
-              child: AnimatedSwitcher(duration: duration200, child: body),
-            ),
+            body: SafeArea(child: AnimatedSwitcher(duration: duration200, child: body)),
           );
         },
       ),

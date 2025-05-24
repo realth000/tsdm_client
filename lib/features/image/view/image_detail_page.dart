@@ -29,65 +29,67 @@ final class ImageDetailPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.info_outline),
             tooltip: tr.statistics,
-            onPressed: () async => showDialog(
-              context: context,
-              builder: (_) => RootPage(
-                DialogPaths.imageDetail,
-                SimpleDialog(
-                  title: Text(tr.statistics),
-                  contentPadding: edgeInsetsL24T24R24B24,
-                  children: [
-                    FutureBuilder(
-                      future: getIt.get<ImageCacheProvider>().getEnsureCachedFullInfo(imageUrl),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(child: Text(tr.failedToLoadWithReason(reason: '${snapshot.error}')));
-                        }
-
-                        if (!snapshot.hasData) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        final data = snapshot.data;
-
-                        if (data == null) {
-                          return Center(child: Text(tr.failedToLoad));
-                        }
-
-                        return Column(
-                          spacing: 8,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+            onPressed:
+                () async => showDialog(
+                  context: context,
+                  builder:
+                      (_) => RootPage(
+                        DialogPaths.imageDetail,
+                        SimpleDialog(
+                          title: Text(tr.statistics),
+                          contentPadding: edgeInsetsL24T24R24B24,
                           children: [
-                            Row(
-                              spacing: 8,
-                              children: [
-                                Expanded(child: Text(tr.url(url: data.url))),
-                                IconButton(
-                                  icon: const Icon(Icons.copy_outlined),
-                                  onPressed: () async => copyToClipboard(context, data.url),
-                                ),
-                              ],
+                            FutureBuilder(
+                              future: getIt.get<ImageCacheProvider>().getEnsureCachedFullInfo(imageUrl),
+                              builder: (context, snapshot) {
+                                if (snapshot.hasError) {
+                                  return Center(child: Text(tr.failedToLoadWithReason(reason: '${snapshot.error}')));
+                                }
+
+                                if (!snapshot.hasData) {
+                                  return const Center(child: CircularProgressIndicator());
+                                }
+
+                                final data = snapshot.data;
+
+                                if (data == null) {
+                                  return Center(child: Text(tr.failedToLoad));
+                                }
+
+                                return Column(
+                                  spacing: 8,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      spacing: 8,
+                                      children: [
+                                        Expanded(child: Text(tr.url(url: data.url))),
+                                        IconButton(
+                                          icon: const Icon(Icons.copy_outlined),
+                                          onPressed: () async => copyToClipboard(context, data.url),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      spacing: 8,
+                                      children: [
+                                        Expanded(child: Text(tr.cacheName(name: data.fileName))),
+                                        IconButton(
+                                          icon: const Icon(Icons.copy_outlined),
+                                          onPressed: () async => copyToClipboard(context, data.fileName),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(tr.size(width: data.width, height: data.height)),
+                                    Text(tr.cacheSize(size: data.cacheSize)),
+                                  ],
+                                );
+                              },
                             ),
-                            Row(
-                              spacing: 8,
-                              children: [
-                                Expanded(child: Text(tr.cacheName(name: data.fileName))),
-                                IconButton(
-                                  icon: const Icon(Icons.copy_outlined),
-                                  onPressed: () async => copyToClipboard(context, data.fileName),
-                                ),
-                              ],
-                            ),
-                            Text(tr.size(width: data.width, height: data.height)),
-                            Text(tr.cacheSize(size: data.cacheSize)),
                           ],
-                        );
-                      },
-                    ),
-                  ],
+                        ),
+                      ),
                 ),
-              ),
-            ),
           ),
         ],
       ),

@@ -72,8 +72,10 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
       providers: [
         RepositoryProvider(create: (_) => LatestThreadRepository()),
         BlocProvider(
-          create: (context) =>
-              LatestThreadBloc(latestThreadRepository: context.repo())..add(LatestThreadRefreshRequested(widget.url)),
+          create:
+              (context) =>
+                  LatestThreadBloc(latestThreadRepository: context.repo())
+                    ..add(LatestThreadRefreshRequested(widget.url)),
         ),
       ],
       child: BlocBuilder<LatestThreadBloc, LatestThreadState>(

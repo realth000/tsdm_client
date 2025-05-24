@@ -70,46 +70,49 @@ class NoticeCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.antiAlias,
       child: InkWell(
-        onTap: notice.redirectUrl != null
-            ? () async {
-                // The redirect url in invite type notice is a thread page.
-                // Do NOT go to the notice detail page.
-                if (notice.noticeType == NoticeType.invite) {
-                  return context.dispatchAsUrl(notice.redirectUrl!);
-                }
+        onTap:
+            notice.redirectUrl != null
+                ? () async {
+                  // The redirect url in invite type notice is a thread page.
+                  // Do NOT go to the notice detail page.
+                  if (notice.noticeType == NoticeType.invite) {
+                    return context.dispatchAsUrl(notice.redirectUrl!);
+                  }
 
-                // These types of notice redirect to thread page with target
-                // post:
-                //
-                // NoticeType.reply
-                // NoticeType.rate
-                // NoticeType.batchRate
-                // NoticeType.mention
-                //
-                // These types of notice redirect to thread page:
-                //
-                // NoticeType.invite (no tested)
-                // NoticeType.newFriend (no tested)
-                switch (notice.noticeType) {
-                  case NoticeType.reply || NoticeType.rate || NoticeType.batchRate || NoticeType.mention:
-                    // Use dispatch, not parsing parameters from url again.
-                    await context.dispatchAsUrl(notice.redirectUrl!);
-                  case NoticeType.invite || NoticeType.newFriend:
-                    await context.pushNamed(
-                      ScreenPaths.reply,
-                      pathParameters: <String, String>{'target': notice.redirectUrl!},
-                      queryParameters: {'noticeType': '${notice.noticeType.index}'},
-                    );
+                  // These types of notice redirect to thread page with target
+                  // post:
+                  //
+                  // NoticeType.reply
+                  // NoticeType.rate
+                  // NoticeType.batchRate
+                  // NoticeType.mention
+                  //
+                  // These types of notice redirect to thread page:
+                  //
+                  // NoticeType.invite (no tested)
+                  // NoticeType.newFriend (no tested)
+                  switch (notice.noticeType) {
+                    case NoticeType.reply || NoticeType.rate || NoticeType.batchRate || NoticeType.mention:
+                      // Use dispatch, not parsing parameters from url again.
+                      await context.dispatchAsUrl(notice.redirectUrl!);
+                    case NoticeType.invite || NoticeType.newFriend:
+                      await context.pushNamed(
+                        ScreenPaths.reply,
+                        pathParameters: <String, String>{'target': notice.redirectUrl!},
+                        queryParameters: {'noticeType': '${notice.noticeType.index}'},
+                      );
+                  }
                 }
-              }
-            : null,
+                : null,
         child: Column(
           children: [
             ListTile(
               leading: GestureDetector(
-                onTap: notice.userSpaceUrl == null
-                    ? null
-                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!, extraQueryParameters: {'hero': heroTag}),
+                onTap:
+                    notice.userSpaceUrl == null
+                        ? null
+                        : () async =>
+                            context.dispatchAsUrl(notice.userSpaceUrl!, extraQueryParameters: {'hero': heroTag}),
                 child: HeroUserAvatar(
                   username: notice.username ?? '',
                   avatarUrl: notice.userAvatarUrl,
@@ -117,9 +120,11 @@ class NoticeCard extends StatelessWidget {
                 ),
               ),
               title: GestureDetector(
-                onTap: notice.userSpaceUrl == null
-                    ? null
-                    : () async => context.dispatchAsUrl(notice.userSpaceUrl!, extraQueryParameters: {'hero': heroTag}),
+                onTap:
+                    notice.userSpaceUrl == null
+                        ? null
+                        : () async =>
+                            context.dispatchAsUrl(notice.userSpaceUrl!, extraQueryParameters: {'hero': heroTag}),
                 child: Row(children: [SingleLineText(notice.username ?? '')]),
               ),
               trailing: Text(notice.noticeTimeString),

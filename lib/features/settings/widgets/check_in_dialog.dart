@@ -20,21 +20,22 @@ class CheckinFeelingDialog extends StatelessWidget {
       title: Text(context.t.settingsPage.checkinSection.feeling),
       content: SingleChildScrollView(
         child: Column(
-          children: CheckinFeeling.values
-              .map(
-                (e) => RadioListTile(
-                  title: Text(e.translate(context)),
-                  onChanged: (value) async {
-                    if (value == null) {
-                      return;
-                    }
-                    Navigator.of(context).pop(value);
-                  },
-                  value: e.toString(),
-                  groupValue: defaultFeeling,
-                ),
-              )
-              .toList(),
+          children:
+              CheckinFeeling.values
+                  .map(
+                    (e) => RadioListTile(
+                      title: Text(e.translate(context)),
+                      onChanged: (value) async {
+                        if (value == null) {
+                          return;
+                        }
+                        Navigator.of(context).pop(value);
+                      },
+                      value: e.toString(),
+                      groupValue: defaultFeeling,
+                    ),
+                  )
+                  .toList(),
         ),
       ),
     );

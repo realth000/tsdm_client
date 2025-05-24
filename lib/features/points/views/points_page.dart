@@ -124,11 +124,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
       ..finishRefresh();
 
     return Column(
-      children: [
-        Padding(padding: edgeInsetsL12T4R12, child: PointsQueryForm(state.allParameters)),
-        sizedBoxW4H4,
-        body,
-      ],
+      children: [Padding(padding: edgeInsetsL12T4R12, child: PointsQueryForm(state.allParameters)), sizedBoxW4H4, body],
     );
   }
 
@@ -159,12 +155,14 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
       providers: [
         RepositoryProvider(create: (_) => PointsRepository()),
         BlocProvider(
-          create: (context) =>
-              PointsStatisticsBloc(pointsRepository: context.repo())..add(PointsStatisticsRefreshRequested()),
+          create:
+              (context) =>
+                  PointsStatisticsBloc(pointsRepository: context.repo())..add(PointsStatisticsRefreshRequested()),
         ),
         BlocProvider(
-          create: (context) =>
-              PointsChangelogBloc(pointsRepository: context.repo())..add(PointsChangelogRefreshRequested()),
+          create:
+              (context) =>
+                  PointsChangelogBloc(pointsRepository: context.repo())..add(PointsChangelogRefreshRequested()),
         ),
       ],
       child: Scaffold(
@@ -172,10 +170,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
           title: Text(tr.title),
           bottom: TabBar(
             controller: _tabController,
-            tabs: [
-              Tab(text: tr.statisticsTab.title),
-              Tab(text: tr.changelogTab.title),
-            ],
+            tabs: [Tab(text: tr.statisticsTab.title), Tab(text: tr.changelogTab.title)],
           ),
         ),
         body: SafeArea(

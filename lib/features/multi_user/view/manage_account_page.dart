@@ -135,21 +135,23 @@ class _UserInfoListTile extends StatelessWidget with LoggerMixin {
           leading: HeroUserAvatar(username: userInfo.username!, avatarUrl: null, disableHero: true),
           title: Text(userInfo.username!),
           subtitle: Text('${userInfo.uid!}'),
-          trailing: isCurrentUser
-              ? Chip(
-                  side: BorderSide.none,
-                  backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
-                  label: Text(
-                    tr.online,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onSecondaryContainer),
-                  ),
-                )
-              : null,
-          onTap: (loading || isCurrentUser)
-              ? null
-              : () async => openManageUserDialog(context: context, userInfo: userInfo, heroTag: ''),
+          trailing:
+              isCurrentUser
+                  ? Chip(
+                    side: BorderSide.none,
+                    backgroundColor: Theme.of(context).colorScheme.secondaryContainer,
+                    label: Text(
+                      tr.online,
+                      style: Theme.of(
+                        context,
+                      ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.onSecondaryContainer),
+                    ),
+                  )
+                  : null,
+          onTap:
+              (loading || isCurrentUser)
+                  ? null
+                  : () async => openManageUserDialog(context: context, userInfo: userInfo, heroTag: ''),
         );
       },
     );

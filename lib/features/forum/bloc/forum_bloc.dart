@@ -122,53 +122,57 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     final totalPages = document.totalPages();
 
     // Update thread filter config.
-    final filterTypeList = document
-        .querySelector('ul#thread_types')
-        ?.querySelectorAll('li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterType(
-            name: e.innerText.trim(),
-            typeID: _typeIDRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('id'),
-          ),
-        )
-        .toList();
+    final filterTypeList =
+        document
+            .querySelector('ul#thread_types')
+            ?.querySelectorAll('li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterType(
+                name: e.innerText.trim(),
+                typeID: _typeIDRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('id'),
+              ),
+            )
+            .toList();
 
-    final filterSpecialTypeList = document
-        .querySelector('div#filter_special_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterSpecialType(
-            name: e.innerText.trim(),
-            specialType: _specialTypeRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('type'),
-          ),
-        )
-        .toList();
+    final filterSpecialTypeList =
+        document
+            .querySelector('div#filter_special_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterSpecialType(
+                name: e.innerText.trim(),
+                specialType: _specialTypeRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('type'),
+              ),
+            )
+            .toList();
 
-    final filterOrderList = document
-        .querySelector('div#filter_orderby_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterOrder(
-            name: e.innerText.trim(),
-            orderBy: _orderByRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('orderby'),
-          ),
-        )
-        .toList();
+    final filterOrderList =
+        document
+            .querySelector('div#filter_orderby_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterOrder(
+                name: e.innerText.trim(),
+                orderBy: _orderByRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('orderby'),
+              ),
+            )
+            .toList();
 
-    final filterDatelineList = document
-        .querySelector('div#filter_dateline_menu')
-        ?.querySelectorAll('ul > li > a')
-        .where((e) => e.innerText.isNotEmpty)
-        .map(
-          (e) => FilterDateline(
-            name: e.innerText.trim(),
-            dateline: _datelineRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('dateline'),
-          ),
-        )
-        .toList();
+    final filterDatelineList =
+        document
+            .querySelector('div#filter_dateline_menu')
+            ?.querySelectorAll('ul > li > a')
+            .where((e) => e.innerText.isNotEmpty)
+            .map(
+              (e) => FilterDateline(
+                name: e.innerText.trim(),
+                dateline: _datelineRe.firstMatch(e.attributes['href'] ?? '')?.namedGroup('dateline'),
+              ),
+            )
+            .toList();
 
     var producedState = state.copyWith(
       status: ForumStatus.success,
@@ -204,11 +208,8 @@ class ForumBloc extends Bloc<ForumEvent, ForumState> with LoggerMixin {
     String threadClass,
     T? Function(uh.Element element) threadBuilder,
   ) {
-    final threadList = document
-        .querySelectorAll('tbody.$threadClass')
-        .map((e) => threadBuilder(e))
-        .whereType<T>()
-        .toList();
+    final threadList =
+        document.querySelectorAll('tbody.$threadClass').map((e) => threadBuilder(e)).whereType<T>().toList();
     return threadList;
   }
 

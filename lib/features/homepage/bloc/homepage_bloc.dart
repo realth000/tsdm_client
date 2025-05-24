@@ -45,10 +45,10 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
        super(
          forumHomeRepository.hasCache()
              ? _parseStateFromDocument(
-                 forumHomeRepository.getCache()!,
-                 authenticationRepository.currentUser?.username,
-                 avatarUrl: profileRepository.getCache()?.extractAvatar(),
-               )
+               forumHomeRepository.getCache()!,
+               authenticationRepository.currentUser?.username,
+               avatarUrl: profileRepository.getCache()?.extractAvatar(),
+             )
              : const HomepageState(),
        ) {
     on<HomepageLoadRequested>(_onHomepageLoadRequested);
@@ -165,27 +165,28 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     // Clear data.
     emit(const HomepageState(status: HomepageStatus.loading));
     var needLogin = false;
-    final respList = (await Future.wait([
-      _forumHomeRepository.fetchHomePage().mapLeft((e) {
-        if (e case HttpHandshakeFailedException(:final statusCode)) {
-          if (statusCode == 200) {
-            needLogin = true;
-          }
-        } else if (e case LoginUserInfoNotFoundException()) {
-          needLogin = true;
-        } else {
-          handle(e);
-        }
-      }).run(),
-      _profileRepository.fetchAvatarUrl().mapLeft((e) {
-        switch (e) {
-          case LoginUserInfoNotFoundException() || ProfileNeedLoginException():
-            needLogin = true;
-          default:
-            handle(e);
-        }
-      }).run(),
-    ])).where((e) => e.isRight()).map((e) => e.unwrap()).toList();
+    final respList =
+        (await Future.wait([
+          _forumHomeRepository.fetchHomePage().mapLeft((e) {
+            if (e case HttpHandshakeFailedException(:final statusCode)) {
+              if (statusCode == 200) {
+                needLogin = true;
+              }
+            } else if (e case LoginUserInfoNotFoundException()) {
+              needLogin = true;
+            } else {
+              handle(e);
+            }
+          }).run(),
+          _profileRepository.fetchAvatarUrl().mapLeft((e) {
+            switch (e) {
+              case LoginUserInfoNotFoundException() || ProfileNeedLoginException():
+                needLogin = true;
+              default:
+                handle(e);
+            }
+          }).run(),
+        ])).where((e) => e.isRight()).map((e) => e.unwrap()).toList();
     if (respList.length != 2) {
       if (_authenticationRepository.currentUser == null && needLogin) {
         emit(state.copyWith(status: HomepageStatus.needLogin));
@@ -313,29 +314,32 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
     final loggedUsername = username ?? '';
     final loggedUserAvatar =
         avatarUrl ?? document.querySelector('div#hd div.wp div.hdc.cl div#um div.avt.y a img')?.attributes['src'];
-    final navigateHrefsPairs = welcomeNode
-        ?.querySelectorAll('a')
-        .where((e) => e.attributes.containsKey('href'))
-        .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))
-        .toList();
+    final navigateHrefsPairs =
+        welcomeNode
+            ?.querySelectorAll('a')
+            .where((e) => e.attributes.containsKey('href'))
+            .map((e) => (e.firstEndDeepText() ?? 'unknown', e.attributes['href']!))
+            .toList();
     loggedUserInfo = LoggedUserInfo(
       username: loggedUsername,
       relatedLinkPairList: navigateHrefsPairs ?? [],
       avatarUrl: loggedUserAvatar,
     );
 
-    final navNameList = document
-        .querySelector('td#Kahrpba_nav')
-        ?.children
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
-    final navShowList = document
-        .querySelector('td#Kahrpba_show')
-        ?.children
-        .where((e) => e.id.startsWith('Kahrpba_c'))
-        .whereType<uh.Element>()
-        .toList();
+    final navNameList =
+        document
+            .querySelector('td#Kahrpba_nav')
+            ?.children
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
+    final navShowList =
+        document
+            .querySelector('td#Kahrpba_show')
+            ?.children
+            .where((e) => e.id.startsWith('Kahrpba_c'))
+            .whereType<uh.Element>()
+            .toList();
 
     if (navNameList != null && navShowList != null && navNameList.length == navShowList.length) {
       if (navNameList.length >= 7) {
@@ -345,11 +349,12 @@ class HomepageBloc extends Bloc<HomepageEvent, HomepageState> with LoggerMixin {
       }
       final count = navNameList.length;
       for (var i = 0; i < count; i++) {
-        final threadList = navShowList[i]
-            .querySelectorAll('div.Kahrpba_threads')
-            .map(_filterThreadAndAuthors)
-            .whereType<PinnedThread>()
-            .toList();
+        final threadList =
+            navShowList[i]
+                .querySelectorAll('div.Kahrpba_threads')
+                .map(_filterThreadAndAuthors)
+                .whereType<PinnedThread>()
+                .toList();
         final group = PinnedThreadGroup(title: navNameList[i], threadList: threadList);
         pinnedThreadGroupList.add(group);
       }

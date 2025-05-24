@@ -71,11 +71,12 @@ final class NotificationRepository with LoggerMixin {
       .get<NetClientProvider>()
       .get(broadcastMessageUrl)
       .mapHttp(
-        (v) => parseHtmlDocument(v.data as String)
-            .querySelectorAll('form#deletepmform > div > dl')
-            .map(BroadcastMessage.fromDl)
-            .whereType<BroadcastMessage>()
-            .toList(),
+        (v) =>
+            parseHtmlDocument(v.data as String)
+                .querySelectorAll('form#deletepmform > div > dl')
+                .map(BroadcastMessage.fromDl)
+                .whereType<BroadcastMessage>()
+                .toList(),
       );
 
   /// Fetch all kinds of notification using API v2.

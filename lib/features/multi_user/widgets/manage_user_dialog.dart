@@ -23,10 +23,11 @@ Future<void> openManageUserDialog({
   required String heroTag,
 }) async => showDialog(
   context: context,
-  builder: (_) => BlocProvider.value(
-    value: context.watch<SwitchUserBloc>(),
-    child: RootPage(DialogPaths.manageUser, _ManageUserDialog(userInfo: userInfo, heroTag: heroTag)),
-  ),
+  builder:
+      (_) => BlocProvider.value(
+        value: context.watch<SwitchUserBloc>(),
+        child: RootPage(DialogPaths.manageUser, _ManageUserDialog(userInfo: userInfo, heroTag: heroTag)),
+      ),
 );
 
 /// Dialog to manage a given user, single one.

@@ -63,12 +63,8 @@ final _appRoutes = [
       );
     },
     branches: [
-      StatefulShellBranch(
-        routes: [AppRoute(path: ScreenPaths.homepage, builder: (_) => const HomepagePage())],
-      ),
-      StatefulShellBranch(
-        routes: [AppRoute(path: ScreenPaths.topic, builder: (_) => const TopicsPage())],
-      ),
+      StatefulShellBranch(routes: [AppRoute(path: ScreenPaths.homepage, builder: (_) => const HomepagePage())]),
+      StatefulShellBranch(routes: [AppRoute(path: ScreenPaths.topic, builder: (_) => const TopicsPage())]),
       StatefulShellBranch(
         routes: [
           AppRoute(
@@ -319,7 +315,8 @@ class AppRoute extends GoRoute {
   }) : super(
          name: path,
          routes: routes,
-         pageBuilder: (context, state) =>
-             MaterialPage<void>(name: path, arguments: state.pathParameters, child: RootPage(path, builder(state))),
+         pageBuilder:
+             (context, state) =>
+                 MaterialPage<void>(name: path, arguments: state.pathParameters, child: RootPage(path, builder(state))),
        );
 }

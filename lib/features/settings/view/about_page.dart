@@ -28,8 +28,7 @@ class AboutPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.copy_outlined),
             onPressed: () async {
-              const data =
-                  '''
+              const data = '''
 ## Info
 
 * Version: $appFullVersion

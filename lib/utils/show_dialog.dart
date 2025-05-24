@@ -70,7 +70,10 @@ Future<bool?> showQuestionDialog({
             TextButton(
               child: Text(
                 context.t.general.ok,
-                style: dangerous ? TextStyle(color: Theme.of(context).colorScheme.error) : null,
+                style: dangerous ? TextStyle(color: Theme
+                    .of(context)
+                    .colorScheme
+                    .error) : null,
               ),
               onPressed: () {
                 Navigator.pop(context, true);

@@ -35,9 +35,10 @@ class ColorPalette extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final brightness = Theme.of(context).brightness;
-    final paddingColor = brightness == Brightness.dark
-        ? Theme.of(context).colorScheme.surfaceBright
-        : Theme.of(context).colorScheme.surfaceDim;
+    final paddingColor =
+        brightness == Brightness.dark
+            ? Theme.of(context).colorScheme.surfaceBright
+            : Theme.of(context).colorScheme.surfaceDim;
     final colorScheme = ColorScheme.fromSeed(seedColor: color, brightness: brightness);
     final palette = ClipRRect(
       borderRadius: BorderRadius.all(Radius.circular(borderRadius)),
@@ -68,17 +69,18 @@ class ColorPalette extends StatelessWidget {
           children: [
             Align(child: palette),
             Align(
-              child: selected
-                  ? ClipRRect(
-                      borderRadius: BorderRadius.circular(padding * 1.5),
-                      child: Container(
-                        width: padding * 1.5,
-                        height: padding * 1.5,
-                        color: colorScheme.primaryContainer,
-                        child: Icon(Icons.check, size: padding, color: colorScheme.primary),
-                      ),
-                    )
-                  : sizedBoxEmpty,
+              child:
+                  selected
+                      ? ClipRRect(
+                        borderRadius: BorderRadius.circular(padding * 1.5),
+                        child: Container(
+                          width: padding * 1.5,
+                          height: padding * 1.5,
+                          color: colorScheme.primaryContainer,
+                          child: Icon(Icons.check, size: padding, color: colorScheme.primary),
+                        ),
+                      )
+                      : sizedBoxEmpty,
             ),
           ],
         ),

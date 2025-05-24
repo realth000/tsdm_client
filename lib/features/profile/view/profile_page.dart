@@ -175,66 +175,67 @@ class _ProfilePageState extends State<ProfilePage> {
                 await context.pushNamed(ScreenPaths.editAvatar);
             }
           },
-          itemBuilder: (context) => [
-            PopupMenuItem(
-              value: _ProfileActions.viewNotification,
-              child: Row(
-                children: [const NoticeIcon(), sizedBoxPopupMenuItemIconSpacing, Text(context.t.noticePage.title)],
-              ),
-            ),
-            PopupMenuItem(
-              enabled: !inCheckin,
-              value: _ProfileActions.checkin,
-              child: Row(
-                children: [
-                  const CheckinButton(useIcon: true),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(tr.checkin.title),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: _ProfileActions.editAvatar,
-              child: Row(
-                children: [
-                  const Icon(Icons.edit_outlined),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(context.t.editAvatarPage.title),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: _ProfileActions.viewPoints,
-              child: Row(
-                children: [
-                  const Icon(Icons.show_chart_outlined),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(tr.statistics.title),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              value: _ProfileActions.switchUserGroup,
-              child: Row(
-                children: [
-                  const Icon(Symbols.change_circle),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(context.t.switchUserGroupPage.title),
-                ],
-              ),
-            ),
-            PopupMenuItem(
-              enabled: !logout,
-              value: _ProfileActions.logout,
-              child: Row(
-                children: [
-                  DebounceIcon(icon: const Icon(Icons.logout_outlined), shouldDebounce: logout),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(tr.logout),
-                ],
-              ),
-            ),
-          ],
+          itemBuilder:
+              (context) => [
+                PopupMenuItem(
+                  value: _ProfileActions.viewNotification,
+                  child: Row(
+                    children: [const NoticeIcon(), sizedBoxPopupMenuItemIconSpacing, Text(context.t.noticePage.title)],
+                  ),
+                ),
+                PopupMenuItem(
+                  enabled: !inCheckin,
+                  value: _ProfileActions.checkin,
+                  child: Row(
+                    children: [
+                      const CheckinButton(useIcon: true),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.checkin.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.editAvatar,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.edit_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(context.t.editAvatarPage.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.viewPoints,
+                  child: Row(
+                    children: [
+                      const Icon(Icons.show_chart_outlined),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.statistics.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  value: _ProfileActions.switchUserGroup,
+                  child: Row(
+                    children: [
+                      const Icon(Symbols.change_circle),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(context.t.switchUserGroupPage.title),
+                    ],
+                  ),
+                ),
+                PopupMenuItem(
+                  enabled: !logout,
+                  value: _ProfileActions.logout,
+                  child: Row(
+                    children: [
+                      DebounceIcon(icon: const Icon(Icons.logout_outlined), shouldDebounce: logout),
+                      sizedBoxPopupMenuItemIconSpacing,
+                      Text(tr.logout),
+                    ],
+                  ),
+                ),
+              ],
         ),
       ];
     } else {
@@ -248,11 +249,12 @@ class _ProfilePageState extends State<ProfilePage> {
         IconButton(
           icon: const Icon(Icons.email_outlined),
           tooltip: context.t.postCard.profileDialog.pmTooltip,
-          onPressed: () async => context.pushNamed(
-            ScreenPaths.chat,
-            pathParameters: {'uid': widget.uid ?? userProfile.uid!},
-            extra: <String, dynamic>{'username': userProfile.username},
-          ),
+          onPressed:
+              () async => context.pushNamed(
+                ScreenPaths.chat,
+                pathParameters: {'uid': widget.uid ?? userProfile.uid!},
+                extra: <String, dynamic>{'username': userProfile.username},
+              ),
         ),
       ];
     }
@@ -376,10 +378,8 @@ class _ProfilePageState extends State<ProfilePage> {
       // Max level
       checkinLevelNumber = 11;
     } else {
-      checkinLevelNumber = _checkinLevelNumberRe
-          .firstMatch(userProfile.checkinLevel!)
-          ?.namedGroup('level')
-          ?.parseToInt();
+      checkinLevelNumber =
+          _checkinLevelNumberRe.firstMatch(userProfile.checkinLevel!)?.namedGroup('level')?.parseToInt();
     }
     if (userProfile.checkinNextLevelDays != null) {
       totalDays = userProfile.checkinDaysCount! + userProfile.checkinNextLevelDays!;
@@ -491,9 +491,8 @@ class _ProfilePageState extends State<ProfilePage> {
       moderatorGroupDoc?.querySelector('font')?.attributes['color'] ?? '',
     );
     if (moderatorColorValue.isValid) {
-      moderatorGroupNameColor = inDark
-          ? Color(moderatorColorValue.colorValue).adaptiveDark()
-          : Color(moderatorColorValue.colorValue);
+      moderatorGroupNameColor =
+          inDark ? Color(moderatorColorValue.colorValue).adaptiveDark() : Color(moderatorColorValue.colorValue);
     } else {
       moderatorGroupNameColor = null;
     }
@@ -601,11 +600,12 @@ class _ProfilePageState extends State<ProfilePage> {
           TextButton.icon(
             icon: const Icon(Icons.group_outlined),
             label: Text(friendsCount),
-            onPressed: friendsPage != null
-                ? () async {
-                    await context.dispatchAsUrl(friendsPage);
-                  }
-                : null,
+            onPressed:
+                friendsPage != null
+                    ? () async {
+                      await context.dispatchAsUrl(friendsPage);
+                    }
+                    : null,
           ),
           if (userProfile.gender != null)
             IconChip(
@@ -709,15 +709,16 @@ class _ProfilePageState extends State<ProfilePage> {
         Wrap(
           spacing: 4,
           runSpacing: 4,
-          children: userProfile.mangedForums!
-              .map(
-                (e) => ActionChip(
-                  visualDensity: VisualDensity.compact,
-                  label: Text(e.name),
-                  onPressed: () async => context.pushNamed(ScreenPaths.forum, pathParameters: {'fid': '${e.fid}'}),
-                ),
-              )
-              .toList(),
+          children:
+              userProfile.mangedForums!
+                  .map(
+                    (e) => ActionChip(
+                      visualDensity: VisualDensity.compact,
+                      label: Text(e.name),
+                      onPressed: () async => context.pushNamed(ScreenPaths.forum, pathParameters: {'fid': '${e.fid}'}),
+                    ),
+                  )
+                  .toList(),
         ),
       ],
 
@@ -819,20 +820,21 @@ class _ProfilePageState extends State<ProfilePage> {
       controller: _refreshController,
       scrollController: _scrollController,
       header: const MaterialHeader(),
-      onRefresh: () =>
-          context.read<ProfileBloc>().add(ProfileRefreshRequested(uid: widget.uid, username: widget.username)),
-      childBuilder: (context, physics) => CustomScrollView(
-        controller: _scrollController,
-        physics: physics,
-        slivers: [
-          // Real app bar when data loaded.
-          _buildSliverAppBar(context, state, logout: logout),
-          SliverPadding(
-            padding: edgeInsetsL12T4R12,
-            sliver: SliverList(delegate: SliverChildListDelegate(_buildSliverContent(context, state))),
+      onRefresh:
+          () => context.read<ProfileBloc>().add(ProfileRefreshRequested(uid: widget.uid, username: widget.username)),
+      childBuilder:
+          (context, physics) => CustomScrollView(
+            controller: _scrollController,
+            physics: physics,
+            slivers: [
+              // Real app bar when data loaded.
+              _buildSliverAppBar(context, state, logout: logout),
+              SliverPadding(
+                padding: edgeInsetsL12T4R12,
+                sliver: SliverList(delegate: SliverChildListDelegate(_buildSliverContent(context, state))),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
@@ -854,10 +856,11 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => ProfileBloc(
-        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-        authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
-      )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
+      create:
+          (context) => ProfileBloc(
+            profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+            authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context),
+          )..add(ProfileLoadRequested(username: widget.username, uid: widget.uid)),
       child: BlocBuilder<ProfileBloc, ProfileState>(
         builder: (context, state) {
           // Default AppBar only use when loading data or failed to load data.
@@ -893,10 +896,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           };
 
-          return Scaffold(
-            appBar: appBar,
-            body: SafeArea(top: false, bottom: false, child: body),
-          );
+          return Scaffold(appBar: appBar, body: SafeArea(top: false, bottom: false, child: body));
         },
       ),
     );

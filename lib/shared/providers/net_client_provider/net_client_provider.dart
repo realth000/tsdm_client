@@ -281,10 +281,8 @@ final class _PointsChangesChecker extends Interceptor {
 
   /// Filter credit notice cookie values from cookie strings.
   Option<List<String>> _filterCreditNotice(List<String> cookie) {
-    final filtered = cookie
-        .filter((v) => v.contains(_creditNotice))
-        .map(_creditNoticeRe.firstMatch)
-        .whereType<RegExpMatch>();
+    final filtered =
+        cookie.filter((v) => v.contains(_creditNotice)).map(_creditNoticeRe.firstMatch).whereType<RegExpMatch>();
     if (filtered.isEmpty) {
       return const None();
     }

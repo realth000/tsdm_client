@@ -8,12 +8,13 @@ extension Spacing<T> on List<T> {
       return this;
     }
 
-    final ret = skip(1).fold([first], (acc, x) {
-      acc
-        ..add(item)
-        ..add(x);
-      return acc;
-    }).toList();
+    final ret =
+        skip(1).fold([first], (acc, x) {
+          acc
+            ..add(item)
+            ..add(x);
+          return acc;
+        }).toList();
 
     return ret;
   }

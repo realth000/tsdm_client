@@ -153,20 +153,22 @@ final class Forum with ForumMappable {
     final latestThreadUserName = latestThreadNode?.querySelector('cite > a')?.firstEndDeepText();
     final latestThreadUserUrl = latestThreadNode?.querySelector('cite > a')?.firstHref();
 
-    final subForumList = element
-        .querySelectorAll('td > p')
-        .firstWhereOrNull((e) => e.nodes.firstOrNull?.text?.contains('子版块') ?? false)
-        ?.querySelectorAll('a')
-        .map((e) => (e.firstEndDeepText()?.trim(), e.attributes['href']))
-        .whereType<(String, String)>()
-        .toList();
+    final subForumList =
+        element
+            .querySelectorAll('td > p')
+            .firstWhereOrNull((e) => e.nodes.firstOrNull?.text?.contains('子版块') ?? false)
+            ?.querySelectorAll('a')
+            .map((e) => (e.firstEndDeepText()?.trim(), e.attributes['href']))
+            .whereType<(String, String)>()
+            .toList();
 
-    final subThreadList = element
-        .querySelectorAll('td > p a')
-        .where((e) => e.attributes['href']?.contains('tid=') ?? false)
-        .map((e) => (e.firstEndDeepText(), e.attributes['href']))
-        .whereType<(String, String)>()
-        .toList();
+    final subThreadList =
+        element
+            .querySelectorAll('td > p a')
+            .where((e) => e.attributes['href']?.contains('tid=') ?? false)
+            .map((e) => (e.firstEndDeepText(), e.attributes['href']))
+            .whereType<(String, String)>()
+            .toList();
 
     return Forum(
       forumID: forumID,
