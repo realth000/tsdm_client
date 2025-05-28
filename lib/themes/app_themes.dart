@@ -77,17 +77,18 @@ class AppTheme {
     }
     return FlexThemeData.light(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors: seedScheme != null
-          ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
-          : null,
+      colors:
+          seedScheme != null
+              ? FlexSchemeColor(
+                primary: seedScheme.primary,
+                primaryContainer: seedScheme.primaryContainer,
+                secondary: seedScheme.secondary,
+                secondaryContainer: seedScheme.secondaryContainer,
+                tertiary: seedScheme.tertiary,
+                tertiaryContainer: seedScheme.tertiaryContainer,
+                error: seedScheme.error,
+              )
+              : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
@@ -114,17 +115,18 @@ class AppTheme {
     }
     return FlexThemeData.dark(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors: seedScheme != null
-          ? FlexSchemeColor(
-              primary: seedScheme.primary,
-              primaryContainer: seedScheme.primaryContainer,
-              secondary: seedScheme.secondary,
-              secondaryContainer: seedScheme.secondaryContainer,
-              tertiary: seedScheme.tertiary,
-              tertiaryContainer: seedScheme.tertiaryContainer,
-              error: seedScheme.error,
-            )
-          : null,
+      colors:
+          seedScheme != null
+              ? FlexSchemeColor(
+                primary: seedScheme.primary,
+                primaryContainer: seedScheme.primaryContainer,
+                secondary: seedScheme.secondary,
+                secondaryContainer: seedScheme.secondaryContainer,
+                tertiary: seedScheme.tertiary,
+                tertiaryContainer: seedScheme.tertiaryContainer,
+                error: seedScheme.error,
+              )
+              : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,

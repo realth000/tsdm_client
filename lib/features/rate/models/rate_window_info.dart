@@ -108,11 +108,12 @@ final class RateWindowInfo with RateWindowInfoMappable {
     }
 
     // Length of row title list should be 4.
-    final rowTitleList = rateTableRowsNodeList.firstOrNull
-        ?.querySelectorAll('th')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
+    final rowTitleList =
+        rateTableRowsNodeList.firstOrNull
+            ?.querySelectorAll('th')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
     // Explicitly check null here just make the compiler happy.
     if (rowTitleList == null || rowTitleList.length != 4) {
       talker.error(
@@ -126,11 +127,8 @@ final class RateWindowInfo with RateWindowInfoMappable {
 
     // Parse table score rows.
 
-    final scoreList = rateTableRowsNodeList
-        .skip(1)
-        .map(_buildRateScoreRowFromTrNode)
-        .whereType<RateWindowScore>()
-        .toList();
+    final scoreList =
+        rateTableRowsNodeList.skip(1).map(_buildRateScoreRowFromTrNode).whereType<RateWindowScore>().toList();
 
     /// Score types available to rate should not be empty;
     if (scoreList.isEmpty) {
@@ -141,12 +139,13 @@ final class RateWindowInfo with RateWindowInfoMappable {
     // Parse default reasons.
 
     // Allow default reason list to be empty.
-    final defaultReasonList = element
-        .querySelector('div.tpclg ul#reasonselect')
-        ?.querySelectorAll('li')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
+    final defaultReasonList =
+        element
+            .querySelector('div.tpclg ul#reasonselect')
+            ?.querySelectorAll('li')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
 
     // Parse form data.
     final formHash = element.querySelector('input[name="formhash"]')?.attributes['value'];
@@ -179,12 +178,13 @@ final class RateWindowInfo with RateWindowInfoMappable {
   static RateWindowScore? _buildRateScoreRowFromTrNode(uh.Element element) {
     final name = element.querySelector('td')?.firstEndDeepText();
     final id = element.querySelector('td:nth-child(2) > input')?.id;
-    final allowedRange = element
-        .querySelector('td:nth-child(2) > ul')
-        ?.querySelectorAll('li')
-        .map((e) => e.firstEndDeepText())
-        .whereType<String>()
-        .toList();
+    final allowedRange =
+        element
+            .querySelector('td:nth-child(2) > ul')
+            ?.querySelectorAll('li')
+            .map((e) => e.firstEndDeepText())
+            .whereType<String>()
+            .toList();
     final allowedRangeDescription = element.querySelector('td:nth-child(3)')?.firstEndDeepText();
     final remaining = element.querySelector('td:nth-child(4)')?.firstEndDeepText();
     if (name == null || id == null || allowedRange == null || allowedRangeDescription == null || remaining == null) {

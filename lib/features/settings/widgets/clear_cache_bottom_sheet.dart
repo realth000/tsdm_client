@@ -39,8 +39,8 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
       providers: [
         RepositoryProvider(create: (_) => const SettingsCacheRepository()),
         BlocProvider(
-          create: (context) =>
-              SettingsCacheBloc(cacheRepository: context.repo())..add(SettingsCacheCalculateRequested()),
+          create:
+              (context) => SettingsCacheBloc(cacheRepository: context.repo())..add(SettingsCacheCalculateRequested()),
         ),
       ],
       child: BlocConsumer<SettingsCacheBloc, SettingsCacheState>(
@@ -59,18 +59,20 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                     title: Text(tr.images),
                     subtitle: Text(state.storageInfo!.imageSize.withSizeHint()),
                     value: state.clearInfo.clearImage,
-                    onChanged: (v) => context.read<SettingsCacheBloc>().add(
-                      SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearImage: v)),
-                    ),
+                    onChanged:
+                        (v) => context.read<SettingsCacheBloc>().add(
+                          SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearImage: v)),
+                        ),
                   ),
                   CheckboxListTile(
                     secondary: const Icon(Icons.emoji_emotions_outlined),
                     title: Text(tr.emoji),
                     subtitle: Text(state.storageInfo!.emojiSize.withSizeHint()),
                     value: state.clearInfo.clearEmoji,
-                    onChanged: (v) => context.read<SettingsCacheBloc>().add(
-                      SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearEmoji: v)),
-                    ),
+                    onChanged:
+                        (v) => context.read<SettingsCacheBloc>().add(
+                          SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearEmoji: v)),
+                        ),
                   ),
                 ],
               ),
@@ -88,17 +90,18 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                     child: Padding(
                       padding: edgeInsetsL12T12R12B12,
                       child: FilledButton(
-                        onPressed: state.status == SettingsCacheStatus.loaded
-                            ? () {
-                                if (state.clearInfo.hasSelected) {
-                                  context.read<SettingsCacheBloc>().add(
-                                    SettingsCacheClearCacheRequested(state.clearInfo),
-                                  );
-                                } else {
-                                  showSnackBar(context: context, message: tr.selectOneCache);
+                        onPressed:
+                            state.status == SettingsCacheStatus.loaded
+                                ? () {
+                                  if (state.clearInfo.hasSelected) {
+                                    context.read<SettingsCacheBloc>().add(
+                                      SettingsCacheClearCacheRequested(state.clearInfo),
+                                    );
+                                  } else {
+                                    showSnackBar(context: context, message: tr.selectOneCache);
+                                  }
                                 }
-                              }
-                            : null,
+                                : null,
                         child: Text(context.t.general.ok),
                       ),
                     ),

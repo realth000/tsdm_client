@@ -131,33 +131,39 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
         .saveNotification(
           uid: uid,
           notificationGroup: NotificationGroup(
-            noticeList: info.noticeList
-                .map((e) => NoticeEntity(uid: uid, nid: e.id, timestamp: e.timestamp, data: e.data, alreadyRead: false))
-                .toList(),
-            personalMessageList: info.personalMessageList
-                .map(
-                  (e) => PersonalMessageEntity(
-                    uid: uid,
-                    timestamp: e.timestamp,
-                    data: e.data,
-                    peerUid: e.peerUid,
-                    peerUsername: e.peerUsername,
-                    sender: e.sender,
-                    alreadyRead: e.alreadyRead,
-                  ),
-                )
-                .toList(),
-            broadcastMessageList: info.broadcastMessageList
-                .map(
-                  (e) => BroadcastMessageEntity(
-                    uid: uid,
-                    timestamp: e.timestamp,
-                    data: e.data,
-                    pmid: e.pmid,
-                    alreadyRead: false,
-                  ),
-                )
-                .toList(),
+            noticeList:
+                info.noticeList
+                    .map(
+                      (e) =>
+                          NoticeEntity(uid: uid, nid: e.id, timestamp: e.timestamp, data: e.data, alreadyRead: false),
+                    )
+                    .toList(),
+            personalMessageList:
+                info.personalMessageList
+                    .map(
+                      (e) => PersonalMessageEntity(
+                        uid: uid,
+                        timestamp: e.timestamp,
+                        data: e.data,
+                        peerUid: e.peerUid,
+                        peerUsername: e.peerUsername,
+                        sender: e.sender,
+                        alreadyRead: e.alreadyRead,
+                      ),
+                    )
+                    .toList(),
+            broadcastMessageList:
+                info.broadcastMessageList
+                    .map(
+                      (e) => BroadcastMessageEntity(
+                        uid: uid,
+                        timestamp: e.timestamp,
+                        data: e.data,
+                        pmid: e.pmid,
+                        alreadyRead: false,
+                      ),
+                    )
+                    .toList(),
           ),
         )
         .run();

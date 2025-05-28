@@ -14,30 +14,17 @@ class HomepagePlaceholder extends StatelessWidget {
         Align(
           child: Card(
             margin: EdgeInsets.zero,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight),
-              child: Container(),
-            ),
+            child: ConstrainedBox(constraints: const BoxConstraints(maxHeight: _kahrpbaPicHeight), child: Container()),
           ),
         ),
         sizedBoxW4H4,
-        const Row(
-          children: [
-            Flexible(flex: 2, child: sizedH60Shimmer),
-            Flexible(flex: 3, child: SizedBox.shrink()),
-          ],
-        ),
+        const Row(children: [Flexible(flex: 2, child: sizedH60Shimmer), Flexible(flex: 3, child: SizedBox.shrink())]),
         const Align(child: sizedH40Shimmer),
         const Align(child: sizedH40Shimmer),
         const Align(child: sizedH40Shimmer),
         const Align(child: sizedH40Shimmer),
         sizedBoxW4H4,
-        const Row(
-          children: [
-            Flexible(flex: 2, child: sizedH60Shimmer),
-            Flexible(flex: 3, child: SizedBox.shrink()),
-          ],
-        ),
+        const Row(children: [Flexible(flex: 2, child: sizedH60Shimmer), Flexible(flex: 3, child: SizedBox.shrink())]),
         const Align(child: sizedH40Shimmer),
         const Align(child: sizedH40Shimmer),
         const Align(child: sizedH40Shimmer),

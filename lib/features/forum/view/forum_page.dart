@@ -89,36 +89,37 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
   PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
     return ListAppBar(
       title: widget.title ?? state.title,
-      bottom: state.permissionDeniedMessage == null
-          ? TabBar(
-              controller: tabController,
-              tabs: [
-                Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
-                Tab(child: Text(context.t.forumPage.threadTab.title)),
-                Tab(child: Text(context.t.forumPage.subredditTab.title)),
-              ],
-              onTap: (index) {
-                // Here we want to scroll the current tab to the top.
-                // Only scroll to top when user taps on the current
-                // tab, which means index is not changing.
-                if (tabController.indexIsChanging) {
-                  // Do nothing because user tapped another index
-                  // and want to switch to it.
-                  return;
-                }
-                const duration = Duration(milliseconds: 300);
-                const curve = Curves.ease;
-                switch (tabController.index) {
-                  case _pinnedTabIndex:
-                    _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
-                  case _threadTabIndex:
-                    _threadScrollController.animateTo(0, duration: duration, curve: curve);
-                  case _subredditTabIndex:
-                    _subredditScrollController.animateTo(0, duration: duration, curve: curve);
-                }
-              },
-            )
-          : null,
+      bottom:
+          state.permissionDeniedMessage == null
+              ? TabBar(
+                controller: tabController,
+                tabs: [
+                  Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
+                  Tab(child: Text(context.t.forumPage.threadTab.title)),
+                  Tab(child: Text(context.t.forumPage.subredditTab.title)),
+                ],
+                onTap: (index) {
+                  // Here we want to scroll the current tab to the top.
+                  // Only scroll to top when user taps on the current
+                  // tab, which means index is not changing.
+                  if (tabController.indexIsChanging) {
+                    // Do nothing because user tapped another index
+                    // and want to switch to it.
+                    return;
+                  }
+                  const duration = Duration(milliseconds: 300);
+                  const curve = Curves.ease;
+                  switch (tabController.index) {
+                    case _pinnedTabIndex:
+                      _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                    case _threadTabIndex:
+                      _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                    case _subredditTabIndex:
+                      _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                  }
+                },
+              )
+              : null,
       onSearch: () async {
         await context.pushNamed(ScreenPaths.search, queryParameters: {'fid': widget.fid});
       },
@@ -246,10 +247,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       if (state.filterState.isFiltering()) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildNormalThreadFilterRow(context, state),
-            Expanded(child: emptyContentHint),
-          ],
+          children: [_buildNormalThreadFilterRow(context, state), Expanded(child: emptyContentHint)],
         );
       }
       return emptyContentHint;
@@ -283,21 +281,23 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         context.read<ForumBloc>().add(ForumLoadMoreRequested(state.currentPage + 1));
         // _refreshController.finishLoad();
       },
-      childBuilder: (context, physics) => CustomScrollView(
-        controller: _threadScrollController,
-        physics: physics,
-        slivers: [
-          PinnedHeaderSliver(child: _buildNormalThreadFilterRow(context, state)),
-          const SliverPadding(padding: edgeInsetsL12T4R12),
-          SliverList.separated(
-            itemCount: normalThreadList.length,
-            itemBuilder: (context, index) =>
-                Padding(padding: edgeInsetsL12R12, child: NormalThreadCard(normalThreadList[index])),
-            separatorBuilder: (context, index) => sizedBoxW4H4,
+      childBuilder:
+          (context, physics) => CustomScrollView(
+            controller: _threadScrollController,
+            physics: physics,
+            slivers: [
+              PinnedHeaderSliver(child: _buildNormalThreadFilterRow(context, state)),
+              const SliverPadding(padding: edgeInsetsL12T4R12),
+              SliverList.separated(
+                itemCount: normalThreadList.length,
+                itemBuilder:
+                    (context, index) =>
+                        Padding(padding: edgeInsetsL12R12, child: NormalThreadCard(normalThreadList[index])),
+                separatorBuilder: (context, index) => sizedBoxW4H4,
+              ),
+              SliverPadding(padding: context.safePadding()),
+            ],
           ),
-          SliverPadding(padding: context.safePadding()),
-        ],
-      ),
     );
   }
 
@@ -379,10 +379,11 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     }
 
     return FloatingActionButton(
-      onPressed: () async => context.pushNamed(
-        ScreenPaths.editPost,
-        pathParameters: {'editType': '${PostEditType.newThread.index}', 'fid': widget.fid},
-      ),
+      onPressed:
+          () async => context.pushNamed(
+            ScreenPaths.editPost,
+            pathParameters: {'editType': '${PostEditType.newThread.index}', 'fid': widget.fid},
+          ),
       tooltip: context.t.forumPage.tooltip.fab,
       child: const Icon(Icons.add_outlined),
     );

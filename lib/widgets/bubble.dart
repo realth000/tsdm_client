@@ -25,27 +25,28 @@ class BubblePainter extends CustomPainter {
     final w = size.width;
     if (alignment == Alignment.topRight) {
       if (tail) {
-        final path = Path()
-          /// starting point
-          ..moveTo(_radius * 2, 0)
-          /// top-left corner
-          ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
-          /// left line
-          ..lineTo(0, h - _radius * 1.5)
-          /// bottom-left corner
-          ..quadraticBezierTo(0, h, _radius * 2, h)
-          /// bottom line
-          ..lineTo(w - _radius * 3, h)
-          /// bottom-right bubble curve
-          ..quadraticBezierTo(w - _radius * 1.5, h, w - _radius * 1.5, h - _radius * 0.6)
-          /// bottom-right tail curve 1
-          ..quadraticBezierTo(w - _radius * 1, h, w, h)
-          /// bottom-right tail curve 2
-          ..quadraticBezierTo(w - _radius * 0.8, h, w - _radius, h - _radius * 1.5)
-          /// right line
-          ..lineTo(w - _radius, _radius * 1.5)
-          /// top-right curve
-          ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 2, 0)
+              /// top-left corner
+              ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
+              /// left line
+              ..lineTo(0, h - _radius * 1.5)
+              /// bottom-left corner
+              ..quadraticBezierTo(0, h, _radius * 2, h)
+              /// bottom line
+              ..lineTo(w - _radius * 3, h)
+              /// bottom-right bubble curve
+              ..quadraticBezierTo(w - _radius * 1.5, h, w - _radius * 1.5, h - _radius * 0.6)
+              /// bottom-right tail curve 1
+              ..quadraticBezierTo(w - _radius * 1, h, w, h)
+              /// bottom-right tail curve 2
+              ..quadraticBezierTo(w - _radius * 0.8, h, w - _radius, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w - _radius, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
 
         canvas
           ..clipPath(path)
@@ -56,23 +57,24 @@ class BubblePainter extends CustomPainter {
               ..style = PaintingStyle.fill,
           );
       } else {
-        final path = Path()
-          /// starting point
-          ..moveTo(_radius * 2, 0)
-          /// top-left corner
-          ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
-          /// left line
-          ..lineTo(0, h - _radius * 1.5)
-          /// bottom-left corner
-          ..quadraticBezierTo(0, h, _radius * 2, h)
-          /// bottom line
-          ..lineTo(w - _radius * 3, h)
-          /// bottom-right curve
-          ..quadraticBezierTo(w - _radius, h, w - _radius, h - _radius * 1.5)
-          /// right line
-          ..lineTo(w - _radius, _radius * 1.5)
-          /// top-right curve
-          ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 2, 0)
+              /// top-left corner
+              ..quadraticBezierTo(0, 0, 0, _radius * 1.5)
+              /// left line
+              ..lineTo(0, h - _radius * 1.5)
+              /// bottom-left corner
+              ..quadraticBezierTo(0, h, _radius * 2, h)
+              /// bottom line
+              ..lineTo(w - _radius * 3, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w - _radius, h, w - _radius, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w - _radius, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w - _radius, 0, w - _radius * 3, 0);
 
         canvas
           ..clipPath(path)
@@ -85,27 +87,28 @@ class BubblePainter extends CustomPainter {
       }
     } else {
       if (tail) {
-        final path = Path()
-          /// starting point
-          ..moveTo(_radius * 3, 0)
-          /// top-left corner
-          ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
-          /// left line
-          ..lineTo(_radius, h - _radius * 1.5)
-          // bottom-right tail curve 1
-          ..quadraticBezierTo(_radius * .8, h, 0, h)
-          /// bottom-right tail curve 2
-          ..quadraticBezierTo(_radius * 1, h, _radius * 1.5, h - _radius * 0.6)
-          /// bottom-left bubble curve
-          ..quadraticBezierTo(_radius * 1.5, h, _radius * 3, h)
-          /// bottom line
-          ..lineTo(w - _radius * 2, h)
-          /// bottom-right curve
-          ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
-          /// right line
-          ..lineTo(w, _radius * 1.5)
-          /// top-right curve
-          ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 3, 0)
+              /// top-left corner
+              ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
+              /// left line
+              ..lineTo(_radius, h - _radius * 1.5)
+              // bottom-right tail curve 1
+              ..quadraticBezierTo(_radius * .8, h, 0, h)
+              /// bottom-right tail curve 2
+              ..quadraticBezierTo(_radius * 1, h, _radius * 1.5, h - _radius * 0.6)
+              /// bottom-left bubble curve
+              ..quadraticBezierTo(_radius * 1.5, h, _radius * 3, h)
+              /// bottom line
+              ..lineTo(w - _radius * 2, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
         canvas
           ..clipPath(path)
           ..drawRRect(
@@ -115,23 +118,24 @@ class BubblePainter extends CustomPainter {
               ..style = PaintingStyle.fill,
           );
       } else {
-        final path = Path()
-          /// starting point
-          ..moveTo(_radius * 3, 0)
-          /// top-left corner
-          ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
-          /// left line
-          ..lineTo(_radius, h - _radius * 1.5)
-          /// bottom-left curve
-          ..quadraticBezierTo(_radius, h, _radius * 3, h)
-          /// bottom line
-          ..lineTo(w - _radius * 2, h)
-          /// bottom-right curve
-          ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
-          /// right line
-          ..lineTo(w, _radius * 1.5)
-          /// top-right curve
-          ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
+        final path =
+            Path()
+              /// starting point
+              ..moveTo(_radius * 3, 0)
+              /// top-left corner
+              ..quadraticBezierTo(_radius, 0, _radius, _radius * 1.5)
+              /// left line
+              ..lineTo(_radius, h - _radius * 1.5)
+              /// bottom-left curve
+              ..quadraticBezierTo(_radius, h, _radius * 3, h)
+              /// bottom line
+              ..lineTo(w - _radius * 2, h)
+              /// bottom-right curve
+              ..quadraticBezierTo(w, h, w, h - _radius * 1.5)
+              /// right line
+              ..lineTo(w, _radius * 1.5)
+              /// top-right curve
+              ..quadraticBezierTo(w, 0, w - _radius * 2, 0);
 
         canvas
           ..clipPath(path)

@@ -103,12 +103,8 @@ enum ThreadStateModel {
       stateSet.addAll(threadIconNode._parseThreadStateFromImg());
     }
     // Parse thread state from images following title text.
-    final stateList = threadElement
-        .querySelectorAll('th > img')
-        .map((e) => e._parseThreadStateFromImg())
-        .toList()
-        .flattened
-        .toList();
+    final stateList =
+        threadElement.querySelectorAll('th > img').map((e) => e._parseThreadStateFromImg()).toList().flattened.toList();
     stateSet.addAll(stateList);
 
     return stateSet;
@@ -262,11 +258,8 @@ class NormalThread with NormalThreadMappable {
     final threadAuthorUrl = threadAuthorNode?.querySelector('cite > a')?.attributes['href'];
     final threadAuthorUid = threadAuthorUrl?.split('uid=').elementAtOrNull(1);
     final threadAuthorName = threadAuthorNode?.querySelector('cite > a')?.firstEndDeepText()?.trim();
-    final threadPublishDate = threadAuthorNode
-        ?.querySelector('em > span')
-        ?.firstEndDeepText()
-        ?.trim()
-        .parseToDateTimeUtc8();
+    final threadPublishDate =
+        threadAuthorNode?.querySelector('em > span')?.firstEndDeepText()?.trim().parseToDateTimeUtc8();
 
     // Thread published in 24 hours get highlight on its publish time with
     // css class `xi1`.

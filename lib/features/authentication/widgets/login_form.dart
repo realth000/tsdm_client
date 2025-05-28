@@ -64,9 +64,10 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
       password: passwordController.text,
       // formHash: state.loginHash!.formHash,
       tsdmVerify: verifyCodeController.text,
-      securityQuestion: _question == _loginQuestions.first
-          ? null
-          : SecurityQuestion(questionId: '${_loginQuestions.indexOf(_question)}', answer: answerController.text),
+      securityQuestion:
+          _question == _loginQuestions.first
+              ? null
+              : SecurityQuestion(questionId: '${_loginQuestions.indexOf(_question)}', answer: answerController.text),
     );
 
     var times = 10;
@@ -188,9 +189,10 @@ class _LoginFormState extends State<LoginForm> with LoggerMixin {
                     _question = newValue;
                   });
                 },
-                items: _loginQuestions.map((value) {
-                  return DropdownMenuItem<String>(value: value, child: Text(value));
-                }).toList(),
+                items:
+                    _loginQuestions.map((value) {
+                      return DropdownMenuItem<String>(value: value, child: Text(value));
+                    }).toList(),
               ),
             ),
           ),

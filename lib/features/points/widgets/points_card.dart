@@ -21,11 +21,12 @@ class PointsChangeCard extends StatelessWidget {
       margin: EdgeInsets.zero,
       clipBehavior: Clip.hardEdge,
       child: InkWell(
-        onTap: pointsChange.redirectUrl == null
-            ? null
-            : () async {
-                await context.dispatchAsUrl(pointsChange.redirectUrl!);
-              },
+        onTap:
+            pointsChange.redirectUrl == null
+                ? null
+                : () async {
+                  await context.dispatchAsUrl(pointsChange.redirectUrl!);
+                },
         child: Padding(
           padding: edgeInsetsL12R12B12,
           child: Column(

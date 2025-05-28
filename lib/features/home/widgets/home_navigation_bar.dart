@@ -12,9 +12,10 @@ class HomeNavigationBar extends StatelessWidget {
     final barItems = _buildNavigationItems(context);
 
     return NavigationBar(
-      destinations: barItems
-          .map((e) => NavigationDestination(icon: e.icon, selectedIcon: e.selectedIcon, label: e.label))
-          .toList(),
+      destinations:
+          barItems
+              .map((e) => NavigationDestination(icon: e.icon, selectedIcon: e.selectedIcon, label: e.label))
+              .toList(),
       selectedIndex: context.watch<HomeCubit>().state.tab.index,
       onDestinationSelected: (index) {
         context.read<HomeCubit>().setTab(barItems[index].tab);

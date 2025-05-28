@@ -33,19 +33,20 @@ final class PostFloorPokemon with PostFloorPokemonMappable {
       firstPokemon = null;
     }
 
-    final others = element
-        .querySelectorAll('p:nth-child(3) > a')
-        .map((e) {
-          final detailIngo = e.attributes['onclick']?.split("'").elementAtOrNull(3);
-          final image = e.querySelector('img')?.imageUrl();
-          final name = e.querySelector('img')?.attributes['title'];
-          if (detailIngo != null && image != null && name != null) {
-            return PokemonInfo(name: name, image: image, detailInfo: detailIngo);
-          }
-          return null;
-        })
-        .whereType<PokemonInfo>()
-        .toList();
+    final others =
+        element
+            .querySelectorAll('p:nth-child(3) > a')
+            .map((e) {
+              final detailIngo = e.attributes['onclick']?.split("'").elementAtOrNull(3);
+              final image = e.querySelector('img')?.imageUrl();
+              final name = e.querySelector('img')?.attributes['title'];
+              if (detailIngo != null && image != null && name != null) {
+                return PokemonInfo(name: name, image: image, detailInfo: detailIngo);
+              }
+              return null;
+            })
+            .whereType<PokemonInfo>()
+            .toList();
 
     if (firstPokemon == null) {
       return null;

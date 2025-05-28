@@ -219,19 +219,20 @@ class Post with PostMappable {
     //
     // Should not build locked with points which must be built in "postmessage"
     // munching.
-    final locked = postDataNode
-        ?.querySelectorAll('div.locked')
-        .where((e) => e.querySelector('span') == null)
-        .map(
-          (e) => Locked.fromLockDivNode(
-            e,
-            allowWithPoints: false,
-            allowWithReply: false,
-            allowWithAuthor: false,
-            allowWithBlocked: false,
-          ),
-        )
-        .toList();
+    final locked =
+        postDataNode
+            ?.querySelectorAll('div.locked')
+            .where((e) => e.querySelector('span') == null)
+            .map(
+              (e) => Locked.fromLockDivNode(
+                e,
+                allowWithPoints: false,
+                allowWithReply: false,
+                allowWithAuthor: false,
+                allowWithBlocked: false,
+              ),
+            )
+            .toList();
 
     final hasPoll = postDataNode?.querySelector('form#poll') != null;
 
@@ -246,12 +247,13 @@ class Post with PostMappable {
     //           'div > em > a[href*="action=reply"]',
     //
     // Should use a more permissive one.
-    final replyAction = element
-        .querySelector(
-          'table > tbody > tr:nth-child(2) > td.tsdm_replybar div.pob em > '
-          'a[href*="action=reply"]',
-        )
-        ?.firstHref();
+    final replyAction =
+        element
+            .querySelector(
+              'table > tbody > tr:nth-child(2) > td.tsdm_replybar div.pob em > '
+              'a[href*="action=reply"]',
+            )
+            ?.firstHref();
 
     final rateNode = postDataNode?.querySelector('div.pct > div.pcb > dl.rate');
     final rate = Rate.fromRateLogNode(rateNode);
@@ -264,10 +266,8 @@ class Post with PostMappable {
     // * If current post is not the first floor, rate action is in <div class="pob cl"><p>...</p></div>
     // Allow to be empty.
     String? rateAction;
-    rateAction = element
-        .querySelector('table  div.pob.cl p > a[onclick*="action=rate"]')
-        ?._parseRateAction()
-        ?.prependHost();
+    rateAction =
+        element.querySelector('table  div.pob.cl p > a[onclick*="action=rate"]')?._parseRateAction()?.prependHost();
 
     rateAction ??= element.querySelector('div#fj > a[onclick*="action=rate"]')?._parseRateAction()?.prependHost();
 
@@ -275,11 +275,12 @@ class Post with PostMappable {
 
     // Url to edit the post is also in the `<div id=fj>` node.
     // We can only find it by the content text "编辑"。
-    final editUrl = element
-        .querySelectorAll('div#fj > a')
-        .firstWhereOrNull((e) => e.firstEndDeepText() == '编辑')
-        ?.attributes['href']
-        ?.prependHost();
+    final editUrl =
+        element
+            .querySelectorAll('div#fj > a')
+            .firstWhereOrNull((e) => e.firstEndDeepText() == '编辑')
+            ?.attributes['href']
+            ?.prependHost();
 
     // Check for last edit status.
     final lastEditText = element.querySelector('i.pstatus')?.innerText.trim().split(' ');
@@ -311,11 +312,8 @@ class Post with PostMappable {
     final isDraft = element.querySelector('a.psave') != null;
 
     // Medals used by the current posts' author.
-    final postMedals = element
-        .querySelectorAll('div.md_ctrl > a > img')
-        .map(PostMedal.fromImg)
-        .whereType<PostMedal>()
-        .toList();
+    final postMedals =
+        element.querySelectorAll('div.md_ctrl > a > img').map(PostMedal.fromImg).whereType<PostMedal>().toList();
 
     // User group badge and optional second badge.
     final badge = element.querySelector('div#$avatarId > div.tsdm_norm_title > img')?.imageUrl();

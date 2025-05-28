@@ -30,11 +30,12 @@ class _UpdatePageState extends State<UpdatePage> {
         actions: [
           BlocSelector<UpdateCubit, UpdateCubitState, bool>(
             selector: (state) => state.loading,
-            builder: (context, state) => IconButton(
-              icon: state ? sizedCircularProgressIndicator : const Icon(Icons.refresh_outlined),
-              tooltip: tr.checkLatest,
-              onPressed: state ? null : () async => context.read<UpdateCubit>().checkUpdate(),
-            ),
+            builder:
+                (context, state) => IconButton(
+                  icon: state ? sizedCircularProgressIndicator : const Icon(Icons.refresh_outlined),
+                  tooltip: tr.checkLatest,
+                  onPressed: state ? null : () async => context.read<UpdateCubit>().checkUpdate(),
+                ),
           ),
         ],
         bottom: Tips(tr.fDroidTip, sizePreferred: true),

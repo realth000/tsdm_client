@@ -87,9 +87,8 @@ final class ReplyRepository with LoggerMixin {
       'message': replyMessage,
     };
 
-    final respEither2 = await netClient
-        .postForm(formatReplyPostUrl(replyParameters.fid, replyParameters.tid), data: formData)
-        .run();
+    final respEither2 =
+        await netClient.postForm(formatReplyPostUrl(replyParameters.fid, replyParameters.tid), data: formData).run();
 
     if (respEither2.isLeft()) {
       return left(respEither2.unwrapErr());
@@ -122,10 +121,11 @@ final class ReplyRepository with LoggerMixin {
     if (replyParameters.postTime != null) {
       formData['posttime'] = replyParameters.postTime;
     }
-    final e = await getIt
-        .get<NetClientProvider>()
-        .postForm(formatReplyThreadUrl(replyParameters.fid, replyParameters.tid), data: formData)
-        .run();
+    final e =
+        await getIt
+            .get<NetClientProvider>()
+            .postForm(formatReplyThreadUrl(replyParameters.fid, replyParameters.tid), data: formData)
+            .run();
     if (e.isLeft()) {
       handle(e.unwrapErr());
     }

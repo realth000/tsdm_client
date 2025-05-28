@@ -66,21 +66,22 @@ class _CardLayout extends StatelessWidget {
     margin: EdgeInsets.zero,
     clipBehavior: Clip.antiAlias,
     child: InkWell(
-      onTap: disableTap
-          ? null
-          : () async {
-              await context.pushNamed(
-                ScreenPaths.threadV1,
-                // pathParameters: {'id': threadID},
-                // FIXME: Query parameters are not recognized by v2 yet.
-                queryParameters: {
-                  'tid': threadID,
-                  'appBarTitle': title,
-                  'threadTypeName': threadType?.name,
-                  'threadTypeID': threadType?.url.tryParseAsUri()?.tryGetQueryParameters()?['typeid'],
-                },
-              );
-            },
+      onTap:
+          disableTap
+              ? null
+              : () async {
+                await context.pushNamed(
+                  ScreenPaths.threadV1,
+                  // pathParameters: {'id': threadID},
+                  // FIXME: Query parameters are not recognized by v2 yet.
+                  queryParameters: {
+                    'tid': threadID,
+                    'appBarTitle': title,
+                    'threadTypeName': threadType?.name,
+                    'threadTypeID': threadType?.url.tryParseAsUri()?.tryGetQueryParameters()?['typeid'],
+                  },
+                );
+              },
       child: child,
     ),
   );
@@ -125,26 +126,27 @@ class _CardLayout extends StatelessWidget {
           children: [
             Expanded(
               child: Row(
-                children: infoList
-                    .map(
-                      (e) => Expanded(
-                        child: Row(
-                          children: [
-                            Icon(e.$1, size: smallIconSize, color: infoColor),
-                            sizedBoxW4H4,
-                            Expanded(
-                              child: Text(
-                                e.$2,
-                                style: TextStyle(fontSize: smallTextSize, color: infoColor),
-                                maxLines: 1,
-                                overflow: TextOverflow.clip,
-                              ),
+                children:
+                    infoList
+                        .map(
+                          (e) => Expanded(
+                            child: Row(
+                              children: [
+                                Icon(e.$1, size: smallIconSize, color: infoColor),
+                                sizedBoxW4H4,
+                                Expanded(
+                                  child: Text(
+                                    e.$2,
+                                    style: TextStyle(fontSize: smallTextSize, color: infoColor),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.clip,
+                                  ),
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                      ),
-                    )
-                    .toList(),
+                          ),
+                        )
+                        .toList(),
               ),
             ),
           ],
@@ -157,21 +159,18 @@ class _CardLayout extends StatelessWidget {
         child: SingleChildScrollView(
           scrollDirection: Axis.horizontal,
           child: Row(
-            children: infoList
-                .map(
-                  (e) => [
-                    Icon(e.$1, size: smallIconSize, color: infoColor),
-                    sizedBoxW4H4,
-                    Text(
-                      e.$2,
-                      style: TextStyle(fontSize: smallTextSize, color: infoColor),
-                      maxLines: 1,
-                    ),
-                    sizedBoxW12H12,
-                  ],
-                )
-                .flattened
-                .toList(),
+            children:
+                infoList
+                    .map(
+                      (e) => [
+                        Icon(e.$1, size: smallIconSize, color: infoColor),
+                        sizedBoxW4H4,
+                        Text(e.$2, style: TextStyle(fontSize: smallTextSize, color: infoColor), maxLines: 1),
+                        sizedBoxW12H12,
+                      ],
+                    )
+                    .flattened
+                    .toList(),
           ),
         ),
       );

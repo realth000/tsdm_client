@@ -47,39 +47,38 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
 
     final tabs = emojiGroupList.map((e) => Tab(child: Text(e.name)));
     final tabViews = emojiGroupList.map(
-      (e) => GridView.builder(
-        shrinkWrap: true,
-        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-          maxCrossAxisExtent: 50,
-          mainAxisSpacing: 10,
-          crossAxisSpacing: 10,
-          mainAxisExtent: 50,
-        ),
-        itemBuilder: (context, index) {
-          final data = RepositoryProvider.of<ImageCacheRepository>(
-            context,
-          ).getEmojiCacheSync(e.id, e.emojiList[index].id);
-          if (data == null) {
-            return Text('${e.id}_${e.emojiList[index].id}');
-          }
-          return GestureDetector(
-            onTap: () async {
-              Navigator.of(context).pop(e.emojiList[index].code);
+          (e) =>
+          GridView.builder(
+            shrinkWrap: true,
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 50,
+              mainAxisSpacing: 10,
+              crossAxisSpacing: 10,
+              mainAxisExtent: 50,
+            ),
+            itemBuilder: (context, index) {
+              final data = RepositoryProvider.of<ImageCacheRepository>(
+                context,
+              ).getEmojiCacheSync(e.id, e.emojiList[index].id);
+              if (data == null) {
+                return Text('${e.id}_${e.emojiList[index].id}');
+              }
+              return GestureDetector(
+                onTap: () async {
+                  Navigator.of(context).pop(e.emojiList[index].code);
+                },
+                child: ClipOval(child: Image.memory(data, fit: BoxFit.cover)),
+              );
             },
-            child: ClipOval(child: Image.memory(data, fit: BoxFit.cover)),
-          );
-        },
-        itemCount: e.emojiList.length,
-      ),
+            itemCount: e.emojiList.length,
+          ),
     );
 
     return Column(
       children: [
         TabBar(isScrollable: true, tabAlignment: TabAlignment.start, controller: tabController, tabs: tabs.toList()),
         sizedBoxW12H12,
-        Expanded(
-          child: TabBarView(controller: tabController, children: tabViews.toList()),
-        ),
+        Expanded(child: TabBarView(controller: tabController, children: tabViews.toList())),
       ],
     );
   }
@@ -89,27 +88,31 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
     return MultiBlocProvider(
       providers: [
         RepositoryProvider<EditorRepository>(create: (_) => EditorRepository()),
-        BlocProvider(create: (context) => EmojiBloc(editRepository: context.repo())..add(EmojiFetchFromAssetEvent())),
+        BlocProvider(create: (context) =>
+        EmojiBloc(editRepository: context.repo())
+          ..add(EmojiFetchFromAssetEvent())),
       ],
       child: BlocBuilder<EmojiBloc, EmojiState>(
         builder: (context, state) {
           final body = switch (state.status) {
-            EmojiStatus.initial || EmojiStatus.loading => Center(
-              child: Padding(
-                padding: edgeInsetsL24R24,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const CircularProgressIndicator(),
-                    sizedBoxW12H12,
-                    Expanded(child: Text(context.t.bbcodeEditor.emoji.loadingAssets)),
-                  ],
+            EmojiStatus.initial || EmojiStatus.loading =>
+                Center(
+                  child: Padding(
+                    padding: edgeInsetsL24R24,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const CircularProgressIndicator(),
+                        sizedBoxW12H12,
+                        Expanded(child: Text(context.t.bbcodeEditor.emoji.loadingAssets)),
+                      ],
+                    ),
+                  ),
                 ),
-              ),
-            ),
-            EmojiStatus.failure => buildRetryButton(context, () {
-              context.read<EmojiBloc>().add(EmojiFetchFromAssetEvent());
-            }),
+            EmojiStatus.failure =>
+                buildRetryButton(context, () {
+                  context.read<EmojiBloc>().add(EmojiFetchFromAssetEvent());
+                }),
             EmojiStatus.success => _buildEmojiTab(context, state),
           };
 

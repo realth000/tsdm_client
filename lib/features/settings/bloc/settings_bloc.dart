@@ -51,10 +51,11 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> with LoggerMixin {
         final SettingsValueChanged<Size> e => _onValueChanged<Size>(e),
         final SettingsValueChanged<List<String>> e => _onValueChanged<List<String>>(e),
         final SettingsValueChanged<List<int>> e => _onValueChanged<List<int>>(e),
-        final SettingsValueChanged<dynamic> e => throw Exception(
-          'Unsupported settings change event '
-          'type(${e.runtimeType}): $e',
-        ),
+        final SettingsValueChanged<dynamic> e =>
+          throw Exception(
+            'Unsupported settings change event '
+            'type(${e.runtimeType}): $e',
+          ),
       },
     );
   }

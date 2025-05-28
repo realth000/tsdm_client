@@ -108,10 +108,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
             // 130 x 60 -> 110.9 -> 52
             return Image.memory(bytes, height: _renderHeight);
           }
-          return const SizedBox(
-            width: _indicatorBoxWidth,
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return const SizedBox(width: _indicatorBoxWidth, child: Center(child: CircularProgressIndicator()));
         },
       ),
     );

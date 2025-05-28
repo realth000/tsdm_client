@@ -111,23 +111,22 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$Notific
 
   /// Mark a given notice as [read].
   Future<int> markNoticeAsRead({required int uid, required int nid, required bool read}) async {
-    return (update(
-      notice,
-    )..where((e) => e.uid.equals(uid) & e.nid.equals(nid))).write(NoticeCompanion(alreadyRead: Value(read)));
+    return (update(notice)
+      ..where((e) => e.uid.equals(uid) & e.nid.equals(nid))).write(NoticeCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark given personal message notice as [read].
   Future<int> markPersonalMessageAsRead({required int uid, required int peerUid, required bool read}) async {
-    return (update(personalMessage)..where((e) => e.uid.equals(uid) & e.peerUid.equals(peerUid))).write(
-      PersonalMessageCompanion(alreadyRead: Value(read)),
-    );
+    return (update(personalMessage)..where(
+      (e) => e.uid.equals(uid) & e.peerUid.equals(peerUid),
+    )).write(PersonalMessageCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark given broadcast message notice as [read].
   Future<int> markBroadcastMessageAsRead({required int uid, required int timestamp, required bool read}) async {
-    return (update(broadcastMessage)..where((e) => e.uid.equals(uid) & e.timestamp.equals(timestamp))).write(
-      BroadcastMessageCompanion(alreadyRead: Value(read)),
-    );
+    return (update(broadcastMessage)..where(
+      (e) => e.uid.equals(uid) & e.timestamp.equals(timestamp),
+    )).write(BroadcastMessageCompanion(alreadyRead: Value(read)));
   }
 
   /// Mark all messages of [notificationType] as [alreadyRead].
@@ -139,17 +138,14 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$Notific
     await transaction(() async {
       switch (notificationType) {
         case NotificationType.notice:
-          await (update(
-            notice,
-          )..where((e) => e.uid.equals(uid))).write(NoticeCompanion(alreadyRead: Value(alreadyRead)));
+          await (update(notice)
+            ..where((e) => e.uid.equals(uid))).write(NoticeCompanion(alreadyRead: Value(alreadyRead)));
         case NotificationType.personalMessage:
-          await (update(
-            personalMessage,
-          )..where((e) => e.uid.equals(uid))).write(PersonalMessageCompanion(alreadyRead: Value(alreadyRead)));
+          await (update(personalMessage)
+            ..where((e) => e.uid.equals(uid))).write(PersonalMessageCompanion(alreadyRead: Value(alreadyRead)));
         case NotificationType.broadcastMessage:
-          await (update(
-            broadcastMessage,
-          )..where((e) => e.uid.equals(uid))).write(BroadcastMessageCompanion(alreadyRead: Value(alreadyRead)));
+          await (update(broadcastMessage)
+            ..where((e) => e.uid.equals(uid))).write(BroadcastMessageCompanion(alreadyRead: Value(alreadyRead)));
       }
     });
   }

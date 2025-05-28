@@ -161,11 +161,12 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             );
             emit(state.copyWith(status: ThreadStatus.failure));
           },
-          (v) => _parseFromDocument(
-            v,
-            state.currentPage,
-            clearOnlyVisibleUid: true,
-          ).map((v) => emit(v.copyWith(onlyVisibleUid: state.onlyVisibleUid))).run(),
+          (v) =>
+              _parseFromDocument(
+                v,
+                state.currentPage,
+                clearOnlyVisibleUid: true,
+              ).map((v) => emit(v.copyWith(onlyVisibleUid: state.onlyVisibleUid))).run(),
         )
         .run();
   }
@@ -199,10 +200,11 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
             );
             emit(state.copyWith(status: ThreadStatus.failure, reverseOrder: state.reverseOrder));
           },
-          (v) => _parseFromDocument(
-            v,
-            state.currentPage,
-          ).map((v) => emit(v.copyWith(reverseOrder: state.reverseOrder))).run(),
+          (v) =>
+              _parseFromDocument(
+                v,
+                state.currentPage,
+              ).map((v) => emit(v.copyWith(reverseOrder: state.reverseOrder))).run(),
         )
         .run();
   }
@@ -294,28 +296,31 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     final latestModAct = document.querySelector('div.modact')?.innerText;
 
     // Parse breadcrumb.
-    final breadcrumbs = document
-        .querySelectorAll('div#pt > div.z > a')
-        .map((e) => (e.innerText, Uri.tryParse(e.attributes['href']!.prependHost())))
-        .whereType<(String, Uri)>()
-        .skipWhile((e) => !(e.$2.tryGetQueryParameters()?.containsKey('gid') ?? false))
-        .map((e) => ThreadBreadcrumb(description: e.$1, link: e.$2))
-        .toList();
+    final breadcrumbs =
+        document
+            .querySelectorAll('div#pt > div.z > a')
+            .map((e) => (e.innerText, Uri.tryParse(e.attributes['href']!.prependHost())))
+            .whereType<(String, Uri)>()
+            .skipWhile((e) => !(e.$2.tryGetQueryParameters()?.containsKey('gid') ?? false))
+            .map((e) => ThreadBreadcrumb(description: e.$1, link: e.$2))
+            .toList();
     if (breadcrumbs.isNotEmpty) {
       breadcrumbs.removeLast();
     }
 
     // Parse available medals. and designation-card
-    final medalsAvailable = document
-        .querySelectorAll(r'div[id^="md_"][id$="_menu"]')
-        .map(PostMedalMenuItem.fromDiv)
-        .whereType<PostMedalMenuItem>()
-        .toList();
+    final medalsAvailable =
+        document
+            .querySelectorAll(r'div[id^="md_"][id$="_menu"]')
+            .map(PostMedalMenuItem.fromDiv)
+            .whereType<PostMedalMenuItem>()
+            .toList();
 
-    final statisticsInfo = document
-        .querySelectorAll('div#postlist > table:nth-child(1) span.xi1')
-        .map((e) => e.firstEndDeepText()?.parseToInt())
-        .whereType<int>();
+    final statisticsInfo =
+        document
+            .querySelectorAll('div#postlist > table:nth-child(1) span.xi1')
+            .map((e) => e.firstEndDeepText()?.parseToInt())
+            .whereType<int>();
     final int? viewCount;
     final int? replyCount;
 

@@ -55,10 +55,8 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
     final checkInResp = checkInRespEither.unwrap();
     final checkInRespData = (checkInResp.data as String).split('\n');
 
-    final checkInResult = checkInRespData
-        .firstWhereOrNull((e) => e.contains('</div>'))
-        ?.replaceFirst('</div>', '')
-        .trim();
+    final checkInResult =
+        checkInRespData.firstWhereOrNull((e) => e.contains('</div>'))?.replaceFirst('</div>', '').trim();
 
     // Return results.
     if (checkInResult == null) {

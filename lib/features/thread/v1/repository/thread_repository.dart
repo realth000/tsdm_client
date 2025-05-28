@@ -99,11 +99,8 @@ class ThreadRepository {
         }
 
         final doc = parseHtmlDocument(htmlData);
-        final items = doc
-            .querySelectorAll('table tr')
-            .map(OperationLogItem.fromTr)
-            .whereType<OperationLogItem>()
-            .toList();
+        final items =
+            doc.querySelectorAll('table tr').map(OperationLogItem.fromTr).whereType<OperationLogItem>().toList();
         return items;
       });
 }

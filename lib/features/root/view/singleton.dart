@@ -237,9 +237,10 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
 }
 
 extension _SignedInteger on int {
-  String withSign() => this < 0
-      ? '$this'
-      : this > 0
-      ? '+$this'
-      : '0';
+  String withSign() =>
+      this < 0
+          ? '$this'
+          : this > 0
+          ? '+$this'
+          : '0';
 }

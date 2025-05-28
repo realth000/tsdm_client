@@ -18,7 +18,11 @@ import 'package:tsdm_client/widgets/tips.dart';
 /// choose.
 Future<PickColorResult?> showColorPicker(BuildContext context, Color? initialColor) async {
   // Load recent used colors.
-  final recentColors = context.read<SettingsBloc>().state.settingsMap.editorRecentUsedCustomColors;
+  final recentColors = context
+      .read<SettingsBloc>()
+      .state
+      .settingsMap
+      .editorRecentUsedCustomColors;
 
   return showCustomBottomSheet<PickColorResult>(
     title: context.t.bbcodeEditor.foregroundColor.title,
@@ -111,15 +115,30 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
               spacing: 5,
               runSpacing: 5,
               wheelDiameter: 155,
-              heading: Text(tr.selectColor, style: Theme.of(context).textTheme.titleSmall),
-              subheading: Text(tr.selectColorShade, style: Theme.of(context).textTheme.titleSmall),
+              heading: Text(tr.selectColor, style: Theme
+                  .of(context)
+                  .textTheme
+                  .titleSmall),
+              subheading: Text(tr.selectColorShade, style: Theme
+                  .of(context)
+                  .textTheme
+                  .titleSmall),
               showMaterialName: true,
               showColorName: true,
               showColorCode: true,
               copyPasteBehavior: const ColorPickerCopyPasteBehavior(longPressMenu: true),
-              materialNameTextStyle: Theme.of(context).textTheme.bodySmall,
-              colorNameTextStyle: Theme.of(context).textTheme.bodySmall,
-              colorCodeTextStyle: Theme.of(context).textTheme.bodySmall,
+              materialNameTextStyle: Theme
+                  .of(context)
+                  .textTheme
+                  .bodySmall,
+              colorNameTextStyle: Theme
+                  .of(context)
+                  .textTheme
+                  .bodySmall,
+              colorCodeTextStyle: Theme
+                  .of(context)
+                  .textTheme
+                  .bodySmall,
               pickersEnabled: const <ColorPickerType, bool>{
                 ColorPickerType.both: true,
                 ColorPickerType.primary: false,
@@ -136,7 +155,8 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
         ),
         sizedBoxW4H4,
         FilledButton(
-          onPressed: _advancedTabColor != Colors.transparent
+          onPressed:
+          _advancedTabColor != Colors.transparent
               ? () => Navigator.of(context).pop(PickColorResult.picked(_advancedTabColor))
               : null,
           child: Text(context.t.general.ok),
@@ -178,18 +198,25 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
                 sizedBoxW4H4,
                 Tips(tr.formatTip, enablePadding: false),
                 sizedBoxW4H4,
-                Text(tr.recentColor, style: Theme.of(context).textTheme.titleSmall),
+                Text(tr.recentColor, style: Theme
+                    .of(context)
+                    .textTheme
+                    .titleSmall),
                 sizedBoxW4H4,
                 Wrap(
                   spacing: 4,
-                  children: _recentCustomColors
+                  children:
+                  _recentCustomColors
                       .map(
-                        (e) => GestureDetector(
-                          onTap: () => setState(() {
-                            final value = e.hex.toLowerCase();
-                            _updateCustomColorPreview(value);
-                            _customColorValueController.text = value;
-                          }),
+                        (e) =>
+                        GestureDetector(
+                          onTap:
+                              () =>
+                              setState(() {
+                                final value = e.hex.toLowerCase();
+                                _updateCustomColorPreview(value);
+                                _customColorValueController.text = value;
+                              }),
                           child: Container(
                             width: 40,
                             height: 40,
@@ -199,7 +226,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
                             ),
                           ),
                         ),
-                      )
+                  )
                       .toList(),
                 ),
               ],
@@ -209,18 +236,18 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
         sizedBoxW4H4,
         FilledButton(
           child: Text(context.t.general.ok),
-          onPressed: () => _customTabColor != Colors.transparent && _customTabErrorText == null
+          onPressed:
+              () =>
+          _customTabColor != Colors.transparent && _customTabErrorText == null
               ? () {
-                  // Update recent colors.
-                  final latestRecentColors = _updateRecentColors(
-                    _recentCustomColors,
-                    _customTabColor,
-                  ).map((e) => e.valueA).toList();
-                  context.read<SettingsBloc>().add(
-                    SettingsValueChanged(SettingsKeys.editorRecentUsedCustomColors, latestRecentColors),
-                  );
-                  Navigator.of(context).pop(PickColorResult.picked(_customTabColor));
-                }()
+            // Update recent colors.
+            final latestRecentColors =
+            _updateRecentColors(_recentCustomColors, _customTabColor).map((e) => e.valueA).toList();
+            context.read<SettingsBloc>().add(
+              SettingsValueChanged(SettingsKeys.editorRecentUsedCustomColors, latestRecentColors),
+            );
+            Navigator.of(context).pop(PickColorResult.picked(_customTabColor));
+          }()
               : null,
         ),
       ],
@@ -268,7 +295,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
     }
     if (widget.recentColors.isNotEmpty) {
       WidgetsBinding.instance.addPostFrameCallback(
-        (_) => setState(() => _recentCustomColors = widget.recentColors.map(Color.new).toList()),
+            (_) => setState(() => _recentCustomColors = widget.recentColors.map(Color.new).toList()),
       );
     }
   }
@@ -291,11 +318,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
         children: [
           TabBar(
             controller: _tabController,
-            tabs: [
-              Tab(text: tr.tabs.normal.title),
-              Tab(text: tr.tabs.advanced.title),
-              Tab(text: tr.tabs.custom.title),
-            ],
+            tabs: [Tab(text: tr.tabs.normal.title), Tab(text: tr.tabs.advanced.title), Tab(text: tr.tabs.custom.title)],
           ),
           sizedBoxW4H4,
           Expanded(
