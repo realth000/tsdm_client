@@ -211,8 +211,12 @@ class Notice with NoticeMappable {
       username = a2Node?.firstEndDeepText();
     }
 
-    final ignoreCount =
-        element.querySelector('dd.xg1.xw0')?.firstEndDeepText()?.split(' ').elementAtOrNull(1)?.parseToInt();
+    final ignoreCount = element
+        .querySelector('dd.xg1.xw0')
+        ?.firstEndDeepText()
+        ?.split(' ')
+        .elementAtOrNull(1)
+        ?.parseToInt();
 
     // Validate
     if (noticeType == NoticeType.mention) {

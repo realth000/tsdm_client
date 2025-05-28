@@ -142,8 +142,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
 
     // Basic info
     final username = profileRootNode.querySelector('h2.mbn')?.nodes.firstOrNull?.text?.trim();
-    final uid =
-        profileRootNode.querySelector('h2.mbn > span.xw0')?.text?.split(': ').lastOrNull?.split(')').firstOrNull;
+    final uid = profileRootNode
+        .querySelector('h2.mbn > span.xw0')
+        ?.text
+        ?.split(': ')
+        .lastOrNull
+        ?.split(')')
+        .firstOrNull;
 
     ///////////  Basic status ///////////
 
@@ -167,11 +172,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     String? from;
     String? qq;
 
-    final basicInfoList =
-        profileRootNode
-            .querySelectorAll('div.pbm:nth-child(1) li')
-            .map((e) => e.parseLiEmNode())
-            .whereType<(String, String)>();
+    final basicInfoList = profileRootNode
+        .querySelectorAll('div.pbm:nth-child(1) li')
+        .map((e) => e.parseLiEmNode())
+        .whereType<(String, String)>();
 
     for (final attr in basicInfoList) {
       switch (attr.$1) {
@@ -213,18 +217,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       }
     }
 
-    final profileMedals =
-        profileRootNode.querySelectorAll('p.md_ctrl img').map(ProfileMedal.fromImg).whereType<ProfileMedal>().toList();
+    final profileMedals = profileRootNode
+        .querySelectorAll('p.md_ctrl img')
+        .map(ProfileMedal.fromImg)
+        .whereType<ProfileMedal>()
+        .toList();
 
-    final managedForums =
-        profileRootNode
-            .querySelector('ul#pbbs')
-            ?.parent
-            ?.previousElementSibling
-            ?.querySelectorAll('a')
-            .map(ManagedForum.fromA)
-            .whereType<ManagedForum>()
-            .toList();
+    final managedForums = profileRootNode
+        .querySelector('ul#pbbs')
+        ?.parent
+        ?.previousElementSibling
+        ?.querySelectorAll('a')
+        .map(ManagedForum.fromA)
+        .whereType<ManagedForum>()
+        .toList();
 
     // Check in status
     final checkinNode = profileRootNode.querySelector('div.pbm.mbm.bbda.c');
@@ -235,8 +241,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     final checkinLastTimeCoin = checkinNode?.querySelector('p:nth-child(5) font:nth-child(2)')?.firstEndDeepText();
     final checkinLevel = checkinNode?.querySelector('p:nth-child(6) font:nth-child(1)')?.firstEndDeepText();
     final checkinNextLevel = checkinNode?.querySelector('p:nth-child(6) font:nth-child(2)')?.firstEndDeepText();
-    final checkinNextLevelDays =
-        checkinNode?.querySelector('p:nth-child(6) font:nth-child(3)')?.firstEndDeepText()?.parseToInt();
+    final checkinNextLevelDays = checkinNode
+        ?.querySelector('p:nth-child(6) font:nth-child(3)')
+        ?.firstEndDeepText()
+        ?.parseToInt();
     final checkinTodayStatus = checkinNode?.querySelector('p:nth-child(7)')?.firstEndDeepText();
 
     ///////////  User group status ///////////
@@ -244,13 +252,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     String? moderatorGroup;
     String? userGroup;
 
-    final userGroupInfoList =
-        profileRootNode
-            .querySelector('ul#pbbs')
-            ?.previousElementSibling
-            ?.querySelectorAll('li')
-            .map((e) => e.parseLiEmNode())
-            .whereType<(String, String)>();
+    final userGroupInfoList = profileRootNode
+        .querySelector('ul#pbbs')
+        ?.previousElementSibling
+        ?.querySelectorAll('li')
+        .map((e) => e.parseLiEmNode())
+        .whereType<(String, String)>();
     if (userGroupInfoList != null) {
       for (final info in userGroupInfoList) {
         switch (info.$1) {
@@ -313,11 +320,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     // Name of special attr.
     String? specialAttrName;
 
-    final statisticsInfoList =
-        profileRootNode
-            .querySelectorAll('div#psts > ul > li')
-            .map((e) => e.parseLiEmNode())
-            .whereType<(String, String)>();
+    final statisticsInfoList = profileRootNode
+        .querySelectorAll('div#psts > ul > li')
+        .map((e) => e.parseLiEmNode())
+        .whereType<(String, String)>();
     for (final stat in statisticsInfoList) {
       switch (stat.$1) {
         case '积分':

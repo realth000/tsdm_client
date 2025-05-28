@@ -142,34 +142,31 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         descendantsAreFocusable: false,
         child: IconButton(
           icon: const Icon(Icons.arrow_drop_down_outlined),
-          onPressed:
-              () async => showDialog(
-                context: context,
-                builder:
-                    (_) => RootPage(
-                      DialogPaths.selectRateReason,
-                      AlertDialog(
-                        title: Text(tr.reason),
-                        scrollable: true,
-                        content: Column(
-                          children:
-                              state.info!.defaultReasonList
-                                  .map(
-                                    (e) => ListTile(
-                                      title: Text(e),
-                                      onTap: () {
-                                        context.pop();
-                                        setState(() {
-                                          reasonController.text = e;
-                                        });
-                                      },
-                                    ),
-                                  )
-                                  .toList(),
+          onPressed: () async => showDialog(
+            context: context,
+            builder: (_) => RootPage(
+              DialogPaths.selectRateReason,
+              AlertDialog(
+                title: Text(tr.reason),
+                scrollable: true,
+                content: Column(
+                  children: state.info!.defaultReasonList
+                      .map(
+                        (e) => ListTile(
+                          title: Text(e),
+                          onTap: () {
+                            context.pop();
+                            setState(() {
+                              reasonController.text = e;
+                            });
+                          },
                         ),
-                      ),
-                    ),
+                      )
+                      .toList(),
+                ),
               ),
+            ),
+          ),
         ),
       );
     }
@@ -274,10 +271,9 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       providers: [
         RepositoryProvider(create: (_) => RateRepository()),
         BlocProvider(
-          create:
-              (context) =>
-                  RateBloc(rateRepository: context.repo())
-                    ..add(RateFetchInfoRequested(pid: widget.pid, rateAction: widget.rateAction)),
+          create: (context) =>
+              RateBloc(rateRepository: context.repo())
+                ..add(RateFetchInfoRequested(pid: widget.pid, rateAction: widget.rateAction)),
         ),
       ],
       child: BlocListener<RateBloc, RateState>(

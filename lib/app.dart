@@ -185,33 +185,28 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             },
           ),
           BlocProvider(
-            create:
-                (context) => NotificationBloc(
-                  notificationRepository: context.repo(),
-                  infoRepository: context.repo(),
-                  authRepo: context.repo(),
-                  storageProvider: getIt(),
-                ),
+            create: (context) => NotificationBloc(
+              notificationRepository: context.repo(),
+              infoRepository: context.repo(),
+              authRepo: context.repo(),
+              storageProvider: getIt(),
+            ),
           ),
           BlocProvider(
-            create:
-                (context) => SettingsBloc(
-                  fragmentsRepository: context.repo(),
-                  settingsRepository: getIt.get<SettingsRepository>(),
-                ),
+            create: (context) =>
+                SettingsBloc(fragmentsRepository: context.repo(), settingsRepository: getIt.get<SettingsRepository>()),
           ),
           BlocProvider(
-            create:
-                (context) => ThreadVisitHistoryBloc(context.repo())..add(const ThreadVisitHistoryFetchAllRequested()),
+            create: (context) =>
+                ThreadVisitHistoryBloc(context.repo())..add(const ThreadVisitHistoryFetchAllRequested()),
           ),
           // Become top-level because of background auto-checkin feature.
           BlocProvider(
-            create:
-                (context) => CheckinBloc(
-                  checkinRepository: context.repo(),
-                  authenticationRepository: context.repo(),
-                  settingsRepository: getIt(),
-                ),
+            create: (context) => CheckinBloc(
+              checkinRepository: context.repo(),
+              authenticationRepository: context.repo(),
+              settingsRepository: getIt(),
+            ),
           ),
           BlocProvider(
             create: (context) {
@@ -227,12 +222,11 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             },
           ),
           BlocProvider(
-            create:
-                (context) => ThemeCubit(
-                  accentColor: widget.color >= 0 ? Color(widget.color) : null,
-                  themeModeIndex: widget.themeModeIndex,
-                  fontFamily: widget.fontFamily,
-                ),
+            create: (context) => ThemeCubit(
+              accentColor: widget.color >= 0 ? Color(widget.color) : null,
+              themeModeIndex: widget.themeModeIndex,
+              fontFamily: widget.fontFamily,
+            ),
           ),
           BlocProvider(
             create: (context) {

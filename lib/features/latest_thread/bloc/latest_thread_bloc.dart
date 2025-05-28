@@ -82,13 +82,12 @@ final class LatestThreadBloc extends Bloc<LatestThreadEvent, LatestThreadState> 
   }
 
   (List<LatestThread>?, String? nextPageUrl) _parseThreadList(uh.Document document) {
-    final data =
-        document
-            .querySelector('div#threadlist > ul')
-            ?.querySelectorAll('li')
-            .map(LatestThread.fromLi)
-            .whereType<LatestThread>()
-            .toList();
+    final data = document
+        .querySelector('div#threadlist > ul')
+        ?.querySelectorAll('li')
+        .map(LatestThread.fromLi)
+        .whereType<LatestThread>()
+        .toList();
     final nextPageUrl = document.querySelector('div#ct_shell div.pg > a.nxt')?.firstHref()?.prependHost();
     return (data ?? const [], nextPageUrl);
   }

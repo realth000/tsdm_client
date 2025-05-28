@@ -78,11 +78,10 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
       chunkEvents: chunkEvents.stream,
       scale: key.scale,
       debugLabel: key.url,
-      informationCollector:
-          () => <DiagnosticsNode>[
-            DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
-            DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
-          ],
+      informationCollector: () => <DiagnosticsNode>[
+        DiagnosticsProperty<ImageProvider>('CachedImageProvider', this),
+        DiagnosticsProperty<CachedImageProvider>('ImageKey', key),
+      ],
     );
   }
 
@@ -105,10 +104,9 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
         ),
       };
 
-      final bytes =
-          await TaskOption(
-            () => f,
-          ).orElse<Uint8List>(() => TaskOption(_onImageError)).getOrElse(() => Uint8List(0)).run();
+      final bytes = await TaskOption(
+        () => f,
+      ).orElse<Uint8List>(() => TaskOption(_onImageError)).getOrElse(() => Uint8List(0)).run();
       if (bytes.lengthInBytes == 0) {
         return ui.instantiateImageCodecFromBuffer(await getPlaceholderImageData());
       }

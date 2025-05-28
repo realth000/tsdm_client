@@ -54,8 +54,10 @@ class PinSection extends StatelessWidget with LoggerMixin {
   /// wrap in a [Card].
   /// All [PinnedThread] inside [threads] should guarantee not null.
   Widget _buildSectionThreads(BuildContext context, List<PinnedThread?> threads, {bool reverseTitle = false}) {
-    final listTileList =
-        threads.whereType<PinnedThread>().map((e) => _sectionThreadBuilder(context, e, isRank: reverseTitle)).toList();
+    final listTileList = threads
+        .whereType<PinnedThread>()
+        .map((e) => _sectionThreadBuilder(context, e, isRank: reverseTitle))
+        .toList();
 
     return Column(children: listTileList);
   }
@@ -76,7 +78,12 @@ class PinSection extends StatelessWidget with LoggerMixin {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(children: [sizedBoxW12H12, Text(sectionName, style: Theme.of(context).textTheme.titleLarge)]),
+                Row(
+                  children: [
+                    sizedBoxW12H12,
+                    Text(sectionName, style: Theme.of(context).textTheme.titleLarge),
+                  ],
+                ),
                 sizedBoxW12H12,
                 threadWidgetList,
               ],

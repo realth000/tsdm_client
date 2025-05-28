@@ -351,21 +351,19 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     await showCustomBottomSheet<void>(
       context: context,
       title: context.t.postEditPage.editPostTitle,
-      childrenBuilder:
-          (context) =>
-              state.content!.threadTypeList!
-                  .map(
-                    (e) => SelectableListTile(
-                      title: Text(e.name),
-                      selected: e.name == threadTypeController.text,
-                      onTap: () {
-                        threadType = e;
-                        threadTypeController.text = e.name;
-                        context.pop();
-                      },
-                    ),
-                  )
-                  .toList(),
+      childrenBuilder: (context) => state.content!.threadTypeList!
+          .map(
+            (e) => SelectableListTile(
+              title: Text(e.name),
+              selected: e.name == threadTypeController.text,
+              onTap: () {
+                threadType = e;
+                threadTypeController.text = e.name;
+                context.pop();
+              },
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -379,26 +377,23 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     await showCustomBottomSheet<void>(
       context: context,
       title: context.t.postEditPage.additionalOptions,
-      childrenBuilder:
-          (context) =>
-              additionalOptionsMap!.values
-                  .map(
-                    (e) => StatefulBuilder(
-                      builder: (context, setState) {
-                        return SectionSwitchListTile(
-                          title: Text(e.readableName),
-                          value: additionalOptionsMap![e.name]!.checked,
-                          onChanged:
-                              e.disabled
-                                  ? null
-                                  : (value) => setState(() {
-                                    additionalOptionsMap![e.name] = e.copyWith(checked: value);
-                                  }),
-                        );
-                      },
-                    ),
-                  )
-                  .toList(),
+      childrenBuilder: (context) => additionalOptionsMap!.values
+          .map(
+            (e) => StatefulBuilder(
+              builder: (context, setState) {
+                return SectionSwitchListTile(
+                  title: Text(e.readableName),
+                  value: additionalOptionsMap![e.name]!.checked,
+                  onChanged: e.disabled
+                      ? null
+                      : (value) => setState(() {
+                          additionalOptionsMap![e.name] = e.copyWith(checked: value);
+                        }),
+                );
+              },
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -448,12 +443,11 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
             suffixText: ' $threadTitleRestLength',
             suffixIcon: IconButton(
               icon: const Icon(Icons.info_outline),
-              onPressed:
-                  () async => showMessageSingleButtonDialog(
-                    context: context,
-                    title: tr.whyTitleDialog.title,
-                    message: tr.whyTitleDialog.detail,
-                  ),
+              onPressed: () async => showMessageSingleButtonDialog(
+                context: context,
+                title: tr.whyTitleDialog.title,
+                message: tr.whyTitleDialog.detail,
+              ),
             ),
           ),
           onChanged: (value) {
@@ -485,7 +479,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     if (ret.isEmpty) {
       return Container();
     }
-    return Padding(padding: edgeInsetsL8R8.add(edgeInsetsT8), child: Row(children: ret.insertBetween(sizedBoxW24H24)));
+    return Padding(
+      padding: edgeInsetsL8R8.add(edgeInsetsT8),
+      child: Row(children: ret.insertBetween(sizedBoxW24H24)),
+    );
   }
 
   /// Build the row to control a
@@ -792,23 +789,20 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 actions: [
                   if (widget.editType.isEditingDraft) ...[
                     IconButton(
-                      onPressed:
-                          state.status == PostEditStatus.uploading
-                              ? null
-                              : () async => _onFinish(context, state, saveDraft: true),
-                      icon:
-                          state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
-                              ? sizedCircularProgressIndicator
-                              : Icon(MdiIcons.contentSaveEditOutline, color: Theme.of(context).colorScheme.secondary),
+                      onPressed: state.status == PostEditStatus.uploading
+                          ? null
+                          : () async => _onFinish(context, state, saveDraft: true),
+                      icon: state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.saveDraft
+                          ? sizedCircularProgressIndicator
+                          : Icon(MdiIcons.contentSaveEditOutline, color: Theme.of(context).colorScheme.secondary),
                       tooltip: context.t.postEditPage.saveAsDraft,
                     ),
                   ],
                   IconButton(
                     tooltip: context.t.postEditPage.publish,
-                    icon:
-                        state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
-                            ? sizedCircularProgressIndicator
-                            : const Icon(Icons.send),
+                    icon: state.status == PostEditStatus.uploading && uploadMethod == _UploadMethod.publish
+                        ? sizedCircularProgressIndicator
+                        : const Icon(Icons.send),
                     onPressed: state.status == PostEditStatus.uploading ? null : () async => _onFinish(context, state),
                   ),
                 ],

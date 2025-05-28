@@ -55,17 +55,16 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
       vsync: this,
     )..addListener(_updateIndexListener!);
 
-    final groupTabBodyList =
-        forumGroupList
-            .map(
-              (e) => ListView.separated(
-                padding: edgeInsetsL12T4R12,
-                itemCount: e.forumList.length,
-                itemBuilder: (context, index) => ForumCard(e.forumList[index]),
-                separatorBuilder: (context, index) => sizedBoxW4H4,
-              ),
-            )
-            .toList();
+    final groupTabBodyList = forumGroupList
+        .map(
+          (e) => ListView.separated(
+            padding: edgeInsetsL12T4R12,
+            itemCount: e.forumList.length,
+            itemBuilder: (context, index) => ForumCard(e.forumList[index]),
+            separatorBuilder: (context, index) => sizedBoxW4H4,
+          ),
+        )
+        .toList();
 
     _refreshController.finishRefresh();
 
@@ -95,10 +94,9 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create:
-          (_) =>
-              TopicsBloc(forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context))
-                ..add(TopicsLoadRequested()),
+      create: (_) =>
+          TopicsBloc(forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context))
+            ..add(TopicsLoadRequested()),
       child: BlocBuilder<TopicsBloc, TopicsState>(
         builder: (context, state) {
           final body = switch (state.status) {
@@ -149,7 +147,11 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
               // Some server enforced situation.
               bottom: state.forumGroupList.isNotEmpty ? tabBar : null,
             ),
-            body: SafeArea(left: false, top: false, child: AnimatedSwitcher(duration: duration200, child: body)),
+            body: SafeArea(
+              left: false,
+              top: false,
+              child: AnimatedSwitcher(duration: duration200, child: body),
+            ),
           );
         },
       ),

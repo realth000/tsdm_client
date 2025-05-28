@@ -88,17 +88,15 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
                 autofocus: true,
                 decoration: InputDecoration(
                   labelText: tr.username,
-                  suffixIcon:
-                      userNameNotEmpty
-                          ? IconButton(
-                            icon: const Icon(Icons.open_in_new),
-                            onPressed:
-                                () async => context.pushNamed(
-                                  ScreenPaths.profile,
-                                  queryParameters: {'username': controller.text.trim()},
-                                ),
-                          )
-                          : null,
+                  suffixIcon: userNameNotEmpty
+                      ? IconButton(
+                          icon: const Icon(Icons.open_in_new),
+                          onPressed: () async => context.pushNamed(
+                            ScreenPaths.profile,
+                            queryParameters: {'username': controller.text.trim()},
+                          ),
+                        )
+                      : null,
                 ),
                 validator: (v) => v == null || v.isEmpty ? tr.errorEmpty : null,
               ),
@@ -107,13 +105,12 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
             TextButton(
               // Only available when form hash is not null.
               // Currently means friend recommendation succeeded.
-              onPressed:
-                  userNameNotEmpty && state.formHash != null && state.searchStatus != UserMentionStatus.loading
-                      ? () async => context.read<UserMentionCubit>().searchUserByName(
-                        keyword: controller.text.trim(),
-                        formHash: state.formHash!,
-                      )
-                      : null,
+              onPressed: userNameNotEmpty && state.formHash != null && state.searchStatus != UserMentionStatus.loading
+                  ? () async => context.read<UserMentionCubit>().searchUserByName(
+                      keyword: controller.text.trim(),
+                      formHash: state.formHash!,
+                    )
+                  : null,
               child: Text(tr.search),
             ),
           ],
@@ -146,10 +143,9 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
             Text(tr.randomFriend, style: Theme.of(context).textTheme.labelLarge),
             IconButton(
               icon: const Icon(Icons.refresh),
-              onPressed:
-                  state.recommendStatus == UserMentionStatus.loading
-                      ? null
-                      : () async => context.read<UserMentionCubit>().recommendFriend(),
+              onPressed: state.recommendStatus == UserMentionStatus.loading
+                  ? null
+                  : () async => context.read<UserMentionCubit>().recommendFriend(),
             ),
           ],
         ),
@@ -191,30 +187,29 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
         BlocProvider(create: (context) => UserMentionCubit(context.repo())..recommendFriend()),
       ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(
-        builder:
-            (context, state) => AlertDialog(
-              title: Text(tr.title),
-              scrollable: true,
-              content: Form(
-                key: formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [_buildSearch(context, state), sizedBoxW16H16, _buildRandomFriend(context, state)],
-                ),
-              ),
-              actions: [
-                TextButton(
-                  onPressed: () {
-                    if (!formKey.currentState!.validate()) {
-                      return;
-                    }
-                    context.pop(controller.text);
-                  },
-                  child: Text(context.t.general.ok),
-                ),
-              ],
+        builder: (context, state) => AlertDialog(
+          title: Text(tr.title),
+          scrollable: true,
+          content: Form(
+            key: formKey,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [_buildSearch(context, state), sizedBoxW16H16, _buildRandomFriend(context, state)],
             ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                if (!formKey.currentState!.validate()) {
+                  return;
+                }
+                context.pop(controller.text);
+              },
+              child: Text(context.t.general.ok),
+            ),
+          ],
+        ),
       ),
     );
   }

@@ -54,27 +54,26 @@ class NewcomerReportCard extends StatelessWidget {
                 defaultColumnWidth: const IntrinsicColumnWidth(),
                 columnWidths: const <int, TableColumnWidth>{0: FixedColumnWidth(100)},
                 defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-                children:
-                    data
-                        .mapIndexed(
-                          (idx, e) => TableRow(
-                            decoration: BoxDecoration(
-                              color: idx.isOdd ? Theme.of(context).colorScheme.surfaceContainerHigh : null,
+                children: data
+                    .mapIndexed(
+                      (idx, e) => TableRow(
+                        decoration: BoxDecoration(
+                          color: idx.isOdd ? Theme.of(context).colorScheme.surfaceContainerHigh : null,
+                        ),
+                        children: [
+                          TableCell(
+                            child: Text(
+                              e.title,
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
                             ),
-                            children: [
-                              TableCell(
-                                child: Text(
-                                  e.title,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                                ),
-                              ),
-                              TableCell(child: Text(e.data, style: Theme.of(context).textTheme.bodyMedium)),
-                            ],
                           ),
-                        )
-                        .toList(),
+                          TableCell(child: Text(e.data, style: Theme.of(context).textTheme.bodyMedium)),
+                        ],
+                      ),
+                    )
+                    .toList(),
               ),
             ),
           ],

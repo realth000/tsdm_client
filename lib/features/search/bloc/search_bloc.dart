@@ -153,12 +153,11 @@ class SearchBloc extends Bloc<SearchEvent, SearchState> with LoggerMixin {
   }
 
   Future<SearchResult> _parseSearchResult(uh.Document document) async {
-    final threadList =
-        document
-            .querySelectorAll('div#ct > div#ct_shell > div#left_s > div.ts_se_rs')
-            .map(SearchedThread.fromDivNode)
-            .whereType<SearchedThread>()
-            .toList();
+    final threadList = document
+        .querySelectorAll('div#ct > div#ct_shell > div#left_s > div.ts_se_rs')
+        .map(SearchedThread.fromDivNode)
+        .whereType<SearchedThread>()
+        .toList();
 
     /// Filter out "Results about: ".
     final count = document.querySelector('h3')?.firstEndDeepText()?.split(' ').firstOrNull?.parseToInt();

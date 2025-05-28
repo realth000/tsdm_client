@@ -134,7 +134,11 @@ const sizedCircularProgressIndicator = SizedBox(
 /// Widget with 24 height and infinite width to use in shimmers.
 const sizedH24Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(width: double.infinity, height: 24, child: ColoredBox(color: Colors.white)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 24,
+    child: ColoredBox(color: Colors.white),
+  ),
 );
 
 /// Widget with 40 width and height to use in shimmers.
@@ -158,21 +162,33 @@ const sizedW120H40Shimmer = ClipRRect(
 /// Widget with 40 height and infinite width to use in shimmers.
 const sizedH40Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(width: double.infinity, height: 40, child: ColoredBox(color: Colors.white)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 40,
+    child: ColoredBox(color: Colors.white),
+  ),
 );
 
 /// Widget with 60 height infinite width to use in shimmers.
 ///
 const sizedH60Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(width: double.infinity, height: 60, child: ColoredBox(color: Colors.white)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 60,
+    child: ColoredBox(color: Colors.white),
+  ),
 );
 
 /// Widget with 100 height infinite width to use in shimmers.
 ///
 const sizedH100Shimmer = ClipRRect(
   borderRadius: BorderRadius.all(Radius.circular(10)),
-  child: SizedBox(width: double.infinity, height: 100, child: ColoredBox(color: Colors.white)),
+  child: SizedBox(
+    width: double.infinity,
+    height: 100,
+    child: ColoredBox(color: Colors.white),
+  ),
 );
 
 /// Define window size boundaries.

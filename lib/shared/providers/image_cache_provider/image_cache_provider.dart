@@ -534,8 +534,9 @@ final class ImageCacheProvider with LoggerMixin {
       usage: cacheInfo.usage,
       width: uiImage.width,
       height: uiImage.height,
-      cacheSize:
-          File('${_imageCacheDirectory.path}${path.separator}${cacheInfo.fileName}').statSync().size.withSizeHint(),
+      cacheSize: File(
+        '${_imageCacheDirectory.path}${path.separator}${cacheInfo.fileName}',
+      ).statSync().size.withSizeHint(),
     );
   }
 }
