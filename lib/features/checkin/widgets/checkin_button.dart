@@ -36,7 +36,10 @@ class CheckinButton extends StatelessWidget {
     return BlocListener<CheckinBloc, CheckinState>(
       listener: (context, state) async {
         if (state is CheckinStateSuccess) {
-          return showSnackBar(context: context, message: tr.success(msg: state.message));
+          return showSnackBar(
+            context: context,
+            message: tr.success(msg: state.message),
+          );
         }
         if (state is CheckinStateFailed && enableSnackBar) {
           await _showCheckinFailedSnackBar(context, state.result);

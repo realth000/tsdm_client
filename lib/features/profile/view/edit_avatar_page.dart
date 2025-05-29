@@ -56,7 +56,10 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
         ],
         Padding(
           padding: edgeInsetsL12R12,
-          child: TextField(controller: _avatarController, decoration: InputDecoration(labelText: tr.avatarUrl)),
+          child: TextField(
+            controller: _avatarController,
+            decoration: InputDecoration(labelText: tr.avatarUrl),
+          ),
         ),
         sizedBoxW12H12,
         Padding(
@@ -65,24 +68,22 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
             children: [
               Expanded(
                 child: FilledButton.tonal(
-                  onPressed:
-                      state.status == EditAvatarStatus.uploading || _avatarController.text.isEmpty
-                          ? null
-                          : () => setState(() => _previewUrl = _avatarController.text),
+                  onPressed: state.status == EditAvatarStatus.uploading || _avatarController.text.isEmpty
+                      ? null
+                      : () => setState(() => _previewUrl = _avatarController.text),
                   child: Text(tr.preview),
                 ),
               ),
               sizedBoxW8H8,
               Expanded(
                 child: FilledButton(
-                  onPressed:
-                      state.formHash == null || state.status == EditAvatarStatus.uploading
-                          ? null
-                          : () {
-                            context.read<EditAvatarBloc>().add(
-                              EditAvatarUploadRequested(avatarUrl: _avatarController.text, formHash: state.formHash!),
-                            );
-                          },
+                  onPressed: state.formHash == null || state.status == EditAvatarStatus.uploading
+                      ? null
+                      : () {
+                          context.read<EditAvatarBloc>().add(
+                            EditAvatarUploadRequested(avatarUrl: _avatarController.text, formHash: state.formHash!),
+                          );
+                        },
                   child: Text(tr.submit),
                 ),
               ),

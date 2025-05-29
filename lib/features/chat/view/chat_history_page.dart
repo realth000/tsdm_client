@@ -110,9 +110,8 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         RepositoryProvider(create: (context) => const ReplyRepository()),
         BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
         BlocProvider(
-          create:
-              (context) =>
-                  ChatHistoryBloc(context.repo())..add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: null)),
+          create: (context) =>
+              ChatHistoryBloc(context.repo())..add(ChatHistoryLoadHistoryRequested(uid: widget.uid, page: null)),
         ),
       ],
       child: MultiBlocListener(
@@ -134,7 +133,10 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
                   context.pop();
                 }
               } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
-                showSnackBar(context: context, message: tr.failed(message: state.failedReason!));
+                showSnackBar(
+                  context: context,
+                  message: tr.failed(message: state.failedReason!),
+                );
               }
             },
           ),

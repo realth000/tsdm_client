@@ -33,7 +33,7 @@ class AppTheme {
     drawerRadius: 0,
   );
 
-  static CardTheme _buildCardTheme() => const CardTheme(elevation: 0);
+  static CardThemeData _buildCardTheme() => const CardThemeData(elevation: 0);
 
   static ChipThemeData _buildChipTheme() => const ChipThemeData(padding: EdgeInsets.all(2));
 
@@ -45,7 +45,7 @@ class AppTheme {
   );
 
   /// Global theme for [TabBar].
-  static TabBarTheme _buildTabBarTheme() => const TabBarTheme(dividerHeight: 0);
+  static TabBarThemeData _buildTabBarTheme() => const TabBarThemeData(dividerHeight: 0);
 
   static ProgressIndicatorThemeData _buildProcessIndicatorTheme() => const ProgressIndicatorThemeData(
     // This flag is deprecated since 3.29 but not default to false yet. Keep
@@ -77,18 +77,17 @@ class AppTheme {
     }
     return FlexThemeData.light(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors:
-          seedScheme != null
-              ? FlexSchemeColor(
-                primary: seedScheme.primary,
-                primaryContainer: seedScheme.primaryContainer,
-                secondary: seedScheme.secondary,
-                secondaryContainer: seedScheme.secondaryContainer,
-                tertiary: seedScheme.tertiary,
-                tertiaryContainer: seedScheme.tertiaryContainer,
-                error: seedScheme.error,
-              )
-              : null,
+      colors: seedScheme != null
+          ? FlexSchemeColor(
+              primary: seedScheme.primary,
+              primaryContainer: seedScheme.primaryContainer,
+              secondary: seedScheme.secondary,
+              secondaryContainer: seedScheme.secondaryContainer,
+              tertiary: seedScheme.tertiary,
+              tertiaryContainer: seedScheme.tertiaryContainer,
+              error: seedScheme.error,
+            )
+          : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,
@@ -115,18 +114,17 @@ class AppTheme {
     }
     return FlexThemeData.dark(
       fontFamily: fontFamily.isEmpty ? null : fontFamily,
-      colors:
-          seedScheme != null
-              ? FlexSchemeColor(
-                primary: seedScheme.primary,
-                primaryContainer: seedScheme.primaryContainer,
-                secondary: seedScheme.secondary,
-                secondaryContainer: seedScheme.secondaryContainer,
-                tertiary: seedScheme.tertiary,
-                tertiaryContainer: seedScheme.tertiaryContainer,
-                error: seedScheme.error,
-              )
-              : null,
+      colors: seedScheme != null
+          ? FlexSchemeColor(
+              primary: seedScheme.primary,
+              primaryContainer: seedScheme.primaryContainer,
+              secondary: seedScheme.secondary,
+              secondaryContainer: seedScheme.secondaryContainer,
+              tertiary: seedScheme.tertiary,
+              tertiaryContainer: seedScheme.tertiaryContainer,
+              error: seedScheme.error,
+            )
+          : null,
       scheme: seedColor == null ? FlexScheme.bahamaBlue : null,
       tabBarStyle: FlexTabBarStyle.forBackground,
       tooltipsMatchBackground: true,

@@ -71,28 +71,32 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> wit
       return;
     }
 
-    final previousPage =
-        _re
-            .firstMatch(rootNode.querySelector('div.pg > span.pgb > a')?.attributes['href'] ?? '')
-            ?.namedGroup('page')
-            ?.parseToInt();
-    final nextPage =
-        _re
-            .firstMatch(rootNode.querySelector('div.pg > a.nxt')?.attributes['href'] ?? '')
-            ?.namedGroup('page')
-            ?.parseToInt();
+    final previousPage = _re
+        .firstMatch(rootNode.querySelector('div.pg > span.pgb > a')?.attributes['href'] ?? '')
+        ?.namedGroup('page')
+        ?.parseToInt();
+    final nextPage = _re
+        .firstMatch(rootNode.querySelector('div.pg > a.nxt')?.attributes['href'] ?? '')
+        ?.namedGroup('page')
+        ?.parseToInt();
 
-    final messages =
-        rootNode.querySelectorAll('div#pm_ul > dl').map(ChatMessage.fromDl).whereType<ChatMessage>().toList().reversed;
+    final messages = rootNode
+        .querySelectorAll('div#pm_ul > dl')
+        .map(ChatMessage.fromDl)
+        .whereType<ChatMessage>()
+        .toList()
+        .reversed;
 
     // Parse send target.
     ChatHistorySendTarget? target;
     final formNode = document.querySelector('form#pmform');
     if (formNode != null) {
-      final targetUrl = formNode.attributes['action']?.unescapeHtml()?.prependHost()
-      // Append "inajax=1" parameter to let server only return the content
-      // xml.
-      .append('&inajax=1');
+      final targetUrl = formNode.attributes['action']
+          ?.unescapeHtml()
+          ?.prependHost()
+          // Append "inajax=1" parameter to let server only return the content
+          // xml.
+          .append('&inajax=1');
       final formHash = formNode.querySelector('input[name="formhash"]')?.attributes['value'];
       final pmid = targetUrl?.tryParseAsUri()?.tryGetQueryParameters()?['pmid'];
       if (targetUrl != null && formHash != null && pmid != null) {

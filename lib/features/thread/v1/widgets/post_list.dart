@@ -192,32 +192,31 @@ class _PostListState extends State<PostList> with LoggerMixin {
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary);
 
     if (_listScrollController.offset <= expandHeight) {
-      final breadFrags =
-          breadcrumbs
-              .map(
-                (e) => [
-                  MouseRegion(
-                    cursor: SystemMouseCursors.click,
-                    child: GestureDetector(
-                      onTap: () async {
-                        final gid = e.link.tryGetQueryParameters()?['gid'];
-                        if (gid != null) {
-                          await context.pushNamed(
-                            ScreenPaths.forumGroup,
-                            pathParameters: {'gid': gid},
-                            queryParameters: {'title': e.description},
-                          );
-                          return;
-                        }
-                        await context.dispatchAsUrl(e.link.toString());
-                      },
-                      child: Text(e.description, style: infoTextHighlightStyle),
-                    ),
-                  ),
-                  const Text(' > '),
-                ],
-              )
-              .flattenedToList;
+      final breadFrags = breadcrumbs
+          .map(
+            (e) => [
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () async {
+                    final gid = e.link.tryGetQueryParameters()?['gid'];
+                    if (gid != null) {
+                      await context.pushNamed(
+                        ScreenPaths.forumGroup,
+                        pathParameters: {'gid': gid},
+                        queryParameters: {'title': e.description},
+                      );
+                      return;
+                    }
+                    await context.dispatchAsUrl(e.link.toString());
+                  },
+                  child: Text(e.description, style: infoTextHighlightStyle),
+                ),
+              ),
+              const Text(' > '),
+            ],
+          )
+          .flattenedToList;
 
       return Padding(
         padding: edgeInsetsL12T4R12B4,
@@ -228,30 +227,28 @@ class _PostListState extends State<PostList> with LoggerMixin {
             child: ListView(
               scrollDirection: Axis.horizontal,
               reverse: true,
-              children:
-                  <Widget>[
-                    ...breadFrags,
-                    if (_threadType?.typeID != null && widget.forumID != null)
-                      MouseRegion(
-                        cursor: SystemMouseCursors.click,
-                        child: GestureDetector(
-                          onTap:
-                              () async => context.pushNamed(
-                                ScreenPaths.forum,
-                                pathParameters: {'fid': '${widget.forumID!}'},
-                                queryParameters: {
-                                  'threadTypeName': _threadType!.name,
-                                  'threadTypeID': '${_threadType!.typeID}',
-                                },
-                              ),
-                          child: Text('[${_threadType!.name}]', style: infoTextHighlightStyle),
-                        ),
+              children: <Widget>[
+                ...breadFrags,
+                if (_threadType?.typeID != null && widget.forumID != null)
+                  MouseRegion(
+                    cursor: SystemMouseCursors.click,
+                    child: GestureDetector(
+                      onTap: () async => context.pushNamed(
+                        ScreenPaths.forum,
+                        pathParameters: {'fid': '${widget.forumID!}'},
+                        queryParameters: {
+                          'threadTypeName': _threadType!.name,
+                          'threadTypeID': '${_threadType!.typeID}',
+                        },
                       ),
-                    Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
-                    if (viewCount != null || replyCount != null)
-                      Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
-                    if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
-                  ].reversed.toList(),
+                      child: Text('[${_threadType!.name}]', style: infoTextHighlightStyle),
+                    ),
+                  ),
+                Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
+                if (viewCount != null || replyCount != null)
+                  Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
+                if (widget.isDraft) Text('[${context.t.threadPage.draft}]'),
+              ].reversed.toList(),
             ),
           ),
         ),

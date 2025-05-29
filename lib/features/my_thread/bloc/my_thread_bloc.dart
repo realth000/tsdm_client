@@ -180,13 +180,12 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> with LoggerM
   }
 
   (List<MyThread>, String? nextPageurl) _parseThreadList(uh.Document document) {
-    final data =
-        document
-            .querySelectorAll('div.bm.bw0 > div.tl > form > table > tbody > tr')
-            .skip(1)
-            .map(MyThread.fromTr)
-            .whereType<MyThread>()
-            .toList();
+    final data = document
+        .querySelectorAll('div.bm.bw0 > div.tl > form > table > tbody > tr')
+        .skip(1)
+        .map(MyThread.fromTr)
+        .whereType<MyThread>()
+        .toList();
 
     final nextPageUrl = document.querySelector('div.pgs.cl.mtm > div.pg > a.nxt')?.firstHref()?.prependHost();
 
@@ -194,12 +193,11 @@ final class MyThreadBloc extends Bloc<MyThreadEvent, MyThreadState> with LoggerM
   }
 
   (List<MyThread>, String? nextPageUrl) _parseReplyList(uh.Document document) {
-    final data =
-        document
-            .querySelectorAll('div.bm.bw0 > div.tl > form > table > tbody > tr.bw0_all')
-            .map(MyThread.fromTr)
-            .whereType<MyThread>()
-            .toList();
+    final data = document
+        .querySelectorAll('div.bm.bw0 > div.tl > form > table > tbody > tr.bw0_all')
+        .map(MyThread.fromTr)
+        .whereType<MyThread>()
+        .toList();
     final nextPageUrl = document.querySelector('div.pgs.cl.mtm > div.pg > a.nxt')?.firstHref()?.prependHost();
     return (data, nextPageUrl);
   }

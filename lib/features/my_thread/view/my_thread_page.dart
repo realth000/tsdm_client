@@ -132,8 +132,8 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
       providers: [
         RepositoryProvider(create: (_) => MyThreadRepository()),
         BlocProvider(
-          create:
-              (context) => MyThreadBloc(myThreadRepository: context.repo())..add(MyThreadLoadInitialDataRequested()),
+          create: (context) =>
+              MyThreadBloc(myThreadRepository: context.repo())..add(MyThreadLoadInitialDataRequested()),
         ),
       ],
       child: BlocBuilder<MyThreadBloc, MyThreadState>(

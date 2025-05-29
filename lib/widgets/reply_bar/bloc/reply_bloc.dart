@@ -47,14 +47,13 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
 
   Future<void> _onReplyToPostRequested(ReplyToPostRequested event, _Emit emit) async {
     emit(state.copyWith(status: ReplyStatus.loading));
-    final ret =
-        await _replyRepository
-            .replyToPost(
-              replyParameters: event.replyParameters,
-              replyAction: event.replyAction,
-              replyMessage: event.replyMessage,
-            )
-            .run();
+    final ret = await _replyRepository
+        .replyToPost(
+          replyParameters: event.replyParameters,
+          replyAction: event.replyAction,
+          replyMessage: event.replyMessage,
+        )
+        .run();
     if (ret.isLeft()) {
       handle(ret.unwrapErr());
       emit(state.copyWith(status: ReplyStatus.failure));
@@ -84,10 +83,9 @@ class ReplyBloc extends Bloc<ReplyEvent, ReplyState> with LoggerMixin {
   Future<void> _onReplyChatHistoryRequested(ReplyChatHistoryRequested event, _Emit emit) async {
     emit(state.copyWith(status: ReplyStatus.loading));
     // TODO: Update chat history with returned pmid.
-    final result =
-        await _replyRepository
-            .replyHistoryPersonalMessage(targetUrl: event.targetUrl, formHash: event.formHash, message: event.message)
-            .run();
+    final result = await _replyRepository
+        .replyHistoryPersonalMessage(targetUrl: event.targetUrl, formHash: event.formHash, message: event.message)
+        .run();
     if (result.isLeft()) {
       final err = result.unwrapErr();
       if (err case ReplyPersonalMessageFailedException()) {

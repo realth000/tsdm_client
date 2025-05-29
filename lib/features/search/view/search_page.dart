@@ -168,11 +168,10 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
   Future<void> _gotoSpecifiedPage(BuildContext context, SearchState state) async {
     final page = await showDialog<int>(
       context: context,
-      builder:
-          (context) => RootPage(
-            DialogPaths.jumpPage,
-            JumpPageDialog(min: 1, current: state.searchResult!.currentPage, max: state.searchResult!.totalPages),
-          ),
+      builder: (context) => RootPage(
+        DialogPaths.jumpPage,
+        JumpPageDialog(min: 1, current: state.searchResult!.currentPage, max: state.searchResult!.totalPages),
+      ),
     );
     if (page == null || page == state.searchResult!.currentPage) {
       return;
@@ -344,12 +343,11 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
           onPressed: !searching && _hasPreviousPage(state) ? () async => _searchPreviousPage(context, state) : null,
         ),
         TextButton(
-          onPressed:
-              !searching && (_hasPreviousPage(state) || _hasNextPage(state)) && state.searchResult != null
-                  ? () async {
-                    await _gotoSpecifiedPage(context, state);
-                  }
-                  : null,
+          onPressed: !searching && (_hasPreviousPage(state) || _hasNextPage(state)) && state.searchResult != null
+              ? () async {
+                  await _gotoSpecifiedPage(context, state);
+                }
+              : null,
           child: Text('${state.searchResult?.currentPage ?? "-"}'),
         ),
         IconButton(

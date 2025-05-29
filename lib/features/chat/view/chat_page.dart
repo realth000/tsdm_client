@@ -133,7 +133,10 @@ final class _ChatPageState extends State<ChatPage> {
                   context.pop();
                 }
               } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
-                showSnackBar(context: context, message: tr.failed(message: state.failedReason!));
+                showSnackBar(
+                  context: context,
+                  message: tr.failed(message: state.failedReason!),
+                );
               }
             },
           ),
