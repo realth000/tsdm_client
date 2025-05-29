@@ -131,7 +131,6 @@ class EditorToolbar extends StatelessWidget {
       afterButtonPressed: afterButtonPressed,
       focusNode: editorFocusNode,
       controller: bbcodeController,
-      config: const BBCodeEditorToolbarConfiguration(),
       emojiPicker: (context) async => showEmojiPicker(context),
       colorPicker: (context, initialColor) async => showColorPicker(context, initialColor),
       urlPicker: (context, url, description) async => showUrlPicker(context, url: url, description: description),
