@@ -223,7 +223,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       final tr = context.t.postEditPage.threadPublish;
       final ret = await showQuestionDialog(
         context: context,
-        title: tr.title,
+        title: saveDraft ? context.t.postEditPage.saveAsDraft : tr.title,
         richMessage: tr.warningBeforePost.body(
           forumName: TextSpan(
             text: state.forumName ?? '<unknown>',
