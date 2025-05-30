@@ -93,6 +93,9 @@ enum EditorFeatures {
 
   /// Paste clipboard.
   paste,
+
+  /// Free area.
+  free,
 }
 
 /// Toolbar for the bbcode editor.
@@ -164,6 +167,7 @@ class EditorToolbar extends StatelessWidget {
       showClipboardCopyButton: _hasFeature(EditorFeatures.copy),
       showClipboardPasteButton: _hasFeature(EditorFeatures.paste),
       showUserMentionButton: _hasFeature(EditorFeatures.userMention),
+      showFree: _hasFeature(EditorFeatures.free),
     );
 
     if (isMobile) {
