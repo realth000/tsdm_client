@@ -49,7 +49,7 @@ Future<T?> showCustomBottomSheet<T>({
             // Sheet widget works with any scrollable widget such as
             // ListView, GridView, CustomScrollView, etc.
             child: SheetContentScaffold(
-              backgroundColor: Theme.of(context).colorScheme.surface,
+              backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
               topBar: pinnedWidget == null
                   ? PreferredSize(
                       preferredSize: const Size.fromHeight(kToolbarHeight),
