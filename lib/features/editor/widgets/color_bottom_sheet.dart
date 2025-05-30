@@ -297,7 +297,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
     final tr = context.t.colorPickerDialog;
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 700),
+      constraints: const BoxConstraints(maxHeight: 450),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
