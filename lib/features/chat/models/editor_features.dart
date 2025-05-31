@@ -19,4 +19,5 @@ const chatPagesDisabledFeatures = {
   EditorFeatures.cut,
   EditorFeatures.copy,
   EditorFeatures.paste,
+  EditorFeatures.free,
 };

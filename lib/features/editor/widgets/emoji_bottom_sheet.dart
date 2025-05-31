@@ -48,6 +48,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
     final tabs = emojiGroupList.map((e) => Tab(child: Text(e.name)));
     final tabViews = emojiGroupList.map(
       (e) => GridView.builder(
+        padding: edgeInsetsL12R12,
         shrinkWrap: true,
         gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: 50,

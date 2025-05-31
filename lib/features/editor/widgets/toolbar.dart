@@ -93,6 +93,9 @@ enum EditorFeatures {
 
   /// Paste clipboard.
   paste,
+
+  /// Free area.
+  free,
 }
 
 /// Toolbar for the bbcode editor.
@@ -132,9 +135,10 @@ class EditorToolbar extends StatelessWidget {
       focusNode: editorFocusNode,
       controller: bbcodeController,
       emojiPicker: (context) async => showEmojiPicker(context),
-      colorPicker: (context, initialColor) async => showColorPicker(context, initialColor),
+      colorPicker: (context, initialColor) async => showColorPicker(context, initialColor, PickerType.foreground),
       urlPicker: (context, url, description) async => showUrlPicker(context, url: url, description: description),
-      backgroundColorPicker: (context, initialColor) async => showColorPicker(context, initialColor),
+      backgroundColorPicker: (context, initialColor) async =>
+          showColorPicker(context, initialColor, PickerType.background),
       imagePicker: (context, url, width, height) => showImagePicker(context, url: url, width: width, height: height),
       usernamePicker: showUsernamePickerDialog,
       // Features.
@@ -164,6 +168,7 @@ class EditorToolbar extends StatelessWidget {
       showClipboardCopyButton: _hasFeature(EditorFeatures.copy),
       showClipboardPasteButton: _hasFeature(EditorFeatures.paste),
       showUserMentionButton: _hasFeature(EditorFeatures.userMention),
+      showFree: _hasFeature(EditorFeatures.free),
     );
 
     if (isMobile) {

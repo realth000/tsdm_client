@@ -206,12 +206,24 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     return '$baseUrl/forum.php?mod=post&action=edit&fid=$fid&tid=$tid&pid=$pid';
   }
 
+  Set<EditorFeatures> get _disabledFeatures {
+    final disabledFeatures = Set<EditorFeatures>.from(
+      fullScreen ? defaultFullScreenDisabledEditorFeatures : defaultEditorDisabledFeatures,
+    );
+    if (price != null) {
+      // Having price means currently we are editing the first floor.
+      disabledFeatures.remove(EditorFeatures.free);
+    }
+
+    return disabledFeatures;
+  }
+
   Future<void> _onFinish(BuildContext context, PostEditState state, {bool saveDraft = false}) async {
     if (widget.editType.isEditingDraft) {
       final tr = context.t.postEditPage.threadPublish;
       final ret = await showQuestionDialog(
         context: context,
-        title: tr.title,
+        title: saveDraft ? context.t.postEditPage.saveAsDraft : tr.title,
         richMessage: tr.warningBeforePost.body(
           forumName: TextSpan(
             text: state.forumName ?? '<unknown>',
@@ -288,6 +300,10 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
 
   // TODO: Fix duplicate with same logic in thread page.
   Widget _buildMobileToolbar(BuildContext context, PostEditState state) {
+    // if (widget.pid) {
+    //
+    // }
+
     return ChatBottomPanelContainer<_BottomPanelType>(
       controller: panelController,
       inputFocusNode: focusNode,
@@ -299,7 +315,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           _BottomPanelType.toolbar => Align(
             child: EditorToolbar(
               bbcodeController: bbcodeController,
-              disabledFeatures: fullScreen ? defaultFullScreenDisabledEditorFeatures : defaultEditorDisabledFeatures,
+              disabledFeatures: _disabledFeatures,
               editorFocusNode: focusNode,
             ),
           ),
@@ -635,7 +651,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     padding: edgeInsetsL4R4.add(edgeInsetsT4),
                     child: EditorToolbar(
                       bbcodeController: bbcodeController,
-                      disabledFeatures: defaultFullScreenDisabledEditorFeatures,
+                      disabledFeatures: _disabledFeatures,
                       editorFocusNode: focusNode,
                     ),
                   ),

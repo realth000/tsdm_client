@@ -88,6 +88,7 @@ const defaultEditorDisabledFeatures = {
   EditorFeatures.paste,
   EditorFeatures.codeBlock,
   EditorFeatures.quoteBlock,
+  EditorFeatures.free,
 };
 
 /// All features disabled by default.
@@ -98,6 +99,7 @@ const defaultFullScreenDisabledEditorFeatures = {
   EditorFeatures.cut,
   EditorFeatures.copy,
   EditorFeatures.paste,
+  EditorFeatures.free,
 };
 
 /// Medal image size fixed to 34 x 55

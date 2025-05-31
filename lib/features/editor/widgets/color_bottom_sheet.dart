@@ -14,14 +14,26 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
+/// What type of color is the picker run for.
+enum PickerType {
+  /// Foreground color.
+  foreground,
+
+  /// Background color.
+  background,
+}
+
 /// Show a bottom sheet provides all available foreground colors for user to
 /// choose.
-Future<PickColorResult?> showColorPicker(BuildContext context, Color? initialColor) async {
+Future<PickColorResult?> showColorPicker(BuildContext context, Color? initialColor, PickerType pickerType) async {
   // Load recent used colors.
   final recentColors = context.read<SettingsBloc>().state.settingsMap.editorRecentUsedCustomColors;
 
   return showCustomBottomSheet<PickColorResult>(
-    title: context.t.bbcodeEditor.foregroundColor.title,
+    title: switch (pickerType) {
+      PickerType.foreground => context.t.bbcodeEditor.foregroundColor.title,
+      PickerType.background => context.t.bbcodeEditor.backgroundColor.title,
+    },
     context: context,
     builder: (context) => RootPage(DialogPaths.colorPicker, _ColorBottomSheet(initialColor, recentColors)),
   );
@@ -285,7 +297,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
     final tr = context.t.colorPickerDialog;
 
     return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 700),
+      constraints: const BoxConstraints(maxHeight: 450),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
