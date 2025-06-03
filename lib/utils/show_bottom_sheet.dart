@@ -15,7 +15,6 @@ import 'package:tsdm_client/widgets/network_indicator_image.dart';
 Future<T?> showCustomBottomSheet<T>({
   required BuildContext context,
   required String title,
-  PreferredSizeWidget? pinnedWidget,
   List<Widget> Function(BuildContext context)? childrenBuilder,
   Widget Function(BuildContext context)? builder,
   Widget? bottomBar,
@@ -50,19 +49,19 @@ Future<T?> showCustomBottomSheet<T>({
             // ListView, GridView, CustomScrollView, etc.
             child: SheetContentScaffold(
               backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
-              topBar: pinnedWidget == null
-                  ? PreferredSize(
-                      preferredSize: const Size.fromHeight(kToolbarHeight),
-                      child: Center(child: Text(title, style: Theme.of(context).textTheme.titleLarge)),
-                    )
-                  : Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(title, style: Theme.of(context).textTheme.titleLarge),
-                        sizedBoxW8H8,
-                        pinnedWidget,
-                      ],
+              topBar: PreferredSize(
+                preferredSize: const Size.fromHeight(kToolbarHeight),
+                child: Stack(
+                  children: [
+                    Align(child: Text(title, style: Theme.of(context).textTheme.titleLarge)),
+                    Positioned(
+                      top: 6,
+                      right: 24,
+                      child: IconButton(icon: const Icon(Icons.close_outlined), onPressed: () async => context.pop()),
                     ),
+                  ],
+                ),
+              ),
               body: content,
               bottomBar: bottomBar,
             ),
