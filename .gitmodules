@@ -12,4 +12,4 @@
 	url = https://github.com/realth000/dart_bbcode_web_colors.git
 [submodule "packages/flutter_system_network_proxy"]
 	path = packages/flutter_system_network_proxy
-	url = git@github.com:realth000/flutter_system_network_proxy.git
+	url = https://github.com/realth000/flutter_system_network_proxy.git
