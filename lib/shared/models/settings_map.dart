@@ -47,6 +47,7 @@ class SettingsMap with SettingsMapMappable {
     required this.enableEditorBBCodeParser,
     required this.enableUpdateCheckOnStartup,
     required this.editorRecentUsedCustomColors,
+    required this.useDetectedProxyWhenStartup,
   });
 
   final String netClientAccept;
@@ -88,6 +89,7 @@ class SettingsMap with SettingsMapMappable {
   final bool enableEditorBBCodeParser;
   final bool enableUpdateCheckOnStartup;
   final List<int> editorRecentUsedCustomColors;
+  final bool useDetectedProxyWhenStartup;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -136,6 +138,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.enableEditorBBCodeParser => copyWith(enableEditorBBCodeParser: value as bool?),
       SettingsKeys.enableUpdateCheckOnStartup => copyWith(enableUpdateCheckOnStartup: value as bool?),
       SettingsKeys.editorRecentUsedCustomColors => copyWith(editorRecentUsedCustomColors: value as List<int>?),
+      SettingsKeys.useDetectedProxyWhenStartup => copyWith(useDetectedProxyWhenStartup: value as bool?),
     };
   }
 }

@@ -184,6 +184,10 @@
           "testing": "Testing...",
           "connected": "Proxy is running",
           "disconnected": "Proxy may not running"
+        },
+        "useDetectProxy": {
+          "title": "Auto detect proxy",
+          "detail":"Use the detected proxy settings when app startup"
         }
       },
       "exportData": "Export data",

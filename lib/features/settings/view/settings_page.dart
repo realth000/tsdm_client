@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_design_icons_flutter/material_design_icons_flutter.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/color.dart';
@@ -538,6 +539,7 @@ class _SettingsPageState extends State<SettingsPage> {
   List<Widget> _buildAdvanceSection(BuildContext context, SettingsState state) {
     final netClientUseProxy = state.settingsMap.netClientUseProxy;
     final netClientProxy = state.settingsMap.netClientProxy;
+    final useDetectedProxy = state.settingsMap.useDetectedProxyWhenStartup;
     String? host;
     String? port;
     if (netClientProxy.contains(':')) {
@@ -547,12 +549,7 @@ class _SettingsPageState extends State<SettingsPage> {
     }
 
     final tr = context.t.settingsPage.advancedSection;
-    Text? proxyOptionHint;
-    if (!netClientUseProxy) {
-      proxyOptionHint = Text(tr.proxySettings.disabled);
-    } else if (host == null && port == null) {
-      proxyOptionHint = Text(tr.proxySettings.notSet, style: TextStyle(color: Theme.of(context).colorScheme.error));
-    }
+
     return [
       SectionTitleText(tr.title),
       if (!kReleaseMode)
@@ -572,11 +569,20 @@ class _SettingsPageState extends State<SettingsPage> {
           showSnackBar(context: context, message: context.t.general.affectAfterRestart);
         },
       ),
+      SectionSwitchListTile(
+        secondary: const Icon(Symbols.network_manage),
+        title: Text(tr.proxySettings.useDetectProxy.title),
+        subtitle: Text(tr.proxySettings.useDetectProxy.detail),
+        value: useDetectedProxy,
+        onChanged: netClientUseProxy
+            ? (v) async =>
+                  context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.useDetectedProxyWhenStartup, v))
+            : null,
+      ),
       SectionListTile(
-        enabled: netClientUseProxy,
+        enabled: netClientUseProxy && !useDetectedProxy,
         leading: const Icon(Icons.network_locked_outlined),
         title: Text(tr.proxySettings.title),
-        subtitle: proxyOptionHint,
         onTap: () async => showDialog<void>(
           context: context,
           builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),

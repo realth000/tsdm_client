@@ -175,7 +175,10 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Recent used custom colors in editor.
   ///
   /// The length of the list is determined to .
-  editorRecentUsedCustomColors<List<int>>(name: 'editorRecentUsedCustomColors', type: List<int>, defaultValue: []);
+  editorRecentUsedCustomColors<List<int>>(name: 'editorRecentUsedCustomColors', type: List<int>, defaultValue: []),
+
+  /// Detect system proxy settings when app startup and use the detected value.
+  useDetectedProxyWhenStartup<bool>(name: 'useDetectedProxyWhenStartup', type: bool, defaultValue: false);
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

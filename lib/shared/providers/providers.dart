@@ -1,9 +1,11 @@
+import 'package:system_network_proxy/system_network_proxy.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/cookie_provider/cookie_provider.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_error_saver.dart';
+import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/connection/connection.dart' as conn;
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
@@ -27,6 +29,12 @@ Future<void> initProviders() async {
     await initCache();
   }
 
+  // For `ProxyProvider`.
+  // system_network_proxy is only available on desktop platforms.
+  if (isDesktop) {
+    SystemNetworkProxy.init();
+  }
+
   // TODO: These separated init steps make it not testable.
 
   /// Dart analyzer does not work on conditional export.
@@ -41,6 +49,7 @@ Future<void> initProviders() async {
   await settingsRepo.init();
 
   getIt
+    ..registerSingleton(ProxyProvider())
     ..registerSingleton(db)
     ..registerSingleton(storageProvider)
     ..registerSingleton(settingsRepo)

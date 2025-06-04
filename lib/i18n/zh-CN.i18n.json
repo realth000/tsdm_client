@@ -184,6 +184,10 @@
           "testing": "测试中。。。",
           "connected": "代理正在运行",
           "disconnected": "代理可能未运行"
+        },
+        "useDetectProxy": {
+          "title": "自动检测代理",
+          "detail": "使用在应用启动时检测到的代理设置"
         }
       },
       "exportData": "导出数据",
