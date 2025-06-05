@@ -491,7 +491,8 @@
     "unknownAllowedRange": "无效的评分区间 $range",
     "onlyAllowIntegers": "只允许整数",
     "failedToRate": "评分失败",
-    "scoreTodayRemaining": "今日剩余 $score"
+    "scoreTodayRemaining": "今日剩余 $score",
+    "fillWithTemplate": "使用模板填充"
   },
   "pointsPage": {
     "title": "积分统计",
@@ -941,6 +942,33 @@
       "fh": "腹黑 ${value: String}",
       "jl": "精灵 ${value: String}",
       "specialAttr": "特殊积分 ${value: String}"
+    }
+  },
+  "fastRateTemplate": {
+    "title": "评分模板",
+    "details": "评分时可用来填充评分数值的模板",
+    "choose": "选择一个模板，将数值填入",
+    "name": "模板名称",
+    "ww": "威望",
+    "tsb": "天使币",
+    "xc": "宣传",
+    "jl": "精灵",
+    "tr": "天然",
+    "fh": "腹黑",
+    "special": "特殊积分",
+    "new": "新模板",
+    "showAllUsers": "显示所有用户的",
+    "delete": "删除模板",
+    "edit": "编辑模板",
+    "pick": "选择模板",
+    "deleteConfirm": "确定要删除评分模板？此操作不可被撤销",
+    "editPageTitle": "新建评分模板",
+    "editPageAlreadyExists": "同名的评分模板已存在",
+    "editPageOverride": "覆盖同名的评分模板",
+    "editPageTemplateAdded": "评分模板已保存",
+    "editPage": {
+      "nameNotEmpty": "名称不能为空",
+      "invalidValue": "无效的数值"
     }
   }
 }

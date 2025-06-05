@@ -175,6 +175,14 @@ class ScreenPaths {
   /// Page to rate a post in thread.
   static const String ratePost = '/ratePost/:username/:pid/:floor/:rateAction';
 
+  /// Page to view and edit fast rate templates.
+  ///
+  /// User id `uid` parameter is required in path.
+  static const String fastRateTemplate = '/fastRateTemplate/:uid/:pick';
+
+  /// Page to edit fast rate templates.
+  static const String fastRateTemplateEdit = '/fastRateTemplateEdit/:uid/:editType';
+
   /// The page to show current logged user's points statistics status
   /// and changelog.
   ///

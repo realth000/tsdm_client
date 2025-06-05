@@ -491,7 +491,8 @@
     "unknownAllowedRange": "Unknown allowed range $range",
     "onlyAllowIntegers": "Only integers are allowed",
     "failedToRate": "Rate failed",
-    "scoreTodayRemaining": "Today Remaining $score"
+    "scoreTodayRemaining": "Today Remaining $score",
+    "fillWithTemplate": "Fill with template"
   },
   "pointsPage": {
     "title": "Points Statistics",
@@ -941,6 +942,33 @@
       "fh": "fh ${value: String}",
       "jl": "jl ${value: String}",
       "specialAttr": "special points ${value: String}"
+    }
+  },
+  "fastRateTemplate": {
+    "title": "Rate Templates",
+    "details": "Templates to fill values when rating",
+    "choose": "Choose one template to fill in the values",
+    "name": "Template name",
+    "ww": "Famous",
+    "tsb": "Coins",
+    "xc": "Publicity",
+    "jl": "Spirit",
+    "tr": "Natural",
+    "fh": "Scheming",
+    "special": "Special",
+    "new": "New",
+    "showAllUsers": "Show all users",
+    "delete": "Delete rate template",
+    "edit": "Edit template",
+    "pick": "Pick template",
+    "deleteConfirm": "Are you sure to delete the rate template? This can not be undone",
+    "editPageTitle": "New rate template",
+    "editPageAlreadyExists": "Same name template already exists",
+    "editPageOverride": "Override same name template",
+    "editPageTemplateAdded": "Rate template added",
+    "editPage": {
+      "nameNotEmpty": "Name shall not be empty",
+      "invalidValue": "Invalid value"
     }
   }
 }

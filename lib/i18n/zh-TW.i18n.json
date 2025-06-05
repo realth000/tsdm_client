@@ -491,7 +491,8 @@
     "unknownAllowedRange": "無效的評分區間 $range",
     "onlyAllowIntegers": "只允許整數",
     "failedToRate": "评分失败",
-    "scoreTodayRemaining": "今日剩餘 $score"
+    "scoreTodayRemaining": "今日剩餘 $score",
+    "fillWithTemplate": "使用模板填滿"
   },
   "pointsPage": {
     "title": "積分統計",
@@ -941,6 +942,33 @@
       "fh": "腹黑 ${value: String}",
       "jl": "精灵 ${value: String}",
       "specialAttr": "特殊积分 ${value: String}"
+    }
+  },
+  "fastRateTemplate": {
+    "title": "評分範本",
+    "details": "評分時可用來填入分數數值的範本",
+    "choose": "選擇一個模板，將數值填入",
+    "name": "範本名稱",
+    "ww": "威望",
+    "tsb": "天使幣",
+    "xc": "宣傳",
+    "jl": "精靈",
+    "tr": "天然",
+    "fh": "腹黑",
+    "special": "特殊積分",
+    "new": "新範本",
+    "showAllUsers": "顯示所有使用者的",
+    "delete": "刪除模板",
+    "edit": "編輯範本",
+    "pick": "選擇模板",
+    "deleteConfirm": "確定要刪除評分範本？此操作不可被撤銷",
+    "editPageTitle": "新評分範本",
+    "editPageAlreadyExists": "同名的評分範本已存在",
+    "editPageOverride": "覆蓋同名的評分範本",
+    "editPageTemplateAdded": "評分範本已儲存",
+    "editPage": {
+      "nameNotEmpty": "名稱不能為空白",
+      "invalidValue": "無效的數值"
     }
   }
 }
