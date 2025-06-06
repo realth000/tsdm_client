@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -46,6 +47,10 @@ class RatePostPage extends StatefulWidget {
 class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
   final formKey = GlobalKey<FormState>();
 
+  /// Key in [scoreMap] may be the name attribute "威望" or id of attribute `score1` and the attribute name may
+  /// surrounded by spaces like " 威望".
+  ///
+  /// To get the human readable name of score, check with the name of `scoreList` in `state`.
   Map<String, TextEditingController>? scoreMap;
   final reasonController = TextEditingController();
 
@@ -248,7 +253,12 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
     );
   }
 
-  Future<void> chooseTemplate() async {
+  Future<void> chooseTemplate(RateState state) async {
+    final scoreList = state.info?.scoreList;
+    if (scoreList == null) {
+      return;
+    }
+
     final pickResult = await context.pushNamed<FastRateTemplateModel>(
       ScreenPaths.fastRateTemplate,
       pathParameters: {'pick': 'true'},
@@ -257,8 +267,16 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       return;
     }
 
+    // Score in `scoreMap` may have score id as key (score1) or score name as key ("威望").
+    // Here we check the correct attribute name with cached score info in `state.scoreList`.
     for (final scoreEntry in scoreMap!.entries) {
-      switch (scoreEntry.key) {
+      final target = scoreList.firstWhereOrNull((e) => e.id == scoreEntry.key);
+      if (target == null) {
+        error('unknown attr name ${scoreEntry.key} when choosing rate template');
+        continue;
+      }
+      // Don't forget to trim the target score name.
+      switch (target.name.trim()) {
         case '威望':
           scoreEntry.value.text = '${pickResult.ww}';
         case '天使币':
@@ -332,7 +350,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                     tooltip: context.t.fastRateTemplate.choose,
                     onPressed: state.status == RateStatus.fetchingInfo || state.status == RateStatus.rating
                         ? null
-                        : chooseTemplate,
+                        : () => chooseTemplate(state),
                   ),
                 ],
               ),
