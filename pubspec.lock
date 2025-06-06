@@ -1128,6 +1128,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  native_flutter_proxy:
+    dependency: "direct main"
+    description:
+      name: native_flutter_proxy
+      sha256: "7ef24d6e6b7500ce58a1e91d93c57d161719d06ad419225a4090869930097416"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.3"
   navigator_resizable:
     dependency: transitive
     description:
@@ -1765,6 +1773,53 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  system_network_proxy:
+    dependency: "direct main"
+    description:
+      path: "packages/flutter_system_network_proxy/system_network_proxy"
+      relative: true
+    source: path
+    version: "1.0.2"
+  system_network_proxy_linux:
+    dependency: transitive
+    description:
+      name: system_network_proxy_linux
+      sha256: "34b4a9dbea76bcde366c6093c41d348c688d4fb16daba9a4b034a9d2b1b47ac9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  system_network_proxy_macos:
+    dependency: transitive
+    description:
+      name: system_network_proxy_macos
+      sha256: "89ed28d040f21b2794df1147150900e88f046372d60a7fa7848b5e4c9fe6263f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  system_network_proxy_platform_interface:
+    dependency: transitive
+    description:
+      name: system_network_proxy_platform_interface
+      sha256: "5b0cc55df5be562b9fdef3c0cab35fd5172ae01e85844566aeb7289cac4b57a8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  system_network_proxy_web:
+    dependency: transitive
+    description:
+      name: system_network_proxy_web
+      sha256: "60ed262c8573529550f99b6ca74f09d8452e8f4d1bb5ef3f792fc9683fb9e7f3"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
+  system_network_proxy_windows:
+    dependency: transitive
+    description:
+      name: system_network_proxy_windows
+      sha256: "67f911602edd0a96890239090b8b929f90038547680264625f6f2334ef8a7a23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2"
   system_theme:
     dependency: "direct main"
     description:

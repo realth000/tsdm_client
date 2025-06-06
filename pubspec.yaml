@@ -61,6 +61,7 @@ dependencies:
   json_annotation: ^4.9.0
   material_design_icons_flutter: ^7.0.7296
   material_symbols_icons: ^4.2811.0
+  native_flutter_proxy: ^0.2.3
   path: any
   path_provider: ^2.1.5
   permission_handler: ^11.4.0
@@ -68,9 +69,11 @@ dependencies:
   responsive_framework: ^1.5.1
   rxdart: ^0.28.0
   shimmer: ^3.0.0
+  smooth_sheets: ^0.11.5
   slang: ^4.7.1
   slang_flutter: ^4.7.0
-  smooth_sheets: ^0.11.5
+  system_network_proxy:
+    path: ./packages/flutter_system_network_proxy/system_network_proxy
   # For drift
   sqlite3: ^2.7.6
   # For drift

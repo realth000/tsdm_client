@@ -549,6 +549,85 @@ class StorageProvider with LoggerMixin {
     return rightVoid();
   });
 
+  /// Get all fast rate template from storage.
+  ///
+  /// No matter uid.
+  AsyncEither<List<FastRateTemplateModel>> getAllFastRateTemplate() => AsyncEither(() async {
+    final rates = (await FastRateTemplateDao(_db).selectAll())
+        .map(
+          (e) => FastRateTemplateModel(
+            uid: e.uid,
+            name: e.name,
+            ww: e.ww,
+            tsb: e.tsb,
+            xc: e.xc,
+            tr: e.tr,
+            fh: e.fh,
+            jl: e.jl,
+            special: e.special,
+          ),
+        )
+        .toList();
+    return right(rates);
+  });
+
+  /// Watch all
+  Stream<List<FastRateTemplateModel>> watchAllFastRateTemplate() => FastRateTemplateDao(_db).watchAll().map(
+    (e) => e
+        .map(
+          (e2) => FastRateTemplateModel(
+            uid: e2.uid,
+            name: e2.name,
+            ww: e2.ww,
+            tsb: e2.tsb,
+            xc: e2.xc,
+            tr: e2.tr,
+            fh: e2.fh,
+            jl: e2.jl,
+            special: e2.special,
+          ),
+        )
+        .toList(),
+  );
+
+  /// Save fast [rate] template to storage.
+  AsyncVoidEither saveFastRateTemplate(FastRateTemplateModel rate) => AsyncEither(() async {
+    await FastRateTemplateDao(_db).insertOrUpdate(
+      FastRateTemplateCompanion(
+        uid: Value(rate.uid),
+        name: Value(rate.name),
+        ww: Value(rate.ww),
+        tsb: Value(rate.tsb),
+        xc: Value(rate.xc),
+        tr: Value(rate.tr),
+        fh: Value(rate.fh),
+        jl: Value(rate.jl),
+        lastUsedTime: Value(DateTime.now()),
+        special: Value(rate.special),
+      ),
+    );
+
+    return rightVoid();
+  });
+
+  /// Delete all fast rate templates from storage.
+  AsyncVoidEither deleteAllFastRateTemplate() => AsyncEither(() async {
+    await FastRateTemplateDao(_db).deleteAll();
+    return rightVoid();
+  });
+
+  /// Delete fast rate templates for user [uid].
+  AsyncVoidEither deleteFastRateTemplateByUid(int uid) => AsyncEither(() async {
+    await FastRateTemplateDao(_db).deleteByUid(uid);
+    return rightVoid();
+  });
+
+  /// Delete the one fast rate templates specified by user [uid] and [name].
+  AsyncVoidEither deleteFastRateTemplateByUidAndName(int uid, String name) => AsyncEither(() async {
+    await FastRateTemplateDao(_db).deleteByUidAndName(uid, name);
+    return rightVoid();
+  });
+
   /// Clear all user avatar cache info.
   Future<void> clearUserAvatarInfo() async {
     await UserAvatarDao(_db).deleteAll();

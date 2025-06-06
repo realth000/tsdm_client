@@ -7,15 +7,10 @@ import 'package:tsdm_client/shared/providers/storage_provider/models/database/sc
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'cookie.dart';
-
 part 'dao.g.dart';
-
+part 'fast_rate_template.dart';
 part 'image.dart';
-
 part 'notification.dart';
-
 part 'settings.dart';
-
 part 'thread_visit_history.dart';
-
 part 'user_avatar.dart';

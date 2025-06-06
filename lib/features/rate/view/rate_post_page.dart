@@ -4,12 +4,14 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
@@ -294,7 +296,47 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         child: BlocBuilder<RateBloc, RateState>(
           builder: (context, state) {
             return Scaffold(
-              appBar: AppBar(title: Text(tr.title)),
+              appBar: AppBar(
+                title: Text(tr.title),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.star_rate_outlined),
+                    tooltip: context.t.fastRateTemplate.choose,
+                    onPressed: () async {
+                      final uid = context.read<AuthenticationRepository>().currentUser?.uid;
+                      if (uid == null) {
+                        return;
+                      }
+                      final pickResult = await context.pushNamed<FastRateTemplateModel>(
+                        ScreenPaths.fastRateTemplate,
+                        pathParameters: {'uid': '$uid', 'pick': 'true'},
+                      );
+                      if (pickResult == null || !context.mounted) {
+                        return;
+                      }
+
+                      for (final scoreEntry in scoreMap!.entries) {
+                        switch (scoreEntry.key) {
+                          case '威望':
+                            scoreEntry.value.text = '${pickResult.ww}';
+                          case '天使币':
+                            scoreEntry.value.text = '${pickResult.tsb}';
+                          case '宣传':
+                            scoreEntry.value.text = '${pickResult.xc}';
+                          case '天然':
+                            scoreEntry.value.text = '${pickResult.tr}';
+                          case '腹黑':
+                            scoreEntry.value.text = '${pickResult.fh}';
+                          case '精灵':
+                            scoreEntry.value.text = '${pickResult.jl}';
+                          default:
+                            scoreEntry.value.text = '${pickResult.special}';
+                        }
+                      }
+                    },
+                  ),
+                ],
+              ),
               body: SafeArea(bottom: false, child: _buildBody(context, state)),
             );
           },

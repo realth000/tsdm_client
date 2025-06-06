@@ -27,6 +27,8 @@ import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/edit_avatar_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
+import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
+import 'package:tsdm_client/features/rate/view/fast_rate_template_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/root/view/singleton.dart';
@@ -43,6 +45,7 @@ import 'package:tsdm_client/features/topics/view/topics_page.dart';
 import 'package:tsdm_client/features/update/view/local_changelog_page.dart';
 import 'package:tsdm_client/features/update/view/update_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 
 /// App router instance wrapped with global singleton widgets.
@@ -243,6 +246,23 @@ final _appRoutes = [
       final floor = state.pathParameters['floor']!;
       final rateAction = state.pathParameters['rateAction']!;
       return RatePostPage(username: username, pid: pid, floor: floor, rateAction: rateAction);
+    },
+  ),
+  AppRoute(
+    path: ScreenPaths.fastRateTemplate,
+    builder: (state) {
+      final uid = int.parse(state.pathParameters['uid']!);
+      final pick = bool.parse(state.pathParameters['pick']!);
+      return FastRateTemplatePage(uid: uid, pick: pick);
+    },
+  ),
+  AppRoute(
+    path: ScreenPaths.fastRateTemplateEdit,
+    builder: (state) {
+      final uid = int.parse(state.pathParameters['uid']!);
+      final editType = FastRateTemplateEditType.values[int.parse(state.pathParameters['editType']!)];
+      final initialValue = state.extra as FastRateTemplateModel?;
+      return FastRateTemplateEditPage(uid, editType, initialValue);
     },
   ),
   AppRoute(path: ScreenPaths.points, builder: (_) => const PointsPage()),

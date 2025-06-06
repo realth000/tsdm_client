@@ -8,6 +8,7 @@ import 'package:dio/io.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -130,6 +131,7 @@ final class SettingsRepository with LoggerMixin {
       enableEditorBBCodeParser: s.extract(_SK.enableEditorBBCodeParser),
       enableUpdateCheckOnStartup: s.extract(_SK.enableUpdateCheckOnStartup),
       editorRecentUsedCustomColors: s.extract(_SK.editorRecentUsedCustomColors),
+      useDetectedProxyWhenStartup: s.extract(_SK.useDetectedProxyWhenStartup),
     );
   }
 
@@ -228,12 +230,19 @@ final class SettingsRepository with LoggerMixin {
           // trusted.
           final settings = getIt.get<SettingsRepository>().currentSettings;
           final useProxy = settings.netClientUseProxy;
-          final proxy = settings.netClientProxy;
 
           final client = HttpClient();
 
-          if (useProxy && proxy.isNotEmpty) {
-            client.findProxy = (_) => 'PROXY $proxy';
+          if (useProxy) {
+            final useDetected = settings.useDetectedProxyWhenStartup;
+            final proxy = switch (useDetected) {
+              true => getIt.get<ProxyProvider>().proxy,
+              false => settings.netClientProxy,
+            };
+
+            if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
+              client.findProxy = (_) => 'PROXY $proxy';
+            }
           }
           return client;
         },
