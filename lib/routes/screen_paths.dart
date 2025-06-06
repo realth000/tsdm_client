@@ -178,10 +178,10 @@ class ScreenPaths {
   /// Page to view and edit fast rate templates.
   ///
   /// User id `uid` parameter is required in path.
-  static const String fastRateTemplate = '/fastRateTemplate/:uid/:pick';
+  static const String fastRateTemplate = '/fastRateTemplate/:pick';
 
   /// Page to edit fast rate templates.
-  static const String fastRateTemplateEdit = '/fastRateTemplateEdit/:uid/:editType';
+  static const String fastRateTemplateEdit = '/fastRateTemplateEdit/:editType';
 
   /// The page to show current logged user's points statistics status
   /// and changelog.
