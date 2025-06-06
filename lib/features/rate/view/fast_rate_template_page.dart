@@ -45,6 +45,15 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
 
         final allTemplates = snapshot.data!;
 
+        if (allTemplates.isEmpty) {
+          return Center(
+            child: Text(
+              tr.empty,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+            ),
+          );
+        }
+
         return SingleChildScrollView(
           child: Wrap(
             spacing: 8,
