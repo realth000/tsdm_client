@@ -83,7 +83,7 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
     }
   }
 
-  Future<void> popBack(TapUpDetails _) async {
+  Future<void> popBack() async {
     context.pop(rateTemplate);
   }
 
@@ -103,12 +103,15 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
       child: InkWell(
-        onTapUp: widget.allowEdit ? openMenu : popBack,
+        onTapUp: !widget.allowEdit ? (_) => popBack() : openMenu,
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(
             children: [
-              Text(rateTemplate.name, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                rateTemplate.name,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
               sizedBoxW8H8,
               Wrap(
                 spacing: 8,

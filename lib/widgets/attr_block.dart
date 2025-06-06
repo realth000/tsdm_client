@@ -36,6 +36,7 @@ class AttrBlock extends StatelessWidget {
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxWidth, maxHeight: maxHeight),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(value, style: valueStyle ?? Theme.of(context).textTheme.titleMedium),
           Text(
