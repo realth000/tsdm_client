@@ -5,9 +5,6 @@ part of 'schema.dart';
 /// Each template is a text using it.
 @DataClassName('FastReplyTemplateEntity')
 class FastReplyTemplate extends Table {
-  /// User holding the template.
-  IntColumn get uid => integer()();
-
   /// Name of the template.
   TextColumn get name => text()();
 
@@ -18,5 +15,5 @@ class FastReplyTemplate extends Table {
   DateTimeColumn get lastUsedTime => dateTime()();
 
   @override
-  Set<Column<Object>> get primaryKey => {uid, name};
+  Set<Column<Object>> get primaryKey => {name};
 }

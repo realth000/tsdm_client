@@ -8,9 +8,6 @@ part of 'schema.dart';
 /// database is far much better to be consist through time, not like variable names or translations.
 @DataClassName('FastRateTemplateEntity')
 class FastRateTemplate extends Table {
-  /// Id of the user holding the template.
-  IntColumn get uid => integer()();
-
   /// Name of the template.
   TextColumn get name => text()();
 
@@ -39,5 +36,5 @@ class FastRateTemplate extends Table {
   DateTimeColumn get lastUsedTime => dateTime()();
 
   @override
-  Set<Column<Object>> get primaryKey => {uid, name};
+  Set<Column<Object>> get primaryKey => {name};
 }

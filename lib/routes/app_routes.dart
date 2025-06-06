@@ -251,18 +251,16 @@ final _appRoutes = [
   AppRoute(
     path: ScreenPaths.fastRateTemplate,
     builder: (state) {
-      final uid = int.parse(state.pathParameters['uid']!);
       final pick = bool.parse(state.pathParameters['pick']!);
-      return FastRateTemplatePage(uid: uid, pick: pick);
+      return FastRateTemplatePage(pick: pick);
     },
   ),
   AppRoute(
     path: ScreenPaths.fastRateTemplateEdit,
     builder: (state) {
-      final uid = int.parse(state.pathParameters['uid']!);
       final editType = FastRateTemplateEditType.values[int.parse(state.pathParameters['editType']!)];
       final initialValue = state.extra as FastRateTemplateModel?;
-      return FastRateTemplateEditPage(uid, editType, initialValue);
+      return FastRateTemplateEditPage(editType, initialValue);
     },
   ),
   AppRoute(path: ScreenPaths.points, builder: (_) => const PointsPage()),

@@ -556,7 +556,6 @@ class StorageProvider with LoggerMixin {
     final rates = (await FastRateTemplateDao(_db).selectAll())
         .map(
           (e) => FastRateTemplateModel(
-            uid: e.uid,
             name: e.name,
             ww: e.ww,
             tsb: e.tsb,
@@ -576,7 +575,6 @@ class StorageProvider with LoggerMixin {
     (e) => e
         .map(
           (e2) => FastRateTemplateModel(
-            uid: e2.uid,
             name: e2.name,
             ww: e2.ww,
             tsb: e2.tsb,
@@ -594,7 +592,6 @@ class StorageProvider with LoggerMixin {
   AsyncVoidEither saveFastRateTemplate(FastRateTemplateModel rate) => AsyncEither(() async {
     await FastRateTemplateDao(_db).insertOrUpdate(
       FastRateTemplateCompanion(
-        uid: Value(rate.uid),
         name: Value(rate.name),
         ww: Value(rate.ww),
         tsb: Value(rate.tsb),
@@ -616,15 +613,9 @@ class StorageProvider with LoggerMixin {
     return rightVoid();
   });
 
-  /// Delete fast rate templates for user [uid].
-  AsyncVoidEither deleteFastRateTemplateByUid(int uid) => AsyncEither(() async {
-    await FastRateTemplateDao(_db).deleteByUid(uid);
-    return rightVoid();
-  });
-
-  /// Delete the one fast rate templates specified by user [uid] and [name].
-  AsyncVoidEither deleteFastRateTemplateByUidAndName(int uid, String name) => AsyncEither(() async {
-    await FastRateTemplateDao(_db).deleteByUidAndName(uid, name);
+  /// Delete the one fast rate template specified by template [name].
+  AsyncVoidEither deleteFastRateTemplateByName(String name) => AsyncEither(() async {
+    await FastRateTemplateDao(_db).deleteByName(name);
     return rightVoid();
   });
 

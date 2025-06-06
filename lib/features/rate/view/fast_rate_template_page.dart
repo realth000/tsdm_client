@@ -16,10 +16,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// in rate page.
 class FastRateTemplatePage extends StatefulWidget {
   /// Constructor.
-  const FastRateTemplatePage({required this.uid, required this.pick, super.key});
-
-  /// Id of the user editing rate template for.
-  final int uid;
+  const FastRateTemplatePage({required this.pick, super.key});
 
   /// Pick template or edit one.
   final bool pick;
@@ -55,7 +52,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
             children: allTemplates
                 .map(
                   (e) => FastRateTemplateCard(
-                    key: ValueKey('FastRateTemplateCard_${e.uid}_${e.name}'),
+                    key: ValueKey('FastRateTemplateCard_${e.name}'),
                     rateTemplate: e,
                     allowEdit: !widget.pick,
                   ),
@@ -76,7 +73,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
             onPressed: () async {
               final editResult = await context.pushNamed<FastRateTemplateModel>(
                 ScreenPaths.fastRateTemplateEdit,
-                pathParameters: {'uid': '${widget.uid}', 'editType': '${FastRateTemplateEditType.create.index}'},
+                pathParameters: {'editType': '${FastRateTemplateEditType.create.index}'},
               );
               if (editResult == null || !context.mounted) {
                 return;

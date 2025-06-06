@@ -5,7 +5,6 @@ part of 'models.dart';
 final class FastRateTemplateModel with FastRateTemplateModelMappable {
   /// Constructor.
   const FastRateTemplateModel({
-    required this.uid,
     required this.name,
     required this.ww,
     required this.tsb,
@@ -15,9 +14,6 @@ final class FastRateTemplateModel with FastRateTemplateModelMappable {
     required this.jl,
     required this.special,
   });
-
-  /// Uid of the user.
-  final int uid;
 
   /// Name of template.
   final String name;

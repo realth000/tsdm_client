@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -69,29 +67,19 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
 
     switch (action) {
       case _MenuAction.edit:
-        final uid = context.read<AuthenticationRepository>().currentUser?.uid;
-        if (uid == null) {
-          return;
-        }
         final editResult = await context.pushNamed<FastRateTemplateModel>(
           ScreenPaths.fastRateTemplateEdit,
-          pathParameters: {'uid': '$uid', 'editType': '${FastRateTemplateEditType.edit.index}'},
+          pathParameters: {'editType': '${FastRateTemplateEditType.edit.index}'},
           extra: rateTemplate,
         );
         if (editResult == null || !context.mounted) {
           return;
         }
         // Save added result.
-        await getIt
-            .get<StorageProvider>()
-            .deleteFastRateTemplateByUidAndName(rateTemplate.uid, rateTemplate.name)
-            .run();
+        await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
         await getIt.get<StorageProvider>().saveFastRateTemplate(editResult).run();
       case _MenuAction.delete:
-        await getIt
-            .get<StorageProvider>()
-            .deleteFastRateTemplateByUidAndName(rateTemplate.uid, rateTemplate.name)
-            .run();
+        await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
     }
   }
 

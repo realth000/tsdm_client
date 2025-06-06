@@ -22,10 +22,7 @@ enum FastRateTemplateEditType {
 /// Page to edit template.
 class FastRateTemplateEditPage extends StatefulWidget {
   /// Constructor.
-  const FastRateTemplateEditPage(this.uid, this.editType, this.initialValue, {super.key});
-
-  /// User adding rate templates for.
-  final int uid;
+  const FastRateTemplateEditPage(this.editType, this.initialValue, {super.key});
 
   /// Type of the edit.
   final FastRateTemplateEditType editType;
@@ -213,7 +210,6 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
                   context.pop(
                     FastRateTemplateModel(
                       name: editingControllerName.text,
-                      uid: widget.uid,
                       ww: int.parse(editingControllerWw.text),
                       tsb: int.parse(editingControllerTsb.text),
                       xc: int.parse(editingControllerXc.text),
