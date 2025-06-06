@@ -248,6 +248,35 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
     );
   }
 
+  Future<void> chooseTemplate() async {
+    final pickResult = await context.pushNamed<FastRateTemplateModel>(
+      ScreenPaths.fastRateTemplate,
+      pathParameters: {'pick': 'true'},
+    );
+    if (pickResult == null || !context.mounted) {
+      return;
+    }
+
+    for (final scoreEntry in scoreMap!.entries) {
+      switch (scoreEntry.key) {
+        case '威望':
+          scoreEntry.value.text = '${pickResult.ww}';
+        case '天使币':
+          scoreEntry.value.text = '${pickResult.tsb}';
+        case '宣传':
+          scoreEntry.value.text = '${pickResult.xc}';
+        case '天然':
+          scoreEntry.value.text = '${pickResult.tr}';
+        case '腹黑':
+          scoreEntry.value.text = '${pickResult.fh}';
+        case '精灵':
+          scoreEntry.value.text = '${pickResult.jl}';
+        default:
+          scoreEntry.value.text = '${pickResult.special}';
+      }
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -301,34 +330,9 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                   IconButton(
                     icon: const Icon(Icons.star_rate_outlined),
                     tooltip: context.t.fastRateTemplate.choose,
-                    onPressed: () async {
-                      final pickResult = await context.pushNamed<FastRateTemplateModel>(
-                        ScreenPaths.fastRateTemplate,
-                        pathParameters: {'pick': 'true'},
-                      );
-                      if (pickResult == null || !context.mounted) {
-                        return;
-                      }
-
-                      for (final scoreEntry in scoreMap!.entries) {
-                        switch (scoreEntry.key) {
-                          case '威望':
-                            scoreEntry.value.text = '${pickResult.ww}';
-                          case '天使币':
-                            scoreEntry.value.text = '${pickResult.tsb}';
-                          case '宣传':
-                            scoreEntry.value.text = '${pickResult.xc}';
-                          case '天然':
-                            scoreEntry.value.text = '${pickResult.tr}';
-                          case '腹黑':
-                            scoreEntry.value.text = '${pickResult.fh}';
-                          case '精灵':
-                            scoreEntry.value.text = '${pickResult.jl}';
-                          default:
-                            scoreEntry.value.text = '${pickResult.special}';
-                        }
-                      }
-                    },
+                    onPressed: state.status == RateStatus.fetchingInfo || state.status == RateStatus.rating
+                        ? null
+                        : chooseTemplate,
                   ),
                 ],
               ),

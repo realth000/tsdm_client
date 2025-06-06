@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
 import 'package:tsdm_client/features/rate/widgets/fast_rate_template_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -55,18 +56,21 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
         }
 
         return SingleChildScrollView(
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: allTemplates
-                .map(
-                  (e) => FastRateTemplateCard(
-                    key: ValueKey('FastRateTemplateCard_${e.name}'),
-                    rateTemplate: e,
-                    allowEdit: !widget.pick,
-                  ),
-                )
-                .toList(),
+          child: Padding(
+            padding: edgeInsetsL12T8R12,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: allTemplates
+                  .map(
+                    (e) => FastRateTemplateCard(
+                      key: ValueKey('FastRateTemplateCard_${e.name}'),
+                      rateTemplate: e,
+                      allowEdit: !widget.pick,
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         );
       },
@@ -98,7 +102,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
           ),
         ],
       ),
-      body: body,
+      body: SafeArea(bottom: false, top: false, child: body),
     );
   }
 }
