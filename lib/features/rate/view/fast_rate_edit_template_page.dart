@@ -64,13 +64,13 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
   void initState() {
     super.initState();
     editingControllerName = TextEditingController(text: widget.initialValue?.name);
-    editingControllerWw = TextEditingController(text: '${widget.initialValue?.ww ?? ""}');
-    editingControllerTsb = TextEditingController(text: '${widget.initialValue?.tsb ?? ""}');
-    editingControllerXc = TextEditingController(text: '${widget.initialValue?.xc ?? ""}');
-    editingControllerTr = TextEditingController(text: '${widget.initialValue?.tr ?? ""}');
-    editingControllerFh = TextEditingController(text: '${widget.initialValue?.fh ?? ""}');
-    editingControllerJl = TextEditingController(text: '${widget.initialValue?.jl ?? ""}');
-    editingControllerSpecial = TextEditingController(text: '${widget.initialValue?.special ?? ""}');
+    editingControllerWw = TextEditingController(text: '${widget.initialValue?.ww ?? "0"}');
+    editingControllerTsb = TextEditingController(text: '${widget.initialValue?.tsb ?? "0"}');
+    editingControllerXc = TextEditingController(text: '${widget.initialValue?.xc ?? "0"}');
+    editingControllerTr = TextEditingController(text: '${widget.initialValue?.tr ?? "0"}');
+    editingControllerFh = TextEditingController(text: '${widget.initialValue?.fh ?? "0"}');
+    editingControllerJl = TextEditingController(text: '${widget.initialValue?.jl ?? "0"}');
+    editingControllerSpecial = TextEditingController(text: '${widget.initialValue?.special ?? "0"}');
   }
 
   @override
@@ -117,6 +117,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
             children: [
               TextFormField(
                 controller: editingControllerName,
+                autofocus: widget.editType == FastRateTemplateEditType.create,
                 decoration: InputDecoration(labelText: tr.name),
                 validator: (v) {
                   if (v == null || v.isEmpty) {
