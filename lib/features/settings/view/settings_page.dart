@@ -14,8 +14,6 @@ import 'package:system_theme/system_theme.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/extensions/duration.dart';
-import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
-import 'package:tsdm_client/features/authentication/repository/models/models.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/features/notification/bloc/auto_notification_cubit.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
@@ -397,12 +395,6 @@ class _SettingsPageState extends State<SettingsPage> {
       autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
     }
     final enableBBCodeParser = state.settingsMap.enableEditorBBCodeParser;
-    final currUid = context.read<AuthenticationRepository>().status.map(
-      (e) => switch (e) {
-        AuthStatusAuthed(:final userInfo) => userInfo.uid,
-        _ => null,
-      },
-    );
 
     return [
       SectionTitleText(tr.title),
@@ -456,25 +448,11 @@ class _SettingsPageState extends State<SettingsPage> {
         onChanged: (v) async =>
             context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableEditorBBCodeParser, v)),
       ),
-      StreamBuilder(
-        stream: currUid,
-        builder: (context, snapshot) {
-          int? uid;
-          if (snapshot.hasError || !snapshot.hasData) {
-            uid = null;
-          } else {
-            uid = snapshot.data;
-          }
-
-          return SectionListTile(
-            leading: const Icon(Icons.star_rate_outlined),
-            title: Text(context.t.fastRateTemplate.title),
-            subtitle: Text(context.t.fastRateTemplate.details),
-            enabled: uid != null && uid > 0,
-            onTap: () async =>
-                context.pushNamed(ScreenPaths.fastRateTemplate, pathParameters: {'uid': '${uid!}', 'pick': 'false'}),
-          );
-        },
+      SectionListTile(
+        leading: const Icon(Icons.star_rate_outlined),
+        title: Text(context.t.fastRateTemplate.title),
+        subtitle: Text(context.t.fastRateTemplate.details),
+        onTap: () async => context.pushNamed(ScreenPaths.fastRateTemplate, pathParameters: {'pick': 'false'}),
       ),
     ];
   }

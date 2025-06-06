@@ -176,8 +176,6 @@ class ScreenPaths {
   static const String ratePost = '/ratePost/:username/:pid/:floor/:rateAction';
 
   /// Page to view and edit fast rate templates.
-  ///
-  /// User id `uid` parameter is required in path.
   static const String fastRateTemplate = '/fastRateTemplate/:pick';
 
   /// Page to edit fast rate templates.

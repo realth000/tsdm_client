@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
-import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/rate/bloc/rate_bloc.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
@@ -303,13 +302,9 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                     icon: const Icon(Icons.star_rate_outlined),
                     tooltip: context.t.fastRateTemplate.choose,
                     onPressed: () async {
-                      final uid = context.read<AuthenticationRepository>().currentUser?.uid;
-                      if (uid == null) {
-                        return;
-                      }
                       final pickResult = await context.pushNamed<FastRateTemplateModel>(
                         ScreenPaths.fastRateTemplate,
-                        pathParameters: {'uid': '$uid', 'pick': 'true'},
+                        pathParameters: {'pick': 'true'},
                       );
                       if (pickResult == null || !context.mounted) {
                         return;
