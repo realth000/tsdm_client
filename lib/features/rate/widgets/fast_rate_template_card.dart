@@ -83,7 +83,12 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
         final delete = await showQuestionDialog(
           context: context,
           title: tr.delete,
-          message: tr.deleteConfirm,
+          richMessage: tr.deleteConfirm(
+            name: TextSpan(
+              text: rateTemplate.name,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
           dangerous: true,
         );
         if (delete != true || !context.mounted) {

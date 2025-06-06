@@ -958,10 +958,10 @@
     "special": "特殊积分",
     "new": "新模板",
     "empty": "没有可用的评分模板",
-    "delete": "删除模板",
+    "delete": "删除评分模板",
     "edit": "编辑模板",
     "pick": "选择模板",
-    "deleteConfirm": "确定要删除评分模板？此操作不可被撤销",
+    "deleteConfirm(rich)": "确定要删除评分模板“${name: String}”？此操作不可被撤销",
     "editPageTitle": "新建评分模板",
     "editPageAlreadyExists": "同名的评分模板已存在",
     "editPageOverride": "覆盖同名的评分模板",
@@ -970,5 +970,22 @@
       "nameNotEmpty": "名称不能为空",
       "invalidValue": "无效的数值"
     }
+  },
+  "fastReplyTemplate": {
+    "title": "回复模板",
+    "details": "回复时可以使用的模板",
+    "choose": "选择一个模板，填充内容",
+    "name": "模板名称",
+    "content": "内容",
+    "empty": "没有可用的回复模板",
+    "edit": "编辑模板",
+    "pick": "选择模板",
+    "delete": "删除回复模板",
+    "deleteConfirm(rich)": "确定要删除回复模板“${name: String}”？此操作不可撤销",
+    "editPageTitle": "新建回复模板",
+    "editPageAlreadyExists": "已存在同名的回复模板",
+    "editPageOverride": "覆盖同名的回复模板",
+    "editPageTemplateAdded": "回复模板已保存",
+    "editPageNameNotEmpty": "名称不能为空"
   }
 }

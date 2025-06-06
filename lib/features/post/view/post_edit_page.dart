@@ -537,6 +537,13 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                     tooltip: context.t.bbcodeEditor.additionalOptions,
                     onPressed: () async => _showAdditionalOptionBottomSheet(context, state),
                   ),
+                // Reply template
+                IconButton(
+                  icon: const Icon(Icons.speaker_notes_outlined),
+                  onPressed: () {
+                    throw UnimplementedError('pick reply template');
+                  },
+                ),
                 if (state.content?.permList?.isNotEmpty ?? false)
                   Badge(
                     label: Text('$perm'),

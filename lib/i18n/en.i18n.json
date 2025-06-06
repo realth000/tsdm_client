@@ -961,7 +961,7 @@
     "delete": "Delete rate template",
     "edit": "Edit template",
     "pick": "Pick template",
-    "deleteConfirm": "Are you sure to delete the rate template? This can not be undone",
+    "deleteConfirm(rich)": "Are you sure to delete the rate template \"${name: String}\"? This can not be undone",
     "editPageTitle": "New rate template",
     "editPageAlreadyExists": "Same name template already exists",
     "editPageOverride": "Override same name template",
@@ -970,5 +970,22 @@
       "nameNotEmpty": "Name shall not be empty",
       "invalidValue": "Invalid value"
     }
+  },
+  "fastReplyTemplate": {
+    "title": "Reply templates",
+    "details": "Templates to fill when replying",
+    "choose": "Choose one template to fill the content",
+    "name": "Template name",
+    "content": "Content",
+    "empty": "No reply templates available",
+    "edit": "Edit template",
+    "pick": "Pick template",
+    "delete": "Delete reply template",
+    "deleteConfirm(rich)": "Are you sure to delete the reply template \"${name: String}\"? This can not be undone",
+    "editPageTitle": "New reply template",
+    "editPageAlreadyExists": "Same name template already exists",
+    "editPageOverride": "Override same name template",
+    "editPageTemplateAdded": "Reply template added",
+    "editPageNameNotEmpty": "Name shall not be empty"
   }
 }
