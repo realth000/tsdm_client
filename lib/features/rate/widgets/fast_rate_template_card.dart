@@ -7,6 +7,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 
 /// Actions in popup menu.
@@ -79,6 +80,15 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
         await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
         await getIt.get<StorageProvider>().saveFastRateTemplate(editResult).run();
       case _MenuAction.delete:
+        final delete = await showQuestionDialog(
+          context: context,
+          title: tr.delete,
+          message: tr.deleteConfirm,
+          dangerous: true,
+        );
+        if (delete != true || !context.mounted) {
+          return;
+        }
         await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
     }
   }
