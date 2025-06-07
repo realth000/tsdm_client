@@ -986,6 +986,7 @@
     "editPageAlreadyExists": "已存在同名的回覆範本",
     "editPageOverride": "覆蓋同名的回覆模板",
     "editPageTemplateAdded": "回覆範本已儲存",
-    "editPageNameNotEmpty": "名稱不能為空白"
+    "editPageNameNotEmpty": "名稱不能為空白",
+    "editPageSaveTemplate": "儲存範本"
   }
 }

@@ -986,6 +986,7 @@
     "editPageAlreadyExists": "Same name template already exists",
     "editPageOverride": "Override same name template",
     "editPageTemplateAdded": "Reply template added",
-    "editPageNameNotEmpty": "Name shall not be empty"
+    "editPageNameNotEmpty": "Name shall not be empty",
+    "editPageSaveTemplate": "Save template"
   }
 }

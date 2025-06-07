@@ -986,6 +986,7 @@
     "editPageAlreadyExists": "已存在同名的回复模板",
     "editPageOverride": "覆盖同名的回复模板",
     "editPageTemplateAdded": "回复模板已保存",
-    "editPageNameNotEmpty": "名称不能为空"
+    "editPageNameNotEmpty": "名称不能为空",
+    "editPageSaveTemplate": "保存模板"
   }
 }

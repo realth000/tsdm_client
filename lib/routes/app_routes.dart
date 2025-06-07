@@ -23,6 +23,8 @@ import 'package:tsdm_client/features/notification/view/notification_search_page.
 import 'package:tsdm_client/features/packet/view/packet_detail_page.dart';
 import 'package:tsdm_client/features/points/views/points_page.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
+import 'package:tsdm_client/features/post/view/fast_reply_edit_template_page.dart';
+import 'package:tsdm_client/features/post/view/fast_reply_template_page.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/edit_avatar_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
@@ -201,6 +203,21 @@ final _appRoutes = [
       final target = state.pathParameters['target']!;
       final noticeTypeIndex = state.uri.queryParameters['noticeType']!.parseToInt()!;
       return NoticeDetailPage(url: target, noticeType: NoticeType.values[noticeTypeIndex]);
+    },
+  ),
+  AppRoute(
+    path: ScreenPaths.fastReplyTemplate,
+    builder: (state) {
+      final pick = bool.parse(state.pathParameters['pick']!);
+      return FastReplyTemplatePage(pick: pick);
+    },
+  ),
+  AppRoute(
+    path: ScreenPaths.fastReplyTemplateEdit,
+    builder: (state) {
+      final editType = FastReplyTemplateEditType.values[int.parse(state.pathParameters['editType']!)];
+      final initialValue = state.extra as FastReplyTemplateModel?;
+      return FastReplyTemplateEditPage(editType, initialValue);
     },
   ),
   AppRoute(path: ScreenPaths.noticeSearch, builder: (_) => const NotificationSearchPage()),

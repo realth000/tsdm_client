@@ -454,6 +454,12 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(context.t.fastRateTemplate.details),
         onTap: () async => context.pushNamed(ScreenPaths.fastRateTemplate, pathParameters: {'pick': 'false'}),
       ),
+      SectionListTile(
+        leading: const Icon(Icons.quickreply_outlined),
+        title: Text(context.t.fastReplyTemplate.title),
+        subtitle: Text(context.t.fastReplyTemplate.details),
+        onTap: () async => context.pushNamed(ScreenPaths.fastReplyTemplate, pathParameters: {'pick': 'false'}),
+      ),
     ];
   }
 

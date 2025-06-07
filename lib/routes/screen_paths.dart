@@ -181,6 +181,12 @@ class ScreenPaths {
   /// Page to edit fast rate templates.
   static const String fastRateTemplateEdit = '/fastRateTemplateEdit/:editType';
 
+  /// Page to view and edit fast reply templates.
+  static const String fastReplyTemplate = '/fastReplyTemplate/:pick';
+
+  /// Page to edit fast reply templates.
+  static const String fastReplyTemplateEdit = '/fastReplyTemplateEdit/:editType';
+
   /// The page to show current logged user's points statistics status
   /// and changelog.
   ///

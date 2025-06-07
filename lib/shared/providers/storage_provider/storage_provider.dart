@@ -549,6 +549,8 @@ class StorageProvider with LoggerMixin {
     return rightVoid();
   });
 
+  /*        Fast rate template       */
+
   /// Get all fast rate template from storage.
   ///
   /// No matter uid.
@@ -616,6 +618,43 @@ class StorageProvider with LoggerMixin {
   /// Delete the one fast rate template specified by template [name].
   AsyncVoidEither deleteFastRateTemplateByName(String name) => AsyncEither(() async {
     await FastRateTemplateDao(_db).deleteByName(name);
+    return rightVoid();
+  });
+
+  /*        Fast reply template       */
+
+  /// Get all fast reply templates from storage.
+  AsyncEither<List<FastReplyTemplateModel>> getAllFastReplyTemplate() => AsyncEither(() async {
+    final rate = (await FastReplyTemplateDao(
+      _db,
+    ).selectAll()).map((e) => FastReplyTemplateModel(name: e.name, data: e.data)).toList();
+
+    return right(rate);
+  });
+
+  /// Watch the changes of fast reply templates in storage.
+  Stream<List<FastReplyTemplateModel>> watchAllFastReplyTemplate() => FastReplyTemplateDao(
+    _db,
+  ).watchAll().map((e) => e.map((e2) => FastReplyTemplateModel(name: e2.name, data: e2.data)).toList());
+
+  /// Save fast [reply] template to storage.
+  AsyncVoidEither saveFastReplyTemplate(FastReplyTemplateModel reply) => AsyncEither(() async {
+    await FastReplyTemplateDao(_db).insertOrUpdate(
+      FastReplyTemplateCompanion(name: Value(reply.name), data: Value(reply.data), lastUsedTime: Value(DateTime.now())),
+    );
+
+    return rightVoid();
+  });
+
+  /// Delete all fast reply templates from storage.
+  AsyncVoidEither deleteAllFastReplyTemplate() => AsyncEither(() async {
+    await FastReplyTemplateDao(_db).deleteAll();
+    return rightVoid();
+  });
+
+  /// Delete fast reply template specified by template [name].
+  AsyncVoidEither deleteFastReplyTemplateByName(String name) => AsyncEither(() async {
+    await FastReplyTemplateDao(_db).deleteByName(name);
     return rightVoid();
   });
 
