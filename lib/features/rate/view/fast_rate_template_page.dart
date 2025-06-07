@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
 import 'package:tsdm_client/features/rate/widgets/fast_rate_template_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -16,10 +17,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 /// in rate page.
 class FastRateTemplatePage extends StatefulWidget {
   /// Constructor.
-  const FastRateTemplatePage({required this.uid, required this.pick, super.key});
-
-  /// Id of the user editing rate template for.
-  final int uid;
+  const FastRateTemplatePage({required this.pick, super.key});
 
   /// Pick template or edit one.
   final bool pick;
@@ -48,19 +46,31 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
 
         final allTemplates = snapshot.data!;
 
+        if (allTemplates.isEmpty) {
+          return Center(
+            child: Text(
+              tr.empty,
+              style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+            ),
+          );
+        }
+
         return SingleChildScrollView(
-          child: Wrap(
-            spacing: 8,
-            runSpacing: 8,
-            children: allTemplates
-                .map(
-                  (e) => FastRateTemplateCard(
-                    key: ValueKey('FastRateTemplateCard_${e.uid}_${e.name}'),
-                    rateTemplate: e,
-                    allowEdit: !widget.pick,
-                  ),
-                )
-                .toList(),
+          child: Padding(
+            padding: edgeInsetsL12T8R12,
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: allTemplates
+                  .map(
+                    (e) => FastRateTemplateCard(
+                      key: ValueKey('FastRateTemplateCard_${e.name}'),
+                      rateTemplate: e,
+                      allowEdit: !widget.pick,
+                    ),
+                  )
+                  .toList(),
+            ),
           ),
         );
       },
@@ -76,7 +86,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
             onPressed: () async {
               final editResult = await context.pushNamed<FastRateTemplateModel>(
                 ScreenPaths.fastRateTemplateEdit,
-                pathParameters: {'uid': '${widget.uid}', 'editType': '${FastRateTemplateEditType.create.index}'},
+                pathParameters: {'editType': '${FastRateTemplateEditType.create.index}'},
               );
               if (editResult == null || !context.mounted) {
                 return;
@@ -92,7 +102,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
           ),
         ],
       ),
-      body: body,
+      body: SafeArea(bottom: false, top: false, child: body),
     );
   }
 }

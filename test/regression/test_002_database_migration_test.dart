@@ -80,4 +80,12 @@ void main() {
     await verifier.migrateAndValidate(db, 9);
     await db.close();
   });
+
+  test('upgrade from 9 to 10', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(9);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 10);
+    await db.close();
+  });
 }

@@ -957,11 +957,11 @@
     "fh": "腹黑",
     "special": "特殊積分",
     "new": "新範本",
-    "showAllUsers": "顯示所有使用者的",
-    "delete": "刪除模板",
+    "empty": "沒有可用的評分範本",
+    "delete": "刪除評分範本",
     "edit": "編輯範本",
     "pick": "選擇模板",
-    "deleteConfirm": "確定要刪除評分範本？此操作不可被撤銷",
+    "deleteConfirm(rich)": "確定要刪除評分範本「${name: String}」？此操作不可被撤銷",
     "editPageTitle": "新評分範本",
     "editPageAlreadyExists": "同名的評分範本已存在",
     "editPageOverride": "覆蓋同名的評分範本",
@@ -970,5 +970,22 @@
       "nameNotEmpty": "名稱不能為空白",
       "invalidValue": "無效的數值"
     }
+  },
+  "fastReplyTemplate": {
+    "title": "回覆模板",
+    "details": "回覆時可以使用的範本",
+    "choose": "選擇一個模板，填滿內容",
+    "name": "範本名稱",
+    "content": "內容",
+    "empty": "沒有可用的回覆範本",
+    "delete": "刪除回應模板",
+    "edit": "編輯範本",
+    "pick": "選擇模板",
+    "deleteConfirm(rich)": "確定要刪除回覆範本「${name: String}」？此動作無法撤銷",
+    "editPageTitle": "新建回應範本",
+    "editPageAlreadyExists": "已存在同名的回覆範本",
+    "editPageOverride": "覆蓋同名的回覆模板",
+    "editPageTemplateAdded": "回覆範本已儲存",
+    "editPageNameNotEmpty": "名稱不能為空白"
   }
 }

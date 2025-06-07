@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 
 /// Actions in popup menu.
@@ -69,33 +68,37 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
 
     switch (action) {
       case _MenuAction.edit:
-        final uid = context.read<AuthenticationRepository>().currentUser?.uid;
-        if (uid == null) {
-          return;
-        }
         final editResult = await context.pushNamed<FastRateTemplateModel>(
           ScreenPaths.fastRateTemplateEdit,
-          pathParameters: {'uid': '$uid', 'editType': '${FastRateTemplateEditType.edit.index}'},
+          pathParameters: {'editType': '${FastRateTemplateEditType.edit.index}'},
           extra: rateTemplate,
         );
         if (editResult == null || !context.mounted) {
           return;
         }
         // Save added result.
-        await getIt
-            .get<StorageProvider>()
-            .deleteFastRateTemplateByUidAndName(rateTemplate.uid, rateTemplate.name)
-            .run();
+        await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
         await getIt.get<StorageProvider>().saveFastRateTemplate(editResult).run();
       case _MenuAction.delete:
-        await getIt
-            .get<StorageProvider>()
-            .deleteFastRateTemplateByUidAndName(rateTemplate.uid, rateTemplate.name)
-            .run();
+        final delete = await showQuestionDialog(
+          context: context,
+          title: tr.delete,
+          richMessage: tr.deleteConfirm(
+            name: TextSpan(
+              text: rateTemplate.name,
+              style: TextStyle(color: Theme.of(context).colorScheme.primary),
+            ),
+          ),
+          dangerous: true,
+        );
+        if (delete != true || !context.mounted) {
+          return;
+        }
+        await getIt.get<StorageProvider>().deleteFastRateTemplateByName(rateTemplate.name).run();
     }
   }
 
-  Future<void> popBack(TapUpDetails _) async {
+  Future<void> popBack() async {
     context.pop(rateTemplate);
   }
 
@@ -115,12 +118,15 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
       child: InkWell(
-        onTapUp: widget.allowEdit ? openMenu : popBack,
+        onTapUp: !widget.allowEdit ? (_) => popBack() : openMenu,
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(
             children: [
-              Text(rateTemplate.name, style: Theme.of(context).textTheme.titleMedium),
+              Text(
+                rateTemplate.name,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
+              ),
               sizedBoxW8H8,
               Wrap(
                 spacing: 8,

@@ -31,7 +31,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
   AppDatabase(super.executor);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -117,6 +117,22 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
         await m.addColumn(schema.settings, schema.settings.stringListValue);
         await m.addColumn(schema.settings, schema.settings.intListValue);
         info('migrating database schema from 8 to 9... ok!');
+      },
+      from9To10: (m, schema) async {
+        info('migrating database schema from 9 to 10...');
+        // Add user identification columns.
+        await m.addColumn(schema.cookie, schema.cookie.password);
+        await m.addColumn(schema.cookie, schema.cookie.questionId);
+        await m.addColumn(schema.cookie, schema.cookie.answer);
+
+        // Recreate template tables.
+        // In fact we shall remove uid column and change the primary key in this migration, but these tables were not
+        // used before, drop and recreate is safe.
+        await m.drop(schema.fastRateTemplate);
+        await m.create(schema.fastRateTemplate);
+        await m.drop(schema.fastReplyTemplate);
+        await m.create(schema.fastReplyTemplate);
+        info('migrating database schema from 9 to 10... ok!');
       },
     ),
   );

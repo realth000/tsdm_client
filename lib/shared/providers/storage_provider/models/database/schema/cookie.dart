@@ -22,6 +22,15 @@ class Cookie extends Table {
   /// by client, not server.
   DateTimeColumn get lastFetchNotice => dateTime().nullable()();
 
+  /// User Password.
+  TextColumn get password => text().nullable()();
+
+  /// Security Question id.
+  IntColumn get questionId => integer().nullable()();
+
+  /// Answer text of question id.
+  TextColumn get answer => text().nullable()();
+
   @override
   Set<Column<Object>> get primaryKey => {uid};
 }
