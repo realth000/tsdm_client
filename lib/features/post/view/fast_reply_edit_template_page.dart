@@ -220,7 +220,6 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
                 padding: edgeInsetsL8R8.add(edgeInsetsT8),
                 child: TextFormField(
                   controller: nameController,
-                  autofocus: widget.editType == FastReplyTemplateEditType.create,
                   decoration: InputDecoration(labelText: tr.name),
                   validator: (v) {
                     if (v == null || v.isEmpty) {
@@ -278,7 +277,10 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(tr.title),
+        title: Text(switch (widget.editType) {
+          FastReplyTemplateEditType.create => tr.editPageTitle,
+          FastReplyTemplateEditType.edit => tr.edit,
+        }),
         actions: [
           IconButton(
             icon: const Icon(Icons.save_outlined),
