@@ -168,6 +168,7 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
       initialDelta: parseBBCodeTextToDelta(widget.initialValue?.data ?? '\n'),
     );
     focusNode = FocusNode();
+    fullScreen = isDesktop;
   }
 
   @override
