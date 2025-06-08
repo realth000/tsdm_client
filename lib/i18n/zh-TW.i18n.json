@@ -166,7 +166,22 @@
       "images": "圖片",
       "emoji": "表情",
       "selectOneCache": "需要至少選擇一項快取",
-      "clearSuccess": "清除成功"
+      "clearSuccess": "清除成功",
+      "scheduledCleaning": {
+        "title": "自動清理圖片",
+        "details": "應用程式啟動時刪除太久未使用的圖片快取",
+        "duration": {
+          "title": "自動清理圖片間隔",
+          "detail": "如果圖片快取上次被使用的時間距離現在的時間超過這個時長，則會在自動清理時清除",
+          "6h": "6小時",
+          "12h": "12小時",
+          "1d": "1天",
+          "3days": "3天",
+          "7days": "7天",
+          "15days": "15天",
+          "30days": "30天"
+        }
+      }
     },
     "advancedSection": {
       "title": "高級",

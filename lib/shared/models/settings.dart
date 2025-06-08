@@ -178,7 +178,19 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   editorRecentUsedCustomColors<List<int>>(name: 'editorRecentUsedCustomColors', type: List<int>, defaultValue: []),
 
   /// Detect system proxy settings when app startup and use the detected value.
-  useDetectedProxyWhenStartup<bool>(name: 'useDetectedProxyWhenStartup', type: bool, defaultValue: false);
+  useDetectedProxyWhenStartup<bool>(name: 'useDetectedProxyWhenStartup', type: bool, defaultValue: false),
+
+  /// Auto clear outdated image cache.
+  ///
+  /// Default is disabled, to match the old behavior.
+  enableAutoClearImageCache<bool>(name: 'enableAutoClearImageCache', type: bool, defaultValue: false),
+
+  /// Duration of an image cache considered as outdated for auto clear, in seconds.
+  ///
+  /// Images that have a long duration till last used time will be considered as outdated.
+  ///
+  /// Default is 7 days = 60 * 60 * 24 * 7.
+  autoClearImageCacheDuration<int>(name: 'autoClearImageCacheDuration', type: int, defaultValue: 60 * 60 * 24 * 7);
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

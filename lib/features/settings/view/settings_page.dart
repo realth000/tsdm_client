@@ -20,6 +20,7 @@ import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/settings/view/debug_showcase_page.dart';
+import 'package:tsdm_client/features/settings/widgets/auto_clear_image_cache_duration_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/auto_sync_notice_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
@@ -535,14 +536,49 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   List<Widget> _buildStorageSection(BuildContext context, SettingsState state) {
+    final tr = context.t.settingsPage.storageSection;
+    final enableAutoClearImageCache = state.settingsMap.enableAutoClearImageCache;
+    final autoClearImageDurationSec = state.settingsMap.autoClearImageCacheDuration;
+    Duration? autoClearImageDuration;
+    if (autoClearImageDurationSec > 0) {
+      autoClearImageDuration = Duration(seconds: autoClearImageDurationSec);
+    }
+
     return [
       // Cache.
-      SectionTitleText(context.t.settingsPage.storageSection.title),
+      SectionTitleText(tr.title),
       SectionListTile(
         leading: const Icon(Icons.cleaning_services_outlined),
-        title: Text(context.t.settingsPage.storageSection.clearCache),
+        title: Text(tr.clearCache),
         onTap: () async {
           await showClearCacheBottomSheet(context: context);
+        },
+      ),
+      SectionSwitchListTile(
+        secondary: const Icon(Icons.image_not_supported_outlined),
+        title: Text(tr.scheduledCleaning.title),
+        subtitle: Text(tr.scheduledCleaning.details),
+        value: enableAutoClearImageCache,
+        onChanged: (v) =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableAutoClearImageCache, v)),
+      ),
+      SectionListTile(
+        enabled: enableAutoClearImageCache,
+        leading: const Icon(Symbols.auto_timer_rounded),
+        title: Text(tr.scheduledCleaning.duration.title),
+        subtitle: autoClearImageDuration != null ? Text(autoClearImageDuration.readable(context)) : null,
+        onTap: () async {
+          final seconds = await showDialog<int>(
+            context: context,
+            builder: (_) => RootPage(
+              DialogPaths.autoClearImageCacheDuration,
+              AutoClearImageCacheDurationDialog(autoClearImageDurationSec),
+            ),
+          );
+          if (seconds == null || !context.mounted) {
+            return;
+          }
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.autoClearImageCacheDuration, seconds));
         },
       ),
     ];

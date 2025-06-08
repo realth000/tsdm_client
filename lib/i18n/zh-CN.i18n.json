@@ -166,7 +166,22 @@
       "images": "图片",
       "emoji": "表情",
       "selectOneCache": "需要至少选择一项缓存",
-      "clearSuccess": "清除成功"
+      "clearSuccess": "清除成功",
+      "scheduledCleaning": {
+        "title": "自动清理图片",
+        "details": "应用启动时删除太久未使用的图片缓存",
+        "duration": {
+          "title": "自动清理图片间隔",
+          "detail": "如果图片缓存上次被使用的时间距离现在的时间超过这个时长，则会在自动清理时清除",
+          "6h": "6小时",
+          "12h": "12小时",
+          "1d": "1天",
+          "3days": "3天",
+          "7days": "7天",
+          "15days": "15天",
+          "30days": "30天"
+        }
+      }
     },
     "advancedSection": {
       "title": "高级",

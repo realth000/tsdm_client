@@ -307,6 +307,9 @@ class DialogPaths {
 
   /// Bottom sheet provide options to clear cache.
   static const String clearCache = '/dialog/clearCache';
+
+  /// Dialog to select the duration consider an image cache as outdated.
+  static const String autoClearImageCacheDuration = '/dialog/autoClearImageDialogDuration';
 }
 
 /// Route path for a screen.

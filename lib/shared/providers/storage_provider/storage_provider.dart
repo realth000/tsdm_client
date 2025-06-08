@@ -67,7 +67,7 @@ Future<Map<String, ImageEntity>> preloadImageCache(AppDatabase db) async {
 /// [StorageProvider] should be used by other providers.
 class StorageProvider with LoggerMixin {
   /// Constructor.
-  const StorageProvider(this._db, this._cookieCache, this._imageCache);
+  StorageProvider(this._db, this._cookieCache, this._imageCache);
 
   /// Injected database
   final AppDatabase _db;
@@ -84,7 +84,7 @@ class StorageProvider with LoggerMixin {
   /// Access this field to avoid disk IO and make it synchronous.
   ///
   /// MUST update during image cache setter calls.
-  final Map<String, ImageEntity> _imageCache;
+  Map<String, ImageEntity> _imageCache;
 
   /// Get the stream of all users in storage.
   Stream<List<UserLoginInfo>> allUsersStream() {
@@ -255,13 +255,22 @@ class StorageProvider with LoggerMixin {
     if (_imageCache.containsKey(url)) {
       _imageCache[url] = _imageCache[url]!.copyWith(lastUsedTime: now);
     }
-    await ImageDao(_db).upsertImageCache(ImageCompanion(url: Value(url), lastUsedTime: Value(now)));
+    await ImageDao(_db).updateImageCache(url: url, lastUsedTime: now);
   }
 
   /// Clear all image cache in database.
   Future<void> clearImageCache() async {
     _imageCache.clear();
     await ImageDao(_db).deleteAll();
+  }
+
+  /// Clear all image cache have a older not-used-time then [dateTime].
+  ///
+  /// Return all deleted image cache entity.
+  Future<List<ImageEntity>> clearImageCacheOutdated(DateTime dateTime) async {
+    final deletedCache = await ImageDao(_db).deleteByLastUsedDuration(dateTime);
+    _imageCache = await preloadImageCache(_db);
+    return deletedCache;
   }
 
   /*             settings             */
