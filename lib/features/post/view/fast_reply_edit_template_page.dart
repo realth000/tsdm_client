@@ -144,6 +144,7 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
                       setState(() {
                         fullScreen = !fullScreen;
                       });
+                      print('>>> fullScreen update to $fullScreen');
                       if (fullScreen) {
                         panelController.updatePanelType(ChatBottomPanelType.other, data: _BottomPanelType.toolbar);
                       } else {
@@ -276,6 +277,8 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
     );
 
     return Scaffold(
+      // Required by chat_bottom_container in the reply bar.
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text(switch (widget.editType) {
           FastReplyTemplateEditType.create => tr.editPageTitle,
