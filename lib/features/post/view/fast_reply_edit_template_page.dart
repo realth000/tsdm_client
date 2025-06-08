@@ -144,7 +144,6 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
                       setState(() {
                         fullScreen = !fullScreen;
                       });
-                      print('>>> fullScreen update to $fullScreen');
                       if (fullScreen) {
                         panelController.updatePanelType(ChatBottomPanelType.other, data: _BottomPanelType.toolbar);
                       } else {
