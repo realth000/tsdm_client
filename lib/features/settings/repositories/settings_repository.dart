@@ -132,6 +132,8 @@ final class SettingsRepository with LoggerMixin {
       enableUpdateCheckOnStartup: s.extract(_SK.enableUpdateCheckOnStartup),
       editorRecentUsedCustomColors: s.extract(_SK.editorRecentUsedCustomColors),
       useDetectedProxyWhenStartup: s.extract(_SK.useDetectedProxyWhenStartup),
+      enableAutoClearImageCache: s.extract(_SK.enableAutoClearImageCache),
+      autoClearImageCacheDuration: s.extract(_SK.autoClearImageCacheDuration),
     );
   }
 

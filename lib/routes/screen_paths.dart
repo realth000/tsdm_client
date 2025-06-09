@@ -181,6 +181,12 @@ class ScreenPaths {
   /// Page to edit fast rate templates.
   static const String fastRateTemplateEdit = '/fastRateTemplateEdit/:editType';
 
+  /// Page to view and edit fast reply templates.
+  static const String fastReplyTemplate = '/fastReplyTemplate/:pick';
+
+  /// Page to edit fast reply templates.
+  static const String fastReplyTemplateEdit = '/fastReplyTemplateEdit/:editType';
+
   /// The page to show current logged user's points statistics status
   /// and changelog.
   ///
@@ -301,6 +307,9 @@ class DialogPaths {
 
   /// Bottom sheet provide options to clear cache.
   static const String clearCache = '/dialog/clearCache';
+
+  /// Dialog to select the duration consider an image cache as outdated.
+  static const String autoClearImageCacheDuration = '/dialog/autoClearImageDialogDuration';
 }
 
 /// Route path for a screen.

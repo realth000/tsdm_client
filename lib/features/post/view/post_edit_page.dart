@@ -156,9 +156,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// Use this field to record how many bytes of char user can input.
   int threadTitleRestLength = 0;
 
-  /// Text controller of thread data form field.
-  final dataController = TextEditingController();
-
   // TODO: Do NOT use bool flag.
   /// Flag to control only init state when first build in loaded state.
   ///
@@ -298,12 +295,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     return;
   }
 
-  // TODO: Fix duplicate with same logic in thread page.
-  Widget _buildMobileToolbar(BuildContext context, PostEditState state) {
-    // if (widget.pid) {
-    //
-    // }
-
+  // TODO: Fix duplicate with same logic in fast reply edit page.
+  Widget _buildMobileToolbar(BuildContext context) {
     return ChatBottomPanelContainer<_BottomPanelType>(
       controller: panelController,
       inputFocusNode: focusNode,
@@ -539,9 +532,21 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                   ),
                 // Reply template
                 IconButton(
-                  icon: const Icon(Icons.speaker_notes_outlined),
-                  onPressed: () {
-                    throw UnimplementedError('pick reply template');
+                  icon: const Icon(Icons.quickreply_outlined),
+                  tooltip: context.t.fastReplyTemplate.title,
+                  onPressed: () async {
+                    final pickResult = await context.pushNamed<FastReplyTemplateModel>(
+                      ScreenPaths.fastReplyTemplate,
+                      pathParameters: {'pick': 'true'},
+                    );
+
+                    if (!context.mounted) {
+                      return;
+                    }
+                    if (pickResult != null) {
+                      bbcodeController.insertBBCode(pickResult.data);
+                    }
+                    focusNode.requestFocus();
                   },
                 ),
                 if (state.content?.permList?.isNotEmpty ?? false)
@@ -670,7 +675,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           color: Theme.of(context).colorScheme.surfaceContainerLow,
           child: Padding(padding: edgeInsetsR4.add(edgeInsetsB4), child: _buildControlRow(context, state)),
         ),
-        if (isMobile) _buildMobileToolbar(context, state),
+        if (isMobile) _buildMobileToolbar(context),
       ],
     );
   }
@@ -714,7 +719,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
       threadTitleRestLength =
           (state.content?.threadTitleMaxLength ?? _defaultThreadTitleMaxlength) -
           threadTitleController.text.parseUtf8Length;
-      dataController.text = state.content?.data ?? '';
       if (state.content?.options != null) {
         additionalOptionsMap = Map.fromEntries(state.content!.options!.map((e) => MapEntry(e.name, e)));
       }
@@ -758,7 +762,6 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     focusNode.dispose();
     threadTypeController.dispose();
     threadTitleController.dispose();
-    dataController.dispose();
     super.dispose();
   }
 

@@ -4,7 +4,7 @@ part of 'init_cubit.dart';
 @MappableClass()
 final class InitState with InitStateMappable {
   /// Constructor.
-  const InitState({this.v0LegacyDataDeleted = false});
+  const InitState({this.v0LegacyDataDeleted = false, this.clearingOutdatedImageCache = true});
 
   /// Flag indicating legacy data used before v1.0 found and deleted.
   ///
@@ -13,4 +13,7 @@ final class InitState with InitStateMappable {
   ///
   /// So delete those data and also image cache.
   final bool v0LegacyDataDeleted;
+
+  /// Flag indicating in process of clear outdated image cache.
+  final bool clearingOutdatedImageCache;
 }

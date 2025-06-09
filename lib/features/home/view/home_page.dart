@@ -17,10 +17,12 @@ import 'package:tsdm_client/features/local_notice/stream.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_auto_sync_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -69,6 +71,17 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
 
   /// Location stream subscription.
   late final StreamSubscription<String?> rootLocationSub;
+
+  Future<void> exitApp() async {
+    await getIt.get<StorageProvider>().dispose();
+    // Close the app.
+    if (isAndroid || isIOS) {
+      await SystemNavigator.pop(animated: true);
+    } else {
+      // CAUTION: unsafe operation.
+      exit(0);
+    }
+  }
 
   Future<void> _onLocalNoticeStreamEvent(String? payload) async {
     switch (payload) {
@@ -119,69 +132,6 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
       ],
     ),
   );
-
-  Widget _buildContent(BuildContext context) {
-    final Widget child;
-    if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {
-      child = _buildDrawerBody(context);
-    } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
-      child = Scaffold(
-        body: Row(
-          children: [
-            if (widget.showNavigationBar) const HomeNavigationRail(),
-            Expanded(child: widget.child),
-          ],
-        ),
-      );
-    } else {
-      child = Scaffold(
-        body: widget.child,
-        bottomNavigationBar: widget.showNavigationBar ? const HomeNavigationBar() : null,
-      );
-    }
-
-    return RepositoryProvider.value(
-      value: widget._forumHomeRepository,
-      child: BackButtonListener(
-        onBackButtonPressed: () async {
-          final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
-          if (!doublePressExit) {
-            // Do NOT handle pop events on double press check is disabled.
-            return false;
-          }
-          if (!context.mounted) {
-            return false;
-          }
-          final location = context.read<RootLocationCubit>().current;
-          if (location != ScreenPaths.homepage &&
-              location != ScreenPaths.topic &&
-              location != ScreenPaths.settings.path) {
-            // Do NOT handle pop events on other pages.
-            return false;
-          }
-          final tr = context.t.home;
-          final currentTime = DateTime.now();
-          if (lastPopTime == null ||
-              currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
-            lastPopTime = currentTime;
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            showSnackBar(context: context, message: tr.confirmExit);
-            return true;
-          }
-          // Close the app.
-          if (isAndroid || isIOS) {
-            await SystemNavigator.pop(animated: true);
-          } else {
-            // CAUTION: unsafe operation.
-            exit(0);
-          }
-          // Unreachable
-          return false;
-        },
-        child: child,
-      ),
-    );
-  }
 
   Future<void> showLocalNotification(BuildContext context, NotificationAutoSyncInfo info) async {
     final tr = context.t.localNotification;
@@ -235,7 +185,20 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => HomeCubit()),
-        BlocProvider(create: (context) => InitCubit()..deleteV0LegacyData()),
+        BlocProvider(
+          create: (context) {
+            final settings = context.read<SettingsBloc>().state.settingsMap;
+
+            final cubit = InitCubit();
+            unawaited(cubit.deleteV0LegacyData());
+            if (settings.enableAutoClearImageCache) {
+              cubit.autoClearImageCache(Duration(seconds: settings.autoClearImageCacheDuration));
+            } else {
+              cubit.skipAutoClearImageCache();
+            }
+            return cubit;
+          },
+        ),
       ],
       child: MultiBlocListener(
         listeners: [
@@ -256,7 +219,70 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
             },
           ),
         ],
-        child: _buildContent(context),
+        child: BlocBuilder<InitCubit, InitState>(
+          builder: (context, state) {
+            if (state.clearingOutdatedImageCache) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            final Widget child;
+            if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {
+              child = _buildDrawerBody(context);
+            } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
+              child = Scaffold(
+                body: Row(
+                  children: [
+                    if (widget.showNavigationBar) const HomeNavigationRail(),
+                    Expanded(child: widget.child),
+                  ],
+                ),
+              );
+            } else {
+              child = Scaffold(
+                body: widget.child,
+                bottomNavigationBar: widget.showNavigationBar ? const HomeNavigationBar() : null,
+              );
+            }
+
+            return RepositoryProvider.value(
+              value: widget._forumHomeRepository,
+              child: BackButtonListener(
+                onBackButtonPressed: () async {
+                  if (!context.mounted) {
+                    await exitApp();
+                    return true;
+                  }
+                  final location = context.read<RootLocationCubit>().current;
+                  if (location != ScreenPaths.homepage &&
+                      location != ScreenPaths.topic &&
+                      location != ScreenPaths.settings.path) {
+                    // Do NOT handle pop events on other pages.
+                    return false;
+                  }
+                  final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
+                  if (!doublePressExit) {
+                    // Do NOT handle pop events on double press check is disabled.
+                    await exitApp();
+                    return true;
+                  }
+                  final tr = context.t.home;
+                  final currentTime = DateTime.now();
+                  if (lastPopTime == null ||
+                      currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
+                    lastPopTime = currentTime;
+                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                    showSnackBar(context: context, message: tr.confirmExit);
+                    return true;
+                  }
+                  await exitApp();
+                  // Unreachable
+                  return false;
+                },
+                child: child,
+              ),
+            );
+          },
+        ),
       ),
     );
   }

@@ -11,6 +11,11 @@ extension ConvertDurationExt on Duration {
   String readable(BuildContext context) {
     final tr = context.t.general;
 
+    final days = inDays;
+    if (days > 0) {
+      return tr.days(value: days);
+    }
+
     final hours = inHours;
     if (hours > 0) {
       return tr.hours(value: hours);

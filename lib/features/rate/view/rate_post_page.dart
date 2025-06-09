@@ -347,7 +347,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.star_rate_outlined),
-                    tooltip: context.t.fastRateTemplate.choose,
+                    tooltip: context.t.fastRateTemplate.title,
                     onPressed: state.status == RateStatus.fetchingInfo || state.status == RateStatus.rating
                         ? null
                         : () => chooseTemplate(state),

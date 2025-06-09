@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -614,6 +615,24 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
                     }
                   },
                 ),
+              IconButton(
+                icon: const Icon(Icons.quickreply_outlined),
+                tooltip: context.t.fastReplyTemplate.title,
+                onPressed: () async {
+                  final pickResult = await context.pushNamed<FastReplyTemplateModel>(
+                    ScreenPaths.fastReplyTemplate,
+                    pathParameters: {'pick': 'true'},
+                  );
+
+                  if (!context.mounted) {
+                    return;
+                  }
+                  if (pickResult != null) {
+                    _replyRichController.insertBBCode(pickResult.data);
+                  }
+                  focusNode.requestFocus();
+                },
+              ),
               const Spacer(),
               FilledButton.tonal(onPressed: () => context.pop(), child: const Icon(Icons.unfold_less)),
               sizedBoxW8H8,

@@ -166,7 +166,22 @@
       "images": "Images",
       "emoji": "Emoji",
       "selectOneCache": "Need to select at least one kind of cache",
-      "clearSuccess": "Cleared successfully"
+      "clearSuccess": "Cleared successfully",
+      "scheduledCleaning": {
+        "title": "Auto clear image",
+        "details": "Clear long time not used image cache when app start",
+        "duration": {
+          "title": "Auto clear image duration",
+          "detail": "Images that not used for more than this amount of time will be cleared",
+          "6h": "6 hours",
+          "12h": "12 hours",
+          "1d": "1 day",
+          "3days": "3 days",
+          "7days": "7 days",
+          "15days": "15 days",
+          "30days": "30 days"
+        }
+      }
     },
     "advancedSection": {
       "title": "Advanced",
@@ -986,6 +1001,7 @@
     "editPageAlreadyExists": "Same name template already exists",
     "editPageOverride": "Override same name template",
     "editPageTemplateAdded": "Reply template added",
-    "editPageNameNotEmpty": "Name shall not be empty"
+    "editPageNameNotEmpty": "Name shall not be empty",
+    "editPageSaveTemplate": "Save template"
   }
 }

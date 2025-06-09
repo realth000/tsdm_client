@@ -48,6 +48,8 @@ class SettingsMap with SettingsMapMappable {
     required this.enableUpdateCheckOnStartup,
     required this.editorRecentUsedCustomColors,
     required this.useDetectedProxyWhenStartup,
+    required this.enableAutoClearImageCache,
+    required this.autoClearImageCacheDuration,
   });
 
   final String netClientAccept;
@@ -90,6 +92,8 @@ class SettingsMap with SettingsMapMappable {
   final bool enableUpdateCheckOnStartup;
   final List<int> editorRecentUsedCustomColors;
   final bool useDetectedProxyWhenStartup;
+  final bool enableAutoClearImageCache;
+  final int autoClearImageCacheDuration;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -139,6 +143,8 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.enableUpdateCheckOnStartup => copyWith(enableUpdateCheckOnStartup: value as bool?),
       SettingsKeys.editorRecentUsedCustomColors => copyWith(editorRecentUsedCustomColors: value as List<int>?),
       SettingsKeys.useDetectedProxyWhenStartup => copyWith(useDetectedProxyWhenStartup: value as bool?),
+      SettingsKeys.enableAutoClearImageCache => copyWith(enableAutoClearImageCache: value as bool?),
+      SettingsKeys.autoClearImageCacheDuration => copyWith(autoClearImageCacheDuration: value as int?),
     };
   }
 }
