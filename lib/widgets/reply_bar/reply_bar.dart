@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:chat_bottom_container/chat_bottom_container.dart';
+import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -662,7 +663,11 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
-    _replyRichController = buildBBCodeEditorController(initialText: widget.outerTextController.text);
+    // FIXME: CAUTION! This initial delta parsing step may cause ui jank.
+    // TODO: Save the quill delta outside and apply it here to avoid losing styles that not supported by bbcode parser.
+    _replyRichController = buildBBCodeEditorController(
+      initialDelta: parseBBCodeTextToDelta(widget.outerTextController.text),
+    );
     _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen((status) {
       setState(() {
