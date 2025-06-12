@@ -90,6 +90,7 @@ final _appRoutes = [
       ),
     ],
   ),
+  AppRoute(path: ScreenPaths.rootSettings, builder: (_) => const SettingsPage()),
   AppRoute(
     path: ScreenPaths.loggedUserProfile,
     builder: (state) {

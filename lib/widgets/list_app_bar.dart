@@ -36,6 +36,9 @@ enum MenuActions {
   ///
   /// View log.
   debugViewLog,
+
+  /// Open settings page.
+  openSettings,
 }
 
 /// A app bar contains list and provides features including:
@@ -110,7 +113,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
     return AppBar(
-      title: title == null ? null : Text(title!),
+      title: title == null ? null : Text(title!, style: Theme.of(context).textTheme.titleSmall),
       bottom: bottom,
       actions: [
         const NoticeButton(),
@@ -177,6 +180,16 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
+            PopupMenuItem(
+              value: MenuActions.openSettings,
+              child: Row(
+                children: [
+                  const Icon(Icons.settings_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.general.openSettings),
+                ],
+              ),
+            ),
             if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
               const PopupMenuDivider(),
               PopupMenuItem(

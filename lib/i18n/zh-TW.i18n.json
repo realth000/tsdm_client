@@ -22,7 +22,8 @@
     "minutes": "${value: int} 分鐘",
     "hours": "${value: int} 小時",
     "days": "${value: int} 天",
-    "now": "剛剛"
+    "now": "剛剛",
+    "openSettings": "開啟設定"
   },
   "navigation": {
     "homepage": "首頁",

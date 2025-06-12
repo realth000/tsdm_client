@@ -68,6 +68,12 @@ class ScreenPaths {
   /// App settings page.
   static const settings = NestedPath._('/settings');
 
+  /// App settings page with root navigator key.
+  ///
+  /// Due to https://github.com/flutter/flutter/issues/140586 it's impossible to navigate to another page outside the
+  /// shell route, copy a root route level page as workaround.
+  static const rootSettings = '/rootSettings';
+
   /// Settings page for thread card appearance.
   static const settingsThreadAppearance = NestedPath._('threadAppearance', settings);
 

@@ -22,7 +22,8 @@
     "minutes": "${value: int} minutes",
     "hours": "${value: int} hours",
     "days": "${value: int} days",
-    "now": "Now"
+    "now": "Now",
+    "openSettings": "Open settings"
   },
   "navigation": {
     "homepage": "Home",
