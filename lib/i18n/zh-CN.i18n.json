@@ -22,7 +22,8 @@
     "minutes": "${value: int} 分钟",
     "hours": "${value: int} 小时",
     "days": "${value: int} 天",
-    "now": "刚刚"
+    "now": "刚刚",
+    "openSettings": "打开设置"
   },
   "navigation": {
     "homepage": "主页",
