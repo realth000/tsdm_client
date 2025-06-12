@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -6,12 +7,14 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/uri.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
+import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/v1/widgets/post_list.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
@@ -121,6 +124,82 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
 
   final _replyBarController = ReplyBarController();
 
+  Widget _buildBreadcrumbsRow(
+    List<ThreadBreadcrumb> breadcrumbs,
+    FilterType? threadType,
+    int? forumID,
+    int? viewCount,
+    int? replyCount,
+    bool isDraft,
+  ) {
+    final infoTextStyle = Theme.of(
+      context,
+    ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
+
+    final infoTextHighlightStyle = Theme.of(
+      context,
+    ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary);
+
+    final breadFrags = breadcrumbs
+        .map(
+          (e) => [
+            MouseRegion(
+              cursor: SystemMouseCursors.click,
+              child: GestureDetector(
+                onTap: () async {
+                  final gid = e.link.tryGetQueryParameters()?['gid'];
+                  if (gid != null) {
+                    await context.pushNamed(
+                      ScreenPaths.forumGroup,
+                      pathParameters: {'gid': gid},
+                      queryParameters: {'title': e.description},
+                    );
+                    return;
+                  }
+                  await context.dispatchAsUrl(e.link.toString());
+                },
+                child: Text(e.description, style: infoTextHighlightStyle),
+              ),
+            ),
+            const Text(' > '),
+          ],
+        )
+        .flattenedToList;
+
+    return Padding(
+      padding: edgeInsetsL12R12.add(edgeInsetsB4),
+      child: DefaultTextStyle.merge(
+        style: infoTextStyle,
+        child: SizedBox(
+          height: 20,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            reverse: true,
+            children: <Widget>[
+              ...breadFrags,
+              if (threadType?.typeID != null && forumID != null)
+                MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () async => context.pushNamed(
+                      ScreenPaths.forum,
+                      pathParameters: {'fid': '$forumID'},
+                      queryParameters: {'threadTypeName': threadType.name, 'threadTypeID': '${threadType.typeID}'},
+                    ),
+                    child: Text('[${threadType!.name}]', style: infoTextHighlightStyle),
+                  ),
+                ),
+              Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
+              if (viewCount != null || replyCount != null)
+                Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
+              if (isDraft) Text('[${context.t.threadPage.draft}]'),
+            ].reversed.toList(),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> replyPostCallback(User user, int? postFloor, String? replyAction) async {
     if (replyAction == null) {
       return;
@@ -142,10 +221,8 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
       children: [
         Expanded(
           child: PostList(
-            forumID: state.fid,
             threadID: state.tid ?? widget.threadID,
             title: state.title ?? widget.title,
-            threadType: state.threadType ?? widget.threadType,
             pageNumber: context.read<JumpPageCubit>().state.currentPage,
             initialPostID: widget.findPostID?.parseToInt(),
             scrollController: _listScrollController,
@@ -153,7 +230,6 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             useDivider: true,
             postList: state.postList,
             canLoadMore: state.canLoadMore,
-            isDraft: state.isDraft,
             latestModAct: state.latestModAct,
           ),
         ),
@@ -319,12 +395,9 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             // Update jump page state.
             context.read<JumpPageCubit>().setPageInfo(totalPages: state.totalPages, currentPage: state.currentPage);
 
-            String? title;
-
             // Reset jump page state when every build.
             if (state.status == ThreadStatus.loading || state.status == ThreadStatus.initial) {
               context.read<JumpPageCubit>().markLoading();
-              title = widget.title;
             } else {
               context.read<JumpPageCubit>().markSuccess();
             }
@@ -346,7 +419,18 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
               // Required by chat_bottom_container in the reply bar.
               resizeToAvoidBottomInset: false,
               appBar: ListAppBar(
-                title: title,
+                title: widget.title ?? state.title,
+                bottom: PreferredSize(
+                  preferredSize: const Size.fromHeight(20),
+                  child: _buildBreadcrumbsRow(
+                    state.breadcrumbs,
+                    state.threadType,
+                    state.fid,
+                    state.viewCount,
+                    state.replyCount,
+                    state.isDraft,
+                  ),
+                ),
                 showReverseOrderAction: true,
                 onSearch: () async {
                   await context.pushNamed(ScreenPaths.search);
