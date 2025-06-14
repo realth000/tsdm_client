@@ -10,7 +10,7 @@ import 'package:tsdm_client/constants/constants.dart';
 final getIt = GetIt.instance;
 
 /// Global logger instance.
-final talker = TalkerFlutter.init();
+final talker = TalkerFlutter.init(settings: TalkerSettings(colors: {TalkerLogType.debug.key: AnsiPen()..xterm(60)}));
 
 /// Global cmdline args.
 ///

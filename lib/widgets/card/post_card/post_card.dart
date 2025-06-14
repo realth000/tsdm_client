@@ -9,7 +9,6 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
-import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
@@ -22,6 +21,7 @@ import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/poll_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/show_user_brief_profile_dialog.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
+import 'package:tsdm_client/widgets/copy_content_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
@@ -375,7 +375,25 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
               case _PostCardActions.openInBrowser:
                 await launchUrl(Uri.parse(widget.post.shareLink!), mode: LaunchMode.externalApplication);
               case _PostCardActions.openAndCopy:
-                await showCopyContentMenu(context);
+                final data =
+                    parseHtmlDocument(widget.post.data).body?.childNodes
+                        .map(
+                          (e) => switch (e.nodeType) {
+                            uh.Node.TEXT_NODE => e.text!.trim(),
+                            uh.Node.ELEMENT_NODE => () {
+                              final x = e as uh.Element;
+                              if (x.tagName.toLowerCase() == 'script') {
+                                return null;
+                              }
+                              return x.innerText.trim();
+                            }(),
+                            _ => null,
+                          },
+                        )
+                        .whereType<String>()
+                        .join() ??
+                    '';
+                await showCopySelectContentDialog(context: context, data: data);
             }
           },
         ),
@@ -383,46 +401,6 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
       ],
     );
   }
-
-  Future<void> showCopyContentMenu(BuildContext context) async => showDialog<void>(
-    context: context,
-    builder: (context) {
-      return RootPage(
-        DialogPaths.copyContent,
-        AlertDialog(
-          scrollable: true,
-          title: Text(context.t.postCard.copyText),
-          content: SelectableText(
-            parseHtmlDocument(widget.post.data).body?.childNodes
-                    .map(
-                      (e) => switch (e.nodeType) {
-                        uh.Node.TEXT_NODE => e.text!.trim(),
-                        uh.Node.ELEMENT_NODE => () {
-                          final x = e as uh.Element;
-                          if (x.tagName.toLowerCase() == 'script') {
-                            return null;
-                          }
-                          return x.innerText.trim();
-                        }(),
-                        _ => null,
-                      },
-                    )
-                    .whereType<String>()
-                    .join() ??
-                '',
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: Text(context.t.general.ok),
-            ),
-          ],
-        ),
-      );
-    },
-  );
 
   // TODO: Handle better.
   // FIXME: Fix rebuild when interacting with widgets inside.
