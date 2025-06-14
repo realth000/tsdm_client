@@ -404,7 +404,16 @@
       "title": "操作记录"
     },
     "softCloseHint": "帖子已关闭，回复前请注意",
-    "statistics": "${view: int} 查看 ${reply: int} 回复"
+    "statistics": "${view: int} 查看 ${reply: int} 回复",
+    "threadInfo": {
+      "title": "帖子信息",
+      "threadTitle": "标题",
+      "threadID": "ID",
+      "threadUrl": "链接",
+      "threadUrlWithDomain": "链接（有域名）",
+      "threadUrlBBCode": "链接BBCode",
+      "threadUrlBBCodeWithDomain": "链接BBCode（有域名）"
+    }
   },
   "noticePage": {
     "title": "通知",
@@ -585,11 +594,12 @@
     "statistics": "详细数据",
     "failedToLoadWithReason": "无法加载图片: ${reason: String}",
     "failedToLoad": "无法加载图片",
-    "url": "Url：${url: String}",
-    "size": "图片大小：${width: int} x ${height: int}",
-    "cacheName": "缓存名称：${name: String}",
-    "cacheSize": "缓存大小：${size: String}",
-    "usage": "用途: ${usage: String}"
+    "url": "Url",
+    "sizeTitle": "图片大小",
+    "sizeValue": "${width: int} x ${height: int}",
+    "cacheName": "缓存名称",
+    "cacheSize": "缓存大小",
+    "usage": "用途"
   },
   "forumCard": {
     "links": "链接",
@@ -1004,5 +1014,16 @@
     "editPageTemplateAdded": "回复模板已保存",
     "editPageNameNotEmpty": "名称不能为空",
     "editPageSaveTemplate": "保存模板"
+  },
+  "copyDialog": {
+    "copyTitle": "复制内容",
+    "copySelectTitle": "选择和复制",
+    "copyAll": "复制全部",
+    "share": "分享",
+    "close": "关闭"
+  },
+  "copyButton": {
+    "copyTip": "复制",
+    "copied": "已复制"
   }
 }

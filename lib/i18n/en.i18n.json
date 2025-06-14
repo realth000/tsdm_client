@@ -404,7 +404,16 @@
       "title": "Operation Log"
     },
     "softCloseHint": "Thread is closed, be attention before posting",
-    "statistics": "${view: int} views ${reply: int} count"
+    "statistics": "${view: int} views ${reply: int} count",
+    "threadInfo": {
+      "title": "Thread info",
+      "threadTitle": "Title",
+      "threadID": "ID",
+      "threadUrl": "Url",
+      "threadUrlWithDomain": "Url (with domain)",
+      "threadUrlBBCode": "Url BBCode",
+      "threadUrlBBCodeWithDomain": "Url BBCode (with domain)"
+    }
   },
   "noticePage": {
     "title": "Notifications",
@@ -585,11 +594,12 @@
     "statistics": "Detail statistic",
     "failedToLoadWithReason": "Failed to load image: ${reason: String}",
     "failedToLoad": "Failed to load",
-    "url": "Url: ${url: String}",
-    "size": "Size: ${width: int} x ${height: int}",
-    "cacheName": "Cache name: ${name: String}",
-    "cacheSize": "Cache size: ${size: String}",
-    "usage": "Usage: ${usage: String}"
+    "url": "Url",
+    "sizeTitle": "Size",
+    "sizeValue": "${width: int} x ${height: int}",
+    "cacheName": "Cache name",
+    "cacheSize": "Cache size",
+    "usage": "Usage"
   },
   "forumCard": {
     "links": "Links",
@@ -1004,5 +1014,16 @@
     "editPageTemplateAdded": "Reply template added",
     "editPageNameNotEmpty": "Name shall not be empty",
     "editPageSaveTemplate": "Save template"
+  },
+  "copyDialog": {
+    "copyTitle": "Copy",
+    "copySelectTitle": "Select and copy",
+    "copyAll": "Copy all",
+    "share": "Share",
+    "close": "Close"
+  },
+  "copyButton": {
+    "copyTip": "Copy",
+    "copied": "Copied"
   }
 }

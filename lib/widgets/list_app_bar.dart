@@ -113,7 +113,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
     return AppBar(
-      title: title == null ? null : Text(title!, style: Theme.of(context).textTheme.titleSmall),
+      title: title == null ? null : Text(title!),
       bottom: bottom,
       actions: [
         const NoticeButton(),

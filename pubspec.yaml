@@ -68,10 +68,12 @@ dependencies:
   photo_view: ^0.15.0
   responsive_framework: ^1.5.1
   rxdart: ^0.28.0
+  # Blocked by talker.
+  share_plus: ^10.1.4
   shimmer: ^3.0.0
   slang: ^4.7.1
-  smooth_sheets: ^0.11.5
   slang_flutter: ^4.7.0
+  smooth_sheets: ^0.11.5
   system_network_proxy:
     path: ./packages/flutter_system_network_proxy/system_network_proxy
   # For drift
