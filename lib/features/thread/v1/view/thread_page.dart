@@ -131,6 +131,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
     int? viewCount,
     int? replyCount,
     bool isDraft,
+    String? tid,
   ) {
     final infoTextStyle = Theme.of(
       context,
@@ -189,7 +190,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                     child: Text('[${threadType!.name}]', style: infoTextHighlightStyle),
                   ),
                 ),
-              Text('[${context.t.threadPage.title} ${widget.threadID ?? ""}]'),
+              Text('[${context.t.threadPage.title} ${tid ?? ""}]'),
               if (viewCount != null || replyCount != null)
                 Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
               if (isDraft) Text('[${context.t.threadPage.draft}]'),
@@ -429,6 +430,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                     state.viewCount,
                     state.replyCount,
                     state.isDraft,
+                    state.tid ?? widget.threadID,
                   ),
                 ),
                 showReverseOrderAction: true,
