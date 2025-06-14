@@ -132,8 +132,6 @@ class _CopyContentDialogState extends State<_CopyContentDialog> {
                   (idx, e) => TextField(
                     controller: controllers[idx],
                     readOnly: true,
-                    maxLines: null,
-                    minLines: 1,
                     decoration: InputDecoration(
                       labelText: e.name,
                       suffixIcon: CopyButton(data: controllers[idx].text),
