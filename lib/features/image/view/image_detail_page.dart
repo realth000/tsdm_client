@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
-import 'package:tsdm_client/constants/layout.dart';
-import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
-import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
+import 'package:tsdm_client/widgets/copy_content_dialog.dart';
 
 /// Page to show a detail image.
 final class ImageDetailPage extends StatelessWidget {
@@ -29,64 +27,27 @@ final class ImageDetailPage extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.info_outline),
             tooltip: tr.statistics,
-            onPressed: () async => showDialog(
+            onPressed: () async => showCopyContentDialogFutureBuilder(
               context: context,
-              builder: (_) => RootPage(
-                DialogPaths.imageDetail,
-                SimpleDialog(
-                  title: Text(tr.statistics),
-                  contentPadding: edgeInsetsL24T24R24B24,
-                  children: [
-                    FutureBuilder(
-                      future: getIt.get<ImageCacheProvider>().getEnsureCachedFullInfo(imageUrl),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError) {
-                          return Center(child: Text(tr.failedToLoadWithReason(reason: '${snapshot.error}')));
-                        }
-
-                        if (!snapshot.hasData) {
-                          return const Center(child: CircularProgressIndicator());
-                        }
-
-                        final data = snapshot.data;
-
-                        if (data == null) {
-                          return Center(child: Text(tr.failedToLoad));
-                        }
-
-                        return Column(
-                          spacing: 8,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              spacing: 8,
-                              children: [
-                                Expanded(child: Text(tr.url(url: data.url))),
-                                IconButton(
-                                  icon: const Icon(Icons.copy_outlined),
-                                  onPressed: () async => copyToClipboard(context, data.url),
-                                ),
-                              ],
-                            ),
-                            Row(
-                              spacing: 8,
-                              children: [
-                                Expanded(child: Text(tr.cacheName(name: data.fileName))),
-                                IconButton(
-                                  icon: const Icon(Icons.copy_outlined),
-                                  onPressed: () async => copyToClipboard(context, data.fileName),
-                                ),
-                              ],
-                            ),
-                            Text(tr.size(width: data.width, height: data.height)),
-                            Text(tr.cacheSize(size: data.cacheSize)),
-                          ],
-                        );
-                      },
-                    ),
-                  ],
-                ),
-              ),
+              // Calling `then` is better than nested callback.
+              // ignore: prefer_async_await
+              contentFuture: getIt.get<ImageCacheProvider>().getEnsureCachedFullInfo(imageUrl).then((imageInfo) {
+                if (imageInfo == null) {
+                  return const [];
+                }
+                return <CopyableContent>[
+                  CopyableContent(name: tr.url, data: imageInfo.url),
+                  CopyableContent(name: tr.cacheName, data: imageInfo.fileName),
+                  CopyableContent(name: tr.cacheSize, data: imageInfo.cacheSize),
+                  CopyableContent(
+                    name: tr.sizeTitle,
+                    data: tr.sizeValue(width: imageInfo.width, height: imageInfo.height),
+                  ),
+                ];
+              }),
+              errorBuilder: (_, err) => Center(child: Text(tr.failedToLoadWithReason(reason: '$err'))),
+              title: tr.statistics,
+              route: DialogPaths.imageDetail,
             ),
           ),
         ],

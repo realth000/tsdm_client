@@ -14,7 +14,6 @@ import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
-import 'package:tsdm_client/features/thread/v1/models/models.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/features/thread/v1/widgets/post_list.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
@@ -30,6 +29,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
+import 'package:tsdm_client/widgets/copy_content_dialog.dart';
 import 'package:tsdm_client/widgets/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
@@ -124,15 +124,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
 
   final _replyBarController = ReplyBarController();
 
-  Widget _buildBreadcrumbsRow(
-    List<ThreadBreadcrumb> breadcrumbs,
-    FilterType? threadType,
-    int? forumID,
-    int? viewCount,
-    int? replyCount,
-    bool isDraft,
-    String? tid,
-  ) {
+  Widget _buildBreadcrumbsRow(ThreadState state) {
     final infoTextStyle = Theme.of(
       context,
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
@@ -141,7 +133,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
       context,
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.primary);
 
-    final breadFrags = breadcrumbs
+    final breadFrags = state.breadcrumbs
         .map(
           (e) => [
             MouseRegion(
@@ -178,22 +170,60 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             reverse: true,
             children: <Widget>[
               ...breadFrags,
-              if (threadType?.typeID != null && forumID != null)
+              if (state.threadType?.typeID != null && state.fid != null)
                 MouseRegion(
                   cursor: SystemMouseCursors.click,
                   child: GestureDetector(
                     onTap: () async => context.pushNamed(
                       ScreenPaths.forum,
-                      pathParameters: {'fid': '$forumID'},
-                      queryParameters: {'threadTypeName': threadType.name, 'threadTypeID': '${threadType.typeID}'},
+                      pathParameters: {'fid': '${state.fid}'},
+                      queryParameters: {
+                        'threadTypeName': state.threadType?.name,
+                        'threadTypeID': '${state.threadType?.typeID}',
+                      },
                     ),
-                    child: Text('[${threadType!.name}]', style: infoTextHighlightStyle),
+                    child: Text('[${state.threadType!.name}]', style: infoTextHighlightStyle),
                   ),
                 ),
-              Text('[${context.t.threadPage.title} ${tid ?? ""}]'),
-              if (viewCount != null || replyCount != null)
-                Text('[${context.t.threadPage.statistics(view: viewCount ?? 0, reply: replyCount ?? 0)}]'),
-              if (isDraft) Text('[${context.t.threadPage.draft}]'),
+              MouseRegion(
+                cursor: SystemMouseCursors.click,
+                child: GestureDetector(
+                  onTap: () async {
+                    final tr = context.t.threadPage.threadInfo;
+                    final id = state.tid ?? widget.threadID;
+                    final title = state.title ?? widget.title;
+                    await showCopyContentDialog(
+                      context: context,
+                      title: tr.title,
+                      contents: [
+                        CopyableContent(name: tr.threadTitle, data: state.title ?? widget.title ?? ''),
+                        if (id != null) ...[
+                          CopyableContent(name: tr.threadID, data: id),
+                          CopyableContent(name: tr.threadUrl, data: 'forum.php?mod=viewthread&tid=$id'),
+                          CopyableContent(
+                            name: tr.threadUrlWithDomain,
+                            data: '$baseUrl/forum.php?mod=viewthread&tid=$id',
+                          ),
+                        ],
+                        if (id != null && title != null) ...[
+                          CopyableContent(
+                            name: tr.threadUrlBBCode,
+                            data: '[url=forum.php?mod=viewthread&tid=$id]$title[/url]',
+                          ),
+                          CopyableContent(
+                            name: tr.threadUrlBBCodeWithDomain,
+                            data: '[url=$baseUrl/forum.php?mod=viewthread&tid=$id]$title[/url]',
+                          ),
+                        ],
+                      ],
+                    );
+                  },
+                  child: Text('[${context.t.threadPage.title} ${state.tid ?? ""}]', style: infoTextHighlightStyle),
+                ),
+              ),
+              if (state.viewCount != null || state.replyCount != null)
+                Text('[${context.t.threadPage.statistics(view: state.viewCount ?? 0, reply: state.replyCount ?? 0)}]'),
+              if (state.isDraft) Text('[${context.t.threadPage.draft}]'),
             ].reversed.toList(),
           ),
         ),
@@ -396,11 +426,15 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             // Update jump page state.
             context.read<JumpPageCubit>().setPageInfo(totalPages: state.totalPages, currentPage: state.currentPage);
 
+            final String? title;
+
             // Reset jump page state when every build.
             if (state.status == ThreadStatus.loading || state.status == ThreadStatus.initial) {
               context.read<JumpPageCubit>().markLoading();
+              title = widget.title ?? state.title;
             } else {
               context.read<JumpPageCubit>().markSuccess();
+              title = null;
             }
 
             var threadUrl = RepositoryProvider.of<ThreadRepository>(context).threadUrl;
@@ -420,19 +454,8 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
               // Required by chat_bottom_container in the reply bar.
               resizeToAvoidBottomInset: false,
               appBar: ListAppBar(
-                title: widget.title ?? state.title,
-                bottom: PreferredSize(
-                  preferredSize: const Size.fromHeight(20),
-                  child: _buildBreadcrumbsRow(
-                    state.breadcrumbs,
-                    state.threadType,
-                    state.fid,
-                    state.viewCount,
-                    state.replyCount,
-                    state.isDraft,
-                    state.tid ?? widget.threadID,
-                  ),
-                ),
+                title: title,
+                bottom: PreferredSize(preferredSize: const Size.fromHeight(20), child: _buildBreadcrumbsRow(state)),
                 showReverseOrderAction: true,
                 onSearch: () async {
                   await context.pushNamed(ScreenPaths.search);
