@@ -381,7 +381,10 @@ final class ImageCacheProvider with LoggerMixin {
     final storage = getIt.get<StorageProvider>();
     final clearedCache = await storage.clearImageCacheOutdated(dateTime);
     for (final cache in clearedCache) {
-      await getCacheFile(cache.fileName).delete();
+      final cacheFile = getCacheFile(cache.fileName);
+      if (cacheFile.existsSync()) {
+        await cacheFile.delete();
+      }
     }
     return clearedCache.length;
   }

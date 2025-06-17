@@ -587,7 +587,7 @@ final class _Muncher with LoggerMixin {
     //
     // Some code blocks do not have line number prefix, use the raw content inside if so.
     final liNodes = element.querySelectorAll('div ol li');
-    final text = liNodes.isNotEmpty ? liNodes.map((e) => e.innerText).join('\n') : element.innerText.trim();
+    final text = liNodes.isNotEmpty ? liNodes.map((e) => e.innerText.trimRight()).join('\n') : element.innerText.trim();
     state
       ..headingBrNodePassed = true
       ..elevation += _elevationStep;

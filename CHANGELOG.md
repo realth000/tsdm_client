@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.8.1] - 2025-06-15
+
+## Fixed
+
+- 编辑：修复在帖子和回复模板中使用`free`会导致灰屏的问题。
+- html：修复部分`code`中行与行之间多一个空行的问题。
+- app：修复应用启动时黑屏的问题。
+
 ## [1.8.0] - 2025-06-14
 
 ## Added
