@@ -64,7 +64,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
               children: allTemplates
                   .map(
                     (e) => FastRateTemplateCard(
-                      key: ValueKey('FastRateTemplateCard_${e.name}'),
+                      key: ValueKey('FastRateTemplateCard_${e.hashCode}'),
                       rateTemplate: e,
                       allowEdit: !widget.pick,
                     ),
