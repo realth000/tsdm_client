@@ -36,6 +36,11 @@ on:
         required: true
         type: boolean
         default: true
+      use_prebuilt_libs:
+        description: Use prebuilt dependency libs.
+        required: true
+        type: boolean
+        default: true
 
 env:
   CI_FLUTTER_VERSION: '3.32.4'
@@ -121,6 +126,13 @@ jobs:
         run: |
           echo "${{ steps.setup-ndk.outputs.ndk-path }}/toolchains/llvm/prebuilt/linux-x86_64/bin" >> $GITHUB_PATH
       - name: Prepare flutter_avif
+        if: ${{ !inputs.use_prebuilt_libs }}
+        run: |
+          sudo apt install -y make meson nasm
+          cargo install cargo-ndk@3.5.4 --locked
+          ./scripts/build-flutter_avif-android.sh
+      - name: Prepare flutter_avif (using prebuilt libs)
+        if: ${{ inputs.use_prebuilt_libs }}
         run: |
           sudo apt install -y make meson nasm
           cargo install cargo-ndk@3.5.4 --locked
