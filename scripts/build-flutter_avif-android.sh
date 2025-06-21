@@ -10,6 +10,12 @@ set -ex
 # export ANDROID_NDK_LATEST_HOME='/usr/local/lib/android/sdk/ndk/28.0.13004108'
 # export ANDROID_NDK_ROOT='/usr/local/lib/android/sdk/ndk/28.0.13004108'
 
+USE_PREBUILT_LIBS="false"
+
+if [ "$1" == "--use-prebuilt-libs" ];then
+  USE_PREBUILT_LIBS="true"
+fi
+
 if [ -d "$ANDROID_NDK_HOME" ];then
   echo "NDK exists"
 else
@@ -24,6 +30,12 @@ fi
 
 AVIF_ROOT="packages/flutter_avif"
 AVIF_ANDROID_JNILIBS_DIR="${AVIF_ROOT}/flutter_avif_android/android/src/main/jniLibs"
+
+if [ "${USE_PREBUILT_LIBS}" == "true" ];then
+  echo "using flutter_avif Android libs, skip building process."
+  echo "make sure you are not using prebuilt libs when releasing new versions, otherwise F-Droid build are broken."
+  exit 0
+fi
 
 find "${AVIF_ANDROID_JNILIBS_DIR}" -type f -name "*.so" -delete
 ls -R "${AVIF_ANDROID_JNILIBS_DIR}"
