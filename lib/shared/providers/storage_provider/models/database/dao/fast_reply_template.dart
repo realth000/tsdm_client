@@ -18,11 +18,6 @@ final class FastReplyTemplateDao extends DatabaseAccessor<AppDatabase> with _$Fa
 
   /// Insert template.
   Future<int> insertOrUpdate(FastReplyTemplateCompanion reply) async {
-    // Delete the same one if already have it.
-    // FIXME: This seems an issue in drift: when insertOrUpdate, if item changes, watch() not produce the change.
-    if ((await (select(fastReplyTemplate)..where((e) => e.name.equals(reply.name.value))).getSingleOrNull()) != null) {
-      await (delete(fastReplyTemplate)..where((e) => e.name.equals(reply.name.value))).go();
-    }
     return into(fastReplyTemplate).insertOnConflictUpdate(reply);
   }
 

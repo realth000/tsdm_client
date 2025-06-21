@@ -61,7 +61,7 @@ class _FastReplyTemplatePageState extends State<FastReplyTemplatePage> with Logg
               children: allTemplates
                   .map(
                     (e) => FastReplyTemplateCard(
-                      key: ValueKey('FastReplyTemplateCard_${e.name}'),
+                      key: ValueKey('FastReplyTemplateCard_${e.hashCode}'),
                       replyTemplate: e,
                       allowEdit: !widget.pick,
                     ),

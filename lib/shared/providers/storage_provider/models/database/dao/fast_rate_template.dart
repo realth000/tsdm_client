@@ -18,11 +18,6 @@ final class FastRateTemplateDao extends DatabaseAccessor<AppDatabase> with _$Fas
 
   /// Insert template.
   Future<int> insertOrUpdate(FastRateTemplateCompanion rate) async {
-    // Delete the same one if already have it.
-    // FIXME: This seems an issue in drift: when insertOrUpdate, if item changes, watch() not produce the change.
-    if ((await (select(fastRateTemplate)..where((e) => e.name.equals(rate.name.value))).getSingleOrNull()) != null) {
-      await (delete(fastRateTemplate)..where((e) => e.name.equals(rate.name.value))).go();
-    }
     return into(fastRateTemplate).insertOnConflictUpdate(rate);
   }
 
