@@ -179,13 +179,13 @@ jobs:
         run: |
           flutter build apk --release --target-platform="android-arm64"
         env:
-          OPENSSL_LIB_DIR: "${PWD}/third-party/openssl-libs/arm64-v8a"
+          OPENSSL_LIB_DIR: "${PWD}/third-party-libs/arm64-v8a"
       - name: Build Android (armeabi-v7a)
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
           flutter build apk --release --target-platform="android-arm"
         env:
-          OPENSSL_LIB_DIR: "${PWD}/third-party/openssl-libs/armeabi-v7a"
+          OPENSSL_LIB_DIR: "${PWD}/third-party-libs/armeabi-v7a"
       - name: Pack Android apk
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
