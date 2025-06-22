@@ -131,12 +131,35 @@ jobs:
           sudo apt install -y make meson nasm
           cargo install cargo-ndk@3.5.4 --locked
           ./scripts/build-flutter_avif-android.sh
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_LATEST_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
       - name: Prepare flutter_avif (using prebuilt libs)
         if: ${{ inputs.use_prebuilt_libs }}
         run: |
           sudo apt install -y make meson nasm
           cargo install cargo-ndk@3.5.4 --locked
           ./scripts/build-flutter_avif-android.sh --use-prebuilt-libs
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_LATEST_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - name: Prepare openssl
+        if: ${{ !inputs.use_prebuilt_libs }}
+        run: |
+          ./scripts/build-openssl-android.sh
+        env:
+          ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_LATEST_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
+          ANDROID_NDK_ROOT: ${{ steps.setup-ndk.outputs.ndk-path }}
+      - name: Prepare openssl (using prebuilt libs)
+        if: ${{ inputs.use_prebuilt_libs }}
+        run: |
+          ./scripts/build-openssl-android.sh --use-prebuilt-libs
         env:
           ANDROID_NDK: ${{ steps.setup-ndk.outputs.ndk-path }}
           ANDROID_NDK_HOME: ${{ steps.setup-ndk.outputs.ndk-path }}
@@ -151,10 +174,18 @@ jobs:
         run: |
           echo '${{ secrets.KEYSTORE }}' | base64 --decode > android/app/key.jks
           echo '${{ secrets.KEY_PROPERTIES }}' > android/key.properties
-      - name: Build Android
+      - name: Build Android (arm64-v8a)
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
-          flutter build apk --release
+          flutter build apk --release --target-platform="android-arm64"
+        env:
+          OPENSSL_LIB_DIR: "${PWD}/third-party/openssl-libs/arm64-v8a"
+      - name: Build Android (armeabi-v7a)
+        if: ${{ github.event_name == 'push' || inputs.build_android }}
+        run: |
+          flutter build apk --release --target-platform="android-arm"
+        env:
+          OPENSSL_LIB_DIR: "${PWD}/third-party/openssl-libs/armeabi-v7a"
       - name: Pack Android apk
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
