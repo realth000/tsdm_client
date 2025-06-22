@@ -36,7 +36,7 @@ if [ "${USE_PREBUILT_LIBS}" == "true" ];then
   LIBS_REPO="third-party"
 
   git clone https://github.com/KDAB/android_openssl/ "${LIBS_REPO}"
-  git reset --HARD 6b9ba2b962e96f437550b5197c130225dd416ddf
+  git reset --hard 6b9ba2b962e96f437550b5197c130225dd416ddf
 
   # "${LIBS_REPO}/ssl_3/${ARCH}/*.a" -> "${LIBS_ROOT}/${ARCH}/"
   cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libssl.a" "${LIBS_ROOT}/arm64-v8a/libssl.a"
