@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -18,7 +19,7 @@ Future<void> _showOperationLogDialog(BuildContext context, String tid) async {
     builder: (_) {
       return RootPage(
         DialogPaths.showOperationLog,
-        AlertDialog(
+        CustomAlertDialog(
           title: Text(tr.title),
           content: FutureBuilder(
             future: context.read<ThreadRepository>().fetchOperationLog(tid).run(),

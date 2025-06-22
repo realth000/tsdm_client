@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Dialog for user select a duration for image cache considered outdated till last used time.
 class AutoClearImageCacheDurationDialog extends StatefulWidget {
@@ -63,7 +64,7 @@ class _AutoClearImageCacheDurationDialogState extends State<AutoClearImageCacheD
       _ => context.t.general.days(value: (time / (3600 * 24)).toInt()),
     };
 
-    return AlertDialog(
+    return CustomAlertDialog(
       scrollable: true,
       title: Column(
         mainAxisSize: MainAxisSize.min,

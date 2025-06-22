@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Show a dialog with given [title] and [message], with a ok button to navigate
 /// back.
@@ -17,7 +18,7 @@ Future<void> showMessageSingleButtonDialog({
     builder: (context) {
       return RootPage(
         DialogPaths.messageSingleButton,
-        AlertDialog(
+        CustomAlertDialog(
           scrollable: true,
           title: Text(title),
           content: SelectableText(message),
@@ -56,7 +57,7 @@ Future<bool?> showQuestionDialog({
     builder: (context) {
       return RootPage(
         DialogPaths.question,
-        AlertDialog(
+        CustomAlertDialog(
           scrollable: true,
           title: Text(title),
           content: message != null ? SelectableText(message) : Text.rich(richMessage!),

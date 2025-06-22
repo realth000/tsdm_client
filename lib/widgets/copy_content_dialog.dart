@@ -10,6 +10,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/widgets/copy_button.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Item represents some content user would copy.
 final class CopyableContent {
@@ -119,7 +120,7 @@ class _CopyContentDialogState extends State<_CopyContentDialog> {
   Widget build(BuildContext context) {
     final tr = context.t.copyDialog;
 
-    return AlertDialog(
+    return CustomAlertDialog(
       title: Text(widget.title ?? tr.copyTitle),
       content: SingleChildScrollView(
         child: Padding(
@@ -179,7 +180,7 @@ class _CopySelectContentDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final tr = context.t.copyDialog;
 
-    return AlertDialog(
+    return CustomAlertDialog(
       title: Text(title ?? tr.copySelectTitle),
       content: SingleChildScrollView(child: SelectableText(data)),
       actions: [

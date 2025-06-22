@@ -10,6 +10,7 @@ import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Small text to show username.
 class _UsernameText extends StatelessWidget {
@@ -187,7 +188,7 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
         BlocProvider(create: (context) => UserMentionCubit(context.repo())..recommendFriend()),
       ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(
-        builder: (context, state) => AlertDialog(
+        builder: (context, state) => CustomAlertDialog(
           title: Text(tr.title),
           scrollable: true,
           content: Form(
@@ -195,7 +196,12 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: [_buildSearch(context, state), sizedBoxW16H16, _buildRandomFriend(context, state)],
+              children: [
+                sizedBoxW8H8,
+                _buildSearch(context, state),
+                sizedBoxW16H16,
+                _buildRandomFriend(context, state),
+              ],
             ),
           ),
           actions: [

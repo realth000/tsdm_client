@@ -11,6 +11,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -43,7 +44,7 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.manageAccountPage.switchAccount.dialog;
-    return AlertDialog(
+    return CustomAlertDialog(
       clipBehavior: Clip.hardEdge,
       title: Row(
         children: [

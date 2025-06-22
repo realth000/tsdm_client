@@ -9,6 +9,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/widgets/annimate/animated_visibility.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Link prefix, originally in quill_flutter.
 const _linkPrefixes = [
@@ -97,7 +98,7 @@ class _UrlDialogState extends State<UrlDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.url;
-    return AlertDialog(
+    return CustomAlertDialog(
       clipBehavior: Clip.antiAlias,
       title: Text(context.t.bbcodeEditor.url.title),
       content: Form(

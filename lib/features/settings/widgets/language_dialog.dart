@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Dialog to let user choose app locale.
 class LanguageDialog extends StatelessWidget {
@@ -11,7 +12,7 @@ class LanguageDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return CustomAlertDialog(
       scrollable: true,
       title: Text(t.settingsPage.appearanceSection.languages.selectLanguage),
       content: SingleChildScrollView(

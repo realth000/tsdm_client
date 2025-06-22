@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
 /// A button provides a dialog that let user input a url and parse it, if that
@@ -61,7 +62,7 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.parseUrlDialog;
-    return AlertDialog(
+    return CustomAlertDialog(
       title: Text(tr.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,

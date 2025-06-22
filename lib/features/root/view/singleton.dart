@@ -21,6 +21,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// The app wide singleton stands on top of all other pages to act on different events in app.
 class RootSingleton extends StatefulWidget {
@@ -157,7 +158,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
                   final size = MediaQuery.sizeOf(context);
                   return RootPage(
                     DialogPaths.updateNotice,
-                    AlertDialog(
+                    CustomAlertDialog(
                       title: Text(tr.availableDialog.title),
                       content: SizedBox(
                         width: math.min(size.width * 0.8, 800),

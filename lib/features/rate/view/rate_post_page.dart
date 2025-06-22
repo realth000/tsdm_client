@@ -14,6 +14,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
@@ -152,7 +153,7 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
             context: context,
             builder: (_) => RootPage(
               DialogPaths.selectRateReason,
-              AlertDialog(
+              CustomAlertDialog(
                 title: Text(tr.reason),
                 scrollable: true,
                 content: Column(
