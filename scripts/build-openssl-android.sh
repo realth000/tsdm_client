@@ -35,22 +35,22 @@ if [ "${USE_PREBUILT_LIBS}" == "true" ];then
 
   LIBS_REPO="third-party"
 
-  git clone https://github.com/KDAB/android_openssl/ "${LIBS_REPO}"
+  git clone https://github.com/KDAB/android_openssl/ "${LIBS_REPO}" --depth=1
 
   # "${LIBS_REPO}/ssl_3/${ARCH}/*.a" -> "${LIBS_ROOT}/${ARCH}/"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libssl.a" "${LIBS_ROOT}/arm64-v8a/libssl.a"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libssl_3.so" "${LIBS_ROOT}/arm64-v8a/libssl.so"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libssl_3.so" "${LIBS_ROOT}/arm64-v8a/ssl.lib"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libcrypto.a" "${LIBS_ROOT}/arm64-v8a/libcrypto.a"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libcrypto_3.so" "${LIBS_ROOT}/arm64-v8a/libcrypto.so"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/arm64-v8a/libcrypto_3.so" "${LIBS_ROOT}/arm64-v8a/crypto.lib"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libssl.a" "${LIBS_ROOT}/arm64-v8a/libssl.a"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libssl_3.so" "${LIBS_ROOT}/arm64-v8a/libssl.so"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libssl_3.so" "${LIBS_ROOT}/arm64-v8a/ssl.lib"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libcrypto.a" "${LIBS_ROOT}/arm64-v8a/libcrypto.a"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libcrypto_3.so" "${LIBS_ROOT}/arm64-v8a/libcrypto.so"
+  cp "${LIBS_REPO}/ssl_3/arm64-v8a/libcrypto_3.so" "${LIBS_ROOT}/arm64-v8a/crypto.lib"
 
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libssl.a" "${LIBS_ROOT}/armeabi-v7a/libssl.a"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libssl_3.so" "${LIBS_ROOT}/armeabi-v7a/libssl.so"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libssl_3.so" "${LIBS_ROOT}/armeabi-v7a/ssl.lib"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libcrypto.a" "${LIBS_ROOT}/armeabi-v7a/libcrypto.a"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libcrypto_3.so" "${LIBS_ROOT}/armeabi-v7a/libcrypto.so"
-  cp "${LIBS_REPO}/android_openssl/ssl_3/armeabi-v7a/libcrypto_3.so" "${LIBS_ROOT}/armeabi-v7a/crypto.lib"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libssl.a" "${LIBS_ROOT}/armeabi-v7a/libssl.a"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libssl_3.so" "${LIBS_ROOT}/armeabi-v7a/libssl.so"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libssl_3.so" "${LIBS_ROOT}/armeabi-v7a/ssl.lib"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libcrypto.a" "${LIBS_ROOT}/armeabi-v7a/libcrypto.a"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libcrypto_3.so" "${LIBS_ROOT}/armeabi-v7a/libcrypto.so"
+  cp "${LIBS_REPO}/ssl_3/armeabi-v7a/libcrypto_3.so" "${LIBS_ROOT}/armeabi-v7a/crypto.lib"
 
   exit 0
 fi
