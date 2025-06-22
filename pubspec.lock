@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
+  build_cli_annotations:
+    dependency: transitive
+    description:
+      name: build_cli_annotations
+      sha256: b59d2769769efd6c9ff6d4c4cede0be115a566afc591705c2040b707534b1172
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   build_config:
     dependency: transitive
     description:
@@ -399,6 +407,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  dio_compatibility_layer:
+    dependency: "direct main"
+    description:
+      name: dio_compatibility_layer
+      sha256: bb7ea1dd6fe98b8f5e3d90da408802fc3abf14d4485416e882cf1b2c8fb4b209
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   dio_cookie_manager:
     dependency: "direct main"
     description:
@@ -782,6 +798,14 @@ packages:
       relative: true
     source: path
     version: "11.0.0"
+  flutter_rust_bridge:
+    dependency: transitive
+    description:
+      name: flutter_rust_bridge
+      sha256: b416ff56002789e636244fb4cc449f587656eff995e5a7169457eb0593fcaddb
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.10.0"
   flutter_styled_toast:
     dependency: "direct main"
     description:
@@ -928,6 +952,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
+  http_profile:
+    dependency: transitive
+    description:
+      name: http_profile
+      sha256: "7e679e355b09aaee2ab5010915c932cce3f2d1c11c3b2dc177891687014ffa78"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.0"
   image:
     dependency: transitive
     description:
@@ -1448,6 +1480,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  rhttp:
+    dependency: "direct main"
+    description:
+      path: "packages/rhttp/rhttp"
+      relative: true
+    source: path
+    version: "0.12.0"
   rxdart:
     dependency: "direct main"
     description:
