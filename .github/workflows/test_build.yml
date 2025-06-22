@@ -112,7 +112,7 @@ jobs:
           cache: true
       - run: |
           sudo apt update -y
-          sudo apt install -y ninja-build libgtk-3-dev libssl-dev
+          sudo apt install -y ninja-build libgtk-3-dev
           git submodule update --init --recursive --force
       - uses: dtolnay/rust-toolchain@stable
         with:
@@ -179,13 +179,15 @@ jobs:
         run: |
           flutter build apk --release --target-platform="android-arm64"
         env:
-          OPENSSL_LIB_DIR: "${PWD}/third-party-libs/arm64-v8a"
+          OPENSSL_LIB_DIR: "${{ github.workspace }}/third-party-libs/arm64-v8a"
+          OPENSSL_INCLUDE_DIR: "${{ github.workspace }}/third-party/ssl_3/include"
       - name: Build Android (armeabi-v7a)
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
           flutter build apk --release --target-platform="android-arm"
         env:
-          OPENSSL_LIB_DIR: "${PWD}/third-party-libs/armeabi-v7a"
+          OPENSSL_LIB_DIR: "${{ github.workspace }}/third-party-libs/armeabi-v7a"
+          OPENSSL_INCLUDE_DIR: "${{ github.workspace }}/third-party/ssl_3/include"
       - name: Pack Android apk
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
