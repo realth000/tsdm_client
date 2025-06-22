@@ -2,8 +2,6 @@
 
 set -ex
 
-/opt/hostedtoolcache/ndk/r28/x64
-
 USE_PREBUILT_LIBS="false"
 
 if [ "$1" == "--use-prebuilt-libs" ];then
