@@ -4,8 +4,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
-import 'package:dio_compatibility_layer/dio_compatibility_layer.dart';
-import 'package:rhttp/rhttp.dart' show ClientSettings, ProxySettings, RhttpCompatibleClient;
+import 'package:dio/io.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -226,49 +225,30 @@ final class SettingsRepository with LoggerMixin {
 
   /// Build a default [Dio] instance from current settings.
   Dio buildDefaultDio() {
-    // Don't trust any certificate just because their root cert is
-    // trusted.
-    final settings = getIt.get<SettingsRepository>().currentSettings;
-    final useProxy = settings.netClientUseProxy;
-
-    ProxySettings? proxySettings;
-
-    if (useProxy) {
-      final useDetected = settings.useDetectedProxyWhenStartup;
-      final proxy = switch (useDetected) {
-        true => getIt.get<ProxyProvider>().proxy,
-        false => settings.netClientProxy,
-      };
-
-      if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
-        proxySettings = ProxySettings.proxy('http://$proxy');
-      }
-    }
-
     return Dio()
-      ..httpClientAdapter = ConversionLayerAdapter(
-        RhttpCompatibleClient.createSync(settings: ClientSettings(proxySettings: proxySettings)),
+      ..httpClientAdapter = IOHttpClientAdapter(
+        createHttpClient: () {
+          // Don't trust any certificate just because their root cert is
+          // trusted.
+          final settings = getIt.get<SettingsRepository>().currentSettings;
+          final useProxy = settings.netClientUseProxy;
+
+          final client = HttpClient();
+
+          if (useProxy) {
+            final useDetected = settings.useDetectedProxyWhenStartup;
+            final proxy = switch (useDetected) {
+              true => getIt.get<ProxyProvider>().proxy,
+              false => settings.netClientProxy,
+            };
+
+            if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
+              client.findProxy = (_) => 'PROXY $proxy';
+            }
+          }
+          return client;
+        },
       )
-      // ..httpClientAdapter = IOHttpClientAdapter(
-      //   createHttpClient: () {
-      //     // Don't trust any certificate just because their root cert is
-      //     // trusted.
-      //     final settings = getIt.get<SettingsRepository>().currentSettings;
-      //     final useProxy = settings.netClientUseProxy;
-      //     final client = HttpClient();
-      //     if (useProxy) {
-      //       final useDetected = settings.useDetectedProxyWhenStartup;
-      //       final proxy = switch (useDetected) {
-      //         true => getIt.get<ProxyProvider>().proxy,
-      //         false => settings.netClientProxy,
-      //       };
-      //       if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
-      //         client.findProxy = (_) => 'PROXY $proxy';
-      //       }
-      //     }
-      //     return client;
-      //   },
-      // )
       ..options = BaseOptions(
         headers: <String, String>{
           HttpHeaders.acceptHeader: _state.netClientAccept,

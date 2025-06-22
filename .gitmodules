@@ -13,6 +13,3 @@
 [submodule "packages/flutter_system_network_proxy"]
 	path = packages/flutter_system_network_proxy
 	url = https://github.com/realth000/flutter_system_network_proxy.git
-[submodule "packages/rhttp"]
-	path = packages/rhttp
-	url = https://github.com/realth000/rhttp.git
