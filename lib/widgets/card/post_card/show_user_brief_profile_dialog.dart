@@ -19,6 +19,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/card/post_card/checkin.dart';
 import 'package:tsdm_client/widgets/card/post_card/pokemon.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/medal_group_view.dart';
 import 'package:universal_html/parsing.dart';
@@ -120,9 +121,9 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
     final inDarkTheme = Theme.of(context).brightness == Brightness.dark;
     final colorOffset = inDarkTheme ? 300 : 700;
 
-    return Dialog(
+    return CustomAlertDialog(
       clipBehavior: Clip.antiAlias,
-      child: Padding(
+      content: Padding(
         padding: edgeInsetsL24T24R24B24,
         child: ConstrainedBox(
           constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.7),

@@ -4,6 +4,7 @@ import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 
 /// Show a dialog to let user select a read permission value for current thread.
 Future<String?> showSelectPermDialog(BuildContext context, List<ThreadPerm> permList, String? initialPerm) async =>
@@ -38,7 +39,7 @@ class _SelectPermDialogState extends State<_SelectPermDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return AlertDialog(
+    return CustomAlertDialog(
       title: Text(context.t.postEditPage.permDialog.title),
       content: Column(
         children: widget.permList

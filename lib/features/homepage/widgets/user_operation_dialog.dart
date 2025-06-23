@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
@@ -44,7 +45,7 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
 
     final tr = context.t.homepage.welcome;
 
-    return AlertDialog(
+    return CustomAlertDialog(
       title: Row(
         children: [
           HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username, minRadius: 30),

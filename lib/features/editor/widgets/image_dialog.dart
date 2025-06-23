@@ -14,6 +14,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
@@ -177,7 +178,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.image;
 
-    return AlertDialog(
+    return CustomAlertDialog(
       clipBehavior: Clip.hardEdge,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
