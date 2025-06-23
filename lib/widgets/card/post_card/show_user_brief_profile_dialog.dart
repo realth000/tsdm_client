@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:go_router/go_router.dart';
@@ -111,7 +109,6 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
 
     final primaryColor = colorScheme.primary;
     final sectionTitleStyle = textTheme.titleSmall?.copyWith(color: primaryColor);
-    final size = MediaQuery.sizeOf(context);
     final pokemon = widget.pokemon;
     final checkin = widget.checkin;
 
@@ -121,340 +118,245 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
     final inDarkTheme = Theme.of(context).brightness == Brightness.dark;
     final colorOffset = inDarkTheme ? 300 : 700;
 
-    return CustomAlertDialog(
-      clipBehavior: Clip.antiAlias,
-      content: Padding(
-        padding: edgeInsetsL24T24R24B24,
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.7),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Hero(
-                    tag: widget.avatarHeroTag,
-                    child: CircleAvatar(
-                      radius: 30,
-                      backgroundImage: CachedImageProvider(
-                        widget.profile.avatarUrl ?? noAvatarUrl,
-                        usage: ImageUsageInfoUserAvatar(widget.profile.username),
-                      ),
-                    ),
-                  ),
-                  const Spacer(),
-                  IconButton(
-                    icon: const Icon(Icons.email_outlined),
-                    tooltip: tr.pmTooltip,
-                    onPressed: () => context.pushNamed(
-                      ScreenPaths.chat,
-                      pathParameters: {'uid': widget.profile.uid},
-                      extra: <String, dynamic>{'username': widget.profile.username},
-                    ),
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.person_outlined),
-                    tooltip: tr.profileTooltip,
-                    onPressed: () async => context.dispatchAsUrl(widget.userSpaceUrl),
-                  ),
-                ],
+    final titleContent = [
+      Row(
+        children: [
+          Hero(
+            tag: widget.avatarHeroTag,
+            child: CircleAvatar(
+              radius: 30,
+              backgroundImage: CachedImageProvider(
+                widget.profile.avatarUrl ?? noAvatarUrl,
+                usage: ImageUsageInfoUserAvatar(widget.profile.username),
               ),
-              sizedBoxW12H12,
+            ),
+          ),
+          const Spacer(),
+          IconButton(
+            icon: const Icon(Icons.email_outlined),
+            tooltip: tr.pmTooltip,
+            onPressed: () => context.pushNamed(
+              ScreenPaths.chat,
+              pathParameters: {'uid': widget.profile.uid},
+              extra: <String, dynamic>{'username': widget.profile.username},
+            ),
+          ),
+          IconButton(
+            icon: const Icon(Icons.person_outlined),
+            tooltip: tr.profileTooltip,
+            onPressed: () async => context.dispatchAsUrl(widget.userSpaceUrl),
+          ),
+        ],
+      ),
+      sizedBoxW12H12,
 
-              // Fix text style lost.
-              // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
-              Hero(
-                tag: widget.nameHeroTag,
-                flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
-                    DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
-                child: Text(widget.profile.username, style: textTheme.titleLarge?.copyWith(color: primaryColor)),
-              ),
-              sizedBoxW4H4,
-              Text('UID ${widget.profile.uid}', style: textTheme.labelMedium?.copyWith(color: colorScheme.outline)),
+      // Fix text style lost.
+      // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
+      Hero(
+        tag: widget.nameHeroTag,
+        flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+            DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
+        child: Text(widget.profile.username, style: textTheme.titleLarge?.copyWith(color: primaryColor)),
+      ),
+      sizedBoxW4H4,
+      Text('UID ${widget.profile.uid}', style: textTheme.labelMedium?.copyWith(color: colorScheme.outline)),
+    ];
 
-              const Divider(height: 12, thickness: 1),
+    final profileContent = [
+      // Basic user info.
+      Text(tr.tabName.info, style: sectionTitleStyle),
+      titleContentSeparator,
+      _UserProfilePair(
+        Icons.group_outlined,
+        tr.group,
+        widget.profile.userGroup,
+        inDarkTheme ? widget.profile.userGroupColor?.adaptiveDark() : widget.profile.userGroupColor,
+      ),
+      if (widget.profile.title != null)
+        _UserProfilePair(Icons.badge_outlined, tr.title, widget.profile.title, Colors.blue[colorOffset]),
+      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, Colors.blue[colorOffset]),
+      _UserProfilePair(Icons.thumb_up_outlined, tr.recommended, widget.profile.recommended, Colors.red[colorOffset]),
+      _UserProfilePair(Icons.book_outlined, tr.thread, widget.profile.threadCount, Colors.green[colorOffset]),
+      _UserProfilePair(MdiIcons.commentEditOutline, tr.post, widget.profile.postCount, Colors.cyan[colorOffset]),
+      _UserProfilePair(Icons.emoji_people_outlined, tr.famous, widget.profile.famous, Colors.purple[colorOffset]),
+      _UserProfilePair(FontAwesomeIcons.coins, tr.coins, widget.profile.coins, Colors.purple[colorOffset]),
+      _UserProfilePair(Icons.campaign_outlined, tr.publicity, widget.profile.publicity, Colors.purple[colorOffset]),
+      _UserProfilePair(Icons.water_drop_outlined, tr.natural, widget.profile.natural, Colors.purple[colorOffset]),
+      _UserProfilePair(MdiIcons.dominoMask, tr.scheming, widget.profile.scheming, Colors.purple[colorOffset]),
+      _UserProfilePair(Icons.stream_outlined, tr.spirit, widget.profile.spirit, Colors.purple[colorOffset]),
+      // Special attr, dynamic and not translated.
+      _UserProfilePair(
+        MdiIcons.heartOutline,
+        widget.profile.specialAttrName,
+        widget.profile.specialAttr,
+        Colors.purple[colorOffset],
+      ),
+      if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
+        _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple, Colors.pink[colorOffset]),
+      _UserProfilePair(Icons.feedback_outlined, tr.privilege, widget.profile.privilege, Colors.orange[colorOffset]),
+      _UserProfilePair(
+        Icons.event_note_outlined,
+        tr.registration,
+        widget.profile.registrationDate,
+        Colors.blue[colorOffset],
+      ),
+      if (widget.profile.comeFrom != null)
+        _UserProfilePair(Icons.pin_drop_outlined, tr.from, widget.profile.comeFrom, Colors.teal[colorOffset]),
+      _UserProfilePair(
+        Icons.online_prediction_outlined,
+        tr.status.title,
+        widget.profile.online ? tr.status.online : tr.status.offline,
+        widget.profile.online ? Colors.green[colorOffset] : Colors.grey,
+      ),
 
-              // Scrollable contents.
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+      sectionSeparator,
+
+      // Badge
+      Text(tr.badges, style: sectionTitleStyle),
+      titleContentSeparator,
+      // Both the primary the secondary badge presents.
+      if (widget.badge != null && widget.secondBadge != null)
+        Row(
+          children: [
+            Expanded(
+              child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height),
+            ),
+            Expanded(
+              child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height),
+            ),
+          ],
+        )
+      // Only the primary badge.
+      else if (widget.badge != null)
+        Row(
+          children: [
+            Expanded(
+              child: CachedImage(widget.badge!, width: badgeImageSize.width, height: badgeImageSize.height),
+            ),
+            const Spacer(),
+          ],
+        )
+      // Only the secondary badge.
+      else if (widget.secondBadge != null)
+        Row(
+          children: [
+            Expanded(
+              child: CachedImage(widget.secondBadge!, width: badgeImageSize.width, height: badgeImageSize.height),
+            ),
+            const Spacer(),
+          ],
+        )
+      // No badges at all, theoretically unreachable.
+      else
+        sizedBoxEmpty,
+
+      sectionSeparator,
+
+      // Medal
+      if (widget.medals.isNotEmpty) ...[
+        Text(tr.medals, style: sectionTitleStyle),
+        titleContentSeparator,
+        MedalGroupView(widget.medals),
+        sectionSeparator,
+      ],
+
+      // Signature, if any. Size is unpredicted.
+      if (widget.signature != null) ...[
+        Text(tr.tabName.signature, style: sectionTitleStyle),
+        titleContentSeparator,
+        // Wrap in Flexible because munchElement returns unbounded widget size.
+        Flexible(child: munchElement(context, parseHtmlDocument(widget.signature!).body!)),
+        sectionSeparator,
+      ],
+
+      // Pokemon
+      if (pokemon != null) ...[
+        Text(tr.pokemon, style: sectionTitleStyle),
+        titleContentSeparator,
+        CachedImage(
+          pokemon.primaryPokemon.image,
+          width: pokemonPrimaryImageSize.width,
+          height: pokemonPrimaryImageSize.height,
+        ),
+        Text(pokemon.primaryPokemon.name, style: textTheme.titleSmall?.copyWith(color: colorScheme.secondary)),
+        if (pokemon.otherPokemon != null)
+          Column(
+            children: pokemon.otherPokemon!
+                .map(
+                  (e) => Row(
                     children: [
-                      // Basic user info.
-                      Text(tr.tabName.info, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      _UserProfilePair(
-                        Icons.group_outlined,
-                        tr.group,
-                        widget.profile.userGroup,
-                        inDarkTheme ? widget.profile.userGroupColor?.adaptiveDark() : widget.profile.userGroupColor,
+                      CachedImage(
+                        e.image,
+                        width: pokemonNotPrimaryImageSize.width,
+                        height: pokemonNotPrimaryImageSize.height,
                       ),
-                      if (widget.profile.title != null)
-                        _UserProfilePair(
-                          Icons.badge_outlined,
-                          tr.title,
-                          widget.profile.title,
-                          Colors.blue[colorOffset],
-                        ),
-                      _UserProfilePair(MdiIcons.idCard, tr.nickname, widget.profile.nickname, Colors.blue[colorOffset]),
-                      _UserProfilePair(
-                        Icons.thumb_up_outlined,
-                        tr.recommended,
-                        widget.profile.recommended,
-                        Colors.red[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.book_outlined,
-                        tr.thread,
-                        widget.profile.threadCount,
-                        Colors.green[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        MdiIcons.commentEditOutline,
-                        tr.post,
-                        widget.profile.postCount,
-                        Colors.cyan[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.emoji_people_outlined,
-                        tr.famous,
-                        widget.profile.famous,
-                        Colors.purple[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        FontAwesomeIcons.coins,
-                        tr.coins,
-                        widget.profile.coins,
-                        Colors.purple[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.campaign_outlined,
-                        tr.publicity,
-                        widget.profile.publicity,
-                        Colors.purple[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.water_drop_outlined,
-                        tr.natural,
-                        widget.profile.natural,
-                        Colors.purple[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        MdiIcons.dominoMask,
-                        tr.scheming,
-                        widget.profile.scheming,
-                        Colors.purple[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.stream_outlined,
-                        tr.spirit,
-                        widget.profile.spirit,
-                        Colors.purple[colorOffset],
-                      ),
-                      // Special attr, dynamic and not translated.
-                      _UserProfilePair(
-                        MdiIcons.heartOutline,
-                        widget.profile.specialAttrName,
-                        widget.profile.specialAttr,
-                        Colors.purple[colorOffset],
-                      ),
-                      if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
-                        _UserProfilePair(
-                          Icons.diversity_1_outlined,
-                          tr.cp,
-                          widget.profile.couple,
-                          Colors.pink[colorOffset],
-                        ),
-                      _UserProfilePair(
-                        Icons.feedback_outlined,
-                        tr.privilege,
-                        widget.profile.privilege,
-                        Colors.orange[colorOffset],
-                      ),
-                      _UserProfilePair(
-                        Icons.event_note_outlined,
-                        tr.registration,
-                        widget.profile.registrationDate,
-                        Colors.blue[colorOffset],
-                      ),
-                      if (widget.profile.comeFrom != null)
-                        _UserProfilePair(
-                          Icons.pin_drop_outlined,
-                          tr.from,
-                          widget.profile.comeFrom,
-                          Colors.teal[colorOffset],
-                        ),
-                      _UserProfilePair(
-                        Icons.online_prediction_outlined,
-                        tr.status.title,
-                        widget.profile.online ? tr.status.online : tr.status.offline,
-                        widget.profile.online ? Colors.green[colorOffset] : Colors.grey,
-                      ),
-
-                      sectionSeparator,
-
-                      // Badge
-                      Text(tr.badges, style: sectionTitleStyle),
-                      titleContentSeparator,
-                      // Both the primary the secondary badge presents.
-                      if (widget.badge != null && widget.secondBadge != null)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CachedImage(
-                                widget.badge!,
-                                width: badgeImageSize.width,
-                                height: badgeImageSize.height,
-                              ),
-                            ),
-                            Expanded(
-                              child: CachedImage(
-                                widget.secondBadge!,
-                                width: badgeImageSize.width,
-                                height: badgeImageSize.height,
-                              ),
-                            ),
-                          ],
-                        )
-                      // Only the primary badge.
-                      else if (widget.badge != null)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CachedImage(
-                                widget.badge!,
-                                width: badgeImageSize.width,
-                                height: badgeImageSize.height,
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        )
-                      // Only the secondary badge.
-                      else if (widget.secondBadge != null)
-                        Row(
-                          children: [
-                            Expanded(
-                              child: CachedImage(
-                                widget.secondBadge!,
-                                width: badgeImageSize.width,
-                                height: badgeImageSize.height,
-                              ),
-                            ),
-                            const Spacer(),
-                          ],
-                        )
-                      // No badges at all, theoretically unreachable.
-                      else
-                        sizedBoxEmpty,
-
-                      sectionSeparator,
-
-                      // Medal
-                      if (widget.medals.isNotEmpty) ...[
-                        Text(tr.medals, style: sectionTitleStyle),
-                        titleContentSeparator,
-                        MedalGroupView(widget.medals),
-                        sectionSeparator,
-                      ],
-
-                      // Signature, if any. Size is unpredicted.
-                      if (widget.signature != null) ...[
-                        Text(tr.tabName.signature, style: sectionTitleStyle),
-                        titleContentSeparator,
-                        munchElement(context, parseHtmlDocument(widget.signature!).body!),
-                        sectionSeparator,
-                      ],
-
-                      // Pokemon
-                      if (pokemon != null) ...[
-                        Text(tr.pokemon, style: sectionTitleStyle),
-                        titleContentSeparator,
-                        CachedImage(
-                          pokemon.primaryPokemon.image,
-                          width: pokemonPrimaryImageSize.width,
-                          height: pokemonPrimaryImageSize.height,
-                        ),
-                        Text(
-                          pokemon.primaryPokemon.name,
-                          style: textTheme.titleSmall?.copyWith(color: colorScheme.secondary),
-                        ),
-                        if (pokemon.otherPokemon != null)
-                          Column(
-                            children: pokemon.otherPokemon!
-                                .map(
-                                  (e) => Row(
-                                    children: [
-                                      CachedImage(
-                                        e.image,
-                                        width: pokemonNotPrimaryImageSize.width,
-                                        height: pokemonNotPrimaryImageSize.height,
-                                      ),
-                                      sizedBoxW4H4,
-                                      Text(e.name),
-                                    ],
-                                  ),
-                                )
-                                .toList(),
-                          ),
-                        sectionSeparator,
-                      ],
-
-                      // Checkin status.
-                      if (checkin != null) ...[
-                        Text(tr.checkin, style: sectionTitleStyle),
-                        titleContentSeparator,
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                CachedImage(
-                                  checkin.feelingImage,
-                                  width: feelingImageSize.width,
-                                  height: feelingImageSize.height,
-                                ),
-                                sizedBoxW4H4,
-                                Text(
-                                  checkin.feelingName,
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
-                                ),
-                              ],
-                            ),
-                            sizedBoxW8H8,
-                            Flexible(
-                              child: CustomPaint(
-                                painter: BubblePainter(
-                                  color: Theme.of(context).colorScheme.primaryContainer,
-                                  alignment: Alignment.topLeft,
-                                  tail: true,
-                                ),
-                                child: Container(
-                                  margin: const EdgeInsets.fromLTRB(14, 7, 7, 7),
-                                  child: Text(
-                                    checkin.words,
-                                    style: textTheme.bodyMedium?.copyWith(color: colorScheme.onPrimaryContainer),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        sizedBoxW4H4,
-                        // Checkin statistics info.
-                        Text(checkin.statistics),
-                      ],
+                      sizedBoxW4H4,
+                      Text(e.name),
                     ],
+                  ),
+                )
+                .toList(),
+          ),
+        sectionSeparator,
+      ],
+
+      // Checkin status.
+      if (checkin != null) ...[
+        Text(tr.checkin, style: sectionTitleStyle),
+        titleContentSeparator,
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              children: [
+                CachedImage(checkin.feelingImage, width: feelingImageSize.width, height: feelingImageSize.height),
+                sizedBoxW4H4,
+                Text(
+                  checkin.feelingName,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.secondary),
+                ),
+              ],
+            ),
+            sizedBoxW8H8,
+            Flexible(
+              child: CustomPaint(
+                painter: BubblePainter(
+                  color: Theme.of(context).colorScheme.primaryContainer,
+                  alignment: Alignment.topLeft,
+                  tail: true,
+                ),
+                child: Container(
+                  margin: const EdgeInsets.fromLTRB(14, 7, 7, 7),
+                  child: Text(
+                    checkin.words,
+                    style: textTheme.bodyMedium?.copyWith(color: colorScheme.onPrimaryContainer),
                   ),
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
+        sizedBoxW4H4,
+        // Checkin statistics info.
+        Text(checkin.statistics),
+      ],
+    ];
+
+    return CustomAlertDialog(
+      clipBehavior: Clip.antiAlias,
+      scrollable: true,
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: titleContent,
       ),
+      content: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: profileContent, //profileContent,
+      ), //profileContent,
     );
   }
 }
