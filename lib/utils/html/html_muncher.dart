@@ -365,6 +365,7 @@ final class _Muncher with LoggerMixin {
             'center' ||
             'nav' ||
             'section' ||
+            'fieldset' ||
             'pre' => _munch(node),
             String() => null,
           };
