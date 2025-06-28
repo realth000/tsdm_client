@@ -114,7 +114,8 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
                           itemCount: n.length,
-                          itemBuilder: (_, idx) => NoticeCardV2(n.elementAt(idx)),
+                          itemBuilder: (_, idx) =>
+                              NoticeCardV2(key: ValueKey('NOTICE_${n.elementAt(idx).id}'), n.elementAt(idx)),
                           separatorBuilder: (_, __) => sizedBoxW4H4,
                         ),
                 ),
@@ -128,7 +129,8 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
                           itemCount: pm.length,
-                          itemBuilder: (_, idx) => PersonalMessageCardV2(pm.elementAt(idx)),
+                          itemBuilder: (_, idx) =>
+                              PersonalMessageCardV2(key: ValueKey('PM_${n.elementAt(idx).id}'), pm.elementAt(idx)),
                           separatorBuilder: (_, __) => sizedBoxW4H4,
                         ),
                 ),
@@ -142,7 +144,8 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
                           itemCount: bm.length,
-                          itemBuilder: (_, idx) => BroadcastMessageCardV2(bm.elementAt(idx)),
+                          itemBuilder: (_, idx) =>
+                              BroadcastMessageCardV2(key: ValueKey('BM_${n.elementAt(idx).id}'), bm.elementAt(idx)),
                           separatorBuilder: (_, __) => sizedBoxW4H4,
                         ),
                 ),
