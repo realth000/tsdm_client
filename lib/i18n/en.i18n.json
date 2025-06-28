@@ -148,8 +148,8 @@
       "editorBBCodeParser": {
         "title": "Enable bbcode parser",
         "tip": {
-          "title": "When to use BBCode parser",
-          "detail": "1. Editing published thread\n2. Editing reply templates\n3. Insert reply templates\n4. Expand bottom editor in thread and chat page"
+          "title": "What is BBCode parser",
+          "detail": "BBCode parser converts plain text BBCode into WYSIWYG content when:\n\n1. Editing published thread\n2. Editing reply templates\n3. Insert reply templates\n4. Expand bottom editor in thread and chat page\n\nDisabling BBCode parser will leave plain text to edit, turn if off when you get bugs."
         }
       }
     },
