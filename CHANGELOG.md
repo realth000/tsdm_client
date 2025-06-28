@@ -6,9 +6,36 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.9.0] - 2025-06-28
+
+### Added
+
+- 编辑：BBCode Parser支持解析列表，包括有序列表`list=1`和无序列表`list`。
+  - 受限于编辑器的渲染流程，目前对于列表有如下限制：
+  - 列表和折叠`spoiler`、隐藏`hide`、免费`free`和代码块`code`冲突。
+  - 列表的每一项`*`中不支持多行文本，会合并到同一行。
+  - 如果一个格式（例如文字颜色`color`）横跨了多个列表项`*`，其格式不保证一定正确。
+- 编辑：BBCode Parser现已进入稳定状态。
+  - [Parser](https://github.com/realth000/dart_bbcode_parser)已达到100%测试覆盖率，修复了绝大多数解析结果有误和解析时报错的问题。
+  - 说明：现在BBCode Parser用在以下场景：编辑已发布的帖子、编辑回复模板、导入回复模板、在帖子和聊天页面中展开底部回复框。将纯文本BBCode解析为所见即所得的内容。
+  - 原先开关BBCode Parser的选项现在同时在上述场景中生效，如果遇到问题可以关闭BBCode Parser，恢复为纯文本编辑。
+
+### Fixed
+
+- 编辑：修复解析BBCode时内容中的图片`img`会导致编辑器卡顿的问题。
+- 模板：修复编辑回复模板时，如果用新模板覆盖同名旧模板且当前只有一个模板，编辑完成后模板页面中显示的模板内容依然为覆盖前的旧内容的问题。
+- 通知：修复通知页面中偶现“标注为已读”不生效的问题。
+- 私信：修复发送私信消息失败时，失败提示会被键盘挡住的问题。
+  - 现在发送消息失败时也会收起键盘。
+
+### Changed
+
+- app：更新所有对话框的样式。
+- 编辑：现在编辑器中列表`list`每一项最左边的heading会保持普通的颜色，不再被文本颜色`color`影响。
+
 ## [1.8.1] - 2025-06-15
 
-## Fixed
+### Fixed
 
 - 编辑：修复在帖子和回复模板中使用`free`会导致灰屏的问题。
 - html：修复部分`code`中行与行之间多一个空行的问题。
@@ -16,7 +43,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [1.8.0] - 2025-06-14
 
-## Added
+### Added
 
 - 评分：新增评分模板功能，可以预设评分的数值，在评分时使用模板内记录的分数数值填充。
   - 在设置 -> 行为 -> 评分模板中配置。
@@ -39,7 +66,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - 默认关闭，可在设置 -> 高级 -> 自动检测代理中开启。
 - app：在底部弹窗上增加关闭弹窗的按钮。
 
-## Fixed
+### Fixed
 
 - 编辑：修复将某些数值的颜色转换成BBCode时，颜色格式不规范导致再次解析时得到的颜色有误的问题。
 - 编辑：修复内置的颜色数值错误的问题。
@@ -48,7 +75,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - 编辑：修复解析代码`code`时每一行两侧的空格会被去除掉的问题。
 - app：修复安卓上关闭“按两次退出”的情况下退出应用会黑屏的问题。
 
-## Changed
+### Changed
 
 - 编辑：现在将内容转换为BBCode时，论坛支持的有名字的颜色会保持使用颜色名字，而不是使用对应的数值。
   - 例如暗红色，以前转换成BBCode是`color=8B0000`，现在是`color=DarkRed`
@@ -57,7 +84,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [1.7.0] - 2025-05-31
 
-## Added
+### Added
 
 - 编辑：支持输入免费区域`[free]`标签。
   - 免费区域`[free]`其中的内容即使在未购买帖子时也依然可见。
@@ -69,7 +96,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
   - 视觉样式和操作方式与其他平台无异。
 - app：更新了底部弹窗样式，现在绝大部分底部弹窗的高度会根据内部包含的内容的高度自动调整。
 
-## Fixed
+### Fixed
 
 - 编辑：修复移动端编辑器工具栏底部按钮显示不完整的问题。
 - 编辑：修复解析bbcode时，图片`[img]`上的其他样式会丢失的问题。
@@ -79,7 +106,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 - html：修复上标文字`[sup]`会丢弃其他文字样式（如粗体`[b]`、斜体`[i]`）的问题。
 - 设置：修复更新日志页面显示底部导航栏的问题。
 
-## Changed
+### Changed
 
 - app：更新多处页面和底部弹窗布局。
 - app：减少了在加载图片的流程出现预期内的错误时打印日志的问题。
