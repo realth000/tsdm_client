@@ -250,10 +250,11 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
   * [x] 修改
   * [x] 自动填充图片大小
   * [x] 根据比例自动设置长度或宽度
-* [x] 折叠卡片 `[spoiler]` （Android尚不支持）
-* [x] 隐藏内容 `[hide]`（Android尚不支持）
+* [x] 折叠卡片 `[spoiler]`
+* [x] 隐藏内容 `[hide]`
   * [x] 根据积分隐藏 `[hide=$POINTS]`
   * [x] 需要回复 `[hide]`
+* [x] 免费区域 `[free]`
 * [x] 代码块 `[code]`
 * [x] 引用文字 `[quote]`
 * [x] 分隔线 `[hr]`
@@ -285,14 +286,15 @@ BBCode编辑器主要功能存放在单独的仓库[flutter_bbcode_editor](https
 * [ ] 表情 `{:$GROUP_$ID:}`
 * [x] 网页链接 `[url]`
 * [x] 外链图片 `[img]`
-* [ ] 折叠卡片 `[spoiler]`
-* [ ] 隐藏内容 `[hide]`
+* [x] 折叠卡片 `[spoiler]`
+* [x] 隐藏内容 `[hide]`
+* [x] 免费区域 `[free]`
 * [x] 代码块 `[code]`
 * [x] 引用文字 `[quote]`
 * [x] 分隔线 `[hr]`
 * [x] 提醒用户 `[@]`
-* [ ] 无序列表 `[list]`
-* [ ] 有序列表 `[list=1]`
+* [x] 无序列表 `[list]`
+* [x] 有序列表 `[list=1]`
 * [ ] 表格 `[table]`
 * [x] 上标 `[sup]`
 * [x] 对齐
