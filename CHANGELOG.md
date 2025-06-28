@@ -12,13 +12,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 - 编辑：BBCode Parser支持解析列表，包括有序列表`list=1`和无序列表`list`。
   - 受限于编辑器的渲染流程，目前对于列表有如下限制：
-  - 列表和折叠`spoiler`、隐藏`hide`、免费`free`和代码块`code`冲突。
-  - 列表的每一项`*`中不支持多行文本，会合并到同一行。
+  - 不能在列表中使用折叠`spoiler`、隐藏`hide`、免费`free`和代码块`code`。
+  - 列表每一项`*`中不支持多行文本，如果出现多行文本，会合并到同一行。
   - 如果一个格式（例如文字颜色`color`）横跨了多个列表项`*`，其格式不保证一定正确。
 - 编辑：BBCode Parser现已进入稳定状态。
-  - [Parser](https://github.com/realth000/dart_bbcode_parser)已达到100%测试覆盖率，修复了绝大多数解析结果有误和解析时报错的问题。
+  - [Parser](https://github.com/realth000/dart_bbcode_parser)已达到100%覆盖率，修复了绝大多数解析结果有误和解析时报错的问题。
   - 说明：现在BBCode Parser用在以下场景：编辑已发布的帖子、编辑回复模板、导入回复模板、在帖子和聊天页面中展开底部回复框。将纯文本BBCode解析为所见即所得的内容。
-  - 原先开关BBCode Parser的选项现在同时在上述场景中生效，如果遇到问题可以关闭BBCode Parser，恢复为纯文本编辑。
+  - 原先开关BBCode Parser的选项现在同时于上述场景中生效，如果遇到问题可以关闭BBCode Parser，恢复为纯文本编辑。
 
 ### Fixed
 
