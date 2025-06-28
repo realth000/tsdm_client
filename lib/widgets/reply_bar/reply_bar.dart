@@ -13,7 +13,9 @@ import 'package:tsdm_client/features/authentication/repository/models/models.dar
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/logger.dart';
@@ -663,11 +665,16 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
     widget.controller._bind = this;
     final authRepo = context.read<AuthenticationRepository>();
     _hasLogin = authRepo.currentUser != null;
-    // FIXME: CAUTION! This initial delta parsing step may cause ui jank.
-    // TODO: Save the quill delta outside and apply it here to avoid losing styles that not supported by bbcode parser.
-    _replyRichController = buildBBCodeEditorController(
-      initialDelta: parseBBCodeTextToDelta(widget.outerTextController.text),
-    );
+    final parserEnabled = getIt.get<SettingsRepository>().currentSettings.enableEditorBBCodeParser;
+    if (parserEnabled) {
+      // FIXME: CAUTION! This initial delta parsing step may cause ui jank.
+      // TODO: Save the quill delta outside and apply it here to avoid losing styles that not supported by bbcode parser.
+      _replyRichController = buildBBCodeEditorController(
+        initialDelta: parseBBCodeTextToDelta(widget.outerTextController.text),
+      );
+    } else {
+      _replyRichController = buildBBCodeEditorController(initialText: widget.outerTextController.text);
+    }
     _replyRichController.addListener(_checkEditorContent);
     _authStatusSub = authRepo.status.listen((status) {
       setState(() {

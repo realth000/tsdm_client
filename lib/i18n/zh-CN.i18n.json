@@ -146,8 +146,11 @@
         "detail": "每隔一段时间，自动从服务器同步消息和提醒"
       },
       "editorBBCodeParser": {
-        "title": "启用BBCode parser（实验性）",
-        "detail": "启用后，在编辑帖子时也会所见即所得"
+        "title": "启用BBCode parser",
+        "tip": {
+          "title": "何时使用BBCode parser",
+          "detail": "1. 编辑已发布的帖子\n2. 编辑回复模板\n3. 插入回复模板\n4. 展开帖子和聊天页面底部的编辑框"
+        }
       }
     },
     "checkinSection": {

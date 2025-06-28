@@ -8,6 +8,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
+import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -164,9 +165,14 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
   void initState() {
     super.initState();
     nameController = TextEditingController(text: widget.initialValue?.name ?? '');
-    dataController = buildBBCodeEditorController(
-      initialDelta: parseBBCodeTextToDelta(widget.initialValue?.data ?? '\n'),
-    );
+    final parserEnabled = getIt.get<SettingsRepository>().currentSettings.enableEditorBBCodeParser;
+    if (parserEnabled) {
+      dataController = buildBBCodeEditorController(
+        initialDelta: parseBBCodeTextToDelta(widget.initialValue?.data ?? '\n'),
+      );
+    } else {
+      dataController = buildBBCodeEditorController(initialText: widget.initialValue?.data);
+    }
     focusNode = FocusNode();
     fullScreen = isDesktop;
   }
