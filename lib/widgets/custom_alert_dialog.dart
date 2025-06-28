@@ -1,4 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
+import 'package:tsdm_client/constants/layout.dart';
 
 /// Alert dialog with more material style.
 ///
@@ -111,6 +114,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   @override
   Widget build(BuildContext context) {
     final outlineColor = Theme.of(context).colorScheme.outline;
+    final size = MediaQuery.sizeOf(context);
 
     return AlertDialog(
       title: widget.title,
@@ -124,25 +128,36 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       )
        */
       // contentPadding: const EdgeInsets.only(top: 16, bottom: 24),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (showTopDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 1),
-          Flexible(
-            child: Card(
-              shape: const Border(),
-              margin: EdgeInsets.zero,
-              color: Colors.transparent,
-              clipBehavior: Clip.hardEdge,
-              child: PrimaryScrollController(
-                controller: scrollController,
-                automaticallyInheritForPlatforms: TargetPlatform.values.toSet(),
-                child: widget.scrollable ? SingleChildScrollView(child: widget.content) : widget.content,
+      content: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.6),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showTopDivider) ...[
+              Divider(height: 1, thickness: 0, color: outlineColor),
+              sizedBoxW4H4,
+            ] else
+              const SizedBox(height: 1),
+            Flexible(
+              child: Card(
+                shape: const Border(),
+                margin: EdgeInsets.zero,
+                color: Colors.transparent,
+                clipBehavior: Clip.hardEdge,
+                child: PrimaryScrollController(
+                  controller: scrollController,
+                  automaticallyInheritForPlatforms: TargetPlatform.values.toSet(),
+                  child: widget.scrollable ? SingleChildScrollView(child: widget.content) : widget.content,
+                ),
               ),
             ),
-          ),
-          if (showBottomDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 1),
-        ],
+            if (showBottomDivider) ...[
+              sizedBoxW4H4,
+              Divider(height: 1, thickness: 0, color: outlineColor),
+            ] else
+              const SizedBox(height: 1),
+          ],
+        ),
       ),
       actions: widget.actions,
       clipBehavior: widget.clipBehavior,
