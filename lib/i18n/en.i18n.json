@@ -146,8 +146,11 @@
         "detail": "Duration of auto sync notice from server"
       },
       "editorBBCodeParser": {
-        "title": "Enable bbcode parser (experimental)",
-        "detail": "Achieve WYSIWYG when editing thread content"
+        "title": "Enable bbcode parser",
+        "tip": {
+          "title": "When to use BBCode parser",
+          "detail": "1. Editing published thread\n2. Editing reply templates\n3. Insert reply templates\n4. Expand bottom editor in thread and chat page"
+        }
       }
     },
     "checkinSection": {

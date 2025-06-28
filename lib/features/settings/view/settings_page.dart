@@ -443,8 +443,22 @@ class _SettingsPageState extends State<SettingsPage> {
       ),
       SectionSwitchListTile(
         secondary: const Icon(Icons.code_outlined),
-        title: Text(tr.editorBBCodeParser.title),
-        subtitle: Text(tr.editorBBCodeParser.detail),
+        title: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(tr.editorBBCodeParser.title),
+            sizedBoxW8H8,
+            IconButton(
+              icon: Icon(Icons.help_outline, color: Theme.of(context).colorScheme.secondary),
+              tooltip: tr.editorBBCodeParser.tip.title,
+              onPressed: () async => showMessageSingleButtonDialog(
+                context: context,
+                title: tr.editorBBCodeParser.tip.title,
+                message: tr.editorBBCodeParser.tip.detail,
+              ),
+            ),
+          ],
+        ),
         value: enableBBCodeParser,
         onChanged: (v) async =>
             context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.enableEditorBBCodeParser, v)),
