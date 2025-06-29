@@ -133,6 +133,10 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
                   context.pop();
                 }
               } else if (state.status == ReplyStatus.failure && state.failedReason != null) {
+                // Close the reply bar when sent failed.
+                if (_replyBarController.showingEditor) {
+                  context.pop();
+                }
                 showSnackBar(
                   context: context,
                   message: tr.failed(message: state.failedReason!),

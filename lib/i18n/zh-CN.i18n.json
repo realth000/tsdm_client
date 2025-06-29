@@ -148,8 +148,8 @@
       "editorBBCodeParser": {
         "title": "启用BBCode parser",
         "tip": {
-          "title": "何时使用BBCode parser",
-          "detail": "1. 编辑已发布的帖子\n2. 编辑回复模板\n3. 插入回复模板\n4. 展开帖子和聊天页面底部的编辑框"
+          "title": "BBCode parser是什么",
+          "detail": "以下场景中BBCode parser会将纯文本的BBCode转换为所见即所得的内容以供编辑:\n\n1. 编辑已发布的帖子\n2. 编辑回复模板\n3. 插入回复模板\n4. 展开帖子和聊天页面底部的编辑框\n\n关闭BBCode parse后在编辑时将使用纯文本，遇到问题时可将其关闭"
         }
       }
     },
