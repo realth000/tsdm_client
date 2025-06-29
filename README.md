@@ -19,10 +19,6 @@
   <a href="https://dart.dev/"><img src="https://img.shields.io/github/languages/top/realth000/tsdm_client?logo=dart" alt="dart_percentage"/></a>
 </p>
 
-> [!TIP]
->
-> 受测试条件限制，标注为已实现的功能也可能有缺陷，欢迎提issue或PR。
-
 ## 截图
 
 <div align="center">
@@ -60,17 +56,25 @@
   <table>
     <thead align="left">
      <tr>
+       <th>渠道</th>
        <th>系统</th>
        <th>版本</th>
      </tr>
     </thead>
   <tbody>
     <tr>
+      <td>论坛</td>
+      <td>all</td>
+      <td>
+        <a href="https://www.tsdm39.com/forum.php?mod=viewthread&tid=628244"><img src="https://img.shields.io/badge/all-universal-blue.svg?logo=&logoColor=white" alt="forum_announcement"/></a><br>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="5">Github</td>
       <td>Android</td>
       <td>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-armeabi_v7a.apk"><img src="https://img.shields.io/badge/apk-armeabi--v7a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv7"/></a><br>
-        <a href="https://f-droid.org/packages/kzs.th000.tsdm_client/"><img src="https://img.shields.io/f-droid/v/kzs.th000.tsdm_client?logo=fdroid&logoColor=white" alt="F-Droid"/></a><br>
       </td>
     </tr>
     <tr>
@@ -95,6 +99,13 @@
       <td>Windows</td>
       <td>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-windows.zip"><img src="https://img.shields.io/badge/zip-x86__64-blue.svg?logo=data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA0ODc1IDQ4NzUiPg0KICAgIDxwYXRoIGZpbGw9IiNmZmYiIGQ9Ik0wIDBoMjMxMXYyMzEwSDB6bTI1NjQgMGgyMzExdjIzMTBIMjU2NHpNMCAyNTY0aDIzMTF2MjMxMUgwem0yNTY0IDBoMjMxMXYyMzExSDI1NjQiLz4NCjwvc3ZnPg==" alt="stable_zip_win"/></a><br>
+      </td>
+    </tr>
+    <tr>
+      <td rowspan="5">F-Droid</td>
+      <td>Android</td>
+      <td>
+        <a href="https://f-droid.org/packages/kzs.th000.tsdm_client/"><img src="https://img.shields.io/f-droid/v/kzs.th000.tsdm_client?logo=fdroid&logoColor=white" alt="F-Droid"/></a><br>
       </td>
     </tr>
   </tbody>
@@ -170,10 +181,9 @@
 * [x] 积分
   * [x] 积分统计和历史记录
   * [x] 查询积分记录
-* [ ] 购买
+* [x] 购买
   * [x] 购买帖子
   * [x] 回复后可见
-  * [ ] 购买记录
 * [x] 签到
   * [x] 手动签到
   * [x] 自动签到（为所有用户）
@@ -209,7 +219,7 @@
   * [ ] 删除
 * [ ] 收藏
   * [ ] 收藏帖子或分区
-  * [ ] RSS订阅
+  * [ ] 编辑收藏
 * [x] 多用户
 
 ### 不实现的功能
