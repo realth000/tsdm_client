@@ -1035,6 +1035,7 @@
     "tabs" : {
       "accumulated": "累加后",
       "original": "原数据"
-    }
+    },
+    "total": "总评分"
   }
 }

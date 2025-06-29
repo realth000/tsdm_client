@@ -122,7 +122,7 @@ class RateCard extends StatelessWidget {
                       : () async => context.pushNamed(
                           ScreenPaths.rateLog,
                           pathParameters: {'tid': tid, 'pid': pid},
-                          queryParameters: {'threadTitle': threadTitle},
+                          queryParameters: {'threadTitle': threadTitle, 'total': rate.rateStatus},
                         ),
                   child: Text(context.t.rateCard.viewAll),
                 ),

@@ -273,7 +273,8 @@ final _appRoutes = [
       final tid = state.pathParameters['tid']!;
       final pid = state.pathParameters['pid']!;
       final threadTitle = state.uri.queryParameters['threadTitle'];
-      return RateLogPage(tid: tid, pid: pid, threadTitle: threadTitle);
+      final total = state.uri.queryParameters['total'];
+      return RateLogPage(tid: tid, pid: pid, threadTitle: threadTitle, total: total);
     },
   ),
   AppRoute(

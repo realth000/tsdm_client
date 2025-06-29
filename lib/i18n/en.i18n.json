@@ -1035,6 +1035,7 @@
     "tabs" : {
       "accumulated": "Accumulated",
       "original": "Original"
-    }
+    },
+    "total": "Total rates"
   }
 }

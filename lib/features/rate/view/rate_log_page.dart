@@ -11,13 +11,14 @@ import 'package:tsdm_client/features/rate/repository/rate_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 
 /// Page to view all rate log for a post.
 class RateLogPage extends StatefulWidget {
   /// Constructor.
-  const RateLogPage({required this.tid, required this.pid, this.threadTitle, super.key});
+  const RateLogPage({required this.tid, required this.pid, this.threadTitle, this.total, super.key});
 
   /// Thread id.
   final String tid;
@@ -27,6 +28,9 @@ class RateLogPage extends StatefulWidget {
 
   /// Optional thread title.
   final String? threadTitle;
+
+  /// TotalStatus.
+  final String? total;
 
   @override
   State<RateLogPage> createState() => _RateLogPageState();
@@ -212,6 +216,14 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
           return Scaffold(
             appBar: AppBar(
               title: Text(tr.title),
+              actions: [
+                if (widget.total != null)
+                  IconButton(
+                    icon: const Icon(Icons.info_outline),
+                    onPressed: () async =>
+                        showMessageSingleButtonDialog(context: context, title: tr.total, message: widget.total!),
+                  ),
+              ],
               bottom: state.status != RateLogStatus.success
                   ? null
                   : TabBar(

@@ -1035,6 +1035,7 @@
     "tabs" : {
       "accumulated": "累加後",
       "original": "原資料"
-    }
+    },
+    "total": "總分"
   }
 }
