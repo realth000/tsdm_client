@@ -428,7 +428,10 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
         // Rate status if any.
         if (widget.post.rate != null) ...[
           sizedBoxW12H12,
-          ConstrainedBox(constraints: const BoxConstraints(maxWidth: 712), child: RateCard(widget.post.rate!)),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 712),
+            child: RateCard(widget.post.rate!, widget.post.postID),
+          ),
         ],
         // Context menu.
         _buildContextMenu(context),

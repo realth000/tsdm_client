@@ -197,7 +197,7 @@ class _HtmlFragment extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         munchElement(context, parseHtmlDocument(htmlData).body!, parseLockedWithPurchase: true),
-        RateCard(Rate.fromRateLogNode(parseHtmlDocument(rateBlockData).body)!),
+        RateCard(Rate.fromRateLogNode(parseHtmlDocument(rateBlockData).body)!, '100000'),
         const PacketCard('', allTaken: false),
         const PacketCard('', allTaken: true),
       ],

@@ -181,6 +181,11 @@ class ScreenPaths {
   /// Page to rate a post in thread.
   static const String ratePost = '/ratePost/:username/:pid/:floor/:rateAction';
 
+  /// Page showing all rate log for a specified post.
+  ///
+  /// Post id and thread id are required.
+  static const String rateLog = '/rateLog/:tid/:pid';
+
   /// Page to view and edit fast rate templates.
   static const String fastRateTemplate = '/fastRateTemplate/:pick';
 

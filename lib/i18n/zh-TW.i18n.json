@@ -667,7 +667,8 @@
   "rateCard": {
     "title": "評分記錄（$userCount）",
     "total": "總計: $total",
-    "user": "使用者"
+    "user": "使用者",
+    "viewAll": "查看全部評分"
   },
   "jumpDialog": {
     "title": "跳到頁面"
@@ -1028,5 +1029,12 @@
   "copyButton": {
     "copyTip": "複製",
     "copied": "已複製"
+  },
+  "rateLogPage": {
+    "title": "評分紀錄",
+    "tabs" : {
+      "accumulated": "累加後",
+      "original": "原資料"
+    }
   }
 }
