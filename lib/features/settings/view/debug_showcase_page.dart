@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -322,9 +324,14 @@ class _SampleThreadV2PageState extends State<_SampleThreadV2Page> {
                 return const Center(child: CircularProgressIndicator());
               }
 
-              final content = snapshot.data!.data as String;
+              // Remove CR and LF
+              // The CR is useless and remove it is safe.
+              // The LF only follows "<br />" which is useless and can be safely removed, too.
+              final content = (snapshot.data!.data as String).replaceAll(RegExp('\u000a|\u000d'), '');
 
-              return SingleChildScrollView(child: Text(content));
+              final x = jsonDecode(content) as Map<String, dynamic>;
+
+              return SingleChildScrollView(child: Text(x.toString()));
             },
           ),
         ),
