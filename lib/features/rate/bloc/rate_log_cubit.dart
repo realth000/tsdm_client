@@ -80,6 +80,11 @@ final class RateLogCubit extends Cubit<RateLogState> with LoggerMixin {
       }
     }
 
+    if (tmpItem != null) {
+      // Don't forget the last one.
+      accumulatedItems.add(tmpItem);
+    }
+
     return accumulatedItems;
   }
 }
