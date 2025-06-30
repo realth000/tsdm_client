@@ -667,7 +667,8 @@
   "rateCard": {
     "title": "Rate log ($userCount)",
     "total": "Total: $total",
-    "user": "User"
+    "user": "User",
+    "viewAll": "View all rates"
   },
   "jumpDialog": {
     "title": "Jump to page ..."
@@ -1028,5 +1029,13 @@
   "copyButton": {
     "copyTip": "Copy",
     "copied": "Copied"
+  },
+  "rateLogPage": {
+    "title": "Rate log",
+    "tabs" : {
+      "accumulated": "Accumulated",
+      "original": "Original"
+    },
+    "total": "Total rates"
   }
 }

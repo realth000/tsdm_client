@@ -71,6 +71,7 @@ final class NetClientProvider with LoggerMixin {
 
       d.interceptors.add(_ErrorHandler());
       d.interceptors.add(_PointsChangesChecker());
+      d.interceptors.add(_GzipEncodingChecker());
       // decode br content-type.
       d.transformer = DioBrotliTransformer();
     }
@@ -301,5 +302,25 @@ final class _PointsChangesChecker extends Interceptor {
         .map((x) => x.forEach(pointsChangesStream.add));
 
     handler.next(response);
+  }
+}
+
+/// This interceptor checks if gzip encoding is available in request.
+///
+/// Ref:
+/// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
+///
+/// Remove "gzip" encoding in "Accept-Encoding" can fix the issue above.
+/// Those requests intend to have a 301 status code need to remove "gzip" encoding in request.
+/// But the server may still return gzip content data.
+final class _GzipEncodingChecker extends Interceptor with LoggerMixin {
+  @override
+  void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
+    if (options.uri.queryParameters['goto'] == 'findpost') {
+      info('removing gzip encoding in request');
+      options.headers[HttpHeaders.acceptEncodingHeader] = 'deflate, br';
+    }
+
+    super.onRequest(options, handler);
   }
 }

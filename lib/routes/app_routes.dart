@@ -31,6 +31,7 @@ import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_template_page.dart';
+import 'package:tsdm_client/features/rate/view/rate_log_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/root/view/singleton.dart';
@@ -264,6 +265,16 @@ final _appRoutes = [
       final floor = state.pathParameters['floor']!;
       final rateAction = state.pathParameters['rateAction']!;
       return RatePostPage(username: username, pid: pid, floor: floor, rateAction: rateAction);
+    },
+  ),
+  AppRoute(
+    path: ScreenPaths.rateLog,
+    builder: (state) {
+      final tid = state.pathParameters['tid']!;
+      final pid = state.pathParameters['pid']!;
+      final threadTitle = state.uri.queryParameters['threadTitle'];
+      final total = state.uri.queryParameters['total'];
+      return RateLogPage(tid: tid, pid: pid, threadTitle: threadTitle, total: total);
     },
   ),
   AppRoute(

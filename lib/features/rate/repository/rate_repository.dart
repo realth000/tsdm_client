@@ -4,10 +4,12 @@ import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:universal_html/html.dart' as uh;
 import 'package:universal_html/parsing.dart';
 
 /// Extension on [String] that provides filling rate url methods.
@@ -31,6 +33,47 @@ final class RateRepository with LoggerMixin {
   ///
   /// User will trigger this error when too many points rated in 24 hour.
   static final _errorHandleRateRe = RegExp(r"{errorhandle_rate\('(?<error>[^']+)',");
+
+  String _buildRateLogTarget({required String tid, required String pid}) =>
+      '$baseUrl/forum.php?mod=misc&action=viewratings&tid=$tid&pid=$pid'
+      '&infloat=yes&handlekey=viewratings&inajax=1&ajaxtarget=fwin_content_viewratings';
+
+  List<RateLogItem> _buildRateLogItemListFromDocument(uh.Document doc) => doc
+      .querySelectorAll('table.list > tbody > tr')
+      .map((tr) {
+        final tds = tr.querySelectorAll('td');
+        if (tds.length != 4) {
+          return null;
+        }
+
+        final attrRaw = tds.first.innerText.trim().split(' ');
+        if (attrRaw.length != 2) {
+          return null;
+        }
+        final attrName = attrRaw.first;
+        final attrValue = int.tryParse(attrRaw.last);
+        final userNode = tds[1].querySelector('a');
+        final username = userNode?.innerText.trim();
+        final uid = userNode?.attributes['href']?.tryParseAsUri()?.queryParameters['uid'];
+        final time = tds[2].querySelector('span')?.attributes['title']?.parseToDateTimeUtc8();
+        final reason = tds[3].innerText.trim();
+
+        if (attrValue == null || username == null || uid == null || time == null) {
+          warning('incomplete rate log item: attrValue=$attrValue, username=$username, uid=$uid, time=$time');
+          return null;
+        }
+
+        return RateLogItem(
+          attrName: attrName,
+          attrValue: attrValue,
+          username: username,
+          uid: uid,
+          time: time,
+          reason: reason,
+        );
+      })
+      .whereType<RateLogItem>()
+      .toList();
 
   /// Fetch rate info for given [pid].
   AsyncEither<RateWindowInfo> fetchInfo({required String pid, required String rateTarget}) => AsyncEither(() async {
@@ -84,4 +127,13 @@ final class RateRepository with LoggerMixin {
     }
     return rightVoid();
   });
+
+  /// Fetch all rate log for post specified by [pid] and [tid].
+  AsyncEither<List<RateLogItem>> fetchRateLog({required String tid, required String pid}) => getIt
+      .get<NetClientProvider>()
+      .get(_buildRateLogTarget(tid: tid, pid: pid))
+      .mapHttp((v) => v.data as String)
+      .map((e) => parseXmlDocument(e).documentElement?.nodes.first.text ?? '')
+      .map(parseHtmlDocument)
+      .map(_buildRateLogItemListFromDocument);
 }

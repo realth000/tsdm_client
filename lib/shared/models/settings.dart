@@ -19,7 +19,9 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// After debugging like this:
   /// https://github.com/flutter/flutter/issues/32558#issuecomment-886022246
   /// Remove "gzip" encoding in "Accept-Encoding" can fix this.
-  netClientAcceptEncoding<String>(name: 'netClientAcceptEncoding', type: String, defaultValue: 'deflate, br'),
+  ///
+  /// See dio interceptor `_GzipEncodingChecker` for more details.
+  netClientAcceptEncoding<String>(name: 'netClientAcceptEncoding', type: String, defaultValue: 'gzip, deflate, br'),
 
   /// Net client config: Accept-Language.
   netClientAcceptLanguage<String>(
