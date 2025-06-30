@@ -116,7 +116,10 @@ class RateCard extends StatelessWidget {
                   context.t.rateCard.title(userCount: '${rate.userCount}'),
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(color: primaryColor),
                 ),
-                TextButton(
+                sizedBoxW12H12,
+                IconButton(
+                  icon: Icon(Icons.bar_chart_outlined, color: primaryColor),
+                  tooltip: context.t.rateCard.viewAll,
                   onPressed: tid == null
                       ? null
                       : () async => context.pushNamed(
@@ -124,7 +127,6 @@ class RateCard extends StatelessWidget {
                           pathParameters: {'tid': tid, 'pid': pid},
                           queryParameters: {'threadTitle': threadTitle, 'total': rate.rateStatus},
                         ),
-                  child: Text(context.t.rateCard.viewAll),
                 ),
               ],
             ),
