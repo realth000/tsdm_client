@@ -134,7 +134,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
           mainAxisSize: MainAxisSize.min,
           children: [
             if (showTopDivider) ...[
-              Divider(height: 1, thickness: 0, color: outlineColor),
+              Divider(height: 1, thickness: 1, color: outlineColor),
               sizedBoxW4H4,
             ] else
               const SizedBox(height: 1),
@@ -153,7 +153,7 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
             ),
             if (showBottomDivider) ...[
               sizedBoxW4H4,
-              Divider(height: 1, thickness: 0, color: outlineColor),
+              Divider(height: 1, thickness: 1, color: outlineColor),
             ] else
               const SizedBox(height: 1),
           ],
