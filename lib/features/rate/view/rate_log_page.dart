@@ -88,7 +88,7 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
                         Text(attr.key),
                         sizedBoxW8H8,
                         Text(
-                          '${attr.value > 0 ? "+" : "-"}${attr.value}',
+                          '${attr.value > 0 ? "+" : ""}${attr.value}',
                           style: TextStyle(
                             color: attr.value > 0
                                 ? Theme.of(context).colorScheme.primary
@@ -147,7 +147,7 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
                   Text(logItem.attrName),
                   sizedBoxW8H8,
                   Text(
-                    '${logItem.attrValue > 0 ? "+" : "-"}${logItem.attrValue}',
+                    '${logItem.attrValue > 0 ? "+" : ""}${logItem.attrValue}',
                     style: TextStyle(
                       color: logItem.attrValue > 0
                           ? Theme.of(context).colorScheme.primary

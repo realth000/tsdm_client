@@ -51,7 +51,7 @@ final class RateRepository with LoggerMixin {
           return null;
         }
         final attrName = attrRaw.first;
-        final attrValue = int.tryParse(attrRaw.last.substring(1));
+        final attrValue = int.tryParse(attrRaw.last);
         final userNode = tds[1].querySelector('a');
         final username = userNode?.innerText.trim();
         final uid = userNode?.attributes['href']?.tryParseAsUri()?.queryParameters['uid'];
