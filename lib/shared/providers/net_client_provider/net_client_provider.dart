@@ -317,15 +317,10 @@ final class _GzipEncodingChecker extends Interceptor with LoggerMixin {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
     if (options.uri.queryParameters['goto'] == 'findpost') {
+      info('removing gzip encoding in request');
       options.headers[HttpHeaders.acceptEncodingHeader] = 'deflate, br';
     }
 
     super.onRequest(options, handler);
-  }
-
-  @override
-  void onResponse(Response<dynamic> response, ResponseInterceptorHandler handler) {
-    info('>>> debug resp: ${response.headers[HttpHeaders.contentEncodingHeader]}');
-    super.onResponse(response, handler);
   }
 }
