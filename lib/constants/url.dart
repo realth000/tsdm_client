@@ -3,8 +3,14 @@
 /// This is kept the same with server behavior.
 const defaultCookieTime = 2592000;
 
+/// Host in url.
+const baseHost = 'www.tsdm39.com';
+
+/// Host in url, without www prefix.
+const baseHostAlt = 'tsdm39.com';
+
 /// Server site base url.
-const baseUrl = 'https://www.tsdm39.com';
+const baseUrl = 'https://$baseHost';
 
 /// Homepage of tsdm.
 const homePage = '$baseUrl/forum.php';
