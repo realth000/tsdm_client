@@ -662,6 +662,15 @@
     "blocked": {
       "title": "內容被屏蔽",
       "detail": "此樓層已被管理員或版主封鎖"
+    },
+    "sale": {
+      "title": "已有內容出售",
+      "detail": "價格： ${price: String} tsb。\n已有 ${count: String} 人購買。",
+      "viewLog": "查看出售記錄",
+      "dialog": {
+        "title": "出售記錄",
+        "price": "${price: String} tsb"
+      }
     }
   },
   "rateCard": {

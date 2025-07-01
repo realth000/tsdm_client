@@ -301,6 +301,9 @@ class DialogPaths {
   /// Dialog to show thread operation log.
   static const String showOperationLog = '/dialog/showOperationLog';
 
+  /// Dialog to show thread sales history log.
+  static const String showThreadSalesHistory = '/dialog/showThreadSalesHistory';
+
   /// Common dialog to show message with only one button in action.
   static const String messageSingleButton = '/dialog/messageSingleButton';
 
