@@ -6,6 +6,7 @@ import 'package:dio_brotli_transformer/dio_brotli_transformer.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/constants/constants.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/map.dart';
 import 'package:tsdm_client/features/points/stream.dart';
@@ -256,7 +257,12 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
 class _ForceDesktopLayoutInterceptor extends Interceptor with LoggerMixin {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    options.queryParameters['mobile'] = 'no';
+    // Only append query parameter if request is target forum server host.
+    final host = options.uri.host;
+    if (host == baseHost || host == baseHostAlt) {
+      options.queryParameters['mobile'] = 'no';
+    }
+
     handler.next(options);
   }
 }
@@ -316,7 +322,8 @@ final class _PointsChangesChecker extends Interceptor {
 final class _GzipEncodingChecker extends Interceptor with LoggerMixin {
   @override
   void onRequest(RequestOptions options, RequestInterceptorHandler handler) {
-    if (options.uri.queryParameters['goto'] == 'findpost') {
+    // Likely to have redirect on post methods.
+    if (options.method != 'GET' || options.uri.queryParameters['goto'] == 'findpost') {
       info('removing gzip encoding in request');
       options.headers[HttpHeaders.acceptEncodingHeader] = 'deflate, br';
     }

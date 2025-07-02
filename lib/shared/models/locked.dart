@@ -18,6 +18,9 @@ sealed class _LockedInfo extends Equatable {
 
   const factory _LockedInfo.banned() = _LockedWithBlocked;
 
+  const factory _LockedInfo.sale({required int price, required int salesCount, required String tid}) =
+      _LockedWithSale._;
+
   @override
   List<Object?> get props => [];
 }
@@ -59,6 +62,30 @@ final class _LockedWithPurchase extends _LockedInfo {
   List<Object?> get props => [tid, pid, price, purchasedCount];
 }
 
+/// This section is locked with purchase but the current user is the provider of thread so content are different.
+///
+/// Contains sale status:
+///
+/// 1. Price
+/// 2. Sales counts.
+/// 3. Url to sale history.
+final class _LockedWithSale extends _LockedInfo {
+  /// Constructor.
+  const _LockedWithSale._({required this.price, required this.salesCount, required this.tid}) : super._();
+
+  /// Price of the locked contents.
+  final int price;
+
+  /// Users count of sales.
+  final int salesCount;
+
+  /// Thread if of current thread, to format log history url.
+  final String tid;
+
+  @override
+  List<Object?> get props => [price, salesCount, tid];
+}
+
 /// This section needs reply to be visible.
 final class _LockedWithReply extends _LockedInfo {
   const _LockedWithReply() : super._();
@@ -81,6 +108,7 @@ final class _LockedWithBlocked extends _LockedInfo {
 /// * [_LockedWithPurchase] : Requires the viewer to purchase.
 /// * [_LockedWithReply] : Requires the view to reply.
 /// * [_LockedWithAuthor] : Only visible to the author and forum moderator.
+/// * [_LockedWithSale] : Thread contains sales action, current user provided it.
 class Locked extends Equatable {
   /// Build a [Locked] from html node [element] where [element] is:
   /// <div class="locked">
@@ -97,6 +125,7 @@ class Locked extends Equatable {
     bool allowWithReply = true,
     bool allowWithAuthor = true,
     bool allowWithBlocked = true,
+    bool allowWithSales = true,
   }) : _info = _buildLockedFromNode(
          element,
          allowWithPoints: allowWithPoints,
@@ -104,9 +133,10 @@ class Locked extends Equatable {
          allowWithReply: allowWithReply,
          allowWithAuthor: allowWithAuthor,
          allowWithBlocked: allowWithBlocked,
+         allowWithSale: allowWithSales,
        );
 
-  static final _re = RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
+  static final _purchareRe = RegExp(r'forum.php\?mod=misc&action=pay&tid=(?<tid>\d+)&pid=(?<pid>\d+)');
 
   final _LockedInfo? _info;
 
@@ -125,12 +155,18 @@ class Locked extends Equatable {
   /// Is it blocked by moderator.
   bool get lockedWithBlocked => _info != null && _info is _LockedWithBlocked;
 
+  /// Is it locked with sale action.
+  bool get lockedWithSale => _info != null && _info is _LockedWithSale;
+
   /// Get the tid of current locked model.
   String? get tid {
     if (_info == null) {
       return null;
     }
     if (_info is _LockedWithPurchase) {
+      return _info.tid;
+    }
+    if (_info is _LockedWithSale) {
       return _info.tid;
     }
     return null;
@@ -157,6 +193,9 @@ class Locked extends Equatable {
     if (_info is _LockedWithPurchase) {
       return _info.price;
     }
+    if (_info is _LockedWithSale) {
+      return _info.price;
+    }
     return null;
   }
 
@@ -169,6 +208,9 @@ class Locked extends Equatable {
     }
     if (_info is _LockedWithPurchase) {
       return _info.purchasedCount;
+    }
+    if (_info is _LockedWithSale) {
+      return _info.salesCount;
     }
     return null;
   }
@@ -207,6 +249,7 @@ class Locked extends Equatable {
     required bool allowWithReply,
     required bool allowWithAuthor,
     required bool allowWithBlocked,
+    required bool allowWithSale,
   }) {
     if (allowWithAuthor && element.childNodes.length == 1 && (element.childNodes[0].text?.contains('仅作者可见') ?? false)) {
       return const _LockedInfo.author();
@@ -218,41 +261,58 @@ class Locked extends Equatable {
     }
 
     final price = element.querySelector('strong')?.firstEndDeepText()?.split(' ').firstOrNull?.parseToInt();
+    // For other users on purchase side.
     final purchasedCount = element.querySelector('em')?.firstEndDeepText()?.split(' ').elementAtOrNull(1)?.parseToInt();
 
-    final targetString = element.querySelector('a')?.attributes['onclick'];
-
-    final match = _re.firstMatch(targetString ?? '');
-
-    final tid = match?.namedGroup('tid');
-    final pid = match?.namedGroup('pid');
-
-    if (tid == null || pid == null || price == null) {
-      if (allowWithBlocked && element.innerText.contains('该帖被管理员或版主屏蔽')) {
-        return const _LockedInfo.banned();
-      }
-
-      if (!allowWithPoints) {
-        // Do not allow locked area that locked with points here.
+    // Check for locked with purchase.
+    final purchaseMatch = _purchareRe.firstMatch(element.querySelector('a')?.attributes['onclick'] ?? '');
+    final purchaseTid = purchaseMatch?.namedGroup('tid');
+    final purchasePid = purchaseMatch?.namedGroup('pid');
+    if (price != null && purchaseTid != null && purchasePid != null) {
+      // Locked with purchase.
+      if (!allowWithPurchase) {
         return null;
       }
 
-      /// Points type;
-      final re = RegExp(r'高于 (?<requiredPoints>\d+) 才可浏览(，您当前积分为 (?<points>\d+))?');
-      final match = re.firstMatch(element.innerText);
-      final requiredPoints = match?.namedGroup('requiredPoints')?.parseToInt();
-      final points = match?.namedGroup('points')?.parseToInt();
-      if (requiredPoints == null) {
-        return null;
-      }
-      return _LockedInfo.points(requiredPoints: requiredPoints, points: points);
+      return _LockedInfo.purchase(price: price, purchasedCount: purchasedCount, tid: purchaseTid, pid: purchasePid);
     }
 
-    if (!allowWithPurchase) {
+    // Check for locked with sale.
+    final salesTid = element.querySelector('em > a')?.attributes['href']?.tryParseAsUri()?.queryParameters['tid'];
+    // Only for current user on selling side.
+    final salesCount = element
+        .querySelector('span.pipe')
+        ?.nextElementSibling
+        ?.firstEndDeepText()
+        ?.split(' ')
+        .lastOrNull
+        ?.parseToInt();
+    if (price != null && salesTid != null && salesCount != null) {
+      if (!allowWithSale) {
+        return null;
+      }
+
+      return _LockedInfo.sale(price: price, salesCount: salesCount, tid: salesTid);
+    }
+
+    if (allowWithBlocked && element.innerText.contains('该帖被管理员或版主屏蔽')) {
+      return const _LockedInfo.banned();
+    }
+
+    if (!allowWithPoints) {
+      // Do not allow locked area that locked with points here.
       return null;
     }
 
-    return _LockedInfo.purchase(price: price, purchasedCount: purchasedCount, tid: tid, pid: pid);
+    /// Points type;
+    final re = RegExp(r'高于 (?<requiredPoints>\d+) 才可浏览(，您当前积分为 (?<points>\d+))?');
+    final match = re.firstMatch(element.innerText);
+    final requiredPoints = match?.namedGroup('requiredPoints')?.parseToInt();
+    final points = match?.namedGroup('points')?.parseToInt();
+    if (requiredPoints == null) {
+      return null;
+    }
+    return _LockedInfo.points(requiredPoints: requiredPoints, points: points);
   }
 
   /// Check is valid locked area or not.
@@ -266,6 +326,9 @@ class Locked extends Equatable {
 
     if (_info is _LockedWithPurchase) {
       return _info.price > 0 && tid != null && pid != null;
+    }
+    if (_info is _LockedWithSale) {
+      return _info.price > 0 && tid != null;
     }
     if (_info is _LockedWithPoints || _info is _LockedWithAuthor || _info is _LockedWithBlocked) {
       return true;

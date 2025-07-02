@@ -662,6 +662,15 @@
     "blocked": {
       "title": "Blocked content",
       "detail": "This post has been blocked by administrator or moderator"
+    },
+    "sale": {
+      "title": "Selling content",
+      "detail": "Price: ${price: String} coins.\n${count: String} users have purchased.",
+      "viewLog": "View sales history",
+      "dialog": {
+        "title": "Sales history",
+        "price": "${price: String} coins"
+      }
     }
   },
   "rateCard": {
