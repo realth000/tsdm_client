@@ -1,0 +1,26 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="108dp"
+        android:height="108dp"
+        android:viewportWidth="108"
+        android:viewportHeight="108">
+    <group
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:translateX="14"
+        android:translateY="16">
+
+        <path
+            android:fillColor="@color/icCls1"
+            android:pathData="M 50.193041,54.002943 70.171747,82.535496 A 6.966362,6.966362 0 0 1 68.46098,92.23774 v 0 A 6.966362,6.966362 0 0 1 58.758727,90.526977 L 38.780021,61.994426 Z" />
+        <path
+            android:fillColor="@color/icCls2"
+            android:pathData="M 32.960826,37.493425 63.395545,16.182804 a 9.2884827,9.2884827 0 0 1 12.936335,2.281022 v 0 A 9.2884827,9.2884827 0 0 1 74.050855,31.400162 L 36.007457,58.038438 30.679801,50.429756 a 9.2884827,9.2884827 0 0 1 2.281025,-12.936331 z" />
+        <path
+            android:fillColor="@color/icCls3"
+            android:pathData="M 38.699596,61.880761 67.232147,41.902053 a 6.966362,6.966362 0 0 1 9.702251,1.710771 v 0 a 6.966362,6.966362 0 0 1 -1.71077,9.70225 L 46.691079,73.293782 Z" />
+        <path
+            android:fillColor="@color/icCls4"
+            android:pathData="m 49.381236,77.133901 21.39865,-14.983495 a 5.223843,5.223843 0 0 1 7.275394,1.282852 v 0 a 5.223843,5.223843 0 0 1 -1.282847,7.275391 L 55.37378,85.692152 Z" />
+
+    </group>
+</vector>
