@@ -39,6 +39,8 @@ class CustomAlertDialog extends StatefulWidget {
 class _CustomAlertDialogState extends State<CustomAlertDialog> {
   late final ScrollController scrollController;
 
+  late final bool scrollable;
+
   // Flag indicating content position is on th top.
   bool showTopDivider = false;
 
@@ -65,10 +67,16 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
         if (showTopDivider) {
           setState(() => showTopDivider = false);
         }
+        if (!showBottomDivider) {
+          setState(() => showBottomDivider = true);
+        }
       } else {
         // At the bottom.
         if (showBottomDivider) {
           setState(() => showBottomDivider = false);
+        }
+        if (!showTopDivider) {
+          setState(() => showTopDivider = true);
         }
       }
     }
@@ -77,30 +85,9 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   @override
   void initState() {
     super.initState();
-
+    scrollable = widget.scrollable;
     scrollController = ScrollController();
     scrollController.addListener(_onScroll);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final position = scrollController.position;
-      if (!position.hasContentDimensions) {
-        return;
-      }
-
-      if (position.extentBefore != 0 || position.extentAfter != 0) {
-        // Scrollable.
-        if (position.extentBefore > 0) {
-          setState(() {
-            showTopDivider = true;
-          });
-        }
-        if (position.extentAfter > 0) {
-          setState(() {
-            showBottomDivider = true;
-          });
-        }
-      }
-    });
   }
 
   @override
@@ -119,43 +106,40 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
     return AlertDialog(
       title: widget.title,
       // This value copied from the default value in AlterDialog and removed horizontal padding.
-      /*
-      EdgeInsets.only(
-        left: 24.0,
-        top: theme.useMaterial3 ? 16.0 : 20.0,
-        right: 24.0,
-        bottom: 24.0,
-      )
-       */
+      contentPadding: const EdgeInsets.only(
+        // left: 24.0,
+        top: 16,
+        // right: 24.0,
+        bottom: 24,
+      ),
       // contentPadding: const EdgeInsets.only(top: 16, bottom: 24),
       content: ConstrainedBox(
         constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.6),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            if (showTopDivider) ...[
-              Divider(height: 1, thickness: 1, color: outlineColor),
-              sizedBoxW4H4,
-            ] else
-              const SizedBox(height: 1),
+            if (showTopDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 5),
             Flexible(
-              child: Card(
-                shape: const Border(),
-                margin: EdgeInsets.zero,
-                color: Colors.transparent,
-                clipBehavior: Clip.hardEdge,
-                child: PrimaryScrollController(
-                  controller: scrollController,
-                  automaticallyInheritForPlatforms: TargetPlatform.values.toSet(),
-                  child: widget.scrollable ? SingleChildScrollView(child: widget.content) : widget.content,
+              child: Scrollbar(
+                controller: scrollController,
+                child: Padding(
+                  padding: edgeInsetsL24R24,
+                  child: Card(
+                    shape: const Border(),
+                    margin: EdgeInsets.zero,
+                    color: Colors.transparent,
+                    clipBehavior: Clip.hardEdge,
+                    child: ScrollConfiguration(
+                      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                      child: scrollable
+                          ? SingleChildScrollView(controller: scrollController, child: widget.content)
+                          : widget.content,
+                    ),
+                  ),
                 ),
               ),
             ),
-            if (showBottomDivider) ...[
-              sizedBoxW4H4,
-              Divider(height: 1, thickness: 1, color: outlineColor),
-            ] else
-              const SizedBox(height: 1),
+            if (showBottomDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 5),
           ],
         ),
       ),
