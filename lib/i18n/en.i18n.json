@@ -207,7 +207,8 @@
         "useDetectProxy": {
           "title": "Auto detect proxy",
           "detail":"Use the detected proxy settings when app startup"
-        }
+        },
+        "automatedOnPlatform": "Proxy settings are automatically configured on this platform"
       },
       "exportData": "Export data",
       "importData": {

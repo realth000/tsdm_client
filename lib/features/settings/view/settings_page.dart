@@ -610,6 +610,9 @@ class _SettingsPageState extends State<SettingsPage> {
       port = parts.elementAtOrNull(1);
     }
 
+    // On these platforms, uses native http client for now and the proxy settings are not configurable.
+    final proxyAutomated = isAndroid || isMacOS || isIOS;
+
     final tr = context.t.settingsPage.advancedSection;
 
     return [
@@ -622,35 +625,44 @@ class _SettingsPageState extends State<SettingsPage> {
             Navigator.push(context, MaterialPageRoute<void>(builder: (context) => const DebugShowcasePage()));
           },
         ),
+
+      // Proxy settings, enable or disable.
       SectionSwitchListTile(
         secondary: Icon(MdiIcons.networkOutline),
         title: Text(tr.useProxy),
+        subtitle: proxyAutomated ? Text(tr.proxySettings.automatedOnPlatform) : null,
         value: netClientUseProxy,
-        onChanged: (v) {
-          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
-          showSnackBar(context: context, message: context.t.general.affectAfterRestart);
-        },
+        onChanged: proxyAutomated
+            ? null
+            : (v) {
+                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
+                showSnackBar(context: context, message: context.t.general.affectAfterRestart);
+              },
       ),
-      SectionSwitchListTile(
-        secondary: const Icon(Symbols.network_manage),
-        title: Text(tr.proxySettings.useDetectProxy.title),
-        subtitle: Text(tr.proxySettings.useDetectProxy.detail),
-        value: useDetectedProxy,
-        onChanged: netClientUseProxy
-            ? (v) async =>
-                  context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.useDetectedProxyWhenStartup, v))
-            : null,
-      ),
-      SectionListTile(
-        enabled: netClientUseProxy && !useDetectedProxy,
-        leading: const Icon(Icons.network_locked_outlined),
-        title: Text(tr.proxySettings.title),
-        onTap: () async => showDialog<void>(
-          context: context,
-          builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),
-          barrierDismissible: false,
+
+      if (!proxyAutomated)
+        SectionSwitchListTile(
+          secondary: const Icon(Symbols.network_manage),
+          title: Text(tr.proxySettings.useDetectProxy.title),
+          subtitle: Text(tr.proxySettings.useDetectProxy.detail),
+          value: useDetectedProxy,
+          onChanged: netClientUseProxy && !proxyAutomated
+              ? (v) async =>
+                    context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.useDetectedProxyWhenStartup, v))
+              : null,
         ),
-      ),
+
+      if (!proxyAutomated)
+        SectionListTile(
+          enabled: netClientUseProxy && !useDetectedProxy && !proxyAutomated,
+          leading: const Icon(Icons.network_locked_outlined),
+          title: Text(tr.proxySettings.title),
+          onTap: () async => showDialog<void>(
+            context: context,
+            builder: (context) => RootPage(DialogPaths.setupProxy, ProxySettingsDialog(host: host, port: port)),
+            barrierDismissible: false,
+          ),
+        ),
 
       // Export data.
       SectionListTile(
