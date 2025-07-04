@@ -32,10 +32,6 @@ class ThreadChip extends StatelessWidget {
   /// Build to provide a list of widgets as bottom sheet content.
   final List<Widget> Function(BuildContext context, ForumState state) sheetItemBuilder;
 
-  Widget _buildContent(BuildContext context, ForumState state) {
-    return SingleChildScrollView(child: Column(children: sheetItemBuilder(context, state)));
-  }
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ForumBloc, ForumState>(
@@ -52,7 +48,9 @@ class ThreadChip extends StatelessWidget {
                     context: context,
                     builder: (_) => BlocProvider.value(
                       value: context.read<ForumBloc>(),
-                      child: BlocBuilder<ForumBloc, ForumState>(builder: _buildContent),
+                      child: BlocBuilder<ForumBloc, ForumState>(
+                        builder: (_, state) => ListView(children: sheetItemBuilder(context, state)),
+                      ),
                     ),
                   );
                 },
@@ -82,7 +80,7 @@ class ThreadTypeChip extends StatelessWidget {
           chipLabel: currFilter ?? state.filterTypeList.firstWhereOrNull((e) => e.typeID == null)?.name ?? '',
           chipSelected: state.filterState.filterType?.typeID != null,
           sheetTitle: context.t.forumPage.threadTab.threadType,
-          sheetItemBuilder: (context, state) => state.filterTypeList
+          sheetItemBuilder: (context, state) => [...state.filterTypeList, ...state.filterTypeList]
               .map(
                 (e) => SelectableListTile(
                   title: Text(e.name),

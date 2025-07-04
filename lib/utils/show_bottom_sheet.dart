@@ -27,16 +27,17 @@ Future<T?> showCustomBottomSheet<T>({
     content = SingleChildScrollView(child: Column(children: childrenBuilder!(context)));
   }
 
+  final size = MediaQuery.sizeOf(context);
+
   // Copied from [showHeroDialog]
   final ret = Navigator.push<T>(
     context,
     ModalSheetRoute(
       maintainState: false,
       swipeDismissible: true,
-      viewportPadding: EdgeInsets.only(
-        // Add the top padding to avoid the status bar.
-        top: MediaQuery.viewPaddingOf(context).top,
-      ),
+      // Here we do not have a context carrying expected padding values.
+      // Set the maximum height to 80% to avoid covered by status bar.
+      viewportPadding: EdgeInsets.only(top: size.height * 0.2),
       builder: (context) {
         return ClipRRect(
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
@@ -62,7 +63,7 @@ Future<T?> showCustomBottomSheet<T>({
                   ],
                 ),
               ),
-              body: content,
+              body: Padding(padding: context.safePadding(), child: content),
               bottomBar: bottomBar,
             ),
           ),
