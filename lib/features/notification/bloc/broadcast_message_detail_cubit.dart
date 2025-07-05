@@ -1,13 +1,12 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/constants/url.dart';
-import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/notification/repository/notification_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'broadcast_message_detail_cubit.mapper.dart';
-
 part 'broadcast_message_detail_state.dart';
 
 /// Cubit of broadcast message detail page.
@@ -31,10 +30,7 @@ final class BroadcastMessageDetailCubit extends Cubit<BroadcastMessageDetailStat
           (v) {
             final (document, _) = v;
             final infoNode = document.querySelector('div#pm_ul');
-            final datetime =
-                infoNode?.querySelector('dl > dd.ptm > span.xg1')?.innerText.parseToDateTimeUtc8() ??
-                // Recent messages.
-                infoNode?.querySelector('dl > dd.ptm > span.xg1 > span')?.title?.parseToDateTimeUtc8();
+            final datetime = infoNode?.querySelector('dl > dd.ptm > span.xg1')?.dateTime();
             final messageNode = infoNode?.querySelector('dl > dd > p.pm_smry');
             if (datetime == null || messageNode == null) {
               error(

@@ -144,6 +144,8 @@ final class Forum with ForumMappable {
         element.querySelector('td:nth-child(4) > div') ??
         // 旅行者 theme
         element.querySelector('td:nth-child(3) > div');
+    // We assume that the time text style of latest thread is always in span with title attribute, say it in recent
+    // 7 days.
     final latestThreadTime = latestThreadNode?.querySelector('cite > span')?.attributes['title']?.parseToDateTimeUtc8();
     final latestThreadTimeText = latestThreadNode?.querySelector('cite > span')?.firstEndDeepText();
     final latestThreadUrl = latestThreadNode?.querySelector('a')?.firstHref();

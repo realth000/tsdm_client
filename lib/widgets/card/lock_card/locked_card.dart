@@ -10,6 +10,7 @@ import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/purchase/bloc/purchase_bloc.dart';
 import 'package:tsdm_client/features/purchase/repository/purchase_repository.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
@@ -89,7 +90,7 @@ class _LockedCardState extends State<LockedCard> with LoggerMixin {
       final userNode = tdNodes.first.querySelector('a');
       final username = userNode?.innerText.trim();
       final uid = userNode?.attributes['href']?.tryParseAsUri()?.queryParameters['uid'];
-      final time = tdNodes[1].querySelector('span')?.attributes['title']?.parseToDateTimeUtc8();
+      final time = tdNodes[1].dateTime();
       final price = tdNodes[2].innerText.trim();
 
       if (username != null && uid != null && time != null) {

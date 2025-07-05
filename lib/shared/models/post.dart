@@ -180,9 +180,7 @@ class Post with PostMappable {
     // Recent post can grep [publishTime] in the the "title" attribute
     // in first child.
     // Otherwise fallback split time string.
-    final postPublishTime =
-        postPublishTimeNode?.querySelector('span')?.attributes['title']?.parseToDateTimeUtc8() ??
-        postPublishTimeNode?.text?.substring(4).parseToDateTimeUtc8();
+    final postPublishTime = postPublishTimeNode?.dateTime();
     // Sometimes the #postmessage_ID ID does not match postID.
     // e.g. tid=1184238
     // Use div.pcb to match it.

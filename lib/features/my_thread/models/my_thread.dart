@@ -94,11 +94,7 @@ class MyThread with MyThreadMappable {
     final latestReplyNode = element.querySelector('td.by');
     final latestReplyAuthorName = latestReplyNode?.querySelector('cite > a')?.firstEndDeepText();
     final latestReplyAuthorUrl = latestReplyNode?.querySelector('cite > a')?.firstHref();
-    final latestReplyTime =
-        // Within 7 days.
-        latestReplyNode?.querySelector('em > a > span')?.attributes['title']?.parseToDateTimeUtc8() ??
-        // More than 7 days ago.
-        latestReplyNode?.querySelector('em > a')?.firstEndDeepText()?.parseToDateTimeUtc8();
+    final latestReplyTime = latestReplyNode?.querySelector('em > a')?.dateTime();
     String? quotedMessage;
     if (element.classes.contains('bw0_all')) {
       quotedMessage = element.nextElementSibling?.querySelector('td.xg1')?.innerText.trim();

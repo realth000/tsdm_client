@@ -72,11 +72,7 @@ final class PersonalMessage with PersonalMessageMappable {
     }
 
     final username = element.querySelector('dd:nth-child(3) > a')?.innerText;
-    final lastMessageTime =
-        // Old messages.
-        element.querySelector('dd:nth-child(3) > span.xg1')?.innerText.parseToDateTimeUtc8() ??
-        // Recent messages.
-        element.querySelector('dd:nth-child(3) > span.xg1 > span')?.title?.parseToDateTimeUtc8();
+    final lastMessageTime = element.querySelector('dd:nth-child(3) > span.xg1')?.dateTime();
     final chatUrl = element.querySelector('a#pmlist_${messageId}_a')?.attributes['href']?.unescapeHtml()?.prependHost();
     final message = element
         .querySelector('dd:nth-child(3) > span.xg1')
@@ -139,10 +135,7 @@ final class BroadcastMessage with BroadcastMessageMappable {
       return null;
     }
     final message = infoNode.querySelector('span')?.innerText.trim();
-    final messageTime =
-        infoNode.querySelector('span.xg1')?.innerText.trim().parseToDateTimeUtc8() ??
-        // Less than 7 days
-        infoNode.querySelector('span.xg1 > span')?.title?.parseToDateTimeUtc8();
+    final messageTime = infoNode.querySelector('span.xg1')?.dateTime();
     final redirectUrl = infoNode.querySelector('a')?.attributes['href']?.unescapeHtml()?.prependHost();
     if (message == null || messageTime == null) {
       talker.error(

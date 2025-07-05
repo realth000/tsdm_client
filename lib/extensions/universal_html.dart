@@ -265,18 +265,52 @@ extension GrepExtension on Element {
 
   /// Parse the datetime on current node or first child.
   ///
+  /// In many situations the date time text format is not the same, especially when in recent 7 days.
+  ///
+  /// Use this function as a unified way to get the correct date time.
+  ///
+  /// Example:
+  ///
   /// From current node `<span>`'s title attribute or first child (usually
   /// a span, too)  's title attribute.
   DateTime? dateTime() {
-    if (tagName != 'SPAN') {
-      return null;
-    }
-    if (classes.contains('xg1')) {
-      final text1 = innerText.parseToDateTimeUtc8();
-      if (text1 != null) {
-        return text1;
+    if (tagName == 'A') {
+      // Use case: last reply time in threads in my thread page.
+      if (children.firstOrNull?.tagName == 'SPAN') {
+        // Recent 7 days.
+        return children.first.attributes['title']?.parseToDateTimeUtc8();
       }
+
+      // More than 7 days.
+      return nodes.firstOrNull?.text?.trim().parseToDateTimeUtc8();
     }
-    return children.firstOrNull?.attributes['title']?.parseToDateTimeUtc8();
+
+    if (tagName == 'SPAN') {
+      if (attributes.containsKey('title')) {
+        // Use case: rate log item in recent 7 days.
+        return attributes['title']!.parseToDateTimeUtc8();
+      }
+
+      // Use case: broadcast message publish time in broadcast page.
+      if (children.firstOrNull?.tagName == 'SPAN') {
+        // Recent 7 days.
+        return children.firstOrNull?.attributes['title']?.parseToDateTimeUtc8();
+      }
+
+      // More than 7 days.
+      return innerText.trim().parseToDateTimeUtc8();
+    }
+
+    // Try parse it.
+
+    if (children.firstOrNull?.tagName == 'SPAN' && children.first.attributes.containsKey('title')) {
+      return children.first.attributes['title']!.parseToDateTimeUtc8();
+    }
+
+    if (nodes.firstOrNull?.nodeType == Node.TEXT_NODE) {
+      return nodes.first.text?.trim().parseToDateTimeUtc8();
+    }
+
+    return null;
   }
 }

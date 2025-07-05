@@ -5,6 +5,7 @@ import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
+import 'package:tsdm_client/extensions/universal_html.dart';
 import 'package:tsdm_client/features/rate/models/models.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/net_client_provider/net_client_provider.dart';
@@ -55,7 +56,7 @@ final class RateRepository with LoggerMixin {
         final userNode = tds[1].querySelector('a');
         final username = userNode?.innerText.trim();
         final uid = userNode?.attributes['href']?.tryParseAsUri()?.queryParameters['uid'];
-        final time = tds[2].querySelector('span')?.attributes['title']?.parseToDateTimeUtc8();
+        final time = tds[2].dateTime();
         final reason = tds[3].innerText.trim();
 
         if (attrValue == null || username == null || uid == null || time == null) {
