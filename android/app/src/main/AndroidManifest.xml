@@ -2,10 +2,10 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <!-- android:usesCleartextTraffic: When using native Cronet http client, http urls shall be handled explicitly -->
     <application
             android:label="天使动漫"
             android:name="${applicationName}"
-            <!-- When using native Cronet http client, http urls shall be handled explicitly -->
             android:usesCleartextTraffic="true"
             android:icon="@mipmap/ic_launcher">
         <activity
