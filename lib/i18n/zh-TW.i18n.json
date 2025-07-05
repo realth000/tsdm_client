@@ -207,7 +207,8 @@
         "useDetectProxy": {
           "title": "自動偵測代理",
           "detail": "使用應用程式啟動時偵測到的代理程式設定"
-        }
+        },
+        "automatedOnPlatform": "在本平台上代理設定會自動設定"
       },
       "exportData": "匯出資料",
       "importData": {

@@ -34,11 +34,11 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
   /// Flag indicating only show unread messages or not
   bool onlyShowUnread = false;
 
-  Widget _buildEmptyBody(BuildContext context) {
+  Widget _buildEmptyBody(ScrollPhysics physics) {
     return Align(
       child: LayoutBuilder(
         builder: (context, constraints) => SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
+          physics: physics,
           child: ConstrainedBox(
             constraints: BoxConstraints(minWidth: MediaQuery.sizeOf(context).width, minHeight: constraints.maxHeight),
             child: Center(
@@ -109,7 +109,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
                   childBuilder: (context, physics) => n.isEmpty
-                      ? _buildEmptyBody(context)
+                      ? _buildEmptyBody(physics)
                       : ListView.separated(
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
@@ -124,7 +124,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
                   childBuilder: (context, physics) => pm.isEmpty
-                      ? _buildEmptyBody(context)
+                      ? _buildEmptyBody(physics)
                       : ListView.separated(
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
@@ -139,7 +139,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                   header: const MaterialHeader(),
                   onRefresh: () => context.read<NotificationBloc>().add(NotificationUpdateAllRequested()),
                   childBuilder: (context, physics) => bm.isEmpty
-                      ? _buildEmptyBody(context)
+                      ? _buildEmptyBody(physics)
                       : ListView.separated(
                           physics: physics,
                           padding: edgeInsetsL12T4R12.add(context.safePadding()),
