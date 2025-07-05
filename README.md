@@ -52,6 +52,43 @@
 
 ## 下载
 
+### 系统要求
+
+<div align="left">
+  <table>
+    <thead align="left">
+     <tr>
+       <th>系统</th>
+       <th>支持的版本</th>
+     </tr>
+    </thead>
+  <tbody>
+    <tr>
+      <td>Android</td>
+      <td>安卓5.0（API 21）及以上</td>
+    </tr>
+    <tr>
+      <td>iOS</td>
+      <td>12.0及以上</td>
+    </tr>
+    <tr>
+      <td>Linux</td>
+      <td>Ubuntu 2404同时期（libc >= 2.39）及以上</td>
+    </tr>
+    <tr>
+      <td>macOS</td>
+      <td>10.14以以上</td>
+    </tr>
+    <tr>
+      <td>Windows</td>
+      <td>10及以上</td>
+    </tr>
+  </tbody>
+  </table>
+</div>
+
+### 下载渠道
+
 <div align="left">
   <table>
     <thead align="left">
@@ -70,7 +107,7 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="5">Github</td>
+      <td rowspan="5">GitHub</td>
       <td>Android</td>
       <td>
         <a href="https://github.com/realth000/tsdm_client/releases/latest/download/tsdm_client-arm64_v8a.apk"><img src="https://img.shields.io/badge/apk-arm64--v8a-blue.svg?logo=android&logoColor=white" alt="stable_apk_armv8"/></a><br>
@@ -102,7 +139,7 @@
       </td>
     </tr>
     <tr>
-      <td rowspan="5">F-Droid</td>
+      <td>F-Droid</td>
       <td>Android</td>
       <td>
         <a href="https://f-droid.org/packages/kzs.th000.tsdm_client/"><img src="https://img.shields.io/f-droid/v/kzs.th000.tsdm_client?logo=fdroid&logoColor=white" alt="F-Droid"/></a><br>
