@@ -52,7 +52,7 @@ class _InputPriceDialogState extends State<_InputPriceDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.postEditPage.priceDialog;
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(tr.title),
       content: Form(
         key: formKey,

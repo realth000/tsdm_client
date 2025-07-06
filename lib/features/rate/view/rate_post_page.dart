@@ -153,9 +153,8 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
             context: context,
             builder: (_) => RootPage(
               DialogPaths.selectRateReason,
-              CustomAlertDialog(
+              CustomAlertDialog.sync(
                 title: Text(tr.reason),
-                scrollable: true,
                 content: Column(
                   children: state.info!.defaultReasonList
                       .map(

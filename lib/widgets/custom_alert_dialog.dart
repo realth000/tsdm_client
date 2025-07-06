@@ -6,16 +6,39 @@ import 'package:tsdm_client/constants/layout.dart';
 /// Alert dialog with more material style.
 ///
 /// Wrapped [AlertDialog] with customization.
-class CustomAlertDialog extends StatefulWidget {
+class CustomAlertDialog<F> extends StatefulWidget {
   /// Constructor.
-  const CustomAlertDialog({
-    required this.content,
+  ///
+  /// Use [CustomAlertDialog.future] is body content is provided by a future, like [FutureBuilder].
+  const CustomAlertDialog._({required this.content, this.title, this.actions, this.clipBehavior, super.key})
+    : future = null,
+      loadingBuilder = null,
+      errorBuilder = null,
+      successBuilder = null;
+
+  /// Constructor wrapping future, like [FutureBuilder].
+  ///
+  /// If the body widget is a [FutureBuilder], use this constructor.
+  const CustomAlertDialog.future({
+    required this.future,
+    required this.successBuilder,
+    this.loadingBuilder,
+    this.errorBuilder,
     this.title,
     this.actions,
     this.clipBehavior,
-    this.scrollable = false,
     super.key,
-  });
+  }) : content = const SizedBox(width: 0);
+
+  /// Make a sync dialog.
+  ///
+  /// Use [CustomAlertDialog.future] is body content is provided by a future, like [FutureBuilder].
+  static CustomAlertDialog<void> sync({
+    required Widget content,
+    Widget? title,
+    List<Widget>? actions,
+    Clip? clipBehavior,
+  }) => CustomAlertDialog._(content: content, title: title, actions: actions, clipBehavior: clipBehavior);
 
   /// Wrapped [AlertDialog.title].
   final Widget? title;
@@ -29,17 +52,90 @@ class CustomAlertDialog extends StatefulWidget {
   /// Wrapped [AlertDialog.clipBehavior].
   final Clip? clipBehavior;
 
-  /// Wrapped [AlertDialog.scrollable].
-  final bool scrollable;
+  /// The future returned.
+  ///
+  /// Only use in `CustomAlertDialog.future`.
+  final Future<F>? future;
+
+  /// Widget builder when [future] returns data.
+  final Widget Function(BuildContext context, F data)? successBuilder;
+
+  /// Optional widget builder when [future] is loading data.
+  final Widget Function(BuildContext context)? loadingBuilder;
+
+  /// Widget builder when [future] returns error.
+  final Widget Function(BuildContext context, AsyncSnapshot<F> snapshot)? errorBuilder;
 
   @override
-  State<CustomAlertDialog> createState() => _CustomAlertDialogState();
+  State<CustomAlertDialog<F>> createState() => _CustomAlertDialogState();
 }
 
-class _CustomAlertDialogState extends State<CustomAlertDialog> {
-  late final ScrollController scrollController;
+class _CustomAlertDialogState<F> extends State<CustomAlertDialog<F>> {
+  late final Future<F>? future;
 
-  late final bool scrollable;
+  @override
+  void initState() {
+    super.initState();
+    future = widget.future;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = MediaQuery.sizeOf(context);
+
+    return AlertDialog(
+      title: widget.title,
+      // This value copied from the default value in AlterDialog and removed horizontal padding.
+      contentPadding: const EdgeInsets.only(
+        // left: 24.0,
+        top: 16,
+        // right: 24.0,
+        bottom: 24,
+      ),
+      // contentPadding: const EdgeInsets.only(top: 16, bottom: 24),
+      content: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.6),
+        child: future != null
+            ? FutureBuilder(
+                future: future,
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return widget.errorBuilder?.call(context, snapshot) ?? Text('${snapshot.error!}');
+                  }
+
+                  if (!snapshot.hasData) {
+                    return widget.loadingBuilder?.call(context) ??
+                        const SizedBox(width: 80, height: 80, child: Center(child: CircularProgressIndicator()));
+                  }
+
+                  // Well, the compiler doesn't agree nullability.
+                  // ignore: null_check_on_nullable_type_parameter
+                  return _DividedDialogBody(content: widget.successBuilder!.call(context, snapshot.data!));
+                },
+              )
+            : _DividedDialogBody(content: widget.content),
+      ),
+      actions: widget.actions,
+      clipBehavior: widget.clipBehavior,
+    );
+  }
+}
+
+/// Separated body widget.
+///
+/// Use this widget to make let [FutureBuilder] going outside of the body to avoid rebuild when calling `setState`.
+class _DividedDialogBody extends StatefulWidget {
+  const _DividedDialogBody({required this.content});
+
+  /// Wrapped [AlertDialog.content].
+  final Widget content;
+
+  @override
+  State<_DividedDialogBody> createState() => _DividedDialogBodyState();
+}
+
+class _DividedDialogBodyState extends State<_DividedDialogBody> {
+  late final ScrollController scrollController;
 
   // Flag indicating content position is on th top.
   bool showTopDivider = false;
@@ -62,21 +158,25 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
       }
     } else {
       // On the top or bottom edge.
-      if (scrollController.offset == 0) {
+      if (scrollController.position.extentBefore == 0) {
         // At the top.
         if (showTopDivider) {
           setState(() => showTopDivider = false);
         }
-        if (!showBottomDivider) {
-          setState(() => showBottomDivider = true);
-        }
       } else {
+        if (!showTopDivider) {
+          setState(() => showTopDivider = true);
+        }
+      }
+
+      if (scrollController.position.extentAfter == 0) {
         // At the bottom.
         if (showBottomDivider) {
           setState(() => showBottomDivider = false);
         }
-        if (!showTopDivider) {
-          setState(() => showTopDivider = true);
+      } else {
+        if (!showBottomDivider) {
+          setState(() => showBottomDivider = true);
         }
       }
     }
@@ -85,9 +185,13 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
   @override
   void initState() {
     super.initState();
-    scrollable = widget.scrollable;
     scrollController = ScrollController();
     scrollController.addListener(_onScroll);
+
+    // Update the scroll state.
+    // In fact this post frame callback only aims to provide a initial state, but it also fixes a
+    // scrollable client re-attach issue which causes the body does not scroll on first drag.
+    WidgetsBinding.instance.addPostFrameCallback((_) => _onScroll());
   }
 
   @override
@@ -100,51 +204,30 @@ class _CustomAlertDialogState extends State<CustomAlertDialog> {
 
   @override
   Widget build(BuildContext context) {
-    final outlineColor = Theme.of(context).colorScheme.outline;
-    final size = MediaQuery.sizeOf(context);
-
-    return AlertDialog(
-      title: widget.title,
-      // This value copied from the default value in AlterDialog and removed horizontal padding.
-      contentPadding: const EdgeInsets.only(
-        // left: 24.0,
-        top: 16,
-        // right: 24.0,
-        bottom: 24,
-      ),
-      // contentPadding: const EdgeInsets.only(top: 16, bottom: 24),
-      content: ConstrainedBox(
-        constraints: BoxConstraints(maxWidth: math.min(size.width * 0.7, 400), maxHeight: size.height * 0.6),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (showTopDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 5),
-            Flexible(
-              child: Scrollbar(
-                controller: scrollController,
-                child: Padding(
-                  padding: edgeInsetsL24R24,
-                  child: Card(
-                    shape: const Border(),
-                    margin: EdgeInsets.zero,
-                    color: Colors.transparent,
-                    clipBehavior: Clip.hardEdge,
-                    child: ScrollConfiguration(
-                      behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                      child: scrollable
-                          ? SingleChildScrollView(controller: scrollController, child: widget.content)
-                          : widget.content,
-                    ),
-                  ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (showTopDivider) const Divider(height: 1, thickness: 1) else const SizedBox(height: 1),
+        Flexible(
+          child: Scrollbar(
+            controller: scrollController,
+            child: Padding(
+              padding: edgeInsetsL24R24,
+              child: Card(
+                shape: const Border(),
+                margin: EdgeInsets.zero,
+                color: Colors.transparent,
+                clipBehavior: Clip.hardEdge,
+                child: ScrollConfiguration(
+                  behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                  child: SingleChildScrollView(controller: scrollController, child: widget.content),
                 ),
               ),
             ),
-            if (showBottomDivider) Divider(height: 1, thickness: 1, color: outlineColor) else const SizedBox(height: 5),
-          ],
+          ),
         ),
-      ),
-      actions: widget.actions,
-      clipBehavior: widget.clipBehavior,
+        if (showBottomDivider) const Divider(height: 1, thickness: 1) else const SizedBox(height: 1),
+      ],
     );
   }
 }

@@ -344,9 +344,8 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
       ],
     ];
 
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       clipBehavior: Clip.antiAlias,
-      scrollable: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

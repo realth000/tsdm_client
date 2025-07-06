@@ -64,8 +64,7 @@ class _AutoClearImageCacheDurationDialogState extends State<AutoClearImageCacheD
       _ => context.t.general.days(value: (time / (3600 * 24)).toInt()),
     };
 
-    return CustomAlertDialog(
-      scrollable: true,
+    return CustomAlertDialog.sync(
       title: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

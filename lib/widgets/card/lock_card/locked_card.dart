@@ -248,55 +248,43 @@ class _LockedCardState extends State<LockedCard> with LoggerMixin {
               context: context,
               builder: (_) => RootPage(
                 DialogPaths.showThreadSalesHistory,
-                CustomAlertDialog(
+                CustomAlertDialog.future(
                   title: Text(tr.sale.dialog.title),
-                  scrollable: true,
-                  content: FutureBuilder(
-                    future: _fetchSalesHistory(widget.locked.tid!),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasError) {
-                        error(snapshot.error);
-                        return Text(context.t.general.failedToLoad);
-                      }
-
-                      if (!snapshot.hasData) {
-                        return const CircularProgressIndicator();
-                      }
-
-                      final salesHistory = snapshot.data!;
-                      if (salesHistory.isEmpty) {
-                        return Text(
-                          context.t.general.noData,
-                          style: Theme.of(
-                            context,
-                          ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
-                        );
-                      }
-
-                      return Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: salesHistory
-                            .map(
-                              (v) => ListTile(
-                                leading: HeroUserAvatar(username: v.username, avatarUrl: null, disableHero: true),
-                                title: Text(v.username),
-                                isThreeLine: true,
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    SingleLineText(v.time.yyyyMMDDHHMMSS()),
-                                    SingleLineText(tr.sale.dialog.price(price: v.price)),
-                                  ],
-                                ),
-                                onTap: () async =>
-                                    context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': v.uid}),
-                              ),
-                            )
-                            .toList(),
+                  future: _fetchSalesHistory(widget.locked.tid!),
+                  successBuilder: (context, snapshot) {
+                    final salesHistory = snapshot;
+                    if (salesHistory.isEmpty) {
+                      return Text(
+                        context.t.general.noData,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
                       );
-                    },
-                  ),
+                    }
+
+                    return Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: salesHistory
+                          .map(
+                            (v) => ListTile(
+                              leading: HeroUserAvatar(username: v.username, avatarUrl: null, disableHero: true),
+                              title: Text(v.username),
+                              isThreeLine: true,
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  SingleLineText(v.time.yyyyMMDDHHMMSS()),
+                                  SingleLineText(tr.sale.dialog.price(price: v.price)),
+                                ],
+                              ),
+                              onTap: () async =>
+                                  context.pushNamed(ScreenPaths.profile, queryParameters: {'uid': v.uid}),
+                            ),
+                          )
+                          .toList(),
+                    );
+                  },
                 ),
               ),
             );

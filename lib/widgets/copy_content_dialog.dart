@@ -120,27 +120,25 @@ class _CopyContentDialogState extends State<_CopyContentDialog> {
   Widget build(BuildContext context) {
     final tr = context.t.copyDialog;
 
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(widget.title ?? tr.copyTitle),
-      content: SingleChildScrollView(
-        child: Padding(
-          padding: edgeInsetsR12.add(edgeInsetsT12),
-          child: Column(
-            spacing: 12,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: widget.contents
-                .mapIndexed(
-                  (idx, e) => TextField(
-                    controller: controllers[idx],
-                    readOnly: true,
-                    decoration: InputDecoration(
-                      labelText: e.name,
-                      suffixIcon: CopyButton(data: controllers[idx].text),
-                    ),
+      content: Padding(
+        padding: edgeInsetsR12.add(edgeInsetsT12),
+        child: Column(
+          spacing: 12,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: widget.contents
+              .mapIndexed(
+                (idx, e) => TextField(
+                  controller: controllers[idx],
+                  readOnly: true,
+                  decoration: InputDecoration(
+                    labelText: e.name,
+                    suffixIcon: CopyButton(data: controllers[idx].text),
                   ),
-                )
-                .toList(),
-          ),
+                ),
+              )
+              .toList(),
         ),
       ),
       actions: [TextButton(child: Text(tr.close), onPressed: () => context.pop())],
@@ -180,9 +178,9 @@ class _CopySelectContentDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     final tr = context.t.copyDialog;
 
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(title ?? tr.copySelectTitle),
-      content: SingleChildScrollView(child: SelectableText(data)),
+      content: SelectableText(data),
       actions: [
         TextButton(
           child: Text(tr.share),

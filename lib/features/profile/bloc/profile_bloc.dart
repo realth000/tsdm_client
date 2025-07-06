@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:fpdart/fpdart.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/extensions/fp.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -49,15 +50,21 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
 
   Future<void> _onLoadRequested(_Emitter emit, {String? username, String? uid}) async {
     if (username == null && uid == null && _profileRepository.hasCache()) {
-      final userProfile = _buildProfile(_profileRepository.getCache()!);
-      final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(_profileRepository.getCache()!);
-      emit(
-        state.copyWith(
-          status: ProfileStatus.success,
-          userProfile: userProfile,
-          unreadNoticeCount: unreadNoticeCount,
-          hasUnreadMessage: hasUnreadMessage,
-        ),
+      (await _buildProfile(_profileRepository.getCache()!).run()).match(
+        (e) {
+          emit(state.copyWith(status: ProfileStatus.failure, failedToLogoutReason: e));
+        },
+        (v) {
+          final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(_profileRepository.getCache()!);
+          emit(
+            state.copyWith(
+              status: ProfileStatus.success,
+              userProfile: v,
+              unreadNoticeCount: unreadNoticeCount,
+              hasUnreadMessage: hasUnreadMessage,
+            ),
+          );
+        },
       );
       return;
     }
@@ -74,20 +81,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       return;
     }
     final document = documentEither.unwrap();
-    final userProfile = _buildProfile(document);
-    if (userProfile == null) {
-      error('failed to parse user profile');
-      emit(state.copyWith(status: ProfileStatus.failure));
-      return;
-    }
-    final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(document);
-    emit(
-      state.copyWith(
-        status: ProfileStatus.success,
-        userProfile: userProfile,
-        unreadNoticeCount: unreadNoticeCount,
-        hasUnreadMessage: hasUnreadMessage,
-      ),
+
+    (await _buildProfile(document).run()).match(
+      (e) {
+        error('failed to parse user profile: $e');
+        emit(state.copyWith(status: ProfileStatus.failure, failedToLogoutReason: e));
+      },
+      (v) {
+        final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(document);
+        emit(
+          state.copyWith(
+            status: ProfileStatus.success,
+            userProfile: v,
+            unreadNoticeCount: unreadNoticeCount,
+            hasUnreadMessage: hasUnreadMessage,
+          ),
+        );
+      },
     );
   }
 
@@ -105,20 +115,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       return;
     }
     final document = documentEither.unwrap();
-    final userProfile = _buildProfile(document);
-    if (userProfile == null) {
-      error('failed to parse user profile');
-      emit(state.copyWith(status: ProfileStatus.failure));
-      return;
-    }
-    final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(document);
-    emit(
-      state.copyWith(
-        status: ProfileStatus.success,
-        userProfile: userProfile,
-        unreadNoticeCount: unreadNoticeCount,
-        hasUnreadMessage: hasUnreadMessage,
-      ),
+    (await _buildProfile(document).run()).match(
+      (e) {
+        error('failed to parse user profile: $e');
+        emit(state.copyWith(status: ProfileStatus.failure, failedToLogoutReason: e));
+        return;
+      },
+      (v) {
+        final (unreadNoticeCount, hasUnreadMessage) = _buildUnreadInfoStatus(document);
+        emit(
+          state.copyWith(
+            status: ProfileStatus.success,
+            userProfile: v,
+            unreadNoticeCount: unreadNoticeCount,
+            hasUnreadMessage: hasUnreadMessage,
+          ),
+        );
+      },
     );
   }
 
@@ -131,11 +144,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
   }
 
   /// Build a user profile [UserProfile] from given html [document].
-  UserProfile? _buildProfile(uh.Document document) {
+  TaskEither<AppException, UserProfile> _buildProfile(uh.Document document) {
+    final errorText = document.querySelector('div#messagetext > p')?.innerText;
+    if (errorText != null) {
+      return TaskEither.left(ServerRespondedErrorException(errorText));
+    }
+
     final profileRootNode = document.querySelector('div#pprl > div.bm.bbda');
 
     if (profileRootNode == null) {
-      return null;
+      return TaskEither.left(ProfileStatusNotFoundException());
     }
 
     final avatarUrl = document.querySelector('div#wp.wp div#ct.ct2 div.sd div.hm > p > a > img')?.imageUrl();
@@ -359,7 +377,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       }
     }
 
-    return UserProfile(
+    final profile = UserProfile(
       avatarUrl: avatarUrl,
       username: username,
       uid: uid,
@@ -420,6 +438,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       specialAttr: specialAttr,
       specialAttrName: specialAttrName,
     );
+
+    return TaskEither.right(profile);
   }
 
   (int unreadNoticeCount, bool hasUnreadMessage) _buildUnreadInfoStatus(uh.Document document) {

@@ -16,8 +16,7 @@ class CheckinFeelingDialog extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAlertDialog(
-      scrollable: true,
+    return CustomAlertDialog.sync(
       title: Text(context.t.settingsPage.checkinSection.feeling),
       content: Column(
         children: CheckinFeeling.values
@@ -75,8 +74,7 @@ class _CheckinMessageDialogState extends State<CheckinMessageDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAlertDialog(
-      scrollable: true,
+    return CustomAlertDialog.sync(
       title: Text(context.t.settingsPage.checkinSection.anythingToSay),
       content: Row(
         mainAxisSize: MainAxisSize.min,

@@ -178,7 +178,7 @@ class _ImageDialogState extends State<_ImageDialog> with LoggerMixin, SingleTick
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.image;
 
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       clipBehavior: Clip.hardEdge,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

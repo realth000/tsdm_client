@@ -39,7 +39,7 @@ class _SelectPermDialogState extends State<_SelectPermDialog> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(context.t.postEditPage.permDialog.title),
       content: Column(
         children: widget.permList
@@ -59,7 +59,6 @@ class _SelectPermDialogState extends State<_SelectPermDialog> {
             )
             .toList(),
       ),
-      scrollable: true,
     );
   }
 }

@@ -51,7 +51,7 @@ class ProfileState with ProfileStateMappable {
   /// This is not an separate state because we need to record extra failed
   /// reason and also though logout failed the
   /// page content is as same as [ProfileStatus.success].
-  final Exception? failedToLogoutReason;
+  final AppException? failedToLogoutReason;
 
   /// The mount of unread notices.
   final int unreadNoticeCount;
@@ -65,7 +65,7 @@ class ProfileState with ProfileStateMappable {
     String? username,
     String? uid,
     UserProfile? userProfile,
-    Exception? failedToLogoutReason,
+    AppException? failedToLogoutReason,
     int? unreadNoticeCount,
     bool? hasUnreadMessage,
   }) {
