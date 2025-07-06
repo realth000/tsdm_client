@@ -1,3 +1,5 @@
+// Not works in this page.
+// ignore_for_file: prefer_const_constructor_declarations
 import 'dart:async';
 import 'dart:io' if (dart.library.js) 'package:web/web.dart';
 
@@ -111,6 +113,15 @@ final class HttpHandshakeFailedException extends AppException with HttpHandshake
 
   /// Optional response headers.
   final Headers? headers;
+}
+
+/// Server responded an error.
+///
+/// Not like 5xx status code, the message carried in `Div#messagetext`.
+@MappableClass()
+final class ServerRespondedErrorException extends AppException with ServerRespondedErrorExceptionMappable {
+  /// Constructor.
+  ServerRespondedErrorException(String message) : super(message: message);
 }
 
 /// The form hash used in login progress is not found.
@@ -377,8 +388,6 @@ final class ImageUploadFailed extends AppException with ImageUploadFailedMappabl
 /// Failed to parse packet detail table
 @MappableClass()
 final class PacketDetailParseFailed extends AppException with PacketDetailParseFailedMappable {
-  // Super not const.
-  // ignore: prefer_const_constructor_declarations
   /// Constructor.
   PacketDetailParseFailed(this.tid, String message) : super(message: message);
 
@@ -389,8 +398,6 @@ final class PacketDetailParseFailed extends AppException with PacketDetailParseF
 /// Server responded an error, likely the client side sent an invalid request.
 @MappableClass()
 final class ServerRespFailure extends AppException with ServerRespFailureMappable {
-  // Super not const.
-  // ignore: prefer_const_constructor_declarations
   /// Constructor.
   ServerRespFailure({required this.status, required super.message});
 

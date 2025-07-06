@@ -886,7 +886,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
             ProfileStatus.failure => buildRetryButton(context, () {
               context.read<ProfileBloc>().add(ProfileLoadRequested(username: widget.username, uid: widget.uid));
-            }),
+            }, message: state.failedToLogoutReason?.message),
             ProfileStatus.success || ProfileStatus.loggingOut => _buildContent(
               context,
               state,
