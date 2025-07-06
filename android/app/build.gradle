@@ -60,8 +60,7 @@ android {
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
 
         // webview_flutter_android acquires minSdkVersion >= 19, restore this when no longer use it.
-        // minSdkVersion flutter.minSdkVersion
-        minSdkVersion 23
+        minSdkVersion flutter.minSdkVersion
         targetSdkVersion 36
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName

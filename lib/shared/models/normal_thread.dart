@@ -292,11 +292,7 @@ class NormalThread with NormalThreadMappable {
     final threadLastReplyAuthorUrl = threadLastReplyNode?.querySelector('cite > a')?.attributes['href'];
     // We only have username here.
     final threadLastReplyAuthorName = threadLastReplyNode?.querySelector('cite > a')?.firstEndDeepText();
-    final threadLastReplyTime =
-        // Within 7 days.
-        threadLastReplyNode?.querySelector('em > a > span')?.attributes['title']?.parseToDateTimeUtc8() ??
-        // 7 days ago.
-        threadLastReplyNode?.querySelector('em > a')?.firstEndDeepText()?.parseToDateTimeUtc8();
+    final threadLastReplyTime = threadLastReplyNode?.querySelector('em > a')?.dateTime();
 
     if (threadLastReplyAuthorName == null || threadLastReplyAuthorUrl == null || threadLastReplyTime == null) {
       talker.error(
