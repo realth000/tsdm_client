@@ -33,9 +33,8 @@ class _FontFamilyDialogState extends State<FontFamilyDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.settingsPage.appearanceSection.fontFamily;
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(tr.dialogTitle),
-      scrollable: true,
       content: TextField(controller: _fontController, autofocus: true),
       actions: [
         TextButton(child: Text(context.t.general.reset), onPressed: () => context.pop('')),

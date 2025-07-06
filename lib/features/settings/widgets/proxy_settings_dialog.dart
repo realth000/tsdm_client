@@ -105,8 +105,7 @@ class _ProxySettingsDialogState extends State<ProxySettingsDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.settingsPage.advancedSection.proxySettings;
-    return CustomAlertDialog(
-      scrollable: true,
+    return CustomAlertDialog.sync(
       title: Text(tr.title),
       content: Form(
         key: formKey,

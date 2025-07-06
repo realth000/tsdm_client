@@ -18,8 +18,7 @@ Future<void> showMessageSingleButtonDialog({
     builder: (context) {
       return RootPage(
         DialogPaths.messageSingleButton,
-        CustomAlertDialog(
-          scrollable: true,
+        CustomAlertDialog.sync(
           title: Text(title),
           content: SelectableText(message),
           actions: [
@@ -57,8 +56,7 @@ Future<bool?> showQuestionDialog({
     builder: (context) {
       return RootPage(
         DialogPaths.question,
-        CustomAlertDialog(
-          scrollable: true,
+        CustomAlertDialog.sync(
           title: Text(title),
           content: message != null ? SelectableText(message) : Text.rich(richMessage!),
           actions: [

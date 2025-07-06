@@ -158,7 +158,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
                   final size = MediaQuery.sizeOf(context);
                   return RootPage(
                     DialogPaths.updateNotice,
-                    CustomAlertDialog(
+                    CustomAlertDialog.sync(
                       title: Text(tr.availableDialog.title),
                       content: SizedBox(
                         width: math.min(size.width * 0.8, 800),

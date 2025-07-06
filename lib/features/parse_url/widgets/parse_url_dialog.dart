@@ -62,7 +62,7 @@ class _ParseUrlDialogState extends State<_ParseUrlDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.parseUrlDialog;
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Text(tr.title),
       content: Column(
         mainAxisSize: MainAxisSize.min,

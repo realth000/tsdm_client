@@ -73,8 +73,7 @@ class _AutoSyncNoticeDialogState extends State<AutoSyncNoticeDialog> {
       _ => context.t.general.hours(value: (time / 3600).toInt()),
     };
 
-    return CustomAlertDialog(
-      scrollable: true,
+    return CustomAlertDialog.sync(
       title: Text(tr.title),
       content: Column(
         children: [

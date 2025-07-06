@@ -45,7 +45,7 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
 
     final tr = context.t.homepage.welcome;
 
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       title: Row(
         children: [
           HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username, minRadius: 30),
@@ -53,7 +53,6 @@ class UserOperationDialog extends StatelessWidget with LoggerMixin {
           Expanded(child: SingleLineText(username, style: Theme.of(context).textTheme.titleLarge)),
         ],
       ),
-      scrollable: true,
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [

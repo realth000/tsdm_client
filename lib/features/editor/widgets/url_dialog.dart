@@ -98,7 +98,7 @@ class _UrlDialogState extends State<UrlDialog> {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.bbcodeEditor.url;
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       clipBehavior: Clip.antiAlias,
       title: Text(context.t.bbcodeEditor.url.title),
       content: Form(

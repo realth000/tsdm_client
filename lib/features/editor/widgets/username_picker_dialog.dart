@@ -190,9 +190,8 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
         BlocProvider(create: (context) => UserMentionCubit(context.repo())..recommendFriend()),
       ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(
-        builder: (context, state) => CustomAlertDialog(
+        builder: (context, state) => CustomAlertDialog.sync(
           title: Text(tr.title),
-          scrollable: true,
           content: Form(
             key: formKey,
             child: Column(

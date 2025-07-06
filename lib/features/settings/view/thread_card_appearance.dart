@@ -99,8 +99,7 @@ class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardApp
       context: context,
       builder: (_) => RootPage(
         DialogPaths.threadCardHelp,
-        CustomAlertDialog(
-          scrollable: true,
+        CustomAlertDialog.sync(
           title: Text(tr.help),
           content: Column(children: contents),
         ),

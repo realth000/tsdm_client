@@ -44,7 +44,7 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
   @override
   Widget build(BuildContext context) {
     final tr = context.t.manageAccountPage.switchAccount.dialog;
-    return CustomAlertDialog(
+    return CustomAlertDialog.sync(
       clipBehavior: Clip.hardEdge,
       title: Row(
         children: [
@@ -53,54 +53,52 @@ class _ManageUserDialog extends StatelessWidget with LoggerMixin {
           Expanded(child: SingleLineText(userInfo.username!, style: Theme.of(context).textTheme.titleLarge)),
         ],
       ),
-      content: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListTile(
-              title: Text(tr.switchAccount),
-              onTap: () async {
-                var times = 10;
-                while (context.read<AutoNotificationCubit>().pause('switch user')) {
-                  info('switch user is waiting for auto sync lock... $times');
-                  times -= 1;
-                  await Future<void>.delayed(const Duration(milliseconds: 300));
-                  if (times <= 0 || !context.mounted) {
-                    info('auto sync lock timeout or canceled, do not switch user');
-                    return;
-                  }
-                }
-                context.read<SwitchUserBloc>().add(SwitchUserStartRequested(userInfo));
-                context.pop();
-              },
-            ),
-            ListTile(
-              title: Text(tr.clearLoginStatus.title),
-              subtitle: Text(tr.clearLoginStatus.detail),
-              enabled: userInfo.uid != null,
-              onTap: () async {
-                await getIt.get<StorageProvider>().deleteCookieByUid(userInfo.uid!);
-                if (!context.mounted) {
+      content: Column(
+        children: [
+          ListTile(
+            title: Text(tr.switchAccount),
+            onTap: () async {
+              var times = 10;
+              while (context.read<AutoNotificationCubit>().pause('switch user')) {
+                info('switch user is waiting for auto sync lock... $times');
+                times -= 1;
+                await Future<void>.delayed(const Duration(milliseconds: 300));
+                if (times <= 0 || !context.mounted) {
+                  info('auto sync lock timeout or canceled, do not switch user');
                   return;
                 }
-                context.pop();
-              },
-            ),
-            ListTile(
-              title: Text(tr.loginAgain.title),
-              subtitle: Text(tr.loginAgain.detail),
-              onTap: () async {
-                await context.pushNamed(
-                  ScreenPaths.login,
-                  queryParameters: {if (userInfo.username != null) 'username': '${userInfo.username}'},
-                );
-                if (!context.mounted) {
-                  return;
-                }
-                context.pop();
-              },
-            ),
-          ],
-        ),
+              }
+              context.read<SwitchUserBloc>().add(SwitchUserStartRequested(userInfo));
+              context.pop();
+            },
+          ),
+          ListTile(
+            title: Text(tr.clearLoginStatus.title),
+            subtitle: Text(tr.clearLoginStatus.detail),
+            enabled: userInfo.uid != null,
+            onTap: () async {
+              await getIt.get<StorageProvider>().deleteCookieByUid(userInfo.uid!);
+              if (!context.mounted) {
+                return;
+              }
+              context.pop();
+            },
+          ),
+          ListTile(
+            title: Text(tr.loginAgain.title),
+            subtitle: Text(tr.loginAgain.detail),
+            onTap: () async {
+              await context.pushNamed(
+                ScreenPaths.login,
+                queryParameters: {if (userInfo.username != null) 'username': '${userInfo.username}'},
+              );
+              if (!context.mounted) {
+                return;
+              }
+              context.pop();
+            },
+          ),
+        ],
       ),
     );
   }
