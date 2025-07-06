@@ -58,7 +58,11 @@ Future<T?> showCustomBottomSheet<T>({
                     Positioned(
                       top: 6,
                       right: 24,
-                      child: IconButton(icon: const Icon(Icons.close_outlined), onPressed: () async => context.pop()),
+                      child: IconButton(
+                        icon: const Icon(Icons.close_outlined),
+                        tooltip: context.t.general.close,
+                        onPressed: () async => context.pop(),
+                      ),
                     ),
                   ],
                 ),

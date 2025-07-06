@@ -242,6 +242,9 @@ final class _PointsQueryFormState extends State<PointsQueryForm> {
                   icon: showQueryFilter
                       ? const Icon(Icons.expand_less_outlined)
                       : const Icon(Icons.expand_more_outlined),
+                  tooltip: showQueryFilter
+                      ? context.t.pointsPage.changelogTab.hideFilterTip
+                      : context.t.pointsPage.changelogTab.showFilterTip,
                   onPressed: () {
                     setState(() {
                       showQueryFilter = !showQueryFilter;

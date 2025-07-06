@@ -63,6 +63,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.open_in_new_outlined),
+                  tooltip: context.t.general.openInBrowser,
                   onPressed: () async => context.dispatchAsUrl('$broadcastMessageDetailUrl$pmid', external: true),
                 ),
               ],

@@ -30,8 +30,22 @@ class PacketDetailPage extends StatefulWidget {
 
 enum _SortBy { time, coinsLeast, coinsMost }
 
+extension _LoopExt on _SortBy {
+  _SortBy loopNext() => this == _SortBy.values.last ? _SortBy.values.first : _SortBy.values[index + 1];
+
+  String loopNextTip(BuildContext context) => loopNext().tip(context);
+
+  String tip(BuildContext context) => switch (this) {
+    _SortBy.time => context.t.packetDetailPage.sort.sortByTime,
+    _SortBy.coinsLeast => context.t.packetDetailPage.sort.sortByLeastCoins,
+    _SortBy.coinsMost => context.t.packetDetailPage.sort.sortByMostCoins,
+  };
+}
+
 class _PacketDetailPageState extends State<PacketDetailPage> {
   _SortBy _sortByCoins = _SortBy.time;
+
+  String _nextSortTip = '';
 
   Widget _buildInfoRow(BuildContext context, List<PacketDetailModel> data) {
     final tr = context.t.packetDetailPage;
@@ -127,6 +141,12 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _nextSortTip = _sortByCoins.loopNextTip(context);
+  }
+
+  @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
@@ -154,12 +174,12 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               actions: [
                 IconButton(
                   icon: const Icon(Icons.sort_outlined),
+                  tooltip: _nextSortTip,
                   onPressed: state is PacketDetailSuccess
-                      ? () => setState(
-                          () => _sortByCoins == _SortBy.values.last
-                              ? _sortByCoins = _SortBy.values.first
-                              : _sortByCoins = _SortBy.values[_sortByCoins.index + 1],
-                        )
+                      ? () => setState(() {
+                          _sortByCoins = _sortByCoins.loopNext();
+                          _nextSortTip = _sortByCoins.loopNextTip(context);
+                        })
                       : null,
                 ),
               ],

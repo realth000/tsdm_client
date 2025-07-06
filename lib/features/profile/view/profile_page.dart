@@ -584,6 +584,7 @@ class _ProfilePageState extends State<ProfilePage> {
             // Email verify state.
             IconButton(
               icon: const Icon(Icons.email_outlined),
+              tooltip: userProfile.emailVerified ?? false ? tr.emailVerified : tr.emailNotVerified,
               onPressed: () async {
                 final content = userProfile.emailVerified ?? false ? tr.emailVerified : tr.emailNotVerified;
                 showSnackBar(context: context, message: content);
@@ -592,6 +593,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           IconButton(
             icon: const Icon(Icons.photo_camera_outlined),
+            tooltip: userProfile.videoVerified ?? false ? tr.videoVerified : tr.videoNotVerified,
             onPressed: () async {
               final content = userProfile.videoVerified ?? false ? tr.videoVerified : tr.videoNotVerified;
               showSnackBar(context: context, message: content);

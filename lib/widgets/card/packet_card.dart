@@ -96,6 +96,7 @@ class PacketCard extends StatelessWidget {
                         sizedBoxW32H32,
                         IconButton(
                           icon: Icon(Icons.bar_chart_outlined, color: Theme.of(context).colorScheme.primary),
+                          tooltip: tr.viewReceiveHistory,
                           onPressed: tid == null
                               ? null
                               : () async =>

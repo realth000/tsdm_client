@@ -23,7 +23,9 @@
     "hours": "${value: int} 小時",
     "days": "${value: int} 天",
     "now": "剛剛",
-    "openSettings": "開啟設定"
+    "openSettings": "開啟設定",
+    "openInBrowser": "在瀏覽器中開啟",
+    "close": "關閉"
   },
   "navigation": {
     "homepage": "首頁",
@@ -43,7 +45,8 @@
       "checkin": "簽到",
       "myThread": "我的貼文",
       "latestThread": "最新貼文"
-    }
+    },
+    "showMoreUserOperationsTip": "顯示更多使用者操作"
   },
   "topicPage": {
     "title": "分割區",
@@ -104,6 +107,50 @@
           "view": "103000",
           "lastReplyAuthor": "桐ヶ谷和人",
           "threadType": "白日夢"
+        },
+        "showHelpTip": "查看貼文卡片內容的意思",
+        "attrs": {
+          "help": "圖示的意義",
+          "closed": {
+            "title": "已關閉",
+            "detail": "貼文已關閉，無法回覆"
+          },
+          "upVoted": {
+            "title": "評分加分",
+            "detail": "貼文由使用者評分加分"
+          },
+          "pictureAttached": {
+            "title": "附帶圖片",
+            "detail": "貼文裡有圖片附件"
+          },
+          "digested": {
+            "title": "精華",
+            "detail": "貼文已加精"
+          },
+          "pinnedGlobally": {
+            "title": "全域置頂",
+            "detail": "在論壇全域置頂"
+          },
+          "pinnedInType": {
+            "title": "分類置頂",
+            "detail": "在目前貼文分類中置頂"
+          },
+          "pinnedInSubreddit": {
+            "title": "本版置頂",
+            "detail": "在目前版塊中置頂"
+          },
+          "vote": {
+            "title": "投票",
+            "detail": "含投票內容"
+          },
+          "rewarded": {
+            "title": "懸賞",
+            "detail": "含有懸賞內容"
+          },
+          "draft": {
+            "title": "草稿",
+            "detail": "貼文處於草稿狀態，仍未發佈"
+          }
         }
       },
       "unreadNoticeBadge": "未讀取提醒小圓點",
@@ -252,7 +299,8 @@
     "version": "軟體版本",
     "flutterVersion": "Flutter版本",
     "dartVersion": "Dart版本",
-    "license": "版權"
+    "license": "版權",
+    "copyEnvironmentInfo": "複製環境資訊"
   },
   "loginPage": {
     "title": "登入天使動漫",
@@ -535,7 +583,9 @@
       "changeType": "收支",
       "operationType": "操作類型",
       "dateRange": "日期範圍",
-      "query": "查詢"
+      "query": "查詢",
+      "showFilterTip": "顯示篩選條件",
+      "hideFilterTip": "隱藏篩選條件"
     }
   },
   "postEditPage": {
@@ -591,7 +641,9 @@
     "success": "發送成功",
     "failed": "發送失敗：$message",
     "online": "[線上]",
-    "offline": "[離線]"
+    "offline": "[離線]",
+    "viewUserSpaceTip": "查看使用者資料",
+    "viewChatHistoryTip": "查看歷史聊天"
   },
   "imageDetailPage": {
     "title": "圖片詳情",
@@ -772,7 +824,8 @@
     "detail": "你找到一個紅包了！",
     "open": "開啟",
     "failedToOpen": "打開失敗",
-    "allTakenAway": "红包都領完了"
+    "allTakenAway": "红包都領完了",
+    "viewReceiveHistory": "查看領取記錄"
   },
   "bountyCard": {
     "title": "懸賞",
@@ -803,7 +856,8 @@
       "link": "連結",
       "errorEmpty": "不能為空",
       "autoPaste": {
-        "tip": "貼上b站分享連結",
+        "action": "貼上b站分享連結",
+        "tip": "查看自動貼上功能的提示",
         "detail": "從剪貼簿貼上b站分享連結。\n格式為【影片名稱】 https://www.bilibili.com/BV號或AV號"
       }
     },
@@ -833,7 +887,9 @@
       "visitUserSpace": "存取TA的主頁",
       "search": "搜尋",
       "searchResult": "結果",
-      "randomFriend": "隨機好友"
+      "randomFriend": "隨機好友",
+      "viewUserSpaceTip": "檢視使用者資料",
+      "refreshRecommendTip": "刷新推薦好友"
     }
   },
   "imageBottomSheet": {
@@ -907,7 +963,12 @@
   },
   "packetDetailPage": {
     "title": "紅包詳情",
-    "statistics": "在 ${time: String} 中有 ${users: int} 名用戶獲得共 ${coins: int} 個天使幣"
+    "statistics": "在 ${time: String} 中有 ${users: int} 名用戶獲得共 ${coins: int} 個天使幣",
+    "sort": {
+      "sortByMostCoins": "依tsb由多到少排序",
+      "sortByLeastCoins": "依tsb由少到多排序",
+      "sortByTime": "按時間排序"
+    }
   },
   "pollCard": {
     "title": "投票",
@@ -1046,6 +1107,12 @@
       "accumulated": "累加後",
       "original": "原資料"
     },
-    "total": "總分"
+    "total": "總分",
+    "showTotalRatePointsTip": "顯示總分"
+  },
+  "replyBar": {
+    "notReplyToFloorTip": "不回覆該樓層（改為回覆樓主）",
+    "expandToolbarTip": "展開工具列",
+    "collapseToolbarTip": "收起工具列"
   }
 }

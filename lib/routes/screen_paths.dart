@@ -324,6 +324,9 @@ class DialogPaths {
 
   /// Dialog to select the duration consider an image cache as outdated.
   static const String autoClearImageCacheDuration = '/dialog/autoClearImageDialogDuration';
+
+  /// Dialog to show help message of thread card.
+  static const String threadCardHelp = '/dialog/threadCardHelp';
 }
 
 /// Route path for a screen.

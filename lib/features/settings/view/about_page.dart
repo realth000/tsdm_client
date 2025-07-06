@@ -27,6 +27,7 @@ class AboutPage extends StatelessWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.copy_outlined),
+            tooltip: tr.copyEnvironmentInfo,
             onPressed: () async {
               const data =
                   '''
