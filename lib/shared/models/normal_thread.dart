@@ -29,14 +29,14 @@ extension _ParseThreadState on uh.Element {
       } else if (src.contains('pin_2')) {
         ret.add(ThreadStateModel.pinnedInType);
       } else if (src.contains('pin_1')) {
-        ret.add(ThreadStateModel.pinnedInForum);
+        ret.add(ThreadStateModel.pinnedInSubreddit);
       }
     }
 
     final alt = attributes['alt'];
     switch (alt) {
       case 'agree':
-        ret.add(ThreadStateModel.agreed);
+        ret.add(ThreadStateModel.upVoted);
       case 'digest':
         ret.add(ThreadStateModel.digested);
       case 'attach_img':
@@ -55,8 +55,8 @@ enum ThreadStateModel {
   /// Closed and can not reply.
   closed(Icons.lock_outline),
 
-  /// Rated by other user.
-  agreed(Icons.thumb_up_outlined),
+  /// Up voted by other user.
+  upVoted(Icons.thumb_up_outlined),
 
   /// Has attached pictures.
   pictureAttached(Icons.image_outlined),
@@ -71,7 +71,7 @@ enum ThreadStateModel {
   pinnedInType(Icons.looks_two_outlined),
 
   /// Pinned in current subreddit.
-  pinnedInForum(Icons.looks_one_outlined),
+  pinnedInSubreddit(Icons.looks_one_outlined),
 
   /// Has poll (also called "rate").
   poll(Icons.poll_outlined),

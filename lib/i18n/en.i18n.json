@@ -104,6 +104,50 @@
           "view": "103000",
           "lastReplyAuthor": "桐ヶ谷和人",
           "threadType": "Daydream"
+        },
+        "showHelpTip": "Show tips on thread card",
+        "attrs": {
+          "help": "What the icons mean",
+          "closed": {
+            "title": "Closed",
+            "detail": "Thread is closed and cannot be replied to."
+          },
+          "upVoted": {
+            "title": "Up voted",
+            "detail": "Thread is up voted by other users"
+          },
+          "pictureAttached": {
+            "title": "Picture attached",
+            "detail": "Thread has attached picture"
+          },
+          "digested": {
+            "title": "Digested",
+            "detail": "Most valuable thread"
+          },
+          "pinnedGlobally": {
+            "title": "Pinned globally",
+            "detail": "Pinned across the forum"
+          },
+          "pinnedInType": {
+            "title": "Pinned thread type",
+            "detail": "Pinned across current thread type"
+          },
+          "pinnedInSubreddit": {
+            "title": "Pinned in subreddit",
+            "detail": "Pinned across current subreddit"
+          },
+          "vote": {
+            "title": "Voting content",
+            "detail": "Thread is voting content"
+          },
+          "rewarded": {
+            "title": "Bounty",
+            "detail": "Asking for something and reward is provided"
+          },
+          "draft": {
+            "title": "Draft",
+            "detail": "Thread is in draft state, not published yet"
+          }
         }
       },
       "unreadNoticeBadge": "Unread notice badge",

@@ -104,6 +104,50 @@
           "view": "103000",
           "lastReplyAuthor": "桐ヶ谷和人",
           "threadType": "白日梦"
+        },
+        "showHelpTip": "查看帖子卡片内容的含义",
+        "attrs": {
+          "help": "图标的含义",
+          "closed": {
+            "title": "已关闭",
+            "detail": "帖子已关闭，无法回复"
+          },
+          "upVoted": {
+            "title": "评分加分",
+            "detail": "帖子被用户评分加分"
+          },
+          "pictureAttached": {
+            "title": "附带图片",
+            "detail": "帖子里有图片附件"
+          },
+          "digested": {
+            "title": "精华",
+            "detail": "帖子已加精"
+          },
+          "pinnedGlobally": {
+            "title": "全局置顶",
+            "detail": "在论坛全局置顶"
+          },
+          "pinnedInType": {
+            "title": "分类置顶",
+            "detail": "在当前帖子分类中置顶"
+          },
+          "pinnedInSubreddit": {
+            "title": "本版置顶",
+            "detail": "在当前版块中置顶"
+          },
+          "vote": {
+            "title": "投票",
+            "detail": "含有投票内容"
+          },
+          "rewarded": {
+            "title": "悬赏",
+            "detail": "含有悬赏内容"
+          },
+          "draft": {
+            "title": "草稿",
+            "detail": "帖子处于草稿状态，仍未发布"
+          }
         }
       },
       "unreadNoticeBadge": "未读提醒小圆点",

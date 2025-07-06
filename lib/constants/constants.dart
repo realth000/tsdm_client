@@ -27,12 +27,6 @@ const assetDartLogoPath = './assets/images/dart.svg';
 /// ref: https://gitlab.com/fdroid/artwork/-/blob/master/fdroid-logo-2015/fdroid-logo.svg
 const assetsFDroidLogoPath = './assets/images/fdroid-logo.svg';
 
-/// Example avatar.
-const assetExampleIndexAvatar = './assets/images/index_avatar.png';
-
-/// Fallback avatar image.
-const assetNoAvatarImagePath = './assets/images/noavatar_middle.jpg';
-
 /// Path of all emoji related asset.
 const assetEmojiDir = './assets/images/emoji/';
 
