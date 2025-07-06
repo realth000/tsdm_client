@@ -494,6 +494,7 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
           const Spacer(),
           IconButton(
             icon: Icon(Icons.clear_outlined, color: outlineColor, size: 16),
+            tooltip: context.t.replyBar.notReplyToFloorTip,
             onPressed: _clearTextAndHint,
           ),
         ],
@@ -570,6 +571,8 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
   }
 
   Widget _buildContent(BuildContext context, ReplyState state) {
+    final tr = context.t.replyBar;
+
     final content = Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -604,9 +607,10 @@ final class _ReplyBarState extends State<_ReplyBar> with LoggerMixin {
               // For desktop, always expand the toolbar.
               if (isMobile)
                 IconButton(
-                  icon: const Icon(Icons.expand),
+                  icon: const Icon(Icons.expand_outlined),
                   selectedIcon: Icon(Icons.expand_outlined, color: Theme.of(context).primaryColor),
                   isSelected: fullScreen,
+                  tooltip: fullScreen ? tr.collapseToolbarTip : tr.expandToolbarTip,
                   onPressed: () {
                     setState(() {
                       fullScreen = !fullScreen;

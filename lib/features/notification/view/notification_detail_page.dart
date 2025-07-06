@@ -126,6 +126,7 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
                 actions: [
                   IconButton(
                     icon: const Icon(Icons.open_in_new_outlined),
+                    tooltip: context.t.general.openInBrowser,
                     onPressed: () async {
                       if (_tid == null || _page == null || _pid == null) {
                         return;

@@ -127,7 +127,7 @@ class _UrlDialogState extends State<UrlDialog> {
                 Row(
                   children: [
                     TextButton(
-                      child: Text(tr.autoPaste.tip),
+                      child: Text(tr.autoPaste.action),
                       onPressed: () async {
                         final bilibiliText = await getPlainTextFromClipboard();
                         if (bilibiliText == null) {
@@ -150,6 +150,7 @@ class _UrlDialogState extends State<UrlDialog> {
                     const Spacer(),
                     IconButton(
                       icon: const Icon(Icons.info_outline),
+                      tooltip: tr.autoPaste.tip,
                       onPressed: () => setState(() => _bilibiliTipExpanded = !_bilibiliTipExpanded),
                     ),
                   ],

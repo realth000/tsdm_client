@@ -188,6 +188,7 @@ class _HomepagePageState extends State<HomepagePage> {
                         height: 32,
                         child: HeroUserAvatar(username: username, avatarUrl: avatarUrl, heroTag: username),
                       ),
+                      tooltip: context.t.homepage.showMoreUserOperationsTip,
                       onPressed: () async => showHeroDialog(
                         context,
                         (context, _, __) => UserOperationDialog(

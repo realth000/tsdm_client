@@ -92,6 +92,7 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
                   suffixIcon: userNameNotEmpty
                       ? IconButton(
                           icon: const Icon(Icons.open_in_new),
+                          tooltip: tr.viewUserSpaceTip,
                           onPressed: () async => context.pushNamed(
                             ScreenPaths.profile,
                             queryParameters: {'username': controller.text.trim()},
@@ -144,6 +145,7 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
             Text(tr.randomFriend, style: Theme.of(context).textTheme.labelLarge),
             IconButton(
               icon: const Icon(Icons.refresh),
+              tooltip: tr.refreshRecommendTip,
               onPressed: state.recommendStatus == UserMentionStatus.loading
                   ? null
                   : () async => context.read<UserMentionCubit>().recommendFriend(),

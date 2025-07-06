@@ -23,7 +23,9 @@
     "hours": "${value: int} hours",
     "days": "${value: int} days",
     "now": "Now",
-    "openSettings": "Open settings"
+    "openSettings": "Open settings",
+    "openInBrowser": "Open in browser",
+    "close": "Close"
   },
   "navigation": {
     "homepage": "Home",
@@ -43,7 +45,8 @@
       "checkin": "Checkin",
       "myThread": "My thread",
       "latestThread": "Latest thread"
-    }
+    },
+    "showMoreUserOperationsTip": "Show more user operations"
   },
   "topicPage": {
     "title": "Topics",
@@ -296,7 +299,8 @@
     "version": "App Version",
     "flutterVersion": "Flutter Version",
     "dartVersion": "Dart Version",
-    "license": "License"
+    "license": "License",
+    "copyEnvironmentInfo": "Copy environment info"
   },
   "loginPage": {
     "title": "Login TSDM",
@@ -579,7 +583,9 @@
       "changeType": "Change Type",
       "operationType": "Operation Type",
       "dateRange": "Date Range",
-      "query": "Query"
+      "query": "Query",
+      "showFilterTip": "Show filter",
+      "hideFilterTip": "Hide filter"
     }
   },
   "postEditPage": {
@@ -635,7 +641,9 @@
     "success": "Sent successfully",
     "failed": "Sent failed: $message",
     "online": "[Online]",
-    "offline": "[Offline]"
+    "offline": "[Offline]",
+    "viewUserSpaceTip": "View user space",
+    "viewChatHistoryTip": "ViewChatHistory"
   },
   "imageDetailPage": {
     "title": "Image detail",
@@ -816,7 +824,8 @@
     "detail": "You found a packet!",
     "open": "Open It",
     "failedToOpen": "Failed to open",
-    "allTakenAway": "All packets were taken away"
+    "allTakenAway": "All packets were taken away",
+    "viewReceiveHistory": "View receive history"
   },
   "bountyCard": {
     "title": "Bounty",
@@ -847,7 +856,8 @@
       "link": "Url link",
       "errorEmpty": "Should not be empty",
       "autoPaste": {
-        "tip": "Paste bilibili share link",
+        "action": "Paste bilibili share link",
+        "tip": "Check help for auto paste",
         "detail": "Paste bilibili video share link from clipboard. \nFormat is 【VIDEO_NAME】 https://www.bilibili.com/VIDEO_ID"
       }
     },
@@ -877,7 +887,9 @@
       "visitUserSpace": "Visit user space",
       "search": "Search",
       "searchResult": "Result",
-      "randomFriend": "Random friend"
+      "randomFriend": "Random friend",
+      "viewUserSpaceTip": "View user space",
+      "refreshRecommendTip": "Refresh recommended friends"
     }
   },
   "imageBottomSheet": {
@@ -951,7 +963,12 @@
   },
   "packetDetailPage": {
     "title": "Packet details",
-    "statistics": "${users: int} users got ${coins: int} coins in ${time: String}"
+    "statistics": "${users: int} users got ${coins: int} coins in ${time: String}",
+    "sort": {
+      "sortByMostCoins": "Sort by most coins",
+      "sortByLeastCoins": "Sort by least coins",
+      "sortByTime": "Sort by time"
+    }
   },
   "pollCard": {
     "title": "Poll",
@@ -1090,6 +1107,12 @@
       "accumulated": "Accumulated",
       "original": "Original"
     },
-    "total": "Total rates"
+    "total": "Total rates",
+    "showTotalRatePointsTip": "Show total rate points"
+  },
+  "replyBar": {
+    "notReplyToFloorTip": "Not reply to this floor",
+    "expandToolbarTip": "Expand toolbar",
+    "collapseToolbarTip": "Collapse toolbar"
   }
 }

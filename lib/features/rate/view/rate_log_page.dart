@@ -220,6 +220,7 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
                 if (widget.total != null)
                   IconButton(
                     icon: const Icon(Icons.info_outline),
+                    tooltip: tr.showTotalRatePointsTip,
                     onPressed: () async =>
                         showMessageSingleButtonDialog(context: context, title: tr.total, message: widget.total!),
                   ),
