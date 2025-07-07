@@ -90,13 +90,18 @@ final class PostEditRepository with LoggerMixin {
     final resp = respEither.unwrap();
     // When post succeed, server responses 301.
     // If we got a 200, likely we ran into some error.
-    if (resp.statusCode == HttpStatus.ok) {
-      final document = parseHtmlDocument(resp.data as String);
-      return left(
-        PostEditFailedToUploadResult(document.querySelector('div#messagetext > p')?.innerText ?? 'unknown error'),
-      );
+    //
+    // When using native http, or say if we are on Android, whe same post requests returns different status code which
+    // is normally a 200 response. That's weired, but pass it, anyway.
+    //
+    // Now we do a more permissive check, reply on message text info more than http status code.
+    final document = parseHtmlDocument(resp.data as String);
+    final messageTextNode = document.querySelector('div#messagetext > p');
+    if (messageTextNode != null) {
+      return left(PostEditFailedToUploadResult(messageTextNode.innerText));
     }
-    if (resp.statusCode != HttpStatus.movedPermanently) {
+
+    if (resp.statusCode != HttpStatus.ok && resp.statusCode != HttpStatus.movedPermanently) {
       return left(HttpRequestFailedException(resp.statusCode));
     }
 
