@@ -128,7 +128,7 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
     }
     return Hero(
       tag: widget.heroTag ?? 'UserAvatar_${widget.username}',
-      flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+      flightShuttleBuilder: (_, _, _, _, toHeroContext) =>
           DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
       child: avatar,
     );

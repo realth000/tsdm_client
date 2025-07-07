@@ -90,7 +90,7 @@ class _BodyState extends State<_Body> {
           itemBuilder: (context, index) {
             return ThreadVisitHistoryCard(widget.models[index]);
           },
-          separatorBuilder: (_, __) => sizedBoxW4H4,
+          separatorBuilder: (_, _) => sizedBoxW4H4,
         );
       },
     );

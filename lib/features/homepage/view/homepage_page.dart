@@ -191,7 +191,7 @@ class _HomepagePageState extends State<HomepagePage> {
                       tooltip: context.t.homepage.showMoreUserOperationsTip,
                       onPressed: () async => showHeroDialog(
                         context,
-                        (context, _, __) => UserOperationDialog(
+                        (context, _, _) => UserOperationDialog(
                           username: username,
                           avatarUrl: avatarUrl,
                           heroTag: username,

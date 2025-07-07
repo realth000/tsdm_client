@@ -112,7 +112,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
           padding: edgeInsetsL12T4R12.add(context.safePadding()),
           itemCount: state.fullChangelog.length,
           itemBuilder: (_, index) => PointsChangeCard(state.fullChangelog[index]),
-          separatorBuilder: (_, __) => sizedBoxW4H4,
+          separatorBuilder: (_, _) => sizedBoxW4H4,
         ),
       );
 
