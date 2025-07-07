@@ -2,6 +2,8 @@
 schema_versions.dart
 /test/data/generated_migrations/*.dart
 
+*.bak
+
 # Flutter android debug symbol build dir since 3.29
 /android/app/.cxx
 

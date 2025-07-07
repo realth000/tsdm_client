@@ -30,7 +30,7 @@ jobs:
           dart ./Makefile.dart
       - name: Run flutter analyze
         run: |
-          flutter analyze --fatal-infos --fatal-warnings lib
+          dart ./scripts/check_strict_analyzing.dart
       - name: Run flutter test
         run: |
           flutter test
