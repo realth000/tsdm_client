@@ -165,7 +165,7 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
             },
             child: Hero(
               tag: nameHeroTag,
-              flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+              flightShuttleBuilder: (_, _, _, _, toHeroContext) =>
                   DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
               child: Text(widget.post.author.name, style: TextStyle(color: Theme.of(context).colorScheme.primary)),
             ),

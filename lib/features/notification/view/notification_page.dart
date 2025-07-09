@@ -116,7 +116,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           itemCount: n.length,
                           itemBuilder: (_, idx) =>
                               NoticeCardV2(key: ValueKey('NOTICE_${n.elementAt(idx).id}'), n.elementAt(idx)),
-                          separatorBuilder: (_, __) => sizedBoxW4H4,
+                          separatorBuilder: (_, _) => sizedBoxW4H4,
                         ),
                 ),
                 EasyRefresh.builder(
@@ -131,7 +131,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           itemCount: pm.length,
                           itemBuilder: (_, idx) =>
                               PersonalMessageCardV2(key: ValueKey('PM_${n.elementAt(idx).id}'), pm.elementAt(idx)),
-                          separatorBuilder: (_, __) => sizedBoxW4H4,
+                          separatorBuilder: (_, _) => sizedBoxW4H4,
                         ),
                 ),
                 EasyRefresh.builder(
@@ -146,7 +146,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
                           itemCount: bm.length,
                           itemBuilder: (_, idx) =>
                               BroadcastMessageCardV2(key: ValueKey('BM_${n.elementAt(idx).id}'), bm.elementAt(idx)),
-                          separatorBuilder: (_, __) => sizedBoxW4H4,
+                          separatorBuilder: (_, _) => sizedBoxW4H4,
                         ),
                 ),
               ],

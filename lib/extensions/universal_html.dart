@@ -308,6 +308,13 @@ extension GrepExtension on Element {
     }
 
     if (nodes.firstOrNull?.nodeType == Node.TEXT_NODE) {
+      final childText = nodes.first.text ?? '';
+      if (childText.startsWith('发表于')) {
+        // Use case: post publish time in post floor.
+        // 发表于 $time
+        return childText.replaceAll('发表于', '').trim().parseToDateTimeUtc8();
+      }
+
       return nodes.first.text?.trim().parseToDateTimeUtc8();
     }
 

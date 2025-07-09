@@ -1,0 +1,70 @@
+include:
+  - package:flutter_lints/flutter.yaml
+  - package:very_good_analysis/analysis_options.yaml
+
+# https://dart.dev/tools/analysis#changing-the-severity-of-rules
+analyzer:
+  plugins:
+    - custom_lint
+  errors:
+    depend_on_referenced_packages: error
+    # Now we adjust the maximum line to 120
+    lines_longer_than_80_chars: ignore
+  exclude:
+    - lib/**.g.dart
+    - lib/**.freezed.dart
+    - lib/**.mapper.dart
+    - packages/**
+
+formatter:
+  page_width: 120
+
+linter:
+  rules:
+    flutter_style_todos: false
+
+custom_lint:
+  rules:
+    # Dart lints
+    - always_put_doc_comments_before_annotations
+    - always_specify_parameter_names
+    - avoid_abbreviations_in_doc_comments
+    - avoid_dynamic
+    - avoid_empty_blocks
+    - avoid_inverted_boolean_expressions
+    - avoid_mutable_global_variables
+    # TODO: Enable it when we have time to refactor
+    # - avoid_nested_if
+    - avoid_positional_fields_in_records
+    - avoid_redundant_pattern_field_names
+    - avoid_unused_parameters
+    - no_duplicate_imports
+    - no_self_comparisons
+    - prefer_async_await
+    - prefer_const_constructor_declarations
+    - prefer_iterable_any
+    - prefer_iterable_every
+    - prefer_iterable_first
+    - prefer_iterable_last
+    - prefer_library_prefixes
+    - prefer_underscore_for_unused_callback_parameters
+    - unnecessary_nullable_return_type
+    # Flutter lints
+    # TODO: Enable it when we have time to refactor
+    # - avoid_returning_widgets
+    - avoid_single_child_in_flex
+    # TODO: Enable it when we have time to refactor
+    # - avoid_public_members_in_states
+    - dispose_controllers
+    - prefer_async_callback
+    - prefer_border_from_border_side
+    - prefer_border_radius_all
+    - prefer_dedicated_media_query_functions
+    - prefer_text_rich
+    - prefer_void_callback
+    - proper_edge_insets_constructors
+    - proper_expanded_and_flexible
+    - proper_from_environment
+    - proper_super_dispose
+    - proper_super_init_state
+    - use_spacer

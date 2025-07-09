@@ -42,7 +42,7 @@ Future<void> showUserBriefProfileDialog(
 }) async {
   await showHeroDialog<void>(
     context,
-    (context, _, __) => _UserBriefProfileDialog(
+    (context, _, _) => _UserBriefProfileDialog(
       userBriefProfile,
       userSpaceUrl,
       avatarHeroTag,
@@ -154,7 +154,7 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
       // ref: https://github.com/flutter/flutter/issues/30647#issuecomment-480980280
       Hero(
         tag: widget.nameHeroTag,
-        flightShuttleBuilder: (_, __, ___, ____, toHeroContext) =>
+        flightShuttleBuilder: (_, _, _, _, toHeroContext) =>
             DefaultTextStyle(style: DefaultTextStyle.of(toHeroContext).style, child: toHeroContext.widget),
         child: Text(widget.profile.username, style: textTheme.titleLarge?.copyWith(color: primaryColor)),
       ),
