@@ -73,7 +73,10 @@ dependencies:
   shimmer: ^3.0.0
   slang: ^4.7.1
   slang_flutter: ^4.7.0
-  smooth_sheets: ^0.11.5
+  smooth_sheets:
+    git:
+      url: https://github.com/fujidaiti/smooth_sheets.git
+      ref: a8ea0803407c1fb8dca9b3087cf06f5f2ae8a1b8
   system_network_proxy:
     path: ./packages/flutter_system_network_proxy/system_network_proxy
   # For drift
