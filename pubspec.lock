@@ -1688,11 +1688,12 @@ packages:
   smooth_sheets:
     dependency: "direct main"
     description:
-      name: smooth_sheets
-      sha256: b69ad36925511bfd7c8ae867dd2869447994589c5046d3e206f39edfbc632ebf
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.11.5"
+      path: "."
+      ref: a8ea0803407c1fb8dca9b3087cf06f5f2ae8a1b8
+      resolved-ref: a8ea0803407c1fb8dca9b3087cf06f5f2ae8a1b8
+      url: "https://github.com/fujidaiti/smooth_sheets.git"
+    source: git
+    version: "0.13.0"
   source_gen:
     dependency: transitive
     description:
