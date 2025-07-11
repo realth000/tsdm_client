@@ -209,19 +209,16 @@ class _DividedDialogBodyState extends State<_DividedDialogBody> {
       children: [
         if (showTopDivider) const Divider(height: 1, thickness: 1) else const SizedBox(height: 1),
         Flexible(
-          child: Scrollbar(
-            controller: scrollController,
-            child: Padding(
-              padding: edgeInsetsL24R24,
-              child: Card(
-                shape: const Border(),
-                margin: EdgeInsets.zero,
-                color: Colors.transparent,
-                clipBehavior: Clip.hardEdge,
-                child: ScrollConfiguration(
-                  behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
-                  child: SingleChildScrollView(controller: scrollController, child: widget.content),
-                ),
+          child: Padding(
+            padding: edgeInsetsL24R24,
+            child: Card(
+              shape: const Border(),
+              margin: EdgeInsets.zero,
+              color: Colors.transparent,
+              clipBehavior: Clip.hardEdge,
+              child: ScrollConfiguration(
+                behavior: ScrollConfiguration.of(context).copyWith(scrollbars: false),
+                child: SingleChildScrollView(controller: scrollController, child: widget.content),
               ),
             ),
           ),

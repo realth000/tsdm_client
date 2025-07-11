@@ -34,7 +34,7 @@ class _SettingsThreadCardAppearancePageState extends State<SettingsThreadCardApp
           );
         case ThreadStateModel.upVoted:
           contents.add(
-            ListTile(leading: Icon(threadState.icon), title: Text(tr.closed.title), subtitle: Text(tr.closed.detail)),
+            ListTile(leading: Icon(threadState.icon), title: Text(tr.upVoted.title), subtitle: Text(tr.upVoted.detail)),
           );
         case ThreadStateModel.pictureAttached:
           contents.add(
