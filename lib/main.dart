@@ -74,7 +74,9 @@ Future<void> _boot(List<String> args) async {
   flnp = FlutterLocalNotificationsPlugin();
   if (isAndroid) {
     await flnp.initialize(
-      const InitializationSettings(android: AndroidInitializationSettings('@drawable/ic_launcher_foreground')),
+      const InitializationSettings(
+        android: AndroidInitializationSettings('@drawable/ic_launcher_foreground_no_transform'),
+      ),
       onDidReceiveNotificationResponse: onLocalNotificationOpened,
     );
     if (autoSyncNoticeSeconds > 0) {
