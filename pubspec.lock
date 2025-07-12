@@ -1049,12 +1049,13 @@ packages:
     source: hosted
     version: "1.0.5"
   jni:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
-      name: jni
-      sha256: "459727a9daf91bdfb39b014cf3c186cf77f0136124a274ac83c186e12262ac4e"
-      url: "https://pub.dev"
-    source: hosted
+      path: "pkgs/jni"
+      ref: "8b6e7021f7384628176c6fe90eecea8987c82e36"
+      resolved-ref: "8b6e7021f7384628176c6fe90eecea8987c82e36"
+      url: "https://github.com/realth000/dart-native"
+    source: git
     version: "0.12.2"
   js:
     dependency: transitive
