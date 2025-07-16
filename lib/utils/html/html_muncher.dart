@@ -811,7 +811,13 @@ final class _Muncher with LoggerMixin {
             WidgetSpan(
               child: MouseRegion(
                 cursor: SystemMouseCursors.click,
-                child: GestureDetector(onTap: () async => context.dispatchAsUrl(url), child: content),
+                child: GestureDetector(
+                  onTap: () async {
+                    await context.dispatchAsUrl(url);
+                    options.onUrlLaunched?.call();
+                  },
+                  child: content,
+                ),
               ),
             ),
           ...ret,
