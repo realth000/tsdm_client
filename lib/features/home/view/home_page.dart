@@ -17,13 +17,14 @@ import 'package:tsdm_client/features/local_notice/stream.dart';
 import 'package:tsdm_client/features/notification/bloc/notification_state_auto_sync_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
+import 'package:tsdm_client/features/root/models/models.dart';
+import 'package:tsdm_client/features/root/stream/root_location_stream.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
-import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
@@ -34,12 +35,7 @@ const _drawerWidth = 250.0;
 /// Page of the homepage of the app.
 class HomePage extends StatefulWidget {
   /// Constructor.
-  const HomePage({
-    required ForumHomeRepository forumHomeRepository,
-    required this.showNavigationBar,
-    required this.child,
-    super.key,
-  }) : _forumHomeRepository = forumHomeRepository;
+  const HomePage({required this.showNavigationBar, required this.child, super.key});
 
   /// Control to show the app level navigation bar or not.
   ///
@@ -48,8 +44,6 @@ class HomePage extends StatefulWidget {
 
   /// Child widget, or call it the body widget.
   final Widget child;
-
-  final ForumHomeRepository _forumHomeRepository;
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -244,39 +238,68 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
               );
             }
 
-            return RepositoryProvider.value(
-              value: widget._forumHomeRepository,
+            // The global listener handles app-wide leave page events.
+            // Every time user intended to leave a certain page, `lastRequestLeavePageTime` is updated and this
+            // listener process check for leave event, decide the page can be popped or not.
+            //
+            // The logic here is to implements double-press before exit app feature. All popping page events are
+            // intercepted by the `BackButtonListener` below, it only triggers the update of `lastRequestLeavePageTime`,
+            // which notifies this listener.
+            //
+            // Every time the pop is allowed, update page locations in `RootLocationCubit` by adding
+            // `RootLocationEventLeave` to stream.
+            return BlocListener<RootLocationCubit, RootLocationState>(
+              listenWhen: (prev, curr) => prev.lastRequestLeavePageTime != curr.lastRequestLeavePageTime,
+              listener: (context, state) async {
+                // Check if fine to pop the current page.
+                final location = state.locations.lastOrNull;
+                if (location != ScreenPaths.homepage &&
+                    location != ScreenPaths.topic &&
+                    location != ScreenPaths.settings.path &&
+                    location != null) {
+                  // Popping current page will not close the app, allow to pop.
+                  rootLocationStream.add(RootLocationEventLeave(location));
+                  return context.pop();
+                }
+
+                // Check for double press exit feature.
+                // From here, if we intend to pop the page, in fact we shall exit the app.
+
+                final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
+                if (!doublePressExit) {
+                  // Double-press before exit feature is disabled, exit app.
+                  await exitApp();
+                  return;
+                }
+
+                // From here, double-press before exit feature is enabled.
+
+                final tr = context.t.home;
+                final currentTime = DateTime.now();
+                if (lastPopTime == null ||
+                    currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
+                  lastPopTime = currentTime;
+                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
+                  showSnackBar(context: context, message: tr.confirmExit);
+                  // Require the second pop event.
+                  return;
+                }
+
+                // A second pop event is here, exit app.
+                await exitApp();
+                // Unreachable
+                return;
+              },
               child: BackButtonListener(
                 onBackButtonPressed: () async {
+                  // App wide popping events interceptor, handles all popping events and notify the listener above.
+                  rootLocationStream.add(const RootLocationEventLeavingLast());
                   if (!context.mounted) {
+                    // Well, leave it here.
                     await exitApp();
                     return true;
                   }
-                  final location = context.read<RootLocationCubit>().current;
-                  if (location != ScreenPaths.homepage &&
-                      location != ScreenPaths.topic &&
-                      location != ScreenPaths.settings.path) {
-                    // Do NOT handle pop events on other pages.
-                    return false;
-                  }
-                  final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
-                  if (!doublePressExit) {
-                    // Do NOT handle pop events on double press check is disabled.
-                    await exitApp();
-                    return true;
-                  }
-                  final tr = context.t.home;
-                  final currentTime = DateTime.now();
-                  if (lastPopTime == null ||
-                      currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
-                    lastPopTime = currentTime;
-                    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                    showSnackBar(context: context, message: tr.confirmExit);
-                    return true;
-                  }
-                  await exitApp();
-                  // Unreachable
-                  return false;
+                  return true;
                 },
                 child: child,
               ),
