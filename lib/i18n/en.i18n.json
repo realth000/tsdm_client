@@ -897,7 +897,10 @@
     "checkDetail": "Check details",
     "copyImageUrl": "Copy image url",
     "reloadImage": "ReloadImage",
-    "openLink": "Open link"
+    "openLink": "Open link",
+    "saveImage": "Save image",
+    "imageSaved": "Image saved at ${filePath: String}",
+    "failedToSaveImage": "Failed to save image"
   },
   "init": {
     "v1DeleteLegacyData": {

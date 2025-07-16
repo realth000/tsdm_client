@@ -1,13 +1,24 @@
+import 'dart:io';
+import 'dart:typed_data';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:fpdart/fpdart.dart' show None, Some;
 import 'package:go_router/go_router.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
+import 'package:tsdm_client/shared/providers/image_cache_provider/models/models.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
+import 'package:tsdm_client/utils/platform.dart';
+import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
 
 /// Show a bottom sheet with given [title] and build children
@@ -150,6 +161,57 @@ Future<void> showImageActionBottomSheet({
             }
           },
         ),
+      ListTile(
+        leading: const Icon(Icons.save_outlined),
+        title: Text(tr.saveImage),
+        onTap: () async {
+          final imageProvider = getIt.get<ImageCacheProvider>();
+          switch (await imageProvider.getOrMakeCache(ImageCacheGeneralRequest(imageUrl))) {
+            case None():
+              {
+                if (context.mounted) {
+                  showSnackBar(context: context, message: tr.failedToSaveImage);
+                }
+              }
+            case Some<Uint8List>(value: final data):
+              {
+                final fileName =
+                    imageUrl.tryParseAsUri()?.pathSegments.lastOrNull ??
+                    'tsdm_client_image_${DateTime.now().microsecondsSinceEpoch}.jpg';
+                if (isDesktop) {
+                  // On desktop platforms, `saveFiles` only return the selected path.
+                  final filePath = await FilePicker.platform.saveFile(dialogTitle: tr.saveImage, fileName: fileName);
+                  if (filePath == null) {
+                    return;
+                  }
+
+                  await File(filePath).writeAsBytes(data, flush: true);
+                  if (context.mounted) {
+                    context.pop();
+                    showSnackBar(
+                      context: context,
+                      message: tr.imageSaved(filePath: filePath),
+                    );
+                  }
+                } else {
+                  // Mobile in one step.
+                  final filePath = await FilePicker.platform.saveFile(
+                    dialogTitle: tr.saveImage,
+                    fileName: fileName,
+                    bytes: data,
+                  );
+                  if (filePath != null && context.mounted) {
+                    context.pop();
+                    showSnackBar(
+                      context: context,
+                      message: tr.imageSaved(filePath: filePath),
+                    );
+                  }
+                }
+              }
+          }
+        },
+      ),
     ],
   );
 }
