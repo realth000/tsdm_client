@@ -922,12 +922,39 @@
     "title": "貼文瀏覽紀錄",
     "localOnlyTip": "僅記錄本機的瀏覽記錄，在網頁端或其他機器上可能會有所不同"
   },
-  "parseUrlDialog": {
-    "title": "在應用程式中開啟連結",
-    "detail": "輸入一個本應用程式支援的論壇頁面鏈接，在應用程式內打開它",
-    "entryTooltip": "在應用程式中開啟連結",
-    "url": "連結",
-    "unsupportedUrl": "不支援的連結",
+  "openInAppPage": {
+    "title": "在應用程式中開啟",
+    "entryTooltip": "在應用程式中開啟頁面",
+    "url": {
+      "title": "連結",
+      "detail": "輸入一個本應用程式支援的論壇頁面鏈接，在應用程式內打開它",
+      "unsupportedUrl": "不支援的連結"
+    },
+    "uid": {
+      "title": "用戶id（uid）",
+      "detail": "可在使用者資料頁等許多地方找到uid",
+      "invalidUid": "無效的uid"
+    },
+    "username": {
+      "title": "使用者名稱",
+      "detail": "可在使用者資料頁等許多地方找到使用者名稱",
+      "invalidUsername": "無效使用者名稱"
+    },
+    "fid": {
+      "title": "分區id（fid）",
+      "detail": "可在分割頁面和分割網頁連結中找到fid",
+      "invalidFid": "無效的fid"
+    },
+    "tid": {
+      "title": "帖子id（tid）",
+      "detail": "可在貼文頁面和貼文分享連結中找到tid",
+      "invalidTid": "無效的tid"
+    },
+    "pid": {
+      "title": "樓層id（pid）",
+      "detail": "可在樓層的分享連結中找到pid",
+      "invalidPid": "無效的pid"
+    },
     "open": "開啟"
   },
   "globalStatePage": {

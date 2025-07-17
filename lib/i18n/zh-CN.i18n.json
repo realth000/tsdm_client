@@ -922,12 +922,39 @@
     "title": "帖子浏览记录",
     "localOnlyTip": "仅记录本机的浏览记录，在网页端或其他机器上可能会有所不同"
   },
-  "parseUrlDialog": {
-    "title": "在应用中打开链接",
-    "detail": "输入一个本应用支持的论坛页面链接，在应用内打开它",
-    "entryTooltip": "在应用中打开链接",
-    "url": "链接",
-    "unsupportedUrl": "不支持的链接",
+  "openInAppPage": {
+    "title": "在应用中打开",
+    "entryTooltip": "在应用中打开页面",
+    "url": {
+      "title": "链接",
+      "detail": "输入一个本应用支持的论坛页面链接，在应用内打开它",
+      "unsupportedUrl": "不支持的链接"
+    },
+    "uid": {
+      "title": "用户id（uid）",
+      "detail": "可在用户资料页等许多地方找到uid",
+      "invalidUid": "无效的uid"
+    },
+    "username": {
+      "title": "用户名",
+      "detail": "可在用户资料页等许多地方找到用户名",
+      "invalidUsername": "无效用户名"
+    },
+    "fid": {
+      "title": "分区id（fid）",
+      "detail": "可在分区页面和分区网页链接中找到fid",
+      "invalidFid": "无效的fid"
+    },
+    "tid": {
+      "title": "帖子id（tid）",
+      "detail": "可在帖子页面和帖子分享链接中找到tid",
+      "invalidTid": "无效的tid"
+    },
+    "pid": {
+      "title": "楼层id（pid）",
+      "detail": "可在楼层的分享链接中找到pid",
+      "invalidPid": "无效的pid"
+    },
     "open": "打开"
   },
   "globalStatePage": {
