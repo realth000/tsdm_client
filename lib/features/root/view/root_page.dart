@@ -27,12 +27,6 @@ class _RootPageState extends State<RootPage> with LoggerMixin {
   }
 
   @override
-  void dispose() {
-    rootLocationStream.add(RootLocationEventLeave(widget.path));
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return widget.child;
   }

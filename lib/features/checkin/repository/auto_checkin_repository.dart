@@ -143,7 +143,7 @@ final class AutoCheckinRepository with LoggerMixin {
     // If any login-user related operation acted, for example logout or switch
     // to another user, the current user below is unexpected behavior.
     // So it's better to make a lock when doing checkin.
-    _storageProvider.updateLastFetchNoticeTime(userInfo.uid!, DateTime.now());
+    _storageProvider.updateLastCheckinTime(userInfo.uid!, DateTime.now());
     _currentInfo = _currentInfo.copyWith(
       running: _currentInfo.running..removeWhere((e) => e == userInfo),
       succeeded: [..._currentInfo.succeeded, (userInfo, checkinResult)],

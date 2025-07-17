@@ -28,8 +28,10 @@ final class ChatMessageCard extends StatelessWidget {
           ListTile(
             leading: GestureDetector(
               onTap: chatMessage.author != null
-                  ? () async =>
-                        context.pushNamed(ScreenPaths.profile, queryParameters: {'username': chatMessage.author})
+                  ? () async => context.pushNamed(
+                      ScreenPaths.profile,
+                      queryParameters: {'uid': ?chatMessage.authorUid, 'username': ?chatMessage.author},
+                    )
                   : null,
               child: HeroUserAvatar(
                 username: chatMessage.author ?? '',

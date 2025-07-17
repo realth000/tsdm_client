@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/view/login_page.dart';
@@ -49,7 +48,6 @@ import 'package:tsdm_client/features/update/view/local_changelog_page.dart';
 import 'package:tsdm_client/features/update/view/update_page.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
-import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 
 /// App router instance wrapped with global singleton widgets.
 final router = GoRouter(
@@ -62,11 +60,7 @@ final _appRoutes = [
   StatefulShellRoute.indexedStack(
     builder: (context, router, navigator) {
       final hideNavigationBarPages = [ScreenPaths.settingsThreadAppearance.fullPath];
-      return HomePage(
-        forumHomeRepository: RepositoryProvider.of<ForumHomeRepository>(context),
-        showNavigationBar: !hideNavigationBarPages.contains(router.fullPath),
-        child: navigator,
-      );
+      return HomePage(showNavigationBar: !hideNavigationBarPages.contains(router.fullPath), child: navigator);
     },
     branches: [
       StatefulShellBranch(

@@ -206,6 +206,7 @@ class _DividedDialogBodyState extends State<_DividedDialogBody> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (showTopDivider) const Divider(height: 1, thickness: 1) else const SizedBox(height: 1),
         Flexible(

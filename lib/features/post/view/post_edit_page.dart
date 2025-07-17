@@ -681,10 +681,11 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   }
 
   Future<void> _onListen(BuildContext context, PostEditState state) async {
-    if (state.status == PostEditStatus.failedToLoad) {
-      showSnackBar(context: context, message: context.t.postEditPage.failedToLoadData);
-    } else if (state.status == PostEditStatus.failedToUpload) {
+    if (state.status == PostEditStatus.failedToUpload) {
       showSnackBar(context: context, message: state.errorText ?? context.t.general.failedToLoad);
+      if (isMobile) {
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+      }
     } else if (state.status == PostEditStatus.success) {
       // Some action succeeded.
       if (widget.editType.isEditingPost) {

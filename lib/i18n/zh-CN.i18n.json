@@ -897,7 +897,10 @@
     "checkDetail": "查看详情",
     "copyImageUrl": "复制图片链接",
     "reloadImage": "重新加载图片",
-    "openLink": "打开链接"
+    "openLink": "打开链接",
+    "saveImage": "保存图片",
+    "imageSaved": "图片已保存至 ${filePath: String}",
+    "failedToSaveImage": "无法保存图片"
   },
   "init": {
     "v1DeleteLegacyData": {
