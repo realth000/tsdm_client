@@ -4,7 +4,7 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/list.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
-import 'package:tsdm_client/features/parse_url/widgets/parse_url_dialog.dart';
+import 'package:tsdm_client/features/open_in_app/view/open_in_app_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/bloc/search_bloc.dart';
 import 'package:tsdm_client/features/search/repository/search_repository.dart';
@@ -408,7 +408,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
             appBar: AppBar(
               title: Text(context.t.searchPage.title),
               actions: [
-                const ParseUrlDialogButton(),
+                const OpenInAppPageButton(),
                 IconButton(
                   icon: Icon(expandForm ? Icons.expand_less : Icons.expand_more),
                   onPressed: () {

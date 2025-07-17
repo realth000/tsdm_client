@@ -922,12 +922,39 @@
     "title": "Thread browsing history",
     "localOnlyTip": "Only local browsing history was recorded, may be different on web side or other machines"
   },
-  "parseUrlDialog": {
-    "title": "Open url in app",
-    "detail": "Redirect to any forum urls that app supports",
-    "entryTooltip": "Open url in app",
-    "url": "Url",
-    "unsupportedUrl": "Unsupported url",
+  "openInAppPage": {
+    "title": "Open in app",
+    "entryTooltip": "Open page in app",
+    "url": {
+      "title": "Url",
+      "detail": "Open any forum urls that app supports",
+      "unsupportedUrl": "Unsupported url"
+    },
+    "uid": {
+      "title": "User id (uid)",
+      "detail": "Uid can be found in user profile and many other places",
+      "invalidUid": "Invalid uid"
+    },
+    "username": {
+      "title": "Username",
+      "detail": "Username can be found in user profile and many other places",
+      "invalidUsername": "Invalid username"
+    },
+    "fid": {
+      "title": "Forum id (fid)",
+      "detail": "Subreddit can be found in subreddit pages and urls",
+      "invalidFid": "Invalid fid"
+    },
+    "tid": {
+      "title": "Thread id (tid)",
+      "detail": "Tid can be found in thread pages and share links",
+      "invalidTid": "Invalid tid"
+    },
+    "pid": {
+      "title": "Post id (pid)",
+      "detail": "Pid can be found in share link of each floor",
+      "invalidPid": "Invalid pid"
+    },
     "open": "Open"
   },
   "globalStatePage": {

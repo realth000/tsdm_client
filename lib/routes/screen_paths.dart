@@ -238,6 +238,9 @@ class ScreenPaths {
 
   /// Page to show the changelog bundled with app.
   static const String localChangelog = '/localChangelog';
+
+  /// Page to open any supported forum resources in app.
+  static const String openInApp = '/openInApp';
 }
 
 /// Route paths for all temporary dialogs and bottom sheets in app.
@@ -264,9 +267,6 @@ class DialogPaths {
 
   /// Dialog to manage logged user.
   static const String manageUser = '/dialog/manageUser';
-
-  /// Dialog to parse user input url into app known targets.
-  static const String parseUrl = '/dialog/parseUrl';
 
   /// Dialog to let user input thread price.
   static const String inputPrice = '/dialog/inputThreadPrice';
