@@ -28,7 +28,7 @@ class ErrorCard extends StatelessWidget {
         child: Card(
           margin: EdgeInsets.zero,
           child: Padding(
-            padding: edgeInsetsL12T12R12B12,
+            padding: edgeInsetsL24T24R24B24,
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -42,7 +42,7 @@ class ErrorCard extends StatelessWidget {
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
                 ),
                 Center(child: child),
-              ].insertBetween(sizedBoxW24H24),
+              ].insertBetween(sizedBoxW12H12),
             ),
           ),
         ),

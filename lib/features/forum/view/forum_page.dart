@@ -314,10 +314,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       );
     } else if (!state.havePermission) {
       if (state.permissionDeniedMessage != null) {
-        return ErrorCard(
-          message: context.t.general.noPermission,
-          child: munchElement(context, state.permissionDeniedMessage!),
-        );
+        return ErrorCard(child: munchElement(context, state.permissionDeniedMessage!));
       } else {
         return Center(child: Text(context.t.general.noPermission));
       }
