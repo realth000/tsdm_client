@@ -446,7 +446,7 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(tr.editorBBCodeParser.title),
+            Expanded(child: Text(tr.editorBBCodeParser.title)),
             sizedBoxW8H8,
             IconButton(
               icon: Icon(Icons.help_outline, color: Theme.of(context).colorScheme.secondary),
