@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// App bar actions.
@@ -116,11 +117,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
 
     return SliverAppBar(
       title: title == null ? null : Text(title!),
-      titleSpacing: 4,
       floating: true,
       snap: true,
       bottom: PreferredSize(
-        preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + 52),
+        preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + (isMobile ? 52 : 42)),
         child: Column(
           children: [
             Row(
