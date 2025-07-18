@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
+import 'package:tsdm_client/features/open_in_app/view/open_in_app_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
@@ -112,12 +114,51 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     //  (though impossible if only one page).
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
-    return AppBar(
+    return SliverAppBar(
       title: title == null ? null : Text(title!),
-      bottom: bottom,
+      titleSpacing: 4,
+      floating: true,
+      snap: true,
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + 52),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: edgeInsetsL4R4,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      child: Row(
+                        children: [
+                          const OpenInAppPageButton(),
+                          IconButton(
+                            icon: const Icon(Icons.search_outlined),
+                            tooltip: context.t.searchPage.title,
+                            onPressed: onSearch,
+                          ),
+                          const NoticeButton(),
+                          IconButton(
+                            icon: const Icon(Icons.settings_outlined),
+                            tooltip: context.t.general.openSettings,
+                            onPressed: () => context.pushNamed(ScreenPaths.rootSettings),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ?bottom,
+          ],
+        ),
+      ),
       actions: [
-        const NoticeButton(),
-        IconButton(icon: const Icon(Icons.search_outlined), tooltip: context.t.searchPage.title, onPressed: onSearch),
+        // const NoticeButton(),
+        // IconButton(icon: const Icon(Icons.search_outlined), tooltip: context.t.searchPage.title, onPressed: onSearch),
         if (onJumpPage != null)
           TextButton(
             onPressed: canJumpPage ? () async => _jumpPage(context, currentPage, totalPages) : null,
