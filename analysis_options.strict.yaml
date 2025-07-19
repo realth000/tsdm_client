@@ -15,6 +15,7 @@ analyzer:
     - lib/**.freezed.dart
     - lib/**.mapper.dart
     - packages/**
+    - test/data/**.dart
 
 formatter:
   page_width: 120
