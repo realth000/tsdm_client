@@ -171,7 +171,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
       header: const MaterialHeader(position: IndicatorPosition.locator),
       footer: const MaterialFooter(),
       controller: _refreshController,
-      scrollController: _listScrollController,
+      // scrollController: _listScrollController,
       onRefresh: () async {
         if (!mounted) {
           return;
@@ -192,7 +192,7 @@ class _PostListState extends State<PostList> with LoggerMixin {
       childBuilder: (context, physics) {
         return CustomScrollView(
           physics: physics,
-          controller: _listScrollController,
+          //controller: _listScrollController,
           slivers: [
             const HeaderLocator.sliver(),
             if (widget.latestModAct != null && widget.latestModAct!.isNotEmpty && widget.threadID != null)

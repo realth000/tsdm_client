@@ -190,6 +190,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
             } else {
               cubit.skipAutoClearImageCache();
             }
+            cubit.autoClearFilePickerCache();
             return cubit;
           },
         ),

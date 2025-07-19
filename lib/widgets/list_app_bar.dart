@@ -6,11 +6,13 @@ import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
+import 'package:tsdm_client/features/open_in_app/view/open_in_app_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// App bar actions.
@@ -36,9 +38,6 @@ enum MenuActions {
   ///
   /// View log.
   debugViewLog,
-
-  /// Open settings page.
-  openSettings,
 }
 
 /// A app bar contains list and provides features including:
@@ -112,12 +111,48 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     //  (though impossible if only one page).
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
-    return AppBar(
+    final collapsableAppBar = context.select<SettingsBloc, bool>((v) => v.state.settingsMap.collapseAppBarWhenScroll);
+
+    return SliverAppBar(
       title: title == null ? null : Text(title!),
-      bottom: bottom,
+      pinned: !collapsableAppBar,
+      floating: collapsableAppBar,
+      snap: collapsableAppBar,
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + (isMobile ? 52 : 42)),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Padding(
+                    padding: edgeInsetsL4R4,
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      reverse: true,
+                      child: Row(
+                        children: [
+                          const OpenInAppPageButton(),
+                          IconButton(
+                            icon: const Icon(Icons.search_outlined),
+                            tooltip: context.t.searchPage.title,
+                            onPressed: onSearch,
+                          ),
+                          const NoticeButton(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            ?bottom,
+          ],
+        ),
+      ),
       actions: [
-        const NoticeButton(),
-        IconButton(icon: const Icon(Icons.search_outlined), tooltip: context.t.searchPage.title, onPressed: onSearch),
+        // const NoticeButton(),
+        // IconButton(icon: const Icon(Icons.search_outlined), tooltip: context.t.searchPage.title, onPressed: onSearch),
         if (onJumpPage != null)
           TextButton(
             onPressed: canJumpPage ? () async => _jumpPage(context, currentPage, totalPages) : null,
@@ -180,16 +215,6 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-            PopupMenuItem(
-              value: MenuActions.openSettings,
-              child: Row(
-                children: [
-                  const Icon(Icons.settings_outlined),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(context.t.general.openSettings),
-                ],
-              ),
-            ),
             if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
               const PopupMenuDivider(),
               PopupMenuItem(

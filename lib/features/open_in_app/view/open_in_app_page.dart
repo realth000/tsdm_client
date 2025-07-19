@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
@@ -17,7 +18,7 @@ class OpenInAppPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Icons.open_in_new),
+      icon: const Icon(Symbols.top_panel_open),
       tooltip: context.t.openInAppPage.entryTooltip,
       onPressed: () async => context.pushNamed(ScreenPaths.openInApp),
     );

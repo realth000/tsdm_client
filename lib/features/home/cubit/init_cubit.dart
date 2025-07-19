@@ -2,10 +2,12 @@ import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
 import 'package:bloc/bloc.dart';
 import 'package:dart_mappable/dart_mappable.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/utils/platform.dart';
 
 part 'init_cubit.mapper.dart';
 part 'init_state.dart';
@@ -44,6 +46,15 @@ final class InitCubit extends Cubit<InitState> with LoggerMixin {
     final clearCount = await cacheProvider.clearOutdatedCache(outdateTime);
     emit(state.copyWith(clearingOutdatedImageCache: false));
     debug('deleted outdated image cache count $clearCount');
+  }
+
+  /// Clear temporary cache file created by file picker.
+  ///
+  /// Only needed and can be call on Android an iOS.
+  Future<void> autoClearFilePickerCache() async {
+    if (isMobile) {
+      await FilePicker.platform.clearTemporaryFiles();
+    }
   }
 
   /// Skip the clear image cache process.
