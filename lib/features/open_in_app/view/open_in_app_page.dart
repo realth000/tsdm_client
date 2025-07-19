@@ -18,7 +18,7 @@ class OpenInAppPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: const Icon(Symbols.top_panel_open),
+      icon: const Icon(Symbols.open_in_phone),
       tooltip: context.t.openInAppPage.entryTooltip,
       onPressed: () async => context.pushNamed(ScreenPaths.openInApp),
     );
