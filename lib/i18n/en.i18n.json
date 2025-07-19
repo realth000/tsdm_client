@@ -198,6 +198,10 @@
           "title": "What is BBCode parser",
           "detail": "BBCode parser converts plain text BBCode into WYSIWYG content when:\n\n1. Editing published thread\n2. Editing reply templates\n3. Insert reply templates\n4. Expand bottom editor in thread and chat page\n\nDisabling BBCode parser will leave plain text to edit, turn if off when you get bugs."
         }
+      },
+      "collapseAppBarWhenScroll": {
+        "title": "Hide app bar when scroll",
+        "detail": "Hide when scroll down in subreddit and thread pages"
       }
     },
     "checkinSection": {

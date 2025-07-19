@@ -136,6 +136,7 @@ final class SettingsRepository with LoggerMixin {
       useDetectedProxyWhenStartup: s.extract(_SK.useDetectedProxyWhenStartup),
       enableAutoClearImageCache: s.extract(_SK.enableAutoClearImageCache),
       autoClearImageCacheDuration: s.extract(_SK.autoClearImageCacheDuration),
+      collapseAppBarWhenScroll: s.extract(_SK.collapseAppBarWhenScroll),
     );
   }
 

@@ -396,6 +396,7 @@ class _SettingsPageState extends State<SettingsPage> {
       autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
     }
     final enableBBCodeParser = state.settingsMap.enableEditorBBCodeParser;
+    final collapseAppBarWhenScroll = state.settingsMap.collapseAppBarWhenScroll;
 
     return [
       SectionTitleText(tr.title),
@@ -474,6 +475,14 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(context.t.fastReplyTemplate.title),
         subtitle: Text(context.t.fastReplyTemplate.details),
         onTap: () async => context.pushNamed(ScreenPaths.fastReplyTemplate, pathParameters: {'pick': 'false'}),
+      ),
+      SectionSwitchListTile(
+        secondary: const Icon(Symbols.page_header),
+        title: Text(tr.collapseAppBarWhenScroll.title),
+        subtitle: Text(tr.collapseAppBarWhenScroll.detail),
+        value: collapseAppBarWhenScroll,
+        onChanged: (v) async =>
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.collapseAppBarWhenScroll, v)),
       ),
     ];
   }

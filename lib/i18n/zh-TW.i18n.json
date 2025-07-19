@@ -198,6 +198,10 @@
           "title": "BBCode parser是什麼",
           "detail": "以下場景中BBCode parser會將純文字的BBCode轉換為所見即所得的內容以供編輯:\n\n1. 編輯已發布的帖子\n2. 編輯回复模板\n3. 插入回复模板\n4. 展開帖子和聊天頁面底部的編輯框\n\n關閉BBCode parse後在編輯時將使用純文本，遇到問題時可將其關閉"
         }
+      },
+      "collapseAppBarWhenScroll": {
+        "title": "滑動時收起AppBar",
+        "detail": "分割區與貼文頁面中收起"
       }
     },
     "checkinSection": {

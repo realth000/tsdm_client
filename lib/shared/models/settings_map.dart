@@ -50,6 +50,7 @@ class SettingsMap with SettingsMapMappable {
     required this.useDetectedProxyWhenStartup,
     required this.enableAutoClearImageCache,
     required this.autoClearImageCacheDuration,
+    required this.collapseAppBarWhenScroll,
   });
 
   final String netClientAccept;
@@ -94,6 +95,7 @@ class SettingsMap with SettingsMapMappable {
   final bool useDetectedProxyWhenStartup;
   final bool enableAutoClearImageCache;
   final int autoClearImageCacheDuration;
+  final bool collapseAppBarWhenScroll;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -145,6 +147,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.useDetectedProxyWhenStartup => copyWith(useDetectedProxyWhenStartup: value as bool?),
       SettingsKeys.enableAutoClearImageCache => copyWith(enableAutoClearImageCache: value as bool?),
       SettingsKeys.autoClearImageCacheDuration => copyWith(autoClearImageCacheDuration: value as int?),
+      SettingsKeys.collapseAppBarWhenScroll => copyWith(collapseAppBarWhenScroll: value as bool?),
     };
   }
 }

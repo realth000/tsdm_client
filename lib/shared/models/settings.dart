@@ -192,7 +192,11 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Images that have a long duration till last used time will be considered as outdated.
   ///
   /// Default is 7 days = 60 * 60 * 24 * 7.
-  autoClearImageCacheDuration<int>(name: 'autoClearImageCacheDuration', type: int, defaultValue: 60 * 60 * 24 * 7);
+  autoClearImageCacheDuration<int>(name: 'autoClearImageCacheDuration', type: int, defaultValue: 60 * 60 * 24 * 7),
+
+  /// Collapse app bar when scroll in pages we want to do it, for example forum page and thread page where app bar
+  /// holds more spaces and user shall have more space to focus on contents in UI.
+  collapseAppBarWhenScroll<bool>(name: 'collapseAppBarWhenScroll', type: bool, defaultValue: true);
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 
