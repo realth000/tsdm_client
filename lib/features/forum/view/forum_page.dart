@@ -172,8 +172,6 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
             await _threadScrollController.animateTo(0, curve: Curves.ease, duration: const Duration(milliseconds: 500));
           case MenuActions.reverseOrder:
             ;
-          case MenuActions.openSettings:
-            await context.pushNamed(ScreenPaths.rootSettings);
           case MenuActions.debugViewLog:
             await context.pushNamed(ScreenPaths.debugLog);
         }

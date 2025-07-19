@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
@@ -39,9 +38,6 @@ enum MenuActions {
   ///
   /// View log.
   debugViewLog,
-
-  /// Open settings page.
-  openSettings,
 }
 
 /// A app bar contains list and provides features including:
@@ -143,11 +139,6 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                             onPressed: onSearch,
                           ),
                           const NoticeButton(),
-                          IconButton(
-                            icon: const Icon(Icons.settings_outlined),
-                            tooltip: context.t.general.openSettings,
-                            onPressed: () => context.pushNamed(ScreenPaths.rootSettings),
-                          ),
                         ],
                       ),
                     ),
@@ -224,16 +215,6 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
-            PopupMenuItem(
-              value: MenuActions.openSettings,
-              child: Row(
-                children: [
-                  const Icon(Icons.settings_outlined),
-                  sizedBoxPopupMenuItemIconSpacing,
-                  Text(context.t.general.openSettings),
-                ],
-              ),
-            ),
             if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
               const PopupMenuDivider(),
               PopupMenuItem(

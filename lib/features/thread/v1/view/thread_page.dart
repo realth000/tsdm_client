@@ -485,8 +485,6 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                           );
                         case MenuActions.reverseOrder:
                           context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested());
-                        case MenuActions.openSettings:
-                          await context.pushNamed(ScreenPaths.rootSettings);
                         case MenuActions.debugViewLog:
                           await context.pushNamed(ScreenPaths.debugLog);
                       }
