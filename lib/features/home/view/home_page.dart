@@ -26,6 +26,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/safe_pop_scope.dart';
 import 'package:tsdm_client/widgets/shutdown.dart';
 
 const _drawerWidth = 250.0;
@@ -278,7 +279,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
                 // Unreachable
                 return;
               },
-              child: child,
+              child: SafePopScope(path: '<Home Page>', child: child),
             );
           },
         ),

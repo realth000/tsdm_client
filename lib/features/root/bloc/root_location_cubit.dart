@@ -76,10 +76,4 @@ final class RootLocationCubit extends Cubit<RootLocationState> with LoggerMixin 
     await _sub.cancel();
     return super.close();
   }
-
-  @override
-  void onChange(Change<RootLocationState> change) {
-    super.onChange(change);
-    warning('>>> $change');
-  }
 }
