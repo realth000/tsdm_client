@@ -1,8 +1,6 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:go_router/go_router.dart';
@@ -24,11 +22,12 @@ import 'package:tsdm_client/features/settings/repositories/settings_repository.d
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/safe_pop_scope.dart';
+import 'package:tsdm_client/widgets/shutdown.dart';
 
 const _drawerWidth = 250.0;
 
@@ -65,17 +64,6 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
 
   /// Location stream subscription.
   late final StreamSubscription<String?> rootLocationSub;
-
-  Future<void> exitApp() async {
-    await getIt.get<StorageProvider>().dispose();
-    // Close the app.
-    if (isAndroid || isIOS) {
-      await SystemNavigator.pop(animated: true);
-    } else {
-      // CAUTION: unsafe operation.
-      exit(0);
-    }
-  }
 
   Future<void> _onLocalNoticeStreamEvent(String? payload) async {
     switch (payload) {
@@ -291,19 +279,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
                 // Unreachable
                 return;
               },
-              child: BackButtonListener(
-                onBackButtonPressed: () async {
-                  // App wide popping events interceptor, handles all popping events and notify the listener above.
-                  rootLocationStream.add(const RootLocationEventLeavingLast());
-                  if (!context.mounted) {
-                    // Well, leave it here.
-                    await exitApp();
-                    return true;
-                  }
-                  return true;
-                },
-                child: child,
-              ),
+              child: SafePopScope(path: '<Home Page>', child: child),
             );
           },
         ),

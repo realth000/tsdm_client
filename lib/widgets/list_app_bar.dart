@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
@@ -14,6 +15,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
+import 'package:tsdm_client/widgets/open_profile_page_button.dart';
 
 /// App bar actions.
 enum MenuActions {
@@ -138,7 +140,13 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                             tooltip: context.t.searchPage.title,
                             onPressed: onSearch,
                           ),
+                          const OpenProfilePageButton(),
                           const NoticeButton(),
+                          IconButton(
+                            icon: const Icon(Icons.settings_outlined),
+                            tooltip: context.t.general.openSettings,
+                            onPressed: () async => context.pushNamed(ScreenPaths.rootSettings),
+                          ),
                         ],
                       ),
                     ),
