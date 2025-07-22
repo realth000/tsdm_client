@@ -113,13 +113,10 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     //  (though impossible if only one page).
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
-    final collapsableAppBar = context.select<SettingsBloc, bool>((v) => v.state.settingsMap.collapseAppBarWhenScroll);
+    //final collapsableAppBar = context.select<SettingsBloc, bool>((v) => v.state.settingsMap.collapseAppBarWhenScroll);
 
-    return SliverAppBar(
+    return AppBar(
       title: title == null ? null : Text(title!),
-      pinned: !collapsableAppBar,
-      floating: collapsableAppBar,
-      snap: collapsableAppBar,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + (isMobile ? 52 : 42)),
         child: Column(

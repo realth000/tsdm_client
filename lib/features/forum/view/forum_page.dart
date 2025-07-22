@@ -1,5 +1,4 @@
 import 'package:easy_refresh/easy_refresh.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -58,10 +57,10 @@ class ForumPage extends StatefulWidget {
 }
 
 class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMixin, LoggerMixin {
-  // final _pinnedScrollController = ScrollController();
+  final _pinnedScrollController = ScrollController();
   final _pinnedRefreshController = EasyRefreshController(controlFinishRefresh: true);
 
-  // final _subredditScrollController = ScrollController();
+  final _subredditScrollController = ScrollController();
   final _subredditRefreshController = EasyRefreshController(controlFinishRefresh: true);
 
   /// Controller of thread tab.
@@ -76,7 +75,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
   /// Visibility of FAB.
   bool _fabVisible = true;
 
-  void _updateFabVisibilityByTabIndex() => WidgetsBinding.instance.addPostFrameCallback((_) {
+  void _updateFabVisibilityByTabIndex() {
     if (tabController.index == _threadTabIndex) {
       setState(() {
         _fabVisible = true;
@@ -86,56 +85,39 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         _fabVisible = false;
       });
     }
-    _threadScrollController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.ease);
-  });
+  }
 
   PreferredSizeWidget _buildListAppBar(BuildContext context, ForumState state) {
     return ListAppBar(
       title: widget.title ?? state.title,
       bottom: state.permissionDeniedMessage == null
-          ? PreferredSize(
-              // There the preferred size is manually calculated.
-              // Not following material standard and need update when widgets in the column changed.
-              preferredSize: const Size.fromHeight(kToolbarHeight + 30),
-              child: Column(
-                children: [
-                  TabBar(
-                    controller: tabController,
-                    tabs: [
-                      Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
-                      Tab(child: Text(context.t.forumPage.threadTab.title)),
-                      Tab(child: Text(context.t.forumPage.subredditTab.title)),
-                    ],
-                    onTap: (index) {
-                      // Here we want to scroll the current tab to the top.
-                      // Only scroll to top when user taps on the current
-                      // tab, which means index is not changing.
-                      if (tabController.indexIsChanging) {
-                        // Do nothing because user tapped another index
-                        // and want to switch to it.
-                        return;
-                      }
-                      // Now the controller in unique.
-                      _threadScrollController.animateTo(
-                        0,
-                        duration: const Duration(milliseconds: 300),
-                        curve: Curves.ease,
-                      );
-                      // switch (tabController.index) {
-                      //   case _pinnedTabIndex:
-                      //     _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
-                      //   case _threadTabIndex:
-                      //     _threadScrollController.animateTo(0, duration: duration, curve: curve);
-                      //   case _subredditTabIndex:
-                      //     _subredditScrollController.animateTo(0, duration: duration, curve: curve);
-                      // }
-                    },
-                  ),
-                  sizedBoxW4H4,
-                  _buildNormalThreadFilterRow(context, state),
-                  sizedBoxW4H4,
-                ],
-              ),
+          ? TabBar(
+              controller: tabController,
+              tabs: [
+                Tab(child: Text(context.t.forumPage.stickThreadTab.title)),
+                Tab(child: Text(context.t.forumPage.threadTab.title)),
+                Tab(child: Text(context.t.forumPage.subredditTab.title)),
+              ],
+              onTap: (index) {
+                // Here we want to scroll the current tab to the top.
+                // Only scroll to top when user taps on the current
+                // tab, which means index is not changing.
+                if (tabController.indexIsChanging) {
+                  // Do nothing because user tapped another index
+                  // and want to switch to it.
+                  return;
+                }
+                const duration = Duration(milliseconds: 300);
+                const curve = Curves.ease;
+                switch (tabController.index) {
+                  case _pinnedTabIndex:
+                    _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                  case _threadTabIndex:
+                    _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                  case _subredditTabIndex:
+                    _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                }
+              },
             )
           : null,
       onSearch: () async {
@@ -183,18 +165,22 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     return Row(
       children: [
         Expanded(
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                if (state.filterTypeList.isNotEmpty) const ThreadTypeChip(),
-                if (state.filterSpecialTypeList.isNotEmpty) const ThreadSpecialTypeChip(),
-                if (state.filterDatelineList.isNotEmpty) const ThreadDatelineChip(),
-                if (state.filterOrderList.isNotEmpty) const ThreadOrderChip(),
-                const ThreadDigestChip(),
-                const ThreadRecommendedChip(),
-              ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
+          child: Container(
+            color: Theme.of(context).colorScheme.surface,
+            height: 40,
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  if (state.filterTypeList.isNotEmpty) const ThreadTypeChip(),
+                  if (state.filterSpecialTypeList.isNotEmpty) const ThreadSpecialTypeChip(),
+                  if (state.filterDatelineList.isNotEmpty) const ThreadDatelineChip(),
+                  if (state.filterOrderList.isNotEmpty) const ThreadOrderChip(),
+                  const ThreadDigestChip(),
+                  const ThreadRecommendedChip(),
+                ].prepend(sizedBoxW4H4).insertBetween(sizedBoxW12H12),
+              ),
             ),
           ),
         ),
@@ -209,7 +195,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     late final Widget content;
     if (state.rulesElement == null) {
       content = ListView.separated(
-        // controller: _pinnedScrollController,
+        controller: _pinnedScrollController,
         padding: edgeInsetsL12T4R12,
         itemCount: state.stickThreadList.length,
         itemBuilder: (context, index) => NormalThreadCard(state.stickThreadList[index]),
@@ -217,7 +203,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       );
     } else {
       content = ListView.separated(
-        // controller: _pinnedScrollController,
+        controller: _pinnedScrollController,
         padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: state.stickThreadList.length + 1,
         itemBuilder: (context, index) {
@@ -240,7 +226,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(),
       controller: _pinnedRefreshController,
-      // scrollController: _pinnedScrollController,
+      scrollController: _pinnedScrollController,
       onRefresh: () async {
         if (!mounted) {
           return;
@@ -261,7 +247,10 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       if (state.filterState.isFiltering()) {
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
-          children: [Expanded(child: emptyContentHint)],
+          children: [
+            _buildNormalThreadFilterRow(context, state),
+            Expanded(child: emptyContentHint),
+          ],
         );
       }
       return emptyContentHint;
@@ -299,6 +288,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         // controller: _threadScrollController,
         physics: physics,
         slivers: [
+          PinnedHeaderSliver(child: _buildNormalThreadFilterRow(context, state)),
           const SliverPadding(padding: edgeInsetsL12T4R12),
           SliverList.separated(
             itemCount: normalThreadList.length,
@@ -339,6 +329,22 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
     }
   }
 
+  Widget _buildBody(BuildContext context, ForumState state) {
+    return switch (state.status) {
+      ForumStatus.initial || ForumStatus.loading => Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (state.filterState.isFiltering()) _buildNormalThreadFilterRow(context, state),
+          const Expanded(child: Center(child: CircularProgressIndicator())),
+        ],
+      ),
+      ForumStatus.failure => buildRetryButton(context, () {
+        context.read<ForumBloc>().add(ForumLoadMoreRequested(state.currentPage));
+      }),
+      ForumStatus.success => _buildSuccessContent(context, state),
+    };
+  }
+
   Widget _buildSubredditTab(BuildContext context, List<Forum> subredditList) {
     if (subredditList.isEmpty) {
       return Center(child: Text(context.t.forumPage.subredditTab.noSubreddit));
@@ -348,7 +354,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       scrollBehaviorBuilder: (physics) => ERScrollBehavior(physics).copyWith(physics: physics, scrollbars: false),
       header: const MaterialHeader(),
       controller: _subredditRefreshController,
-      // scrollController: _subredditScrollController,
+      scrollController: _subredditScrollController,
       onRefresh: () async {
         if (!mounted) {
           return;
@@ -356,7 +362,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         context.read<ForumBloc>().add(ForumRefreshRequested());
       },
       child: ListView.separated(
-        // controller: _subredditScrollController,
+        controller: _subredditScrollController,
         padding: edgeInsetsL12T4R12.add(context.safePadding()),
         itemCount: subredditList.length,
         itemBuilder: (context, index) => ForumCard(subredditList[index]),
@@ -407,11 +413,11 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
 
   @override
   void dispose() {
-    // _pinnedScrollController.dispose();
+    _pinnedScrollController.dispose();
     _pinnedRefreshController.dispose();
     _threadScrollController.dispose();
     _threadRefreshController.dispose();
-    // _subredditScrollController.dispose();
+    _subredditScrollController.dispose();
     _subredditRefreshController.dispose();
     tabController.dispose();
     super.dispose();
@@ -465,55 +471,12 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
           }
 
           return Scaffold(
-            body: ExtendedNestedScrollView(
-              controller: _threadScrollController,
-              onlyOneScrollInBody: true,
-              headerSliverBuilder: (context, innerBoxIsScroller) => [_buildListAppBar(context, state)],
-              body: NotificationListener(
-                onNotification: _onBodyScrollNotification,
-                child: switch (state.status) {
-                  ForumStatus.initial || ForumStatus.loading => const Center(child: CircularProgressIndicator()),
-                  ForumStatus.failure => buildRetryButton(context, () {
-                    context.read<ForumBloc>().add(ForumLoadMoreRequested(state.currentPage));
-                  }),
-                  ForumStatus.success => _buildSuccessContent(context, state),
-                },
-              ),
+            appBar: PreferredSize(preferredSize: const Size.fromHeight(130), child: _buildListAppBar(context, state)),
+            body: NotificationListener<UserScrollNotification>(
+              onNotification: _onBodyScrollNotification,
+              child: SafeArea(bottom: false, child: _buildBody(context, state)),
             ),
-            floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
             floatingActionButton: _buildFloatingActionButton(context, state),
-            // bottomNavigationBar: AnimatedContainer(
-            //   curve: Curves.easeIn,
-            //   duration: duration200,
-            //   height: _fabVisible ? 100 : 0,
-            //   child: BottomAppBar(
-            //     padding: edgeInsetsL12R12,
-            //     child: Align(
-            //       alignment: Alignment.centerLeft,
-            //       child: SingleChildScrollView(
-            //         child: Wrap(
-            //           runAlignment: WrapAlignment.center,
-            //           children: [
-            //             const NoticeButton(),
-            //             const OpenInAppPageButton(),
-            //             IconButton(
-            //               icon: const Icon(Icons.search_outlined),
-            //               tooltip: context.t.searchPage.title,
-            //               onPressed: () async {
-            //                 await context.pushNamed(ScreenPaths.search, queryParameters: {'fid': widget.fid});
-            //               },
-            //             ),
-            //             IconButton(
-            //               icon: const Icon(Icons.settings_outlined),
-            //               tooltip: context.t.general.openSettings,
-            //               onPressed: () => context.pushNamed(ScreenPaths.rootSettings),
-            //             ),
-            //           ],
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
           );
         },
       ),
