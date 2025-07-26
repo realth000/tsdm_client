@@ -98,8 +98,7 @@ dependency_overrides:
       path: pkgs/jni
 
 dev_dependencies:
-  # Pinned on 2.4.x version for working with null-aware-elements issue in GitHub CI.
-  build_runner: 2.4.15
+  build_runner: 2.5.4
   custom_lint: ^0.7.6
   dart_mappable_builder: ^4.5.0
   flutter_launcher_icons: ^0.14.4
