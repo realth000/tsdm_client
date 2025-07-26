@@ -391,13 +391,16 @@ final class _Muncher with LoggerMixin {
     if (tmpImpellerWorkaroundUrls.contains(url)) {
       return [
         WidgetSpan(
-          child: IconButton(
-            icon: Icon(Icons.navigate_before_outlined, color: Theme.of(context).colorScheme.tertiary),
-            // Constrains size to fit line height.
+          child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 24, minWidth: 24, maxHeight: 24, minHeight: 24),
-            padding: EdgeInsets.zero,
-            tooltip: context.t.workaroundRedirect,
-            onPressed: hrefUrl != null ? () async => context.dispatchAsUrl(hrefUrl) : null,
+            child: IconButton(
+              icon: Icon(Icons.navigate_before_outlined, color: Theme.of(context).colorScheme.tertiary),
+              // Constrains size to fit line height.
+              constraints: const BoxConstraints(maxWidth: 24, minWidth: 24, maxHeight: 24, minHeight: 24),
+              padding: EdgeInsets.zero,
+              tooltip: context.t.workaroundRedirect,
+              onPressed: hrefUrl != null ? () async => context.dispatchAsUrl(hrefUrl) : null,
+            ),
           ),
         ),
       ];
