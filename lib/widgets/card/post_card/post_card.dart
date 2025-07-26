@@ -59,6 +59,9 @@ enum _PostCardActions {
 
   /// Open the dialog to copy contents.
   openAndCopy,
+
+  /// Copy post id.
+  copyPid,
 }
 
 /// Card for a [Post] model.
@@ -345,6 +348,16 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                   ],
                 ),
               ),
+              PopupMenuItem(
+                value: _PostCardActions.copyPid,
+                child: Row(
+                  children: [
+                    const Icon(Icons.numbers_outlined),
+                    sizedBoxPopupMenuItemIconSpacing,
+                    Text(context.t.postCard.copyPid(pid: widget.post.postID)),
+                  ],
+                ),
+              ),
             ],
           ],
           onSelected: (value) async {
@@ -394,6 +407,8 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
                         .join() ??
                     '';
                 await showCopySelectContentDialog(context: context, data: data);
+              case _PostCardActions.copyPid:
+                await copyToClipboard(context, widget.post.postID);
             }
           },
         ),

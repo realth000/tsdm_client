@@ -823,7 +823,8 @@
     },
     "share": "Copy share link",
     "openInBrowser": "Open in browser",
-    "copyText": "Copy Text"
+    "copyText": "Copy Text",
+    "copyPid": "Copy pid (${pid: String})"
   },
   "packetCard": {
     "title": "Packet",
