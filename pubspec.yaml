@@ -96,6 +96,10 @@ dependency_overrides:
       # 0.14.2
       ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
       path: pkgs/jni
+  # For build issues in GitHub CI.
+  # ref: https://github.com/dart-lang/sdk/issues/60784#issuecomment-2907039707
+  analyzer: ^7.4.0
+
 
 dev_dependencies:
   build_runner: 2.5.4
