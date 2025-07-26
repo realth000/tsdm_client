@@ -1148,5 +1148,6 @@
     "notReplyToFloorTip": "Not reply to this floor",
     "expandToolbarTip": "Expand toolbar",
     "collapseToolbarTip": "Collapse toolbar"
-  }
+  },
+  "workaroundRedirect": "View conversation"
 }

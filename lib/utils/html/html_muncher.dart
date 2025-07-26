@@ -4,9 +4,11 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/extensions/universal_html.dart';
+import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/html/adaptive_color.dart';
 import 'package:tsdm_client/utils/html/css_parser.dart';
@@ -384,6 +386,23 @@ final class _Muncher with LoggerMixin {
     final hrefUrl = state.tapUrl;
     final imgWidth = element.attributes['width']?.parseToInt()?.toDouble();
     final imgHeight = element.attributes['height']?.parseToInt()?.toDouble();
+
+    // Show a button instead of the original image.
+    if (tmpImpellerWorkaroundUrls.contains(url)) {
+      return [
+        WidgetSpan(
+          child: IconButton(
+            icon: Icon(Icons.navigate_before_outlined, color: Theme.of(context).colorScheme.tertiary),
+            // Constrains size to fit line height.
+            constraints: const BoxConstraints(maxWidth: 24, minWidth: 24, maxHeight: 24, minHeight: 24),
+            padding: EdgeInsets.zero,
+            tooltip: context.t.workaroundRedirect,
+            onPressed: hrefUrl != null ? () async => context.dispatchAsUrl(hrefUrl) : null,
+          ),
+        ),
+      ];
+    }
+
     return [
       WidgetSpan(
         child: GestureDetector(
