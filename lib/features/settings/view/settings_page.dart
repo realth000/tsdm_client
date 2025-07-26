@@ -475,14 +475,6 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(context.t.fastReplyTemplate.details),
         onTap: () async => context.pushNamed(ScreenPaths.fastReplyTemplate, pathParameters: {'pick': 'false'}),
       ),
-      SectionSwitchListTile(
-        secondary: const Icon(Symbols.page_header),
-        title: Text(tr.collapseAppBarWhenScroll.title),
-        subtitle: Text(tr.collapseAppBarWhenScroll.detail),
-        value: collapseAppBarWhenScroll,
-        onChanged: (v) async =>
-            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.collapseAppBarWhenScroll, v)),
-      ),
     ];
   }
 
