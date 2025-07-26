@@ -99,6 +99,7 @@ dependency_overrides:
   # For build issues in GitHub CI.
   # ref: https://github.com/dart-lang/sdk/issues/60784#issuecomment-2907039707
   analyzer: ^7.4.0
+  analyzer_plugin: 0.13.1
 
 
 dev_dependencies:
