@@ -635,18 +635,23 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
 
       // Proxy settings, enable or disable.
-      SectionSwitchListTile(
-        secondary: Icon(MdiIcons.networkOutline),
-        title: Text(tr.useProxy),
-        subtitle: proxyAutomated ? Text(tr.proxySettings.automatedOnPlatform) : null,
-        value: netClientUseProxy,
-        onChanged: proxyAutomated
-            ? null
-            : (v) {
-                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
-                showSnackBar(context: context, message: context.t.general.affectAfterRestart);
-              },
-      ),
+      if (proxyAutomated)
+        SectionListTile(
+          leading: Icon(MdiIcons.networkOutline),
+          title: Text(tr.useProxy),
+          subtitle: Text(tr.proxySettings.automatedOnPlatform),
+          enabled: false,
+        )
+      else
+        SectionSwitchListTile(
+          secondary: Icon(MdiIcons.networkOutline),
+          title: Text(tr.useProxy),
+          value: netClientUseProxy,
+          onChanged: (v) {
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
+            showSnackBar(context: context, message: context.t.general.affectAfterRestart);
+          },
+        ),
 
       if (!proxyAutomated)
         SectionSwitchListTile(
