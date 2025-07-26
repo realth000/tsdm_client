@@ -111,11 +111,17 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                 const curve = Curves.ease;
                 switch (tabController.index) {
                   case _pinnedTabIndex:
-                    _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                    if (_pinnedScrollController.hasClients) {
+                      _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                    }
                   case _threadTabIndex:
-                    _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                    if (_threadScrollController.hasClients) {
+                      _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                    }
                   case _subredditTabIndex:
-                    _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                    if (_subredditScrollController.hasClients) {
+                      _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                    }
                 }
               },
             )
@@ -151,7 +157,13 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
           case MenuActions.openInBrowser:
             await context.dispatchAsUrl(widget.forumUrl, external: true);
           case MenuActions.backToTop:
-            await _threadScrollController.animateTo(0, curve: Curves.ease, duration: const Duration(milliseconds: 500));
+            if (_threadScrollController.hasClients) {
+              await _threadScrollController.animateTo(
+                0,
+                curve: Curves.ease,
+                duration: const Duration(milliseconds: 500),
+              );
+            }
           case MenuActions.reverseOrder:
             ;
           case MenuActions.debugViewLog:
