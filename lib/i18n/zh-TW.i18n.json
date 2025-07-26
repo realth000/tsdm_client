@@ -927,7 +927,7 @@
     "localOnlyTip": "僅記錄本機的瀏覽記錄，在網頁端或其他機器上可能會有所不同"
   },
   "openInAppPage": {
-    "title": "在應用程式中開啟",
+    "title": "開啟頁面",
     "entryTooltip": "在應用程式中開啟頁面",
     "url": {
       "title": "連結",
@@ -936,27 +936,27 @@
     },
     "uid": {
       "title": "用戶id（uid）",
-      "detail": "可在使用者資料頁等許多地方找到uid",
+      "detail": "查看使用者資料。許多地方可在使用者資料頁等找到uid",
       "invalidUid": "無效的uid"
     },
     "username": {
       "title": "使用者名稱",
-      "detail": "可在使用者資料頁等許多地方找到使用者名稱",
+      "detail": "查看使用者資料。可在使用者資料頁等許多地方找到使用者名稱",
       "invalidUsername": "無效使用者名稱"
     },
     "fid": {
       "title": "分區id（fid）",
-      "detail": "可在分割頁面和分割網頁連結中找到fid",
+      "detail": "前往指定分割區。可在分割頁面和分割區網頁連結中找到fid",
       "invalidFid": "無效的fid"
     },
     "tid": {
       "title": "帖子id（tid）",
-      "detail": "可在貼文頁面和貼文分享連結中找到tid",
+      "detail": "開啟指定貼文。可在貼文頁面和貼文分享連結中找到tid",
       "invalidTid": "無效的tid"
     },
     "pid": {
       "title": "樓層id（pid）",
-      "detail": "可在樓層的分享連結中找到pid",
+      "detail": "查看指定貼文樓層。可在樓層的分享連結中找到pid",
       "invalidPid": "無效的pid"
     },
     "open": "開啟"

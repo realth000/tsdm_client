@@ -936,27 +936,27 @@
     },
     "uid": {
       "title": "User id (uid)",
-      "detail": "Uid can be found in user profile and many other places",
+      "detail": "Open user profile page. Uid can be found in user profile and many other places",
       "invalidUid": "Invalid uid"
     },
     "username": {
       "title": "Username",
-      "detail": "Username can be found in user profile and many other places",
+      "detail": "Open user profile page. Username can be found in user profile and many other places",
       "invalidUsername": "Invalid username"
     },
     "fid": {
       "title": "Forum id (fid)",
-      "detail": "Subreddit can be found in subreddit pages and urls",
+      "detail": "Open subreddit page. Subreddit can be found in subreddit pages and urls",
       "invalidFid": "Invalid fid"
     },
     "tid": {
       "title": "Thread id (tid)",
-      "detail": "Tid can be found in thread pages and share links",
+      "detail": "Open thread page. Tid can be found in thread pages and share links",
       "invalidTid": "Invalid tid"
     },
     "pid": {
       "title": "Post id (pid)",
-      "detail": "Pid can be found in share link of each floor",
+      "detail": "Find specified post. Pid can be found in share link of each floor",
       "invalidPid": "Invalid pid"
     },
     "open": "Open"
