@@ -185,7 +185,7 @@ class _CopySelectContentDialog extends StatelessWidget {
         TextButton(
           child: Text(tr.share),
           onPressed: () async {
-            await Share.share(data);
+            await SharePlus.instance.share(ShareParams(text: data));
             if (!context.mounted) {
               return;
             }

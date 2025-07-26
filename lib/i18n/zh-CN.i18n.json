@@ -1148,5 +1148,6 @@
     "notReplyToFloorTip": "不回复该楼层（改为回复楼主）",
     "expandToolbarTip": "展开工具栏",
     "collapseToolbarTip": "收起工具栏"
-  }
+  },
+  "workaroundRedirect": "查看对话"
 }

@@ -2,23 +2,23 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
+import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/jump_page/widgets/jump_page_dialog.dart';
-import 'package:tsdm_client/features/open_in_app/view/open_in_app_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
-import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
-import 'package:tsdm_client/widgets/open_profile_page_button.dart';
 
 /// App bar actions.
 enum MenuActions {
+  /* Page related options */
+
   /// Refresh current page.
   refresh,
 
@@ -35,6 +35,29 @@ enum MenuActions {
   ///
   /// Only available to thread pages.
   reverseOrder,
+
+  /* Global options */
+
+  /// View contents in app.
+  openInApp,
+
+  /// Open search page.
+  openSearchPage,
+
+  /// Current user's profile.
+  ///
+  /// If logged in.
+  profile,
+
+  /// Open notification page.
+  ///
+  /// If logged in.
+  openNoticePage,
+
+  /// Open app settings page.
+  openSettingsPage,
+
+  /* Debug options */
 
   /// Debug option.
   ///
@@ -113,60 +136,62 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
     //  (though impossible if only one page).
     final reverseOrder = threadBloc?.state.reverseOrder ?? false;
 
-    final collapsableAppBar = context.select<SettingsBloc, bool>((v) => v.state.settingsMap.collapseAppBarWhenScroll);
+    final isLogin = context.select<AuthenticationRepository, bool>((repo) => repo.currentUser != null);
 
-    return SliverAppBar(
+    return AppBar(
       title: title == null ? null : Text(title!),
-      pinned: !collapsableAppBar,
-      floating: collapsableAppBar,
-      snap: collapsableAppBar,
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + (isMobile ? 52 : 42)),
-        child: Column(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Padding(
-                    padding: edgeInsetsL4R4,
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      reverse: true,
-                      child: Row(
-                        children: [
-                          const OpenInAppPageButton(),
-                          IconButton(
-                            icon: const Icon(Icons.search_outlined),
-                            tooltip: context.t.searchPage.title,
-                            onPressed: onSearch,
-                          ),
-                          const OpenProfilePageButton(),
-                          const NoticeButton(),
-                          IconButton(
-                            icon: const Icon(Icons.settings_outlined),
-                            tooltip: context.t.general.openSettings,
-                            onPressed: () async => context.pushNamed(ScreenPaths.rootSettings),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ?bottom,
-          ],
-        ),
-      ),
+      // TODO: Currently we always use a compact layout in list app bar for larger main content space.
+      // If going to implement responsive layout, remember to wrap list app bar in `PreferredSize` in ALL places using
+      // it, this is an issue or usage defined by Flutter, seems the AppBar checks if it's direct `bottom` widget is
+      // preferred size or not, to determine the height of app bar, DISGUSTING.
+      bottom: bottom,
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight((bottom?.preferredSize.height ?? 0) + (isMobile ? 52 : 42)),
+      //   child: Column(
+      //     children: [
+      //       Row(
+      //         children: [
+      //           Expanded(
+      //             child: Padding(
+      //               padding: edgeInsetsL4R4,
+      //               child: SingleChildScrollView(
+      //                 scrollDirection: Axis.horizontal,
+      //                 reverse: true,
+      //                 child: Row(
+      //                   children: [
+      //                     const OpenInAppPageButton(),
+      //                     IconButton(
+      //                       icon: const Icon(Icons.search_outlined),
+      //                       tooltip: context.t.searchPage.title,
+      //                       onPressed: onSearch,
+      //                     ),
+      //                     const OpenProfilePageButton(),
+      //                     const NoticeButton(),
+      //                     IconButton(
+      //                       icon: const Icon(Icons.settings_outlined),
+      //                       tooltip: context.t.general.openSettings,
+      //                       onPressed: () async => context.pushNamed(ScreenPaths.rootSettings),
+      //                     ),
+      //                   ],
+      //                 ),
+      //               ),
+      //             ),
+      //           ),
+      //         ],
+      //       ),
+      //       ?bottom,
+      //     ],
+      //   ),
+      // ),
       actions: [
-        // const NoticeButton(),
-        // IconButton(icon: const Icon(Icons.search_outlined), tooltip: context.t.searchPage.title, onPressed: onSearch),
+        // Using three or more actions violates material design spec, but just do it.
+        const NoticeButton(),
         if (onJumpPage != null)
           TextButton(
             onPressed: canJumpPage ? () async => _jumpPage(context, currentPage, totalPages) : null,
             child: Text('${canJumpPage ? currentPage : "-"}'),
           ),
-        PopupMenuButton(
+        PopupMenuButton<MenuActions>(
           itemBuilder: (context) => [
             PopupMenuItem(
               value: MenuActions.refresh,
@@ -223,6 +248,60 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                   ],
                 ),
               ),
+            const PopupMenuDivider(),
+            PopupMenuItem(
+              value: MenuActions.openInApp,
+              child: Row(
+                children: [
+                  const Icon(Symbols.open_in_phone),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.openInAppPage.entryTooltip),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: MenuActions.openSearchPage,
+              child: Row(
+                children: [
+                  const Icon(Icons.search_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.searchPage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              enabled: isLogin,
+              value: MenuActions.profile,
+              child: Row(
+                children: [
+                  const Icon(Icons.person_outline),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.profilePage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              enabled: isLogin,
+              value: MenuActions.openNoticePage,
+              child: Row(
+                children: [
+                  const Icon(Icons.notifications_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.noticePage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: MenuActions.openSettingsPage,
+              child: Row(
+                children: [
+                  const Icon(Icons.settings_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.general.openSettings),
+                ],
+              ),
+            ),
+
             if (context.read<SettingsBloc>().state.settingsMap.enableDebugOperations) ...<PopupMenuEntry<MenuActions>>[
               const PopupMenuDivider(),
               PopupMenuItem(

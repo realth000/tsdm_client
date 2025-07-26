@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/constants/url.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/features/cache/models/models.dart';
 import 'package:tsdm_client/instance.dart';
@@ -94,6 +95,9 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
   @override
   void initState() {
     super.initState();
+    if (tmpImpellerWorkaroundUrls.contains(widget.imageUrl)) {
+      return;
+    }
     imageSub = getIt
         .get<ImageCacheProvider>()
         .response
@@ -109,6 +113,11 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
 
   @override
   Widget build(BuildContext context) {
+    // Show an icon instead of the original image.
+    if (tmpImpellerWorkaroundUrls.contains(widget.imageUrl)) {
+      return Icon(Icons.navigate_before_outlined, color: Theme.of(context).colorScheme.tertiary);
+    }
+
     final Widget body;
     if (widget.imageUrl.isEmpty) {
       body = FallbackPicture(

@@ -81,6 +81,16 @@ String formatReplyThreadUrl(String fid, String tid) {
 /// Prefix in url to get fast reply window to a certain post.
 const replyPostWindowSuffix = '&infloat=yes&handlekey=reply&inajax=1&ajaxtarget=fwin_content_reply';
 
+/// Url of images have rendering issue with Impeller.
+///
+/// The root cause is not clear, maybe corrupt cache content, but it works with skia backend so should not be it.
+/// Since these images are now for redirect back purpose, we could handle them specially although we didn't intend to
+/// do it before, we have to do it before the next upcoming stable release of Flutter in August, 2025.
+const tmpImpellerWorkaroundUrls = [
+  'https://$baseHost/static/image/common/back.gif',
+  'https://$baseHostAlt/static/image/common/back.gif',
+];
+
 /// Target url to post a reply to another post in thread [tid], forum [fid].
 String formatReplyPostUrl(String fid, String tid) {
   return '$homePage?mod=post&infloat=yes&action=reply&fid=$fid&'

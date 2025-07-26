@@ -13,6 +13,8 @@ import 'package:tsdm_client/features/authentication/repository/models/models.dar
 import 'package:tsdm_client/features/chat/models/models.dart';
 import 'package:tsdm_client/features/editor/widgets/rich_editor.dart';
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
+import 'package:tsdm_client/features/root/models/models.dart';
+import 'package:tsdm_client/features/root/stream/root_location_stream.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -104,8 +106,10 @@ class _ReplyBarWrapperState extends State<ReplyBar> {
       ),
     );
 
+    rootLocationStream.add(const RootLocationEventEnter('<editor>'));
     widget.controller._showingEditor = true;
     await c.closed;
+    rootLocationStream.add(const RootLocationEventLeave('<editor>'));
     widget.controller._showingEditor = false;
   }
 
