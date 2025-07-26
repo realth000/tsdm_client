@@ -445,7 +445,8 @@
     },
     "tooltip": {
       "fab": "發佈新帖"
-    }
+    },
+    "copyFid": "複製fid（${fid: String}）"
   },
   "threadPage": {
     "title": "貼文",
@@ -469,7 +470,8 @@
       "threadUrlWithDomain": "連結（有網域）",
       "threadUrlBBCode": "連結BBCode",
       "threadUrlBBCodeWithDomain": "連結BBCode（有網域）"
-    }
+    },
+    "copyTid": "複製tid（${tid: String}）"
   },
   "noticePage": {
     "title": "通知",

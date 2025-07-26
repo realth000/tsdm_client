@@ -445,7 +445,8 @@
     },
     "tooltip": {
       "fab": "Post new thread"
-    }
+    },
+    "copyFid": "Copy fid(${fid: String})"
   },
   "threadPage": {
     "title": "Thread",
@@ -469,7 +470,8 @@
       "threadUrlWithDomain": "Url (with domain)",
       "threadUrlBBCode": "Url BBCode",
       "threadUrlBBCodeWithDomain": "Url BBCode (with domain)"
-    }
+    },
+    "copyTid": "Copy tid(${tid: String})"
   },
   "noticePage": {
     "title": "Notifications",
