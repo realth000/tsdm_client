@@ -156,6 +156,16 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
             ;
           case MenuActions.debugViewLog:
             await context.pushNamed(ScreenPaths.debugLog);
+          case MenuActions.openInApp:
+            await context.pushNamed(ScreenPaths.openInApp);
+          case MenuActions.openSearchPage:
+            await context.pushNamed(ScreenPaths.search);
+          case MenuActions.profile:
+            await context.pushNamed(ScreenPaths.profile);
+          case MenuActions.openNoticePage:
+            await context.pushNamed(ScreenPaths.notice);
+          case MenuActions.openSettingsPage:
+            await context.pushNamed(ScreenPaths.rootSettings);
         }
       },
     );
@@ -263,7 +273,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
       header: const MaterialHeader(),
       footer: const MaterialFooter(),
       controller: _threadRefreshController,
-      // scrollController: _threadScrollController,
+      scrollController: _threadScrollController,
       onRefresh: () async {
         if (!mounted) {
           return;
@@ -285,7 +295,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         // _refreshController.finishLoad();
       },
       childBuilder: (context, physics) => CustomScrollView(
-        // controller: _threadScrollController,
+        controller: _threadScrollController,
         physics: physics,
         slivers: [
           PinnedHeaderSliver(child: _buildNormalThreadFilterRow(context, state)),
@@ -471,7 +481,8 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
           }
 
           return Scaffold(
-            appBar: PreferredSize(preferredSize: const Size.fromHeight(130), child: _buildListAppBar(context, state)),
+            // appBar: PreferredSize(preferredSize: const Size.fromHeight(145), child: _buildListAppBar(context, state)),
+            appBar: _buildListAppBar(context, state),
             body: NotificationListener<UserScrollNotification>(
               onNotification: _onBodyScrollNotification,
               child: SafeArea(bottom: false, child: _buildBody(context, state)),

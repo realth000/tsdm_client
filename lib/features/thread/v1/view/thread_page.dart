@@ -447,46 +447,53 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
             return Scaffold(
               // Required by chat_bottom_container in the reply bar.
               resizeToAvoidBottomInset: false,
-              appBar: PreferredSize(
-                preferredSize: const Size.fromHeight(110),
-                child: ListAppBar(
-                  title: title,
-                  bottom: PreferredSize(preferredSize: const Size.fromHeight(20), child: _buildBreadcrumbsRow(state)),
-                  showReverseOrderAction: true,
-                  onSearch: () async {
-                    await context.pushNamed(ScreenPaths.search);
-                  },
-                  onJumpPage: (pageNumber) async {
-                    if (!mounted) {
-                      return;
-                    }
-                    // Mark loading here.
-                    // Mark state will be removed when loading finishes
-                    // in next build.
-                    context.read<JumpPageCubit>().markLoading();
-                    context.read<ThreadBloc>().add(ThreadJumpPageRequested(pageNumber));
-                  },
-                  onSelected: (value) async {
-                    switch (value) {
-                      case MenuActions.refresh:
-                        context.read<ThreadBloc>().add(ThreadRefreshRequested());
-                      case MenuActions.copyUrl:
-                        await copyToClipboard(context, threadUrl!);
-                      case MenuActions.openInBrowser:
-                        await context.dispatchAsUrl(threadUrl!, external: true);
-                      case MenuActions.backToTop:
-                        await _listScrollController.animateTo(
-                          0,
-                          curve: Curves.ease,
-                          duration: const Duration(milliseconds: 500),
-                        );
-                      case MenuActions.reverseOrder:
-                        context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested());
-                      case MenuActions.debugViewLog:
-                        await context.pushNamed(ScreenPaths.debugLog);
-                    }
-                  },
-                ),
+              appBar: ListAppBar(
+                title: title,
+                bottom: PreferredSize(preferredSize: const Size.fromHeight(20), child: _buildBreadcrumbsRow(state)),
+                showReverseOrderAction: true,
+                onSearch: () async {
+                  await context.pushNamed(ScreenPaths.search);
+                },
+                onJumpPage: (pageNumber) async {
+                  if (!mounted) {
+                    return;
+                  }
+                  // Mark loading here.
+                  // Mark state will be removed when loading finishes
+                  // in next build.
+                  context.read<JumpPageCubit>().markLoading();
+                  context.read<ThreadBloc>().add(ThreadJumpPageRequested(pageNumber));
+                },
+                onSelected: (value) async {
+                  switch (value) {
+                    case MenuActions.refresh:
+                      context.read<ThreadBloc>().add(ThreadRefreshRequested());
+                    case MenuActions.copyUrl:
+                      await copyToClipboard(context, threadUrl!);
+                    case MenuActions.openInBrowser:
+                      await context.dispatchAsUrl(threadUrl!, external: true);
+                    case MenuActions.backToTop:
+                      await _listScrollController.animateTo(
+                        0,
+                        curve: Curves.ease,
+                        duration: const Duration(milliseconds: 500),
+                      );
+                    case MenuActions.reverseOrder:
+                      context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested());
+                    case MenuActions.debugViewLog:
+                      await context.pushNamed(ScreenPaths.debugLog);
+                    case MenuActions.openInApp:
+                      await context.pushNamed(ScreenPaths.openInApp);
+                    case MenuActions.openSearchPage:
+                      await context.pushNamed(ScreenPaths.search);
+                    case MenuActions.profile:
+                      await context.pushNamed(ScreenPaths.profile);
+                    case MenuActions.openNoticePage:
+                      await context.pushNamed(ScreenPaths.notice);
+                    case MenuActions.openSettingsPage:
+                      await context.pushNamed(ScreenPaths.rootSettings);
+                  }
+                },
               ),
               body: SafeArea(bottom: false, child: _buildBody(context, state)),
             );
