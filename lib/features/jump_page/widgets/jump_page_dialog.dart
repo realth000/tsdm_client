@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
@@ -57,7 +59,7 @@ class _JumpPageDialogState extends State<JumpPageDialog> {
             year2023: false,
             max: widget.max.toDouble(),
             min: widget.min.toDouble(),
-            divisions: widget.max - 1,
+            divisions: math.max(widget.max - 1, 1),
             label: '$currentPage',
             value: currentPage.toDouble(),
             onChanged: (v) => setState(() {

@@ -25,12 +25,15 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
-import 'package:tsdm_client/widgets/list_app_bar.dart';
+import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 
 const _tabsCount = 3;
 const _pinnedTabIndex = 0;
 const _threadTabIndex = 1;
 const _subredditTabIndex = 2;
+
+const _backToTopCurve = Curves.ease;
+const _backToTopAnimationDuration = duration500;
 
 /// Page to show all forum status.
 class ForumPage extends StatefulWidget {
@@ -126,9 +129,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
               },
             )
           : null,
-      onSearch: () async {
-        await context.pushNamed(ScreenPaths.search, queryParameters: {'fid': widget.fid});
-      },
+      onSearch: () async => context.pushNamed(ScreenPaths.search, queryParameters: {'fid': widget.fid}),
       onJumpPage: (pageNumber) async {
         if (!mounted) {
           return;
@@ -139,47 +140,27 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         context.read<JumpPageCubit>().markLoading();
         context.read<ForumBloc>().add(ForumJumpPageRequested(pageNumber));
       },
-      onSelected: (value) async {
-        switch (value) {
-          case MenuActions.refresh:
-            switch (tabController.index) {
-              case _pinnedTabIndex:
-                await _pinnedRefreshController.callRefresh();
-              case _threadTabIndex:
-                await _threadRefreshController.callRefresh();
-              case _subredditTabIndex:
-                await _subredditRefreshController.callRefresh();
-              default:
-                context.read<ForumBloc>().add(ForumRefreshRequested());
-            }
-          case MenuActions.copyUrl:
-            await copyToClipboard(context, widget.forumUrl);
-          case MenuActions.openInBrowser:
-            await context.dispatchAsUrl(widget.forumUrl, external: true);
-          case MenuActions.backToTop:
-            if (_threadScrollController.hasClients) {
-              await _threadScrollController.animateTo(
-                0,
-                curve: Curves.ease,
-                duration: const Duration(milliseconds: 500),
-              );
-            }
-          case MenuActions.reverseOrder:
-            ;
-          case MenuActions.debugViewLog:
-            await context.pushNamed(ScreenPaths.debugLog);
-          case MenuActions.openInApp:
-            await context.pushNamed(ScreenPaths.openInApp);
-          case MenuActions.openSearchPage:
-            await context.pushNamed(ScreenPaths.search);
-          case MenuActions.profile:
-            await context.pushNamed(ScreenPaths.profile);
-          case MenuActions.openNoticePage:
-            await context.pushNamed(ScreenPaths.notice);
-          case MenuActions.openSettingsPage:
-            await context.pushNamed(ScreenPaths.rootSettings);
-        }
+      onRefresh: () async => switch (tabController.index) {
+        _pinnedTabIndex => await _pinnedRefreshController.callRefresh(),
+        _threadTabIndex => await _threadRefreshController.callRefresh(),
+        _subredditTabIndex => await _subredditRefreshController.callRefresh(),
+        _ => context.mounted ? context.read<ForumBloc>().add(ForumRefreshRequested()) : null,
       },
+      onCopyUrl: () async => copyToClipboard(context, widget.forumUrl),
+      onOpenInBrowser: () async => context.dispatchAsUrl(widget.forumUrl, external: true),
+      onBackToTop: () async => await switch (tabController.index) {
+        _pinnedTabIndex when _pinnedScrollController.hasClients => _pinnedScrollController,
+        _threadTabIndex when _threadScrollController.hasClients => _threadScrollController,
+        _subredditTabIndex when _subredditScrollController.hasClients => _subredditScrollController,
+        _ => null,
+      }?.animateTo(0, curve: _backToTopCurve, duration: _backToTopAnimationDuration),
+      customMenuItems: [
+        MenuCustomItem(
+          icon: Icons.numbers_outlined,
+          description: context.t.forumPage.copyFid(fid: widget.fid),
+          onSelected: () async => copyToClipboard(context, widget.fid),
+        ),
+      ],
     );
   }
 

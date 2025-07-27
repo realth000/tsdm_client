@@ -475,14 +475,6 @@ class _SettingsPageState extends State<SettingsPage> {
         subtitle: Text(context.t.fastReplyTemplate.details),
         onTap: () async => context.pushNamed(ScreenPaths.fastReplyTemplate, pathParameters: {'pick': 'false'}),
       ),
-      SectionSwitchListTile(
-        secondary: const Icon(Symbols.page_header),
-        title: Text(tr.collapseAppBarWhenScroll.title),
-        subtitle: Text(tr.collapseAppBarWhenScroll.detail),
-        value: collapseAppBarWhenScroll,
-        onChanged: (v) async =>
-            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.collapseAppBarWhenScroll, v)),
-      ),
     ];
   }
 
@@ -635,18 +627,23 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
 
       // Proxy settings, enable or disable.
-      SectionSwitchListTile(
-        secondary: Icon(MdiIcons.networkOutline),
-        title: Text(tr.useProxy),
-        subtitle: proxyAutomated ? Text(tr.proxySettings.automatedOnPlatform) : null,
-        value: netClientUseProxy,
-        onChanged: proxyAutomated
-            ? null
-            : (v) {
-                context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
-                showSnackBar(context: context, message: context.t.general.affectAfterRestart);
-              },
-      ),
+      if (proxyAutomated)
+        SectionListTile(
+          leading: Icon(MdiIcons.networkOutline),
+          title: Text(tr.useProxy),
+          subtitle: Text(tr.proxySettings.automatedOnPlatform),
+          enabled: false,
+        )
+      else
+        SectionSwitchListTile(
+          secondary: Icon(MdiIcons.networkOutline),
+          title: Text(tr.useProxy),
+          value: netClientUseProxy,
+          onChanged: (v) {
+            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.netClientUseProxy, v));
+            showSnackBar(context: context, message: context.t.general.affectAfterRestart);
+          },
+        ),
 
       if (!proxyAutomated)
         SectionSwitchListTile(

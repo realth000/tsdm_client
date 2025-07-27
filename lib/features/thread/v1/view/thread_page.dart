@@ -30,7 +30,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
 import 'package:tsdm_client/widgets/copy_content_dialog.dart';
-import 'package:tsdm_client/widgets/list_app_bar.dart';
+import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
@@ -451,9 +451,6 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                 title: title,
                 bottom: PreferredSize(preferredSize: const Size.fromHeight(20), child: _buildBreadcrumbsRow(state)),
                 showReverseOrderAction: true,
-                onSearch: () async {
-                  await context.pushNamed(ScreenPaths.search);
-                },
                 onJumpPage: (pageNumber) async {
                   if (!mounted) {
                     return;
@@ -464,36 +461,20 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                   context.read<JumpPageCubit>().markLoading();
                   context.read<ThreadBloc>().add(ThreadJumpPageRequested(pageNumber));
                 },
-                onSelected: (value) async {
-                  switch (value) {
-                    case MenuActions.refresh:
-                      context.read<ThreadBloc>().add(ThreadRefreshRequested());
-                    case MenuActions.copyUrl:
-                      await copyToClipboard(context, threadUrl!);
-                    case MenuActions.openInBrowser:
-                      await context.dispatchAsUrl(threadUrl!, external: true);
-                    case MenuActions.backToTop:
-                      await _listScrollController.animateTo(
-                        0,
-                        curve: Curves.ease,
-                        duration: const Duration(milliseconds: 500),
-                      );
-                    case MenuActions.reverseOrder:
-                      context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested());
-                    case MenuActions.debugViewLog:
-                      await context.pushNamed(ScreenPaths.debugLog);
-                    case MenuActions.openInApp:
-                      await context.pushNamed(ScreenPaths.openInApp);
-                    case MenuActions.openSearchPage:
-                      await context.pushNamed(ScreenPaths.search);
-                    case MenuActions.profile:
-                      await context.pushNamed(ScreenPaths.profile);
-                    case MenuActions.openNoticePage:
-                      await context.pushNamed(ScreenPaths.notice);
-                    case MenuActions.openSettingsPage:
-                      await context.pushNamed(ScreenPaths.rootSettings);
-                  }
-                },
+                onRefresh: () => context.read<ThreadBloc>().add(ThreadRefreshRequested()),
+                onCopyUrl: () async => copyToClipboard(context, threadUrl!),
+                onOpenInBrowser: () async => context.dispatchAsUrl(threadUrl!, external: true),
+                onBackToTop: () async =>
+                    _listScrollController.animateTo(0, curve: Curves.ease, duration: const Duration(milliseconds: 500)),
+                onReverseOrder: () => context.readOrNull<ThreadBloc>()?.add(const ThreadChangeViewOrderRequested()),
+                customMenuItems: [
+                  if (state.tid != null)
+                    MenuCustomItem(
+                      icon: Icons.numbers_outlined,
+                      description: context.t.threadPage.copyTid(tid: state.tid!),
+                      onSelected: () async => copyToClipboard(context, state.tid!),
+                    ),
+                ],
               ),
               body: SafeArea(bottom: false, child: _buildBody(context, state)),
             );
