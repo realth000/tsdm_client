@@ -386,7 +386,6 @@ class _SettingsPageState extends State<SettingsPage> {
 
   List<Widget> _buildBehaviorSection(BuildContext context, SettingsState state) {
     final tr = context.t.settingsPage.behaviorSection;
-    final doublePressExit = state.settingsMap.doublePressExit;
     final threadReverseOrder = state.settingsMap.threadReverseOrder;
     // Duration in seconds.
     final autoSyncNoticeSeconds = state.settingsMap.autoSyncNoticeSeconds;
@@ -395,20 +394,9 @@ class _SettingsPageState extends State<SettingsPage> {
       autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
     }
     final enableBBCodeParser = state.settingsMap.enableEditorBBCodeParser;
-    final collapseAppBarWhenScroll = state.settingsMap.collapseAppBarWhenScroll;
 
     return [
       SectionTitleText(tr.title),
-      if (isMobile)
-        SectionSwitchListTile(
-          secondary: const Icon(Icons.block_outlined),
-          title: Text(tr.doublePressExit.title),
-          subtitle: Text(tr.doublePressExit.detail),
-          value: doublePressExit,
-          onChanged: (v) async {
-            context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.doublePressExit, v));
-          },
-        ),
       SectionSwitchListTile(
         secondary: const Icon(Icons.align_vertical_top_outlined),
         title: Text(tr.threadReverseOrder.title),
