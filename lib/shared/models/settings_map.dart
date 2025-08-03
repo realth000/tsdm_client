@@ -28,7 +28,6 @@ class SettingsMap with SettingsMapMappable {
     required this.accentColor,
     required this.accentColorFollowSystem,
     required this.showUnreadInfoHint,
-    required this.doublePressExit,
     required this.threadReverseOrder,
     required this.threadCardInfoRowAlignCenter,
     required this.threadCardShowLastReplyAuthor,
@@ -73,7 +72,6 @@ class SettingsMap with SettingsMapMappable {
   final int accentColor;
   final bool accentColorFollowSystem;
   final bool showUnreadInfoHint;
-  final bool doublePressExit;
   final bool threadReverseOrder;
   final bool threadCardInfoRowAlignCenter;
   final bool threadCardShowLastReplyAuthor;
@@ -125,7 +123,6 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.accentColor => copyWith(accentColor: value as int?),
       SettingsKeys.accentColorFollowSystem => copyWith(accentColorFollowSystem: value as bool?),
       SettingsKeys.showUnreadInfoHint => copyWith(showUnreadInfoHint: value as bool?),
-      SettingsKeys.doublePressExit => copyWith(doublePressExit: value as bool?),
       SettingsKeys.threadReverseOrder => copyWith(threadReverseOrder: value as bool?),
       SettingsKeys.threadCardInfoRowAlignCenter => copyWith(threadCardInfoRowAlignCenter: value as bool?),
       SettingsKeys.threadCardShowLastReplyAuthor => copyWith(threadCardShowLastReplyAuthor: value as bool?),

@@ -12,22 +12,13 @@ import 'package:tsdm_client/features/home/cubit/init_cubit.dart';
 import 'package:tsdm_client/features/home/widgets/widgets.dart';
 import 'package:tsdm_client/features/local_notice/keys.dart';
 import 'package:tsdm_client/features/local_notice/stream.dart';
-import 'package:tsdm_client/features/notification/bloc/notification_state_auto_sync_cubit.dart';
 import 'package:tsdm_client/features/notification/models/models.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
-import 'package:tsdm_client/features/root/models/models.dart';
-import 'package:tsdm_client/features/root/stream/root_location_stream.dart';
-import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
-import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
-import 'package:tsdm_client/utils/show_dialog.dart';
-import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/safe_pop_scope.dart';
-import 'package:tsdm_client/widgets/shutdown.dart';
 
 const _drawerWidth = 250.0;
 
@@ -49,19 +40,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with LoggerMixin {
-  /// Use this duration to limit the confirm time between the first exit app
-  /// attempt and second real exit action.
-  ///
-  /// Maximum allowed duration between last time pop action triggered and
-  /// current time.
-  ///
-  /// Means that if the user stayed more than this duration between two pop
-  /// navigate action, the second one will be the confirm one and not pop back.
-  static const exitConfirmDuration = Duration(seconds: 3);
-
-  /// Record last time user try to exit the app.
-  DateTime? lastPopTime;
-
   /// Location stream subscription.
   late final StreamSubscription<String?> rootLocationSub;
 
@@ -164,125 +142,33 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
   @override
   Widget build(BuildContext context) {
     Translations.of(context);
+
     return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => HomeCubit()),
-        BlocProvider(
-          create: (context) {
-            final settings = context.read<SettingsBloc>().state.settingsMap;
+      providers: [BlocProvider(create: (_) => HomeCubit())],
+      child: BlocBuilder<InitCubit, InitState>(
+        builder: (context, state) {
+          if (state.clearingOutdatedImageCache) {
+            return const Center(child: CircularProgressIndicator());
+          }
 
-            final cubit = InitCubit();
-            unawaited(cubit.deleteV0LegacyData());
-            if (settings.enableAutoClearImageCache) {
-              cubit.autoClearImageCache(Duration(seconds: settings.autoClearImageCacheDuration));
-            } else {
-              cubit.skipAutoClearImageCache();
-            }
-            cubit.autoClearFilePickerCache();
-            return cubit;
-          },
-        ),
-      ],
-      child: MultiBlocListener(
-        listeners: [
-          BlocListener<NotificationStateAutoSyncCubit, NotificationAutoSyncInfo?>(
-            listenWhen: (prev, curr) => curr != null && prev != curr,
-            listener: (context, state) async {
-              await showLocalNotification(context, state!);
-            },
-          ),
-          BlocListener<InitCubit, InitState>(
-            listenWhen: (prev, curr) => prev.v0LegacyDataDeleted != curr.v0LegacyDataDeleted,
-            listener: (context, state) {
-              if (state.v0LegacyDataDeleted != true) {
-                return;
-              }
-              final tr = context.t.init.v1DeleteLegacyData;
-              showMessageSingleButtonDialog(context: context, title: tr.title, message: tr.detail);
-            },
-          ),
-        ],
-        child: BlocBuilder<InitCubit, InitState>(
-          builder: (context, state) {
-            if (state.clearingOutdatedImageCache) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            final Widget child;
-            if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {
-              child = _buildDrawerBody(context);
-            } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
-              child = Scaffold(
-                body: Row(
-                  children: [
-                    if (widget.showNavigationBar) const HomeNavigationRail(),
-                    Expanded(child: widget.child),
-                  ],
-                ),
-              );
-            } else {
-              child = Scaffold(
-                body: widget.child,
-                bottomNavigationBar: widget.showNavigationBar ? const HomeNavigationBar() : null,
-              );
-            }
-
-            // The global listener handles app-wide leave page events.
-            // Every time user intended to leave a certain page, `lastRequestLeavePageTime` is updated and this
-            // listener process check for leave event, decide the page can be popped or not.
-            //
-            // The logic here is to implements double-press before exit app feature. All popping page events are
-            // intercepted by the `BackButtonListener` below, it only triggers the update of `lastRequestLeavePageTime`,
-            // which notifies this listener.
-            //
-            // Every time the pop is allowed, update page locations in `RootLocationCubit` by adding
-            // `RootLocationEventLeave` to stream.
-            return BlocListener<RootLocationCubit, RootLocationState>(
-              listenWhen: (prev, curr) => prev.lastRequestLeavePageTime != curr.lastRequestLeavePageTime,
-              listener: (context, state) async {
-                // Check if fine to pop the current page.
-                final location = state.locations.lastOrNull;
-                if (location != ScreenPaths.homepage &&
-                    location != ScreenPaths.topic &&
-                    location != ScreenPaths.settings.path &&
-                    location != null) {
-                  // Popping current page will not close the app, allow to pop.
-                  rootLocationStream.add(RootLocationEventLeave(location));
-                  return context.pop();
-                }
-
-                // Check for double press exit feature.
-                // From here, if we intend to pop the page, in fact we shall exit the app.
-
-                final doublePressExit = getIt.get<SettingsRepository>().currentSettings.doublePressExit;
-                if (!doublePressExit) {
-                  // Double-press before exit feature is disabled, exit app.
-                  await exitApp();
-                  return;
-                }
-
-                // From here, double-press before exit feature is enabled.
-
-                final tr = context.t.home;
-                final currentTime = DateTime.now();
-                if (lastPopTime == null ||
-                    currentTime.difference(lastPopTime!).inMilliseconds > exitConfirmDuration.inMilliseconds) {
-                  lastPopTime = currentTime;
-                  ScaffoldMessenger.of(context).hideCurrentSnackBar();
-                  showSnackBar(context: context, message: tr.confirmExit);
-                  // Require the second pop event.
-                  return;
-                }
-
-                // A second pop event is here, exit app.
-                await exitApp();
-                // Unreachable
-                return;
-              },
-              child: SafePopScope(path: '<Home Page>', child: child),
+          if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {
+            return _buildDrawerBody(context);
+          } else if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.compact.name)) {
+            return Scaffold(
+              body: Row(
+                children: [
+                  if (widget.showNavigationBar) const HomeNavigationRail(),
+                  Expanded(child: widget.child),
+                ],
+              ),
             );
-          },
-        ),
+          } else {
+            return Scaffold(
+              body: widget.child,
+              bottomNavigationBar: widget.showNavigationBar ? const HomeNavigationBar() : null,
+            );
+          }
+        },
       ),
     );
   }

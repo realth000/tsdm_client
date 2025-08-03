@@ -114,7 +114,6 @@ final class SettingsRepository with LoggerMixin {
       accentColor: s.extract(_SK.accentColor),
       accentColorFollowSystem: s.extract(_SK.accentColorFollowSystem),
       showUnreadInfoHint: s.extract(_SK.showUnreadInfoHint),
-      doublePressExit: s.extract(_SK.doublePressExit),
       threadReverseOrder: s.extract(_SK.threadReverseOrder),
       threadCardInfoRowAlignCenter: s.extract(_SK.threadCardInfoRowAlignCenter),
       threadCardShowLastReplyAuthor: s.extract(_SK.threadCardShowLastReplyAuthor),

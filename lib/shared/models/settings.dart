@@ -106,11 +106,6 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
   /// Show badge or unread notice count on notice button.
   showUnreadInfoHint<bool>(name: 'showUnreadInfoHint', type: bool, defaultValue: true),
 
-  /// Only exit the app when user press back button twice or more.
-  ///
-  /// Avoid accidentally exit the app.
-  doublePressExit<bool>(name: 'doublePressExit', type: bool, defaultValue: true),
-
   /// View latest posts in thread first, in other words, posts are sorted in
   /// desc order.
   threadReverseOrder<bool>(name: 'threadReverseOrder', type: bool, defaultValue: false),
