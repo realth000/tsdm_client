@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
+import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 
 /// Dialog to let user choose app locale.
 class LanguageDialog extends StatelessWidget {
@@ -16,18 +17,13 @@ class LanguageDialog extends StatelessWidget {
       title: Text(t.settingsPage.appearanceSection.languages.selectLanguage),
       content: Column(
         children: [
-          RadioListTile(
+          SelectableListTile(
             title: Text(t.settingsPage.appearanceSection.languages.followSystem),
-            onChanged: (value) async {
-              if (value != null) {
-                Navigator.of(context).pop((null, true));
-              }
-            },
-            value: '',
-            groupValue: currentLocale,
+            selected: currentLocale == '',
+            onTap: () async => Navigator.of(context).pop((null, true)),
           ),
           ...AppLocale.values.map(
-            (e) => RadioListTile(
+            (e) => SelectableListTile(
               // TODO: Check if is caused by lazy loading.
               // Traditional Chinese language tag is displayed as "English".
               title: // Text(e.translations.locale),
@@ -40,15 +36,13 @@ class LanguageDialog extends StatelessWidget {
                   'language tag $v',
                 ),
               }),
-              value: e.languageTag,
-              groupValue: currentLocale,
-              onChanged: (value) async {
-                Navigator.of(context).pop((e, false));
-              },
+              selected: currentLocale == e.languageTag,
+              onTap: () async => Navigator.of(context).pop((e, false)),
             ),
           ),
         ],
       ),
+      contentPadding: EdgeInsets.zero,
     );
   }
 }

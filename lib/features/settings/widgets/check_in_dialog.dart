@@ -5,6 +5,7 @@ import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/checkin/models/models.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
+import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 
 /// Dialog to let user select a checkin feeling.
 class CheckinFeelingDialog extends StatelessWidget {
@@ -21,20 +22,15 @@ class CheckinFeelingDialog extends StatelessWidget {
       content: Column(
         children: CheckinFeeling.values
             .map(
-              (e) => RadioListTile(
+              (e) => SelectableListTile(
                 title: Text(e.translate(context)),
-                onChanged: (value) async {
-                  if (value == null) {
-                    return;
-                  }
-                  Navigator.of(context).pop(value);
-                },
-                value: e.toString(),
-                groupValue: defaultFeeling,
+                onTap: () async => Navigator.of(context).pop(e.toString()),
+                selected: defaultFeeling == e.toString(),
               ),
             )
             .toList(),
       ),
+      contentPadding: EdgeInsets.zero,
     );
   }
 }
