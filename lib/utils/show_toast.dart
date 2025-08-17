@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/instance.dart';
 
 /// Show a snack bar contains message show no more contents.
 void showNoMoreSnackBar(BuildContext context, {bool floating = true}) {
@@ -21,8 +22,6 @@ void showSnackBar({
   required String message,
   bool floating = true,
   SnackBarAction? action,
-}) {
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(behavior: floating ? SnackBarBehavior.floating : null, content: Text(message), action: action),
-  );
-}
+}) => snackbarKey.currentState?.showSnackBar(
+  SnackBar(behavior: floating ? SnackBarBehavior.floating : null, content: Text(message), action: action),
+);
