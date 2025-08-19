@@ -1,5 +1,6 @@
 import 'dart:ui' as ui;
 
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -30,3 +31,11 @@ late final FlutterLocalNotificationsPlugin flnp;
 Future<ui.ImmutableBuffer> getPlaceholderImageData() async {
   return ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath);
 }
+
+/// The global snackbar key.
+///
+/// Because we have global BlocListeners outside of `MaterialApp` that calls `showSnackBar`, use this global key to
+/// access a context with `Scaffold` to show the snack bar.
+///
+/// Do NOT use this global key directly, call `showSnackBar` function instead.
+final GlobalKey<ScaffoldMessengerState> snackbarKey = GlobalKey<ScaffoldMessengerState>();

@@ -489,6 +489,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                 theme: lightTheme,
                 darkTheme: darkTheme,
                 themeMode: ThemeMode.values[themeModeIndex],
+                scaffoldMessengerKey: snackbarKey,
               );
             },
           ),

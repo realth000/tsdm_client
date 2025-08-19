@@ -10,11 +10,17 @@ class CustomAlertDialog<F> extends StatefulWidget {
   /// Constructor.
   ///
   /// Use [CustomAlertDialog.future] is body content is provided by a future, like [FutureBuilder].
-  const CustomAlertDialog._({required this.content, this.title, this.actions, this.clipBehavior, super.key})
-    : future = null,
-      loadingBuilder = null,
-      errorBuilder = null,
-      successBuilder = null;
+  const CustomAlertDialog._({
+    required this.content,
+    this.title,
+    this.actions,
+    this.clipBehavior,
+    this.contentPadding,
+    super.key,
+  }) : future = null,
+       loadingBuilder = null,
+       errorBuilder = null,
+       successBuilder = null;
 
   /// Constructor wrapping future, like [FutureBuilder].
   ///
@@ -27,6 +33,7 @@ class CustomAlertDialog<F> extends StatefulWidget {
     this.title,
     this.actions,
     this.clipBehavior,
+    this.contentPadding,
     super.key,
   }) : content = const SizedBox(width: 0);
 
@@ -38,13 +45,23 @@ class CustomAlertDialog<F> extends StatefulWidget {
     Widget? title,
     List<Widget>? actions,
     Clip? clipBehavior,
-  }) => CustomAlertDialog._(content: content, title: title, actions: actions, clipBehavior: clipBehavior);
+    EdgeInsets? contentPadding,
+  }) => CustomAlertDialog._(
+    content: content,
+    title: title,
+    actions: actions,
+    clipBehavior: clipBehavior,
+    contentPadding: contentPadding,
+  );
 
   /// Wrapped [AlertDialog.title].
   final Widget? title;
 
   /// Wrapped [AlertDialog.content].
   final Widget content;
+
+  /// Padding wrapping the [content].
+  final EdgeInsets? contentPadding;
 
   /// Wrapped [AlertDialog.actions].
   final List<Widget>? actions;
@@ -108,12 +125,15 @@ class _CustomAlertDialogState<F> extends State<CustomAlertDialog<F>> {
                         const SizedBox(width: 80, height: 80, child: Center(child: CircularProgressIndicator()));
                   }
 
-                  // Well, the compiler doesn't agree nullability.
-                  // ignore: null_check_on_nullable_type_parameter
-                  return _DividedDialogBody(content: widget.successBuilder!.call(context, snapshot.data!));
+                  return _DividedDialogBody(
+                    // Well, the compiler doesn't agree nullability.
+                    // ignore: null_check_on_nullable_type_parameter
+                    content: widget.successBuilder!.call(context, snapshot.data!),
+                    contentPadding: widget.contentPadding,
+                  );
                 },
               )
-            : _DividedDialogBody(content: widget.content),
+            : _DividedDialogBody(content: widget.content, contentPadding: widget.contentPadding),
       ),
       actions: widget.actions,
       clipBehavior: widget.clipBehavior,
@@ -125,10 +145,13 @@ class _CustomAlertDialogState<F> extends State<CustomAlertDialog<F>> {
 ///
 /// Use this widget to make let [FutureBuilder] going outside of the body to avoid rebuild when calling `setState`.
 class _DividedDialogBody extends StatefulWidget {
-  const _DividedDialogBody({required this.content});
+  const _DividedDialogBody({required this.content, required this.contentPadding});
 
   /// Wrapped [AlertDialog.content].
   final Widget content;
+
+  /// Padding wrapping the [content].
+  final EdgeInsets? contentPadding;
 
   @override
   State<_DividedDialogBody> createState() => _DividedDialogBodyState();
@@ -211,7 +234,7 @@ class _DividedDialogBodyState extends State<_DividedDialogBody> {
         if (showTopDivider) const Divider(height: 1, thickness: 1) else const SizedBox(height: 1),
         Flexible(
           child: Padding(
-            padding: edgeInsetsL24R24,
+            padding: widget.contentPadding ?? edgeInsetsL24R24,
             child: Card(
               shape: const Border(),
               margin: EdgeInsets.zero,

@@ -175,7 +175,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   /// Optional permission set to access this thread.
   ///
   /// Only used when editing thread, not other floors' posts.
-  String? perm;
+  ThreadPerm? threadPerm;
 
   /// Optional price set to this thread.
   ///
@@ -265,7 +265,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         data: bbcodeController.toBBCode(),
         options: additionalOptionsMap?.values.toList() ?? [],
         save: saveDraft ? '1' : '',
-        perm: perm,
+        perm: threadPerm?.perm,
         price: price,
       ),
       PostEditType.newThread => ThreadPubPostThread(
@@ -279,7 +279,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           checkbox: '0',
           subject: threadTitleController.text,
           message: bbcodeController.toBBCode(),
-          perm: perm,
+          perm: threadPerm?.perm,
           price: price,
           save: saveDraft ? '1' : '',
           options: additionalOptionsMap?.values.toList() ?? [],
@@ -551,21 +551,21 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                 ),
                 if (state.content?.permList?.isNotEmpty ?? false)
                   Badge(
-                    label: Text('$perm'),
+                    label: Text(threadPerm?.perm ?? ''),
                     offset: const Offset(-4, 4),
-                    isLabelVisible: perm != null && perm!.isNotEmpty,
+                    isLabelVisible: threadPerm != null && threadPerm!.perm.isNotEmpty,
                     child: IconButton(
                       icon: const Icon(Icons.lock_open_outlined),
                       selectedIcon: const Icon(Icons.lock_outline),
-                      isSelected: perm != null && perm!.isNotEmpty,
+                      isSelected: threadPerm != null && threadPerm!.perm.isNotEmpty,
                       tooltip: context.t.bbcodeEditor.readPerm,
                       onPressed: () async {
-                        final selectedPerm = await showSelectPermDialog(context, state.content!.permList!, perm);
+                        final selectedPerm = await showSelectPermDialog(context, state.content!.permList!, threadPerm);
                         if (selectedPerm == null || !context.mounted) {
                           return;
                         }
                         setState(() {
-                          perm = selectedPerm;
+                          threadPerm = selectedPerm;
                         });
                       },
                     ),
@@ -733,14 +733,14 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
         // value.
         threadType ??= state.content?.threadTypeList?.firstOrNull;
         threadTypeController.text = threadType?.name ?? '';
-        perm = state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+        threadPerm = state.content?.permList?.where((e) => e.selected).lastOrNull;
         price = state.content?.price;
       });
 
       init = true;
     } else if (state.status == PostEditStatus.editing) {
       setState(() {
-        perm = state.content?.permList?.where((e) => e.selected).lastOrNull?.perm;
+        threadPerm = state.content?.permList?.where((e) => e.selected).lastOrNull;
         price = state.content?.price;
       });
     }
