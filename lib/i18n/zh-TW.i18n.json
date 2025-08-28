@@ -1152,5 +1152,8 @@
     "expandToolbarTip": "展開工具列",
     "collapseToolbarTip": "收起工具列"
   },
-  "workaroundRedirect": "查看對話"
+  "workaroundRedirect": "查看對話",
+  "threadCard": {
+    "viewInfo": "查看貼文資訊"
+  }
 }
