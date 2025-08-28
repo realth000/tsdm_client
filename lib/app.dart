@@ -328,7 +328,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                     message: tr.autoCheckinFinished,
                     action: SnackBarAction(
                       label: tr.viewDetail,
-                      onPressed: () async => context.pushNamed(ScreenPaths.autoCheckinDetail),
+                      onPressed: () async => router.pushNamed(ScreenPaths.autoCheckinDetail),
                     ),
                   );
                 }
@@ -410,7 +410,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                     },
                   );
                   if (true == gotoUpdatePage && context.mounted && !inUpdatePage) {
-                    await context.pushNamed(ScreenPaths.update);
+                    await router.pushNamed(ScreenPaths.update);
                   }
                 }
               },
