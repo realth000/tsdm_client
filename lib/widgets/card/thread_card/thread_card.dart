@@ -101,8 +101,26 @@ class _CardLayout extends StatelessWidget {
           context: context,
           position: position,
           items: <PopupMenuEntry<_CtxMenuActions>>[
-            PopupMenuItem(value: _CtxMenuActions.openInBrowser, child: Text(context.t.general.openInBrowser)),
-            PopupMenuItem(value: _CtxMenuActions.viewInfo, child: Text(context.t.threadCard.viewInfo)),
+            PopupMenuItem(
+              value: _CtxMenuActions.openInBrowser,
+              child: Row(
+                children: [
+                  const Icon(Icons.open_in_browser_outlined),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.general.openInBrowser),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: _CtxMenuActions.viewInfo,
+              child: Row(
+                children: [
+                  const Icon(Icons.info_outline),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.threadCard.viewInfo),
+                ],
+              ),
+            ),
           ],
         );
 

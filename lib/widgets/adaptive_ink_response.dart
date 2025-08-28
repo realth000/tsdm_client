@@ -214,11 +214,8 @@ class AdaptiveInkResponse extends StatelessWidget {
         autofocus: autofocus,
         statesController: statesController,
         hoverDuration: hoverDuration,
-        onSecondaryTapUp: onAdaptiveContextTap != null
-            ? (d) => onAdaptiveContextTap!.call(
-                TapPosition(globalPosition: d.globalPosition, localPosition: d.localPosition),
-              )
-            : null,
+        onSecondaryTapUp: (d) =>
+            onAdaptiveContextTap?.call(TapPosition(globalPosition: d.globalPosition, localPosition: d.localPosition)),
         child: child,
       );
     }
