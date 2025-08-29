@@ -1152,5 +1152,8 @@
     "expandToolbarTip": "Expand toolbar",
     "collapseToolbarTip": "Collapse toolbar"
   },
-  "workaroundRedirect": "View conversation"
+  "workaroundRedirect": "View conversation",
+  "threadCard": {
+    "viewInfo": "View thread info"
+  }
 }

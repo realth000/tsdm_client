@@ -15,6 +15,7 @@ import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
+import 'package:tsdm_client/features/thread/v1/utils/dialog.dart';
 import 'package:tsdm_client/features/thread/v1/widgets/post_list.dart';
 import 'package:tsdm_client/features/thread_visit_history/bloc/thread_visit_history_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -29,7 +30,6 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
-import 'package:tsdm_client/widgets/copy_content_dialog.dart';
 import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
@@ -189,34 +189,9 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
                 cursor: SystemMouseCursors.click,
                 child: GestureDetector(
                   onTap: () async {
-                    final tr = context.t.threadPage.threadInfo;
                     final id = state.tid ?? widget.threadID;
                     final title = state.title ?? widget.title;
-                    await showCopyContentDialog(
-                      context: context,
-                      title: tr.title,
-                      contents: [
-                        CopyableContent(name: tr.threadTitle, data: state.title ?? widget.title ?? ''),
-                        if (id != null) ...[
-                          CopyableContent(name: tr.threadID, data: id),
-                          CopyableContent(name: tr.threadUrl, data: 'forum.php?mod=viewthread&tid=$id'),
-                          CopyableContent(
-                            name: tr.threadUrlWithDomain,
-                            data: '$baseUrl/forum.php?mod=viewthread&tid=$id',
-                          ),
-                        ],
-                        if (id != null && title != null) ...[
-                          CopyableContent(
-                            name: tr.threadUrlBBCode,
-                            data: '[url=forum.php?mod=viewthread&tid=$id]$title[/url]',
-                          ),
-                          CopyableContent(
-                            name: tr.threadUrlBBCodeWithDomain,
-                            data: '[url=$baseUrl/forum.php?mod=viewthread&tid=$id]$title[/url]',
-                          ),
-                        ],
-                      ],
-                    );
+                    await showCopyThreadInfoDialog(context: context, tid: id, title: title);
                   },
                   child: Text('[${context.t.threadPage.title} ${state.tid ?? ""}]', style: infoTextHighlightStyle),
                 ),
