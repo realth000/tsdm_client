@@ -35,7 +35,7 @@ dependencies:
   equatable: ^2.0.7
   file_picker: ^10.2.0
   flex_color_picker: ^3.7.1
-  flex_color_scheme: ^8.2.0
+  flex_color_scheme: ^8.3.0
   flutter:
     sdk: flutter
   flutter_avif:
@@ -87,15 +87,8 @@ dependencies:
   uuid: ^4.5.1
   web: ^1.1.1
   window_manager: ^0.4.3
-  native_dio_adapter: ^1.5.0
 
 dependency_overrides:
-  jni:
-    git:
-      url: https://github.com/realth000/dart-native
-      # 0.14.2
-      ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
-      path: pkgs/jni
   # For build issues in GitHub CI.
   # ref: https://github.com/dart-lang/sdk/issues/60784#issuecomment-2907039707
   analyzer: ^7.4.0
