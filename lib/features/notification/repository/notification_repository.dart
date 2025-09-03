@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io' if (dart.libaray.js) 'package:web/web.dart';
 
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:fpdart/fpdart.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/constants/url.dart';
@@ -87,9 +89,22 @@ final class NotificationRepository with LoggerMixin {
     return getIt
         .get<NetClientProvider>()
         .get(_buildNotificationV2Url(timestamp: timestamp))
-        .mapHttp(
-          (v) => _controller.add(NotificationInfoStateSuccess(uid, NotificationV2Mapper.fromJson(v.data as String))),
-        )
+        .mapHttp((v) {
+          try {
+            final msg = NotificationV2Mapper.fromJson(v.data as String);
+            _controller.add(NotificationInfoStateSuccess(uid, msg));
+          } on MapperException catch (e) {
+            error(
+              '>>> failed to decode msgV2: $e; '
+              'pm is ${(jsonDecode(v.data as String) as Map<String, dynamic>)["private_message"]}',
+            );
+            error('>>> fallback parsing without pm');
+            final d2 = jsonDecode(v.data as String) as Map<String, dynamic>;
+            d2['private_message'] = [];
+            final msg2 = NotificationV2Mapper.fromMap(d2);
+            _controller.add(NotificationInfoStateSuccess(uid, msg2));
+          }
+        })
         .mapLeft((e) {
           _controller.add(const NotificationInfoStateFailure());
           return e;
