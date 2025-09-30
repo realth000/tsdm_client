@@ -374,6 +374,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
         case '金蛋':
           specialAttr = stat.$2;
           specialAttrName = '金蛋';
+        // 2025 坛庆
+        case '魔法石':
+          specialAttr = stat.$2;
+          specialAttrName = '魔法石';
       }
     }
 
