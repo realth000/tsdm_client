@@ -165,6 +165,17 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
               ),
               null,
             ),
+            PacketDetailSuccess(:final data) when data.isEmpty => (
+              Center(
+                child: Text(
+                  context.t.general.noData,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(color: Theme.of(context).colorScheme.outline),
+                ),
+              ),
+              null,
+            ),
             PacketDetailSuccess(:final data) => (_buildContent(context, data), _buildInfoRow(context, data)),
           };
 
