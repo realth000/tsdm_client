@@ -96,6 +96,7 @@ dependency_overrides:
       # 0.14.2
       ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
       path: pkgs/jni
+  cronet_http: ^1.6.0
 
 dev_dependencies:
   build_runner: 2.5.4
