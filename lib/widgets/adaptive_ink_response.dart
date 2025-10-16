@@ -55,6 +55,7 @@ class AdaptiveInkResponse extends StatelessWidget {
     this.autofocus = false,
     this.statesController,
     this.hoverDuration,
+    this.behavior,
     super.key,
   });
 
@@ -148,10 +149,14 @@ class AdaptiveInkResponse extends StatelessWidget {
   /// [InkResponse.hoverDuration].
   final Duration? hoverDuration;
 
+  /// [GestureDetector.behavior].
+  final HitTestBehavior? behavior;
+
   @override
   Widget build(BuildContext context) {
     if (isMobile) {
       return GestureDetector(
+        behavior: behavior,
         onLongPressStart: (d) =>
             onAdaptiveContextTap?.call(TapPosition(globalPosition: d.globalPosition, localPosition: d.localPosition)),
         child: InkResponse(
