@@ -242,13 +242,13 @@ packages:
     source: hosted
     version: "4.0.8"
   cronet_http:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: cronet_http
-      sha256: "1b99ad5ae81aa9d2f12900e5f17d3681f3828629bb7f7fe7ad88076a34209840"
+      sha256: "07bfb4c6158aef72f8004631826abaeecdeaa2b6042f5f8916b8db20e1d01b4a"
       url: "https://pub.dev"
     source: hosted
-    version: "1.5.0"
+    version: "1.6.0"
   cross_file:
     dependency: transitive
     description:

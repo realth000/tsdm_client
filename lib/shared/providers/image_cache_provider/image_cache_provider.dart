@@ -287,7 +287,6 @@ final class ImageCacheProvider with LoggerMixin {
 
     final cacheFile = getCacheFile(cacheInfo.cacheName);
     if (!cacheFile.existsSync()) {
-      error('$username user avatar cache file not exists');
       return const Option.none();
     }
 
