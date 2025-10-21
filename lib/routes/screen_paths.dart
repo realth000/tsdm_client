@@ -327,6 +327,9 @@ class DialogPaths {
 
   /// Dialog to show help message of thread card.
   static const String threadCardHelp = '/dialog/threadCardHelp';
+
+  /// Dialog to let user select the interaction mode on thread floors.
+  static const String selectThreadFloorInteractionMode = '/dialog/selectThreadFloorInteractionMode';
 }
 
 /// Route path for a screen.

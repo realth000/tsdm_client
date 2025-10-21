@@ -202,6 +202,12 @@
       "collapseAppBarWhenScroll": {
         "title": "滑動時收起AppBar",
         "detail": "分割區與貼文頁面中收起"
+      },
+      "threadFloorInteractionMode": {
+        "title": "貼文樓層互動方式",
+        "detail": "點擊貼文頁面中的樓層時如何回應",
+        "adaptiveTapOpenContextMenu": "長按或右鍵時開啟選單",
+        "tapToReply": "點擊樓層時講目前樓層設為回覆目標"
       }
     },
     "checkinSection": {

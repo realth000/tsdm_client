@@ -202,6 +202,12 @@
       "collapseAppBarWhenScroll": {
         "title": "Hide app bar when scroll",
         "detail": "Hide when scroll down in subreddit and thread pages"
+      },
+      "threadFloorInteractionMode": {
+        "title": "Interaction on thread floor",
+        "detail": "Interaction on floors in thread page",
+        "adaptiveTapOpenContextMenu": "Open context menu when long press or right click",
+        "tapToReply": "Set floor as reply target when tap"
       }
     },
     "checkinSection": {
