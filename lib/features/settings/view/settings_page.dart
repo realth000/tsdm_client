@@ -27,6 +27,7 @@ import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/font_family_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/select_thread_floor_interaction_mode_dialog.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
@@ -394,6 +395,7 @@ class _SettingsPageState extends State<SettingsPage> {
       autoSyncNoticeDuration = Duration(seconds: autoSyncNoticeSeconds);
     }
     final enableBBCodeParser = state.settingsMap.enableEditorBBCodeParser;
+    final threadFloorInteractionMode = state.settingsMap.threadFloorInteractionMode;
 
     return [
       SectionTitleText(tr.title),
@@ -462,6 +464,21 @@ class _SettingsPageState extends State<SettingsPage> {
         title: Text(context.t.fastReplyTemplate.title),
         subtitle: Text(context.t.fastReplyTemplate.details),
         onTap: () async => context.pushNamed(ScreenPaths.fastReplyTemplate, pathParameters: {'pick': 'false'}),
+      ),
+      SectionListTile(
+        leading: const Icon(Icons.touch_app_outlined),
+        title: Text(context.t.settingsPage.behaviorSection.threadFloorInteractionMode.title),
+        subtitle: Text(context.t.settingsPage.behaviorSection.threadFloorInteractionMode.detail),
+        onTap: () async {
+          final result = await showSelectThreadFloorInteractionMode(context, threadFloorInteractionMode);
+          if (result == null) {
+            return;
+          }
+          if (!context.mounted) {
+            return;
+          }
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.threadFloorInteractionMode, result));
+        },
       ),
     ];
   }

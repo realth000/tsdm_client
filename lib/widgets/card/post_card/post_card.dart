@@ -9,11 +9,13 @@ import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/date_time.dart';
 import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/post/models/models.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/medal.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/models/thread_floor_interaction_mode.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/adaptive_ink_response.dart';
@@ -221,40 +223,50 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
   }
 
   Widget _buildPostBody(BuildContext context) {
-    return AdaptiveInkResponse(
-      splashColor: Colors.transparent,
-      mouseCursor: MouseCursor.uncontrolled,
-      behavior: HitTestBehavior.opaque,
-      onAdaptiveContextTap: (tapPosition) async {
-        // Get the position where the tap occurred.
-        RelativeRect? position;
-        position = RelativeRect.fromRect(
-          tapPosition.globalPosition & Size.zero, // Rect from the tap position
-          Offset.zero & MediaQuery.of(context).size, // Bounding box for the menu
-        );
-        final choice = await showMenu<_PostCardActions>(
-          context: context,
-          position: position,
-          items: _buildContextMenuEntries(context),
-        );
-
-        if (choice == null || !context.mounted) {
-          return;
-        }
-
-        await _onContextMenuItemSelected(context, choice);
-      },
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: edgeInsetsL16R16,
-              child: munchElement(context, parseHtmlDocument(widget.post.data).body!),
-            ),
+    final interactionMode = context.read<SettingsBloc>().state.settingsMap.threadFloorInteractionMode;
+    final child = Row(
+      children: [
+        Expanded(
+          child: Padding(
+            padding: edgeInsetsL16R16,
+            child: munchElement(context, parseHtmlDocument(widget.post.data).body!),
           ),
-        ],
-      ),
+        ),
+      ],
     );
+    return switch (interactionMode) {
+      ThreadFloorInteractionMode.adaptiveTapMenu => AdaptiveInkResponse(
+        splashColor: Colors.transparent,
+        mouseCursor: MouseCursor.uncontrolled,
+        behavior: HitTestBehavior.opaque,
+        onAdaptiveContextTap: (tapPosition) async {
+          // Get the position where the tap occurred.
+          RelativeRect? position;
+          position = RelativeRect.fromRect(
+            tapPosition.globalPosition & Size.zero, // Rect from the tap position
+            Offset.zero & MediaQuery.of(context).size, // Bounding box for the menu
+          );
+          final choice = await showMenu<_PostCardActions>(
+            context: context,
+            position: position,
+            items: _buildContextMenuEntries(context),
+          );
+
+          if (choice == null || !context.mounted) {
+            return;
+          }
+
+          await _onContextMenuItemSelected(context, choice);
+        },
+        child: child,
+      ),
+      ThreadFloorInteractionMode.tapToReply => GestureDetector(
+        onTap: () async {
+          await widget.replyCallback?.call(widget.post.author, widget.post.postFloor, widget.post.replyAction);
+        },
+        child: child,
+      ),
+    };
   }
 
   List<PopupMenuEntry<_PostCardActions>> _buildContextMenuEntries(BuildContext context) {

@@ -50,6 +50,7 @@ class SettingsMap with SettingsMapMappable {
     required this.enableAutoClearImageCache,
     required this.autoClearImageCacheDuration,
     required this.collapseAppBarWhenScroll,
+    required this.threadFloorInteractionMode,
   });
 
   final String netClientAccept;
@@ -94,6 +95,7 @@ class SettingsMap with SettingsMapMappable {
   final bool enableAutoClearImageCache;
   final int autoClearImageCacheDuration;
   final bool collapseAppBarWhenScroll;
+  final ThreadFloorInteractionMode threadFloorInteractionMode;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -145,6 +147,9 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.enableAutoClearImageCache => copyWith(enableAutoClearImageCache: value as bool?),
       SettingsKeys.autoClearImageCacheDuration => copyWith(autoClearImageCacheDuration: value as int?),
       SettingsKeys.collapseAppBarWhenScroll => copyWith(collapseAppBarWhenScroll: value as bool?),
+      SettingsKeys.threadFloorInteractionMode => copyWith(
+        threadFloorInteractionMode: value as ThreadFloorInteractionMode?,
+      ),
     };
   }
 }

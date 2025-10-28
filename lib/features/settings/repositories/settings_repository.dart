@@ -9,6 +9,7 @@ import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/models/thread_floor_interaction_mode.dart';
 import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
@@ -48,6 +49,8 @@ extension _ExtractExt on List<SettingsEntity> {
       value = v.stringListValue;
     } else if (T == List<int>) {
       value = v.intListValue;
+    } else if (T == ThreadFloorInteractionMode) {
+      value = ThreadFloorInteractionMode.values[v.intValue ?? 0];
     } else {
       talker.error('failed to extract settings: unsupported settings type $T');
       value = null;
@@ -136,6 +139,7 @@ final class SettingsRepository with LoggerMixin {
       enableAutoClearImageCache: s.extract(_SK.enableAutoClearImageCache),
       autoClearImageCacheDuration: s.extract(_SK.autoClearImageCacheDuration),
       collapseAppBarWhenScroll: s.extract(_SK.collapseAppBarWhenScroll),
+      threadFloorInteractionMode: s.extract(_SK.threadFloorInteractionMode),
     );
   }
 
@@ -172,6 +176,8 @@ final class SettingsRepository with LoggerMixin {
       v = await _storage.getStringList(name);
     } else if (T == List<int>) {
       v = await _storage.getIntList(name);
+    } else if (T == ThreadFloorInteractionMode) {
+      v = ThreadFloorInteractionMode.values[await _storage.getInt(name) ?? 0];
     } else {
       error('failed to getValue for key $key: unsupported type $T');
       v = null;
@@ -214,6 +220,8 @@ final class SettingsRepository with LoggerMixin {
       await _storage.saveStringList(name, value as List<String>);
     } else if (T == List<int>) {
       await _storage.saveIntList(name, value as List<int>);
+    } else if (T == ThreadFloorInteractionMode) {
+      await _storage.saveInt(name, (value as ThreadFloorInteractionMode).index);
     } else {
       error(
         'failed to save settings for key $key:'

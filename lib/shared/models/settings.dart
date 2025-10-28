@@ -191,7 +191,14 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
 
   /// Collapse app bar when scroll in pages we want to do it, for example forum page and thread page where app bar
   /// holds more spaces and user shall have more space to focus on contents in UI.
-  collapseAppBarWhenScroll<bool>(name: 'collapseAppBarWhenScroll', type: bool, defaultValue: true);
+  collapseAppBarWhenScroll<bool>(name: 'collapseAppBarWhenScroll', type: bool, defaultValue: true),
+
+  /// Interaction mode on thread floors.
+  threadFloorInteractionMode<ThreadFloorInteractionMode>(
+    name: 'threadFloorInteractionMode',
+    type: ThreadFloorInteractionMode,
+    defaultValue: ThreadFloorInteractionMode.adaptiveTapMenu,
+  );
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

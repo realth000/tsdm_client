@@ -6,13 +6,12 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:stream_transform/stream_transform.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/shared/models/thread_floor_interaction_mode.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 part 'settings_bloc.mapper.dart';
-
 part 'settings_event.dart';
-
 part 'settings_state.dart';
 
 /// Emitter.
@@ -51,6 +50,7 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> with LoggerMixin {
         final SettingsValueChanged<Size> e => _onValueChanged<Size>(e),
         final SettingsValueChanged<List<String>> e => _onValueChanged<List<String>>(e),
         final SettingsValueChanged<List<int>> e => _onValueChanged<List<int>>(e),
+        final SettingsValueChanged<ThreadFloorInteractionMode> e => _onValueChanged<ThreadFloorInteractionMode>(e),
         final SettingsValueChanged<dynamic> e => throw Exception(
           'Unsupported settings change event '
           'type(${e.runtimeType}): $e',
