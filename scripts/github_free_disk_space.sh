@@ -28,14 +28,7 @@
 
 echo "This script is copied from https://github.com/apache/flink/blob/02d30ace69dc18555a5085eccf70ee884e73a16e/tools/azure-pipelines/free_disk_space.sh"
 
-if [ -n "$CI_FLUTTER_VERSION" ]; then
-  echo "Remove unused GitHub CI components"
-else
-  echo "This script is only intended to use in GitHub CI environments"
-  echo "This script is only intended to use in GitHub CI environments"
-  echo "This script is only intended to use in GitHub CI environments"
-  exit 1
-fi
+echo "Remove unused GitHub CI components"
 
 echo "=============================================================================="
 echo "Freeing up disk space on CI system"
