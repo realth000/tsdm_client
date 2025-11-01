@@ -28,7 +28,7 @@
 
 echo "This script is copied from https://github.com/apache/flink/blob/02d30ace69dc18555a5085eccf70ee884e73a16e/tools/azure-pipelines/free_disk_space.sh"
 
-if [ "$CI" = "true" ]; then
+if [ "$GITHUB_ACTIONS" = "true" ]; then
   echo "Remove unused GitHub CI components"
 else
   echo "This script is only intended to use in GitHub CI environments"
