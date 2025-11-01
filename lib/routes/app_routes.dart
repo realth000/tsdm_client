@@ -35,6 +35,7 @@ import 'package:tsdm_client/features/rate/view/rate_log_page.dart';
 import 'package:tsdm_client/features/rate/view/rate_post_page.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/search/view/search_page.dart';
+import 'package:tsdm_client/features/settings/models/historical_log.dart';
 import 'package:tsdm_client/features/settings/view/about_page.dart';
 import 'package:tsdm_client/features/settings/view/debug_log_page.dart';
 import 'package:tsdm_client/features/settings/view/settings_page.dart';
@@ -332,6 +333,14 @@ final _appRoutes = [
   AppRoute(path: ScreenPaths.threadVisitHistory, builder: (_) => const ThreadVisitHistoryPage()),
   AppRoute(path: ScreenPaths.autoCheckinDetail, builder: (_) => const AutoCheckinPage()),
   AppRoute(path: ScreenPaths.debugLog, builder: (_) => const DebugLogPage()),
+  AppRoute(path: ScreenPaths.debugHistoricalLog, builder: (_) => const DebugHistoricalLogPage()),
+  AppRoute(
+    path: ScreenPaths.debugHistoricalLogDetail,
+    builder: (state) {
+      final log = state.extra as HistoricalLog?;
+      return DebugHistoricalLogDetailPage(log!);
+    },
+  ),
   AppRoute(
     path: ScreenPaths.packetDetail,
     builder: (state) {

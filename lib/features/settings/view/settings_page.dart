@@ -750,6 +750,11 @@ class _SettingsPageState extends State<SettingsPage> {
             },
           ),
           SectionListTile(title: Text(tr.viewLog.title), onTap: () async => context.pushNamed(ScreenPaths.debugLog)),
+          // View historical logs.
+          SectionListTile(
+            title: Text(tr.viewHistoryLog.title),
+            onTap: () async => context.pushNamed(ScreenPaths.debugHistoricalLog),
+          ),
           SectionListTile(
             title: Text(tr.exportLog.title),
             subtitle: _logExportPath == null ? null : Text(tr.exportLog.detail(path: _logExportPath!)),

@@ -22,11 +22,13 @@ import 'package:window_manager/window_manager.dart';
 Future<void> main(List<String> args) async => runZonedGuarded(() async => _boot(args), _ensureHandled);
 
 Future<void> _boot(List<String> args) async {
+  await initLogger();
+
   WidgetsFlutterBinding.ensureInitialized();
 
   parseCmdArgs(args);
 
-  talker.debug('start app...');
+  talker.debug('------------------- start app -------------------');
   await initProviders();
 
   final settings = getIt.get<SettingsRepository>().currentSettings;

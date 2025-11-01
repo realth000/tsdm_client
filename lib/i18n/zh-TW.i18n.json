@@ -288,6 +288,11 @@
       "viewLog": {
         "title": "查看日誌"
       },
+      "viewHistoryLog": {
+        "title": "查看歷史日誌",
+        "historicalLogs": "歷史日誌",
+        "export": "匯出"
+      },
       "copyDatabaseDir": "複製資料庫路徑"
     },
     "othersSection": {

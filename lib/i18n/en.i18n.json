@@ -288,6 +288,11 @@
       "viewLog": {
         "title": "View log"
       },
+      "viewHistoryLog": {
+        "title": "View historical log",
+        "historicalLogs": "Historical logs",
+        "export": "Export"
+      },
       "copyDatabaseDir": "Copy database path"
     },
     "othersSection": {
