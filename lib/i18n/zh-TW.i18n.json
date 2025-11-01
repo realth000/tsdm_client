@@ -226,6 +226,7 @@
       "downloadAgainInfo": "必要的快取檔案將會再次從伺服器下載",
       "images": "圖片",
       "emoji": "表情",
+      "log": "日誌",
       "selectOneCache": "需要至少選擇一項快取",
       "clearSuccess": "清除成功",
       "scheduledCleaning": {

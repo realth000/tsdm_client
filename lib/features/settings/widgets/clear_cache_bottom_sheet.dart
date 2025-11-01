@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/int.dart';
@@ -70,6 +71,15 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                     value: state.clearInfo.clearEmoji,
                     onChanged: (v) => context.read<SettingsCacheBloc>().add(
                       SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearEmoji: v)),
+                    ),
+                  ),
+                  CheckboxListTile(
+                    secondary: const Icon(Symbols.text_ad),
+                    title: Text(tr.log),
+                    subtitle: Text(state.storageInfo!.logSize.withSizeHint()),
+                    value: state.clearInfo.clearLog,
+                    onChanged: (v) => context.read<SettingsCacheBloc>().add(
+                      SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearLog: v)),
                     ),
                   ),
                 ],

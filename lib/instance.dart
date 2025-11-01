@@ -15,6 +15,21 @@ final getIt = GetIt.instance;
 /// Global logger instance.
 late final Talker talker;
 
+/// The log file instance.
+///
+/// This is a global instance because we have to reinit the log sink
+/// after deleting logs.
+late File _logFile;
+
+/// The sink of log file.
+///
+/// This is a global instance because we have to release the file first
+/// when deleting logs.
+late IOSink _logSink;
+
+/// Flag indicating [_logSink] is in closed state or not.
+bool _logSinkClosed = false;
+
 /// Global cmdline args.
 ///
 /// Only used in desktop platforms.
@@ -43,27 +58,33 @@ Future<ui.ImmutableBuffer> getPlaceholderImageData() async {
 final GlobalKey<ScaffoldMessengerState> snackbarKey = GlobalKey<ScaffoldMessengerState>();
 
 class _TalkerObserver implements TalkerObserver {
-  _TalkerObserver(this.logFile, this.sink);
-
-  final File logFile;
-  final IOSink sink;
+  _TalkerObserver();
 
   /// Init the file to save log, this function MUST be called as early as possible.
   Future<void> initLogFile() async {}
 
   @override
   void onError(TalkerError err) {
-    sink.write('${err.generateTextMessage()}\n');
+    if (_logSinkClosed) {
+      return;
+    }
+    _logSink.write('${err.generateTextMessage()}\n');
   }
 
   @override
   void onException(TalkerException err) {
-    sink.write('${err.generateTextMessage()}\n');
+    if (_logSinkClosed) {
+      return;
+    }
+    _logSink.write('${err.generateTextMessage()}\n');
   }
 
   @override
   void onLog(TalkerData log) {
-    sink.write('${log.generateTextMessage()}\n');
+    if (_logSinkClosed) {
+      return;
+    }
+    _logSink.write('${log.generateTextMessage()}\n');
   }
 }
 
@@ -87,11 +108,26 @@ Future<void> initLogger() async {
   }
 
   final logFileTime = '${nowTime.year}${"${nowTime.month}".padLeft(2, "0")}${"${nowTime.day}".padLeft(2, "0")}';
-  final logFile = File('${logDir.path}${sep}tsdm_client_$logFileTime.log');
-  final sink = logFile.openWrite(mode: FileMode.append);
+  _logFile = File('${logDir.path}${sep}tsdm_client_$logFileTime.log');
+  _logSink = _logFile.openWrite(mode: FileMode.append);
 
   talker = TalkerFlutter.init(
     settings: TalkerSettings(colors: {TalkerLogType.debug.key: AnsiPen()..xterm(60)}),
-    observer: _TalkerObserver(logFile, sink),
+    observer: _TalkerObserver(),
   );
+}
+
+/// Close the log sink.
+///
+/// Remember to call [openLogSink] otherwise logs are not saved.
+Future<void> closeLogSink() async {
+  _logSinkClosed = true;
+  await _logSink.flush();
+  await _logSink.close();
+}
+
+/// Close the log sink.
+Future<void> openLogSink() async {
+  _logSink = _logFile.openWrite(mode: FileMode.append);
+  _logSinkClosed = false;
 }

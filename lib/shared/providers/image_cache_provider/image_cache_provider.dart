@@ -354,7 +354,8 @@ final class ImageCacheProvider with LoggerMixin {
   Future<CacheStorageInfo> calculateCache() async {
     final imageSize = _calculateDirectorySize(_imageCacheDirectory);
     final emojiSize = _calculateDirectorySize(_emojiCacheDirectory);
-    return CacheStorageInfo(imageSize: imageSize, emojiSize: emojiSize);
+    final logSize = _calculateDirectorySize(await getLogDir());
+    return CacheStorageInfo(imageSize: imageSize, emojiSize: emojiSize, logSize: logSize);
   }
 
   /// Clear cache in [_imageCacheDirectory].
