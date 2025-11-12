@@ -1,14 +1,16 @@
 import 'package:drift_dev/api/migrations_native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 
 import '../data/generated_migrations/schema.dart';
 
 void main() {
-  setUp(() async {
-    await initLogger();
+  setUpAll(() async {
+    talker = TalkerFlutter.init();
   });
+
   test('upgrade from 1 to 2', () async {
     final verifier = SchemaVerifier(GeneratedHelper());
     final connection = await verifier.startAt(1);

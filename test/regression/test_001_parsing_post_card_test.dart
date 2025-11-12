@@ -1,4 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:universal_html/parsing.dart';
 
@@ -41,7 +43,8 @@ const _postBodyAuthorData = '''
 /// Common post body that have both <div class="pcb"> and <table> node.
 ///
 /// tid: 1188184
-const _postBodyWithPcbTable = '''
+const _postBodyWithPcbTable =
+    '''
 <div id="post_123456">
   <table id="pid123456">
     <tbody>
@@ -75,7 +78,8 @@ const _postBodyWithPcbTable = '''
 /// Post body with <div class="pcb"> but none <table> node.
 ///
 /// tid: 1189593
-const _postBodyWithPcb = '''
+const _postBodyWithPcb =
+    '''
 <div id="post_123456">
   <table id="pid123456">
     <tbody>
@@ -101,7 +105,8 @@ const _postBodyWithPcb = '''
 /// Post data with <div class="pcbs"> appears in post with poll form.
 ///
 /// tid: 1189614
-const _postBodyWithPcbs = '''
+const _postBodyWithPcbs =
+    '''
 <div id="post_123456">
   <table id="pid123456">
     <tbody>
@@ -135,7 +140,8 @@ const _postBodyWithPcbs = '''
 /// Post body with purchase area.
 ///
 /// tid: 1179745
-const _postBodyWithLockedWithPurchase = '''
+const _postBodyWithLockedWithPurchase =
+    '''
 <div id="post_123456">
   <table id="pid123456">
     <tbody>
@@ -164,65 +170,42 @@ const _postBodyWithLockedWithPurchase = '''
 ''';
 
 void main() {
+  setUpAll(() async {
+    talker = TalkerFlutter.init();
+  });
+
   group('ParsePostBody', () {
     test('with pcb and table', () {
       final document = parseHtmlDocument(_postBodyWithPcbTable);
-      final postData = Post.fromPostNode(
-        document.body!.querySelector('div')!,
-        1,
-      );
+      final postData = Post.fromPostNode(document.body!.querySelector('div')!, 1);
       expect(postData?.data.contains('test_body_with_pcb_table'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
-      expect(
-        postData?.author.avatarUrl,
-        'https://www.user_avatar/data-original',
-      );
+      expect(postData?.author.avatarUrl, 'https://www.user_avatar/data-original');
     });
     test('with pcb', () {
       final document = parseHtmlDocument(_postBodyWithPcb);
-      final postData = Post.fromPostNode(
-        document.body!.querySelector('div')!,
-        1,
-      );
+      final postData = Post.fromPostNode(document.body!.querySelector('div')!, 1);
       expect(postData?.data.contains('test_body_with_pcb'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
-      expect(
-        postData?.author.avatarUrl,
-        'https://www.user_avatar/data-original',
-      );
+      expect(postData?.author.avatarUrl, 'https://www.user_avatar/data-original');
     });
     test('with pcbs', () {
       final document = parseHtmlDocument(_postBodyWithPcbs);
-      final postData = Post.fromPostNode(
-        document.body!.querySelector('div')!,
-        1,
-      );
+      final postData = Post.fromPostNode(document.body!.querySelector('div')!, 1);
       expect(postData?.data.contains('test_body_with_pcbs'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
-      expect(
-        postData?.author.avatarUrl,
-        'https://www.user_avatar/data-original',
-      );
+      expect(postData?.author.avatarUrl, 'https://www.user_avatar/data-original');
     });
     test('with locked with purchase', () {
       final document = parseHtmlDocument(_postBodyWithLockedWithPurchase);
-      final postData = Post.fromPostNode(
-        document.body!.querySelector('div')!,
-        1,
-      );
-      expect(
-        postData?.data.contains('test_body_with_locked_with_purchase'),
-        true,
-      );
+      final postData = Post.fromPostNode(document.body!.querySelector('div')!, 1);
+      expect(postData?.data.contains('test_body_with_locked_with_purchase'), true);
       expect(postData?.author.uid, '123789');
       expect(postData?.author.name, 'test_user');
-      expect(
-        postData?.author.avatarUrl,
-        'https://www.user_avatar/data-original',
-      );
+      expect(postData?.author.avatarUrl, 'https://www.user_avatar/data-original');
       expect(postData?.locked.length, 1);
       expect(postData!.locked[0].lockedWithPurchase, true);
       expect(postData.locked[0].purchasedCount, 138);
