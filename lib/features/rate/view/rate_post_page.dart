@@ -16,6 +16,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 
 /// Page to rate a post in thread.
@@ -133,11 +134,11 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
     }
 
     if (state.status == RateStatus.initial || state.status == RateStatus.fetchingInfo) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
 
     if (state.status == RateStatus.failed) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
 
     final scoreWidgetList = state.info!.scoreList.map((e) => _buildScoreWidget(context, e)).toList();

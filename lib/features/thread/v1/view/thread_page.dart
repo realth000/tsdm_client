@@ -30,6 +30,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/post_card/post_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
@@ -281,7 +282,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
     }
 
     return switch (state.status) {
-      ThreadStatus.initial || ThreadStatus.loading => const Center(child: CircularProgressIndicator()),
+      ThreadStatus.initial || ThreadStatus.loading => const CenteredCircularIndicator(),
       ThreadStatus.failure => buildRetryButton(context, () {
         context.read<ThreadBloc>().add(ThreadLoadMoreRequested(state.currentPage));
       }),

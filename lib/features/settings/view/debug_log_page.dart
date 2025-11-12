@@ -15,6 +15,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Debug page for show all caught log since this start.
 class DebugLogPage extends StatefulWidget {
@@ -76,7 +77,7 @@ class DebugHistoricalLogPage extends StatelessWidget with LoggerMixin {
       future: _loadLogFiles(),
       builder: (BuildContext context, AsyncSnapshot<List<HistoricalLog>> snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         if (snapshot.hasError) {
@@ -129,7 +130,7 @@ class _DebugHistoricalLogDetailPageState extends State<DebugHistoricalLogDetailP
       future: File(widget.log.file.path).readAsString(),
       builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         if (snapshot.hasError) {

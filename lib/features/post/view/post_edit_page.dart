@@ -28,6 +28,7 @@ import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 
@@ -603,7 +604,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
 
   Widget _buildBody(BuildContext context, PostEditState state) {
     if (state.status == PostEditStatus.initial || state.status == PostEditStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
     if (state.status == PostEditStatus.failedToLoad) {
       return buildRetryButton(context, () {

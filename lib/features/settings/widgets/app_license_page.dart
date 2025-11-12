@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to show app license and license of dependencies.
 class AppLicensePage extends StatelessWidget {
@@ -32,7 +33,7 @@ class AppLicensePage extends StatelessWidget {
             applicationLegalese: snapshot.data,
           );
         }
-        return const CircularProgressIndicator();
+        return const CircularIndicator();
       },
     );
   }

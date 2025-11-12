@@ -8,6 +8,7 @@ import 'package:tsdm_client/features/latest_thread/repository/latest_thread_repo
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to show info about latest thread page.
 class LatestThreadPage extends StatefulWidget {
@@ -79,8 +80,7 @@ class _LatestThreadPageState extends State<LatestThreadPage> {
       child: BlocBuilder<LatestThreadBloc, LatestThreadState>(
         builder: (context, state) {
           final body = switch (state.status) {
-            LatestThreadStatus.initial ||
-            LatestThreadStatus.loading => const Center(child: CircularProgressIndicator()),
+            LatestThreadStatus.initial || LatestThreadStatus.loading => const CenteredCircularIndicator(),
             LatestThreadStatus.failed => buildRetryButton(context, () {
               context.read<LatestThreadBloc>().add(LatestThreadRefreshRequested(widget.url));
             }),

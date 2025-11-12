@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page showing changelog bundled with app.
 class LocalChangelogPage extends StatelessWidget {
@@ -23,7 +24,7 @@ class LocalChangelogPage extends StatelessWidget {
           }
 
           if (!snapshot.hasData) {
-            return const Center(child: CircularProgressIndicator());
+            return const CenteredCircularIndicator();
           }
 
           return Markdown(data: snapshot.data!);

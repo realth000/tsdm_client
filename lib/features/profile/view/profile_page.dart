@@ -36,6 +36,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/medal_group_view.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 import 'package:tsdm_client/widgets/obscure_list_tile.dart';
@@ -876,7 +877,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // Main content of user profile.
           // Contain a sliver version app bar to show when data loaded.
           final body = switch (state.status) {
-            ProfileStatus.initial || ProfileStatus.loading => const Center(child: CircularProgressIndicator()),
+            ProfileStatus.initial || ProfileStatus.loading => const CenteredCircularIndicator(),
             ProfileStatus.needLogin => NeedLoginPage(
               backUri: GoRouterState.of(context).uri,
               needPop: true,

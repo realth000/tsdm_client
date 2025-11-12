@@ -12,6 +12,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Show a bottom sheet provides clear cache functionality with clear cache
 /// options.
@@ -85,7 +86,7 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                 ],
               ),
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const CenteredCircularIndicator(),
           };
 
           return Column(

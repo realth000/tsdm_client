@@ -6,6 +6,7 @@ import 'package:tsdm_client/features/forum/bloc/forum_group_bloc.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// The forum group page is the page corresponding to urls with `gid` query parameter.
 class ForumGroupPage extends StatefulWidget {
@@ -41,7 +42,7 @@ class _ForumGroupPageState extends State<ForumGroupPage> {
       child: BlocBuilder<ForumGroupBloc, ForumGroupBaseState>(
         builder: (context, state) {
           final body = switch (state) {
-            ForumGroupInitial() || ForumGroupLoading() => const Center(child: CircularProgressIndicator()),
+            ForumGroupInitial() || ForumGroupLoading() => const CenteredCircularIndicator(),
             ForumGroupSuccess(:final forumGroup) => _buildContent(context, forumGroup),
             ForumGroupFailure() => buildRetryButton(
               context,

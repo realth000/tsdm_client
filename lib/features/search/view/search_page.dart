@@ -13,6 +13,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page of search, including a form to fill search parameters and search
 /// results.
@@ -360,7 +361,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
   Widget _buildSearchResult(BuildContext context, SearchState state) {
     if (state.status.isSearching()) {
-      return const Expanded(child: Center(child: CircularProgressIndicator()));
+      return const Expanded(child: CenteredCircularIndicator());
     } else if (state.searchResult?.data?.isEmpty ?? true) {
       return Expanded(child: Center(child: Text(context.t.searchPage.result.noData)));
     }

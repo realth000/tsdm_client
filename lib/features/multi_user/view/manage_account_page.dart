@@ -16,6 +16,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to manage user account for multi-user target.
 class ManageAccountPage extends StatefulWidget {
@@ -60,7 +61,7 @@ class _ManageAccountPageState extends State<ManageAccountPage> {
                       return Center(child: Text('${snapshot.error}'));
                     }
                     if (!snapshot.hasData) {
-                      return const Center(child: CircularProgressIndicator());
+                      return const CenteredCircularIndicator();
                     }
 
                     final tr = context.t.manageAccountPage;

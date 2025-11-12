@@ -16,6 +16,7 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Type of editing the fast reply template.
 enum FastReplyTemplateEditType {
@@ -198,7 +199,7 @@ class _FastReplyTemplateEditPageState extends State<FastReplyTemplateEditPage> w
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         final result = snapshot.data!;

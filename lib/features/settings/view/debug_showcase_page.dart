@@ -13,6 +13,7 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/widgets/card/packet_card.dart';
 import 'package:tsdm_client/widgets/card/rate_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:universal_html/parsing.dart';
 
 /// Showcase page for debugging.
@@ -313,7 +314,7 @@ class _SampleThreadV2PageState extends State<_SampleThreadV2Page> {
             future: _fetchThreadPage(),
             builder: (context, snapshot) {
               if (snapshot.connectionState != ConnectionState.done) {
-                return const Center(child: CircularProgressIndicator());
+                return const CenteredCircularIndicator();
               }
 
               if (snapshot.hasError) {
@@ -321,7 +322,7 @@ class _SampleThreadV2PageState extends State<_SampleThreadV2Page> {
               }
 
               if (!snapshot.hasData) {
-                return const Center(child: CircularProgressIndicator());
+                return const CenteredCircularIndicator();
               }
 
               // Remove CR and LF

@@ -19,6 +19,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 const _drawerWidth = 250.0;
 
@@ -148,7 +149,7 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
       child: BlocBuilder<InitCubit, InitState>(
         builder: (context, state) {
           if (state.clearingOutdatedImageCache) {
-            return const Center(child: CircularProgressIndicator());
+            return const CenteredCircularIndicator();
           }
 
           if (ResponsiveBreakpoints.of(context).largerThan(WindowSize.expanded.name)) {

@@ -25,6 +25,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 
 const _tabsCount = 3;
@@ -338,7 +339,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (state.filterState.isFiltering()) _buildNormalThreadFilterRow(context, state),
-          const Expanded(child: Center(child: CircularProgressIndicator())),
+          const Expanded(child: CenteredCircularIndicator()),
         ],
       ),
       ForumStatus.failure => buildRetryButton(context, () {

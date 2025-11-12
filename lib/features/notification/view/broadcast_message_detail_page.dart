@@ -9,6 +9,7 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Detail page of a `BroadcastMessage`.
@@ -50,7 +51,7 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
         builder: (context, state) {
           final body = switch (state.status) {
             BroadcastMessageDetailStatus.initial ||
-            BroadcastMessageDetailStatus.loading => const Center(child: CircularProgressIndicator()),
+            BroadcastMessageDetailStatus.loading => const CenteredCircularIndicator(),
             BroadcastMessageDetailStatus.success => _buildBody(context, state),
             BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
               context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);

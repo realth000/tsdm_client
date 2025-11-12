@@ -19,6 +19,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 
 /// Show [FloatingActionButton] when offset is larger than this value.
@@ -135,7 +136,7 @@ class _HomepagePageState extends State<HomepagePage> {
                 onRefresh: () {
                   context.read<HomepageBloc>().add(HomepageRefreshRequested());
                 },
-                child: const Center(child: CircularProgressIndicator()),
+                child: const CenteredCircularIndicator(),
               ),
               HomepageStatus.needLogin => NeedLoginPage(
                 backUri: GoRouterState.of(context).uri,

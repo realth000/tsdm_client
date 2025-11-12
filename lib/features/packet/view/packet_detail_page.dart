@@ -15,6 +15,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page showing packet statistics detail data for a given thread.
 class PacketDetailPage extends StatefulWidget {
@@ -158,7 +159,7 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
           final tr = context.t.packetDetailPage;
 
           final (body, infoRow) = switch (state) {
-            PacketDetailInitial() || PacketDetailLoading() => (const Center(child: CircularProgressIndicator()), null),
+            PacketDetailInitial() || PacketDetailLoading() => (const CenteredCircularIndicator(), null),
             PacketDetailFailure() => (
               Center(
                 child: buildRetryButton(context, () async => context.read<PacketDetailCubit>().fetchDetail(widget.tid)),

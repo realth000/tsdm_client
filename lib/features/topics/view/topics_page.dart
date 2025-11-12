@@ -11,6 +11,7 @@ import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// App topic page.
 ///
@@ -104,7 +105,7 @@ class _TopicsPageState extends State<TopicsPage> with SingleTickerProviderStateM
               key: const ValueKey('loading'),
               controller: _refreshController,
               header: const MaterialHeader(),
-              child: const Center(child: CircularProgressIndicator()),
+              child: const CenteredCircularIndicator(),
             ),
             TopicsStatus.failed => buildRetryButton(context, () {
               context.read<TopicsBloc>().add(TopicsRefreshRequested());
