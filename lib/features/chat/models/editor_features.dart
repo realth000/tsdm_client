@@ -1,7 +1,7 @@
 import 'package:tsdm_client/features/editor/widgets/toolbar.dart';
 
 /// All disabled bbcode editor features in chat feature.
-const chatPagesDisabledFeatures = {
+const Set<EditorFeatures> chatPagesDisabledFeatures = {
   EditorFeatures.italic,
   EditorFeatures.underline,
   EditorFeatures.strikethrough,

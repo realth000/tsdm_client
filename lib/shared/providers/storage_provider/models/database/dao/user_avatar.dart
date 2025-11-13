@@ -4,7 +4,7 @@ part of 'dao.dart';
 @DriftAccessor(tables: [UserAvatar])
 final class UserAvatarDao extends DatabaseAccessor<AppDatabase> with _$UserAvatarDaoMixin {
   /// Constructor.
-  UserAvatarDao(super.db);
+  UserAvatarDao(super.attachedDatabase);
 
   /// Select all cache.
   Future<List<UserAvatarEntity>> selectAll() async {

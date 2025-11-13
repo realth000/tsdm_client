@@ -13,9 +13,7 @@ import 'package:tsdm_client/widgets/card/post_card/post_medal_menu_info.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'thread_bloc.mapper.dart';
-
 part 'thread_event.dart';
-
 part 'thread_state.dart';
 
 /// Emitter.
@@ -210,7 +208,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
   IO<ThreadState> _parseFromDocument(uh.Document document, int pageNumber, {bool? clearOnlyVisibleUid}) => IO(() {
     // Reset the thread id from document.
     final threadLink = document.querySelector('head > link')?.attributes['href'];
-    final tid = threadLink?.tryParseAsUri()?.tryGetQueryParameters()?['tid'];
+    final tid = threadLink?.tryParseAsUri().tryGetQueryParameters()?['tid'];
 
     final threadSoftClosed = document.querySelector('div#postlist h1.ts img[title="关闭"]') != null;
     final threadClosed = document.querySelector('form#fastpostform') == null;
@@ -249,7 +247,7 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
     /// This should only run once.
     final filterTypeNode = document.querySelector('div#postlist h1.ts > a');
     final threadTypeName = filterTypeNode?.firstEndDeepText()?.replaceFirst('[', '').replaceFirst(']', '');
-    final threadTypeID = filterTypeNode?.attributes['href']?.tryParseAsUri()?.tryGetQueryParameters()?['typeid'];
+    final threadTypeID = filterTypeNode?.attributes['href']?.tryParseAsUri().tryGetQueryParameters()?['typeid'];
     final FilterType? threadType;
     if (threadTypeName != null) {
       threadType = FilterType(name: threadTypeName, typeID: threadTypeID);

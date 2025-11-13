@@ -106,10 +106,10 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
     context.read<SearchBloc>().add(SearchRequested(keyword: keyword, uid: authorUid, fid: fid, pageNumer: page));
 
-    setState(() {
+    setState(() async {
       // Only return to top when attached (not the first search).
       if (scrollController.hasClients) {
-        scrollController.animateTo(0, curve: Curves.ease, duration: const Duration(microseconds: 500));
+        await scrollController.animateTo(0, curve: Curves.ease, duration: const Duration(microseconds: 500));
       }
     });
   }

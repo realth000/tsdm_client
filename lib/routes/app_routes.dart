@@ -54,7 +54,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 final router = GoRouter(initialLocation: ScreenPaths.homepage, routes: _appRoutes);
 
 /// All named routes in app.
-final _appRoutes = [
+final List<RouteBase> _appRoutes = [
   StatefulShellRoute.indexedStack(
     builder: (context, router, navigator) {
       final hideNavigationBarPages = [ScreenPaths.settingsThreadAppearance.fullPath];

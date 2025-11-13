@@ -161,7 +161,7 @@ final class AutoCheckinRepository with LoggerMixin {
   }
 
   /// Dispose the repo.
-  void dispose() {
-    _stream.close();
+  Future<void> dispose() async {
+    await _stream.close();
   }
 }

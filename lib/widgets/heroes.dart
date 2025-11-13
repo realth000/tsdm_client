@@ -103,14 +103,16 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
         .response
         .where((e) => e.respType == ImageCacheResponseType.userAvatar && e.imageId == widget.username)
         .listen((resp) async => onImageCachedResponse(resp));
-    getIt.get<ImageCacheProvider>().queryUserAvatarCacheState(
-      ImageCacheUserAvatarRequest(username: widget.username, imageUrl: widget.avatarUrl ?? ''),
+    unawaited(
+      getIt.get<ImageCacheProvider>().queryUserAvatarCacheState(
+        ImageCacheUserAvatarRequest(username: widget.username, imageUrl: widget.avatarUrl ?? ''),
+      ),
     );
   }
 
   @override
-  void dispose() {
-    imageCacheSub?.cancel();
+  Future<void> dispose() async {
+    await imageCacheSub?.cancel();
     super.dispose();
   }
 

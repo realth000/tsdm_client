@@ -88,8 +88,8 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
   }
 
   @override
-  void dispose() {
-    _pointsChangesSub.cancel();
+  Future<void> dispose() async {
+    await _pointsChangesSub.cancel();
     super.dispose();
   }
 
@@ -132,7 +132,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
           },
         ),
         BlocListener<UpdateCubit, UpdateCubitState>(
-          listenWhen: (prev, curr) => curr.loading == false && prev.loading == true,
+          listenWhen: (prev, curr) => !curr.loading && prev.loading,
           listener: (context, state) async {
             final info = state.latestVersionInfo;
             final tr = context.t.updatePage;

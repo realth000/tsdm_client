@@ -37,7 +37,7 @@ final class AvailableUserGroup {
     final nameNode = element.querySelector('td:nth-child(1) > a');
     final name = nameNode?.innerText.trim();
     final infoUrl = nameNode?.attributes['href'];
-    final gid = infoUrl?.tryParseAsUri()?.tryGetQueryParameters()?['gid']?.parseToInt();
+    final gid = infoUrl?.tryParseAsUri().tryGetQueryParameters()?['gid']?.parseToInt();
 
     if (name == null || infoUrl == null || gid == null) {
       talker.error('failed to parse avaiable user group: name=$name, infoUrl=$infoUrl, gid=$gid');

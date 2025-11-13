@@ -9,9 +9,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 
 part 'auto_checkin_bloc.mapper.dart';
-
 part 'auto_checkin_event.dart';
-
 part 'auto_checkin_state.dart';
 
 typedef _Emit = Emitter<AutoCheckinState>;
@@ -116,9 +114,9 @@ final class AutoCheckinBloc extends Bloc<AutoCheckinEvent, AutoCheckinState> {
   }
 
   @override
-  Future<void> close() {
-    _stateSub.cancel();
-    _autoCheckinRepository.dispose();
+  Future<void> close() async {
+    await _stateSub.cancel();
+    await _autoCheckinRepository.dispose();
     return super.close();
   }
 }

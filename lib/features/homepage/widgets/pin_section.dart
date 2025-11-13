@@ -35,13 +35,13 @@ class PinSection extends StatelessWidget with LoggerMixin {
       ),
       subtitle: isRank ? null : SingleLineText(threadTitle, overflow: TextOverflow.ellipsis),
       trailing: isRank ? SingleLineText(threadTitle) : null,
-      onTap: () {
+      onTap: () async {
         final target = pinnedThread.threadUrl.parseUrlToRoute();
         if (target == null) {
           error('invalid pinned thread url: ${pinnedThread.threadUrl}');
           return;
         }
-        context.pushNamed(
+        await context.pushNamed(
           target.screenPath,
           pathParameters: target.pathParameters,
           queryParameters: target.queryParameters.copyWith({'appBarTitle': pinnedThread.threadTitle}),

@@ -144,8 +144,8 @@ final class SettingsRepository with LoggerMixin {
   }
 
   /// Dispose settings repository instance.
-  void dispose() {
-    _controller.close();
+  Future<void> dispose() async {
+    await _controller.close();
   }
 
   /// Get settings [key] with value in type [T}.

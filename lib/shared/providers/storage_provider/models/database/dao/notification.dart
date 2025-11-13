@@ -6,7 +6,7 @@ const _noticeFetchMaxCountLimit = 500;
 @DriftAccessor(tables: [Notice, PersonalMessage, BroadcastMessage])
 final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$NotificationDaoMixin {
   /// Constructor.
-  NotificationDao(super.db);
+  NotificationDao(super.attachedDatabase);
 
   /// Select notice for user [uid] since [timestamp].
   ///

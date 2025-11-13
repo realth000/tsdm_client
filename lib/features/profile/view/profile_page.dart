@@ -48,7 +48,7 @@ import 'package:universal_html/parsing.dart';
 const _appBarBackgroundTopPadding = 44.0;
 const _appBarBackgroundImageHeight = 80.0;
 const _appBarAvatarHeight = 80.0;
-const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight + _appBarBackgroundTopPadding;
+const double _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight + _appBarBackgroundTopPadding;
 
 const _groupAvatarHeight = 100.0;
 
@@ -69,7 +69,7 @@ const _groupAvatarHeight = 100.0;
 /// lv2  偶尔看看I     3天
 /// lv1  初来乍到      1天
 /// ```
-const _checkinNextLevelExp = [
+const List<int> _checkinNextLevelExp = [
   1 - 0,
   3 - 1,
   7 - 3,

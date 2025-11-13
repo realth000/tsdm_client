@@ -30,7 +30,7 @@ final class ImageCacheRepository with LoggerMixin {
   }
 
   /// Release resources.
-  void dispose() {
-    _imageCacheProvider.dispose();
+  Future<void> dispose() async {
+    await _imageCacheProvider.dispose();
   }
 }

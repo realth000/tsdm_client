@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -45,7 +47,13 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => NotificationRepository()),
-        BlocProvider(create: (context) => BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid)),
+        BlocProvider(
+          create: (context) {
+            final cubit = BroadcastMessageDetailCubit(context.repo());
+            unawaited(cubit.fetchDetail(pmid));
+            return cubit;
+          },
+        ),
       ],
       child: BlocBuilder<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
         builder: (context, state) {
@@ -53,8 +61,8 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
             BroadcastMessageDetailStatus.initial ||
             BroadcastMessageDetailStatus.loading => const CenteredCircularIndicator(),
             BroadcastMessageDetailStatus.success => _buildBody(context, state),
-            BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
-              context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
+            BroadcastMessageDetailStatus.failed => buildRetryButton(context, () async {
+              await context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
             }),
           };
 

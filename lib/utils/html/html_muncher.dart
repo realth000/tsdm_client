@@ -298,8 +298,8 @@ final class _Muncher with LoggerMixin {
             // Copy to save the url.
             final url = state.tapUrl;
             recognizer = TapGestureRecognizer()
-              ..onTap = () {
-                context.dispatchAsUrl(url!);
+              ..onTap = () async {
+                await context.dispatchAsUrl(url!);
                 options.onUrlLaunched?.call();
               };
           }

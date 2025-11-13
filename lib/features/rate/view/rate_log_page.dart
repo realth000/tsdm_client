@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart' show FpdartOnIterableOfIterable;
@@ -184,7 +186,11 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
       providers: [
         RepositoryProvider(create: (_) => RateRepository()),
         BlocProvider(
-          create: (context) => RateLogCubit(context.repo())..fetchLog(tid: widget.tid, pid: widget.pid),
+          create: (context) {
+            final cubit = RateLogCubit(context.repo());
+            unawaited(cubit.fetchLog(tid: widget.tid, pid: widget.pid));
+            return cubit;
+          },
         ),
       ],
       child: BlocBuilder<RateLogCubit, RateLogState>(

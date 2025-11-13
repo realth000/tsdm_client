@@ -106,7 +106,7 @@ class _WelcomeSectionState extends State<WelcomeSection> with LoggerMixin {
         }
       }
       if (target != null) {
-        _swiperController.animateTo(target, duration: duration200, curve: Curves.ease);
+        unawaited(_swiperController.animateTo(target, duration: duration200, curve: Curves.ease));
       }
     });
   }

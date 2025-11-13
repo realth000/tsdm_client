@@ -110,10 +110,10 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
   static const Duration _snackBarDisplayDuration = Duration(milliseconds: 4000 - 1000);
 
   /// Temporary store of current window position value.
-  var _windowPosition = Offset.zero;
+  Offset _windowPosition = Offset.zero;
 
   /// Temporary store of current window size value.
-  var _windowSize = Size.zero;
+  Size _windowSize = Size.zero;
 
   /// Timer to debounce the saving progress of window position.
   ///
@@ -212,18 +212,33 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
 
     return MultiRepositoryProvider(
       providers: [
-        RepositoryProvider<NotificationInfoRepository>(create: (_) => NotificationInfoRepository()),
-        RepositoryProvider<NotificationRepository>(create: (_) => NotificationRepository()),
-        RepositoryProvider<AuthenticationRepository>(create: (_) => AuthenticationRepository()),
+        RepositoryProvider<NotificationInfoRepository>(
+          create: (_) => NotificationInfoRepository(),
+          dispose: (repo) async => repo.dispose(),
+        ),
+        RepositoryProvider<NotificationRepository>(
+          create: (_) => NotificationRepository(),
+          dispose: (repo) async => repo.dispose(),
+        ),
+        RepositoryProvider<AuthenticationRepository>(
+          create: (_) => AuthenticationRepository(),
+          dispose: (repo) async => repo.dispose(),
+        ),
         RepositoryProvider<CheckinRepository>(create: (_) => CheckinRepository(storageProvider: getIt())),
         RepositoryProvider<ForumHomeRepository>(create: (_) => ForumHomeRepository()),
         RepositoryProvider<ProfileRepository>(create: (_) => ProfileRepository()),
         RepositoryProvider<FragmentsRepository>(create: (_) => FragmentsRepository()),
         RepositoryProvider<ForumRepository>(create: (_) => ForumRepository()),
-        RepositoryProvider<ImageCacheRepository>(create: (_) => ImageCacheRepository(getIt())),
+        RepositoryProvider<ImageCacheRepository>(
+          create: (_) => ImageCacheRepository(getIt()),
+          dispose: (repo) async => repo.dispose(),
+        ),
         RepositoryProvider<ImageCacheTriggerCubit>(create: (context) => ImageCacheTriggerCubit(context.repo())),
         RepositoryProvider<ThreadVisitHistoryRepo>(create: (_) => ThreadVisitHistoryRepo(getIt.get<StorageProvider>())),
-        RepositoryProvider<AutoCheckinRepository>(create: (_) => AutoCheckinRepository(storageProvider: getIt())),
+        RepositoryProvider<AutoCheckinRepository>(
+          create: (_) => AutoCheckinRepository(storageProvider: getIt()),
+          dispose: (repo) async => repo.dispose(),
+        ),
       ],
       child: MultiBlocProvider(
         providers: [
@@ -295,7 +310,8 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             create: (context) {
               final cubit = UpdateCubit();
               if (widget.checkUpdate) {
-                cubit.checkUpdate(delay: const Duration(seconds: 1), notice: false);
+                // We intend to spawn the check process asynchronously, so do not wait it.
+                unawaited(cubit.checkUpdate(delay: const Duration(seconds: 1), notice: false));
               }
               return cubit;
             },
@@ -306,13 +322,14 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
               final settings = context.read<SettingsBloc>().state.settingsMap;
 
               final cubit = InitCubit();
+              // We intend to delete legacy files asynchronously, so do not wait it.
               unawaited(cubit.deleteV0LegacyData());
               if (settings.enableAutoClearImageCache) {
-                cubit.autoClearImageCache(Duration(seconds: settings.autoClearImageCacheDuration));
+                unawaited(cubit.autoClearImageCache(Duration(seconds: settings.autoClearImageCacheDuration)));
               } else {
                 cubit.skipAutoClearImageCache();
               }
-              cubit.autoClearFilePickerCache();
+              unawaited(cubit.autoClearFilePickerCache());
               return cubit;
             },
           ),
@@ -353,7 +370,7 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
               },
             ),
             BlocListener<UpdateCubit, UpdateCubitState>(
-              listenWhen: (prev, curr) => curr.loading == false && prev.loading == true,
+              listenWhen: (prev, curr) => !curr.loading && prev.loading,
               listener: (context, state) async {
                 final info = state.latestVersionInfo;
                 final tr = context.t.updatePage;
@@ -460,12 +477,12 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
             ),
             BlocListener<InitCubit, InitState>(
               listenWhen: (prev, curr) => prev.v0LegacyDataDeleted != curr.v0LegacyDataDeleted,
-              listener: (context, state) {
-                if (state.v0LegacyDataDeleted != true) {
+              listener: (context, state) async {
+                if (!state.v0LegacyDataDeleted) {
                   return;
                 }
                 final tr = context.t.init.v1DeleteLegacyData;
-                showMessageSingleButtonDialog(context: context, title: tr.title, message: tr.detail);
+                await showMessageSingleButtonDialog(context: context, title: tr.title, message: tr.detail);
               },
             ),
           ],

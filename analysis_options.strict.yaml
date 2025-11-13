@@ -68,4 +68,5 @@ custom_lint:
     - proper_from_environment
     - proper_super_dispose
     - proper_super_init_state
+    - specify_icon_button_tooltip
     - use_spacer

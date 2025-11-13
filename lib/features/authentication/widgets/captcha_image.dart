@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -18,7 +19,7 @@ const _captchaImageHeight = 150.0;
 
 const _renderHeight = 52.0;
 
-const _indicatorBoxWidth = (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
+const double _indicatorBoxWidth = (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
 
 /// The captcha image used in login form.
 class CaptchaImage extends StatefulWidget {
@@ -132,7 +133,8 @@ final class CaptchaImageController {
 
   /// Reload captcha image.
   void reload() {
-    _state?.reload();
+    // FIXME: Make is sync.
+    unawaited(_state?.reload());
   }
 
   /// Release resource.

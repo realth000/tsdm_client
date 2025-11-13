@@ -135,8 +135,8 @@ class _HomePageState extends State<HomePage> with LoggerMixin {
   }
 
   @override
-  void dispose() {
-    rootLocationSub.cancel();
+  Future<void> dispose() async {
+    await rootLocationSub.cancel();
     super.dispose();
   }
 

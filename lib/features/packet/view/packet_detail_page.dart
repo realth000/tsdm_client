@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -152,7 +154,13 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => PacketRepository()),
-        BlocProvider(create: (context) => PacketDetailCubit(context.repo())..fetchDetail(widget.tid)),
+        BlocProvider(
+          create: (context) {
+            final cubit = PacketDetailCubit(context.repo());
+            unawaited(cubit.fetchDetail(widget.tid));
+            return cubit;
+          },
+        ),
       ],
       child: BlocBuilder<PacketDetailCubit, PacketDetailState>(
         builder: (context, state) {

@@ -63,7 +63,7 @@ Future<String> readChangelogContent(String _) async {
 ///
 /// Used in normal usages, disable these features to make concise toolbar
 /// layout.
-const defaultEditorDisabledFeatures = {
+const Set<EditorFeatures> defaultEditorDisabledFeatures = {
   EditorFeatures.fontFamily,
   EditorFeatures.fontSize,
   EditorFeatures.bold,
@@ -88,7 +88,7 @@ const defaultEditorDisabledFeatures = {
 /// All features disabled by default.
 ///
 /// Used in normal usages, disable these features to remove noisy styles.
-const defaultFullScreenDisabledEditorFeatures = {
+const Set<EditorFeatures> defaultFullScreenDisabledEditorFeatures = {
   EditorFeatures.fontFamily,
   EditorFeatures.cut,
   EditorFeatures.copy,

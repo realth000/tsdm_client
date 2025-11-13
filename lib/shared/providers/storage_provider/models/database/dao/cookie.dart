@@ -4,7 +4,7 @@ part of 'dao.dart';
 @DriftAccessor(tables: [Cookie])
 final class CookieDao extends DatabaseAccessor<AppDatabase> with _$CookieDaoMixin {
   /// Constructor.
-  CookieDao(super.db);
+  CookieDao(super.attachedDatabase);
 
   /// Get all cookies.
   Future<List<CookieEntity>> selectAll() async {

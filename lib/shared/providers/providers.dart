@@ -52,7 +52,7 @@ Future<void> initProviders() async {
     ..registerSingleton(ProxyProvider())
     ..registerSingleton(db)
     ..registerSingleton(storageProvider)
-    ..registerSingleton(settingsRepo)
+    ..registerSingleton(settingsRepo, dispose: (s) async => s.dispose())
     ..registerSingleton(CookieProvider.build())
     ..registerFactory(CookieProvider.buildEmpty, instanceName: ServiceKeys.empty)
     ..registerSingleton(ImageCacheProvider.new)
@@ -61,6 +61,9 @@ Future<void> initProviders() async {
     ..registerSingleton(NetErrorSaver());
   await getIt.allReady();
 
-  getIt.registerSingleton(ImageCacheProvider(getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie)));
+  getIt.registerSingleton(
+    ImageCacheProvider(getIt.get<NetClientProvider>(instanceName: ServiceKeys.noCookie)),
+    dispose: (s) async => s.dispose(),
+  );
   await getIt.allReady();
 }

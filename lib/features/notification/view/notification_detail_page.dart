@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -94,7 +96,11 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
         RepositoryProvider(create: (_) => const ReplyRepository()),
         BlocProvider(create: (context) => ReplyBloc(replyRepository: context.repo())),
         BlocProvider(
-          create: (context) => NotificationDetailCubit(notificationRepository: context.repo())..fetchDetail(widget.url),
+          create: (context) {
+            final cubit = NotificationDetailCubit(notificationRepository: context.repo());
+            unawaited(cubit.fetchDetail(widget.url));
+            return cubit;
+          },
         ),
       ],
       child: BlocListener<ReplyBloc, ReplyState>(
@@ -110,8 +116,8 @@ class _NoticeDetailPage extends State<NoticeDetailPage> with LoggerMixin {
             final body = switch (state.status) {
               NotificationDetailStatus.initial || NotificationDetailStatus.loading => const CenteredCircularIndicator(),
               NotificationDetailStatus.success => _buildBody(context, state),
-              NotificationDetailStatus.failed => buildRetryButton(context, () {
-                context.read<NotificationDetailCubit>().fetchDetail(widget.url);
+              NotificationDetailStatus.failed => buildRetryButton(context, () async {
+                await context.read<NotificationDetailCubit>().fetchDetail(widget.url);
               }),
             };
 

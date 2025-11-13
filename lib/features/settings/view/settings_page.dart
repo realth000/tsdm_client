@@ -626,8 +626,8 @@ class _SettingsPageState extends State<SettingsPage> {
         SectionListTile(
           leading: const Icon(Icons.developer_mode_outlined),
           title: const Text('DEBUG SHOWCASE'),
-          onTap: () {
-            Navigator.push(context, MaterialPageRoute<void>(builder: (context) => const DebugShowcasePage()));
+          onTap: () async {
+            await Navigator.push(context, MaterialPageRoute<void>(builder: (context) => const DebugShowcasePage()));
           },
         ),
 

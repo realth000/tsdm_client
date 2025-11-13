@@ -102,8 +102,8 @@ final class ImageCacheProvider with LoggerMixin {
   final List<String> _loadingImages = [];
 
   /// Dispose the repository.
-  void dispose() {
-    _controller.close();
+  Future<void> dispose() async {
+    await _controller.close();
   }
 
   /// Get the cache info related to [imageUrl].

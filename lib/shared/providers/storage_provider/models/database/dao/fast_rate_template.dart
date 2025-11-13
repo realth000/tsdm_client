@@ -4,7 +4,7 @@ part of 'dao.dart';
 @DriftAccessor(tables: [FastRateTemplate])
 final class FastRateTemplateDao extends DatabaseAccessor<AppDatabase> with _$FastRateTemplateDaoMixin {
   /// Constructor.
-  FastRateTemplateDao(super.db);
+  FastRateTemplateDao(super.attachedDatabase);
 
   /// Get all templates.
   Future<List<FastRateTemplateEntity>> selectAll() async {

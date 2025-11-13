@@ -47,8 +47,8 @@ final class NotificationInfoRepository with LoggerMixin {
   }
 
   /// Dispose the repo.
-  void dispose() {
-    _controller.close();
-    _autoSyncController.close();
+  Future<void> dispose() async {
+    await _controller.close();
+    await _autoSyncController.close();
   }
 }

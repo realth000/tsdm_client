@@ -20,7 +20,7 @@ class AutoClearImageCacheDurationDialog extends StatefulWidget {
 class _AutoClearImageCacheDurationDialogState extends State<AutoClearImageCacheDurationDialog> {
   late double _choiceIndex;
 
-  static const allTimes = [
+  static const List<int> allTimes = [
     // 6 hours
     3600 * 6,
 
@@ -59,9 +59,9 @@ class _AutoClearImageCacheDurationDialogState extends State<AutoClearImageCacheD
 
     final currentTimeText = switch (time) {
       < 0 => context.t.general.never,
-      >= 0 && < 3600 => context.t.general.minutes(value: (time / 60).toInt()),
-      >= 3600 && < 3600 * 24 => context.t.general.hours(value: (time / 3600).toInt()),
-      _ => context.t.general.days(value: (time / (3600 * 24)).toInt()),
+      >= 0 && < 3600 => context.t.general.minutes(value: time ~/ 60),
+      >= 3600 && < 3600 * 24 => context.t.general.hours(value: time ~/ 3600),
+      _ => context.t.general.days(value: time ~/ (3600 * 24)),
     };
 
     return CustomAlertDialog.sync(

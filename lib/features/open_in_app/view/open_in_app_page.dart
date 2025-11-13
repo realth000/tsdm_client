@@ -119,7 +119,7 @@ class _OpenInAppPageState extends State<OpenInAppPage> {
             label: Text(tr.open),
             icon: const Icon(Icons.open_in_new),
             onPressed: () async {
-              if (formKey.currentState!.validate() != true) {
+              if (!formKey.currentState!.validate()) {
                 return;
               }
               if (currentRoute == null) {

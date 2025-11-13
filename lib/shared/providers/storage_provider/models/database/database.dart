@@ -28,7 +28,7 @@ part 'database.g.dart';
 )
 final class AppDatabase extends _$AppDatabase with LoggerMixin {
   /// Constructor.
-  AppDatabase(super.executor);
+  AppDatabase(super.e);
 
   @override
   int get schemaVersion => 10;

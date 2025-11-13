@@ -86,7 +86,7 @@ class _CardLayout extends StatelessWidget {
                   'tid': threadID,
                   'appBarTitle': title,
                   'threadTypeName': threadType?.name,
-                  'threadTypeID': threadType?.url.tryParseAsUri()?.tryGetQueryParameters()?['typeid'],
+                  'threadTypeID': threadType?.url.tryParseAsUri().tryGetQueryParameters()?['typeid'],
                 },
               );
             },

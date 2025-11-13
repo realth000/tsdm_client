@@ -10,7 +10,7 @@ import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Global service locator instance.
-final getIt = GetIt.instance;
+final GetIt getIt = GetIt.instance;
 
 /// Global logger instance.
 late final Talker talker;
@@ -112,7 +112,7 @@ Future<void> initLogger() async {
   _logSink = _logFile.openWrite(mode: FileMode.append);
 
   talker = TalkerFlutter.init(
-    settings: TalkerSettings(colors: {TalkerLogType.debug.key: AnsiPen()..xterm(60)}),
+    settings: TalkerSettings(colors: {TalkerKey.debug: AnsiPen()..xterm(60)}),
     observer: _TalkerObserver(),
   );
 }

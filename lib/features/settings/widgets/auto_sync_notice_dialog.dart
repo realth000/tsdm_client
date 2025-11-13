@@ -69,8 +69,8 @@ class _AutoSyncNoticeDialogState extends State<AutoSyncNoticeDialog> {
 
     final currentTimeText = switch (time) {
       < 0 => context.t.general.never,
-      >= 0 && < 3600 => context.t.general.minutes(value: (time / 60).toInt()),
-      _ => context.t.general.hours(value: (time / 3600).toInt()),
+      >= 0 && < 3600 => context.t.general.minutes(value: time ~/ 60),
+      _ => context.t.general.hours(value: time ~/ 3600),
     };
 
     return CustomAlertDialog.sync(

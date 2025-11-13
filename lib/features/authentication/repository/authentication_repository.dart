@@ -66,8 +66,8 @@ class AuthenticationRepository with LoggerMixin {
   Stream<AuthStatus> get status => _controller.asBroadcastStream();
 
   /// Dispose the resources.
-  void dispose() {
-    _controller.close();
+  Future<void> dispose() async {
+    await _controller.close();
   }
 
   /// Fetch login hash and form hash for logging in.
