@@ -83,7 +83,15 @@ const List<int> _checkinNextLevelExp = [
   300 - 250,
 ];
 
-enum _ProfileActions { viewNotification, checkin, viewPoints, switchUserGroup, logout, editAvatar }
+enum _ProfileActions {
+  viewNotification,
+  checkin,
+  viewPoints,
+  switchUserGroup,
+  switchTitle,
+  logout,
+  editAvatar,
+}
 
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
@@ -159,6 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 await context.pushNamed(ScreenPaths.switchUserGroup);
+              case _ProfileActions.switchTitle:
+                if (logout) {
+                  return;
+                }
+                await context.pushNamed(ScreenPaths.switchTitle);
               case _ProfileActions.logout:
                 final logout = await showQuestionDialog(
                   context: context,
@@ -221,6 +234,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   const Icon(Symbols.change_circle),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.switchUserGroupPage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: _ProfileActions.switchTitle,
+              child: Row(
+                children: [
+                  const Icon(Symbols.badge),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.myTitlesPage.title),
                 ],
               ),
             ),

@@ -1167,5 +1167,13 @@
   "workaroundRedirect": "查看对话",
   "threadCard": {
     "viewInfo": "查看帖子信息"
+  },
+  "myTitlesPage": {
+    "title": "我的称号",
+    "current": "使用中",
+    "unset": "摘下",
+    "openTitleShop": "访问称号商店（在浏览器中）",
+    "noneActivated": "当前尚未激活任何称号",
+    "activated": "使用中：${name: String}"
   }
 }

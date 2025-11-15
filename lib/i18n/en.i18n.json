@@ -1167,5 +1167,13 @@
   "workaroundRedirect": "View conversation",
   "threadCard": {
     "viewInfo": "View thread info"
+  },
+  "myTitlesPage": {
+    "title": "My titles",
+    "current": "ON",
+    "unset": "Unset",
+    "openTitleShop": "Visit title shop (in browser)",
+    "noneActivated": "None secondary title activated",
+    "activated": "Activated: ${name: String}"
   }
 }

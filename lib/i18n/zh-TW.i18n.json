@@ -1167,5 +1167,13 @@
   "workaroundRedirect": "查看對話",
   "threadCard": {
     "viewInfo": "查看貼文資訊"
+  },
+  "myTitlesPage": {
+    "title": "我的頭銜",
+    "current": "使用中",
+    "unset": "摘下",
+    "openTitleShop": "訪問頭銜商店（在瀏覽器中）",
+    "noneActivated": "目前尚未啟動任何頭銜",
+    "activated": "使用中：${name: String}"
   }
 }

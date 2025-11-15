@@ -27,6 +27,7 @@ import 'package:tsdm_client/features/post/view/fast_reply_edit_template_page.dar
 import 'package:tsdm_client/features/post/view/fast_reply_template_page.dart';
 import 'package:tsdm_client/features/post/view/post_edit_page.dart';
 import 'package:tsdm_client/features/profile/view/edit_avatar_page.dart';
+import 'package:tsdm_client/features/profile/view/my_titles_page.dart';
 import 'package:tsdm_client/features/profile/view/profile_page.dart';
 import 'package:tsdm_client/features/profile/view/switch_user_group_page.dart';
 import 'package:tsdm_client/features/rate/view/fast_rate_edit_template_page.dart';
@@ -249,6 +250,7 @@ final List<RouteBase> _appRoutes = [
   ),
   AppRoute(path: ScreenPaths.editAvatar, builder: (_) => const EditAvatarPage()),
   AppRoute(path: ScreenPaths.switchUserGroup, builder: (_) => const SwitchUserGroupPage()),
+  AppRoute(path: ScreenPaths.switchTitle, builder: (_) => const MyTitlesPage()),
   AppRoute(
     path: ScreenPaths.ratePost,
     builder: (state) {
