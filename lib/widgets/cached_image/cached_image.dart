@@ -106,8 +106,8 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
   }
 
   @override
-  Future<void> dispose() async {
-    await imageSub?.cancel();
+  void dispose() {
+    unawaited(imageSub?.cancel());
     super.dispose();
   }
 

@@ -111,8 +111,8 @@ class _HeroUserAvatarState extends State<HeroUserAvatar> {
   }
 
   @override
-  Future<void> dispose() async {
-    await imageCacheSub?.cancel();
+  void dispose() {
+    unawaited(imageCacheSub?.cancel());
     super.dispose();
   }
 

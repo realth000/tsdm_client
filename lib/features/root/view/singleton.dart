@@ -88,8 +88,8 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
   }
 
   @override
-  Future<void> dispose() async {
-    await _pointsChangesSub.cancel();
+  void dispose() {
+    unawaited(_pointsChangesSub.cancel());
     super.dispose();
   }
 
