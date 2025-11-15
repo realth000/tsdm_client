@@ -90,7 +90,14 @@ Widget munchElement(
   // Currently is 712.
   return ConstrainedBox(
     constraints: const BoxConstraints(maxWidth: htmlContentMaxWidth),
-    child: Text.rich(TextSpan(children: ret)),
+    child: Text.rich(
+      style: const TextStyle(
+        // Set line height to none to fix gaps between rows only holding images. May cause unexpected overlap or narrow
+        // row spacing between text lines.
+        height: kTextHeightNone,
+      ),
+      TextSpan(children: ret),
+    ),
   );
 }
 
