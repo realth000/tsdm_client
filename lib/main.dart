@@ -32,7 +32,6 @@ Future<void> _boot(List<String> args) async {
 
   talker.debug('------------------- start app -------------------');
   await initProviders();
-  await initPlaceholderImageData();
 
   HttpOverrides.global = AppHttpOverride();
 

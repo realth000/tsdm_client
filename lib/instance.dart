@@ -1,12 +1,10 @@
 import 'dart:io';
-import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:tsdm_client/cmd.dart';
-import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/utils/logger.dart';
 
 /// Global service locator instance.
@@ -39,20 +37,6 @@ late final CmdArgs cmdArgs;
 
 /// Global instance.
 late final FlutterLocalNotificationsPlugin flnp;
-
-/// The static placeholder image bytes data to hold up when network image is not available.
-late final ui.Codec placeholderImageCodec;
-
-/// Get the initialized placeholder image data.
-///
-/// A singleton with only initializing once insurance actually does not work.
-/// Still there are some steps when building ui codec from image data, so call
-/// it again and again shall be considered as cheap.
-Future<void> initPlaceholderImageData() async {
-  placeholderImageCodec = await ui.instantiateImageCodecFromBuffer(
-    await ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath),
-  );
-}
 
 /// The global snackbar key.
 ///

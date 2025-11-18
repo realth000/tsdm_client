@@ -233,7 +233,7 @@ class _ErrorHandler extends Interceptor with LoggerMixin {
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) {
-    error('${err.requestOptions} ${err.type}: ${err.error},${err.message}');
+    error('${err.requestOptions.uri} ${err.type}: error: ${err.error}, status code: ${err.response?.statusCode}');
     getIt.get<NetErrorSaver>().save(err.message);
 
     if (err.type == DioExceptionType.badResponse) {

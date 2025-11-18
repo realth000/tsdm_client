@@ -209,7 +209,7 @@ final class ImageCacheProvider with LoggerMixin {
       final respEither = await _netClientProvider.getImage(imageUrl).run();
       if (respEither.isLeft()) {
         final err = respEither.unwrapErr();
-        handle(err);
+        // handle(err);
         throw err;
       }
       final resp = respEither.unwrap();
@@ -261,11 +261,8 @@ final class ImageCacheProvider with LoggerMixin {
       await _saveCache(imageUrl, imageData, usage: usage);
       _controller.add(ImageCacheSuccessResponse(imageId, respType, imageData));
       return Option.of(imageData);
-    } on Exception catch (e) {
-      warning(
-        'exception thrown when trying to update image cache: $e, '
-        'for url: $imageUrl',
-      );
+    } on Exception catch (e, st) {
+      handleRaw(e, st);
       _controller.add(ImageCacheFailedResponse(imageId, respType));
       return const Option.none();
     } finally {

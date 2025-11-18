@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fpdart/fpdart.dart';
+import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
@@ -94,7 +95,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
       assert(key == this, 'check instance in load async');
       if (usage is! ImageUsageInfoUserAvatar && imageUrl.isEmpty) {
         // error('failed to make $usage: empty url');
-        return placeholderImageCodec;
+        return await ui.instantiateImageCodecFromBuffer(await ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath));
       }
       final f = switch (usage) {
         ImageUsageInfoOther() => getIt.get<ImageCacheProvider>().getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
@@ -104,13 +105,20 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
         ),
       };
 
-      final bytes = await TaskOption(
+      switch (await TaskOption(
         () => f,
-      ).orElse<Uint8List>(() => TaskOption(_onImageError)).getOrElse(() => Uint8List(0)).run();
-      if (bytes.lengthInBytes == 0) {
-        return placeholderImageCodec;
+      ).orElse<Uint8List>(() => TaskOption(_onImageError)).run()) {
+        case Some(:final value):
+          return decode(await ui.ImmutableBuffer.fromUint8List(value));
+        case None():
+          if (usage is ImageUsageInfoUserAvatar) {
+            return await ui.instantiateImageCodecFromBuffer(
+              await ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath),
+            );
+          } else {
+            return Future.error('failed to load image for $imageUrl');
+          }
       }
-      return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {
       // // Depending on where the exception was thrown, the image cache may not
       // // have had a chance to track the key in the cache at all.
