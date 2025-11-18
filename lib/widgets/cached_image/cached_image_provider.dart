@@ -94,7 +94,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
       assert(key == this, 'check instance in load async');
       if (usage is! ImageUsageInfoUserAvatar && imageUrl.isEmpty) {
         // error('failed to make $usage: empty url');
-        return ui.instantiateImageCodecFromBuffer(await getPlaceholderImageData());
+        return placeholderImageCodec;
       }
       final f = switch (usage) {
         ImageUsageInfoOther() => getIt.get<ImageCacheProvider>().getOrMakeCache(ImageCacheGeneralRequest(imageUrl)),
@@ -108,7 +108,7 @@ final class CachedImageProvider extends ImageProvider<CachedImageProvider> with 
         () => f,
       ).orElse<Uint8List>(() => TaskOption(_onImageError)).getOrElse(() => Uint8List(0)).run();
       if (bytes.lengthInBytes == 0) {
-        return ui.instantiateImageCodecFromBuffer(await getPlaceholderImageData());
+        return placeholderImageCodec;
       }
       return decode(await ui.ImmutableBuffer.fromUint8List(bytes));
     } catch (e) {

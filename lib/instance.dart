@@ -40,13 +40,18 @@ late final CmdArgs cmdArgs;
 /// Global instance.
 late final FlutterLocalNotificationsPlugin flnp;
 
+/// The static placeholder image bytes data to hold up when network image is not available.
+late final ui.Codec placeholderImageCodec;
+
 /// Get the initialized placeholder image data.
 ///
 /// A singleton with only initializing once insurance actually does not work.
 /// Still there are some steps when building ui codec from image data, so call
 /// it again and again shall be considered as cheap.
-Future<ui.ImmutableBuffer> getPlaceholderImageData() async {
-  return ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath);
+Future<void> initPlaceholderImageData() async {
+  placeholderImageCodec = await ui.instantiateImageCodecFromBuffer(
+    await ui.ImmutableBuffer.fromAsset(assetPlaceholderImagePath),
+  );
 }
 
 /// The global snackbar key.
