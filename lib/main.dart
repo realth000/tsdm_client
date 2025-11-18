@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show HttpOverrides;
 
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart';
+import 'package:tsdm_client/utils/http_override.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/window_configs.dart';
 import 'package:window_manager/window_manager.dart';
@@ -31,6 +33,8 @@ Future<void> _boot(List<String> args) async {
   talker.debug('------------------- start app -------------------');
   await initProviders();
   await initPlaceholderImageData();
+
+  HttpOverrides.global = AppHttpOverride();
 
   final settings = getIt.get<SettingsRepository>().currentSettings;
 
