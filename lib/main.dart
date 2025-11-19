@@ -13,6 +13,7 @@ import 'package:tsdm_client/features/local_notice/callback.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/instance.dart';
+import 'package:tsdm_client/services/background_service.dart';
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart';
 import 'package:tsdm_client/utils/platform.dart';
@@ -31,6 +32,18 @@ Future<void> _boot(List<String> args) async {
   talker.debug('------------------- start app -------------------');
   await initProviders();
 
+  // 初始化后台服务
+  await BackgroundService.initialize();
+  
+  // 获取设置仓库并检查后台常驻设置
+  final settingsRepo = getIt.get<SettingsRepository>();
+  final backgroundKeepAliveEnabled = settingsRepo.currentSettings.backgroundKeepAlive ?? false;
+  
+  // 如果设置中启用了后台常驻，则启动后台任务
+  if (backgroundKeepAliveEnabled) {
+    await BackgroundService.startBackgroundTask();
+  }
+  
   final settings = getIt.get<SettingsRepository>().currentSettings;
 
   final settingsLocale = settings.locale;

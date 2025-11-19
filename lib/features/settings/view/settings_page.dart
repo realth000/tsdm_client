@@ -46,6 +46,8 @@ import 'package:tsdm_client/widgets/section_switch_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 import 'package:tsdm_client/widgets/shutdown.dart';
 import 'package:tsdm_client/widgets/tips.dart';
+import 'package:provider/provider.dart';
+import '../provider/settings_provider.dart';
 
 /// Settings page of the app.
 class SettingsPage extends StatefulWidget {
@@ -864,4 +866,49 @@ class _SettingsPageState extends State<SettingsPage> {
       },
     );
   }
+}
+
+Widget build(BuildContext context) {
+  return CupertinoPageScaffold(
+    navigationBar: CupertinoNavigationBar(
+      middle: Text('设置'),
+    ),
+    child: SafeArea(
+      child: ListView(
+        children: [
+          // ... 其他现有设置项 ...
+          
+          // === 添加后台常驻开关 ===
+          CupertinoFormSection.insetGrouped(
+            header: Text('行为'),
+            children: [
+              CupertinoFormRow(
+                prefix: Container(
+                  width: 24, // 留空图标位置
+                ),
+                helper: Text('开启后，应用在后台时会尝试保持活动状态以执行任务'),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Text('后台常驻'),
+                    ),
+                    Consumer<SettingsProvider>(
+                      builder: (context, settings, child) {
+                        return CupertinoSwitch(
+                          value: settings.backgroundKeepAlive,
+                          onChanged: (bool value) {
+                            settings.setBackgroundKeepAlive(value);
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
