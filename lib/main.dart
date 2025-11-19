@@ -31,6 +31,18 @@ Future<void> _boot(List<String> args) async {
   talker.debug('------------------- start app -------------------');
   await initProviders();
 
+  // 初始化后台服务
+  await BackgroundService.initialize();
+  
+  // 获取设置仓库并检查后台常驻设置
+  final settingsRepo = getIt.get<SettingsRepository>();
+  final backgroundKeepAliveEnabled = settingsRepo.currentSettings.backgroundKeepAlive ?? false;
+  
+  // 如果设置中启用了后台常驻，则启动后台任务
+  if (backgroundKeepAliveEnabled) {
+    await BackgroundService.startBackgroundTask();
+  }
+  
   final settings = getIt.get<SettingsRepository>().currentSettings;
 
   final settingsLocale = settings.locale;
