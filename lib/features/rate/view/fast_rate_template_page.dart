@@ -10,6 +10,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to view and edit fast rate templates.
 ///
@@ -41,7 +42,7 @@ class _FastRateTemplatePageState extends State<FastRateTemplatePage> with Logger
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         final allTemplates = snapshot.data!;

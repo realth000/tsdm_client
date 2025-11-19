@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
@@ -148,8 +149,7 @@ final class _ChatHistoryPageState extends State<ChatHistoryPage> {
         child: BlocBuilder<ChatHistoryBloc, ChatHistoryState>(
           builder: (context, state) {
             final body = switch (state.status) {
-              ChatHistoryStatus.initial ||
-              ChatHistoryStatus.loading => const Center(child: CircularProgressIndicator()),
+              ChatHistoryStatus.initial || ChatHistoryStatus.loading => const CenteredCircularIndicator(),
               ChatHistoryStatus.success || ChatHistoryStatus.loadingMore => _buildContent(context, state),
               ChatHistoryStatus.failure => buildRetryButton(
                 context,

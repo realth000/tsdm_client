@@ -36,3 +36,9 @@ echo "building flutter_avif Android libs ... OK!"
 
 ls -R "${AVIF_ANDROID_JNILIBS_DIR}"
 find "${AVIF_ANDROID_JNILIBS_DIR}" -type f -name "*.so" -exec md5sum {} +
+
+# Reduce disk space usage, otherwise GitHub CI fails.
+echo "deleting build cache ..."
+rm -rf ~/.cargo/registry
+find "${AVIF_ROOT}" -name target -exec rm -rf {} +
+echo "deleting build cache ... OK!"

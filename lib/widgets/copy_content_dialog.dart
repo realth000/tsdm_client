@@ -11,6 +11,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/widgets/copy_button.dart';
 import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Item represents some content user would copy.
 final class CopyableContent {
@@ -64,7 +65,7 @@ Future<void> showCopyContentDialogFutureBuilder({
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         return _CopyContentDialog(title, snapshot.data!);

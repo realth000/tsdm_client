@@ -1,4 +1,7 @@
+import 'dart:io';
+
 import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:tsdm_client/exceptions/exceptions.dart';
 import 'package:tsdm_client/instance.dart';
 
@@ -55,3 +58,7 @@ mixin LoggerMixin {
     callback();
   }
 }
+
+/// Get the directory which stores log files.
+Future<Directory> getLogDir() async =>
+    Directory('${(await getApplicationSupportDirectory()).path}${Platform.pathSeparator}log');

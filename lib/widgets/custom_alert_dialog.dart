@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Alert dialog with more material style.
 ///
@@ -122,7 +123,7 @@ class _CustomAlertDialogState<F> extends State<CustomAlertDialog<F>> {
 
                   if (!snapshot.hasData) {
                     return widget.loadingBuilder?.call(context) ??
-                        const SizedBox(width: 80, height: 80, child: Center(child: CircularProgressIndicator()));
+                        const SizedBox(width: 80, height: 80, child: CenteredCircularIndicator());
                   }
 
                   return _DividedDialogBody(

@@ -226,6 +226,7 @@
       "downloadAgainInfo": "必要的快取檔案將會再次從伺服器下載",
       "images": "圖片",
       "emoji": "表情",
+      "log": "日誌",
       "selectOneCache": "需要至少選擇一項快取",
       "clearSuccess": "清除成功",
       "scheduledCleaning": {
@@ -287,6 +288,11 @@
       },
       "viewLog": {
         "title": "查看日誌"
+      },
+      "viewHistoryLog": {
+        "title": "查看歷史日誌",
+        "historicalLogs": "歷史日誌",
+        "export": "匯出"
       },
       "copyDatabaseDir": "複製資料庫路徑"
     },
@@ -1161,5 +1167,13 @@
   "workaroundRedirect": "查看對話",
   "threadCard": {
     "viewInfo": "查看貼文資訊"
+  },
+  "myTitlesPage": {
+    "title": "我的頭銜",
+    "current": "使用中",
+    "unset": "摘下",
+    "openTitleShop": "訪問頭銜商店（在瀏覽器中）",
+    "noneActivated": "目前尚未啟動任何頭銜",
+    "activated": "使用中：${name: String}"
   }
 }

@@ -11,9 +11,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/html.dart' as uh;
 
 part 'chat_history_bloc.mapper.dart';
-
 part 'chat_history_event.dart';
-
 part 'chat_history_state.dart';
 
 typedef _Emit = Emitter<ChatHistoryState>;
@@ -98,7 +96,7 @@ final class ChatHistoryBloc extends Bloc<ChatHistoryEvent, ChatHistoryState> wit
           // xml.
           .append('&inajax=1');
       final formHash = formNode.querySelector('input[name="formhash"]')?.attributes['value'];
-      final pmid = targetUrl?.tryParseAsUri()?.tryGetQueryParameters()?['pmid'];
+      final pmid = targetUrl?.tryParseAsUri().tryGetQueryParameters()?['pmid'];
       if (targetUrl != null && formHash != null && pmid != null) {
         target = ChatHistorySendTarget(targetUrl: targetUrl, pmid: pmid, formHash: formHash);
       } else {

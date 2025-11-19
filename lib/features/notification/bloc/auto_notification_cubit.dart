@@ -55,7 +55,7 @@ final class AutoNotificationCubit extends Cubit<AutoNoticeState> with LoggerMixi
   Duration duration;
 
   /// Current time to tick.
-  var _remainingTick = Duration.zero;
+  Duration _remainingTick = Duration.zero;
 
   /// Timer calculating fetch actions.
   Timer? _timer;

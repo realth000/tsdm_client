@@ -1,10 +1,12 @@
 part of 'dao.dart';
 
+const _noticeFetchMaxCountLimit = 500;
+
 /// DAO for all notification related tables.
 @DriftAccessor(tables: [Notice, PersonalMessage, BroadcastMessage])
 final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$NotificationDaoMixin {
   /// Constructor.
-  NotificationDao(super.db);
+  NotificationDao(super.attachedDatabase);
 
   /// Select notice for user [uid] since [timestamp].
   ///
@@ -12,7 +14,8 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$Notific
   Future<List<NoticeEntity>> selectNoticeSince({required int uid, required int timestamp}) async {
     return (select(notice)
           ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
-          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)])
+          ..limit(_noticeFetchMaxCountLimit))
         .get();
   }
 
@@ -22,7 +25,8 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$Notific
   Future<List<PersonalMessageEntity>> selectPersonalMessageSince({required int uid, required int timestamp}) async {
     return (select(personalMessage)
           ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
-          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)])
+          ..limit(_noticeFetchMaxCountLimit))
         .get();
   }
 
@@ -32,7 +36,8 @@ final class NotificationDao extends DatabaseAccessor<AppDatabase> with _$Notific
   Future<List<BroadcastMessageEntity>> selectBroadcastMessageSince({required int uid, required int timestamp}) async {
     return (select(broadcastMessage)
           ..where((e) => e.uid.equals(uid) & e.timestamp.isBiggerOrEqualValue(timestamp))
-          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)]))
+          ..orderBy([(e) => OrderingTerm(expression: e.timestamp, mode: OrderingMode.desc)])
+          ..limit(_noticeFetchMaxCountLimit))
         .get();
   }
 

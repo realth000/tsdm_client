@@ -38,7 +38,7 @@ extension ParseUrl on String {
   /// Try parse string to [RecognizedRoute] with arguments.
   /// Return null if string is unsupported route.
   RecognizedRoute? parseUrlToRoute() {
-    final queryParameters = tryParseAsUri()?.tryGetQueryParameters();
+    final queryParameters = tryParseAsUri().tryGetQueryParameters();
     if (queryParameters == null) {
       return null;
     }
@@ -58,7 +58,7 @@ extension ParseUrl on String {
         ScreenPaths.forum,
         pathParameters: {'fid': "${queryParameters['fid']}"},
         queryParameters: {
-          if (threadTypeID != null) 'threadTypeID': threadTypeID,
+          'threadTypeID': ?threadTypeID,
           // FIXME: The FilterType originally is for showing the thread type name, but now the name is unknown when
           // parsing route in url. For now it's safe to add empty thread type name to let the page apply initial filter
           // state. If the name field not present, typeid is also discarded, this is the more one we we dont want.
@@ -82,7 +82,7 @@ extension ParseUrl on String {
           if (queryParameters.containsKey('page')) 'pageNumber': "${queryParameters['page']}",
           if (anchor != null) 'overrideReverseOrder': 'false',
           if (order != null) 'overrideWithExactOrder': '$order',
-          if (anchor != null) 'pid': anchor,
+          'pid': ?anchor,
           if (queryParameters.containsKey('authorid')) 'onlyVisibleUid': "${queryParameters['authorid']}",
         },
       );
@@ -192,7 +192,7 @@ extension ParseUrl on String {
 
   /// Parse self as an uri and return the value of parameter [name].
   String? uriQueryParameter(String name) {
-    return tryParseAsUri()?.tryGetQueryParameters()?[name];
+    return tryParseAsUri().tryGetQueryParameters()?[name];
   }
 
   /// Check a string is pattern of user space url.
@@ -204,7 +204,7 @@ extension ParseUrl on String {
   /// 3. In query parameters, contains key 'uid' or 'username'. (email ignored).
   /// 4. In query parameters, value of 'ac' is neither 'usergroup' nor 'credit'.
   bool get isUserSpaceUrl {
-    final args = tryParseAsUri()?.tryGetQueryParameters();
+    final args = tryParseAsUri().tryGetQueryParameters();
     if (args == null) {
       return false;
     }

@@ -7,6 +7,7 @@ import 'package:tsdm_client/features/my_thread/bloc/my_thread_bloc.dart';
 import 'package:tsdm_client/features/my_thread/repository/my_thread_repository.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to show the threads and replies published by current logged user.
 class MyThreadPage extends StatefulWidget {
@@ -25,7 +26,7 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
 
   Widget _buildThreadTab(BuildContext context, MyThreadState state) {
     if (state.status == MyThreadStatus.loading || state.refreshingThread) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
     _threadRefreshController
       ..finishRefresh()
@@ -68,7 +69,7 @@ class _MyThreadPageState extends State<MyThreadPage> with SingleTickerProviderSt
 
   Widget _buildReplyTab(BuildContext context, MyThreadState state) {
     if (state.status == MyThreadStatus.loading || state.refreshingReply) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
     _replyRefreshController
       ..finishRefresh()

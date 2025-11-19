@@ -4,7 +4,7 @@ part of 'dao.dart';
 @DriftAccessor(tables: [Image])
 final class ImageDao extends DatabaseAccessor<AppDatabase> with _$ImageDaoMixin {
   /// Constructor.
-  ImageDao(super.db);
+  ImageDao(super.attachedDatabase);
 
   /// Get all image cache.
   Future<List<ImageEntity>> selectAll() async {

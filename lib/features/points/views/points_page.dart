@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/points/widgets/points_query_form.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Page to show current logged user's points statistics and changelog.
@@ -31,7 +32,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
 
   Widget _buildStatisticsTab(BuildContext context, PointsStatisticsState state) {
     if (state.status == PointsStatus.loading) {
-      return const Center(child: CircularProgressIndicator());
+      return const CenteredCircularIndicator();
     }
     _statisticsRefreshController.finishRefresh();
 
@@ -89,7 +90,7 @@ class _PointsPageState extends State<PointsPage> with SingleTickerProviderStateM
   Widget _buildChangelogTab(BuildContext context, PointsChangelogState state) {
     late final Widget body;
     if (state.status == PointsStatus.loading) {
-      body = const Expanded(child: Center(child: CircularProgressIndicator()));
+      body = const Expanded(child: CenteredCircularIndicator());
     } else {
       final changelogList = EasyRefresh(
         controller: _changelogRefreshController,

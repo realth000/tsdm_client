@@ -226,6 +226,7 @@
       "downloadAgainInfo": "The necessary cache will be downloaded from the server again",
       "images": "Images",
       "emoji": "Emoji",
+      "log": "Log",
       "selectOneCache": "Need to select at least one kind of cache",
       "clearSuccess": "Cleared successfully",
       "scheduledCleaning": {
@@ -287,6 +288,11 @@
       },
       "viewLog": {
         "title": "View log"
+      },
+      "viewHistoryLog": {
+        "title": "View historical log",
+        "historicalLogs": "Historical logs",
+        "export": "Export"
       },
       "copyDatabaseDir": "Copy database path"
     },
@@ -1161,5 +1167,13 @@
   "workaroundRedirect": "View conversation",
   "threadCard": {
     "viewInfo": "View thread info"
+  },
+  "myTitlesPage": {
+    "title": "My titles",
+    "current": "ON",
+    "unset": "Unset",
+    "openTitleShop": "Visit title shop (in browser)",
+    "noneActivated": "None secondary title activated",
+    "activated": "Activated: ${name: String}"
   }
 }

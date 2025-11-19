@@ -6,6 +6,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/providers/image_cache_provider/image_cache_provider.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/copy_content_dialog.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to show a detail image.
 final class ImageDetailPage extends StatelessWidget {
@@ -59,7 +60,7 @@ final class ImageDetailPage extends StatelessWidget {
           minScale: 0.3,
           initialScale: PhotoViewComputedScale.contained,
           backgroundDecoration: BoxDecoration(color: Theme.of(context).colorScheme.surfaceContainerLowest),
-          loadingBuilder: (_, _) => const Center(child: CircularProgressIndicator()),
+          loadingBuilder: (_, _) => const CenteredCircularIndicator(),
         ),
       ),
     );

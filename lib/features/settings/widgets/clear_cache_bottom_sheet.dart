@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/material_symbols_icons.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/int.dart';
@@ -11,6 +12,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Show a bottom sheet provides clear cache functionality with clear cache
 /// options.
@@ -72,10 +74,19 @@ class _ClearCacheBottomSheetState extends State<_ClearCacheBottomSheet> {
                       SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearEmoji: v)),
                     ),
                   ),
+                  CheckboxListTile(
+                    secondary: const Icon(Symbols.text_ad),
+                    title: Text(tr.log),
+                    subtitle: Text(state.storageInfo!.logSize.withSizeHint()),
+                    value: state.clearInfo.clearLog,
+                    onChanged: (v) => context.read<SettingsCacheBloc>().add(
+                      SettingsCacheUpdateClearInfoRequested(state.clearInfo.copyWith(clearLog: v)),
+                    ),
+                  ),
                 ],
               ),
             ),
-            _ => const Center(child: CircularProgressIndicator()),
+            _ => const CenteredCircularIndicator(),
           };
 
           return Column(

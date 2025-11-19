@@ -65,6 +65,9 @@ class ScreenPaths {
   /// Page to switch current user's user group.
   static const String switchUserGroup = '/switchUserGroup';
 
+  /// Page to switch current user's title.
+  static const String switchTitle = '/switchTitle';
+
   /// App settings page.
   static const settings = NestedPath._('/settings');
 
@@ -226,6 +229,12 @@ class ScreenPaths {
 
   /// Page to show logs for debugging.
   static const String debugLog = '/debugLog';
+
+  /// Page to show all historical logs for debugging.
+  static const String debugHistoricalLog = '/historicalLog';
+
+  /// Page to show detail of historical log.
+  static const String debugHistoricalLogDetail = '/historicalLogDetail';
 
   /// Page to show packet statistics detail info of a thread.
   static const String packetDetail = '/packetDetail/:tid';

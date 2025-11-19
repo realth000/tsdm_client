@@ -9,6 +9,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
@@ -143,7 +144,7 @@ class _EditAvatarPageState extends State<EditAvatarPage> {
         },
         builder: (context, state) {
           final body = switch (state.status) {
-            EditAvatarStatus.initial || EditAvatarStatus.loading => const Center(child: CircularProgressIndicator()),
+            EditAvatarStatus.initial || EditAvatarStatus.loading => const CenteredCircularIndicator(),
             EditAvatarStatus.waitingForUpload ||
             EditAvatarStatus.success ||
             EditAvatarStatus.uploading => _buildContent(context, state),

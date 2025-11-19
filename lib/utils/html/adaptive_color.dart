@@ -15,7 +15,7 @@ const _identifiedMatrix = [
   [0, 0, 0, 0, 1],
 ];
 
-const _invertNHueMatrix = [
+const List<List<num>> _invertNHueMatrix = [
   [0.333, -0.667, -0.667, 0, 1],
   [-0.667, 0.333, -0.667, 0, 1],
   [-0.667, -0.667, 0.333, 0, 1],

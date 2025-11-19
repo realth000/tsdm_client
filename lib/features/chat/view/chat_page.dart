@@ -11,6 +11,7 @@ import 'package:tsdm_client/features/chat/widgets/chat_message_card.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/reply_bar/bloc/reply_bloc.dart';
 import 'package:tsdm_client/widgets/reply_bar/models/reply_types.dart';
 import 'package:tsdm_client/widgets/reply_bar/reply_bar.dart';
@@ -144,7 +145,7 @@ final class _ChatPageState extends State<ChatPage> {
         child: BlocBuilder<ChatBloc, ChatState>(
           builder: (context, state) {
             final body = switch (state.status) {
-              ChatStatus.initial || ChatStatus.loading => const Center(child: CircularProgressIndicator()),
+              ChatStatus.initial || ChatStatus.loading => const CenteredCircularIndicator(),
               ChatStatus.success => _buildContent(context, state),
               ChatStatus.failure => buildRetryButton(
                 context,

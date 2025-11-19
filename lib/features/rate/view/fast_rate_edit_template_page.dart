@@ -9,6 +9,7 @@ import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Type of editing the fast rate template.
 enum FastRateTemplateEditType {
@@ -99,7 +100,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         final result = snapshot.data!;

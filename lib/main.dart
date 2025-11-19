@@ -24,9 +24,11 @@ Future<void> main(List<String> args) async => runZonedGuarded(() async => _boot(
 Future<void> _boot(List<String> args) async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  await initLogger();
+
   parseCmdArgs(args);
 
-  talker.debug('start app...');
+  talker.debug('------------------- start app -------------------');
   await initProviders();
 
   final settings = getIt.get<SettingsRepository>().currentSettings;

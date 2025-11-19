@@ -13,6 +13,7 @@ import 'package:tsdm_client/shared/models/notification_type.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/widgets/card/notice_card_v2.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 enum _Actions { markAllNoticeAsRead, markAllPersonalMessageAsRead, markAllBroadcastMessageAsRead }
 
@@ -99,8 +100,7 @@ class _NotificationPageState extends State<NotificationPage> with SingleTickerPr
           };
 
           final body = switch (state.status) {
-            NotificationStatus.initial ||
-            NotificationStatus.loading => const Center(child: CircularProgressIndicator()),
+            NotificationStatus.initial || NotificationStatus.loading => const CenteredCircularIndicator(),
             NotificationStatus.success => TabBarView(
               controller: _tabController,
               children: [

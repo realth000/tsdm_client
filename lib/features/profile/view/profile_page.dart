@@ -36,6 +36,7 @@ import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/medal_group_view.dart';
 import 'package:tsdm_client/widgets/notice_button.dart';
 import 'package:tsdm_client/widgets/obscure_list_tile.dart';
@@ -47,7 +48,7 @@ import 'package:universal_html/parsing.dart';
 const _appBarBackgroundTopPadding = 44.0;
 const _appBarBackgroundImageHeight = 80.0;
 const _appBarAvatarHeight = 80.0;
-const _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight + _appBarBackgroundTopPadding;
+const double _appBarExpandHeight = _appBarBackgroundImageHeight + _appBarAvatarHeight + _appBarBackgroundTopPadding;
 
 const _groupAvatarHeight = 100.0;
 
@@ -68,7 +69,7 @@ const _groupAvatarHeight = 100.0;
 /// lv2  偶尔看看I     3天
 /// lv1  初来乍到      1天
 /// ```
-const _checkinNextLevelExp = [
+const List<int> _checkinNextLevelExp = [
   1 - 0,
   3 - 1,
   7 - 3,
@@ -82,7 +83,15 @@ const _checkinNextLevelExp = [
   300 - 250,
 ];
 
-enum _ProfileActions { viewNotification, checkin, viewPoints, switchUserGroup, logout, editAvatar }
+enum _ProfileActions {
+  viewNotification,
+  checkin,
+  viewPoints,
+  switchUserGroup,
+  switchTitle,
+  logout,
+  editAvatar,
+}
 
 /// Page of user profile.
 class ProfilePage extends StatefulWidget {
@@ -158,6 +167,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 await context.pushNamed(ScreenPaths.switchUserGroup);
+              case _ProfileActions.switchTitle:
+                if (logout) {
+                  return;
+                }
+                await context.pushNamed(ScreenPaths.switchTitle);
               case _ProfileActions.logout:
                 final logout = await showQuestionDialog(
                   context: context,
@@ -220,6 +234,16 @@ class _ProfilePageState extends State<ProfilePage> {
                   const Icon(Symbols.change_circle),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.switchUserGroupPage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
+              value: _ProfileActions.switchTitle,
+              child: Row(
+                children: [
+                  const Icon(Symbols.badge),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.myTitlesPage.title),
                 ],
               ),
             ),
@@ -876,7 +900,7 @@ class _ProfilePageState extends State<ProfilePage> {
           // Main content of user profile.
           // Contain a sliver version app bar to show when data loaded.
           final body = switch (state.status) {
-            ProfileStatus.initial || ProfileStatus.loading => const Center(child: CircularProgressIndicator()),
+            ProfileStatus.initial || ProfileStatus.loading => const CenteredCircularIndicator(),
             ProfileStatus.needLogin => NeedLoginPage(
               backUri: GoRouterState.of(context).uri,
               needPop: true,

@@ -10,6 +10,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/section_list_tile.dart';
 import 'package:tsdm_client/widgets/section_title_text.dart';
 
@@ -93,8 +94,7 @@ class _SwitchUserGroupPageState extends State<SwitchUserGroupPage> with LoggerMi
           final tr = context.t.switchUserGroupPage;
 
           final body = switch (state.status) {
-            SwitchUserGroupStatus.initial ||
-            SwitchUserGroupStatus.loadingInfo => const Center(child: CircularProgressIndicator()),
+            SwitchUserGroupStatus.initial || SwitchUserGroupStatus.loadingInfo => const CenteredCircularIndicator(),
             SwitchUserGroupStatus.waitingSwitchAction ||
             SwitchUserGroupStatus.switching ||
             SwitchUserGroupStatus.success => _buildContent(context, state),

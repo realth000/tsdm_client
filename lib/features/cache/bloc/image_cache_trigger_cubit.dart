@@ -3,7 +3,6 @@ import 'package:dart_mappable/dart_mappable.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
 
 part 'image_cache_trigger_cubit.mapper.dart';
-
 part 'image_cache_trigger_state.dart';
 
 /// Global cubit as a trigger to enable widgets triggering image reload.
@@ -16,7 +15,7 @@ class ImageCacheTriggerCubit extends Cubit<ImageCacheTriggerState> {
   final ImageCacheRepository _imageCacheRepository;
 
   /// Trigger reloading process for given image [url].
-  void updateImageCache(String url, {bool force = false}) {
-    _imageCacheRepository.updateImageCache(url, force: force);
+  Future<void> updateImageCache(String url, {bool force = false}) async {
+    await _imageCacheRepository.updateImageCache(url, force: force);
   }
 }

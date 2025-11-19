@@ -13,6 +13,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page of search, including a form to fill search parameters and search
 /// results.
@@ -105,12 +106,11 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
     context.read<SearchBloc>().add(SearchRequested(keyword: keyword, uid: authorUid, fid: fid, pageNumer: page));
 
-    setState(() {
-      // Only return to top when attached (not the first search).
-      if (scrollController.hasClients) {
-        scrollController.animateTo(0, curve: Curves.ease, duration: const Duration(microseconds: 500));
-      }
-    });
+    // Only return to top when attached (not the first search).
+    if (scrollController.hasClients) {
+      await scrollController.animateTo(0, curve: Curves.ease, duration: const Duration(microseconds: 500));
+      setState(() {});
+    }
   }
 
   /// Search with given keyword, authorUid and fid, return the [page] index
@@ -360,7 +360,7 @@ class _SearchPageState extends State<SearchPage> with LoggerMixin {
 
   Widget _buildSearchResult(BuildContext context, SearchState state) {
     if (state.status.isSearching()) {
-      return const Expanded(child: Center(child: CircularProgressIndicator()));
+      return const Expanded(child: CenteredCircularIndicator());
     } else if (state.searchResult?.data?.isEmpty ?? true) {
       return Expanded(child: Center(child: Text(context.t.searchPage.result.noData)));
     }

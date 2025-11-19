@@ -10,6 +10,7 @@ import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Show a bottom sheet that provides emojis in editor.
 Future<String?> showEmojiPicker(BuildContext context) async {
@@ -101,7 +102,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const CircularProgressIndicator(),
+                    const CircularIndicator(),
                     sizedBoxW12H12,
                     Expanded(child: Text(context.t.bbcodeEditor.emoji.loadingAssets)),
                   ],

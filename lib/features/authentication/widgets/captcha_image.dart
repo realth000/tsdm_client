@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
@@ -10,6 +11,7 @@ import 'package:tsdm_client/shared/providers/net_client_provider/net_client_prov
 import 'package:tsdm_client/shared/providers/providers.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/widgets/fallback_picture.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Captcha image size is 320x150.
 const _captchaImageWidth = 320.0;
@@ -17,7 +19,7 @@ const _captchaImageHeight = 150.0;
 
 const _renderHeight = 52.0;
 
-const _indicatorBoxWidth = (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
+const double _indicatorBoxWidth = (_renderHeight / _captchaImageHeight) * _captchaImageWidth;
 
 /// The captcha image used in login form.
 class CaptchaImage extends StatefulWidget {
@@ -108,10 +110,7 @@ class _VerityImageState extends State<CaptchaImage> with LoggerMixin {
             // 130 x 60 -> 110.9 -> 52
             return Image.memory(bytes, height: _renderHeight);
           }
-          return const SizedBox(
-            width: _indicatorBoxWidth,
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return const SizedBox(width: _indicatorBoxWidth, child: CenteredCircularIndicator());
         },
       ),
     );
@@ -134,7 +133,8 @@ final class CaptchaImageController {
 
   /// Reload captcha image.
   void reload() {
-    _state?.reload();
+    // FIXME: Make is sync.
+    unawaited(_state?.reload());
   }
 
   /// Release resource.

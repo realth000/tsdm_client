@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -187,7 +189,14 @@ class _UsernamePickerDialogState extends State<_UsernamePickerDialog> with Logge
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => EditorRepository()),
-        BlocProvider(create: (context) => UserMentionCubit(context.repo())..recommendFriend()),
+        BlocProvider(
+          create: (context) {
+            final cubit = UserMentionCubit(context.repo());
+            // TODO: Make it sync.
+            unawaited(cubit.recommendFriend());
+            return cubit;
+          },
+        ),
       ],
       child: BlocBuilder<UserMentionCubit, UserMentionState>(
         builder: (context, state) => CustomAlertDialog.sync(

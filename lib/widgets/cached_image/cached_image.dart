@@ -107,7 +107,7 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
 
   @override
   void dispose() {
-    imageSub?.cancel();
+    unawaited(imageSub?.cancel());
     super.dispose();
   }
 
@@ -152,7 +152,7 @@ class _CachedImageState extends State<CachedImage> with LoggerMixin {
             layoutBuilder: (currentChild, previousChildren) {
               return Stack(
                 alignment: Alignment.center,
-                children: <Widget>[...previousChildren, if (currentChild != null) currentChild],
+                children: <Widget>[...previousChildren, ?currentChild],
               );
             },
             // Return the same placeholder until built finished to avoid size

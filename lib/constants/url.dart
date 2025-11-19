@@ -64,7 +64,7 @@ const modifyUserCredentialUrl = '$baseUrl/home.php?mod=spacecp&ac=profile&op=pas
 /// * Username
 /// * UID
 /// * User email
-const checkAuthenticationStateUrl = modifyUserCredentialUrl;
+const String checkAuthenticationStateUrl = modifyUserCredentialUrl;
 
 /// Url to get the latest app on Github.
 const upgradeGithubReleaseUrl = 'https://github.com/realth000/tsdm_client/releases/latest';

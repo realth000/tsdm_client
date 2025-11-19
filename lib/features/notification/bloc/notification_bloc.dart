@@ -16,9 +16,7 @@ import 'package:tsdm_client/utils/logger.dart';
 import 'package:universal_html/parsing.dart';
 
 part 'notification_bloc.mapper.dart';
-
 part 'notification_event.dart';
-
 part 'notification_state.dart';
 
 /// Emitter
@@ -389,7 +387,7 @@ class NotificationBloc extends Bloc<NotificationEvent, NotificationState> with L
   /// Do NOT dispose [_infoRepository] here because the state cubit owns it.
   @override
   Future<void> close() async {
-    _notificationRepository.dispose();
+    await _notificationRepository.dispose();
     return super.close();
   }
 }

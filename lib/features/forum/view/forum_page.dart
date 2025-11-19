@@ -25,6 +25,7 @@ import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/card/error_card.dart';
 import 'package:tsdm_client/widgets/card/forum_card.dart';
 import 'package:tsdm_client/widgets/card/thread_card/thread_card.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/list_app_bar/list_app_bar.dart';
 
 const _tabsCount = 3;
@@ -32,8 +33,8 @@ const _pinnedTabIndex = 0;
 const _threadTabIndex = 1;
 const _subredditTabIndex = 2;
 
-const _backToTopCurve = Curves.ease;
-const _backToTopAnimationDuration = duration500;
+const Cubic _backToTopCurve = Curves.ease;
+const Duration _backToTopAnimationDuration = duration500;
 
 /// Page to show all forum status.
 class ForumPage extends StatefulWidget {
@@ -101,7 +102,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                 Tab(child: Text(context.t.forumPage.threadTab.title)),
                 Tab(child: Text(context.t.forumPage.subredditTab.title)),
               ],
-              onTap: (index) {
+              onTap: (index) async {
                 // Here we want to scroll the current tab to the top.
                 // Only scroll to top when user taps on the current
                 // tab, which means index is not changing.
@@ -115,15 +116,15 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
                 switch (tabController.index) {
                   case _pinnedTabIndex:
                     if (_pinnedScrollController.hasClients) {
-                      _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
+                      await _pinnedScrollController.animateTo(0, duration: duration, curve: curve);
                     }
                   case _threadTabIndex:
                     if (_threadScrollController.hasClients) {
-                      _threadScrollController.animateTo(0, duration: duration, curve: curve);
+                      await _threadScrollController.animateTo(0, duration: duration, curve: curve);
                     }
                   case _subredditTabIndex:
                     if (_subredditScrollController.hasClients) {
-                      _subredditScrollController.animateTo(0, duration: duration, curve: curve);
+                      await _subredditScrollController.animateTo(0, duration: duration, curve: curve);
                     }
                 }
               },
@@ -338,7 +339,7 @@ class _ForumPageState extends State<ForumPage> with SingleTickerProviderStateMix
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (state.filterState.isFiltering()) _buildNormalThreadFilterRow(context, state),
-          const Expanded(child: Center(child: CircularProgressIndicator())),
+          const Expanded(child: CenteredCircularIndicator()),
         ],
       ),
       ForumStatus.failure => buildRetryButton(context, () {

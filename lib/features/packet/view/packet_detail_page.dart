@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +17,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page showing packet statistics detail data for a given thread.
 class PacketDetailPage extends StatefulWidget {
@@ -151,14 +154,20 @@ class _PacketDetailPageState extends State<PacketDetailPage> {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => PacketRepository()),
-        BlocProvider(create: (context) => PacketDetailCubit(context.repo())..fetchDetail(widget.tid)),
+        BlocProvider(
+          create: (context) {
+            final cubit = PacketDetailCubit(context.repo());
+            unawaited(cubit.fetchDetail(widget.tid));
+            return cubit;
+          },
+        ),
       ],
       child: BlocBuilder<PacketDetailCubit, PacketDetailState>(
         builder: (context, state) {
           final tr = context.t.packetDetailPage;
 
           final (body, infoRow) = switch (state) {
-            PacketDetailInitial() || PacketDetailLoading() => (const Center(child: CircularProgressIndicator()), null),
+            PacketDetailInitial() || PacketDetailLoading() => (const CenteredCircularIndicator(), null),
             PacketDetailFailure() => (
               Center(
                 child: buildRetryButton(context, () async => context.read<PacketDetailCubit>().fetchDetail(widget.tid)),

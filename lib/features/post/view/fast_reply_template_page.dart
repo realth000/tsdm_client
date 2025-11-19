@@ -10,6 +10,7 @@ import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 
 /// Page to view all templates for fast reply.
 class FastReplyTemplatePage extends StatefulWidget {
@@ -38,7 +39,7 @@ class _FastReplyTemplatePageState extends State<FastReplyTemplatePage> with Logg
         }
 
         if (!snapshot.hasData) {
-          return const Center(child: CircularProgressIndicator());
+          return const CenteredCircularIndicator();
         }
 
         final allTemplates = snapshot.data!;

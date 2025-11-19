@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart' show FpdartOnIterableOfIterable;
@@ -13,6 +15,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/quoted_text.dart';
 
 /// Page to view all rate log for a post.
@@ -183,13 +186,17 @@ class _RateLogPageState extends State<RateLogPage> with SingleTickerProviderStat
       providers: [
         RepositoryProvider(create: (_) => RateRepository()),
         BlocProvider(
-          create: (context) => RateLogCubit(context.repo())..fetchLog(tid: widget.tid, pid: widget.pid),
+          create: (context) {
+            final cubit = RateLogCubit(context.repo());
+            unawaited(cubit.fetchLog(tid: widget.tid, pid: widget.pid));
+            return cubit;
+          },
         ),
       ],
       child: BlocBuilder<RateLogCubit, RateLogState>(
         builder: (context, state) {
           final body = switch (state.status) {
-            RateLogStatus.initial || RateLogStatus.loading => const Center(child: CircularProgressIndicator()),
+            RateLogStatus.initial || RateLogStatus.loading => const CenteredCircularIndicator(),
             RateLogStatus.failure => buildRetryButton(
               context,
               () => context.read<RateLogCubit>().fetchLog(tid: widget.tid, pid: widget.pid),

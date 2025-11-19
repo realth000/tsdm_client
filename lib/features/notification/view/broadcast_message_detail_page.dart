@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/layout.dart';
@@ -9,6 +11,7 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/utils/html/html_muncher.dart';
 import 'package:tsdm_client/utils/retry_button.dart';
+import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Detail page of a `BroadcastMessage`.
@@ -44,16 +47,22 @@ final class BroadcastMessageDetailPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         RepositoryProvider(create: (_) => NotificationRepository()),
-        BlocProvider(create: (context) => BroadcastMessageDetailCubit(context.repo())..fetchDetail(pmid)),
+        BlocProvider(
+          create: (context) {
+            final cubit = BroadcastMessageDetailCubit(context.repo());
+            unawaited(cubit.fetchDetail(pmid));
+            return cubit;
+          },
+        ),
       ],
       child: BlocBuilder<BroadcastMessageDetailCubit, BroadcastMessageDetailState>(
         builder: (context, state) {
           final body = switch (state.status) {
             BroadcastMessageDetailStatus.initial ||
-            BroadcastMessageDetailStatus.loading => const Center(child: CircularProgressIndicator()),
+            BroadcastMessageDetailStatus.loading => const CenteredCircularIndicator(),
             BroadcastMessageDetailStatus.success => _buildBody(context, state),
-            BroadcastMessageDetailStatus.failed => buildRetryButton(context, () {
-              context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
+            BroadcastMessageDetailStatus.failed => buildRetryButton(context, () async {
+              await context.read<BroadcastMessageDetailCubit>().fetchDetail(pmid);
             }),
           };
 
