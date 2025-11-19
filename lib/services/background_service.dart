@@ -17,10 +17,16 @@ void callbackDispatcher() {
 
 class BackgroundService {
   static Future<void> initialize() async {
-    await Workmanager().initialize(
-      callbackDispatcher, // 上面的回调函数
-      isInDebugMode: false, // 开发时设为true可看更多日志
-    );
+   try {
+      await Workmanager().initialize(
+        callbackDispatcher, // 上面的回调函数
+        isInDebugMode: false, // 开发时设为true可看更多日志
+      );
+      print("BackgroundService: Initialized successfully"); // 添加这行
+    } catch (e) {
+      print("BackgroundService: Initialization failed - $e"); // 添加这行
+      rethrow; // 添加这行
+    }
   }
 
   static Future<void> startBackgroundTask() async {
@@ -36,10 +42,22 @@ class BackgroundService {
       constraints: Constraints(
         networkType: NetworkType.connected, // 指定网络条件
       ),
+      existingWorkPolicy: ExistingWorkPolicy.replace, // 添加这行
     );
+      print("BackgroundService: Background task started successfully"); // 添加这行
+    } catch (e) {
+      print("BackgroundService: Failed to start background task - $e"); // 添加这行
+      rethrow; // 添加这行
+    }
   }
 
   static Future<void> stopBackgroundTask() async {
-    await Workmanager().cancelByUniqueName("tsdmBackgroundTask");
+ try {
+      await Workmanager().cancelByUniqueName("tsdmBackgroundTask");
+      print("BackgroundService: Background task stopped successfully"); // 添加这行
+    } catch (e) {
+      print("BackgroundService: Failed to stop background task - $e"); // 添加这行
+      rethrow; // 添加这行
+    }
   }
 }
