@@ -418,3 +418,17 @@ final class EditAvatarUrlNotFound extends AppException with EditAvatarUrlNotFoun
   /// Constructor.
   EditAvatarUrlNotFound() : super(message: 'avatar url not found');
 }
+
+/// Failed to find the user profile form in edit page.
+@MappableClass()
+final class EditUserProfileFormNotFound extends AppException with EditUserProfileFormNotFoundMappable {
+  /// Constructor.
+  EditUserProfileFormNotFound() : super(message: 'user profile not found');
+}
+
+/// Failed to upload user profile data to server.
+@MappableClass()
+final class EditUserProfileUploadFailed extends AppException with EditUserProfileUploadFailedMappable {
+  /// Constructor.
+  EditUserProfileUploadFailed() : super();
+}

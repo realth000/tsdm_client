@@ -2112,6 +2112,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.3"
+  wheel_choice:
+    dependency: "direct main"
+    description:
+      name: wheel_choice
+      sha256: ae86dc4fd7de762310810bf48b23e7d33d9282f4f824d06c5c9a92212ade22d6
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.0"
   win32:
     dependency: transitive
     description:

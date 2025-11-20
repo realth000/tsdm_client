@@ -89,6 +89,7 @@ enum _ProfileActions {
   viewPoints,
   switchUserGroup,
   switchTitle,
+  editProfile,
   logout,
   editAvatar,
 }
@@ -172,6 +173,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   return;
                 }
                 await context.pushNamed(ScreenPaths.switchTitle);
+              case .editProfile:
+                if (logout) {
+                  return;
+                }
+                await context.pushNamed(ScreenPaths.editUserProfile);
               case _ProfileActions.logout:
                 final logout = await showQuestionDialog(
                   context: context,
@@ -208,10 +214,20 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
             ),
             PopupMenuItem(
+              value: .editProfile,
+              child: Row(
+                children: [
+                  const Icon(Symbols.person_edit),
+                  sizedBoxPopupMenuItemIconSpacing,
+                  Text(context.t.editUserProfilePage.title),
+                ],
+              ),
+            ),
+            PopupMenuItem(
               value: _ProfileActions.editAvatar,
               child: Row(
                 children: [
-                  const Icon(Icons.edit_outlined),
+                  const Icon(Symbols.familiar_face_and_zone),
                   sizedBoxPopupMenuItemIconSpacing,
                   Text(context.t.editAvatarPage.title),
                 ],

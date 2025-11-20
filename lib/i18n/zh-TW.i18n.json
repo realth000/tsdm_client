@@ -1175,5 +1175,50 @@
     "openTitleShop": "訪問頭銜商店（在瀏覽器中）",
     "noneActivated": "目前尚未啟動任何頭銜",
     "activated": "使用中：${name: String}"
+  },
+  "editUserProfilePage": {
+    "title": "編輯資料",
+    "save": "儲存資料",
+    "saveSuccess": "保存成功",
+    "saveFailed": "儲存失敗",
+    "visibility": {
+      "title": "隱私",
+      "public": "公開",
+      "friendsOnly": "僅好友可見",
+      "private": "保密"
+    },
+    "username": "使用者名稱",
+    "gender": {
+      "title": "性別",
+      "male": "男",
+      "female": "女",
+      "hide": "保密"
+    },
+    "birthday": {
+      "title": "生日",
+      "year": "年",
+      "month": "月",
+      "day": "日"
+    },
+    "qq": {
+      "title": "QQ",
+      "invalidQQ": "無效的qq號碼"
+    },
+    "msn": "MSN",
+    "homepage": "首頁",
+    "bio": "自我介紹",
+    "hobby": "興趣愛好",
+    "location": "來自",
+    "nickname": "暱稱",
+    "wordsToSay": "最想說的話",
+    "skills": "技能",
+    "favoriteBangumi": "最喜歡的動漫",
+    "pageStyle": {
+      "title": "網頁風格",
+      "tip": "對app無影響"
+    },
+    "customTitle": "自訂頭銜",
+    "signature": "個人簽名",
+    "timezone": "時區"
   }
 }

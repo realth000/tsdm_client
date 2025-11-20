@@ -1175,5 +1175,50 @@
     "openTitleShop": "Visit title shop (in browser)",
     "noneActivated": "None secondary title activated",
     "activated": "Activated: ${name: String}"
+  },
+  "editUserProfilePage": {
+    "title": "Edit profile",
+    "save": "Save profile",
+    "saveSuccess": "Save success",
+    "saveFailed": "Save failed",
+    "visibility": {
+      "title": "Privacy",
+      "public": "Public",
+      "friendsOnly": "Friends only",
+      "private": "Private"
+    },
+    "username": "Username",
+    "gender": {
+      "title": "Gender",
+      "male": "Male",
+      "female": "Female",
+      "hide": "Hide"
+    },
+    "birthday": {
+      "title": "Birthday",
+      "year": "Year",
+      "month": "Month",
+      "day": "Day"
+    },
+    "qq": {
+      "title": "QQ",
+      "invalidQQ": "Invalid qq"
+    },
+    "msn": "MSN",
+    "homepage": "Homepage",
+    "bio": "Bio",
+    "hobby": "Hobby",
+    "location": "Location",
+    "nickname": "Nickname",
+    "wordsToSay": "Words to say",
+    "skills": "Skills",
+    "favoriteBangumi": "Favorite bangumi",
+    "pageStyle": {
+      "title": "Web page style",
+      "tip": "No effect on app"
+    },
+    "customTitle": "Custom title",
+    "signature": "Signature",
+    "timezone": "Timezone"
   }
 }

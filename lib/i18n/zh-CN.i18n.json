@@ -1175,5 +1175,50 @@
     "openTitleShop": "访问称号商店（在浏览器中）",
     "noneActivated": "当前尚未激活任何称号",
     "activated": "使用中：${name: String}"
+  },
+  "editUserProfilePage": {
+    "title": "编辑资料",
+    "save": "保存资料",
+    "saveSuccess": "保存成功",
+    "saveFailed": "保存失败",
+    "visibility": {
+      "title": "隐私",
+      "public": "公开",
+      "friendsOnly": "仅好友可见",
+      "private": "保密"
+    },
+    "username": "用户名",
+    "gender": {
+      "title": "性别",
+      "male": "男",
+      "female": "女",
+      "hide": "保密"
+    },
+    "birthday": {
+      "title": "生日",
+      "year": "年",
+      "month": "月",
+      "day": "日"
+    },
+    "qq": {
+      "title": "QQ",
+      "invalidQQ": "无效的qq号码"
+    },
+    "msn": "MSN",
+    "homepage": "主页",
+    "bio": "自我介绍",
+    "hobby": "兴趣爱好",
+    "location": "来自",
+    "nickname": "昵称",
+    "wordsToSay": "最想说的话",
+    "skills": "技能",
+    "favoriteBangumi": "最喜欢的动漫",
+    "pageStyle": {
+      "title": "网页风格",
+      "tip": "对app无影响"
+    },
+    "customTitle": "自定义头衔",
+    "signature": "个人签名",
+    "timezone": "时区"
   }
 }

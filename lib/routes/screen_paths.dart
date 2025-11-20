@@ -68,6 +68,9 @@ class ScreenPaths {
   /// Page to switch current user's title.
   static const String switchTitle = '/switchTitle';
 
+  /// Page to edit current user's profile.
+  static const String editUserProfile = '/editUserProfile';
+
   /// App settings page.
   static const settings = NestedPath._('/settings');
 
@@ -339,6 +342,9 @@ class DialogPaths {
 
   /// Dialog to let user select the interaction mode on thread floors.
   static const String selectThreadFloorInteractionMode = '/dialog/selectThreadFloorInteractionMode';
+
+  /// Dialog to edit user profile.
+  static const String editUserProfile = '/dialog/editUserProfile';
 }
 
 /// Route path for a screen.
