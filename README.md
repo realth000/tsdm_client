@@ -367,7 +367,7 @@ cd tsdm_client
 dart ./Makefile.dart
 
 # 2. Android
-flutter build apk --dart-define=cronetHttpNoPlay=true
+flutter build apk
 
 # 2. iOS
 flutter build ios --no-codesign

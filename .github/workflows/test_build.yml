@@ -143,7 +143,7 @@ jobs:
       - name: Build Android
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |
-          flutter build apk --release --dart-define=cronetHttpNoPlay=true
+          flutter build apk --release
       - name: Pack Android apk
         if: ${{ github.event_name == 'push' || inputs.build_android }}
         run: |

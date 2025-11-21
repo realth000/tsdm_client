@@ -61,7 +61,6 @@ dependencies:
   m3e_design: ^0.2.1
   material_design_icons_flutter: ^7.0.7296
   material_symbols_icons: ^4.2874.0
-  native_dio_adapter: ^1.5.0
   native_flutter_proxy: ^0.2.3
   path: any
   path_provider: ^2.1.5
@@ -91,15 +90,6 @@ dependencies:
   web: ^1.1.1
   wheel_choice: ^1.2.0
   window_manager: ^0.5.1
-
-dependency_overrides:
-  cronet_http: ^1.6.0
-  jni:
-    git:
-      url: https://github.com/realth000/dart-native
-      # 0.14.2
-      ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
-      path: pkgs/jni
 
 dev_dependencies:
   build_runner: ^2.10.3

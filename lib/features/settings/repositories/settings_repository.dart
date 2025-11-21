@@ -5,7 +5,6 @@ import 'dart:ui';
 import 'package:collection/collection.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
-import 'package:native_dio_adapter/native_dio_adapter.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:tsdm_client/instance.dart';
 import 'package:tsdm_client/shared/models/models.dart';
@@ -14,7 +13,6 @@ import 'package:tsdm_client/shared/providers/proxy_provider/proxy_provider.dart'
 import 'package:tsdm_client/shared/providers/storage_provider/models/database/database.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/logger.dart';
-import 'package:tsdm_client/utils/platform.dart';
 
 typedef _SK<T> = SettingsKeys<T>;
 
@@ -235,34 +233,29 @@ final class SettingsRepository with LoggerMixin {
 
   /// Build a default [Dio] instance from current settings.
   Dio buildDefaultDio() {
-    final HttpClientAdapter httpClientAdapter;
-    if (isAndroid || isIOS || isMacOS) {
-      httpClientAdapter = NativeAdapter();
-    } else {
-      httpClientAdapter = IOHttpClientAdapter(
-        createHttpClient: () {
-          // Don't trust any certificate just because their root cert is
-          // trusted.
-          final settings = getIt.get<SettingsRepository>().currentSettings;
-          final useProxy = settings.netClientUseProxy;
+    final HttpClientAdapter httpClientAdapter = IOHttpClientAdapter(
+      createHttpClient: () {
+        // Don't trust any certificate just because their root cert is
+        // trusted.
+        final settings = getIt.get<SettingsRepository>().currentSettings;
+        final useProxy = settings.netClientUseProxy;
 
-          final client = HttpClient();
+        final client = HttpClient();
 
-          if (useProxy) {
-            final useDetected = settings.useDetectedProxyWhenStartup;
-            final proxy = switch (useDetected) {
-              true => getIt.get<ProxyProvider>().proxy,
-              false => settings.netClientProxy,
-            };
+        if (useProxy) {
+          final useDetected = settings.useDetectedProxyWhenStartup;
+          final proxy = switch (useDetected) {
+            true => getIt.get<ProxyProvider>().proxy,
+            false => settings.netClientProxy,
+          };
 
-            if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
-              client.findProxy = (_) => 'PROXY $proxy';
-            }
+          if ((useDetected && getIt.get<ProxyProvider>().proxyEnabled && proxy.isNotEmpty) || proxy.isNotEmpty) {
+            client.findProxy = (_) => 'PROXY $proxy';
           }
-          return client;
-        },
-      );
-    }
+        }
+        return client;
+      },
+    );
 
     return Dio()
       ..httpClientAdapter = httpClientAdapter

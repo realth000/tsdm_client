@@ -139,7 +139,7 @@ jobs:
           echo '${{ secrets.KEY_PROPERTIES }}' > android/key.properties
       - name: Build Android
         run: |
-          flutter build apk --release --dart-define=cronetHttpNoPlay=true
+          flutter build apk --release
       - name: Pack Android apk
         run: |
           pushd build/app/outputs/flutter-apk/

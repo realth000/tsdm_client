@@ -225,14 +225,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.8"
-  cronet_http:
-    dependency: "direct overridden"
-    description:
-      name: cronet_http
-      sha256: "07bfb4c6158aef72f8004631826abaeecdeaa2b6042f5f8916b8db20e1d01b4a"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.6.0"
   cross_file:
     dependency: transitive
     description:
@@ -265,14 +257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.0.0"
-  cupertino_http:
-    dependency: transitive
-    description:
-      name: cupertino_http
-      sha256: "72187f715837290a63479a5b0ae709f4fedad0ed6bd0441c275eceaa02d5abae"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.3.0"
   custom_lint:
     dependency: "direct dev"
     description:
@@ -920,14 +904,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.2"
-  http_profile:
-    dependency: transitive
-    description:
-      name: http_profile
-      sha256: "7e679e355b09aaee2ab5010915c932cce3f2d1c11c3b2dc177891687014ffa78"
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.1.0"
   image:
     dependency: transitive
     description:
@@ -1016,15 +992,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5"
-  jni:
-    dependency: "direct overridden"
-    description:
-      path: "pkgs/jni"
-      ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
-      resolved-ref: ce500ed0953a8767f4c84815195baa9cd121f2dc
-      url: "https://github.com/realth000/dart-native"
-    source: git
-    version: "0.14.2"
   json_annotation:
     dependency: "direct main"
     description:
@@ -1161,14 +1128,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  native_dio_adapter:
-    dependency: "direct main"
-    description:
-      name: native_dio_adapter
-      sha256: "1c51bd42027861d27ccad462ba0903f5e3197461cc6d59a0bb8658cb5ad7bd01"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.5.0"
   native_flutter_proxy:
     dependency: "direct main"
     description:
@@ -1193,14 +1152,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  objective_c:
-    dependency: transitive
-    description:
-      name: objective_c
-      sha256: "9f034ba1eeca53ddb339bc8f4813cb07336a849cd735559b60cdc068ecce2dc7"
-      url: "https://pub.dev"
-    source: hosted
-    version: "7.1.0"
   package_config:
     dependency: transitive
     description:
