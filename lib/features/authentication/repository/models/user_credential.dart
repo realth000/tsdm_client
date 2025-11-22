@@ -86,7 +86,7 @@ class UserCredential with UserCredentialMappable {
   final SecurityQuestion? securityQuestion;
 
   /// Method to convert to json.
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     final m = {
       'fastloginfield': loginField.toString(),
       'username': loginFieldValue,

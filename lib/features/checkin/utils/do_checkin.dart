@@ -45,7 +45,13 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
       return const CheckinResultFormHashNotFound();
     }
 
-    final body = {'formhash': formHash, 'qdxq': feeling.toString(), 'qdmode': 1, 'todaysay': message, 'fastreply': 1};
+    final body = <String, String>{
+      'formhash': formHash,
+      'qdxq': feeling.toString(),
+      'qdmode': '1',
+      'todaysay': message,
+      'fastreply': '1',
+    };
 
     final checkInRespEither = await netClient.postForm(_checkInRequestUrl, data: body).run();
     if (checkInRespEither.isLeft()) {
