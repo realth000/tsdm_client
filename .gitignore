@@ -6,6 +6,7 @@ schema_versions.dart
 
 # Flutter android debug symbol build dir since 3.29
 /android/app/.cxx
+/android/build
 
 # Not bundle drift web artifacts
 /web/drift_worker.dart.js
