@@ -112,15 +112,15 @@ final class ReplyRepository with LoggerMixin {
   /// * **ReplyToThreadResultFailedException** when reply finished but no
   /// successful result found in response.
   Future<void> replyToThread({required ReplyParameters replyParameters, required String replyMessage}) async {
-    final formData = <String, dynamic>{
+    final formData = <String, String>{
       'message': replyMessage,
-      'usesig': 1,
+      'usesig': '1',
       'formhash': replyParameters.formHash,
       'subject': replyParameters.subject,
     };
     // Only apply post time when not null.
     if (replyParameters.postTime != null) {
-      formData['posttime'] = replyParameters.postTime;
+      formData['posttime'] = replyParameters.postTime.toString();
     }
     final e = await getIt
         .get<NetClientProvider>()
@@ -182,7 +182,7 @@ final class ReplyRepository with LoggerMixin {
   ///
   /// Return the pmid if send message succeed which is used to show the new
   /// generated message.
-  AsyncVoidEither replyPersonalMessage(String touid, Map<String, dynamic> formData) => AsyncVoidEither(() async {
+  AsyncVoidEither replyPersonalMessage(String touid, Map<String, String> formData) => AsyncVoidEither(() async {
     final e = await getIt.get<NetClientProvider>().postForm(formatSendMessageUrl(touid), data: formData).run();
     if (e.isLeft()) {
       return left(e.unwrapErr());

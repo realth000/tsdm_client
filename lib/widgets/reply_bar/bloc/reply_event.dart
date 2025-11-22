@@ -107,5 +107,5 @@ final class ReplyChatRequested extends ReplyEvent with ReplyChatRequestedMappabl
   final String touid;
 
   /// Form data used in post request to send message to server.
-  final Map<String, dynamic> formData;
+  final Map<String, String> formData;
 }
