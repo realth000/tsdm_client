@@ -33,7 +33,7 @@ android {
     namespace = "kzs.th000.tsdm_client"
     compileSdkVersion 36
     // ndkVersion flutter.ndkVersion
-    ndkVersion "28.0.13004108" // r28, keep using the same version in workflows.
+    ndkVersion "29.0.14206865" // r29, keep using the same version in workflows.
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -133,10 +133,10 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 
     // For splash screen Theme.SplashScreen
-    implementation "androidx.core:core-splashscreen:1.2.0-rc01"
+    implementation "androidx.core:core-splashscreen:1.2.0"
 
     // Required by flutter_local_notifications
-    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.5'
 
     // For Android native http client.
     implementation platform("com.squareup.okhttp3:okhttp-bom:5.3.2")
