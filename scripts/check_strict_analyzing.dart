@@ -32,5 +32,5 @@ Future<int> main() async {
   // Restore options.
   await File(analysisOptionsLightweightBackup).rename(lightWeightOptionsFile.path);
 
-  return ret;
+  return exit(ret);
 }
