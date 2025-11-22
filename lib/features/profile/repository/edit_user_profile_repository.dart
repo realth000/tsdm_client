@@ -80,7 +80,13 @@ final class EditUserProfileRepository with LoggerMixin {
       .flatMap(
         (doc) => switch (doc?.contains('show_success') ?? false) {
           true => .right(null),
-          false => .left(EditUserProfileUploadFailed()),
+          false => () {
+            error(
+              'failed to upload user profile: '
+              '${parseHtmlDocument(doc ?? '').querySelector('div#messagetext > p')?.innerText}',
+            );
+            return TaskEither<AppException, void>.left(EditUserProfileUploadFailed());
+          }(),
         },
       );
 }

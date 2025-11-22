@@ -34,12 +34,13 @@ AppException mapException(Object error, StackTrace st) {
 extension _WithFormExt<T> on Dio {
   AsyncEither<Response<T>> postWithForm(String path, {Object? data, Map<String, dynamic>? queryParameters}) =>
       AsyncEither.tryCatch(
-        () async => post(
-          path,
-          data: data,
-          queryParameters: queryParameters,
-          options: Options(headers: {'Content-Type': 'application/x-www-form-urlencoded'}),
-        ),
+            () async =>
+            post(
+              path,
+              data: data,
+              queryParameters: queryParameters,
+              options: Options(headers: {HttpHeaders.contentTypeHeader: 'application/x-www-form-urlencoded'}),
+            ),
         mapException,
       );
 }
@@ -137,30 +138,31 @@ final class NetClientProvider with LoggerMixin {
       }, mapException);
 
   /// Get a image from the given [uri].
-  AsyncEither<Response<dynamic>> getImageFromUri(Uri uri) => AsyncEither.tryCatch(() async {
-    final resp = await _dio.getUri<dynamic>(
-      uri,
-      options: Options(
-        responseType: ResponseType.bytes,
-        headers: {
-          HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
-          HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
-        },
-      ),
-    );
+  AsyncEither<Response<dynamic>> getImageFromUri(Uri uri) =>
+      AsyncEither.tryCatch(() async {
+        final resp = await _dio.getUri<dynamic>(
+          uri,
+          options: Options(
+            responseType: ResponseType.bytes,
+            headers: {
+              HttpHeaders.acceptHeader: 'image/avif,image/webp,*/*;q=0.8',
+              HttpHeaders.acceptEncodingHeader: 'gzip, deflate, br',
+            },
+          ),
+        );
 
-    if (resp.statusCode != HttpStatus.ok) {
-      throw HttpRequestFailedException(resp.statusCode);
-    }
-    return resp;
-  }, mapException);
+        if (resp.statusCode != HttpStatus.ok) {
+          throw HttpRequestFailedException(resp.statusCode);
+        }
+        return resp;
+      }, mapException);
 
   /// Post [data] to [path] with [queryParameters].
   ///
   /// When post a form data, use [postForm] instead.
   AsyncEither<Response<dynamic>> post(String path, {Object? data, Map<String, dynamic>? queryParameters}) =>
       AsyncEither.tryCatch(
-        () async => _dio.post<dynamic>(path, data: data, queryParameters: queryParameters),
+            () async => _dio.post<dynamic>(path, data: data, queryParameters: queryParameters),
         mapException,
       );
 
@@ -173,54 +175,57 @@ final class NetClientProvider with LoggerMixin {
   /// Post a form [data] to url [path] in `Content-Type` multipart/form-data.
   ///
   /// Automatically set `Content-Type` to `multipart/form-data`.
-  AsyncEither<Response<dynamic>> postMultipartForm(
-    String path, {
-    required Map<String, dynamic> data,
+  AsyncEither<Response<dynamic>> postMultipartForm(String path, {
+    required Map<String, String> data,
     Map<String, String>? header,
-  }) => AsyncEither.tryCatch(
-    () async => _dio.post<dynamic>(
-      path,
-      options: Options(
-        headers: <String, String>{
-          HttpHeaders.contentTypeHeader: Headers.multipartFormDataContentType,
-        }.copyWith(header ?? {}),
-        validateStatus: (code) {
-          if (code == 301 || code == 200) {
-            return true;
-          }
-          return false;
-        },
-      ),
-      data: FormData.fromMap(data),
-    ),
-    mapException,
-  );
+  }) =>
+      AsyncEither.tryCatch(
+            () async =>
+            _dio.post<dynamic>(
+              path,
+              options: Options(
+                headers: <String, String>{
+                  HttpHeaders.contentTypeHeader: Headers.multipartFormDataContentType,
+                }.copyWith(header ?? {}),
+                validateStatus: (code) {
+                  if (code == 301 || code == 200) {
+                    return true;
+                  }
+                  return false;
+                },
+              ),
+              // Use plain map for kotlin native http client.
+              data: isAndroid ? data : FormData.fromMap(data),
+            ),
+        mapException,
+      );
 
   /// Download the file from url [path] and save to [savePath].
-  AsyncVoidEither download(
-    String path,
-    dynamic savePath, {
-    ProgressCallback? onReceiveProgress,
-    Map<String, dynamic>? queryParameters,
-    CancelToken? cancelToken,
-    bool deleteOnError = true,
-    String lengthHeader = Headers.contentLengthHeader,
-    Object? data,
-    Options? options,
-  }) => AsyncVoidEither.tryCatch(
-    () async => _dio.download(
-      path,
-      savePath,
-      onReceiveProgress: onReceiveProgress,
-      queryParameters: queryParameters,
-      cancelToken: cancelToken,
-      deleteOnError: deleteOnError,
-      lengthHeader: lengthHeader,
-      data: data,
-      options: options,
-    ),
-    mapException,
-  );
+  AsyncVoidEither download(String path,
+      dynamic savePath, {
+        ProgressCallback? onReceiveProgress,
+        Map<String, dynamic>? queryParameters,
+        CancelToken? cancelToken,
+        bool deleteOnError = true,
+        String lengthHeader = Headers.contentLengthHeader,
+        Object? data,
+        Options? options,
+      }) =>
+      AsyncVoidEither.tryCatch(
+            () async =>
+            _dio.download(
+              path,
+              savePath,
+              onReceiveProgress: onReceiveProgress,
+              queryParameters: queryParameters,
+              cancelToken: cancelToken,
+              deleteOnError: deleteOnError,
+              lengthHeader: lengthHeader,
+              data: data,
+              options: options,
+            ),
+        mapException,
+      );
 }
 
 /// Handle exceptions during web request.
@@ -304,7 +309,7 @@ final class _PointsChangesChecker extends Interceptor {
     response.headers.map
         .lookup('set-cookie')
         .filterMap(_filterCreditNotice)
-        // All notice changes cookie value.
+    // All notice changes cookie value.
         .map((x) => x.forEach(pointsChangesStream.add));
 
     handler.next(response);
