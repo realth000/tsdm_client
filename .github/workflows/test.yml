@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 
 env:
-  CI_FLUTTER_VERSION: '3.38.1'
+  CI_FLUTTER_VERSION: '3.38.3'
 
 jobs:
   flutter_test:
