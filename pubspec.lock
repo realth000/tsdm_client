@@ -1818,10 +1818,11 @@ packages:
   system_theme:
     dependency: "direct main"
     description:
-      name: system_theme
-      sha256: "5f93485401689601d4636a695f99f7c70a30873ee68c1d95025d908a3386be7e"
-      url: "https://pub.dev"
-    source: hosted
+      path: system_theme
+      ref: "0e66e563ccf48735066a81b7eb55811b3af3c0d7"
+      resolved-ref: "0e66e563ccf48735066a81b7eb55811b3af3c0d7"
+      url: "https://github.com/realth000/system_theme"
+    source: git
     version: "3.1.2"
   system_theme_web:
     dependency: transitive
