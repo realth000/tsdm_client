@@ -24,7 +24,7 @@ import 'package:tsdm_client/widgets/indicator.dart';
 import 'package:tsdm_client/widgets/selectable_list_tile.dart';
 import 'package:tsdm_client/widgets/single_line_text.dart';
 
-const _profileFieldTextMaxLines = 15;
+const _profileFieldTextMaxLines = 10;
 const _profileFieldTextMinLines = 3;
 
 /// Page allow showing and editing current user's profile.
@@ -386,15 +386,12 @@ class _EditUserProfilePageState extends State<EditUserProfilePage> {
             onTap: (gender) async => _spawnSelectionDialog<int>(
               context: context,
               profile: profile,
-              title: tr.gender.title,
+              title: tr.pageStyle.title,
               currentValue: profile.pageStyle?.value ?? 0,
               valueNamePairs: profile.availablePageStyles.map((v) => (v.value, v.name)).toList(),
               onValueUpdated: (p, v) => p.copyWith(
                 pageStyle: profile.availablePageStyles.firstWhereOrNull((e) => e.value == v),
               ),
-            ),
-            onVisibilityChanged: (visibility) => context.read<EditUserProfileBloc>().add(
-              EditUserProfileSaveProfileRequested(profile.copyWith(genderVisibility: visibility)),
             ),
           ),
           _buildProfileListTile(
@@ -520,50 +517,36 @@ Widget _buildProfileListTile<T>({
   contentPadding: edgeInsetsL16R16,
   trailing: visibility == null
       ? null
-      : Row(
-          mainAxisSize: .min,
-          children: [
-            const Column(
-              mainAxisSize: .min,
-              children: [
-                sizedBoxW8H8,
-                Expanded(child: VerticalDivider()),
-                sizedBoxW8H8,
-              ],
-            ),
-            sizedBoxW4H4,
-            IconButton(
-              icon: Icon(switch (visibility) {
-                eup.Visibility.public => Symbols.visibility,
-                eup.Visibility.friendsOnly => Symbols.visibility_lock,
-                eup.Visibility.private => Symbols.visibility_off,
-              }),
-              onPressed: context.read<EditUserProfileBloc>().state.status == .submitting
-                  ? null
-                  : () async {
-                      final tr = context.t.editUserProfilePage.visibility;
-                      final v = await _showSelectionDialog(
-                        context: context,
-                        title: '${tr.title} - $title',
-                        currentValue: visibility,
-                        valueNamePairs: [
-                          (eup.Visibility.public, tr.public),
-                          (eup.Visibility.friendsOnly, tr.friendsOnly),
-                          (eup.Visibility.private, tr.private),
-                        ],
-                      );
-                      if (v == null || !context.mounted) {
-                        return;
-                      }
-                      await onVisibilityChanged?.call(v);
-                    },
-              tooltip: switch (visibility) {
-                eup.Visibility.public => context.t.editUserProfilePage.visibility.public,
-                eup.Visibility.friendsOnly => context.t.editUserProfilePage.visibility.friendsOnly,
-                eup.Visibility.private => context.t.editUserProfilePage.visibility.private,
-              },
-            ),
-          ],
+      : IconButton(
+          icon: Icon(switch (visibility) {
+            eup.Visibility.public => Symbols.visibility,
+            eup.Visibility.friendsOnly => Symbols.visibility_lock,
+            eup.Visibility.private => Symbols.visibility_off,
+          }),
+          onPressed: context.read<EditUserProfileBloc>().state.status == .submitting
+              ? null
+              : () async {
+                  final tr = context.t.editUserProfilePage.visibility;
+                  final v = await _showSelectionDialog(
+                    context: context,
+                    title: '${tr.title} - $title',
+                    currentValue: visibility,
+                    valueNamePairs: [
+                      (eup.Visibility.public, tr.public),
+                      (eup.Visibility.friendsOnly, tr.friendsOnly),
+                      (eup.Visibility.private, tr.private),
+                    ],
+                  );
+                  if (v == null || !context.mounted) {
+                    return;
+                  }
+                  await onVisibilityChanged?.call(v);
+                },
+          tooltip: switch (visibility) {
+            eup.Visibility.public => context.t.editUserProfilePage.visibility.public,
+            eup.Visibility.friendsOnly => context.t.editUserProfilePage.visibility.friendsOnly,
+            eup.Visibility.private => context.t.editUserProfilePage.visibility.private,
+          },
         ),
 );
 

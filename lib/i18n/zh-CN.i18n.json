@@ -23,7 +23,7 @@
     "hours": "${value: int} 小时",
     "days": "${value: int} 天",
     "now": "刚刚",
-    "openSettings": "打开设置",
+    "settings": "设置",
     "openInBrowser": "在浏览器中打开",
     "close": "关闭"
   },
@@ -207,7 +207,7 @@
         "title": "帖子楼层交互方式",
         "detail": "点击帖子页面中的楼层时如何响应",
         "adaptiveTapOpenContextMenu": "长按或右击时打开菜单",
-        "tapToReply": "点击楼层时讲当前楼层设为回复目标"
+        "tapToReply": "点击楼层时将当前楼层设为回复目标"
       }
     },
     "checkinSection": {

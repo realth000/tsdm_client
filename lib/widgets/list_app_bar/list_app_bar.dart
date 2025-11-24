@@ -312,7 +312,7 @@ class ListAppBar extends StatelessWidget implements PreferredSizeWidget {
                 children: [
                   const Icon(Icons.settings_outlined),
                   sizedBoxPopupMenuItemIconSpacing,
-                  Text(context.t.general.openSettings),
+                  Text(context.t.general.settings),
                 ],
               ),
             ),
