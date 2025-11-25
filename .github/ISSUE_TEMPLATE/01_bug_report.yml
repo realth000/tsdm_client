@@ -60,15 +60,20 @@ body:
       required: true
   - type: textarea
     attributes:
-      label: 应用信息
-      description: `设置 -> 关于 -> 右上角按钮`复制
+      label: |
+        应用信息
+      description: |
+        `设置 -> 关于 -> 右上角按钮`复制
     validations:
       required: true
   - type: input
     attributes:
-      label: 环境信息
-      description: 发生问题的系统版本
-      placeholder: 例如安卓16，Windows 11
+      label: |
+        环境信息
+      description: |
+        发生问题的系统版本
+      placeholder: |
+        例如安卓16，Windows 11
     validations:
       required: true
   - type: textarea
