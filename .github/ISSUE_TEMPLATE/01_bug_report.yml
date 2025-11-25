@@ -2,8 +2,8 @@ name: 报告bug
 description: |
   上报有关应用的错误和异常等。
   安全漏洞类的bug（例如账号cookie泄露）不要在此上报，请论坛私信联系@ruik0
-title: "[BUG] "
-labels: 'bug'
+title: '[BUG] '
+labels: ['bug']
 body:
   - type: markdown
     attributes:
@@ -55,7 +55,7 @@ body:
   - type: textarea
     attributes:
       label: |
-        预期的结果
+        实际的结果
       description: |
         按照复现步骤操作后，实际出现的现象或结果
       validations:
@@ -73,21 +73,22 @@ body:
       value: |
         <details>
         <summary>截图或视频</summary>
-
-
+        
+        
         在此粘贴截图
-
-
+        
+        
         </details>
-
+        
+        
         <details><summary>当次启动日志</summary>
-
-
+        
+        
         ```console
         在此粘贴日志
         ```
-
-
+        
+        
         </details>
       validations:
         required: false
