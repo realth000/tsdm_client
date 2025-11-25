@@ -1,7 +1,9 @@
 name: 报告bug
 description: |
   上报有关应用的错误和异常等。
-  安全漏洞类的bug（例如账号cookie泄露）不要在此上报，请论坛私信联系@ruik0
+  安全漏洞类的bug（例如账号cookie泄露）不要在此上报，请论坛私信联系ruik0
+title: '[BUG] '
+labels: 'bug'
 body:
   - type: markdown
     attributes:
@@ -28,7 +30,7 @@ body:
             我已确认这个问题不属于[已知问题](https://github.com/realth000/tsdm_client#%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98)。
           required: true
         - label: |
-            我确认这个问题不属于安全漏洞（例如账号cookie超时、泄露）。**安全漏洞问题不要在此上报，请论坛私信联系@ruik0**
+            我确认这个问题不属于安全漏洞（例如账号cookie超时、泄露）。**安全漏洞问题不要在此上报，请论坛私信联系ruik0**
           required: true
   - type: textarea
     attributes:
@@ -55,7 +57,8 @@ body:
       label: |
         实际的结果
       description: |
-        按照复现步骤操作后，实际出现的现象或结果
+        按照复现步骤操作后，实际出现的现象或结果。
+        可以上传截图或视频。
     validations:
       required: true
   - type: textarea
@@ -82,6 +85,8 @@ body:
         附加信息
       description: |
         任何有助于描述问题、帮助开发者定位问题的现象、信息都可以放在这里。
+        
+        建议上传日志或问题现象的截图/视频以节约沟通的时间。
         
         * 如果上传截图或视频，请简练地给出涉及问题的部分。
         * 如果问题不会使软件退出，请重启app，复现一次问题，而后在 设置 -> 调试 -> 日志 -> 右上角菜单 中点击“Copy all logs”后粘贴日志。
