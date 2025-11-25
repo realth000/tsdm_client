@@ -2,8 +2,6 @@ name: 报告bug
 description: |
   上报有关应用的错误和异常等。
   安全漏洞类的bug（例如账号cookie泄露）不要在此上报，请论坛私信联系@ruik0
-title: '[BUG] '
-labels: ['bug']
 body:
   - type: markdown
     attributes:
@@ -42,7 +40,7 @@ body:
         1. ...
         2. ...
         3. ...
-      validations:
+    validations:
         required: true
   - type: textarea
     attributes:
@@ -50,16 +48,29 @@ body:
         预期的结果
       description: |
         按照复现步骤操作后，预期出现的现象或结果
-      validations:
-        required: true
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: |
         实际的结果
       description: |
         按照复现步骤操作后，实际出现的现象或结果
-      validations:
-        required: true
+    validations:
+      required: true
+  - type: textarea
+    attributes:
+      label: 应用信息
+      description: `设置 -> 关于 -> 右上角按钮`复制
+    validations:
+      required: true
+  - type: input
+    attributes:
+      label: 环境信息
+      description: 发生问题的系统版本
+      placeholder: 例如安卓16，Windows 11
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: |
@@ -71,6 +82,8 @@ body:
         * 如果问题不会使软件退出，请重启app，复现一次问题，而后在`设置 -> 调试 -> 日志 -> 右上角菜单`中点击“Copy all logs” 后粘贴日志。
         * 如果问题会导致软件退出，请于复现问题在`设置 -> 调试 -> 查看历史日志`中选择发生问题的日期，右上角导出日志后将日志作为附件上传。
       value: |
+        现象、信息填写到此处
+        
         <details>
         <summary>截图或视频</summary>
         
@@ -90,5 +103,5 @@ body:
         
         
         </details>
-      validations:
-        required: false
+    validations:
+      required: false
