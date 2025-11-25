@@ -1,16 +1,11 @@
 import 'dart:async';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
-import 'package:tsdm_client/extensions/string.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
 import 'package:tsdm_client/features/cache/repository/image_cache_repository.dart';
@@ -31,7 +26,6 @@ import 'package:tsdm_client/features/notification/repository/notification_reposi
 import 'package:tsdm_client/features/profile/repository/profile_repository.dart';
 import 'package:tsdm_client/features/root/bloc/points_changes_cubit.dart';
 import 'package:tsdm_client/features/root/bloc/root_location_cubit.dart';
-import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/theme/cubit/theme_cubit.dart';
@@ -47,12 +41,10 @@ import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.d
 import 'package:tsdm_client/shared/repositories/forum_home_repository/forum_home_repository.dart';
 import 'package:tsdm_client/shared/repositories/fragments_repository/fragments_repository.dart';
 import 'package:tsdm_client/themes/app_themes.dart';
-import 'package:tsdm_client/utils/git_info.dart';
 import 'package:tsdm_client/utils/logger.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
-import 'package:tsdm_client/widgets/custom_alert_dialog.dart';
 import 'package:window_manager/window_manager.dart';
 
 extension _SignedInteger on int {
@@ -365,69 +357,6 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                   // the notification page is live. This fixes the critical issue where time not updated.
                   if (state.latestTime != null) {
                     context.read<NotificationBloc>().add(NotificationRecordFetchTimeRequested(state.latestTime!));
-                  }
-                }
-              },
-            ),
-            BlocListener<UpdateCubit, UpdateCubitState>(
-              listenWhen: (prev, curr) => !curr.loading && prev.loading,
-              listener: (context, state) async {
-                final info = state.latestVersionInfo;
-                final tr = context.t.updatePage;
-                if (info == null) {
-                  error('failed to check update state');
-                  if (state.notice) {
-                    showSnackBar(context: context, message: tr.failed);
-                  }
-                  return;
-                }
-
-                final inUpdatePage = context.read<RootLocationCubit>().isIn(ScreenPaths.update);
-
-                if (info.versionCode <= appVersion.split('+').last.parseToInt()!) {
-                  // Only show the already latest message in update page.
-                  if (inUpdatePage) {
-                    showSnackBar(context: context, message: tr.alreadyLatest);
-                  }
-                } else {
-                  final gotoUpdatePage = await showDialog<bool>(
-                    context: context,
-                    builder: (context) {
-                      final size = MediaQuery.sizeOf(context);
-                      return RootPage(
-                        DialogPaths.updateNotice,
-                        CustomAlertDialog.sync(
-                          title: Text(tr.availableDialog.title),
-                          content: SizedBox(
-                            width: math.min(size.width * 0.8, 800),
-                            height: math.min(size.height * 0.6, 600),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  tr.availableDialog.version(version: info.version),
-                                  style: Theme.of(
-                                    context,
-                                  ).textTheme.labelMedium?.copyWith(color: Theme.of(context).colorScheme.primary),
-                                ),
-                                sizedBoxW8H8,
-                                Expanded(child: Markdown(data: info.changelog)),
-                              ],
-                            ),
-                          ),
-                          actions: [
-                            TextButton(child: Text(context.t.general.cancel), onPressed: () => context.pop(false)),
-                            TextButton(
-                              child: Text(context.t.settingsPage.othersSection.update),
-                              onPressed: () => context.pop(true),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  );
-                  if (true == gotoUpdatePage && context.mounted && !inUpdatePage) {
-                    await router.pushNamed(ScreenPaths.update);
                   }
                 }
               },

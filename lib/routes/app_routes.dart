@@ -60,6 +60,7 @@ final List<RouteBase> _appRoutes = [
   StatefulShellRoute.indexedStack(
     builder: (context, router, navigator) {
       final hideNavigationBarPages = [ScreenPaths.settingsThreadAppearance.fullPath];
+      // Partial global singleton page here.
       return HomePage(showNavigationBar: !hideNavigationBarPages.contains(router.fullPath), child: navigator);
     },
     branches: [
