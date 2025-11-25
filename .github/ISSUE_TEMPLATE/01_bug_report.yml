@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         感谢您上报问题，**请在上方标题栏填写清晰的问题摘要，包含问题发生的位置和现象**。
-        > 例如：`[BUG] 帖子页面内回复时应用闪退`、`[BUG] 设置中更改主题颜色后没有效果`
+        > 例如：`[BUG] 帖子页面内回复时应用闪退`，`[BUG] 设置中更改主题颜色后没有效果`
   - type: checkboxes
     attributes:
       label: |
@@ -25,10 +25,10 @@ body:
             我已在[issue](https://github.com/realth000/tsdm_client/issues?q=sort%3Aupdated-desc%20is%3Aissue)中搜索，确认没有重复或类似issue。
           required: true
         - label: |
-            我已确认这个问题不属于[已知问题](https://github.com/realth000/tsdm_client#%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98)
+            我已确认这个问题不属于[已知问题](https://github.com/realth000/tsdm_client#%E5%B7%B2%E7%9F%A5%E9%97%AE%E9%A2%98)。
           required: true
         - label: |
-            我确认这个问题不属于安全漏洞（例如账号cookie超时、泄露）。
+            我确认这个问题不属于安全漏洞（例如账号cookie超时、泄露）。**安全漏洞问题不要在此上报，请论坛私信联系@ruik0**
           required: true
   - type: textarea
     attributes:
@@ -63,7 +63,7 @@ body:
       label: |
         应用信息
       description: |
-        `设置 -> 关于 -> 右上角按钮`复制
+        设置 -> 关于 -> 右上角按钮 点击复制
     validations:
       required: true
   - type: input
@@ -84,8 +84,8 @@ body:
         任何有助于描述问题、帮助开发者定位问题的现象、信息都可以放在这里。
         
         * 如果上传截图或视频，请简练地给出涉及问题的部分。
-        * 如果问题不会使软件退出，请重启app，复现一次问题，而后在`设置 -> 调试 -> 日志 -> 右上角菜单`中点击“Copy all logs” 后粘贴日志。
-        * 如果问题会导致软件退出，请于复现问题在`设置 -> 调试 -> 查看历史日志`中选择发生问题的日期，右上角导出日志后将日志作为附件上传。
+        * 如果问题不会使软件退出，请重启app，复现一次问题，而后在 设置 -> 调试 -> 日志 -> 右上角菜单 中点击“Copy all logs”后粘贴日志。
+        * 如果问题会导致软件退出，请于复现问题后，在 设置 -> 调试 -> 查看历史日志 中选择发生问题的日期，右上角导出日志后将导出的日志文件作为附件上传。
       value: |
         现象、信息填写到此处
         
