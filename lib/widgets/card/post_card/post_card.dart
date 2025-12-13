@@ -237,6 +237,9 @@ class _PostCardState extends State<PostCard> with AutomaticKeepAliveClientMixin 
     return switch (interactionMode) {
       ThreadFloorInteractionMode.adaptiveTapMenu => AdaptiveInkResponse(
         splashColor: Colors.transparent,
+        highlightColor: Colors.transparent,
+        focusColor: Colors.transparent,
+        hoverColor: Colors.transparent,
         mouseCursor: MouseCursor.uncontrolled,
         behavior: HitTestBehavior.opaque,
         onAdaptiveContextTap: (tapPosition) async {
