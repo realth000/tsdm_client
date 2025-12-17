@@ -27,15 +27,15 @@ dependencies:
   dio: ^5.9.0
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.3.0
-  drift: ^2.29.0
+  drift: ^2.30.0
   # For drift
-  drift_dev: ^2.29.0
-  drift_flutter: ^0.2.7
+  drift_dev: ^2.30.0
+  drift_flutter: ^0.2.8
   easy_refresh: ^3.4.0
   equatable: ^2.0.7
-  file_picker: ^10.3.6
-  flex_color_picker: ^3.7.2
-  flex_color_scheme: ^8.3.1
+  file_picker: ^10.3.7
+  flex_color_picker: ^3.8.0
+  flex_color_scheme: ^8.4.0
   flutter:
     sdk: flutter
   flutter_avif:
@@ -47,13 +47,13 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   flutter_markdown: ^0.7.7+1
-  flutter_styled_toast: ^2.2.1
-  flutter_svg: ^2.2.2
+  flutter_styled_toast: ^2.3.0
+  flutter_svg: ^2.2.3
   font_awesome_flutter: ^10.12.0
   fpdart: ^1.2.0
-  get_it: ^9.0.5
+  get_it: ^9.2.0
   gitsumu: ^0.7.2
-  go_router: ^17.0.0
+  go_router: ^17.0.1
   html: ^0.15.5+1
   http: ^1.6.0
   image_picker: ^1.2.1
@@ -61,7 +61,7 @@ dependencies:
   loading_indicator_m3e: ^0.1.1
   m3e_design: ^0.2.1
   material_design_icons_flutter: ^7.0.7296
-  material_symbols_icons: ^4.2874.0
+  material_symbols_icons: ^4.2892.0
   native_flutter_proxy: ^0.2.3
   path: any
   path_provider: ^2.1.5
@@ -71,13 +71,13 @@ dependencies:
   rxdart: ^0.28.0
   share_plus: ^12.0.1
   shimmer: ^3.0.0
-  slang: ^4.10.1
-  slang_flutter: ^4.10.0
+  slang: ^4.11.1
+  slang_flutter: ^4.11.0
   smooth_sheets: ^0.15.0
   # For drift
   sqlite3: ^2.9.4
   # For drift
-  sqlite3_flutter_libs: ^0.5.40
+  sqlite3_flutter_libs: ^0.5.41
   stream_transform: ^2.1.1
   super_sliver_list: ^0.4.1
   system_network_proxy:
@@ -87,8 +87,8 @@ dependencies:
       url: https://github.com/realth000/system_theme
       path: system_theme
       ref: 0e66e563ccf48735066a81b7eb55811b3af3c0d7
-  talker: ^5.0.2
-  talker_flutter: ^5.0.2
+  talker: ^5.1.9
+  talker_flutter: ^5.1.9
   universal_html: ^2.3.0
   url_launcher: ^6.3.2
   uuid: ^4.5.2
@@ -97,16 +97,16 @@ dependencies:
   window_manager: ^0.5.1
 
 dev_dependencies:
-  build_runner: ^2.10.3
+  build_runner: ^2.10.4
   custom_lint: ^0.8.0
-  dart_mappable_builder: ^4.5.0
+  dart_mappable_builder: ^4.6.3
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
-  json_serializable: ^6.9.4
+  json_serializable: ^6.11.2
   pyramid_lint: ^2.4.0
-  slang_build_runner: ^4.10.0
+  slang_build_runner: ^4.11.0
   very_good_analysis: ^10.0.0
 
 flutter:
