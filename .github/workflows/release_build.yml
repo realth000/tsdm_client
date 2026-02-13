@@ -3,11 +3,11 @@ name: Release build
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 env:
-  CI_FLUTTER_VERSION: '3.38.3' # Do NOT remove or rename the variable otherwise will break FDroid workflows.
-  CI_RUST_VERSION: '1.83.0' # Keep a same rust version on all compile targets.
+  CI_FLUTTER_VERSION: "3.41.0" # Do NOT remove or rename the variable otherwise will break FDroid workflows.
+  CI_RUST_VERSION: "1.83.0" # Keep a same rust version on all compile targets.
 
 jobs:
   release:
@@ -35,11 +35,11 @@ jobs:
           prerelease: ${{ env.PRERELEASE }}
           allowUpdates: true
           omitPrereleaseDuringUpdate: true
-          body: '${{ steps.extract-release-notes.outputs.release_notes }}'
+          body: "${{ steps.extract-release-notes.outputs.release_notes }}"
 
   build-linux:
     name: Build Linux
-    needs: [ release ]
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -49,8 +49,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
@@ -73,7 +73,7 @@ jobs:
       - name: Pack Linux tarball
         uses: thedoctor0/zip-release@master
         with:
-          type: 'tar'
+          type: "tar"
           filename: tsdm_client-linux.tar.gz
           directory: build/linux/x64/release/
           path: tsdm_client
@@ -84,10 +84,10 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          artifacts: 'build/linux/x64/release/tsdm_client-linux.tar.gz'
+          artifacts: "build/linux/x64/release/tsdm_client-linux.tar.gz"
   build-android:
     name: Build Android
-    needs: [ release ]
+    needs: [release]
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -97,8 +97,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
@@ -153,11 +153,11 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          artifacts: 'build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk'
+          artifacts: "build/app/outputs/flutter-apk/tsdm_client-arm64_v8a.apk,build/app/outputs/flutter-apk/tsdm_client-armeabi_v7a.apk"
 
   build-windows:
     name: Build Windows
-    needs: [ release ]
+    needs: [release]
     runs-on: windows-latest
     permissions:
       contents: write
@@ -185,7 +185,7 @@ jobs:
       - name: Pack Windows tarball
         uses: thedoctor0/zip-release@master
         with:
-          type: 'zip'
+          type: "zip"
           filename: tsdm_client-windows.zip
           directory: build/windows/x64/runner
           path: tsdm_client
@@ -196,10 +196,10 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          artifacts: 'build/windows/x64/runner/tsdm_client-windows.zip'
+          artifacts: "build/windows/x64/runner/tsdm_client-windows.zip"
   build-macos-and-ios:
     name: Build MacOS and iOS
-    needs: [ release ]
+    needs: [release]
     runs-on: macos-latest
     permissions:
       contents: write
@@ -229,7 +229,7 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          artifacts: 'build/tsdm_client-universal.dmg'
+          artifacts: "build/tsdm_client-universal.dmg"
       - name: Build iOS ipa
         run: |
           flutter build ios --release --no-codesign
@@ -245,4 +245,4 @@ jobs:
           omitBody: true
           omitBodyDuringUpdate: true
           omitPrereleaseDuringUpdate: true
-          artifacts: 'tsdm_client.ipa'
+          artifacts: "tsdm_client.ipa"

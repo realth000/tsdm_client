@@ -8,12 +8,12 @@ publish_to: "none"
 version: 1.13.0+53
 
 environment:
-  flutter: ">=3.38.3 <4.0.0"
-  sdk: ">=3.10.0 <4.0.0"
+  flutter: ">=3.41.0 <4.0.0"
+  sdk: ">=3.11.0 <4.0.0"
 
 dependencies:
   args: ^2.6.0
-  bloc: ^9.1.0
+  bloc: ^9.2.0
   chat_bottom_container: ^0.4.0
   # Blocked by flutter
   collection: any
@@ -24,15 +24,15 @@ dependencies:
     path: ./packages/dart_bbcode_web_colors
   dart_mappable: ^4.6.1
   dart_quill_delta: ^10.8.3
-  dio: ^5.9.0
+  dio: ^5.9.1
   dio_brotli_transformer: ^2.0.0
   dio_cookie_manager: ^3.3.0
-  drift: ^2.30.0
+  drift: ^2.31.0
   # For drift
-  drift_dev: ^2.30.0
+  drift_dev: ^2.31.0
   drift_flutter: ^0.2.8
   easy_refresh: ^3.4.0
-  equatable: ^2.0.7
+  equatable: ^2.0.8
   file_picker: ^10.3.7
   flex_color_picker: ^3.8.0
   flex_color_scheme: ^8.4.0
@@ -53,7 +53,7 @@ dependencies:
   fpdart: ^1.2.0
   get_it: ^9.2.0
   gitsumu: ^0.7.2
-  go_router: ^17.0.1
+  go_router: ^17.1.0
   html: ^0.15.5+1
   http: ^1.6.0
   image_picker: ^1.2.1
@@ -71,8 +71,8 @@ dependencies:
   rxdart: ^0.28.0
   share_plus: ^12.0.1
   shimmer: ^3.0.0
-  slang: ^4.11.1
-  slang_flutter: ^4.11.0
+  slang: ^4.12.1
+  slang_flutter: ^4.12.1
   smooth_sheets: ^0.15.0
   # For drift
   sqlite3: ^2.9.4
@@ -87,8 +87,8 @@ dependencies:
       url: https://github.com/realth000/system_theme
       path: system_theme
       ref: 0e66e563ccf48735066a81b7eb55811b3af3c0d7
-  talker: ^5.1.9
-  talker_flutter: ^5.1.9
+  talker: ^5.1.13
+  talker_flutter: ^5.1.13
   universal_html: ^2.3.0
   url_launcher: ^6.3.2
   uuid: ^4.5.2
@@ -97,17 +97,17 @@ dependencies:
   window_manager: ^0.5.1
 
 dev_dependencies:
-  build_runner: ^2.10.4
+  build_runner: ^2.11.1
   custom_lint: ^0.8.0
-  dart_mappable_builder: ^4.6.3
+  dart_mappable_builder: ^4.6.4
   flutter_launcher_icons: ^0.14.4
   flutter_lints: ^6.0.0
   flutter_test:
     sdk: flutter
   json_serializable: ^6.11.2
   pyramid_lint: ^2.4.0
-  slang_build_runner: ^4.11.0
-  very_good_analysis: ^10.0.0
+  slang_build_runner: ^4.12.1
+  very_good_analysis: ^10.1.0
 
 flutter:
   uses-material-design: true

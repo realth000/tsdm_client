@@ -38,8 +38,8 @@ on:
         default: true
 
 env:
-  CI_FLUTTER_VERSION: '3.38.3'
-  CI_RUST_VERSION: '1.83.0'
+  CI_FLUTTER_VERSION: "3.41.0"
+  CI_RUST_VERSION: "1.83.0"
 
 jobs:
   build-linux:
@@ -52,8 +52,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
@@ -79,7 +79,7 @@ jobs:
         if: ${{ github.event_name == 'push' || inputs.build_linux }}
         uses: thedoctor0/zip-release@master
         with:
-          type: 'tar'
+          type: "tar"
           filename: tsdm_client-linux.tar.gz
           directory: build/linux/x64/release/
           path: tsdm_client
@@ -99,8 +99,8 @@ jobs:
           fetch-depth: 0
       - uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
-          java-version: '17'
+          distribution: "zulu"
+          java-version: "17"
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{env.CI_FLUTTER_VERSION}}
@@ -187,7 +187,7 @@ jobs:
       - name: Pack Windows tarball
         uses: thedoctor0/zip-release@master
         with:
-          type: 'zip'
+          type: "zip"
           filename: tsdm_client-windows.zip
           directory: build/windows/x64/runner
           path: tsdm_client

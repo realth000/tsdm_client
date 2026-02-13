@@ -2,13 +2,13 @@ name: Test
 
 on:
   push:
-    branches: [ "master" ]
+    branches: ["master"]
   pull_request:
-    branches: [ "master" ]
+    branches: ["master"]
   workflow_dispatch:
 
 env:
-  CI_FLUTTER_VERSION: '3.38.3'
+  CI_FLUTTER_VERSION: "3.41.0"
 
 jobs:
   flutter_test:
