@@ -839,6 +839,8 @@ class _ProfilePageState extends State<ProfilePage> {
           // Here is dynamic and not translated.
           if (userProfile.specialAttr != null && userProfile.specialAttrName != null)
             AttrBlock(name: userProfile.specialAttrName!, value: userProfile.specialAttr!),
+          if (userProfile.specialAttr2 != null && userProfile.specialAttrName2 != null)
+            AttrBlock(name: userProfile.specialAttrName2!, value: userProfile.specialAttr2!),
         ],
       ),
     ];

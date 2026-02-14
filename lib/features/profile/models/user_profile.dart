@@ -54,6 +54,8 @@ class UserProfile with UserProfileMappable {
     required this.spirit,
     required this.specialAttr,
     required this.specialAttrName,
+    required this.specialAttr2,
+    required this.specialAttrName2,
   });
 
   /// Url of user avatar.
@@ -240,10 +242,18 @@ class UserProfile with UserProfileMappable {
   final String? spirit;
 
   /// Special attr changes over time.
-  ///
-  /// 龙之印章/西瓜/爱心/金蛋/魔法石
   final String? specialAttr;
 
   /// Special attr name.
   final String? specialAttrName;
+
+  /// Special attr changes over time.
+  ///
+  /// The other attr, optionally used.
+  final String? specialAttr2;
+
+  /// Special attr name.
+  ///
+  /// The other attr, optionally used.
+  final String? specialAttrName2;
 }

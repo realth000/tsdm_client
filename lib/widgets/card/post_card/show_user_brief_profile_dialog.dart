@@ -191,6 +191,14 @@ class _UserBriefProfileDialogState extends State<_UserBriefProfileDialog> {
         widget.profile.specialAttr,
         Colors.purple[colorOffset],
       ),
+      // Optional special attr, dynamic and not tranlsated.
+      if (widget.profile.specialAttr2 != null && widget.profile.specialAttrName2 != null)
+        _UserProfilePair(
+          MdiIcons.heartOutline,
+          widget.profile.specialAttrName2!,
+          widget.profile.specialAttr2,
+          Colors.purple[colorOffset],
+        ),
       if (widget.profile.couple != null && widget.profile.couple!.isNotEmpty)
         _UserProfilePair(Icons.diversity_1_outlined, tr.cp, widget.profile.couple, Colors.pink[colorOffset]),
       _UserProfilePair(Icons.feedback_outlined, tr.privilege, widget.profile.privilege, Colors.orange[colorOffset]),

@@ -337,6 +337,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
     String? specialAttr;
     // Name of special attr.
     String? specialAttrName;
+    // Special attr that changes over time. Optionally used.
+    String? specialAttr2;
+    // Name of special attr. Optionally used.
+    String? specialAttrName2;
 
     final statisticsInfoList = profileRootNode
         .querySelectorAll('div#psts > ul > li')
@@ -358,26 +362,16 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
           scheming = stat.$2;
         case '精灵':
           spirit = stat.$2;
-        // Special attr that changes over time.
-        // 2023 春节
-        case '龙之印章':
-          specialAttr = stat.$2;
-          specialAttrName = '龙之印章';
-        // 2024 夏日
-        case '西瓜':
-          specialAttr = stat.$2;
-          specialAttrName = '西瓜';
-        // 2024 坛庆
-        case '爱心❤':
-          specialAttr = stat.$2;
-          specialAttrName = '爱心';
-        case '金蛋':
-          specialAttr = stat.$2;
-          specialAttrName = '金蛋';
-        // 2025 坛庆
-        case '魔法石':
-          specialAttr = stat.$2;
-          specialAttrName = '魔法石';
+        default:
+          {
+            if (specialAttr == null) {
+              specialAttr = stat.$2;
+              specialAttrName = stat.$1.trim().replaceFirst(':', '');
+            } else {
+              specialAttr2 = stat.$2;
+              specialAttrName2 = stat.$1.trim().replaceFirst(':', '');
+            }
+          }
       }
     }
 
@@ -441,6 +435,8 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> with LoggerMixin {
       spirit: spirit,
       specialAttr: specialAttr,
       specialAttrName: specialAttrName,
+      specialAttr2: specialAttr2,
+      specialAttrName2: specialAttrName2,
     );
 
     return TaskEither.right(profile);
