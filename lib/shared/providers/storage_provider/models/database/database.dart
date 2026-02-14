@@ -72,6 +72,10 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           updates: {schema.notice},
           updateKind: UpdateKind.delete,
         );
+        // We are using table migration for old versions.
+        // If in a far future the `TableMigration` API is removed, we may also
+        // drop support for versions < 1.2.0
+        // ignore: experimental_member_use
         await m.alterTable(TableMigration(schema.notice));
         info('migrating database schema from 4 to 5... ok!');
       },
@@ -94,6 +98,10 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
           updates: {schema.personalMessage},
           updateKind: UpdateKind.delete,
         );
+        // We are using table migration for old versions.
+        // If in a far future the `TableMigration` API is removed, we may also
+        // drop support for versions < 1.2.0
+        // ignore: experimental_member_use
         await m.alterTable(TableMigration(schema.personalMessage));
         // Migrate personal message table.
         await m.addColumn(schema.broadcastMessage, schema.broadcastMessage.alreadyRead);

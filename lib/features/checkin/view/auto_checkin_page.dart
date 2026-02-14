@@ -24,7 +24,7 @@ class _AutoCheckinPageState extends State<AutoCheckinPage> {
   Widget build(BuildContext context) {
     final tr = context.t.autoCheckinPage;
     return BlocBuilder<AutoCheckinBloc, AutoCheckinState>(
-      builder: (BuildContext context, state) {
+      builder: (context, state) {
         var waitingList = <UserLoginInfo>[];
         var runningList = <UserLoginInfo>[];
         var succeededList = <(UserLoginInfo, CheckinResult)>[];

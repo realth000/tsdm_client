@@ -118,7 +118,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
               // Use the dialogPickerColor as start and active color.
               color: _advancedTabColor,
               // Update the dialogPickerColor using the callback.
-              onColorChanged: (Color color) => setState(() => _advancedTabColor = color),
+              onColorChanged: (color) => setState(() => _advancedTabColor = color),
               borderRadius: 15,
               spacing: 5,
               runSpacing: 5,

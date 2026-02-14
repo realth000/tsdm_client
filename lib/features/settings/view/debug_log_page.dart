@@ -75,7 +75,7 @@ class DebugHistoricalLogPage extends StatelessWidget with LoggerMixin {
     final tr = context.t.settingsPage.debugSection.viewHistoryLog;
     final body = FutureBuilder(
       future: _loadLogFiles(),
-      builder: (BuildContext context, AsyncSnapshot<List<HistoricalLog>> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const CenteredCircularIndicator();
         }
@@ -128,7 +128,7 @@ class _DebugHistoricalLogDetailPageState extends State<DebugHistoricalLogDetailP
     final tr = context.t.settingsPage.debugSection.viewHistoryLog;
     final body = FutureBuilder(
       future: File(widget.log.file.path).readAsString(),
-      builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+      builder: (context, snapshot) {
         if (!snapshot.hasData) {
           return const CenteredCircularIndicator();
         }

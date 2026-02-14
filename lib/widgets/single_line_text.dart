@@ -14,7 +14,7 @@ class SingleLineText extends Text {
     super.textDirection,
     super.locale,
     super.softWrap,
-    super.textScaleFactor,
+    super.textScaler,
     super.semanticsLabel,
     super.textWidthBasis,
     super.textHeightBehavior,

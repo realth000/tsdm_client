@@ -22,7 +22,7 @@ class SectionSwitchListTile extends SwitchListTile {
   const SectionSwitchListTile({
     required super.value,
     required super.onChanged,
-    super.activeColor,
+    super.activeThumbColor,
     super.activeTrackColor,
     super.inactiveThumbColor,
     super.inactiveTrackColor,
