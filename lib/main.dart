@@ -78,7 +78,9 @@ Future<void> _boot(List<String> args) async {
     await flnp.initialize(
       // Drawable ic_launcher_foreground_no_transform is shrunk when building in CI.
       // The default one is compat but ok.
-      const InitializationSettings(android: AndroidInitializationSettings('@drawable/ic_launcher_foreground')),
+      settings: const InitializationSettings(
+        android: AndroidInitializationSettings('@drawable/ic_launcher_foreground'),
+      ),
       onDidReceiveNotificationResponse: onLocalNotificationOpened,
     );
     if (autoSyncNoticeSeconds > 0) {

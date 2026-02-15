@@ -48,7 +48,10 @@ Future<T?> showCustomBottomSheet<T>({
       swipeDismissible: true,
       // Here we do not have a context carrying expected padding values.
       // Set the maximum height to 80% to avoid covered by status bar.
-      viewportPadding: EdgeInsets.only(top: size.height * 0.2),
+      viewportBuilder: (context, child) => Padding(
+        padding: EdgeInsets.only(top: size.height * 0.2),
+        child: child,
+      ),
       builder: (context) {
         return ClipRRect(
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),

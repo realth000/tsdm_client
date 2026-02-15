@@ -180,7 +180,13 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
         tr.notice.detail.bm(noticeCount: notice, pmCount: personalMessage, bmCount: broadcastMessage, msg: msg),
     };
     if (isAndroid) {
-      await flnp.show(0, tr.notice.title, noticeData, nd, payload: LocalNoticeKeys.openNotification);
+      await flnp.show(
+        id: 0,
+        title: tr.notice.title,
+        body: noticeData,
+        notificationDetails: nd,
+        payload: LocalNoticeKeys.openNotification,
+      );
     }
   }
 

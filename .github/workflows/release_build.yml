@@ -6,7 +6,7 @@ on:
       - "v*"
 
 env:
-  CI_FLUTTER_VERSION: "3.41.0" # Do NOT remove or rename the variable otherwise will break FDroid workflows.
+  CI_FLUTTER_VERSION: "3.41.1" # Do NOT remove or rename the variable otherwise will break FDroid workflows.
   CI_RUST_VERSION: "1.83.0" # Keep a same rust version on all compile targets.
 
 jobs:
