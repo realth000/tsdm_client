@@ -1,5 +1,4 @@
 import 'dart:math' as math;
-import 'dart:ui';
 
 import 'package:dart_bbcode_web_colors/dart_bbcode_web_colors.dart';
 import 'package:easy_refresh/easy_refresh.dart';
@@ -33,6 +32,7 @@ import 'package:tsdm_client/utils/show_dialog.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 import 'package:tsdm_client/widgets/cached_image/cached_image.dart';
+import 'package:tsdm_client/widgets/cached_image/cached_image_provider.dart';
 import 'package:tsdm_client/widgets/debounce_buttons.dart';
 import 'package:tsdm_client/widgets/heroes.dart';
 import 'package:tsdm_client/widgets/icon_chip.dart';
@@ -313,7 +313,6 @@ class _ProfilePageState extends State<ProfilePage> {
         minRadius: _appBarAvatarHeight / 2,
       ),
     );
-
     if (userProfile.avatarUrl != null) {
       flexSpace = Stack(
         // Disable clip, let profile avatar show outside the stack.
@@ -321,27 +320,25 @@ class _ProfilePageState extends State<ProfilePage> {
         children: [
           // Background blurred image.
           Positioned.fill(
-            // Why we can not add padding here?
-            child: Column(
-              children: [
-                // The height of color box is decided by the sigma in image filtered.
-                Container(
-                  color: Theme.of(context).colorScheme.surfaceContainerLowest,
-                  height: _appBarBackgroundTopPadding,
+            child: Container(
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  image: CachedImageProvider(userProfile.avatarUrl!),
+                  fit: .fitWidth,
+                  isAntiAlias: true,
                 ),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: ImageFiltered(
-                          imageFilter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                          child: CachedImage(userProfile.avatarUrl!, fit: BoxFit.cover, enableAnimation: false),
-                        ),
-                      ),
-                    ],
-                  ),
+              ),
+              foregroundDecoration: BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Theme.of(context).colorScheme.surfaceContainerLowest.withValues(alpha: 0.6),
+                    Theme.of(context).colorScheme.surfaceContainerLowest,
+                  ],
+                  begin: .topCenter,
+                  end: .bottomCenter,
+                  stops: const [0.0, 0.55],
                 ),
-              ],
+              ),
             ),
           ),
           // Background color under avatar, height is half of avatar height.
