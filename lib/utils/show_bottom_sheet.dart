@@ -38,8 +38,6 @@ Future<T?> showCustomBottomSheet<T>({
     content = SingleChildScrollView(child: Column(children: childrenBuilder!(context)));
   }
 
-  final size = MediaQuery.sizeOf(context);
-
   // Copied from [showHeroDialog]
   final ret = Navigator.push<T>(
     context,
@@ -48,10 +46,6 @@ Future<T?> showCustomBottomSheet<T>({
       swipeDismissible: true,
       // Here we do not have a context carrying expected padding values.
       // Set the maximum height to 80% to avoid covered by status bar.
-      viewportBuilder: (context, child) => Padding(
-        padding: EdgeInsets.only(top: size.height * 0.2),
-        child: child,
-      ),
       builder: (context) {
         return ClipRRect(
           borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
