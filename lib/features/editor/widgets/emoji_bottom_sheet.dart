@@ -34,17 +34,31 @@ class _EmojiBottomSheet extends StatefulWidget {
 
 class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerProviderStateMixin {
   TabController? tabController;
+  int sheetIndex = 0;
+
+  void onSheetIndexChanged() {
+    if (tabController?.indexIsChanging ?? false) {
+      final currIndex = tabController?.index;
+      if (currIndex != null) {
+        setState(() {
+          sheetIndex = currIndex;
+        });
+      }
+    }
+  }
 
   @override
   void dispose() {
-    tabController?.dispose();
+    tabController
+      ?..removeListener(onSheetIndexChanged)
+      ..dispose();
     super.dispose();
   }
 
   /// When calling this function, assume all emoji is available.
   Widget _buildEmojiTab(BuildContext context, EmojiState state) {
     final emojiGroupList = state.emojiGroupList!;
-    tabController ??= TabController(length: emojiGroupList.length, vsync: this);
+    tabController ??= TabController(length: emojiGroupList.length, vsync: this)..addListener(onSheetIndexChanged);
 
     final tabs = emojiGroupList.map((e) => Tab(child: Text(e.name)));
     final tabViews = emojiGroupList.map(
@@ -75,14 +89,20 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
       ),
     );
 
-    return Column(
-      children: [
-        TabBar(isScrollable: true, tabAlignment: TabAlignment.start, controller: tabController, tabs: tabs.toList()),
-        sizedBoxW12H12,
-        Expanded(
-          child: TabBarView(controller: tabController, children: tabViews.toList()),
-        ),
-      ],
+    return SingleChildScrollView(
+      child: Column(
+        mainAxisSize: .min,
+        children: [
+          TabBar(isScrollable: true, tabAlignment: TabAlignment.start, controller: tabController, tabs: tabs.toList()),
+          sizedBoxW12H12,
+          // Use IndexStack instead of TabBarView to make contents having minimum height for the bottom sheet.
+          // But it stucks more than TabBarView.
+          IndexedStack(
+            index: sheetIndex,
+            children: tabViews.toList(),
+          ),
+        ],
+      ),
     );
   }
 
@@ -115,7 +135,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
             EmojiStatus.success => _buildEmojiTab(context, state),
           };
 
-          return ConstrainedBox(constraints: const BoxConstraints(maxHeight: 400), child: body);
+          return body;
         },
       ),
     );

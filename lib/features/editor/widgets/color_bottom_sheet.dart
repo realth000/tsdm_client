@@ -56,6 +56,8 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   late final TabController _tabController;
   late final TextEditingController _customColorValueController;
 
+  int currentIndex = 0;
+
   String? _customTabErrorText;
 
   Color _advancedTabColor = Colors.transparent;
@@ -63,6 +65,15 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   Color _customTabColor = Colors.transparent;
 
   List<Color> _recentCustomColors = [];
+
+  void onCurrentIndexChanged() {
+    if (_tabController.indexIsChanging) {
+      final newIndex = _tabController.index;
+      setState(() {
+        currentIndex = newIndex;
+      });
+    }
+  }
 
   void _updateCustomColorPreview(String? v) {
     final tr = context.t.colorPickerDialog.tabs.custom;
@@ -109,51 +120,50 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   Widget _buildAdvancedTab() {
     final tr = context.t.colorPickerDialog.tabs.advanced;
 
-    return Column(
-      children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: ColorPicker(
-              padding: EdgeInsets.zero,
-              // Use the dialogPickerColor as start and active color.
-              color: _advancedTabColor,
-              // Update the dialogPickerColor using the callback.
-              onColorChanged: (color) => setState(() => _advancedTabColor = color),
-              borderRadius: 15,
-              spacing: 5,
-              runSpacing: 5,
-              wheelDiameter: 155,
-              heading: Text(tr.selectColor, style: Theme.of(context).textTheme.titleSmall),
-              subheading: Text(tr.selectColorShade, style: Theme.of(context).textTheme.titleSmall),
-              showMaterialName: true,
-              showColorName: true,
-              showColorCode: true,
-              copyPasteBehavior: const ColorPickerCopyPasteBehavior(longPressMenu: true),
-              materialNameTextStyle: Theme.of(context).textTheme.bodySmall,
-              colorNameTextStyle: Theme.of(context).textTheme.bodySmall,
-              colorCodeTextStyle: Theme.of(context).textTheme.bodySmall,
-              pickersEnabled: const <ColorPickerType, bool>{
-                ColorPickerType.both: true,
-                ColorPickerType.primary: false,
-                ColorPickerType.accent: false,
-                ColorPickerType.bw: false,
-                ColorPickerType.custom: false,
-                ColorPickerType.customSecondary: false,
-                ColorPickerType.wheel: false,
-              },
-              showEditIconButton: true,
-              // customColorSwatchesAndNames: colorsNameMap,
-            ),
+    return Align(
+      child: Column(
+        mainAxisSize: .min,
+        children: [
+          ColorPicker(
+            padding: EdgeInsets.zero,
+            // Use the dialogPickerColor as start and active color.
+            color: _advancedTabColor,
+            // Update the dialogPickerColor using the callback.
+            onColorChanged: (color) => setState(() => _advancedTabColor = color),
+            borderRadius: 15,
+            spacing: 5,
+            runSpacing: 5,
+            wheelDiameter: 155,
+            heading: Text(tr.selectColor, style: Theme.of(context).textTheme.titleSmall),
+            subheading: Text(tr.selectColorShade, style: Theme.of(context).textTheme.titleSmall),
+            showMaterialName: true,
+            showColorName: true,
+            showColorCode: true,
+            copyPasteBehavior: const ColorPickerCopyPasteBehavior(longPressMenu: true),
+            materialNameTextStyle: Theme.of(context).textTheme.bodySmall,
+            colorNameTextStyle: Theme.of(context).textTheme.bodySmall,
+            colorCodeTextStyle: Theme.of(context).textTheme.bodySmall,
+            pickersEnabled: const <ColorPickerType, bool>{
+              ColorPickerType.both: true,
+              ColorPickerType.primary: false,
+              ColorPickerType.accent: false,
+              ColorPickerType.bw: false,
+              ColorPickerType.custom: false,
+              ColorPickerType.customSecondary: false,
+              ColorPickerType.wheel: false,
+            },
+            showEditIconButton: true,
+            // customColorSwatchesAndNames: colorsNameMap,
           ),
-        ),
-        sizedBoxW4H4,
-        FilledButton(
-          onPressed: _advancedTabColor != Colors.transparent
-              ? () => Navigator.of(context).pop(PickColorResult.picked(_advancedTabColor))
-              : null,
-          child: Text(context.t.general.ok),
-        ),
-      ],
+          sizedBoxW4H4,
+          FilledButton(
+            onPressed: _advancedTabColor != Colors.transparent
+                ? () => Navigator.of(context).pop(PickColorResult.picked(_advancedTabColor))
+                : null,
+            child: Text(context.t.general.ok),
+          ),
+        ],
+      ),
     );
   }
 
@@ -161,62 +171,55 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
     final tr = context.t.colorPickerDialog.tabs.custom;
 
     return Column(
+      mainAxisSize: .min,
       children: [
-        Expanded(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                sizedBoxW8H8,
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextField(
-                        controller: _customColorValueController,
-                        decoration: InputDecoration(errorText: _customTabErrorText, labelText: tr.colorValue),
-                        onChanged: _updateCustomColorPreview,
-                      ),
-                    ),
-                    sizedBoxW12H12,
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(15)),
-                        color: _customTabColor,
-                      ),
-                    ),
-                  ],
-                ),
-                sizedBoxW4H4,
-                Tips(tr.formatTip, enablePadding: false),
-                sizedBoxW4H4,
-                Text(tr.recentColor, style: Theme.of(context).textTheme.titleSmall),
-                sizedBoxW4H4,
-                Wrap(
-                  spacing: 4,
-                  children: _recentCustomColors
-                      .map(
-                        (e) => GestureDetector(
-                          onTap: () => setState(() {
-                            final value = e.hex.toLowerCase();
-                            _updateCustomColorPreview(value);
-                            _customColorValueController.text = value;
-                          }),
-                          child: Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.all(Radius.circular(15)),
-                              color: e,
-                            ),
-                          ),
-                        ),
-                      )
-                      .toList(),
-                ),
-              ],
+        sizedBoxW8H8,
+        Row(
+          children: [
+            Expanded(
+              child: TextField(
+                controller: _customColorValueController,
+                decoration: InputDecoration(errorText: _customTabErrorText, labelText: tr.colorValue),
+                onChanged: _updateCustomColorPreview,
+              ),
             ),
-          ),
+            sizedBoxW12H12,
+            Container(
+              width: 40,
+              height: 40,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(15)),
+                color: _customTabColor,
+              ),
+            ),
+          ],
+        ),
+        sizedBoxW4H4,
+        Tips(tr.formatTip, enablePadding: false),
+        sizedBoxW4H4,
+        Text(tr.recentColor, style: Theme.of(context).textTheme.titleSmall),
+        sizedBoxW4H4,
+        Wrap(
+          spacing: 4,
+          children: _recentCustomColors
+              .map(
+                (e) => GestureDetector(
+                  onTap: () => setState(() {
+                    final value = e.hex.toLowerCase();
+                    _updateCustomColorPreview(value);
+                    _customColorValueController.text = value;
+                  }),
+                  child: Container(
+                    width: 40,
+                    height: 40,
+                    decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(15)),
+                      color: e,
+                    ),
+                  ),
+                ),
+              )
+              .toList(),
         ),
         sizedBoxW4H4,
         FilledButton(
@@ -268,7 +271,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this)..addListener(onCurrentIndexChanged);
     _customColorValueController = TextEditingController();
     if (widget.initialColor != null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -287,7 +290,9 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
 
   @override
   void dispose() {
-    _tabController.dispose();
+    _tabController
+      ..removeListener(onCurrentIndexChanged)
+      ..dispose();
     _customColorValueController.dispose();
     super.dispose();
   }
@@ -296,38 +301,38 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   Widget build(BuildContext context) {
     final tr = context.t.colorPickerDialog;
 
-    return ConstrainedBox(
-      constraints: const BoxConstraints(maxHeight: 450),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          TabBar(
-            controller: _tabController,
-            tabs: [
-              Tab(text: tr.tabs.normal.title),
-              Tab(text: tr.tabs.advanced.title),
-              Tab(text: tr.tabs.custom.title),
-            ],
-          ),
-          sizedBoxW4H4,
-          Expanded(
-            child: Padding(
-              padding: edgeInsetsL12R12,
-              child: TabBarView(
-                controller: _tabController,
-                children: [_buildNormalTab(), _buildAdvancedTab(), _buildCustomTab(context)],
+    return SingleChildScrollView(
+      child: Padding(
+        padding: edgeInsetsL12R12,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4,
+          children: [
+            TabBar(
+              controller: _tabController,
+              tabs: [
+                Tab(text: tr.tabs.normal.title),
+                Tab(text: tr.tabs.advanced.title),
+                Tab(text: tr.tabs.custom.title),
+              ],
+            ),
+            IndexedStack(
+              index: currentIndex,
+              children: [
+                _buildNormalTab(),
+                _buildAdvancedTab(),
+                _buildCustomTab(context),
+              ],
+            ),
+            Align(
+              alignment: Alignment.centerRight,
+              child: TextButton(
+                onPressed: () => Navigator.of(context).pop(PickColorResult.clearColor()),
+                child: Text(context.t.general.reset),
               ),
             ),
-          ),
-          sizedBoxW4H4,
-          Align(
-            alignment: Alignment.centerRight,
-            child: TextButton(
-              onPressed: () => Navigator.of(context).pop(PickColorResult.clearColor()),
-              child: Text(context.t.general.reset),
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -49,7 +49,7 @@ class ThreadChip extends StatelessWidget {
                     builder: (_) => BlocProvider.value(
                       value: context.read<ForumBloc>(),
                       child: BlocBuilder<ForumBloc, ForumState>(
-                        builder: (_, state) => ListView(children: sheetItemBuilder(context, state)),
+                        builder: (_, state) => ListView(shrinkWrap: true, children: sheetItemBuilder(context, state)),
                       ),
                     ),
                   );
