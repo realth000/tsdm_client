@@ -257,7 +257,18 @@ class ThreadBloc extends Bloc<ThreadEvent, ThreadState> with LoggerMixin {
 
     // Update reply parameters.
     // These reply parameters should be sent to [ReplyBar] later.
-    final fid = document.querySelector('input[name="srhfid"]')?.attributes['value']?.parseToInt();
+    //
+    // In some themes without search bar we can not find fid by the global input with name 'srhfid',
+    // parse fid from the query parameters in form action url instead.
+    final fid =
+        document.querySelector('input[name="srhfid"]')?.attributes['value']?.parseToInt() ??
+        document
+            .querySelector('#fastpostform')
+            ?.attributes['action']
+            ?.prependHost()
+            .tryParseAsUri()
+            .tryGetQueryParameters()?['fid']
+            ?.parseToInt();
     final postTime = document.querySelector('input[name="posttime"]')?.attributes['value'];
     final formHash = document.querySelector('input[name="formhash"]')?.attributes['value'];
     final subject = document.querySelector('input[name="subject"]')?.attributes['value'];
