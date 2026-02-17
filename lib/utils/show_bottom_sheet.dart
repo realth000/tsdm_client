@@ -29,6 +29,7 @@ Future<T?> showCustomBottomSheet<T>({
   List<Widget> Function(BuildContext context)? childrenBuilder,
   Widget Function(BuildContext context)? builder,
   Widget? bottomBar,
+  BottomSheetTopBar? topBar,
 }) async {
   assert(builder != null || childrenBuilder != null, 'must provide builder or childrenBuilder');
   final Widget content;
@@ -66,12 +67,20 @@ Future<T?> showCustomBottomSheet<T>({
             child: SheetContentScaffold(
               backgroundColor: Theme.of(context).bottomSheetTheme.backgroundColor,
               topBar: PreferredSize(
-                preferredSize: const Size.fromHeight(kToolbarHeight),
+                preferredSize: Size.fromHeight(kToolbarHeight + (topBar?.height ?? 0)),
+                // preferredSize: const Size.fromHeight(kToolbarHeight),
                 child: Stack(
                   children: [
-                    Align(child: Text(title, style: Theme.of(context).textTheme.titleLarge)),
+                    Align(
+                      alignment: .topCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: Text(title, style: Theme.of(context).textTheme.titleLarge),
+                      ),
+                    ),
+                    if (topBar != null) Positioned(top: kToolbarHeight, child: topBar),
                     Positioned(
-                      top: 6,
+                      top: 16,
                       right: 24,
                       child: IconButton(
                         icon: const Icon(Icons.close_outlined),
@@ -218,4 +227,32 @@ Future<void> showImageActionBottomSheet({
       ),
     ],
   );
+}
+
+/// The top bar of custom bottom sheet
+///
+/// Only use this widget in [showCustomBottomSheet]'s `topBar`.
+class BottomSheetTopBar extends StatelessWidget {
+  /// Constructor.
+  const BottomSheetTopBar({required this.height, required this.child, this.alignment, super.key});
+
+  /// Preferred height of top bar content.
+  final double height;
+
+  /// Content child widget.
+  final Widget child;
+
+  /// Horizontal alignment.
+  final Alignment? alignment;
+
+  @override
+  Widget build(BuildContext context) {
+    return PreferredSize(
+      preferredSize: Size.fromHeight(height),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxHeight: height, maxWidth: MediaQuery.widthOf(context)),
+        child: alignment != null ? Align(alignment: alignment!, child: child) : child,
+      ),
+    );
+  }
 }

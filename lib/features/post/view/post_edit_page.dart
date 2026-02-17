@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:chat_bottom_container/chat_bottom_container.dart';
+import 'package:collection/collection.dart';
 import 'package:dart_bbcode_parser/dart_bbcode_parser.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
@@ -204,6 +207,80 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
     return '$baseUrl/forum.php?mod=post&action=edit&fid=$fid&tid=$tid&pid=$pid';
   }
 
+  EditorDocumentMetadata collectThreadMetata() {
+    final metadata = EditorDocumentMetadata.empty().copyWith(
+      title: threadTitleController.text,
+      typeId: threadType?.typeID,
+      additionalOptions: additionalOptionsMap?.values
+          .map((e) => EditorDocumentAdditionalOption(name: e.name, checked: e.checked))
+          .toList(),
+      price: price,
+      perm: threadPerm?.perm,
+    );
+    debug('collected EditorDocumentMetadata $metadata');
+    return metadata;
+  }
+
+  void applyThreadMetadata(EditorDocumentMetadata metadata, PostEditState state) {
+    if (metadata.isEmpty) {
+      debug('empty thread metadata');
+      return;
+    }
+
+    final metadataTitle = metadata.title;
+    final metadataThreadType = state.content?.threadTypeList?.firstWhereOrNull(
+      (e) => e.typeID == metadata.typeId,
+    );
+    final metadataAddtionalOptions = metadata.additionalOptions
+        .where((e) => additionalOptionsMap?.containsKey(e.name) ?? false)
+        .toList();
+    final metadataPrice = metadata.price;
+    final metadataPerm = state.content?.permList?.firstWhereOrNull(
+      (e) => e.perm == metadata.perm,
+    );
+
+    if (metadataTitle == null &&
+        metadataThreadType == null &&
+        metadataAddtionalOptions.isEmpty &&
+        metadataPrice == null &&
+        metadataPerm == null) {
+      debug(
+        'failed to apply thread metadata: invalid metadata: '
+        'title=$metadataTitle, threadType=$metadataThreadType, '
+        'additionalOptions=${jsonEncode(metadataAddtionalOptions)}, '
+        'price=$metadataPrice, perm=$metadataPerm',
+      );
+      return;
+    }
+
+    setState(() {
+      if (metadataTitle != null) {
+        threadTitleController.text = metadataTitle;
+      }
+
+      if (metadataThreadType != null) {
+        threadType = metadataThreadType;
+        threadTypeController.text = metadataThreadType.name;
+      }
+
+      if (additionalOptionsMap != null && metadataAddtionalOptions.isNotEmpty) {
+        for (final option in metadataAddtionalOptions) {
+          additionalOptionsMap![option.name] = additionalOptionsMap![option.name]!.copyWith(checked: option.checked);
+        }
+      }
+
+      if (metadataPrice != null) {
+        price = metadataPrice;
+      }
+
+      if (metadataPerm != null) {
+        threadPerm = metadataPerm;
+      }
+    });
+
+    debug('applied thread metadata');
+  }
+
   Set<EditorFeatures> get _disabledFeatures {
     final disabledFeatures = Set<EditorFeatures>.from(
       fullScreen ? defaultFullScreenDisabledEditorFeatures : defaultEditorDisabledFeatures,
@@ -297,7 +374,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
   }
 
   // TODO: Fix duplicate with same logic in fast reply edit page.
-  Widget _buildMobileToolbar(BuildContext context) {
+  Widget _buildMobileToolbar(BuildContext context, PostEditState state) {
     return ChatBottomPanelContainer<_BottomPanelType>(
       controller: panelController,
       inputFocusNode: focusNode,
@@ -311,6 +388,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
               bbcodeController: bbcodeController,
               disabledFeatures: _disabledFeatures,
               editorFocusNode: focusNode,
+              collectDocumentMetadata: collectThreadMetata,
+              applyDocumentMetadata: (metadata) => applyThreadMetadata(metadata, state),
             ),
           ),
         };
@@ -666,6 +745,8 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
                       bbcodeController: bbcodeController,
                       disabledFeatures: _disabledFeatures,
                       editorFocusNode: focusNode,
+                      collectDocumentMetadata: collectThreadMetata,
+                      applyDocumentMetadata: (metadata) => applyThreadMetadata(metadata, state),
                     ),
                   ),
                 ),
@@ -676,7 +757,7 @@ class _PostEditPageState extends State<PostEditPage> with LoggerMixin {
           color: Theme.of(context).colorScheme.surfaceContainerLow,
           child: Padding(padding: edgeInsetsR4.add(edgeInsetsB4), child: _buildControlRow(context, state)),
         ),
-        if (isMobile) _buildMobileToolbar(context),
+        if (isMobile) _buildMobileToolbar(context, state),
       ],
     );
   }

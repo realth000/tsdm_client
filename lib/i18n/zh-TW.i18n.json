@@ -645,6 +645,19 @@
     "whyTitleDialog": {
       "title": "為什麼這有個標題？",
       "detail": "如果在發布新帖子或編輯帖子一樓，有個標題很正常。\n但實際上其他樓層也都有個“標題”，可以在樓層正文之前加些<h2>樣式的文字"
+    },
+    "portation": {
+      "title": "匯入與匯出",
+      "tip": "請注意，貼上和匯入會覆寫目前正在編輯的內容以及貼文的附加選項（如果有）",
+      "typesTip": "BBCode格式只保存正文；Quill Delta既保存正文也保存帖子的設定",
+      "copyBBCode": "複製BBCode",
+      "pasteBBCode": "貼上BBCode",
+      "exportBBCode": "匯出BBCode",
+      "importBBCode": "導入BBCode",
+      "copyQuilllDelta": "複製Quill Delta",
+      "pasteQuillDelta": "貼上Quill Delta",
+      "exportQuillDelta": "導出Quill Delta",
+      "importQuillDelta": "導入Quill Delta"
     }
   },
   "chatHistoryPage": {
@@ -1152,7 +1165,7 @@
   },
   "rateLogPage": {
     "title": "評分紀錄",
-    "tabs" : {
+    "tabs": {
       "accumulated": "累加後",
       "original": "原資料"
     },

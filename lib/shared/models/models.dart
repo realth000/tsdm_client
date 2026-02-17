@@ -16,6 +16,7 @@ import 'package:universal_html/html.dart' as uh;
 
 part 'cookie.dart';
 part 'css_types.dart';
+part 'editor_document.dart';
 part 'emoji.dart';
 part 'fast_rate_template.dart';
 part 'fast_reply_template.dart';

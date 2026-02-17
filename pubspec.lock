@@ -1896,6 +1896,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.9"
+  text_scroll:
+    dependency: "direct main"
+    description:
+      name: text_scroll
+      sha256: "164b49e6134fca874989213d4e7ba225e2c3f9e30d9e32f14d543b2fc55716a0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.1"
   timezone:
     dependency: transitive
     description:

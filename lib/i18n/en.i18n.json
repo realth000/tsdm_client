@@ -264,7 +264,7 @@
         },
         "useDetectProxy": {
           "title": "Auto detect proxy",
-          "detail":"Use the detected proxy settings when app startup"
+          "detail": "Use the detected proxy settings when app startup"
         },
         "automatedOnPlatform": "Proxy settings are automatically configured on this platform"
       },
@@ -645,6 +645,19 @@
     "whyTitleDialog": {
       "title": "Why here is a thread title?",
       "detail": "Not weired to have a title here when drafting a new thread or editing the first floor of the thread.\nBut it always presents because other floors also have \"subject\" fields to add some <h2> style text ahead of the body of post."
+    },
+    "portation": {
+      "title": "Import and Export",
+      "tip": "Be careful! Paste and import contents will overwrite all contents you editing and thread additional options (if any).",
+      "typesTip": "BBCode only reserve content; Quill Delta reserves both content and thread options",
+      "copyBBCode": "Copy BBCode",
+      "pasteBBCode": "Paste BBCode",
+      "exportBBCode": "Export BBCode",
+      "importBBCode": "Import BBCode",
+      "copyQuilllDelta": "Copy Quill Delta",
+      "pasteQuillDelta": "Paste Quill Delta",
+      "exportQuillDelta": "Export Quill Delta",
+      "importQuillDelta": "Import Quill Delta"
     }
   },
   "chatHistoryPage": {
@@ -1152,7 +1165,7 @@
   },
   "rateLogPage": {
     "title": "Rate log",
-    "tabs" : {
+    "tabs": {
       "accumulated": "Accumulated",
       "original": "Original"
     },
