@@ -45,6 +45,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
   late final TextEditingController editingControllerTr;
   late final TextEditingController editingControllerFh;
   late final TextEditingController editingControllerSpecial;
+  late final TextEditingController editingControllerSpecial2;
 
   /// All current templates, for duplicate check.
   final List<FastRateTemplateModel> allTemplates = [];
@@ -72,6 +73,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
     editingControllerFh = TextEditingController(text: '${widget.initialValue?.fh ?? "0"}');
     editingControllerJl = TextEditingController(text: '${widget.initialValue?.jl ?? "0"}');
     editingControllerSpecial = TextEditingController(text: '${widget.initialValue?.special ?? "0"}');
+    editingControllerSpecial2 = TextEditingController(text: '${widget.initialValue?.special2 ?? "0"}');
   }
 
   @override
@@ -84,6 +86,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
     editingControllerTr.dispose();
     editingControllerFh.dispose();
     editingControllerSpecial.dispose();
+    editingControllerSpecial2.dispose();
     super.dispose();
   }
 
@@ -192,6 +195,14 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
                 inputFormatters: [numberInputFormatter],
                 validator: (v) => attributeValidator(v, context),
               ),
+              sizedBoxW8H8,
+              TextFormField(
+                controller: editingControllerSpecial2,
+                decoration: InputDecoration(labelText: tr.special2),
+                keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
+                inputFormatters: [numberInputFormatter],
+                validator: (v) => attributeValidator(v, context),
+              ),
               if (widget.editType == FastRateTemplateEditType.create) ...[
                 // Only show override option if drafting new templates.
                 sizedBoxW8H8,
@@ -219,6 +230,7 @@ class _FastRateTemplateEditPageState extends State<FastRateTemplateEditPage> wit
                       fh: int.parse(editingControllerFh.text),
                       jl: int.parse(editingControllerJl.text),
                       special: int.parse(editingControllerSpecial.text),
+                      special2: int.parse(editingControllerSpecial2.text),
                     ),
                   );
                 },

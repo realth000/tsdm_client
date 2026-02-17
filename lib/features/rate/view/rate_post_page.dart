@@ -268,6 +268,11 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
       return;
     }
 
+    // Flag indicating the first special attribute is used or not.
+    // Target at the second special attribute when the first one is used and another unknown
+    // name attribute occurs.
+    var specialAttrUsed = false;
+
     // Score in `scoreMap` may have score id as key (score1) or score name as key ("威望").
     // Here we check the correct attribute name with cached score info in `state.scoreList`.
     for (final scoreEntry in scoreMap!.entries) {
@@ -291,7 +296,14 @@ class _RatePostPageState extends State<RatePostPage> with LoggerMixin {
         case '精灵':
           scoreEntry.value.text = '${pickResult.jl}';
         default:
-          scoreEntry.value.text = '${pickResult.special}';
+          {
+            if (specialAttrUsed) {
+              scoreEntry.value.text = '${pickResult.special2}';
+            } else {
+              scoreEntry.value.text = '${pickResult.special}';
+              specialAttrUsed = true;
+            }
+          }
       }
     }
   }

@@ -67,6 +67,7 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
     final fh = segments.elementAt(5).parseToInt();
     final jl = segments.elementAt(6).parseToInt();
     final specialAttr = segments.elementAt(7).parseToInt();
+    final specialAttr2 = segments.elementAt(8).parseToInt();
 
     if (ww == null || tsb == null || xc == null || tr == null || fh == null || jl == null || specialAttr == null) {
       info(
@@ -77,7 +78,16 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
     }
 
     context.read<PointsChangesCubit>().recordsChanges(
-      PointsChangesValue(ww: ww, tsb: tsb, xc: xc, tr: tr, fh: fh, jl: jl, specialAttr: specialAttr),
+      PointsChangesValue(
+        ww: ww,
+        tsb: tsb,
+        xc: xc,
+        tr: tr,
+        fh: fh,
+        jl: jl,
+        specialAttr: specialAttr,
+        specialAttr2: specialAttr2 ?? 0,
+      ),
     );
   }
 
@@ -220,6 +230,9 @@ class _RootSingletonState extends State<RootSingleton> with LoggerMixin {
             }
             if (state.specialAttr != 0) {
               kinds.add(tr.points.specialAttr(value: state.specialAttr.withSign()));
+            }
+            if (state.specialAttr2 != 0) {
+              kinds.add(tr.points.specialAttr2(value: state.specialAttr2.withSign()));
             }
             showToast(
               kinds.join(tr.sep),

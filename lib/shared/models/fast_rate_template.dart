@@ -13,6 +13,7 @@ final class FastRateTemplateModel with FastRateTemplateModelMappable {
     required this.fh,
     required this.jl,
     required this.special,
+    required this.special2,
   });
 
   /// Name of template.
@@ -38,4 +39,7 @@ final class FastRateTemplateModel with FastRateTemplateModelMappable {
 
   /// Special attribute.
   final int special;
+
+  /// Another special attribute.
+  final int special2;
 }

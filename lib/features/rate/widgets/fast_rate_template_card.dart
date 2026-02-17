@@ -144,6 +144,12 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
                     nameStyle: nameStyle,
                     valueStyle: valueStyle,
                   ),
+                  AttrBlock(
+                    name: tr.special2,
+                    value: '${rateTemplate.special2}',
+                    nameStyle: nameStyle,
+                    valueStyle: valueStyle,
+                  ),
                 ],
               ),
             ],

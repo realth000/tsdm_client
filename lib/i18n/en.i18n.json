@@ -1104,7 +1104,8 @@
       "tr": "tr ${value: String}",
       "fh": "fh ${value: String}",
       "jl": "jl ${value: String}",
-      "specialAttr": "special points ${value: String}"
+      "specialAttr": "special points ${value: String}",
+      "specialAttr2": "special2 points ${value: String}"
     }
   },
   "fastRateTemplate": {
@@ -1119,6 +1120,7 @@
     "tr": "Natural",
     "fh": "Scheming",
     "special": "Special",
+    "special2": "Special2",
     "new": "New",
     "empty": "No rate templates available",
     "delete": "Delete rate template",

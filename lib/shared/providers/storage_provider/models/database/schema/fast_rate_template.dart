@@ -32,6 +32,11 @@ class FastRateTemplate extends Table {
   /// The special attribute changes through time.
   IntColumn get special => integer()();
 
+  /// Another special attribute changes through time.
+  ///
+  /// Optioanl as not used in most time.
+  IntColumn get special2 => integer().nullable()();
+
   /// The time last used this template.
   DateTimeColumn get lastUsedTime => dateTime()();
 

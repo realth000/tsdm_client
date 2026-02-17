@@ -575,6 +575,7 @@ class StorageProvider with LoggerMixin {
             fh: e.fh,
             jl: e.jl,
             special: e.special,
+            special2: e.special2 ?? 0,
           ),
         )
         .toList();
@@ -594,6 +595,7 @@ class StorageProvider with LoggerMixin {
             fh: e2.fh,
             jl: e2.jl,
             special: e2.special,
+            special2: e2.special2 ?? 0,
           ),
         )
         .toList(),
@@ -612,6 +614,7 @@ class StorageProvider with LoggerMixin {
         jl: Value(rate.jl),
         lastUsedTime: Value(DateTime.now()),
         special: Value(rate.special),
+        special2: Value(rate.special2),
       ),
     );
 

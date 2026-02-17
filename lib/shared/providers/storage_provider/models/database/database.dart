@@ -31,7 +31,7 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
   AppDatabase(super.e);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -141,6 +141,11 @@ final class AppDatabase extends _$AppDatabase with LoggerMixin {
         await m.drop(schema.fastReplyTemplate);
         await m.create(schema.fastReplyTemplate);
         info('migrating database schema from 9 to 10... ok!');
+      },
+      from10To11: (m, schema) async {
+        info('migrating database schema from 10 to 11...');
+        await m.addColumn(schema.fastRateTemplate, schema.fastRateTemplate.special2);
+        info('migrating database schema from 10 to 11... ok!');
       },
     ),
   );

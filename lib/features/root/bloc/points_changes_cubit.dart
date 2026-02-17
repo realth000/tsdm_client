@@ -15,6 +15,7 @@ final class PointsChangesValue with PointsChangesValueMappable {
     this.fh = 0,
     this.jl = 0,
     this.specialAttr = 0,
+    this.specialAttr2 = 0,
   });
 
   /// The empty one.
@@ -40,6 +41,9 @@ final class PointsChangesValue with PointsChangesValueMappable {
 
   /// Kind of attribute changes following seasons events.
   final int specialAttr;
+
+  /// Another kind of attribute changes following seasons events.
+  final int specialAttr2;
 }
 
 /// Cubit of user points changes events.
