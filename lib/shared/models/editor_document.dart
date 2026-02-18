@@ -50,7 +50,7 @@ final class EditorDocumentMetadata with EditorDocumentMetadataMappable {
   ///
   /// If any data field is **valid**, current metadata is not empty.
   bool get isNotEmpty =>
-      title != null && typeId != null && additionalOptions.isNotEmpty && price != null && perm != null;
+      title != null || typeId != null || additionalOptions.isNotEmpty || price != null || perm != null;
 
   /// Document version.
   final int version;
