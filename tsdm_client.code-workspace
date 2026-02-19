@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": "."
+		},
+		{
+			"path": "packages/dart_bbcode_parser"
+		},
+		{
+			"path": "packages/dart_bbcode_web_colors"
+		},
+		{
+			"path": "packages/flutter_bbcode_editor"
+		}
+	],
+	"settings": {}
+}
