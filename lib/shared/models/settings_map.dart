@@ -51,6 +51,7 @@ class SettingsMap with SettingsMapMappable {
     required this.autoClearImageCacheDuration,
     required this.collapseAppBarWhenScroll,
     required this.threadFloorInteractionMode,
+    required this.textScaleFactor,
   });
 
   final String netClientAccept;
@@ -96,6 +97,7 @@ class SettingsMap with SettingsMapMappable {
   final int autoClearImageCacheDuration;
   final bool collapseAppBarWhenScroll;
   final ThreadFloorInteractionMode threadFloorInteractionMode;
+  final double textScaleFactor;
 
   SettingsMap copyWithKey<T>(SettingsKeys<T> key, T? value) {
     assert(
@@ -150,6 +152,7 @@ class SettingsMap with SettingsMapMappable {
       SettingsKeys.threadFloorInteractionMode => copyWith(
         threadFloorInteractionMode: value as ThreadFloorInteractionMode?,
       ),
+      SettingsKeys.textScaleFactor => copyWith(textScaleFactor: value as double?),
     };
   }
 }

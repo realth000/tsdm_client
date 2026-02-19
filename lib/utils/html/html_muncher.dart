@@ -814,7 +814,11 @@ final class _Muncher with LoggerMixin {
         // Text already has the label, do not add duplicate one.
         content = null;
       } else {
-        content = Text('@', style: TextStyle(color: Theme.of(context).colorScheme.primary));
+        content = Text(
+          '@',
+          style: TextStyle(color: Theme.of(context).colorScheme.primary),
+          textScaler: .noScaling,
+        );
       }
     } else {
       final IconData prefixIcon;

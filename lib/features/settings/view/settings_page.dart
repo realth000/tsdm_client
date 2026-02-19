@@ -25,6 +25,7 @@ import 'package:tsdm_client/features/settings/widgets/check_in_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/clear_cache_bottom_sheet.dart';
 import 'package:tsdm_client/features/settings/widgets/color_picker_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/font_family_dialog.dart';
+import 'package:tsdm_client/features/settings/widgets/font_scale_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/language_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/proxy_settings_dialog.dart';
 import 'package:tsdm_client/features/settings/widgets/select_thread_floor_interaction_mode_dialog.dart';
@@ -142,6 +143,9 @@ class _SettingsPageState extends State<SettingsPage> {
 
     /// App wide font family
     final fontFamily = state.settingsMap.fontFamily;
+
+    // App wide text scale factor.
+    final textScaleFactor = state.settingsMap.textScaleFactor;
 
     return [
       SectionTitleText(tr.title),
@@ -343,6 +347,23 @@ class _SettingsPageState extends State<SettingsPage> {
 
           context.read<ThemeCubit>().setFontFamily(selectedFont);
           context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.fontFamily, selectedFont));
+        },
+      ),
+
+      /// Text scale factor.
+      SectionListTile(
+        leading: const Icon(Icons.text_increase_outlined),
+        title: Text(tr.textScaleFactor.title),
+        onTap: () async {
+          final selectedScale = await showDialog<double>(
+            context: context,
+            builder: (_) => RootPage(DialogPaths.textScalePicker, TextScaleDialog(textScaleFactor)),
+          );
+          if (!context.mounted || selectedScale == null) {
+            return;
+          }
+
+          context.read<SettingsBloc>().add(SettingsValueChanged(SettingsKeys.textScaleFactor, selectedScale));
         },
       ),
     ];

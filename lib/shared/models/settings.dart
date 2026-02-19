@@ -198,7 +198,15 @@ enum SettingsKeys<T> implements Comparable<SettingsKeys<T>> {
     name: 'threadFloorInteractionMode',
     type: ThreadFloorInteractionMode,
     defaultValue: ThreadFloorInteractionMode.adaptiveTapMenu,
-  );
+  ),
+
+  /// Global text scale factor.
+  textScaleFactor<double>(
+    name: 'textScaleFactor',
+    type: double,
+    defaultValue: 1,
+  ),
+  ;
 
   const SettingsKeys({required this.name, required this.type, required this.defaultValue});
 

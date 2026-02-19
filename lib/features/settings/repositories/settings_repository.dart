@@ -140,6 +140,7 @@ final class SettingsRepository with LoggerMixin {
       autoClearImageCacheDuration: s.extract(_SK.autoClearImageCacheDuration),
       collapseAppBarWhenScroll: s.extract(_SK.collapseAppBarWhenScroll),
       threadFloorInteractionMode: s.extract(_SK.threadFloorInteractionMode),
+      textScaleFactor: s.extract(_SK.textScaleFactor),
     );
   }
 

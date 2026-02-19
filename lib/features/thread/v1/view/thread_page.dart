@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +14,7 @@ import 'package:tsdm_client/features/authentication/repository/authentication_re
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/features/jump_page/cubit/jump_page_cubit.dart';
 import 'package:tsdm_client/features/need_login/view/need_login_page.dart';
+import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/features/settings/repositories/settings_repository.dart';
 import 'package:tsdm_client/features/thread/v1/bloc/thread_bloc.dart';
 import 'package:tsdm_client/features/thread/v1/repository/thread_repository.dart';
@@ -125,7 +128,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
 
   final _replyBarController = ReplyBarController();
 
-  Widget _buildBreadcrumbsRow(ThreadState state) {
+  Widget _buildBreadcrumbsRow(ThreadState state, double extraHeight) {
     final infoTextStyle = Theme.of(
       context,
     ).textTheme.labelLarge?.copyWith(color: Theme.of(context).colorScheme.outline);
@@ -165,7 +168,7 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
       child: DefaultTextStyle.merge(
         style: infoTextStyle,
         child: SizedBox(
-          height: 20,
+          height: 20 + extraHeight,
           child: ListView(
             scrollDirection: Axis.horizontal,
             reverse: true,
@@ -398,6 +401,9 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
           builder: (context, state) {
             // Update jump page state.
             context.read<JumpPageCubit>().setPageInfo(totalPages: state.totalPages, currentPage: state.currentPage);
+            final textScaleExtraBreadHeight = context.select<SettingsBloc, double>(
+              (bloc) => 1 * math.max(0, (bloc.state.settingsMap.textScaleFactor - 1) / 0.1),
+            );
 
             final title = widget.title ?? state.title;
             // Reset jump page state when every build.
@@ -425,7 +431,10 @@ class _ThreadPageState extends State<ThreadPage> with SingleTickerProviderStateM
               resizeToAvoidBottomInset: false,
               appBar: ListAppBar(
                 title: title,
-                bottom: PreferredSize(preferredSize: const Size.fromHeight(20), child: _buildBreadcrumbsRow(state)),
+                bottom: PreferredSize(
+                  preferredSize: Size.fromHeight(20 + textScaleExtraBreadHeight),
+                  child: _buildBreadcrumbsRow(state, textScaleExtraBreadHeight),
+                ),
                 showReverseOrderAction: true,
                 onJumpPage: (pageNumber) async {
                   if (!mounted) {

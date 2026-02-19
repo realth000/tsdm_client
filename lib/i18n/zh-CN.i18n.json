@@ -160,6 +160,10 @@
       "fontFamily": {
         "title": "字体",
         "dialogTitle": "选择字体"
+      },
+      "textScaleFactor": {
+        "title": "文字缩放",
+        "dialogTitle": "文字缩放系数"
       }
     },
     "windowSection": {

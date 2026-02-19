@@ -62,7 +62,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
     return Column(children: listTileList);
   }
 
-  Widget _buildSection(BuildContext context) {
+  Widget _buildSection(BuildContext context, double textScaleFactor) {
     final ret = <Widget>[];
 
     final count = pinnedThreadGroup.length;
@@ -95,9 +95,9 @@ class PinSection extends StatelessWidget with LoggerMixin {
 
     return GridView(
       physics: const NeverScrollableScrollPhysics(),
-      gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-        maxCrossAxisExtent: 600,
-        mainAxisExtent: 700,
+      gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+        maxCrossAxisExtent: 670,
+        mainAxisExtent: 700 + math.max(25 * ((textScaleFactor - 1) / 0.1), 0),
         mainAxisSpacing: 12,
         crossAxisSpacing: 12,
       ),
@@ -108,6 +108,7 @@ class PinSection extends StatelessWidget with LoggerMixin {
 
   @override
   Widget build(BuildContext context) {
-    return _buildSection(context);
+    final textScaleFactor = context.select<SettingsBloc, double>((bloc) => bloc.state.settingsMap.textScaleFactor);
+    return _buildSection(context, textScaleFactor);
   }
 }

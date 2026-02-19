@@ -160,6 +160,10 @@
       "fontFamily": {
         "title": "Font family",
         "dialogTitle": "Choose font"
+      },
+      "textScaleFactor": {
+        "title": "Text scale",
+        "dialogTitle": "Text scale factor"
       }
     },
     "windowSection": {

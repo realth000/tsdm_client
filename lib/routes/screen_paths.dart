@@ -298,6 +298,9 @@ class DialogPaths {
   /// Dialog to let user picker a font.
   static const String fontPicker = '/dialog/fontPicker';
 
+  /// Dialog to let user picker a text scale factor.
+  static const String textScalePicker = '/dialog/textScalePicker';
+
   /// Dialog to let user select the duration between auto syncing notice events.
   static const String selectAutoSyncDuration = '/dialog/selectAutoSyncDuration';
 

@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
+import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/authentication/repository/authentication_repository.dart';
 import 'package:tsdm_client/features/cache/bloc/image_cache_trigger_cubit.dart';
@@ -428,6 +429,9 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
               final accentColor = themeState.accentColor;
               final themeModeIndex = themeState.themeModeIndex;
               final fontFamily = themeState.fontFamily;
+              final textScaleFactor = context.select<SettingsBloc, double>(
+                (bloc) => bloc.state.settingsMap.textScaleFactor,
+              );
 
               final lightTheme = AppTheme.makeLight(context, seedColor: accentColor, fontFamily: fontFamily);
               final darkTheme = AppTheme.makeDark(context, seedColor: accentColor, fontFamily: fontFamily);
@@ -442,6 +446,15 @@ class _AppState extends State<App> with WindowListener, LoggerMixin {
                 darkTheme: darkTheme,
                 themeMode: ThemeMode.values[themeModeIndex],
                 scaffoldMessengerKey: snackbarKey,
+                builder: (context, child) {
+                  final data = MediaQuery.of(context);
+                  return MediaQuery(
+                    data: data.copyWith(
+                      textScaler: TextScaler.linear(textScaleFactor)..clamp(minScaleFactor: 0.7, maxScaleFactor: 1.5),
+                    ),
+                    child: child ?? sizedBoxEmpty,
+                  );
+                },
               );
             },
           ),
