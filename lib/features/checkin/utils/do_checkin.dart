@@ -39,6 +39,15 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
     }
 
     final document = parseHtmlDocument(resp.data as String);
+
+    final maybeCheckinMessage = document.querySelector('h1.mt')?.innerText;
+    if (maybeCheckinMessage != null) {
+      final r2 = checkCheckinResultText(maybeCheckinMessage);
+      if (r2 != null) {
+        return r2;
+      }
+    }
+
     final formHashMatch = _re.firstMatch(document.body?.innerHtml ?? '');
     final formHash = formHashMatch?.namedGroup('FormHash');
     if (formHash == null) {
@@ -72,27 +81,36 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
       return CheckinResultOtherError(resp.data as String);
     }
 
-    if (checkInResult.contains('签到成功')) {
-      talker.info('check in success: $checkInResult');
-      return CheckinResultSuccess(checkInResult);
-    }
-
-    if (checkInResult.contains('已经签到')) {
-      talker.error('check in failed: already checked in today');
-      return const CheckinResultAlreadyChecked();
-    }
-
-    if (checkInResult.contains('已经过了签到时间')) {
-      talker.error('check in failed: late in time');
-      return const CheckinResultLateInTime();
-    }
-
-    if (checkInResult.contains('签到时间还没有到')) {
-      talker.error('check in failed: early in time');
-      return const CheckinResultEarlyInTime();
+    final r2 = checkCheckinResultText(checkInResult);
+    if (r2 != null) {
+      return r2;
     }
 
     talker.error('check in with other error: $checkInResult');
     return CheckinResultOtherError(resp.data as String);
   });
+}
+
+CheckinResult? checkCheckinResultText(String result) {
+  if (result.contains('签到成功')) {
+    talker.info('check in success: $result');
+    return CheckinResultSuccess(result);
+  }
+
+  if (result.contains('已经签到')) {
+    talker.error('check in failed: already checked in today');
+    return const CheckinResultAlreadyChecked();
+  }
+
+  if (result.contains('已经过了签到时间')) {
+    talker.error('check in failed: late in time');
+    return const CheckinResultLateInTime();
+  }
+
+  if (result.contains('签到时间还没有到')) {
+    talker.error('check in failed: early in time');
+    return const CheckinResultEarlyInTime();
+  }
+
+  return null;
 }
