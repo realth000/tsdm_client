@@ -42,7 +42,7 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
 
     final maybeCheckinMessage = document.querySelector('h1.mt')?.innerText;
     if (maybeCheckinMessage != null) {
-      final r2 = checkCheckinResultText(maybeCheckinMessage);
+      final r2 = _checkCheckinResultText(maybeCheckinMessage);
       if (r2 != null) {
         return r2;
       }
@@ -81,7 +81,7 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
       return CheckinResultOtherError(resp.data as String);
     }
 
-    final r2 = checkCheckinResultText(checkInResult);
+    final r2 = _checkCheckinResultText(checkInResult);
     if (r2 != null) {
       return r2;
     }
@@ -91,7 +91,7 @@ Task<CheckinResult> doCheckin(NetClientProvider netClient, CheckinFeeling feelin
   });
 }
 
-CheckinResult? checkCheckinResultText(String result) {
+CheckinResult? _checkCheckinResultText(String result) {
   if (result.contains('签到成功')) {
     talker.info('check in success: $result');
     return CheckinResultSuccess(result);
