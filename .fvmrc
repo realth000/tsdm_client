@@ -1,6 +1,6 @@
 {
-  "flutter": "3.38.10",
+  "flutter": "3.41.2",
+  "runPubGetOnSdkChanges": false,
   "updateVscodeSettings": false,
-  "updateGitIgnore": false,
-  "runPubGetOnSdkChanges": false
+  "updateGitIgnore": false
 }
