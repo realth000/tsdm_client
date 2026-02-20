@@ -94,4 +94,12 @@ void main() {
     await verifier.migrateAndValidate(db, 10);
     await db.close();
   });
+
+  test('upgrade from 10 to 11', () async {
+    final verifier = SchemaVerifier(GeneratedHelper());
+    final connection = await verifier.startAt(10);
+    final db = AppDatabase(connection);
+    await verifier.migrateAndValidate(db, 11);
+    await db.close();
+  });
 }
