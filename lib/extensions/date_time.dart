@@ -24,6 +24,14 @@ extension DateTimeExtension on DateTime {
         '${second.toString().padLeft(2, '0')}';
   }
 
+  /// Format [DateTime] to format yyyyMMDDhhmmss
+  String yyyyMMDDHHMMSSPlain() {
+    return '$year${month.toString().padLeft(2, '0')}'
+        '${day.toString().padLeft(2, '0')}${hour.toString().padLeft(2, '0')}'
+        '${minute.toString().padLeft(2, '0')}'
+        '${second.toString().padLeft(2, '0')}';
+  }
+
   /// Calculate the duration to current date time.
   ///
   /// May be less than zero if current time is older than the given `this` time.

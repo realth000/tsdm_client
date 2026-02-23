@@ -435,7 +435,7 @@ Future<String?> _importFile(BuildContext context, List<String> exts) async {
 
 Future<void> _exportFile(BuildContext context, String prefix, String ext, String data) async {
   final result = await FilePicker.platform.saveFile(
-    fileName: '$prefix${DateTime.now().yyyyMMDDHHMMSS()}.$ext',
+    fileName: '$prefix${DateTime.now().yyyyMMDDHHMMSSPlain()}.$ext',
     bytes: Uint8List.fromList(utf8.encode(data)),
   );
   if (result == null) {
