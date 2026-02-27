@@ -90,6 +90,7 @@ class _EmojiBottomSheetState extends State<_EmojiBottomSheet> with SingleTickerP
     );
 
     return SingleChildScrollView(
+      padding: context.safePadding(),
       child: Column(
         mainAxisSize: .min,
         children: [

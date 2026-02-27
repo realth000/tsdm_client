@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/widgets/color_palette.dart';
 
@@ -20,6 +21,7 @@ final class ColorPickerDialog extends StatelessWidget {
     const items = Colors.primaries;
 
     return GridView.builder(
+      padding: context.safePadding(),
       shrinkWrap: true,
       gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
         maxCrossAxisExtent: _colorBoxSize,

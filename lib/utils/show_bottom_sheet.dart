@@ -36,7 +36,11 @@ Future<T?> showCustomBottomSheet<T>({
   if (builder != null) {
     content = builder.call(context);
   } else {
-    content = SingleChildScrollView(child: Column(children: childrenBuilder!(context)));
+    content = ListView(
+      shrinkWrap: true,
+      padding: context.safePadding(),
+      children: childrenBuilder!(context),
+    );
   }
 
   // Copied from [showHeroDialog]
@@ -80,7 +84,7 @@ Future<T?> showCustomBottomSheet<T>({
                     ),
                     if (topBar != null) Positioned(top: kToolbarHeight, child: topBar),
                     Positioned(
-                      top: 16,
+                      top: 12,
                       right: 24,
                       child: IconButton(
                         icon: const Icon(Icons.close_outlined),

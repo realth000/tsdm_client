@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/features/forum/bloc/forum_bloc.dart';
 import 'package:tsdm_client/features/forum/models/models.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
@@ -49,7 +50,11 @@ class ThreadChip extends StatelessWidget {
                     builder: (_) => BlocProvider.value(
                       value: context.read<ForumBloc>(),
                       child: BlocBuilder<ForumBloc, ForumState>(
-                        builder: (_, state) => ListView(shrinkWrap: true, children: sheetItemBuilder(context, state)),
+                        builder: (_, state) => ListView(
+                          padding: context.safePadding(),
+                          shrinkWrap: true,
+                          children: sheetItemBuilder(context, state),
+                        ),
                       ),
                     ),
                   );

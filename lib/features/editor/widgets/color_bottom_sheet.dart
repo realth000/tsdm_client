@@ -5,6 +5,7 @@ import 'package:flutter_bbcode_editor/flutter_bbcode_editor.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:tsdm_client/constants/constants.dart';
 import 'package:tsdm_client/constants/layout.dart';
+import 'package:tsdm_client/extensions/build_context.dart';
 import 'package:tsdm_client/extensions/color.dart';
 import 'package:tsdm_client/features/root/view/root_page.dart';
 import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
@@ -303,7 +304,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
 
     return SingleChildScrollView(
       child: Padding(
-        padding: edgeInsetsL12R12,
+        padding: edgeInsetsL12R12.add(context.safePadding()),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           spacing: 4,
