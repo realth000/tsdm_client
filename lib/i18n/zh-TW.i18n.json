@@ -184,10 +184,6 @@
     },
     "behaviorSection": {
       "title": "行為",
-      "doublePressExit": {
-        "title": "按兩下返回才退出應用",
-        "detail": "避免意外退出app"
-      },
       "threadReverseOrder": {
         "title": "倒序瀏覽貼文",
         "detail": "貼文裡優先看到最新發布的樓層"

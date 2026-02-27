@@ -185,8 +185,7 @@
     "behaviorSection": {
       "title": "行为",
       "doublePressExit": {
-        "title": "按两下返回才退出应用",
-        "detail": "避免意外退出app"
+        "title": "按两下返回才退出应用"
       },
       "threadReverseOrder": {
         "title": "倒序浏览帖子",
