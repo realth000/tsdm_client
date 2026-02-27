@@ -12,6 +12,7 @@ import 'package:tsdm_client/features/settings/bloc/settings_bloc.dart';
 import 'package:tsdm_client/i18n/strings.g.dart';
 import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
+import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 import 'package:tsdm_client/widgets/tips.dart';
 
@@ -62,6 +63,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
   String? _customTabErrorText;
 
   Color _advancedTabColor = Colors.transparent;
+  String _advancedTabColorValue = '-';
 
   Color _customTabColor = Colors.transparent;
 
@@ -139,7 +141,7 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
             subheading: Text(tr.selectColorShade, style: Theme.of(context).textTheme.titleSmall),
             showMaterialName: true,
             showColorName: true,
-            showColorCode: true,
+            onColorChangeEnd: (color) => setState(() => _advancedTabColorValue = '#${color.hex}'),
             copyPasteBehavior: const ColorPickerCopyPasteBehavior(longPressMenu: true),
             materialNameTextStyle: Theme.of(context).textTheme.bodySmall,
             colorNameTextStyle: Theme.of(context).textTheme.bodySmall,
@@ -156,12 +158,20 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
             showEditIconButton: true,
             // customColorSwatchesAndNames: colorsNameMap,
           ),
+          ActionChip(
+            label: Text(_advancedTabColorValue),
+            avatar: const Icon(Icons.copy_outlined),
+            onPressed: () async => copyToClipboard(context, _advancedTabColorValue),
+          ),
           sizedBoxW4H4,
-          FilledButton(
-            onPressed: _advancedTabColor != Colors.transparent
-                ? () => Navigator.of(context).pop(PickColorResult.picked(_advancedTabColor))
-                : null,
-            child: Text(context.t.general.ok),
+          SizedBox(
+            width: sizeButtonInCardMinWidth,
+            child: FilledButton(
+              onPressed: _advancedTabColor != Colors.transparent
+                  ? () => Navigator.of(context).pop(PickColorResult.picked(_advancedTabColor))
+                  : null,
+              child: Text(context.t.general.ok),
+            ),
           ),
         ],
       ),
@@ -223,21 +233,24 @@ class _ColorBottomSheetState extends State<_ColorBottomSheet> with SingleTickerP
               .toList(),
         ),
         sizedBoxW4H4,
-        FilledButton(
-          child: Text(context.t.general.ok),
-          onPressed: () => _customTabColor != Colors.transparent && _customTabErrorText == null
-              ? () {
-                  // Update recent colors.
-                  final latestRecentColors = _updateRecentColors(
-                    _recentCustomColors,
-                    _customTabColor,
-                  ).map((e) => e.valueA).toList();
-                  context.read<SettingsBloc>().add(
-                    SettingsValueChanged(SettingsKeys.editorRecentUsedCustomColors, latestRecentColors),
-                  );
-                  Navigator.of(context).pop(PickColorResult.picked(_customTabColor));
-                }()
-              : null,
+        SizedBox(
+          width: sizeButtonInCardMinWidth,
+          child: FilledButton(
+            child: Text(context.t.general.ok),
+            onPressed: () => _customTabColor != Colors.transparent && _customTabErrorText == null
+                ? () {
+                    // Update recent colors.
+                    final latestRecentColors = _updateRecentColors(
+                      _recentCustomColors,
+                      _customTabColor,
+                    ).map((e) => e.valueA).toList();
+                    context.read<SettingsBloc>().add(
+                      SettingsValueChanged(SettingsKeys.editorRecentUsedCustomColors, latestRecentColors),
+                    );
+                    Navigator.of(context).pop(PickColorResult.picked(_customTabColor));
+                  }()
+                : null,
+          ),
         ),
       ],
     );
