@@ -6,6 +6,26 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ## [Unreleased]
 
+## [1.16.0] - 2026-03-02
+
+### Added
+
+- app：添加全局文字缩放支持。
+  - 支持缩放倍数从0.7到1.5。
+  - 倍数偏大或偏小会破坏ui排版，建议根据实际情况微调。
+
+### Fixed
+
+- 编辑：修复导入Quill Delta时没有应用帖子设置的问题。
+- 编辑：修复在Windows上无法导出内容的问题。
+- 编辑：修复导出内容时，默认的文件名格式有误的问题。
+- 签到：修复在使用2026春节主题时错误显示签到失败的问题。
+
+### Changed
+
+- app：为底部弹出sheet添加底部padding以在Android上保持edge-to-edge效果。
+- 编辑：更改工具栏中表情sheet的样式，恢复400的高度限制。
+
 ## [1.15.0] - 2026-02-18
 
 ### Added
