@@ -9,6 +9,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/adaptive_ink_response.dart';
 
 /// Actions in popup menu.
 enum _MenuAction {
@@ -39,7 +40,14 @@ class FastReplyTemplateCard extends StatefulWidget {
 class _FastReplyTemplateCardState extends State<FastReplyTemplateCard> {
   late FastReplyTemplateModel replyTemplate;
 
-  Future<void> openMenu(TapUpDetails details) async {
+  Future<void> openMenu(TapPosition tapPosition) async {
+    // Get the position where the tap occurred.
+    RelativeRect? position;
+    position = RelativeRect.fromRect(
+      tapPosition.globalPosition & Size.zero, // Rect from the tap position
+      Offset.zero & MediaQuery.of(context).size, // Bounding box for the menu
+    );
+
     final tr = context.t.fastReplyTemplate;
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
     if (overlay == null) {
@@ -48,7 +56,7 @@ class _FastReplyTemplateCardState extends State<FastReplyTemplateCard> {
 
     final action = await showMenu<_MenuAction>(
       context: context,
-      position: RelativeRect.fromRect(details.globalPosition & const Size(40, 40), Offset.zero & overlay.size),
+      position: position,
       items: [
         PopupMenuItem(value: _MenuAction.edit, child: Text(tr.edit)),
         PopupMenuItem(
@@ -109,8 +117,8 @@ class _FastReplyTemplateCardState extends State<FastReplyTemplateCard> {
     return Card(
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
-      child: InkWell(
-        onTapUp: !widget.allowEdit ? (_) => popBack() : openMenu,
+      child: AdaptiveInkResponse(
+        onAdaptiveContextTap: !widget.allowEdit ? (_) => popBack() : openMenu,
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(
