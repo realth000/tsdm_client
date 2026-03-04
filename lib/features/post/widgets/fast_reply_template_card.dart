@@ -20,13 +20,40 @@ enum _MenuAction {
   delete,
 }
 
+/// The action to activate when user tap the card.
+enum FastReplyTemplateCardAction {
+  /// Do nothing.
+  none,
+
+  /// Call `context.pop` with card itself as the popped result.
+  popBackSelf,
+
+  /// Open context menu.
+  openMenu,
+}
+
 /// Card showing fast reply template content.
 class FastReplyTemplateCard extends StatefulWidget {
   /// Constructor.
-  const FastReplyTemplateCard({required this.replyTemplate, this.allowEdit = false, super.key});
+  const FastReplyTemplateCard({
+    required this.replyTemplate,
+    this.onTap = .none,
+    this.onLongPressOrRightClick = .none,
+    this.allowEdit = false,
+    super.key,
+  });
 
   /// The initial rate template.
   final FastReplyTemplateModel replyTemplate;
+
+  /// Action to do when user tap the card.
+  final FastReplyTemplateCardAction onTap;
+
+  /// Adativly call the action when:
+  ///
+  /// * User long press, mobile only.
+  /// * User right clicked, desktop only.
+  final FastReplyTemplateCardAction onLongPressOrRightClick;
 
   /// Flag indicating the template card is editable or not.
   ///
@@ -40,11 +67,11 @@ class FastReplyTemplateCard extends StatefulWidget {
 class _FastReplyTemplateCardState extends State<FastReplyTemplateCard> {
   late FastReplyTemplateModel replyTemplate;
 
-  Future<void> openMenu(TapPosition tapPosition) async {
+  Future<void> openMenu(Offset globalPosition) async {
     // Get the position where the tap occurred.
     RelativeRect? position;
     position = RelativeRect.fromRect(
-      tapPosition.globalPosition & Size.zero, // Rect from the tap position
+      globalPosition & Size.zero, // Rect from the tap position
       Offset.zero & MediaQuery.of(context).size, // Bounding box for the menu
     );
 
@@ -118,7 +145,16 @@ class _FastReplyTemplateCardState extends State<FastReplyTemplateCard> {
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
       child: AdaptiveInkResponse(
-        onAdaptiveContextTap: !widget.allowEdit ? (_) => popBack() : openMenu,
+        onTapUp: switch (widget.onTap) {
+          .none => null,
+          .popBackSelf => (_) => popBack(),
+          .openMenu => (pos) async => openMenu(pos.globalPosition),
+        },
+        onAdaptiveContextTap: switch (widget.onLongPressOrRightClick) {
+          .none => null,
+          .popBackSelf => (_) async => popBack(),
+          .openMenu => (pos) async => openMenu(pos.globalPosition),
+        },
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(

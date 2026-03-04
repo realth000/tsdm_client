@@ -8,6 +8,7 @@ import 'package:tsdm_client/routes/screen_paths.dart';
 import 'package:tsdm_client/shared/models/models.dart';
 import 'package:tsdm_client/shared/providers/storage_provider/storage_provider.dart';
 import 'package:tsdm_client/utils/show_dialog.dart';
+import 'package:tsdm_client/widgets/adaptive_ink_response.dart';
 import 'package:tsdm_client/widgets/attr_block.dart';
 
 /// Actions in popup menu.
@@ -43,16 +44,22 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
   /// Current rate template used as state.
   late FastRateTemplateModel rateTemplate;
 
-  Future<void> openMenu(TapUpDetails details) async {
+  Future<void> openMenu(Offset globalPosition) async {
     final tr = context.t.fastRateTemplate;
     final overlay = Overlay.of(context).context.findRenderObject() as RenderBox?;
     if (overlay == null) {
       return;
     }
 
+    RelativeRect? position;
+    position = RelativeRect.fromRect(
+      globalPosition & Size.zero, // Rect from the tap position
+      Offset.zero & MediaQuery.of(context).size, // Bounding box for the menu
+    );
+
     final action = await showMenu<_MenuAction>(
       context: context,
-      position: RelativeRect.fromRect(details.globalPosition & const Size(40, 40), Offset.zero & overlay.size),
+      position: position,
       items: [
         PopupMenuItem(value: _MenuAction.edit, child: Text(tr.edit)),
         PopupMenuItem(
@@ -117,8 +124,9 @@ class _FastRateTemplateCardState extends State<FastRateTemplateCard> {
     return Card(
       clipBehavior: Clip.hardEdge,
       margin: EdgeInsets.zero,
-      child: InkWell(
-        onTapUp: !widget.allowEdit ? (_) => popBack() : openMenu,
+      child: AdaptiveInkResponse(
+        onTapUp: widget.allowEdit ? (pos) async => openMenu(pos.globalPosition) : (_) async => popBack(),
+        onAdaptiveContextTap: (pos) => openMenu(pos.globalPosition),
         child: Padding(
           padding: edgeInsetsL12T12R12B12,
           child: Column(

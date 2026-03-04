@@ -65,6 +65,8 @@ class _FastReplyTemplatePageState extends State<FastReplyTemplatePage> with Logg
                       key: ValueKey('FastReplyTemplateCard_${e.hashCode}'),
                       replyTemplate: e,
                       allowEdit: !widget.pick,
+                      onTap: widget.pick ? .popBackSelf : .openMenu,
+                      onLongPressOrRightClick: .openMenu,
                     ),
                   )
                   .toList(),
