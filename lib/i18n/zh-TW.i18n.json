@@ -1235,5 +1235,23 @@
     "customTitle": "自訂頭銜",
     "signature": "個人簽名",
     "timezone": "時區"
+  },
+  "urlInfoBottomSheet": {
+    "title": "連結訊息",
+    "recognizeResult": "辨識結果",
+    "target": "這個連結導航至：",
+    "urlTypes": {
+      "external": {
+        "title": "外部連結",
+        "detail": "天使動漫以外的網站。透過這個連結會離開天使動漫"
+      },
+      "internal": {
+        "title": "內部連結",
+        "detail": "天使動漫內部網頁"
+      }
+    },
+    "copyUrl": "複製連結",
+    "open": "開啟",
+    "openInBrowser": "在瀏覽器中開啟"
   }
 }

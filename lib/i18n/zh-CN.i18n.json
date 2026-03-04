@@ -1235,5 +1235,23 @@
     "customTitle": "自定义头衔",
     "signature": "个人签名",
     "timezone": "时区"
+  },
+  "urlInfoBottomSheet": {
+    "title": "链接信息",
+    "recognizeResult": "识别结果",
+    "target": "这个链接导航至：",
+    "urlTypes": {
+      "external": {
+        "title": "外部链接",
+        "detail": "天使动漫之外的网站。通过这个链接会离开天使动漫"
+      },
+      "internal": {
+        "title": "内部链接",
+        "detail": "天使动漫内部网页"
+      }
+    },
+    "copyUrl": "复制链接",
+    "open": "打开",
+    "openInBrowser": "在浏览器中打开"
   }
 }

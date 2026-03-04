@@ -21,6 +21,7 @@ import 'package:tsdm_client/utils/html/newcomer_report_card.dart';
 import 'package:tsdm_client/utils/html/table_width.dart';
 import 'package:tsdm_client/utils/html/types.dart';
 import 'package:tsdm_client/utils/logger.dart';
+import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_bottom_sheet.dart';
 // Bounty answer card
 import 'package:tsdm_client/widgets/card/bounty_answer_card.dart';
@@ -300,15 +301,26 @@ final class _Muncher with LoggerMixin {
           }
 
           // Attach url to open when `onTap`.
-          TapGestureRecognizer? recognizer;
+          GestureRecognizer? recognizer;
           if (state.tapUrl != null) {
             // Copy to save the url.
             final url = state.tapUrl;
-            recognizer = TapGestureRecognizer()
-              ..onTap = () async {
-                await context.dispatchAsUrl(url!);
-                options.onUrlLaunched?.call();
-              };
+            if (isMobile) {
+              recognizer = LongPressGestureRecognizer()
+                ..onLongPressCancel = () async {
+                  await context.dispatchAsUrl(url!);
+                  options.onUrlLaunched?.call();
+                }
+                ..onLongPress = () async => showUrlInfoBottomSheet(context: context, url: url!);
+            } else {
+              // Desktop or web.
+              recognizer = TapGestureRecognizer()
+                ..onTapDown = (_) async {
+                  await context.dispatchAsUrl(url!);
+                  options.onUrlLaunched?.call();
+                }
+                ..onSecondaryTap = () async => showUrlInfoBottomSheet(context: context, url: url!);
+            }
           }
           state
             ..headingBrNodePassed = true

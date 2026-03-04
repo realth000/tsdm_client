@@ -1235,5 +1235,23 @@
     "customTitle": "Custom title",
     "signature": "Signature",
     "timezone": "Timezone"
+  },
+  "urlInfoBottomSheet": {
+    "title": "Url info",
+    "recognizeResult": "Recognize result",
+    "target": "This link leads to: ",
+    "urlTypes": {
+      "external": {
+        "title": "External urls",
+        "detail": "external website outside of TSDM. Be careful you are leaving TSDM via this url"
+      },
+      "internal": {
+        "title": "Internal urls",
+        "detail": "internal pages of TSDM."
+      }
+    },
+    "copyUrl": "Copy url",
+    "open": "Open",
+    "openInBrowser": "Open in browser"
   }
 }

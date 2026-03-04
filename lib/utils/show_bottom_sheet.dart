@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fpdart/fpdart.dart' show None, Some;
 import 'package:go_router/go_router.dart';
+import 'package:material_symbols_icons/symbols.dart';
 import 'package:smooth_sheets/smooth_sheets.dart';
 import 'package:tsdm_client/constants/layout.dart';
 import 'package:tsdm_client/extensions/build_context.dart';
@@ -20,6 +21,7 @@ import 'package:tsdm_client/utils/clipboard.dart';
 import 'package:tsdm_client/utils/platform.dart';
 import 'package:tsdm_client/utils/show_toast.dart';
 import 'package:tsdm_client/widgets/network_indicator_image.dart';
+import 'package:tsdm_client/widgets/single_line_text.dart';
 
 /// Show a bottom sheet with given [title] and build children
 /// with [childrenBuilder].
@@ -230,6 +232,83 @@ Future<void> showImageActionBottomSheet({
         },
       ),
     ],
+  );
+}
+
+/// Show a bottom sheet for url info and related actions.
+Future<void> showUrlInfoBottomSheet({
+  required BuildContext context,
+  required String url,
+}) async {
+  final tr = context.t.urlInfoBottomSheet;
+  final theme = Theme.of(context);
+
+  final route = url.parseUrlToRoute();
+  final isInternal = route != null;
+  final parseResultTitle = isInternal ? tr.urlTypes.internal.title : tr.urlTypes.external.title;
+  final parseResultDetail = isInternal ? tr.urlTypes.internal.detail : tr.urlTypes.external.detail;
+
+  await showCustomBottomSheet<void>(
+    context: context,
+    title: tr.title,
+    childrenBuilder: (context) {
+      return [
+        Container(
+          width: double.infinity,
+          padding: edgeInsetsL12T12R12B12.add(edgeInsetsL8R8),
+          color: theme.colorScheme.surfaceContainerHighest.withAlpha(160),
+          child: Column(
+            crossAxisAlignment: .start,
+            spacing: 8,
+            children: [
+              SingleLineText(url, style: theme.textTheme.bodyLarge?.copyWith(color: theme.colorScheme.primary)),
+              Container(
+                padding: edgeInsetsL8R8.add(edgeInsetsL4R4),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(parseResultTitle, style: theme.textTheme.labelSmall),
+              ),
+              Text(parseResultDetail, style: theme.textTheme.bodySmall),
+            ],
+          ),
+        ),
+        sizedBoxW12H12,
+        ListTile(
+          leading: const Icon(Symbols.open_in_phone),
+          title: Text(tr.open),
+          onTap: () async {
+            await context.dispatchAsUrl(url);
+            if (context.mounted) {
+              context.pop();
+            }
+          },
+        ),
+        ListTile(
+          leading: const Icon(Symbols.open_in_browser),
+          title: Text(tr.openInBrowser),
+          onTap: () async {
+            await context.dispatchAsUrl(url, external: true);
+            if (context.mounted) {
+              context.pop();
+            }
+          },
+        ),
+        ListTile(
+          leading: const Icon(Icons.copy_outlined),
+          title: Text(tr.copyUrl),
+          onTap: () async {
+            await context.dispatchAsUrl(url);
+            if (!context.mounted) {
+              return;
+            }
+            context.pop();
+            await copyToClipboard(context, url);
+          },
+        ),
+      ];
+    },
   );
 }
 
